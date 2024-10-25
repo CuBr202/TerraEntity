@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "org.confluence.mod.mixin",
+  "package": "org.confluence.terraentity.mixin",
   "compatibilityLevel": "JAVA_21",
   "refmap": "confluence.refmap.json",
   "mixins": [
