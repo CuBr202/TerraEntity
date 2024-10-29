@@ -7,6 +7,8 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.boss.renderer.CthulhuEyeRenderer;
+import org.confluence.terraentity.client.entity.renderer.BloodCrawlerRenderer;
+import org.confluence.terraentity.client.entity.renderer.BloodySporeRenderer;
 import org.confluence.terraentity.client.entity.renderer.DemonEyeRenderer;
 import org.confluence.terraentity.init.ModEntities;
 
@@ -41,8 +43,7 @@ public final class ModClient {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ModEntities.DEMON_EYE.get(), DemonEyeRenderer::new);
-        event.registerEntityRenderer(ModEntities.CTHULHU_EYE.get(), CthulhuEyeRenderer::new);
+        ModEntities.registerRenderers(event);
     }
 
     @SubscribeEvent

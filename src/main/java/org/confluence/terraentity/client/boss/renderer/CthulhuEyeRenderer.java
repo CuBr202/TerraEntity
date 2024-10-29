@@ -10,6 +10,7 @@ import org.confluence.terraentity.client.boss.model.CthulhuEyeModel;
 import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.entity.boss.CthulhuEye;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
@@ -23,8 +24,8 @@ public class CthulhuEyeRenderer extends GeoEntityRenderer<CthulhuEye> {
     public void preRender(PoseStack poseStack, CthulhuEye animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
         var syncRot = animatable.getRot();
-//        poseStack.mulPose(Axis.YP.rotationDegrees(-syncRot.y));
-//        poseStack.mulPose(Axis.XP.rotationDegrees(-syncRot.x));
+        double rad = animatable.yBodyRot*Math.PI/180;
+        poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(syncRot.x));
         poseStack.translate(0,0.5,0);
     }
 
