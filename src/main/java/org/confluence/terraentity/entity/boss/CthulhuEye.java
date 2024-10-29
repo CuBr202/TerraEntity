@@ -62,6 +62,7 @@ public class CthulhuEye extends TerraBossBase implements GeoEntity {
         setHealth(MAX_HEALTHS[difficultyIdx]* size);
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE[difficultyIdx]);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
+
         this.playSound(ModSounds.ROAR.get());
     }
 
@@ -125,7 +126,7 @@ public class CthulhuEye extends TerraBossBase implements GeoEntity {
                     if (getTarget() == null) return;
                     if (!skills.canContinue()) {
                         // 调整方向
-                        cslLookAt(50);
+                        cslLookAt(360);
                         // 不精准度
                         dashPos = getTarget().position().subtract(position()).add(0, 1, 0).offsetRandom(RandomSource.create(), 1);
                         return;
@@ -237,20 +238,14 @@ public class CthulhuEye extends TerraBossBase implements GeoEntity {
         addSkill(state2_dash, type2run); // 6
     }
 
-    public void endDash2(){
-
-    }
-
-
     private void cslLookAt(float maxAngleY) {
         var pEntity = getTarget();
         if (pEntity != null) {
             lookAt(getTarget(), maxAngleY, 85);
+            this.lookControl.setLookAt(getTarget());
 
         }
     }
-
-
 
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -280,8 +275,6 @@ public class CthulhuEye extends TerraBossBase implements GeoEntity {
             serverLevel.addFreshEntity(eye);
         }
     }
-
-
 
     @Override // 受伤音效
     protected SoundEvent getHurtSound(DamageSource damageSource) {return ModSounds.ROUTINE_HURT.get();}

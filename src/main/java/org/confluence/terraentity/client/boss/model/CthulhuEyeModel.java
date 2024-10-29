@@ -10,9 +10,9 @@ public class CthulhuEyeModel extends GeoModel<CthulhuEye> {
 
     private static final String name = "eye_of_cthulhu";
 
-    private static final ResourceLocation MODEL = TerraEntity.space("geo/entity/" + name + ".geo.json");
+    private static final ResourceLocation MODEL = TerraEntity.space("geo/entity/boss/" + name + ".geo.json");
     private static final ResourceLocation TEXTURES = TerraEntity.space("textures/entity/boss/" + name + ".png");
-    private static final ResourceLocation ANIMATION = TerraEntity.space("animations/entity/" + name + ".animation.json");
+    private static final ResourceLocation ANIMATION = TerraEntity.space("animations/entity/boss/" + name + ".animation.json");
 
     @Override
     public ResourceLocation getModelResource(CthulhuEye animatable) {
