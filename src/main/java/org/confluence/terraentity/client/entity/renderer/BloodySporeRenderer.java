@@ -5,17 +5,19 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.Creeper;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.client.entity.model.GeoNormalModel;
+import org.confluence.terraentity.entity.monster.BloodySpore;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class BloodySporeRenderer extends CreeperRenderer {
-    private static final ResourceLocation LOCATION = TerraEntity.space("textures/entity/bloody_spore.png");
+public class BloodySporeRenderer extends GeoEntityRenderer<BloodySpore> {
 
-    public BloodySporeRenderer(EntityRendererProvider.Context p_173958_) {
-        super(p_173958_);
+    public BloodySporeRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new GeoNormalModel<>("bloody_spore"));
     }
 
     @Override
-    public ResourceLocation getTextureLocation(@NotNull Creeper pEntity) {
-        return LOCATION;
+    protected float getDeathMaxRotation(BloodySpore animatable){
+        return 0;
     }
 }
