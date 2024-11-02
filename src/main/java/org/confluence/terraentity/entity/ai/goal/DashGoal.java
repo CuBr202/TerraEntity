@@ -19,10 +19,10 @@ public class DashGoal extends Goal {
     Vec3 lastDir = Vec3.ZERO;
 
     /**
-     *
      * @param entity self
      * @param speed 冲刺加速度
      * @param additionTime 冲刺时间
+     * @param rootSpeed y转向速度
      */
     public DashGoal(AbstractMonster entity,float speed,int additionTime,int rootSpeed) {
         super();
@@ -34,7 +34,7 @@ public class DashGoal extends Goal {
     @Override
     public boolean canUse() {
 
-        return mob.getTarget()!=null;
+        return mob.getTarget()!=null && mob.getTarget().isAlive();
     }
 
     public void start() {
@@ -48,7 +48,7 @@ public class DashGoal extends Goal {
     public void tick() {
         LivingEntity target = mob.getTarget();
 
-        //mob.getLookControl().setLookAt(target,0.01f,0.01f);
+        mob.getLookControl().setLookAt(target,0,85);
         mob.lookAt(target, rootYSpeed,85);
         //mob.setYRot(mob.yHeadRot);
         if(--dashTime > _dashTime){
@@ -71,7 +71,7 @@ public class DashGoal extends Goal {
 
         }
         */
-        else {//背向暂停行动
+        else {//背向 往前冲刺一段时间
             dashTime = 0;
             lastDir = mob.getDeltaMovement();
         }

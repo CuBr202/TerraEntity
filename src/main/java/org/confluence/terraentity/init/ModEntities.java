@@ -25,6 +25,7 @@ import org.confluence.terraentity.client.boss.renderer.CthulhuEyeRenderer;
 import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.client.entity.renderer.*;
 import org.confluence.terraentity.entity.ai.goal.DashGoal;
+import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.ai.goal.MeleeAttackNoLookGoal;
 import org.confluence.terraentity.entity.boss.CthulhuEye;
 import org.confluence.terraentity.entity.boss.KingSlime;
@@ -95,8 +96,8 @@ public final class ModEntities {
             .setGoal((g,e)-> {
                 g.addGoal(0,new DashGoal(e, 0.08f,10,10));
                 g.addGoal(1, new MeleeAttackNoLookGoal(e, 0.5, false));
-//                g.addGoal(2, new DemonEyeWanderGoal(e));
-//                g.addGoal(2,new DemonEyeSurroundTargetGoal(e));
+                g.addGoal(2, new LookForwardWanderFlyGoal(e,0.3f,10));
+
             })
             .setNavigation((e)->new FlyingPathNavigation(e,e.level()))
     );
@@ -146,7 +147,7 @@ public final class ModEntities {
         event.registerEntityRenderer(DEMON_EYE.get(), DemonEyeRenderer::new);
         event.registerEntityRenderer(BLOOD_CRAWLER.get(), BloodCrawlerRenderer::new);
         event.registerEntityRenderer(BLOODY_SPORE.get(), BloodySporeRenderer::new);
-        event.registerEntityRenderer(SIMPLE_MONSTER.get(), c->new GeoEntityRenderer<>(c,new GeoNormalModel<>("crimson_kemera")));
+        event.registerEntityRenderer(SIMPLE_MONSTER.get(), c->new GeoNormalRenderer<>(c,"crimson_kemera",true));
 
         // boss
         event.registerEntityRenderer(KING_SLIME.get(), KingSlimeRenderer::new);

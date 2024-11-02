@@ -13,6 +13,10 @@ public class DemonEyeWanderGoal extends DemonEyeSurroundTargetGoal {
         super(mob);
         maxSpeed=0.2;
     }
+    public DemonEyeWanderGoal(Mob mob,float maxSpeed){
+        super(mob);
+        this.maxSpeed = maxSpeed;
+    }
 
     @Override
     public boolean canUse(){
