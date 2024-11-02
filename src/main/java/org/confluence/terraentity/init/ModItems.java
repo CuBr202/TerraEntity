@@ -45,7 +45,7 @@ public class ModItems {
     public static final DeferredItem<Item> BLOOD_CRAWLER_SPAWN_EGG = register("blood_crawler_spawn_egg", ModEntities.BLOOD_CRAWLER, 0xf2d4ca, 0xa75049);
     public static final DeferredItem<Item> BLOODY_SPORE_SPAWN_EGG = register("bloody_spore_spawn_egg", ModEntities.BLOODY_SPORE, 0xa75049, 0x65292c);
 
-    public static final DeferredItem<Item> CRIMSON_KEMERA_EGG = register("crimson_kemera_egg", ModEntities.SIMPLE_MONSTER, 0xa75049, 0x65292c);
+    public static final DeferredItem<Item> CRIMSON_KEMERA_EGG = register("crimson_kemera_egg", ModEntities.CRIMSON_KEMERA, 0xa75049, 0x65292c);
 
 
     public static final DeferredItem<Item> KING_SLIME_SPAWN_EGG = register("king_slime_spawn_egg", ModEntities.KING_SLIME, 0x73bcf4, 0xf8e234);

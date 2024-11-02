@@ -4,15 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomStandGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -22,11 +14,7 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.client.boss.renderer.CthulhuEyeRenderer;
-import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.client.entity.renderer.*;
-import org.confluence.terraentity.entity.ai.goal.DashGoal;
-import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
-import org.confluence.terraentity.entity.ai.goal.MeleeAttackNoLookGoal;
 import org.confluence.terraentity.entity.boss.CthulhuEye;
 import org.confluence.terraentity.entity.boss.KingSlime;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
@@ -34,17 +22,12 @@ import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.BloodCrawler;
 import org.confluence.terraentity.entity.monster.BloodySpore;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
-import org.confluence.terraentity.entity.monster.demoneye.DemonEyeSurroundTargetGoal;
-import org.confluence.terraentity.entity.monster.demoneye.DemonEyeWanderGoal;
+import org.confluence.terraentity.entity.monster.prefab.MonsterBuilders;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
+import java.util.function.Supplier;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -78,29 +61,7 @@ public final class ModEntities {
 
 
     // tip 野怪
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> SIMPLE_MONSTER = registerSimpleMonster("crimson_kemera", new AbstractMonster.Builder()
-            .setController((c,e)->c.add(new AnimationController<GeoAnimatable>(e,"move",10,
-                    state->{state.setAnimation(RawAnimation.begin().thenLoop("fly"));return PlayState.CONTINUE;})))
-            .setNoGravity()
-            .setHealth(1)
-            .setAttackDamage(1)
-            .setFollowRange(20)
-            .setKnockBack(0.5f)
-//            .setFlyingSpeed(20)
-            .setSafeFall(1000)
-            .setTarget((t,e)->{
-                t.addGoal(0,new NearestAttackableTargetGoal<>(e, Villager.class,false));
-                t.addGoal(1,new NearestAttackableTargetGoal<>(e, Player.class,false));
-
-            })
-            .setGoal((g,e)-> {
-                g.addGoal(0,new DashGoal(e, 0.08f,10,10));
-                g.addGoal(1, new MeleeAttackNoLookGoal(e, 0.5, false));
-                g.addGoal(2, new LookForwardWanderFlyGoal(e,0.3f,10));
-
-            })
-            .setNavigation((e)->new FlyingPathNavigation(e,e.level()))
-    );
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMSON_KEMERA = registerSimpleMonster("crimson_kemera", MonsterBuilders.CRIMSON_KEMERA_BUILDER);
 
     public static final DeferredHolder<EntityType<?>, EntityType<DemonEye>> DEMON_EYE = ENTITIES.register("demon_eye", () -> EntityType.Builder.of(DemonEye::new, MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(Key("demon_eye")));
     public static final DeferredHolder<EntityType<?>, EntityType<BloodySpore>> BLOODY_SPORE = ENTITIES.register("bloody_spore", () -> EntityType.Builder.of(BloodySpore::new, MobCategory.MONSTER).build(Key("bloody_spore")));
@@ -110,7 +71,9 @@ public final class ModEntities {
     public static <T extends AbstractMonster> DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, AbstractMonster.Builder builder) {
         return ENTITIES.register(name, () -> EntityType.Builder.<AbstractMonster>of((type,level)->new AbstractMonster(type,level,builder), MobCategory.MISC).clientTrackingRange(10).setTrackingRange(50).sized(1,1f).build(Key(name)));
     }
-
+    public static <T extends AbstractMonster> DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AbstractMonster.Builder> builder) {
+        return ENTITIES.register(name, () -> EntityType.Builder.<AbstractMonster>of((type,level)->new AbstractMonster(type,level,builder.get()), MobCategory.MISC).clientTrackingRange(10).setTrackingRange(50).sized(1,1f).build(Key(name)));
+    }
     // tip Boss
     public static final DeferredHolder<EntityType<?>, EntityType<KingSlime>> KING_SLIME = ENTITIES.register("king_slime", () -> EntityType.Builder.<KingSlime>of(KingSlime::new, MobCategory.MONSTER).sized(0.6f, 0.6f).clientTrackingRange(10).build(Key("king_slime")));
     public static final DeferredHolder<EntityType<?>, EntityType<CrownOfKingSlimeModelEntity>> CROWN_OF_KING_SLIME_MODEL = ENTITIES.register("crown_of_king_slime_model", () -> EntityType.Builder.<CrownOfKingSlimeModelEntity>of(CrownOfKingSlimeModelEntity::new, MobCategory.MISC).sized(0.0F, 0.0F).clientTrackingRange(10).build(Key("crown_of_king_slime_model")));
@@ -147,7 +110,7 @@ public final class ModEntities {
         event.registerEntityRenderer(DEMON_EYE.get(), DemonEyeRenderer::new);
         event.registerEntityRenderer(BLOOD_CRAWLER.get(), BloodCrawlerRenderer::new);
         event.registerEntityRenderer(BLOODY_SPORE.get(), BloodySporeRenderer::new);
-        event.registerEntityRenderer(SIMPLE_MONSTER.get(), c->new GeoNormalRenderer<>(c,"crimson_kemera",true));
+        event.registerEntityRenderer(CRIMSON_KEMERA.get(), c->new GeoNormalRenderer<>(c,"crimson_kemera",true));
 
         // boss
         event.registerEntityRenderer(KING_SLIME.get(), KingSlimeRenderer::new);
@@ -192,7 +155,7 @@ public final class ModEntities {
         event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
         event.put(BLOODY_SPORE.get(), BloodySpore.createAttributes().build());
-        event.put(SIMPLE_MONSTER.get(), AbstractMonster.createAttributes().build());
+        event.put(CRIMSON_KEMERA.get(), AbstractMonster.createAttributes().build());
 
 
 
