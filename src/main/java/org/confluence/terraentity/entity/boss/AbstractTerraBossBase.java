@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.util;
+package org.confluence.terraentity.entity.boss;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -48,7 +48,7 @@ import static org.confluence.terraentity.utils.ModUtils.switchByDifficulty;
 
 
 @SuppressWarnings("all")
-public abstract class TerraBossBase extends Monster implements GeoEntity {
+public abstract class AbstractTerraBossBase extends Monster implements GeoEntity {
 
     public int difficultyIdx;
 
@@ -60,7 +60,7 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
 
-    public TerraBossBase(EntityType<? extends Monster> type, Level level) {
+    public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level) {
         super(type, level);
         this.moveControl = new FlyingMoveControl(this, 10, false);
         setNoGravity(true);
@@ -90,9 +90,9 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
 
     private final Map<String, RawAnimation> skillMap = new HashMap<>();
     private int lastAnimIndex = -1;
-    private static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(TerraBossBase.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> DATA_SKILL_TICK = SynchedEntityData.defineId(TerraBossBase.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Vector3f> DATA_ROTATE = SynchedEntityData.defineId(TerraBossBase.class, EntityDataSerializers.VECTOR3);
+    private static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_SKILL_TICK = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Vector3f> DATA_ROTATE = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.VECTOR3);
 
     // 动画数据同步
     @Override
@@ -106,7 +106,7 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, 20, state -> {
-            TerraBossBase entity = (TerraBossBase) state.getData(DataTickets.ENTITY);
+            AbstractTerraBossBase entity = (AbstractTerraBossBase) state.getData(DataTickets.ENTITY);
             if (!entity.isAlive()) return PlayState.STOP;
             if (skills.count() == 0) return PlayState.STOP;
             String skillString = entity.skills.getCurSkill();
@@ -221,7 +221,7 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
 
     public boolean canAttack(Entity entity) {
         return attackInternal < 0 &&
-                (entity instanceof Player || getTarget() != null && getTarget().is(entity) && entity != this &&!(entity instanceof TerraBossBase));
+                (entity instanceof Player || getTarget() != null && getTarget().is(entity) && entity != this &&!(entity instanceof AbstractTerraBossBase));
     }
 
     // boss条

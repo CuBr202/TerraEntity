@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.monster.demoneye;
 
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
 
 /** 周围没有目标的AI，乱逛
@@ -8,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
 public class DemonEyeWanderGoal extends DemonEyeSurroundTargetGoal {
     private double anchorY=Double.NaN;
 
-    public DemonEyeWanderGoal(DemonEye mob){
+    public DemonEyeWanderGoal(Mob mob){
         super(mob);
         maxSpeed=0.2;
     }

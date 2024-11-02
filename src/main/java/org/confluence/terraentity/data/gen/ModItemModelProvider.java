@@ -1,24 +1,15 @@
 package org.confluence.terraentity.data.gen;
 
-import com.google.common.util.concurrent.Runnables;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.TieredItem;
-import net.minecraft.world.level.block.*;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.ModItems;
-import software.bernie.geckolib.animatable.GeoItem;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 

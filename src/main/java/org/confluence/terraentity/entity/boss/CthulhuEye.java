@@ -1,8 +1,6 @@
 package org.confluence.terraentity.entity.boss;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
@@ -16,7 +14,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.BossSkill;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
-import org.confluence.terraentity.entity.util.TerraBossBase;
 import org.confluence.terraentity.init.ModEntities;
 import org.confluence.terraentity.init.ModSounds;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -27,7 +24,7 @@ import static org.confluence.terraentity.utils.ModUtils.switchByDifficulty;
 
 
 @SuppressWarnings("all")
-public class CthulhuEye extends TerraBossBase implements GeoEntity {
+public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity {
     private static final float[] MAX_HEALTHS = {728f, 946f, 1206f};
     private static final float[] DAMAGE = {4f, 6f, 9f};//一阶段接触伤害
     private static final float[] CRAZY_DAMAGE = {6f, 10f, 15f};//二阶段接触伤害

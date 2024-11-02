@@ -1,19 +1,19 @@
 package org.confluence.terraentity.entity.ai;
 
-import org.confluence.terraentity.entity.util.TerraBossBase;
+import net.minecraft.world.entity.Mob;
 
 import java.util.function.Consumer;
 
-public class BossSkill {
+public class BossSkill<T extends Mob> {
 
     public String skillID;
     public String skill;
     public int timeContinue;
     public int timeTrigger;
 
-    public Consumer<TerraBossBase> stateInit;
-    public Consumer<TerraBossBase> stateTick;
-    public Consumer<TerraBossBase> stateOver;
+    public Consumer<T> stateInit;
+    public Consumer<T> stateTick;
+    public Consumer<T> stateOver;
 
     /**
      *
@@ -30,9 +30,9 @@ public class BossSkill {
     }
 
     public BossSkill(String skillID, String animName, int timeContinue, int timeTrigger,
-                     Consumer<TerraBossBase> stateInit,
-                     Consumer<TerraBossBase> stateTick,
-                     Consumer<TerraBossBase> stateOver
+                     Consumer<T> stateInit,
+                     Consumer<T> stateTick,
+                     Consumer<T> stateOver
     ){
         this.skill = animName;
         this.timeContinue = timeContinue;
@@ -43,13 +43,13 @@ public class BossSkill {
         this.stateOver = stateOver;
     }
 
-    public void addStateReset(Consumer<TerraBossBase> stateTick){
+    public void addStateReset(Consumer<T> stateTick){
         this.stateTick = stateTick;
     };
-    public void addStateInit(Consumer<TerraBossBase> stateInit){
+    public void addStateInit(Consumer<T> stateInit){
         this.stateInit = stateInit;
     };
-    public void addStateOver(Consumer<TerraBossBase> stateOver){
+    public void addStateOver(Consumer<T> stateOver){
         this.stateOver = stateOver;
     };
 }

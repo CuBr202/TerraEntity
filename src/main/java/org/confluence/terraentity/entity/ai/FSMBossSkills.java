@@ -1,20 +1,20 @@
 package org.confluence.terraentity.entity.ai;
 
-import org.confluence.terraentity.entity.util.TerraBossBase;
+import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 
 import java.util.function.Consumer;
 
 public class FSMBossSkills extends CircleBossSkills {
 
 
-    public FSMBossSkills(TerraBossBase owner) {
+    public FSMBossSkills(AbstractTerraBossBase owner) {
         super(owner);
     }
 
     public boolean pushSkill(String skillID,String skill,int timeContinue,int timeTrigger,
-                             Consumer<TerraBossBase> stateInit,
-                             Consumer<TerraBossBase> stateTick,
-                             Consumer<TerraBossBase> stateOver
+                             Consumer<AbstractTerraBossBase> stateInit,
+                             Consumer<AbstractTerraBossBase> stateTick,
+                             Consumer<AbstractTerraBossBase> stateOver
                              ){
         BossSkill skill1 = new BossSkill(skillID,skill,timeContinue,timeTrigger,stateInit,stateTick,stateOver);
         bossSkills.add(skill1);

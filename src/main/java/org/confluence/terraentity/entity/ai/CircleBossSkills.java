@@ -1,14 +1,14 @@
 package org.confluence.terraentity.entity.ai;
 
-import org.confluence.terraentity.entity.util.TerraBossBase;
+import net.minecraft.world.entity.Mob;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CircleBossSkills {
-    public TerraBossBase owner;
+public class CircleBossSkills<T extends Mob> {
+    public T owner;
     protected final List<BossSkill> bossSkills = new ArrayList<>();
     protected Map<String,Integer> stateIndexMap = new HashMap<>();
 
@@ -16,7 +16,7 @@ public class CircleBossSkills {
     public int index = 0;
     public boolean ifStateInit = false;
 
-    public CircleBossSkills(TerraBossBase owner){ this.owner = owner;}
+    public CircleBossSkills(T owner){ this.owner = owner;}
     public int count(){return bossSkills.size();};
 
     public boolean pushSkill(BossSkill skill){

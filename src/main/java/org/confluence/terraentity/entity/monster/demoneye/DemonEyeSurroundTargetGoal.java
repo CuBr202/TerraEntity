@@ -5,6 +5,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -17,14 +18,14 @@ import static org.confluence.terraentity.utils.ModUtils.angleBetween;
 /** 平时的AI
  * @author voila  */
 public class DemonEyeSurroundTargetGoal extends Goal {
-    protected final DemonEye mob;
+    protected final Mob mob;
     protected final RandomSource random;
     protected int locateCount = 0;  // 用来确定目标Y坐标
     protected int ticksLeft = 40;  // 每40刻无条件换目标
     public Vec3 targetPos;
     public double maxSpeed = 0.4;  // 给游荡眼球怪用的，以后估计还有别的字段
 
-    public DemonEyeSurroundTargetGoal(DemonEye mob){
+    public DemonEyeSurroundTargetGoal(Mob mob){
         this.mob = mob;
         random = mob.getRandom();
     }

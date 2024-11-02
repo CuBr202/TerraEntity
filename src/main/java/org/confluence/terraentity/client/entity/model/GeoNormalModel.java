@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.util.TerraBossBase;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 

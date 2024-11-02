@@ -1,11 +1,8 @@
 package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
-
 import net.neoforged.neoforge.common.data.LanguageProvider;
-
 import org.confluence.terraentity.init.ModItems;
-
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
