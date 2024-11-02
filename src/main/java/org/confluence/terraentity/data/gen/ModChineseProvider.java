@@ -33,9 +33,13 @@ public class ModChineseProvider extends LanguageProvider {
         add(ModItems.LAVA_SLIME_SPAWN_EGG.get(), "岩浆史莱姆刷怪蛋");
 
         add(ModItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
+        add(ModItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
+        add(ModItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
+
         add(ModItems.BLOOD_CRAWLER_SPAWN_EGG.get(), "血爬虫刷怪蛋");
         add(ModItems.BLOODY_SPORE_SPAWN_EGG.get(), "血腥芽孢刷怪蛋");
         add(ModItems.CRIMSON_KEMERA_EGG.get(), "喀迈拉刷怪蛋");
+
 
         add(ModItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
         add(ModItems.CTHULHU_EYE_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");

@@ -41,7 +41,22 @@ public class MonsterBuilders {
             ;
 
     public static Supplier<AbstractMonster.Builder> CRIMSON_KEMERA_BUILDER = () -> SIMPLE_FLY_DASH_MONSTER.get()
-            .setHealth(10)
-            .setAttackDamage(5);
+            .setHealth(20)
+            .setArmor(2)
+            .setAttackDamage(11)
+            .setFollowRange(30);
 
+    public static Supplier<AbstractMonster.Builder> DRIPPLER_BUILDER = () -> SIMPLE_FLY_DASH_MONSTER.get()
+        .setHealth(26)
+        .setArmor(3)
+        .setAttackDamage(14)
+        .setFlyingSpeed(0.2F)
+        .setFollowRange(30);
+
+    public static Supplier<AbstractMonster.Builder> FLYING_FISH_BUILDER = () -> SIMPLE_FLY_DASH_MONSTER.get()
+        .setHealth(10)
+        .setArmor(1)
+        .setAttackDamage(4)
+        .setFlyingSpeed(0.4F)
+        .setFollowRange(25);
 }
