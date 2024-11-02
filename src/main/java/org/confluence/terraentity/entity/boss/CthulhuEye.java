@@ -23,7 +23,7 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animation.RawAnimation;
 
-import static org.confluence.terraentity.utils.ModUtil.switchByDifficulty;
+import static org.confluence.terraentity.utils.ModUtils.switchByDifficulty;
 
 
 @SuppressWarnings("all")

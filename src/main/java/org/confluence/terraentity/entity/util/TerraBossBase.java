@@ -44,7 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import static org.confluence.terraentity.utils.ModUtil.switchByDifficulty;
+import static org.confluence.terraentity.utils.ModUtils.switchByDifficulty;
 
 
 @SuppressWarnings("all")
@@ -64,12 +64,15 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
         super(type, level);
         this.moveControl = new FlyingMoveControl(this, 10, false);
         setNoGravity(true);
-        addSkills();
         this.difficultyIdx = switchByDifficulty(level(), 0, 1, 2);
-
     }
 
     public abstract void addSkills();
+
+    public void onAddedToLevel(){
+        super.onAddedToLevel();
+        this.addSkills();
+    }
 
     // 攻击目标
     private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = entity -> entity instanceof Player;
@@ -78,8 +81,8 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
         //this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 100F));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, false));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
     }
 
     // 技能动画
@@ -123,6 +126,9 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
         }));
     }
 
+
+    // 技能逻辑
+
     public void addSkill(BossSkill bossSkill, RawAnimation anim) {
         this.skills.pushSkill(bossSkill);
         //if(anim==null)return;
@@ -134,8 +140,6 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
         //if(anim==null)return;
         //skillMap.put(bossSkill.skill,anim);
     }
-
-    // 技能逻辑
 
     @Override
     public void tick() {
@@ -158,8 +162,6 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
 
 
     public void lookAtPos(Vec3 target, float pMaxYRotIncrease, float pMaxXRotIncrease) {
-
-
         double d0 = target.x - this.getX();
         double d2 = target.z - this.getZ();
         double d1 = target.y - this.getEyeY();
@@ -170,6 +172,7 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
         this.setXRot(this.rotlerp(this.getXRot(), f1, pMaxXRotIncrease));
         this.setYRot(this.rotlerp(this.getYRot(), f, pMaxYRotIncrease));
     }
+
     private float rotlerp(float pAngle, float pTargetAngle, float pMaxIncrease) {
         float f = Mth.wrapDegrees(pTargetAngle - pAngle);
         if (f > pMaxIncrease) {
@@ -204,6 +207,7 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
             }
        }
     }
+
     public boolean hurt(DamageSource pSource, float pAmount) {
         if(pSource.getEntity() instanceof IronGolem){
             pAmount *= ironGlomResistance;
@@ -219,8 +223,6 @@ public abstract class TerraBossBase extends Monster implements GeoEntity {
         return attackInternal < 0 &&
                 (entity instanceof Player || getTarget() != null && getTarget().is(entity) && entity != this &&!(entity instanceof TerraBossBase));
     }
-
-
 
     // boss条
     public boolean shouldShowBossBar() {

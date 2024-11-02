@@ -7,10 +7,14 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.boss.renderer.CthulhuEyeRenderer;
+import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
 import org.confluence.terraentity.client.entity.renderer.BloodCrawlerRenderer;
 import org.confluence.terraentity.client.entity.renderer.BloodySporeRenderer;
+import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.DemonEyeRenderer;
 import org.confluence.terraentity.init.ModEntities;
+
+import static org.confluence.terraentity.init.ModEntities.CROWN_OF_KING_SLIME_MODEL;
 
 
 @SuppressWarnings("deprecation")
@@ -38,11 +42,14 @@ public final class ModClient {
 
     @SubscribeEvent
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(CrownOfKingSlimeModel.LAYER_LOCATION, CrownOfKingSlimeModel::createBodyLayer);
 
     }
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(CROWN_OF_KING_SLIME_MODEL.get(), CrownOfKingSlimeModelRenderer::new);
+
         ModEntities.registerRenderers(event);
     }
 

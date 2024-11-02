@@ -3,7 +3,7 @@ package org.confluence.terraentity.entity.monster.demoneye;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
-import org.confluence.terraentity.utils.ModUtil;
+import org.confluence.terraentity.utils.ModUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.IntFunction;
@@ -68,7 +68,7 @@ public enum DemonEyeVariant implements StringRepresentable {
     }
 
     public static DemonEyeVariant random(RandomSource randomSource) {
-        if (ModUtil.isHalloween()) {
+        if (ModUtils.isHalloween()) {
             return byId(randomSource.nextBoolean() ? 12 : 13);
         }
         return byId(randomSource.nextInt(12)); // 0 ~ 11

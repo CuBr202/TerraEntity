@@ -8,11 +8,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.utils.ModUtil;
+import org.confluence.terraentity.utils.ModUtils;
 
 import java.util.List;
 
-import static org.confluence.terraentity.utils.ModUtil.angleBetween;
+import static org.confluence.terraentity.utils.ModUtils.angleBetween;
 
 /** 平时的AI
  * @author voila  */
@@ -42,7 +42,7 @@ public class DemonEyeSurroundTargetGoal extends Goal {
         ticksLeft=40;
         mob.setDeltaMovement(mob.getDeltaMovement().with(Direction.Axis.Y, 0));
         Vec3 targetDir = mob.position().with(Direction.Axis.Y,target.position().y).vectorTo(target.position());  // 先确定水平方向
-        float[] offsetAngle = ModUtil.dirToRot(targetDir);
+        float[] offsetAngle = ModUtils.dirToRot(targetDir);
         double offsetY = getOffsetY();
         if(random.nextInt(3) == 0){
             offsetAngle[0] += random.nextBoolean() ? 20 : -20;

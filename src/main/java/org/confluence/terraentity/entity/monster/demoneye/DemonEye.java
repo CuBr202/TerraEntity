@@ -1,13 +1,11 @@
 package org.confluence.terraentity.entity.monster.demoneye;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -23,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.ModSounds;
-import org.confluence.terraentity.utils.ModUtil;
+import org.confluence.terraentity.utils.ModUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -168,7 +166,7 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
         setTarget(level().getNearestPlayer(pos.x, pos.y, pos.z, 40, true));
         super.tick();
         // 在super.tick()结束后更新面向方向即可覆盖原版AI
-        ModUtil.updateEntityRotation(this, this.getDeltaMovement().multiply(1, -1, 1));
+        ModUtils.updateEntityRotation(this, this.getDeltaMovement().multiply(1, -1, 1));
     }
 
     @Override

@@ -12,8 +12,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import org.confluence.terraentity.init.ModEntities;
-import org.confluence.terraentity.init.ModSounds;
+import org.confluence.terraentity.init.*;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -27,6 +26,8 @@ public class TerraEntity {
     public TerraEntity (IEventBus modEventBus, ModContainer modContainer) {
         ModEntities.ENTITIES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
-
+        ModParticles.PARTICLES.register(modEventBus);
+        ModItems.SPAWN_EGGS.register(modEventBus);
+        ModItems.TABS.register(modEventBus);
     }
 }
