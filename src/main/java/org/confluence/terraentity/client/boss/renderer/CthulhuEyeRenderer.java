@@ -53,18 +53,18 @@ public class CthulhuEyeRenderer extends GeoEntityRenderer<CthulhuEye> {
             distance /= (float) Math.min(entity.getDeltaMovement().length(), 1);
             // 长度与角度相关
             //distance *= Math.max(Math.cos((dir.angle(new Vector3f(1,0,0)))),0.3f);
-            if(!exisit.get()){
+            if(!exisit.getPrefab()){
                 target = new DIYBlitTarget(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight(),
                         false,true,ModRenderTypes.Shaders.motion_blur);
                 target.setClearColor(0,0,0,0);
                 target.clear(true);
                 mb.blurList.put(obj,new MotionBlur.blurTuple(target,distance,new Vector2f(dir.x,dir.y),true));
             }else{
-                target = mb.blurList.get(obj).fbo;
+                target = mb.blurList.getPrefab(obj).fbo;
 
-                mb.blurList.get(obj).dir = new Vector2f(dir.x,dir.y);
-                mb.blurList.get(obj).distance = distance;
-                mb.blurList.get(obj).dirty = true;
+                mb.blurList.getPrefab(obj).dir = new Vector2f(dir.x,dir.y);
+                mb.blurList.getPrefab(obj).distance = distance;
+                mb.blurList.getPrefab(obj).dirty = true;
             }
             ModRenderTypes.Shaders.cthSampler.setMultiOutTarget(target);
 

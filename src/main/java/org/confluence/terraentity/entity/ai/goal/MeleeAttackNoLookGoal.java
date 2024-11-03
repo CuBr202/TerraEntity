@@ -13,23 +13,14 @@ import java.util.EnumSet;
 
 public class MeleeAttackNoLookGoal extends Goal {
     protected final PathfinderMob mob;
-    private final double speedModifier;
     private final boolean followingTargetEvenIfNotSeen;
-    private Path path;
-    private double pathedTargetX;
-    private double pathedTargetY;
-    private double pathedTargetZ;
-    private int ticksUntilNextPathRecalculation;
     private int ticksUntilNextAttack;
-    private final int attackInterval = 20;
+    private final int attackInterval = 5;
     private long lastCanUseCheck;
-    private static final long COOLDOWN_BETWEEN_CAN_USE_CHECKS = 20L;
-    private int failedPathFindingPenalty = 0;
-    private boolean canPenalize = false;
 
-    public MeleeAttackNoLookGoal(PathfinderMob mob, double speedModifier, boolean followingTargetEvenIfNotSeen) {
+    public MeleeAttackNoLookGoal(PathfinderMob mob, boolean followingTargetEvenIfNotSeen) {
         this.mob = mob;
-        this.speedModifier = speedModifier;
+
         this.followingTargetEvenIfNotSeen = followingTargetEvenIfNotSeen;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -37,7 +28,7 @@ public class MeleeAttackNoLookGoal extends Goal {
     @Override
     public boolean canUse() {
         long i = this.mob.level().getGameTime();
-        if (i - this.lastCanUseCheck < 20L) {
+        if (i - this.lastCanUseCheck < attackInterval) {
             return false;
         } else {
             this.lastCanUseCheck = i;
@@ -68,9 +59,8 @@ public class MeleeAttackNoLookGoal extends Goal {
 
     @Override
     public void start() {
-        this.mob.getNavigation().moveTo(this.path, this.speedModifier);
+
         this.mob.setAggressive(true);
-        this.ticksUntilNextPathRecalculation = 0;
         this.ticksUntilNextAttack = 0;
     }
 
@@ -94,6 +84,7 @@ public class MeleeAttackNoLookGoal extends Goal {
     public void tick() {
         LivingEntity livingentity = this.mob.getTarget();
         if (livingentity != null) {
+            this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0);
             this.checkAndPerformAttack(livingentity);
         }
     }
@@ -110,19 +101,7 @@ public class MeleeAttackNoLookGoal extends Goal {
         this.ticksUntilNextAttack = this.adjustedTickDelay(20);
     }
 
-    protected boolean isTimeToAttack() {
-        return this.ticksUntilNextAttack <= 0;
-    }
-
     protected boolean canPerformAttack(LivingEntity entity) {
-        return this.isTimeToAttack() && this.mob.isWithinMeleeAttackRange(entity) && this.mob.getSensing().hasLineOfSight(entity);
-    }
-
-    protected int getTicksUntilNextAttack() {
-        return this.ticksUntilNextAttack;
-    }
-
-    protected int getAttackInterval() {
-        return this.adjustedTickDelay(20);
+        return this.ticksUntilNextAttack <= 0 && this.mob.isWithinMeleeAttackRange(entity) && this.mob.getSensing().hasLineOfSight(entity);
     }
 }

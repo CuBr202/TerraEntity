@@ -22,7 +22,8 @@ import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.BloodCrawler;
 import org.confluence.terraentity.entity.monster.BloodySpore;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
-import org.confluence.terraentity.entity.monster.prefab.MonsterBuilders;
+import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
+import org.confluence.terraentity.entity.monster.prefab.MonsterPrefabs;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
@@ -61,21 +62,24 @@ public final class ModEntities {
 
 
     // tip 野怪
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMSON_KEMERA = registerSimpleMonster("crimson_kemera", MonsterBuilders.CRIMSON_KEMERA_BUILDER);
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", MonsterBuilders.DRIPPLER_BUILDER);
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", MonsterBuilders.FLYING_FISH_BUILDER);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMSON_KEMERA = registerSimpleMonster("crimson_kemera", FlyMonsterPrefab.CRIMSON_KEMERA_BUILDER);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.75F,0.75F);
 
     public static final DeferredHolder<EntityType<?>, EntityType<DemonEye>> DEMON_EYE = ENTITIES.register("demon_eye", () -> EntityType.Builder.of(DemonEye::new, MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(Key("demon_eye")));
     public static final DeferredHolder<EntityType<?>, EntityType<BloodySpore>> BLOODY_SPORE = ENTITIES.register("bloody_spore", () -> EntityType.Builder.of(BloodySpore::new, MobCategory.MONSTER).build(Key("bloody_spore")));
     public static final DeferredHolder<EntityType<?>, EntityType<BloodCrawler>> BLOOD_CRAWLER = ENTITIES.register("blood_crawler", () -> EntityType.Builder.of(BloodCrawler::new, MobCategory.MONSTER).sized(1.8F, 1.2F).clientTrackingRange(10).build(Key("blood_crawler")));
 
 
-    public static <T extends AbstractMonster> DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, AbstractMonster.Builder builder) {
-        return ENTITIES.register(name, () -> EntityType.Builder.<AbstractMonster>of((type,level)->new AbstractMonster(type,level,builder), MobCategory.MISC).clientTrackingRange(10).setTrackingRange(50).sized(1,1f).build(Key(name)));
+
+    // 用于调整包围盒
+    public static DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AbstractMonster.Builder> builder, float width, float height) {
+        return ENTITIES.register(name, () -> EntityType.Builder.<AbstractMonster>of((type,level)->new AbstractMonster(type,level,builder.get()), MobCategory.MISC).clientTrackingRange(10).setTrackingRange(50).sized(width,height).build(Key(name)));
     }
-    public static <T extends AbstractMonster> DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AbstractMonster.Builder> builder) {
-        return ENTITIES.register(name, () -> EntityType.Builder.<AbstractMonster>of((type,level)->new AbstractMonster(type,level,builder.get()), MobCategory.MISC).clientTrackingRange(10).setTrackingRange(50).sized(1,1f).build(Key(name)));
+    public static DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AbstractMonster.Builder> builder) {
+        return registerSimpleMonster(name, builder, 1, 1);
     }
+
     // tip Boss
     public static final DeferredHolder<EntityType<?>, EntityType<KingSlime>> KING_SLIME = ENTITIES.register("king_slime", () -> EntityType.Builder.<KingSlime>of(KingSlime::new, MobCategory.MONSTER).sized(0.6f, 0.6f).clientTrackingRange(10).build(Key("king_slime")));
     public static final DeferredHolder<EntityType<?>, EntityType<CrownOfKingSlimeModelEntity>> CROWN_OF_KING_SLIME_MODEL = ENTITIES.register("crown_of_king_slime_model", () -> EntityType.Builder.<CrownOfKingSlimeModelEntity>of(CrownOfKingSlimeModelEntity::new, MobCategory.MISC).sized(0.0F, 0.0F).clientTrackingRange(10).build(Key("crown_of_king_slime_model")));
@@ -116,7 +120,7 @@ public final class ModEntities {
 
         event.registerEntityRenderer(DRIPPLER.get(), c->new GeoNormalRenderer<>(c,"drippler",true));
 
-        event.registerEntityRenderer(FLYING_FISH.get(), c->new GeoNormalRenderer<>(c,"flying_fish",true));
+        event.registerEntityRenderer(FLYING_FISH.get(), c->new GeoNormalRenderer<>(c,"flying_fish",true,0.75f,-0.5f));
 
         // boss
         event.registerEntityRenderer(KING_SLIME.get(), KingSlimeRenderer::new);

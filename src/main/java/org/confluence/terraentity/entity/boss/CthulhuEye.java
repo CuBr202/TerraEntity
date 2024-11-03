@@ -96,7 +96,7 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity {
                         BlockPos pos = BlockPos.containing(position());
 
                         /*
-                        ((ServerLevel) level()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, ModBlocks.TR_CRIMSON_STONE.get().defaultBlockState()),
+                        ((ServerLevel) level()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, ModBlocks.TR_CRIMSON_STONE.getPrefab().defaultBlockState()),
                                 pos.getX() + 0.5F,
                                 pos.getY() + 0.75F,
                                 pos.getZ() + 0.5F,

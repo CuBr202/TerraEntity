@@ -7,11 +7,10 @@ import org.confluence.terraentity.entity.monster.demoneye.DemonEyeWanderGoal;
 
 public class LookForwardWanderFlyGoal extends DemonEyeWanderGoal {
 
-    int distanceToGround = 0;
-    int maxHeight;
-    public LookForwardWanderFlyGoal(Mob mob,float speed,int maxHeight) {
+
+    public LookForwardWanderFlyGoal(Mob mob,float speed) {
         super(mob,speed);
-        this.maxHeight = maxHeight;
+
     }
     public boolean canUse() {
         return mob.getTarget() == null;
@@ -28,10 +27,9 @@ public class LookForwardWanderFlyGoal extends DemonEyeWanderGoal {
     public void tick(){
         super.tick();
 
-        if(distanceToGround > maxHeight) mob.addDeltaMovement(new Vec3(0,-0.05f,0));
         mob.getLookControl().setLookAt(mob.position().add(mob.getDeltaMovement()));
         mob.setYRot(mob.getYHeadRot());
-        distanceToGround--;
+
 
     }
 }

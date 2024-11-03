@@ -34,7 +34,7 @@ public class HoneySlime extends Slime implements DeathAnimOptions {
         super(slime, level);
         // setSize在constructor中调用时size还没更新，再变一遍
         setSize(2, true);
-//        ItemStack itemStack = new ItemStack(Materials.GEL.get());
+//        ItemStack itemStack = new ItemStack(Materials.GEL.getPrefab());
 //        ColoredItem.setColor(itemStack, color);
         this.color = FloatRGB.fromInteger(color);
     }

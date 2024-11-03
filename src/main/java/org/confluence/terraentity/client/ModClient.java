@@ -28,7 +28,7 @@ public final class ModClient {
         IntegerRGB y = hallowMixture(Math.abs(pos.getY()) % 12);
         IntegerRGB z = hallowMixture(Math.abs(pos.getZ()) % 12);
 
-        return x.mixture(y, 0.5F).mixture(z, 0.5F).get();
+        return x.mixture(y, 0.5F).mixture(z, 0.5F).getPrefab();
     };
     public static final ItemColor SIMPLE = (pStack, pTintIndex) -> ColoredItem.getColor(pStack);
 
