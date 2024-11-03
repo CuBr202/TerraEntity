@@ -62,8 +62,8 @@ public final class ModEntities {
 
 
     // tip 野怪
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMSON_KEMERA = registerSimpleMonster("crimson_kemera", FlyMonsterPrefab.CRIMSON_KEMERA_BUILDER);
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMSON_KEMERA = registerSimpleMonster("crimson_kemera", FlyMonsterPrefab.CRIMSON_KEMERA_BUILDER,1.2f,1.2f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER,1.6f,1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.75F,0.75F);
 
     public static final DeferredHolder<EntityType<?>, EntityType<DemonEye>> DEMON_EYE = ENTITIES.register("demon_eye", () -> EntityType.Builder.of(DemonEye::new, MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(Key("demon_eye")));
@@ -118,7 +118,7 @@ public final class ModEntities {
         event.registerEntityRenderer(BLOODY_SPORE.get(), BloodySporeRenderer::new);
         event.registerEntityRenderer(CRIMSON_KEMERA.get(), c->new GeoNormalRenderer<>(c,"crimson_kemera",true));
 
-        event.registerEntityRenderer(DRIPPLER.get(), c->new GeoNormalRenderer<>(c,"drippler",true));
+        event.registerEntityRenderer(DRIPPLER.get(), c->new GeoNormalRenderer<>(c,"drippler",true,2f,-0.5f));
 
         event.registerEntityRenderer(FLYING_FISH.get(), c->new GeoNormalRenderer<>(c,"flying_fish",true,0.75f,-0.5f));
 

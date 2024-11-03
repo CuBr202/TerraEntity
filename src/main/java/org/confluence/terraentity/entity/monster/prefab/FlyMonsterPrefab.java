@@ -25,15 +25,20 @@ public class FlyMonsterPrefab {
 
     //在预制体上修改参数
     public static Supplier<AbstractMonster.Builder> CRIMSON_KEMERA_BUILDER =
-            ()->new FlyMonsterPrefab(0.08f,10,10,20,2,11,30).getPrefab()
-                    .setHurtSound(ModSounds.FART_SOUND)
+            ()->new FlyMonsterPrefab(0.06f,10,10,20,2,11,30,0.5f,0.2f).getPrefab()
+                    .setHurtSound(ModSounds.ROUTINE_HURT)
+                    .setDeathSound(ModSounds.ROUTINE_DEATH)
             ;
 
     public static Supplier<AbstractMonster.Builder> DRIPPLER_BUILDER  =
-            ()->new FlyMonsterPrefab(0.1f,15,10,26,3,14,30).getPrefab();
+            ()->new FlyMonsterPrefab(0.02f,15,10,26,3,14,30,0.5f,0.0f).getPrefab()
+                .setHurtSound(ModSounds.DRIPPLER_HURT)
+                .setDeathSound(ModSounds.DRIPPLER_DEATH);
 
     public static Supplier<AbstractMonster.Builder> FLYING_FISH_BUILDER  =
-            ()->new FlyMonsterPrefab(0.2f,20,15,10,1,4,50).getPrefab();
+            ()->new FlyMonsterPrefab(0.04f,20,15,10,1,4,30,0.5f,0.0f).getPrefab()
+                .setHurtSound(ModSounds.ROUTINE_HURT)
+                .setDeathSound(ModSounds.ROUTINE_DEATH);
 
 
     //从一个预制体复制参数再调整参数
@@ -51,8 +56,9 @@ public class FlyMonsterPrefab {
      * @param attack 攻击力
      * @param followRange 跟随距离
      * @param knockBack 击退力
+     * @param knockbackResistance 击退抗性
      */
-    public FlyMonsterPrefab(float dashAccelerationSpeed,int inertiaTick, int rootYSpeed,int health,int armor,int attack,int followRange,float knockBack) {
+    public FlyMonsterPrefab(float dashAccelerationSpeed,int inertiaTick, int rootYSpeed,int health,int armor,int attack,int followRange,float knockBack,float knockbackResistance) {
         SIMPLE_FLY_DASH_MONSTER = new AbstractMonster.Builder()
                 .setController((c,e)->c.add(new AnimationController<GeoAnimatable>(e,"move",10,
                         state->{state.setAnimation(RawAnimation.begin().thenLoop("fly"));return PlayState.CONTINUE;})))
@@ -62,6 +68,7 @@ public class FlyMonsterPrefab {
                 .setAttackDamage(attack)
                 .setFollowRange(followRange)
                 .setKnockBack(knockBack)
+                .setKnockbackResistance(knockbackResistance)
                 .setSafeFall(1000)
                 .setTarget((t,e)->{
                     t.addGoal(0, new NearestAttackableTargetGoal<>(e, Villager.class,false));
@@ -77,11 +84,11 @@ public class FlyMonsterPrefab {
     }
 
     public FlyMonsterPrefab(float dashAccelerationSpeed,int inertiaTick, int rootYSpeed,int health,int armor,int attack) {
-        this(dashAccelerationSpeed,inertiaTick,rootYSpeed,health,armor,attack,20,0.5f);
+        this(dashAccelerationSpeed,inertiaTick,rootYSpeed,health,armor,attack,20,0.5f,0.0f);
     }
 
     public FlyMonsterPrefab(float dashAccelerationSpeed,int inertiaTick, int rootYSpeed,int health,int armor,int attack,int followRange) {
-        this(dashAccelerationSpeed,inertiaTick,rootYSpeed,health,armor,attack,followRange,0.5f);
+        this(dashAccelerationSpeed,inertiaTick,rootYSpeed,health,armor,attack,followRange,0.5f,0.0f);
     }
 
     protected final AbstractMonster.Builder SIMPLE_FLY_DASH_MONSTER;
