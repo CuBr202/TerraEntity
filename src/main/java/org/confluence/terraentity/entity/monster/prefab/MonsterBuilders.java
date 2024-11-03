@@ -8,6 +8,7 @@ import org.confluence.terraentity.entity.ai.goal.DashGoal;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.ai.goal.MeleeAttackNoLookGoal;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
+import org.confluence.terraentity.init.ModSounds;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
@@ -44,12 +45,16 @@ public class MonsterBuilders {
             .setHealth(20)
             .setArmor(2)
             .setAttackDamage(11)
+            .setHurtSound(ModSounds.ROUTINE_HURT)
+            .setDeathSound(ModSounds.ROUTINE_DEATH)
             .setFollowRange(30);
 
     public static Supplier<AbstractMonster.Builder> DRIPPLER_BUILDER = () -> SIMPLE_FLY_DASH_MONSTER.get()
         .setHealth(26)
         .setArmor(3)
         .setAttackDamage(14)
+        .setHurtSound(ModSounds.DRIPPLER_HURT)
+        .setDeathSound(ModSounds.DRIPPLER_DEATH)
         .setFlyingSpeed(0.2F)
         .setFollowRange(30);
 
@@ -57,6 +62,8 @@ public class MonsterBuilders {
         .setHealth(10)
         .setArmor(1)
         .setAttackDamage(4)
+        .setHurtSound(ModSounds.ROUTINE_HURT)
+        .setDeathSound(ModSounds.ROUTINE_DEATH)
         .setFlyingSpeed(0.4F)
         .setFollowRange(25);
 }

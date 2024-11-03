@@ -15,6 +15,31 @@ public class ModChineseProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add("itemGroup.terraentity.title", "泰拉生物");
+
+        add("entity.terra_entity.ice_slime", "冰冻史莱姆");
+        add("entity.terra_entity.blue_slime", "蓝色史莱姆");
+        add("entity.terra_entity.red_slime", "红色史莱姆");
+        add("entity.terra_entity.purple_slime", "紫色史莱姆");
+        add("entity.terra_entity.jungle_slime", "丛林史莱姆");
+        add("entity.terra_entity.pink_slime", "粉色史莱姆");
+        add("entity.terra_entity.yellow_slime", "黄色史莱姆");
+        add("entity.terra_entity.honey_slime", "蜂蜜史莱姆");
+        add("entity.terra_entity.crimson_slime", "猩红史莱姆");
+        add("entity.terra_entity.corrupted_slime", "腐化史莱姆");
+        add("entity.terra_entity.desert_slime", "沙漠史莱姆");
+        add("entity.terra_entity.tropic_slime", "热带史莱姆");
+        add("entity.terra_entity.green_slime", "绿色史莱姆");
+        add("entity.terra_entity.black_slime", "史莱姆之母");
+        add("entity.terra_entity.lava_slime", "岩浆史莱姆");
+        add("entity.terra_entity.demon_eye", "恶魔眼");
+        add("entity.terra_entity.flying_fish", "飞鱼");
+        add("entity.terra_entity.drippler", "滴滴怪");
+        add("entity.terra_entity.blood_crawler", "血爬虫");
+        add("entity.terra_entity.bloody_spore", "血腥芽孢");
+        add("entity.terra_entity.crimson_kemera", "猩红喀迈拉");
+
+        add("entity.terra_entity.king_slime", "史莱姆王");
+        add("entity.terra_entity.cthulhu_eye", "克苏鲁之眼");
         // 刷怪蛋
         add(ModItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
         add(ModItems.RED_SLIME_SPAWN_EGG.get(), "红色史莱姆刷怪蛋");
@@ -38,7 +63,7 @@ public class ModChineseProvider extends LanguageProvider {
 
         add(ModItems.BLOOD_CRAWLER_SPAWN_EGG.get(), "血爬虫刷怪蛋");
         add(ModItems.BLOODY_SPORE_SPAWN_EGG.get(), "血腥芽孢刷怪蛋");
-        add(ModItems.CRIMSON_KEMERA_EGG.get(), "喀迈拉刷怪蛋");
+        add(ModItems.CRIMSON_KEMERA_EGG.get(), "猩红喀迈拉刷怪蛋");
 
 
         add(ModItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");

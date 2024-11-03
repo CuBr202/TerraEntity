@@ -201,5 +201,15 @@
         "sounds": [
             "terra_entity:decoupling"
         ]
+    },
+    "drippler_death": {
+        "sounds": [
+            "terra_entity:mob/drippler_death"
+        ]
+    },
+    "drippler_hurt": {
+        "sounds": [
+            "terra_entity:mob/drippler_hurt"
+        ]
     }
 }

@@ -29,8 +29,10 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent,SoundEvent> MANA_STAR_USE = register("mana_star_use");
     public static final DeferredHolder<SoundEvent,SoundEvent> COINS = register("coins");
     public static final DeferredHolder<SoundEvent,SoundEvent> ALPHA = register("alpha");
-    public static final DeferredHolder<SoundEvent,SoundEvent> ROUTINE_HURT = register("routine_hurt");
-    public static final DeferredHolder<SoundEvent,SoundEvent> ROUTINE_DEATH = register("routine_death");
+    public static final DeferredHolder<SoundEvent,SoundEvent> ROUTINE_HURT = register("routine_hurt"); // 常规受伤音效
+    public static final DeferredHolder<SoundEvent,SoundEvent> ROUTINE_DEATH = register("routine_death"); // 常规死亡音效
+    public static final DeferredHolder<SoundEvent,SoundEvent> DRIPPLER_HURT = register("drippler_hurt"); // 滴滴怪受伤音效
+    public static final DeferredHolder<SoundEvent,SoundEvent> DRIPPLER_DEATH = register("drippler_death"); // 滴滴怪死亡音效
     public static final DeferredHolder<SoundEvent,SoundEvent> COOLDOWN_RECOVERY = register("cooldown_recovery"); // CD冷却
     public static final DeferredHolder<SoundEvent,SoundEvent> FROZEN_ARROW = register("frozen_arrow"); // 冰雪射弹
     public static final DeferredHolder<SoundEvent,SoundEvent> FROZEN_BROKEN = register("frozen_broken");
