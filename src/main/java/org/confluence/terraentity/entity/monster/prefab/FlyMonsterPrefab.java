@@ -16,6 +16,8 @@ import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.function.Supplier;
 
+import static org.confluence.terraentity.entity.monster.AbstractMonster.copyFrom;
+
 /**
  * 飞行怪预制体
  */
@@ -34,6 +36,9 @@ public class FlyMonsterPrefab {
             ()->new FlyMonsterPrefab(0.2f,20,15,10,1,4,50).getPrefab();
 
 
+    //从一个预制体复制参数再调整参数
+    public static Supplier<AbstractMonster.Builder> DO_NOTHING  = ()->copyFrom(CRIMSON_KEMERA_BUILDER)
+            .setController((c,e)->c.add(new AnimationController<GeoAnimatable>(e,"move",10,s->PlayState.CONTINUE)));
 
 
     /**
@@ -84,4 +89,6 @@ public class FlyMonsterPrefab {
     public AbstractMonster.Builder getPrefab() {
         return SIMPLE_FLY_DASH_MONSTER;
     }
+
+
 }

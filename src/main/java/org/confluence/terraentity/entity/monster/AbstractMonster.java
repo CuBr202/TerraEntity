@@ -259,4 +259,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
         }
 
     }
+    public static AbstractMonster.Builder copyFrom(Supplier<AbstractMonster.Builder> supplier) {
+        return supplier.get();
+    }
 }
