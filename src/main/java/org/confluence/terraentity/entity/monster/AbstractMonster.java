@@ -1,6 +1,5 @@
 package org.confluence.terraentity.entity.monster;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -12,17 +11,14 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -53,13 +49,8 @@ public class AbstractMonster extends Monster implements GeoEntity {
     }
 
     protected void registerGoals() {
-        if(builder!= null && builder.goal!= null)
-            builder.goal.accept(goalSelector,this);
-        if(builder!= null && builder.target!= null)
-            builder.target.accept(targetSelector,this);
-//        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class,false));
-//        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class,false));
-
+        if(builder!= null) builder.goals.forEach(g->g.accept(goalSelector,this));
+        if(builder!= null) builder.targets.forEach(t->t.accept(targetSelector,this));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -142,7 +133,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
     public void tick(){
         super.tick();
 
-        if(!level().isClientSide && --attackInternal<0 && builder.attackAttack){
+        if(!level().isClientSide && --attackInternal<0 && builder.attachAttack){
             var entities = level().getEntities(this, this.getBoundingBox());
             if (!entities.isEmpty()) {
                 for (var e : entities) {
@@ -175,8 +166,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
         public float ATTACK_SPEED = 0.6f;
         public float FLYING_SPEED = 0.4f;
         public float SAFE_FALL = 5f;
-        public boolean attackAttack = true;
-
+        public boolean attachAttack = true;
 
         public boolean noGravity = false;
 
@@ -185,14 +175,10 @@ public class AbstractMonster extends Monster implements GeoEntity {
         public Supplier<SoundEvent> hurtSound;
 
         public BiConsumer<AnimatableManager.ControllerRegistrar,AbstractMonster> controller;
-        public BiConsumer<GoalSelector,AbstractMonster> goal;
-        public BiConsumer<GoalSelector,AbstractMonster> target;
+        public List<BiConsumer<GoalSelector,AbstractMonster>> goals = new ArrayList<>();
+        public List<BiConsumer<GoalSelector,AbstractMonster>> targets = new ArrayList<>();
         public Function<AbstractMonster,PathNavigation> navigation;
 
-        public float friction = 0.9f;
-        public float maxSpeed = 0.4f;
-        public float turnAngle = 45;
-        public float triggerAngle = 20;
 
         public Builder modify(Function<Builder, Builder> modifier){
             return modifier.apply(this);
@@ -222,11 +208,6 @@ public class AbstractMonster extends Monster implements GeoEntity {
             return this;
         }
 
-        public Builder setSpawnReinforcementsChance(float spawnReinforcementsChance) {
-            this.SPAWN_REINFORCEMENTS_CHANCE = spawnReinforcementsChance;
-            return this;
-        }
-
         public Builder setKnockbackResistance(float knockbackResistance) {
             this.KNOCKBACK_RESISTANCE = knockbackResistance;
             return this;
@@ -252,13 +233,14 @@ public class AbstractMonster extends Monster implements GeoEntity {
             return this;
         }
 
-        public Builder setGoal(BiConsumer<GoalSelector,AbstractMonster> goal) {
-            this.goal = goal;
+
+        public Builder addGoal(BiConsumer<GoalSelector,AbstractMonster> goal) {
+            this.goals.add(goal) ;
             return this;
         }
 
-        public Builder setTarget(BiConsumer<GoalSelector,AbstractMonster> target) {
-            this.target = target;
+        public Builder addTarget(BiConsumer<GoalSelector,AbstractMonster> target) {
+            this.targets.add(target);
             return this;
         }
 
@@ -275,20 +257,13 @@ public class AbstractMonster extends Monster implements GeoEntity {
             this.ATTACK_KNOCKBACK = knockBack;
             return this;
         }
-        public Builder setAttackSpeed(float attackSpeed) {
-            this.ATTACK_SPEED = attackSpeed;
-            return this;
-        }
-        public Builder setFlyingSpeed(float flyingSpeed) {
-            this.FLYING_SPEED = flyingSpeed;
-            return this;
-        }
+
         public Builder setSafeFall(float value) {
             this.SAFE_FALL = value;
             return this;
         }
         public Builder setNoAttackAttack() {
-            this.attackAttack = false;
+            this.attachAttack = false;
             return this;
         }
     }
