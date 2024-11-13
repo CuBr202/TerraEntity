@@ -118,7 +118,7 @@ public final class ModEntities {
         event.registerEntityRenderer(BLOODY_SPORE.get(), BloodySporeRenderer::new);
         event.registerEntityRenderer(CRIMSON_KEMERA.get(), c->new GeoNormalRenderer<>(c,"crimson_kemera",true));
 
-        event.registerEntityRenderer(DRIPPLER.get(), c->new GeoNormalRenderer<>(c,"drippler",true,2f,-0.5f));
+        event.registerEntityRenderer(DRIPPLER.get(), c->new GeoNormalRenderer<>(c,"drippler",false,2f,-0.5f));
 
         event.registerEntityRenderer(FLYING_FISH.get(), c->new GeoNormalRenderer<>(c,"flying_fish",true,0.75f,-0.5f));
 

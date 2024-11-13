@@ -8,16 +8,19 @@ import org.confluence.terraentity.utils.ModUtils;
 
 public class DashGoal extends Goal {
 
-    private final AbstractMonster mob;
+    protected final AbstractMonster mob;
 
-    int dashTime = 0;
-    int _dashTime;
-
-    int rootYSpeed;
-
-    float speed;
-    Vec3 lastDir = Vec3.ZERO;
-
+    protected int dashTime = 0;
+    protected int _dashTime;
+    protected int rootYSpeed;
+    protected float speed;
+    protected Vec3 lastDir = Vec3.ZERO;
+    protected  States state = States.idle;
+    enum States{
+        dashing,
+        dashing_back,
+        idle
+    }
     /**
      * @param entity self
      * @param speed 冲刺加速度
@@ -31,9 +34,9 @@ public class DashGoal extends Goal {
         this._dashTime = -additionTime;
         this.rootYSpeed = rootSpeed;
     }
+
     @Override
     public boolean canUse() {
-
         return mob.getTarget()!=null && mob.getTarget().isAlive();
     }
 
@@ -45,37 +48,73 @@ public class DashGoal extends Goal {
 
     }
 
+    protected void lookAtTarget(LivingEntity target) {
+        mob.getLookControl().setLookAt(target, 0, 85);
+        mob.lookAt(target, rootYSpeed, 85);
+    }
+
+    protected void downSpeed(){
+        lastDir = lastDir.scale(mob.builder.friction);
+        mob.setDeltaMovement(lastDir);
+    }
+
+    protected float getAngle(LivingEntity target){
+        return (float) ModUtils.angleBetween(target.position().subtract(mob.position()), mob.getForward());
+    }
+
+
+
     public void tick() {
         LivingEntity target = mob.getTarget();
+        if(target == null ||!target.isAlive())
+            return;
+        System.out.println(state);
+        if(mob.hurtTime>0) {
+            state = States.idle;
 
-        mob.getLookControl().setLookAt(target,0,85);
-        mob.lookAt(target, rootYSpeed,85);
-        //mob.setYRot(mob.yHeadRot);
-        if(--dashTime > _dashTime){
-            mob.setDeltaMovement(lastDir);
-            lastDir.scale(0.95f);
+        }
+        if(state == States.dashing_back){
+            --dashTime;
+            downSpeed();
+            mob.addDeltaMovement( new Vec3(0,0.05f,0));
+            if(dashTime <= _dashTime) state = States.idle;
+            return;
+        }
+        else if(state == States.idle) {
+            lookAtTarget(target);
+            downSpeed();
+
+            float angle = getAngle(target);
+            if(angle < mob.builder.triggerAngle / 180 * 3.14159) {
+                state = States.dashing;
+            }
             return;
         }
 
-        float angle = (float) ModUtils.angleBetween(mob.getTarget().getEyePosition().subtract(mob.position()), mob.getForward());
+        float angle = getAngle(target);
+
+        if(angle < mob.builder.turnAngle / 180 * 3.14159) {//30度 向前方加速
+            lookAtTarget(target);
+
+            float speed = (float) Math.min(mob.builder.maxSpeed , mob.getDeltaMovement().add(mob.getDeltaMovement().normalize().scale(mob.builder.FLYING_SPEED)).length());
+            if(speed < 0.1) {
+                mob.setDeltaMovement(0, 0.1, 0);
+                return;
+            }
+
+            Vec3 dir1 = mob.getForward().normalize();
+            Vec3 dir2 = target.getEyePosition().subtract(mob.position()).normalize();
+            Vec3 newSpeed = dir1.add(dir2).normalize().scale(speed);
+
+            mob.setDeltaMovement(newSpeed);
 
 
-        if(angle < 3.14159/6
-        ) {//30度 向前方加速
-
-            mob.addDeltaMovement(mob.getForward().normalize().scale(speed));
         }
-        /*
-        else if(angle < 3.14159/2){ //90度
-            mob.addDeltaMovement(target.getEyePosition().subtract(mob.position()).normalize().scale(0.1f));
-
-        }
-        */
         else {//背向 往前冲刺一段时间
             dashTime = 0;
+            state = States.dashing_back;
             lastDir = mob.getDeltaMovement();
         }
-
 
     }
 

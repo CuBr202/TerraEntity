@@ -1,7 +1,9 @@
 package org.confluence.terraentity.entity.monster.prefab;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.entity.ai.goal.DashGoal;
@@ -25,20 +27,36 @@ public class FlyMonsterPrefab {
 
     //在预制体上修改参数
     public static Supplier<AbstractMonster.Builder> CRIMSON_KEMERA_BUILDER =
-            ()->new FlyMonsterPrefab(0.06f,10,10,20,2,11,30,0.5f,0.2f).getPrefab()
+            ()->new FlyMonsterPrefab(0.06f,10,10,20,2,11,30,0.5f,0.4f).getPrefab()
                     .setHurtSound(ModSounds.ROUTINE_HURT)
                     .setDeathSound(ModSounds.ROUTINE_DEATH)
+                    .modify(b->{
+                        b.friction = 0.9f;
+                        return b;
+                    })
             ;
 
     public static Supplier<AbstractMonster.Builder> DRIPPLER_BUILDER  =
-            ()->new FlyMonsterPrefab(0.02f,15,10,26,3,14,30,0.5f,0.0f).getPrefab()
+            ()->new FlyMonsterPrefab(0.02f,5,40,26,3,14,30,0.5f,0.2f).getPrefab()
                 .setHurtSound(ModSounds.DRIPPLER_HURT)
-                .setDeathSound(ModSounds.DRIPPLER_DEATH);
+                .setDeathSound(ModSounds.DRIPPLER_DEATH)
+                    .modify(b->{
+                        b.friction = 0.8f;
+                        b.maxSpeed = 0.2f;
+                        return b;
+                    })
+            ;
 
     public static Supplier<AbstractMonster.Builder> FLYING_FISH_BUILDER  =
-            ()->new FlyMonsterPrefab(0.04f,20,15,10,1,4,30,0.5f,0.0f).getPrefab()
+            ()->new FlyMonsterPrefab(0.04f,20,15,10,1,4,30,0.5f,0.3f).getPrefab()
                 .setHurtSound(ModSounds.ROUTINE_HURT)
-                .setDeathSound(ModSounds.ROUTINE_DEATH);
+                .setDeathSound(ModSounds.ROUTINE_DEATH)
+                    .modify(b->{
+                        b.friction = 0.9f;
+
+                        return b;
+                    })
+            ;
 
 
     //从一个预制体复制参数再调整参数
@@ -71,8 +89,8 @@ public class FlyMonsterPrefab {
                 .setKnockbackResistance(knockbackResistance)
                 .setSafeFall(1000)
                 .setTarget((t,e)->{
-                    t.addGoal(0, new NearestAttackableTargetGoal<>(e, Villager.class,false));
-                    t.addGoal(1, new NearestAttackableTargetGoal<>(e, Player.class,false));
+//                    t.addGoal(0, new NearestAttackableTargetGoal<>(e, Horse.class,false,LivingEntity::canBeSeenAsEnemy));
+                    t.addGoal(1, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
                 })
                 .setGoal((g,e)-> {
                     g.addGoal(0, new DashGoal(e, dashAccelerationSpeed,inertiaTick,rootYSpeed));

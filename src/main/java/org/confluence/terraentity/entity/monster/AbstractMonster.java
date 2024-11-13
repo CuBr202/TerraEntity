@@ -1,8 +1,10 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -10,6 +12,11 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -21,13 +28,15 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class AbstractMonster extends Monster implements GeoEntity {
-
+    private int attackInternal = 0;
+    private int _attackInternal = 20;
     public Builder builder;
     public AbstractMonster(EntityType<? extends Monster> type, Level level,Builder builder) {
         super(type, level);
         this.builder = builder;
         this.registerGoals();
         this.navigation = createNavigation(level);
+        this.setDiscardFriction(true);
 
         this.setHealth(builder.MAX_HEALTH);
         this.getAttribute(Attributes.ARMOR).setBaseValue(builder.ARMOR);
@@ -130,43 +139,64 @@ public class AbstractMonster extends Monster implements GeoEntity {
         if(builder == null)return true;
         return builder.noGravity;
     }
+    public void tick(){
+        super.tick();
+
+        if(!level().isClientSide && --attackInternal<0 && builder.attackAttack){
+            var entities = level().getEntities(this, this.getBoundingBox());
+            if (!entities.isEmpty()) {
+                for (var e : entities) {
+                    if (e instanceof LivingEntity living && canAttack(living)){
+                        attackInternal = _attackInternal;
+                        e.hurt(this.damageSources().generic(),(float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    public boolean canAttack(LivingEntity entity) {
+        return entity.getType() == EntityType.PLAYER || entity == getTarget();
+    }
+
 
 
     public static class Builder {
-        private int ATTACK_DAMAGE = 15;
-        private int MAX_HEALTH = 31;
-        private int ARMOR = 2;
-        private float MOVEMENT_SPEED = 0.38f;
-        private int FOLLOW_RANGE = 32;
-        private float SPAWN_REINFORCEMENTS_CHANCE = 0.01f;
-        private float KNOCKBACK_RESISTANCE = 0.8f;
-        private float ATTACK_KNOCKBACK = 0.5f;
-        private float ATTACK_SPEED = 0.6f;
-        private float FLYING_SPEED = 0.4f;
-        private float SAFE_FALL = 5f;
-        boolean noGravity = false;
+        public int ATTACK_DAMAGE = 15;
+        public int MAX_HEALTH = 31;
+        public int ARMOR = 2;
+        public float MOVEMENT_SPEED = 0.38f;
+        public int FOLLOW_RANGE = 32;
+        public float SPAWN_REINFORCEMENTS_CHANCE = 0.01f;
+        public float KNOCKBACK_RESISTANCE = 0.8f;
+        public float ATTACK_KNOCKBACK = 0.5f;
+        public float ATTACK_SPEED = 0.6f;
+        public float FLYING_SPEED = 0.4f;
+        public float SAFE_FALL = 5f;
+        public boolean attackAttack = true;
 
 
+        public boolean noGravity = false;
 
-        private Supplier<SoundEvent> deathSound;
-        private Supplier<SoundEvent> ambientSound;
-        private Supplier<SoundEvent> hurtSound;
+        public Supplier<SoundEvent> deathSound;
+        public Supplier<SoundEvent> ambientSound;
+        public Supplier<SoundEvent> hurtSound;
 
-        private BiConsumer<AnimatableManager.ControllerRegistrar,AbstractMonster> controller;
-        private BiConsumer<GoalSelector,AbstractMonster> goal;
-        private BiConsumer<GoalSelector,AbstractMonster> target;
-        private Function<AbstractMonster,PathNavigation> navigation;
-/*
-        public AttributeSupplier.Builder createAttributes() {
-            return LivingEntity.createLivingAttributes()
-                    .add(Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE)  // 攻击力
-                    .add(Attributes.MAX_HEALTH, MAX_HEALTH)        // 生命值
-                    .add(Attributes.ARMOR, ARMOR)                 // 防御值
-                    .add(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED)          // 移动速度
-                    .add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE)             // 跟随距离
-                    .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, SPAWN_REINFORCEMENTS_CHANCE)  // 召唤物品的几率
-                    .add(Attributes.KNOCKBACK_RESISTANCE, KNOCKBACK_RESISTANCE);     // 击退抗性
-        }*/
+        public BiConsumer<AnimatableManager.ControllerRegistrar,AbstractMonster> controller;
+        public BiConsumer<GoalSelector,AbstractMonster> goal;
+        public BiConsumer<GoalSelector,AbstractMonster> target;
+        public Function<AbstractMonster,PathNavigation> navigation;
+
+        public float friction = 0.9f;
+        public float maxSpeed = 0.4f;
+        public float turnAngle = 45;
+        public float triggerAngle = 20;
+
+        public Builder modify(Function<Builder, Builder> modifier){
+            return modifier.apply(this);
+        }
 
         public Builder setAttackDamage(int attackDamage) {
             this.ATTACK_DAMAGE = attackDamage;
@@ -257,9 +287,17 @@ public class AbstractMonster extends Monster implements GeoEntity {
             this.SAFE_FALL = value;
             return this;
         }
-
+        public Builder setNoAttackAttack() {
+            this.attackAttack = false;
+            return this;
+        }
     }
+
+
+
     public static AbstractMonster.Builder copyFrom(Supplier<AbstractMonster.Builder> supplier) {
         return supplier.get();
     }
+
+
 }

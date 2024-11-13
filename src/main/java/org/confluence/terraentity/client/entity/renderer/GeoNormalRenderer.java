@@ -15,7 +15,7 @@ import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class GeoNormalRenderer<T extends AbstractMonster> extends GeoEntityRenderer<T> {
-    boolean ifRotX;
+    boolean ifRotX = false;
     float scale;
     float offsetY;
     public GeoNormalRenderer(EntityRendererProvider.Context renderManager, String name, boolean ifRotX) {
