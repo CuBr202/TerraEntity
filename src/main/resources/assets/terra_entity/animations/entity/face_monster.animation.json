@@ -68,7 +68,7 @@
                 }
             }
         },
-        "idle": {
+        "misc.idle": {
             "loop": true,
             "animation_length": 1.375,
             "bones": {
@@ -110,7 +110,7 @@
                 }
             }
         },
-        "move": {
+        "move.walk": {
             "loop": true,
             "animation_length": 0.95833,
             "bones": {
@@ -166,4 +166,4 @@
         }
     },
     "geckolib_format_version": 2
-},
+}

@@ -1,13 +1,16 @@
 package org.confluence.terraentity.event;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.init.ModEntities;
@@ -37,5 +40,12 @@ public class GameEntityEvent {
             entity.finalizeSpawn(entity.getRandom(),event.getDifficulty());
         }
 
+    }
+    @SubscribeEvent
+    public static void FinalizeSpawnRegister(LivingEvent.LivingJumpEvent event) {
+        if(event.getEntity().getType() != EntityType.SLIME){
+
+            System.out.println(event.getEntity().getType());
+        }
     }
 }

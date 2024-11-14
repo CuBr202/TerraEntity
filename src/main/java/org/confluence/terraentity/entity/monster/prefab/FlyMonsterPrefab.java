@@ -1,13 +1,6 @@
 package org.confluence.terraentity.entity.monster.prefab;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.animal.horse.Horse;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.entity.ai.goal.DashGoal;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.ai.goal.MeleeAttackNoLookGoal;
@@ -25,7 +18,7 @@ import static org.confluence.terraentity.entity.monster.AbstractMonster.copyFrom
 /**
  * 飞行怪预制体
  */
-public class FlyMonsterPrefab {
+public class FlyMonsterPrefab extends AbstractPrefab {
 
     //在预制体上修改参数
     public static Supplier<AbstractMonster.Builder> CRIMSON_KEMERA_BUILDER =
@@ -65,40 +58,24 @@ public class FlyMonsterPrefab {
             .setController((c,e)->c.add(new AnimationController<GeoAnimatable>(e,"move",10,s->PlayState.CONTINUE)));
 
 
-    /**
-     * @param health 生命值
-     * @param armor 防御值
-     * @param attack 攻击力
-     * @param followRange 跟随距离
-     * @param knockBack 击退力
-     * @param knockbackResistance 击退抗性
-     */
+
+
+
     public FlyMonsterPrefab(int health,int armor,int attack,int followRange,float knockBack,float knockbackResistance) {
-        SIMPLE_FLY_DASH_MONSTER = new AbstractMonster.Builder()
-                .setHealth(health)
-                .setArmor(armor)
-                .setAttackDamage(attack)
-                .setFollowRange(followRange)
-                .setKnockBack(knockBack)
-                .setKnockbackResistance(knockbackResistance)
-                .setNoGravity()
+        super(health,armor,attack,followRange,knockBack,knockbackResistance);
+        SIMPLE_FLY_DASH_MONSTER
+                .setNavigation((e)->new FlyingPathNavigation(e,e.level()))
                 .setSafeFall(1000)
+                .setNoGravity()
+                .setNoFriction()
                 .addGoal((g,e)-> {
                     g.addGoal(1, new MeleeAttackNoLookGoal(e,  false));
                     g.addGoal(2, new LookForwardWanderFlyGoal(e,0.3f));
                 })
-                .addTarget((t,e)->{
-                    t.addGoal(0, new HurtByTargetGoal(e));
-                    t.addGoal(1, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
-                })
-                .setNavigation((e)->new FlyingPathNavigation(e,e.level()))
                 .setController((c,e)->c.add(new AnimationController<GeoAnimatable>(e,"move",10,
                         state->{state.setAnimation(RawAnimation.begin().thenLoop("fly"));return PlayState.CONTINUE;})))
         ;
     }
-
-
-    protected final AbstractMonster.Builder SIMPLE_FLY_DASH_MONSTER;
 
     public AbstractMonster.Builder getPrefab() {
         return SIMPLE_FLY_DASH_MONSTER;

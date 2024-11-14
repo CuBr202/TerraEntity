@@ -32,7 +32,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
         this.builder = builder;
         this.registerGoals();
         this.navigation = createNavigation(level);
-        this.setDiscardFriction(true);
+        this.setDiscardFriction(builder.noFriction);
 
         this.setHealth(builder.MAX_HEALTH);
         this.getAttribute(Attributes.ARMOR).setBaseValue(builder.ARMOR);
@@ -45,6 +45,8 @@ public class AbstractMonster extends Monster implements GeoEntity {
         this.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(builder.ATTACK_SPEED);
         this.getAttribute(Attributes.FLYING_SPEED).setBaseValue(builder.FLYING_SPEED);
         this.getAttribute(Attributes.SAFE_FALL_DISTANCE).setBaseValue(builder.SAFE_FALL);
+        this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(builder.JUMP_STRENGTH);
+        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(builder.STEP_HEIGHT);
 
     }
 
@@ -134,6 +136,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
         super.tick();
 
         if(!level().isClientSide && --attackInternal<0 && builder.attachAttack){
+            System.out.println(this.navigation.getPath());
             var entities = level().getEntities(this, this.getBoundingBox());
             if (!entities.isEmpty()) {
                 for (var e : entities) {
@@ -166,9 +169,12 @@ public class AbstractMonster extends Monster implements GeoEntity {
         public float ATTACK_SPEED = 0.6f;
         public float FLYING_SPEED = 0.4f;
         public float SAFE_FALL = 5f;
+        public float JUMP_STRENGTH = 0.41999998688697815f;
+        public float STEP_HEIGHT = 0.6f;
         public boolean attachAttack = true;
-
         public boolean noGravity = false;
+        public boolean noFriction = false;
+
 
         public Supplier<SoundEvent> deathSound;
         public Supplier<SoundEvent> ambientSound;
@@ -264,6 +270,18 @@ public class AbstractMonster extends Monster implements GeoEntity {
         }
         public Builder setNoAttackAttack() {
             this.attachAttack = false;
+            return this;
+        }
+        public Builder setNoFriction() {
+            this.noFriction = true;
+            return this;
+        }
+        public Builder setJumpStrength(float jumpStrength) {
+            this.JUMP_STRENGTH = jumpStrength;
+            return this;
+        }
+        public Builder setStepHeight(float stepHeight) {
+            this.STEP_HEIGHT = stepHeight;
             return this;
         }
     }
