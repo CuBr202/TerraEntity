@@ -136,7 +136,6 @@ public class AbstractMonster extends Monster implements GeoEntity {
         super.tick();
 
         if(!level().isClientSide && --attackInternal<0 && builder.attachAttack){
-            System.out.println(this.navigation.getPath());
             var entities = level().getEntities(this, this.getBoundingBox());
             if (!entities.isEmpty()) {
                 for (var e : entities) {

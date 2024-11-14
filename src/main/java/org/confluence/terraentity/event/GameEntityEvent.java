@@ -43,9 +43,6 @@ public class GameEntityEvent {
     }
     @SubscribeEvent
     public static void FinalizeSpawnRegister(LivingEvent.LivingJumpEvent event) {
-        if(event.getEntity().getType() != EntityType.SLIME){
 
-            System.out.println(event.getEntity().getType());
-        }
     }
 }
