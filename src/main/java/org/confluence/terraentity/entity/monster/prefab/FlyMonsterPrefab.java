@@ -70,7 +70,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                 .setNoFriction()
                 .addGoal((g,e)-> {
                     g.addGoal(1, new MeleeAttackNoLookGoal(e,  false));
-                    g.addGoal(2, new LookForwardWanderFlyGoal(e,0.3f));
+                    g.addGoal(2, new LookForwardWanderFlyGoal(e,0.2f));
                 })
                 .setController((c,e)->c.add(new AnimationController<GeoAnimatable>(e,"move",10,
                         state->{state.setAnimation(RawAnimation.begin().thenLoop("fly"));return PlayState.CONTINUE;})))

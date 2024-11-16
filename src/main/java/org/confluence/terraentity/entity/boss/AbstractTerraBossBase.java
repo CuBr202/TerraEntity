@@ -144,7 +144,6 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     @Override
     public void tick() {
         // 动画同步
-
         if (level().isClientSide) {
             skills.index = this.entityData.get(DATA_SKILL_INDEX);
             skills.tick = this.entityData.get(DATA_SKILL_TICK);

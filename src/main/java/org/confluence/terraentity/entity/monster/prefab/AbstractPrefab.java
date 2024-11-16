@@ -24,8 +24,8 @@ public abstract class AbstractPrefab {
                 .setKnockBack(knockBack)
                 .setKnockbackResistance(knockbackResistance)
                 .addTarget((t,e)->{
-                    t.addGoal(0, new HurtByTargetGoal(e));
-                    t.addGoal(1, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
+                    t.addGoal(1, new HurtByTargetGoal(e));
+                    t.addGoal(2, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
                 })
         ;
     }

@@ -10,7 +10,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -30,7 +32,8 @@ public class AbstractMonster extends Monster implements GeoEntity {
     public AbstractMonster(EntityType<? extends Monster> type, Level level,Builder builder) {
         super(type, level);
         this.builder = builder;
-        this.registerGoals();
+        if (level != null && !level.isClientSide)
+            this.registerGoals();
         this.navigation = createNavigation(level);
         this.setDiscardFriction(builder.noFriction);
 
@@ -135,6 +138,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
     public void tick(){
         super.tick();
 
+
         if(!level().isClientSide && --attackInternal<0 && builder.attachAttack){
             var entities = level().getEntities(this, this.getBoundingBox());
             if (!entities.isEmpty()) {
@@ -151,7 +155,9 @@ public class AbstractMonster extends Monster implements GeoEntity {
 
 
     public boolean canAttack(LivingEntity entity) {
-        return entity.getType() == EntityType.PLAYER || entity == getTarget();
+        return attackInternal < 0 &&
+                (entity instanceof Player && !entity.isInvulnerable() && !((Player) entity).isCreative()||
+                        getTarget() != null && getTarget().is(entity) && entity != this &&!(entity instanceof AbstractTerraBossBase));
     }
 
 
