@@ -1,5 +1,6 @@
 package org.confluence.terraentity.init;
 
+import net.minecraft.client.renderer.entity.SkeletonRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -25,6 +26,7 @@ import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.BloodCrawler;
 import org.confluence.terraentity.entity.monster.BloodySpore;
+import org.confluence.terraentity.entity.monster.DemonPossession;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.monster.prefab.LandMonsterPrefab;
@@ -68,6 +70,7 @@ public final class ModEntities {
     // tip 野怪
     public static final DeferredHolder<EntityType<?>, EntityType<DemonEye>> DEMON_EYE = ENTITIES.register("demon_eye", () -> EntityType.Builder.of(DemonEye::new, MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(Key("demon_eye")));
     public static final DeferredHolder<EntityType<?>, EntityType<BloodySpore>> BLOODY_SPORE = ENTITIES.register("bloody_spore", () -> EntityType.Builder.of(BloodySpore::new, MobCategory.MONSTER).build(Key("bloody_spore")));
+    public static final DeferredHolder<EntityType<?>, EntityType<DemonPossession>> DEMON_POSSESSION = ENTITIES.register("demon_possession", () -> EntityType.Builder.of(DemonPossession::new, MobCategory.MONSTER).build(Key("demon_possession")));
     public static final DeferredHolder<EntityType<?>, EntityType<BloodCrawler>> BLOOD_CRAWLER = ENTITIES.register("blood_crawler", () -> EntityType.Builder.of(BloodCrawler::new, MobCategory.MONSTER).sized(1.8F, 1.2F).clientTrackingRange(10).build(Key("blood_crawler")));
 
 
@@ -133,6 +136,7 @@ public final class ModEntities {
         event.registerEntityRenderer(DEMON_EYE.get(), DemonEyeRenderer::new);
         event.registerEntityRenderer(BLOOD_CRAWLER.get(), BloodCrawlerRenderer::new);
         event.registerEntityRenderer(BLOODY_SPORE.get(), BloodySporeRenderer::new);
+        event.registerEntityRenderer(DEMON_POSSESSION.get(), SkeletonRenderer::new);  //todo
 
 
         event.registerEntityRenderer(FACE_MONSTER.get(), c->new GeoNormalRenderer<>(c,"face_monster",false));
@@ -180,6 +184,7 @@ public final class ModEntities {
 
         event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
+        event.put(DEMON_POSSESSION.get(), DemonPossession.createAttributes().build());
         event.put(BLOODY_SPORE.get(), BloodySpore.createAttributes().build());
         event.put(CRIMSON_KEMERA.get(), AbstractMonster.createAttributes().build());
         event.put(SOULS_EATER.get(), AbstractMonster.createAttributes().build());

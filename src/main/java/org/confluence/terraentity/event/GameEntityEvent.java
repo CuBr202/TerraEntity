@@ -1,25 +1,37 @@
 package org.confluence.terraentity.event;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.critereon.EntityHurtPlayerTrigger;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import org.confluence.terraentity.entity.ai.Boss;
+import org.confluence.terraentity.entity.monster.AbstractMonster;
+import org.confluence.terraentity.entity.monster.DemonPossession;
+import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
+import org.confluence.terraentity.init.ModEffects;
 import org.confluence.terraentity.init.ModEntities;
 import org.confluence.terraentity.utils.FloatRGB;
 
@@ -99,6 +111,29 @@ public class GameEntityEvent {
                 for (Player player : level.players()){
                     player.sendSystemMessage(mes);   //todo 报两次
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void livingDamageEntity(LivingDamageEvent.Post event) {
+        LivingEntity e = (LivingEntity) event.getSource().getEntity();
+        LivingEntity e1 = event.getEntity();
+        Level level = event.getEntity().level();
+        if (!(level instanceof ServerLevel serverLevel)) return;
+        if (e instanceof DemonPossession dp){
+            if (!e1.hasEffect(ModEffects.DEMONIC_THOUGHTS)){
+                e1.addEffect(new MobEffectInstance(
+                        ModEffects.DEMONIC_THOUGHTS, 200
+                ), dp);
+            } else {
+                e1.removeEffect(ModEffects.DEMONIC_THOUGHTS);
+                e1.hurt(event.getSource(), 6);
+                AbstractMonster soulEater = ModEntities.SOULS_EATER.get().create(level);
+                soulEater.setPos(e1.getEyePosition());
+                soulEater.setTarget(e1);
+                level.addFreshEntity(soulEater);
+                e1.removeEffect(ModEffects.DEMONIC_THOUGHTS);
             }
         }
     }

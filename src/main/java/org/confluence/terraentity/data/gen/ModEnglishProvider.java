@@ -2,6 +2,7 @@ package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import org.confluence.terraentity.init.ModEffects;
 import org.confluence.terraentity.init.ModItems;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class ModEnglishProvider extends LanguageProvider {
     protected void addTranslations() {
 
         ModItems.SPAWN_EGGS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
+        ModEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get(), toTitleCase(effect.getId().getPath())));
 
         add("itemGroup.terraentity.title", "tab.terraentity.name");
         add("message.terraentity.boss_spawn", "%s Has Awoken!");

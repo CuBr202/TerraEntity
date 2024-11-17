@@ -44,6 +44,7 @@ public class ModItems {
     public static final DeferredItem<Item> DEMON_EYE_SPAWN_EGG = register("demon_eye_spawn_egg", ModEntities.DEMON_EYE, 0xffffff, 0xab0d0d);
     public static final DeferredItem<Item> BLOOD_CRAWLER_SPAWN_EGG = register("blood_crawler_spawn_egg", ModEntities.BLOOD_CRAWLER, 0xf2d4ca, 0xa75049);
     public static final DeferredItem<Item> BLOODY_SPORE_SPAWN_EGG = register("bloody_spore_spawn_egg", ModEntities.BLOODY_SPORE, 0xa75049, 0x65292c);
+    public static final DeferredItem<Item> DEMON_POSSESSION_SPAWN_EGG = register("demon_possession_spawn_egg", ModEntities.DEMON_POSSESSION, 0x5d478b, 0x8968cd);
 
     public static final DeferredItem<Item> FLYING_FISH_SPAWN_EGG = register("flying_fish_spawn_egg", ModEntities.FLYING_FISH, 0xffe8fa, 0x002348);
     public static final DeferredItem<Item> DRIPPLER_SPAWN_EGG = register("drippler_spawn_egg", ModEntities.DRIPPLER, 0xe9dbc2, 0x830022);
@@ -59,7 +60,6 @@ public class ModItems {
 
     public static DeferredItem<Item> register(String name, Supplier<? extends EntityType<? extends Mob>>  entityType, int primaryColor, int secondaryColor){
 
-
         return SPAWN_EGGS.register(name, () -> new DeferredSpawnEggItem(entityType, primaryColor, secondaryColor,new Item.Properties()));
     }
 
@@ -71,5 +71,4 @@ public class ModItems {
                         SPAWN_EGGS.getEntries().forEach(item -> output.accept(item.get()));
                     })
                     .build());
-
 }

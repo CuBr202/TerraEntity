@@ -29,5 +29,6 @@ public class TerraEntity {
         ModParticles.PARTICLES.register(modEventBus);
         ModItems.SPAWN_EGGS.register(modEventBus);
         ModItems.TABS.register(modEventBus);
+        ModEffects.EFFECTS.register(modEventBus);
     }
 }

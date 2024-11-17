@@ -36,10 +36,13 @@ public class ModChineseProvider extends LanguageProvider {
         add("entity.terra_entity.drippler", "滴滴怪");
         add("entity.terra_entity.blood_crawler", "血爬虫");
         add("entity.terra_entity.bloody_spore", "血腥芽孢");
+        add("entity.terra_entity.demon_possession", "邪念寄生");
         add("entity.terra_entity.crimson_kemera", "猩红喀迈拉");
 
         add("entity.terra_entity.king_slime", "史莱姆王");
         add("entity.terra_entity.cthulhu_eye", "克苏鲁之眼");
+
+        add("effect.terra_entity.demonic_thoughts", "邪念");
         // 刷怪蛋
         add(ModItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
         add(ModItems.RED_SLIME_SPAWN_EGG.get(), "红色史莱姆刷怪蛋");
@@ -63,6 +66,7 @@ public class ModChineseProvider extends LanguageProvider {
 
         add(ModItems.BLOOD_CRAWLER_SPAWN_EGG.get(), "血爬虫刷怪蛋");
         add(ModItems.BLOODY_SPORE_SPAWN_EGG.get(), "血腥芽孢刷怪蛋");
+        add(ModItems.DEMON_POSSESSION_SPAWN_EGG.get(), "邪念寄生刷怪蛋");
         add(ModItems.CRIMSON_KEMERA_EGG.get(), "猩红喀迈拉刷怪蛋");
 
 
