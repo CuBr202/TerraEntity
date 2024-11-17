@@ -144,30 +144,6 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         }
         return super.isInWater();
     }
-    // tip 持有tag的物品转换史莱姆
-    @Override
-    protected @NotNull InteractionResult mobInteract(@NotNull Player pPlayer, @NotNull InteractionHand pHand) {
-        if (level().isClientSide) return super.mobInteract(pPlayer, pHand);
-        ItemStack item = pPlayer.getItemInHand(pHand);
-        if (item.is(ModTags.Items.HONEY_BUCKET) || item.is(ModTags.Items.BOTTOMLESS_HONEY_BUCKET)) {
-            EntityType<? extends Slime> type = getType();
-            if (type == ModEntities.BLUE_SLIME.get() || type == ModEntities.GREEN_SLIME.get() || type == ModEntities.PURPLE_SLIME.get()) {
-                HoneySlime honeySlime = new HoneySlime(ModEntities.HONEY_SLIME.get(), level(), 0xf8e234);
-                honeySlime.setPos(position());
-                honeySlime.setDeltaMovement(getDeltaMovement());
-                honeySlime.setXRot(getXRot());
-                honeySlime.setYRot(getYRot());
-                level().addFreshEntity(honeySlime);
-                discard();
-                if (!pPlayer.getAbilities().instabuild && item.is(ModTags.Items.HONEY_BUCKET)) {
-                    pPlayer.setItemInHand(pHand, new ItemStack(Items.BUCKET));
-                }
-                level().playSound(null, getX(), getY(), getZ(), SoundEvents.HONEY_DRINK, SoundSource.AMBIENT, 1.0F, 1.0F);
-            }
-        }
-        return super.mobInteract(pPlayer, pHand);
-    }
-
 
     @Override
     protected void dealDamage(@NotNull LivingEntity pLivingEntity) {

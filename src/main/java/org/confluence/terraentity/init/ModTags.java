@@ -23,17 +23,17 @@ public class ModTags {
     }
 
     public static class Items {
-        public static final TagKey<Item> BOTTOMLESS_HONEY_BUCKET =
-                tag("bottomless_honey_bucket");
-
-        public static final TagKey<Item> HONEY_BUCKET =
-                tag("honey_bucket");
-
-
+        public static final TagKey<Item> HONEY_TRANSLATION_BUCKET = register("honey_translation_with_bucket");
+        public static final TagKey<Item> HONEY_TRANSLATION = register("honey_translation");
+        public static final TagKey<Item> HONEY_TRANSLATION_NOT_CONSUMED = register("honey_translation_not_consumed");
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(TerraEntity.space(name));
         }
 
+    }
+
+    private static TagKey<Item> register(String id) {
+        return ItemTags.create(TerraEntity.asResource(id));
     }
 
 }

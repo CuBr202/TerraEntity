@@ -38,6 +38,7 @@ import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.ModEffects;
 import org.confluence.terraentity.init.ModEntities;
+import org.confluence.terraentity.init.ModTags;
 import org.confluence.terraentity.utils.FloatRGB;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -152,29 +153,29 @@ public class GameEntityEvent {
         if (    entity.getType().equals(ModEntities.BLUE_SLIME.get()) ||
                 entity.getType().equals(ModEntities.GREEN_SLIME.get()) ||
                 entity.getType().equals(ModEntities.PURPLE_SLIME.get())){
-            if (item.is(ItemTags.create(TerraEntity.asResource("confluence", "honey_translation_with_bucket")))){
+            if (item.is(ModTags.Items.HONEY_TRANSLATION_BUCKET)){
                 HoneySlime slime = ModEntities.HONEY_SLIME.get().create(level);
                 item.shrink(1);
                 player.addItem(new ItemStack(Items.BUCKET));
                 slime.setSize(2, true);
-                slime.setPos(entity.getPosition(0));
+                slime.setPos(entity.position());
                 slime.setXRot(entity.getXRot());
                 slime.setYRot(entity.getYRot());
                 level.addFreshEntity(slime);
                 entity.remove(Entity.RemovalReason.DISCARDED);
-            } else if (item.is(ItemTags.create(TerraEntity.asResource("confluence", "honey_translation")))){
+            } else if (item.is(ModTags.Items.HONEY_TRANSLATION)){
                 HoneySlime slime = ModEntities.HONEY_SLIME.get().create(level);
                 item.shrink(1);
                 slime.setSize(2, true);
-                slime.setPos(entity.getPosition(0));
+                slime.setPos(entity.position());
                 slime.setXRot(entity.getXRot());
                 slime.setYRot(entity.getYRot());
                 level.addFreshEntity(slime);
                 entity.remove(Entity.RemovalReason.DISCARDED);
-            } else if (item.is(ItemTags.create(TerraEntity.asResource("confluence", "honey_translation_not_consumed")))){
+            } else if (item.is(ModTags.Items.HONEY_TRANSLATION_NOT_CONSUMED)){
                 HoneySlime slime = ModEntities.HONEY_SLIME.get().create(level);
                 slime.setSize(2, true);
-                slime.setPos(entity.getPosition(0));
+                slime.setPos(entity.position());
                 slime.setXRot(entity.getXRot());
                 slime.setYRot(entity.getYRot());
                 level.addFreshEntity(slime);
