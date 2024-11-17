@@ -125,6 +125,7 @@ public final class ModEntities {
 
 
         event.registerEntityRenderer(CRIMSON_KEMERA.get(), c->new GeoNormalRenderer<>(c,"crimson_kemera",true));
+        event.registerEntityRenderer(SOULS_EATER.get(), c->new GeoNormalRenderer<>(c,"crimson_kemera",true));  //todo
         event.registerEntityRenderer(DRIPPLER.get(), c->new GeoNormalRenderer<>(c,"drippler",false,2f,0));
         event.registerEntityRenderer(FLYING_FISH.get(), c->new GeoNormalRenderer<>(c,"flying_fish",true,0.75f,-0.5f));
 
@@ -181,6 +182,7 @@ public final class ModEntities {
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
         event.put(BLOODY_SPORE.get(), BloodySpore.createAttributes().build());
         event.put(CRIMSON_KEMERA.get(), AbstractMonster.createAttributes().build());
+        event.put(SOULS_EATER.get(), AbstractMonster.createAttributes().build());
         event.put(DRIPPLER.get(), AbstractMonster.createAttributes().build());
         event.put(FLYING_FISH.get(), AbstractMonster.createAttributes().build());
         event.put(FACE_MONSTER.get(), AbstractMonster.createAttributes().build());
