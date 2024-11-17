@@ -25,15 +25,11 @@ public class CthulhuEyeRenderer extends GeoEntityRenderer<CthulhuEye> {
     @Override
     public void preRender(PoseStack poseStack, CthulhuEye entity, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
 
-//        System.out.println(entity.xRotO);
         float yRot = Mth.lerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
         double rad = yRot*Math.PI/180;
         float xRot = Mth.lerp(partialTick, entity.xRotO, entity.getXRot());
-
         poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(xRot));
-
         poseStack.translate(0,0.5,0);
-
         super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
 
     }

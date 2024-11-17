@@ -227,6 +227,10 @@ public final class ModUtils {
         };
     }
 
+    /**
+     * 获取当前难度的不同属性加成倍率
+     * @return 倍率
+     */
     public static float getMultiple(Level level, Holder<Attribute> attribute) {
         if(attribute == Attributes.MAX_HEALTH)
             return switchByDifficulty(level, 1f, 1.5f, 2f);

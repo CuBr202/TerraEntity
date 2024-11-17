@@ -157,8 +157,6 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
                     this.playSound(ModSounds.HURRIED_ROARING.get());
                 },
                 terraBossBase -> {
-
-
                     spawnMinions(getTarget());
                     },
                 terraBossBase -> {
@@ -217,9 +215,6 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
                         return;
                     }
                     this.lookControl.setLookAt(dashPos);
-                    //updateEntityRotation(this,dashDir);
-                    //lookAtPos(dashPos,50,80);
-
                     // 冲刺增加伤害
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE * dashFactor);
                     if (dashDir != null) this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor * stage2SpeedFactor));
