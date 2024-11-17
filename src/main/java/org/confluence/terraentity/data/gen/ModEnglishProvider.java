@@ -25,5 +25,7 @@ public class ModEnglishProvider extends LanguageProvider {
         ModItems.SPAWN_EGGS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
 
         add("itemGroup.terraentity.title", "tab.terraentity.name");
+        add("message.terraentity.boss_spawn", "%s Has Awoken!");
+        add("message.terraentity.boss_leave", "%s Have Been Defeated!");
     }
 }

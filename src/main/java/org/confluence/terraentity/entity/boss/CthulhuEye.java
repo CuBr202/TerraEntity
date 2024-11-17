@@ -12,6 +12,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.BossSkill;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.init.ModEntities;
@@ -24,7 +25,7 @@ import static org.confluence.terraentity.utils.ModUtils.switchByDifficulty;
 
 
 @SuppressWarnings("all")
-public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity {
+public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss {
     private static final float[] MAX_HEALTHS = {728f, 946f, 1206f};
     private static final float[] DAMAGE = {4f, 6f, 9f};//一阶段接触伤害
     private static final float[] CRAZY_DAMAGE = {6f, 10f, 15f};//二阶段接触伤害

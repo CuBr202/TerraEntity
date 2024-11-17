@@ -69,7 +69,8 @@ public class ModChineseProvider extends LanguageProvider {
         add(ModItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
         add(ModItems.CTHULHU_EYE_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
 
-
+        add("message.terraentity.boss_spawn", "%s已苏醒！");
+        add("message.terraentity.boss_leave", "%s已被打败！");
 
     }
 }
