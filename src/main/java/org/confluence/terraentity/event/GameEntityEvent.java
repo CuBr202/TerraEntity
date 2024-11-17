@@ -147,7 +147,7 @@ public class GameEntityEvent {
     @SubscribeEvent
     public static void entityInteract(PlayerInteractEvent.EntityInteract event){
         ItemStack item = event.getItemStack();
-        LivingEntity entity = (LivingEntity) event.getTarget();
+        if(!(event.getTarget() instanceof LivingEntity entity)) return;
         Player player = event.getEntity();
         Level level = event.getLevel();
         if (    entity.getType().equals(ModEntities.BLUE_SLIME.get()) ||
@@ -183,6 +183,7 @@ public class GameEntityEvent {
                 event.setCanceled(true);
                 return;
             }
+            event.setCanceled(true);
         }
     }
 }
