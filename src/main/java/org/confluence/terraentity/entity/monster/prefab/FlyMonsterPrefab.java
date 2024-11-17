@@ -31,6 +31,16 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     })
             ;
 
+    public static Supplier<AbstractMonster.Builder> SOULS_EATER_BUILDER =
+            ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
+                    .setHurtSound(ModSounds.ROUTINE_HURT)
+                    .setDeathSound(ModSounds.ROUTINE_DEATH)
+                    .addGoal((g,e)->{
+                        g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
+
+                    })
+            ;
+
     public static Supplier<AbstractMonster.Builder> DRIPPLER_BUILDER  =
             ()->new FlyMonsterPrefab(26,3,14,30,0.5f,0.2f).getPrefab()
                 .setHurtSound(ModSounds.DRIPPLER_HURT)
