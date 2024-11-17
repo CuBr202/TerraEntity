@@ -36,8 +36,11 @@ public class ModChineseProvider extends LanguageProvider {
         add("entity.terra_entity.drippler", "滴滴怪");
         add("entity.terra_entity.blood_crawler", "血爬虫");
         add("entity.terra_entity.bloody_spore", "血腥芽孢");
-        add("entity.terra_entity.demon_possession", "邪念寄生");
+        add("entity.terra_entity.face_monster", "脸怪");
         add("entity.terra_entity.crimson_kemera", "猩红喀迈拉");
+        add("entity.terra_entity.souls_eater", "噬魂怪");
+        add("entity.terra_entity.decayeder", "腐骴");
+
 
         add("entity.terra_entity.king_slime", "史莱姆王");
         add("entity.terra_entity.cthulhu_eye", "克苏鲁之眼");
@@ -66,9 +69,11 @@ public class ModChineseProvider extends LanguageProvider {
 
         add(ModItems.BLOOD_CRAWLER_SPAWN_EGG.get(), "血爬虫刷怪蛋");
         add(ModItems.BLOODY_SPORE_SPAWN_EGG.get(), "血腥芽孢刷怪蛋");
-        add(ModItems.DEMON_POSSESSION_SPAWN_EGG.get(), "邪念寄生刷怪蛋");
         add(ModItems.CRIMSON_KEMERA_EGG.get(), "猩红喀迈拉刷怪蛋");
+        add(ModItems.FACE_MONSTER_EGG.get(), "脸怪刷怪蛋");
 
+        add(ModItems.SOULS_EATER_EGG.get(), "噬魂怪刷怪蛋");
+        add(ModItems.DECAYEDER_SPAWN_EGG.get(), "腐骴刷怪蛋");
 
         add(ModItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
         add(ModItems.CTHULHU_EYE_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");

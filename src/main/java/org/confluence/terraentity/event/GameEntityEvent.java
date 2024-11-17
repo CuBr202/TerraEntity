@@ -1,15 +1,10 @@
 package org.confluence.terraentity.event;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.critereon.EntityHurtPlayerTrigger;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Zombie;
@@ -17,21 +12,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
-import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
-import org.confluence.terraentity.entity.monster.DemonPossession;
-import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
+import org.confluence.terraentity.entity.monster.Decayeder;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
@@ -127,7 +115,7 @@ public class GameEntityEvent {
         LivingEntity e1 = event.getEntity();
         Level level = event.getEntity().level();
         if (!(level instanceof ServerLevel serverLevel)) return;
-        if (e instanceof DemonPossession dp){
+        if (e instanceof Decayeder dp){
             if (!e1.hasEffect(ModEffects.DEMONIC_THOUGHTS)){
                 e1.addEffect(new MobEffectInstance(
                         ModEffects.DEMONIC_THOUGHTS, 200

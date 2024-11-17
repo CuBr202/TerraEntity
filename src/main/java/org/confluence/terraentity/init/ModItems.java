@@ -1,15 +1,11 @@
 package org.confluence.terraentity.init;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -44,12 +40,12 @@ public class ModItems {
     public static final DeferredItem<Item> DEMON_EYE_SPAWN_EGG = register("demon_eye_spawn_egg", ModEntities.DEMON_EYE, 0xffffff, 0xab0d0d);
     public static final DeferredItem<Item> BLOOD_CRAWLER_SPAWN_EGG = register("blood_crawler_spawn_egg", ModEntities.BLOOD_CRAWLER, 0xf2d4ca, 0xa75049);
     public static final DeferredItem<Item> BLOODY_SPORE_SPAWN_EGG = register("bloody_spore_spawn_egg", ModEntities.BLOODY_SPORE, 0xa75049, 0x65292c);
-    public static final DeferredItem<Item> DEMON_POSSESSION_SPAWN_EGG = register("demon_possession_spawn_egg", ModEntities.DEMON_POSSESSION, 0x5d478b, 0x8968cd);
+    public static final DeferredItem<Item> DECAYEDER_SPAWN_EGG = register("decayeder_spawn_egg", ModEntities.DECAYEDER, 0x5d478b, 0x8968cd);
 
     public static final DeferredItem<Item> FLYING_FISH_SPAWN_EGG = register("flying_fish_spawn_egg", ModEntities.FLYING_FISH, 0xffe8fa, 0x002348);
     public static final DeferredItem<Item> DRIPPLER_SPAWN_EGG = register("drippler_spawn_egg", ModEntities.DRIPPLER, 0xe9dbc2, 0x830022);
     public static final DeferredItem<Item> CRIMSON_KEMERA_EGG = register("crimson_kemera_egg", ModEntities.CRIMSON_KEMERA, 0xa75049, 0x65292c);
-    public static final DeferredItem<Item> SOULS_EATER_EGG = register("eater_of_souls_egg", ModEntities.SOULS_EATER, 0xa75049, 0x65292c);
+    public static final DeferredItem<Item> SOULS_EATER_EGG = register("eater_of_souls_egg", ModEntities.SOULS_EATER, 0x5d478b, 0x8968cd);
     public static final DeferredItem<Item> FACE_MONSTER_EGG = register("face_monster_egg", ModEntities.FACE_MONSTER, 0xa75049, 0x65292c);
 
 

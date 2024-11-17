@@ -1,4 +1,5 @@
 {
+  "effect.terra_entity.demonic_thoughts": "邪念",
   "entity.terra_entity.black_slime": "史莱姆之母",
   "entity.terra_entity.blood_crawler": "血爬虫",
   "entity.terra_entity.bloody_spore": "血腥芽孢",
@@ -7,9 +8,11 @@
   "entity.terra_entity.crimson_kemera": "猩红喀迈拉",
   "entity.terra_entity.crimson_slime": "猩红史莱姆",
   "entity.terra_entity.cthulhu_eye": "克苏鲁之眼",
+  "entity.terra_entity.decayeder": "腐骴",
   "entity.terra_entity.demon_eye": "恶魔眼",
   "entity.terra_entity.desert_slime": "沙漠史莱姆",
   "entity.terra_entity.drippler": "滴滴怪",
+  "entity.terra_entity.face_monster": "脸怪",
   "entity.terra_entity.flying_fish": "飞鱼",
   "entity.terra_entity.green_slime": "绿色史莱姆",
   "entity.terra_entity.honey_slime": "蜂蜜史莱姆",
@@ -20,6 +23,7 @@
   "entity.terra_entity.pink_slime": "粉色史莱姆",
   "entity.terra_entity.purple_slime": "紫色史莱姆",
   "entity.terra_entity.red_slime": "红色史莱姆",
+  "entity.terra_entity.souls_eater": "噬魂怪",
   "entity.terra_entity.tropic_slime": "热带史莱姆",
   "entity.terra_entity.yellow_slime": "黄色史莱姆",
   "item.terra_entity.black_slime_spawn_egg": "史莱姆之母刷怪蛋",
@@ -29,10 +33,13 @@
   "item.terra_entity.crimson_kemera_egg": "猩红喀迈拉刷怪蛋",
   "item.terra_entity.crimson_slime_spawn_egg": "猩红史莱姆刷怪蛋",
   "item.terra_entity.cthulhu_eye_spawn_egg": "克苏鲁之眼刷怪蛋",
+  "item.terra_entity.decayeder_spawn_egg": "腐骴刷怪蛋",
   "item.terra_entity.demon_eye_spawn_egg": "恶魔眼刷怪蛋",
   "item.terra_entity.desert_slime_spawn_egg": "沙漠史莱姆刷怪蛋",
   "item.terra_entity.drippler_spawn_egg": "滴滴怪刷怪蛋",
+  "item.terra_entity.eater_of_souls_egg": "噬魂怪刷怪蛋",
   "item.terra_entity.evil_slime_spawn_egg": "夜明史莱姆刷怪蛋",
+  "item.terra_entity.face_monster_egg": "脸怪刷怪蛋",
   "item.terra_entity.flying_fish_spawn_egg": "飞鱼刷怪蛋",
   "item.terra_entity.green_slime_spawn_egg": "绿色史莱姆刷怪蛋",
   "item.terra_entity.honey_slime_spawn_egg": "蜂蜜史莱姆刷怪蛋",
@@ -45,5 +52,7 @@
   "item.terra_entity.red_slime_spawn_egg": "红色史莱姆刷怪蛋",
   "item.terra_entity.tropic_slime_spawn_egg": "热带史莱姆刷怪蛋",
   "item.terra_entity.yellow_slime_spawn_egg": "黄色史莱姆刷怪蛋",
-  "itemGroup.terraentity.title": "泰拉生物"
+  "itemGroup.terraentity.title": "泰拉生物",
+  "message.terraentity.boss_leave": "%s已被打败！",
+  "message.terraentity.boss_spawn": "%s已苏醒！"
 }
