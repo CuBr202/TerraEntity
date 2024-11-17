@@ -31,4 +31,12 @@ public class TerraEntity {
         ModItems.TABS.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
     }
+
+    public static ResourceLocation asResource(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    }
+
+    public static ResourceLocation asResource(String id, String path) {
+        return ResourceLocation.fromNamespaceAndPath(id, path);
+    }
 }

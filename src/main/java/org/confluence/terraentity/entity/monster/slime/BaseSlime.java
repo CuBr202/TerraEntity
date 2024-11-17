@@ -183,7 +183,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
                         pLivingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 0), this);
                     }
                 } else if (getType() == ModEntities.LAVA_SLIME.get()) {
-                    pLivingEntity.setRemainingFireTicks(5);
+                    pLivingEntity.setRemainingFireTicks(100);
                 }
             }
         }

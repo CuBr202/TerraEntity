@@ -4,6 +4,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.EntityHurtPlayerTrigger;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -12,24 +14,27 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
-import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.DemonPossession;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
+import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.ModEffects;
 import org.confluence.terraentity.init.ModEntities;
@@ -134,6 +139,48 @@ public class GameEntityEvent {
                 soulEater.setTarget(e1);
                 level.addFreshEntity(soulEater);
                 e1.removeEffect(ModEffects.DEMONIC_THOUGHTS);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void entityInteract(PlayerInteractEvent.EntityInteract event){
+        ItemStack item = event.getItemStack();
+        LivingEntity entity = (LivingEntity) event.getTarget();
+        Player player = event.getEntity();
+        Level level = event.getLevel();
+        if (    entity.getType().equals(ModEntities.BLUE_SLIME.get()) ||
+                entity.getType().equals(ModEntities.GREEN_SLIME.get()) ||
+                entity.getType().equals(ModEntities.PURPLE_SLIME.get())){
+            if (item.is(ItemTags.create(TerraEntity.asResource("confluence", "honey_translation_with_bucket")))){
+                HoneySlime slime = ModEntities.HONEY_SLIME.get().create(level);
+                item.shrink(1);
+                player.addItem(new ItemStack(Items.BUCKET));
+                slime.setSize(2, true);
+                slime.setPos(entity.getPosition(0));
+                slime.setXRot(entity.getXRot());
+                slime.setYRot(entity.getYRot());
+                level.addFreshEntity(slime);
+                entity.remove(Entity.RemovalReason.DISCARDED);
+            } else if (item.is(ItemTags.create(TerraEntity.asResource("confluence", "honey_translation")))){
+                HoneySlime slime = ModEntities.HONEY_SLIME.get().create(level);
+                item.shrink(1);
+                slime.setSize(2, true);
+                slime.setPos(entity.getPosition(0));
+                slime.setXRot(entity.getXRot());
+                slime.setYRot(entity.getYRot());
+                level.addFreshEntity(slime);
+                entity.remove(Entity.RemovalReason.DISCARDED);
+            } else if (item.is(ItemTags.create(TerraEntity.asResource("confluence", "honey_translation_not_consumed")))){
+                HoneySlime slime = ModEntities.HONEY_SLIME.get().create(level);
+                slime.setSize(2, true);
+                slime.setPos(entity.getPosition(0));
+                slime.setXRot(entity.getXRot());
+                slime.setYRot(entity.getYRot());
+                level.addFreshEntity(slime);
+                entity.remove(Entity.RemovalReason.DISCARDED);
+                event.setCanceled(true);
+                return;
             }
         }
     }
