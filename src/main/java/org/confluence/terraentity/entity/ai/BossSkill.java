@@ -1,15 +1,16 @@
 package org.confluence.terraentity.entity.ai;
 
 import net.minecraft.world.entity.Mob;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.function.Consumer;
 
 public class BossSkill<T extends Mob> {
 
-    public String skillID;
-    public String skill;
+
     public int timeContinue;
     public int timeTrigger;
+    public RawAnimation anim;
 
     public Consumer<T> stateInit;
     public Consumer<T> stateTick;
@@ -17,27 +18,24 @@ public class BossSkill<T extends Mob> {
 
     /**
      *
-     * @param skillID 强制状态跳转标识  已废弃
-     * @param skill 动画名称
+     * @param anim 动画名称
      * @param timeContinue 状态持续时间
      * @param timeTrigger 逻辑触发时间
      */
-    public BossSkill(String skillID, String skill, int timeContinue, int timeTrigger){
-        this.skill = skill;
+    public BossSkill(RawAnimation anim, int timeContinue, int timeTrigger){
+        this.anim = anim;
         this.timeContinue = timeContinue;
         this.timeTrigger = timeTrigger;
-        this.skillID = skillID;
     }
 
-    public BossSkill(String skillID, String animName, int timeContinue, int timeTrigger,
+    public BossSkill(RawAnimation anim, int timeContinue, int timeTrigger,
                      Consumer<T> stateInit,
                      Consumer<T> stateTick,
                      Consumer<T> stateOver
     ){
-        this.skill = animName;
+        this.anim = anim;
         this.timeContinue = timeContinue;
         this.timeTrigger = timeTrigger;
-        this.skillID = skillID;
         this.stateInit = stateInit;
         this.stateTick = stateTick;
         this.stateOver = stateOver;

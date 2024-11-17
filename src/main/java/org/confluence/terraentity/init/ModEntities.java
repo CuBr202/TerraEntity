@@ -20,6 +20,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.client.boss.renderer.CthulhuEyeRenderer;
 import org.confluence.terraentity.client.entity.renderer.*;
+import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.boss.CthulhuEye;
 import org.confluence.terraentity.entity.boss.KingSlime;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
@@ -194,7 +195,7 @@ public final class ModEntities {
 
 
         event.put(KING_SLIME.get(), KingSlime.createSlimeAttributes().build());
-        event.put(CTHULHU_EYE.get(),CthulhuEye.createAttributes().build());
+        event.put(CTHULHU_EYE.get(), AbstractTerraBossBase.createAttributes().build());
 
 
     }

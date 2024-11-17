@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.ai;
 
 import net.minecraft.world.entity.Mob;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +11,6 @@ import java.util.Map;
 public class CircleBossSkills<T extends Mob> {
     public T owner;
     protected final List<BossSkill> bossSkills = new ArrayList<>();
-    protected Map<String,Integer> stateIndexMap = new HashMap<>();
 
     public int tick = 0;
     public int index = 0;
@@ -21,7 +21,6 @@ public class CircleBossSkills<T extends Mob> {
 
     public boolean pushSkill(BossSkill skill){
         bossSkills.add(skill);
-        stateIndexMap.put(skill.skillID,bossSkills.size()-1);
         if(bossSkills.size()==1) tick = 0;
         return true;
     }
@@ -68,10 +67,10 @@ public class CircleBossSkills<T extends Mob> {
         if(bossSkills.isEmpty()) return false;
         return bossSkills.get(index).timeTrigger < this.tick;
     }
-    public String getCurSkill(){
+    public RawAnimation getCurAnim(){
         if(!bossSkills.isEmpty())
-            return bossSkills.get(index).skill;
-        return "";
+            return bossSkills.get(index).anim;
+        return null;
     }
     public int getCurAnimFullTick(){
         if(!bossSkills.isEmpty())

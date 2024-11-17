@@ -26,19 +26,18 @@ import static org.confluence.terraentity.utils.ModUtils.switchByDifficulty;
 
 @SuppressWarnings("all")
 public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss {
-    private static final float[] MAX_HEALTHS = {728f, 946f, 1206f};
-    private static final float[] DAMAGE = {4f, 6f, 9f};//一阶段接触伤害
-    private static final float[] CRAZY_DAMAGE = {6f, 10f, 15f};//二阶段接触伤害
-    private static final float[] MOVE_SPEED = {0.5f,0.6f,0.7f};
-    private static final float[] CRAZY_PERCENTAGE = {0.25f, 0.25f, 0.25f};
+    private static final float MAX_HEALTHS = 728f;
+    private static final float DAMAGE = 4f;//一阶段接触伤害
+    private static final float CRAZY_DAMAGE = 6f;//二阶段接触伤害
+    private static final float MOVE_SPEED = 0.5f;
+    private static final float CRAZY_PERCENTAGE = 0.25f;
 
     private final int followMinDistance = 16; //最近跟随距离的平方
     private final int distanceAbove = 3; //悬在玩家blockPos上距离
     private final float dashFactor = 1.5f; //冲刺增伤
-    private final float speedFactor = 2f; //冲刺加速
+    private float speedFactor = 2f; //冲刺加速
     private final float stage2SpeedFactor = 1.5f; //二阶段加速加成
     private final float minDashDistanceSqr = 20;
-    private int difficultyIdx;
     public int stage = 1; //阶段
 
     //定义技能参数
@@ -47,18 +46,21 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
 
     private final int stage2_dashCount_base = -5 + 3;
     private int stage2_dashCount = stage2_dashCount_base; //二阶段冲刺次数，每掉1/10的血+1
+    private int stage2_dashCount_max = 3; //二阶段冲刺正常冲刺次数
+
 
     private Vec3 dashPos;
     private Vec3 dashDir;
 
+
     public CthulhuEye(EntityType<CthulhuEye> entityType, Level level) {
         super(entityType, level);
-        this.difficultyIdx = switchByDifficulty(level(), 0, 1, 2);
         //初始属性
         int size = level().players().size();
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(MAX_HEALTHS[difficultyIdx] * size);
-        setHealth(MAX_HEALTHS[difficultyIdx]* size);
-        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE[difficultyIdx]);
+        getAttribute(Attributes.MAX_HEALTH).setBaseValue(MAX_HEALTHS * size);
+        setHealth(MAX_HEALTHS* size);
+        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
+        
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
 
         this.playSound(ModSounds.ROAR.get());
@@ -68,12 +70,6 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
         this(ModEntities.CTHULHU_EYE.get(), level);
     }
 
-    // 定义动画
-    private static final RawAnimation type1 = RawAnimation.begin().thenPlay("type_1");
-    private static final RawAnimation type1run = RawAnimation.begin().thenPlay("type_1_run");
-    private static final RawAnimation switching = RawAnimation.begin().thenPlay("switching");
-    private static final RawAnimation type2 = RawAnimation.begin().thenPlay("type_2");
-    private static final RawAnimation type2run = RawAnimation.begin().thenPlay("type_2_run");
 
     // 定义技能类型
     BossSkill stage1_stare;
@@ -84,10 +80,16 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
 
     @Override
     public void addSkills() {
-        this.difficultyIdx = switchByDifficulty(level(), 0, 1, 2);
+        // 定义动画
+        RawAnimation type1 = RawAnimation.begin().thenPlay("type_1");
+        RawAnimation type1run = RawAnimation.begin().thenPlay("type_1_run");
+        RawAnimation switching = RawAnimation.begin().thenPlay("switching");
+        RawAnimation type2 = RawAnimation.begin().thenPlay("type_2");
+        RawAnimation type2run = RawAnimation.begin().thenPlay("type_2_run");
+
         // 定义技能实现
         // 定格在玩家正上方
-        this.stage1_stare = new BossSkill("1", "type_1", 5 * 20, 0,
+        this.stage1_stare = new BossSkill( type1, 5 * 20, 0,
                 terraBossBase -> {},
                 terraBossBase -> {
                     if (getTarget() == null) return;
@@ -108,42 +110,43 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
                     spawnMinions(getTarget());
                     // 向玩家正上方移动
                     Vec3 tar = getTarget().position().add(new Vec3(0, distanceAbove, 0));
-                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED[difficultyIdx] / 10));
+                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED / 10));
 
                 },
                 terraBossBase -> {}
         );
         // 延迟20tick冲刺10tick
-        this.state1_dash = new BossSkill("2", "type_1_run", 30, 20,
+        this.state1_dash = new BossSkill( type1run, 30, 20,
+                terraBossBase -> {},
                 terraBossBase -> {
-
-                },
-                terraBossBase -> {
-
                     // 延迟冲刺
-                    if (getTarget() == null) return;
+                    if (getTarget() == null)
+                        return;
                     if (!skills.canContinue()) {
                         // 调整方向
                         cslLookAt(360);
+
+                        this.addDeltaMovement(new Vec3(0, 0.02, 0));
                         // 不精准度
-                        dashPos = getTarget().position().subtract(position()).add(0, 1, 0).offsetRandom(RandomSource.create(), 1);
+                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(RandomSource.create(), 1);
+                        dashDir = dashPos.subtract(position());
                         return;
                     }
+                    this.lookControl.setLookAt(dashPos);
                     // 冲刺增加伤害
                     //getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(
                     //new AttributeModifier(DASH_UUID.toString(),2, AttributeModifier.Operation.ADDITION));
-                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE[difficultyIdx] * dashFactor);
+                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE * dashFactor);
 
-                    if (dashPos != null) this.setDeltaMovement(dashPos.normalize().scale(MOVE_SPEED[difficultyIdx] * speedFactor));
+                    if (dashDir != null) this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor));
                 },
                 terraBossBase -> {
                     // 结束冲刺移除加成
-                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE[difficultyIdx]);
-                    //getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(DASH_UUID);
+                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
                 }
         );
         // 转换阶段
-        this.switch_1_to_2 = new BossSkill("3", "switching", 40, 0,
+        this.switch_1_to_2 = new BossSkill(switching, 40, 0,
                 terraBossBase -> {
                     if (stage == 1){
                         skills.forceStartIndex(0);
@@ -160,10 +163,10 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
                     },
                 terraBossBase -> {
                     // 增加属性
-                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE[difficultyIdx]);
+                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE);
 
                 });
-        this.stage2_stare = new BossSkill("4", "type_2", 3 * 20, 0,
+        this.stage2_stare = new BossSkill(type2, 3 * 20, 0,
                 terraBossBase -> {
                 },
                 terraBossBase -> {
@@ -172,22 +175,27 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
 
                     // 向玩家正上方移动
                     Vec3 tar = getTarget().position().add(new Vec3(0, distanceAbove, 0));
-                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED[difficultyIdx] * stage2SpeedFactor / 10));
+                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED * stage2SpeedFactor / 10));
                 },
                 terraBossBase -> {
                     // 生成冲撞次数
-                    this.stage2_dashCount = (int) (stage2_dashCount_base + 10 - this.getHealth() / (getMaxHealth() / 10));
-                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE[difficultyIdx]);
+                    this.stage2_dashCount = (int) ((stage2_dashCount_base + 10 - this.getHealth() / (getMaxHealth() / 10)) * 1.5);
+                    this.stage2_dashCount_max = this.stage2_dashCount - 3;
+                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE);
                 }
         );
-        this.state2_dash = new BossSkill("5", "type_2_run", 20, 10,
+        this.state2_dash = new BossSkill(type2run, 20, 10,
                 terraBossBase -> {
-                    //setDeltaMovement(0, 0, 0);
-                    if(this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount < 4){
+
+                    if(this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount <= stage2_dashCount_max){
                         state2_dash.timeTrigger = 5;
+                        state2_dash.timeContinue = 15;
+                        speedFactor = 3;
                         this.playSound(ModSounds.HURRIED_ROARING.get());
                     }else {
                         state2_dash.timeTrigger = 10;
+                        state2_dash.timeContinue = 20;
+                        speedFactor = 2;
                         this.playSound(ModSounds.ROAR.get());
                     }
 
@@ -199,23 +207,26 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
                     if (!skills.canContinue()) {
                         // 调整方向
 
+                        this.addDeltaMovement(new Vec3(0, 0.02, 0));
+                        float inaccuracy = (float) getTarget().getDeltaMovement().length();
                         // 不精准度
-                        dashPos = getTarget().position().subtract(position()).add(0, 1, 0).offsetRandom(RandomSource.create(), 4);
+                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(RandomSource.create(), inaccuracy * 10);
                         dashDir = dashPos.subtract(position());
                         //冲撞距离过小则后退
                         if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashPos.normalize().scale(-1));
                         return;
                     }
+                    this.lookControl.setLookAt(dashPos);
                     //updateEntityRotation(this,dashDir);
                     //lookAtPos(dashPos,50,80);
 
                     // 冲刺增加伤害
-                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE[difficultyIdx] * dashFactor);
-                    if (dashPos != null) this.setDeltaMovement(dashPos.normalize().scale(MOVE_SPEED[difficultyIdx] * speedFactor * stage2SpeedFactor));
+                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE * dashFactor);
+                    if (dashDir != null) this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor * stage2SpeedFactor));
                 },
                 terraBossBase -> {
                     // 结束冲刺移除加成
-                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE[difficultyIdx]);
+                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE);
                     if (--stage2_dashCount <= 0) {
                         // 冲刺完
                         stage2_dashCount = stage2_dashCount_base;
@@ -227,13 +238,13 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
                 }
         );
         // 添加技能序列
-        addSkill(stage1_stare, type1); // 0
-        addSkill(state1_dash, type1run); // 1
-        addSkill(state1_dash, type1run); // 2
-        addSkill(state1_dash, type1run); // 3
-        addSkill(switch_1_to_2, switching); // 4
-        addSkill(stage2_stare, type2); // 5
-        addSkill(state2_dash, type2run); // 6
+        addSkill(stage1_stare); // 0
+        addSkill(state1_dash); // 1
+        addSkill(state1_dash); // 2
+        addSkill(state1_dash); // 3
+        addSkill(switch_1_to_2); // 4
+        addSkill(stage2_stare); // 5
+        addSkill(state2_dash); // 6
     }
 
     private void cslLookAt(float maxAngleY) {
@@ -241,19 +252,7 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
         if (pEntity != null) {
             lookAt(getTarget(), maxAngleY, 85);
             this.lookControl.setLookAt(getTarget());
-
         }
-    }
-
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.ATTACK_DAMAGE, 1.0)
-                .add(Attributes.ATTACK_KNOCKBACK, 2.2)
-                .add(Attributes.ARMOR, 12.0)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
-                .add(Attributes.FOLLOW_RANGE, 100.0);
-
     }
 
     private void spawnMinions(LivingEntity target) {
@@ -265,7 +264,7 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
                 protected boolean shouldDropLoot() {
                     return false;
                 }
-            };  //todo 仆从
+            };
             eye.setHealth(8);
             eye.getAttribute(Attributes.MAX_HEALTH).setBaseValue(8);
             eye.setPos(position().add(getForward().normalize().scale(-1)));
@@ -294,6 +293,6 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
     @Override
     public void tick() {
         super.tick();
-        syncRot();
+
     }
 }

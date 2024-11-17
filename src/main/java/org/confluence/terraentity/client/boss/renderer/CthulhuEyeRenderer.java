@@ -6,8 +6,10 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+import net.minecraft.util.Mth;
 import org.confluence.terraentity.client.boss.model.CthulhuEyeModel;
 import org.confluence.terraentity.client.entity.model.GeoNormalModel;
+import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.boss.CthulhuEye;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -21,12 +23,19 @@ public class CthulhuEyeRenderer extends GeoEntityRenderer<CthulhuEye> {
     }
 
     @Override
-    public void preRender(PoseStack poseStack, CthulhuEye animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
-        var syncRot = animatable.getRot();
-        double rad = animatable.yBodyRot*Math.PI/180;
-        poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(syncRot.x));
+    public void preRender(PoseStack poseStack, CthulhuEye entity, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+
+//        System.out.println(entity.xRotO);
+        float yRot = Mth.lerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
+        double rad = yRot*Math.PI/180;
+        float xRot = Mth.lerp(partialTick, entity.xRotO, entity.getXRot());
+
+        poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(xRot));
+
         poseStack.translate(0,0.5,0);
+
+        super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+
     }
 
     @Override
@@ -36,40 +45,6 @@ public class CthulhuEyeRenderer extends GeoEntityRenderer<CthulhuEye> {
 
     @Override
     public void render(CthulhuEye entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        /*
-        MotionBlur mb = PostUtil.motionBlur;
-        if(mb!=null && entity.stage>1 && entity.getDeltaMovement().length() > 0.3){
-            Object obj = entity.getUUID();
-            AtomicBoolean exisit = new AtomicBoolean(false);
-            mb.blurList.forEach((k,v)->{ if(k==obj) exisit.set(true);});
-            DIYBlitTarget target;
-            // 运动方向
-            Vector3f dir = entity.getDeltaMovement().toVector3f();
-            // 旋转到相机坐标系
-            new Matrix4f().rotate(Minecraft.getInstance().gameRenderer.getMainCamera().rotation().conjugate().normalize()).transformPosition(dir);
-            // 长度与距离相关
-            float distance = Minecraft.getInstance().player.distanceTo(entity);
-            // 长度与移速相关
-            distance /= (float) Math.min(entity.getDeltaMovement().length(), 1);
-            // 长度与角度相关
-            //distance *= Math.max(Math.cos((dir.angle(new Vector3f(1,0,0)))),0.3f);
-            if(!exisit.getPrefab()){
-                target = new DIYBlitTarget(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight(),
-                        false,true,ModRenderTypes.Shaders.motion_blur);
-                target.setClearColor(0,0,0,0);
-                target.clear(true);
-                mb.blurList.put(obj,new MotionBlur.blurTuple(target,distance,new Vector2f(dir.x,dir.y),true));
-            }else{
-                target = mb.blurList.getPrefab(obj).fbo;
-
-                mb.blurList.getPrefab(obj).dir = new Vector2f(dir.x,dir.y);
-                mb.blurList.getPrefab(obj).distance = distance;
-                mb.blurList.getPrefab(obj).dirty = true;
-            }
-            ModRenderTypes.Shaders.cthSampler.setMultiOutTarget(target);
-
-        }
-*/
 
 
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
