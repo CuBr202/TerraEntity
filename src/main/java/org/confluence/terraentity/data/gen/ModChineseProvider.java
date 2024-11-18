@@ -38,7 +38,7 @@ public class ModChineseProvider extends LanguageProvider {
         add("entity.terra_entity.bloody_spore", "血腥芽孢");
         add("entity.terra_entity.face_monster", "脸怪");
         add("entity.terra_entity.crimson_kemera", "猩红喀迈拉");
-        add("entity.terra_entity.souls_eater", "噬魂怪");
+        add("entity.terra_entity.eater_of_souls", "噬魂怪");
         add("entity.terra_entity.decayeder", "腐骴");
 
 
@@ -72,7 +72,7 @@ public class ModChineseProvider extends LanguageProvider {
         add(ModItems.CRIMSON_KEMERA_EGG.get(), "猩红喀迈拉刷怪蛋");
         add(ModItems.FACE_MONSTER_EGG.get(), "脸怪刷怪蛋");
 
-        add(ModItems.SOULS_EATER_EGG.get(), "噬魂怪刷怪蛋");
+        add(ModItems.EATER_OF_SOULS_SPAWN_EGG.get(), "噬魂怪刷怪蛋");
         add(ModItems.DECAYEDER_SPAWN_EGG.get(), "腐骴刷怪蛋");
 
         add(ModItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");

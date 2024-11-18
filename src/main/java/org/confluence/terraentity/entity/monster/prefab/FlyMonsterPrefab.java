@@ -31,7 +31,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     })
             ;
 
-    public static Supplier<AbstractMonster.Builder> SOULS_EATER_BUILDER =
+    public static Supplier<AbstractMonster.Builder> EATER_OF_SOULS_BUILDER =
             ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
                     .setHurtSound(ModSounds.ROUTINE_HURT)
                     .setDeathSound(ModSounds.ROUTINE_DEATH)

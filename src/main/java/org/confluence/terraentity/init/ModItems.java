@@ -45,7 +45,7 @@ public class ModItems {
     public static final DeferredItem<Item> FLYING_FISH_SPAWN_EGG = register("flying_fish_spawn_egg", ModEntities.FLYING_FISH, 0xffe8fa, 0x002348);
     public static final DeferredItem<Item> DRIPPLER_SPAWN_EGG = register("drippler_spawn_egg", ModEntities.DRIPPLER, 0xe9dbc2, 0x830022);
     public static final DeferredItem<Item> CRIMSON_KEMERA_EGG = register("crimson_kemera_egg", ModEntities.CRIMSON_KEMERA, 0xa75049, 0x65292c);
-    public static final DeferredItem<Item> SOULS_EATER_EGG = register("eater_of_souls_egg", ModEntities.SOULS_EATER, 0x5d478b, 0x8968cd);
+    public static final DeferredItem<Item> EATER_OF_SOULS_SPAWN_EGG = register("eater_of_souls_spawn_egg", ModEntities.EATER_OF_SOULS, 0x5d478b, 0x8968cd);
     public static final DeferredItem<Item> FACE_MONSTER_EGG = register("face_monster_egg", ModEntities.FACE_MONSTER, 0xa75049, 0x65292c);
 
 

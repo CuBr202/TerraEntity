@@ -123,7 +123,7 @@ public class GameEntityEvent {
             } else {
                 e1.removeEffect(ModEffects.DEMONIC_THOUGHTS);
                 e1.hurt(event.getSource(), 6);
-                AbstractMonster soulEater = ModEntities.SOULS_EATER.get().create(level);
+                AbstractMonster soulEater = ModEntities.EATER_OF_SOULS.get().create(level);
                 soulEater.setPos(e1.getEyePosition());
                 soulEater.setTarget(e1);
                 level.addFreshEntity(soulEater);
