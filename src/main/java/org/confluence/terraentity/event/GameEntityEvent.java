@@ -15,7 +15,10 @@ import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
@@ -24,9 +27,9 @@ import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
-import org.confluence.terraentity.init.ModEffects;
-import org.confluence.terraentity.init.ModEntities;
-import org.confluence.terraentity.init.ModTags;
+import org.confluence.terraentity.init.TEEffects;
+import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.utils.FloatRGB;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -38,7 +41,7 @@ public class GameEntityEvent {
         Level level = event.getLevel();
         if (event.loadedFromDisk() || !(level instanceof ServerLevel serverLevel)) return;
         if (event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < 0.05F) {
-            BaseSlime slime = ModEntities.BLUE_SLIME.get().create(level);
+            BaseSlime slime = TEEntities.BLUE_SLIME.get().create(level);
             if (slime != null) {
                 slime.moveTo(zombie.getX(), zombie.getY(), zombie.getZ(), zombie.getYRot(), 0.0F);
                 slime.finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(zombie.blockPosition()), MobSpawnType.JOCKEY, null);
@@ -116,18 +119,18 @@ public class GameEntityEvent {
         Level level = event.getEntity().level();
         if (!(level instanceof ServerLevel serverLevel)) return;
         if (e instanceof Decayeder dp){
-            if (!e1.hasEffect(ModEffects.DEMONIC_THOUGHTS)){
+            if (!e1.hasEffect(TEEffects.DEMONIC_THOUGHTS)){
                 e1.addEffect(new MobEffectInstance(
-                        ModEffects.DEMONIC_THOUGHTS, 200
+                        TEEffects.DEMONIC_THOUGHTS, 200
                 ), dp);
             } else {
-                e1.removeEffect(ModEffects.DEMONIC_THOUGHTS);
+                e1.removeEffect(TEEffects.DEMONIC_THOUGHTS);
                 e1.hurt(event.getSource(), 6);
-                AbstractMonster soulEater = ModEntities.EATER_OF_SOULS.get().create(level);
+                AbstractMonster soulEater = TEEntities.EATER_OF_SOULS.get().create(level);
                 soulEater.setPos(e1.getEyePosition());
                 soulEater.setTarget(e1);
                 level.addFreshEntity(soulEater);
-                e1.removeEffect(ModEffects.DEMONIC_THOUGHTS);
+                e1.removeEffect(TEEffects.DEMONIC_THOUGHTS);
             }
         }
     }
@@ -138,11 +141,11 @@ public class GameEntityEvent {
         if(!(event.getTarget() instanceof LivingEntity entity)) return;
         Player player = event.getEntity();
         Level level = event.getLevel();
-        if (    entity.getType().equals(ModEntities.BLUE_SLIME.get()) ||
-                entity.getType().equals(ModEntities.GREEN_SLIME.get()) ||
-                entity.getType().equals(ModEntities.PURPLE_SLIME.get())){
-            if (item.is(ModTags.Items.HONEY_TRANSLATION_BUCKET)){
-                HoneySlime slime = ModEntities.HONEY_SLIME.get().create(level);
+        if (    entity.getType().equals(TEEntities.BLUE_SLIME.get()) ||
+                entity.getType().equals(TEEntities.GREEN_SLIME.get()) ||
+                entity.getType().equals(TEEntities.PURPLE_SLIME.get())){
+            if (item.is(TETags.Items.HONEY_TRANSLATION_BUCKET)){
+                HoneySlime slime = TEEntities.HONEY_SLIME.get().create(level);
                 item.shrink(1);
                 player.addItem(new ItemStack(Items.BUCKET));
                 slime.setSize(2, true);
@@ -151,8 +154,8 @@ public class GameEntityEvent {
                 slime.setYRot(entity.getYRot());
                 level.addFreshEntity(slime);
                 entity.remove(Entity.RemovalReason.DISCARDED);
-            } else if (item.is(ModTags.Items.HONEY_TRANSLATION)){
-                HoneySlime slime = ModEntities.HONEY_SLIME.get().create(level);
+            } else if (item.is(TETags.Items.HONEY_TRANSLATION)){
+                HoneySlime slime = TEEntities.HONEY_SLIME.get().create(level);
                 item.shrink(1);
                 slime.setSize(2, true);
                 slime.setPos(entity.position());
@@ -160,8 +163,8 @@ public class GameEntityEvent {
                 slime.setYRot(entity.getYRot());
                 level.addFreshEntity(slime);
                 entity.remove(Entity.RemovalReason.DISCARDED);
-            } else if (item.is(ModTags.Items.HONEY_TRANSLATION_NOT_CONSUMED)){
-                HoneySlime slime = ModEntities.HONEY_SLIME.get().create(level);
+            } else if (item.is(TETags.Items.HONEY_TRANSLATION_NOT_CONSUMED)){
+                HoneySlime slime = TEEntities.HONEY_SLIME.get().create(level);
                 slime.setSize(2, true);
                 slime.setPos(entity.position());
                 slime.setXRot(entity.getXRot());

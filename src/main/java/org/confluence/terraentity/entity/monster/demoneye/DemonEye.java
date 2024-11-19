@@ -18,10 +18,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
-import org.confluence.terraentity.init.ModSounds;
-import org.confluence.terraentity.utils.ModUtils;
+import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -166,7 +165,7 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
         setTarget(level().getNearestPlayer(pos.x, pos.y, pos.z, 40, true));
         super.tick();
         // 在super.tick()结束后更新面向方向即可覆盖原版AI
-        ModUtils.updateEntityRotation(this, this.getDeltaMovement().multiply(1, -1, 1));
+        TEUtils.updateEntityRotation(this, this.getDeltaMovement().multiply(1, -1, 1));
     }
 
     @Override
@@ -177,12 +176,12 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.ROUTINE_DEATH.get();
+        return TESounds.ROUTINE_DEATH.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
-        return ModSounds.ROUTINE_HURT.get();
+        return TESounds.ROUTINE_HURT.get();
     }
 
     @Override

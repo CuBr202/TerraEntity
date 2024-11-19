@@ -6,15 +6,11 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.client.boss.renderer.CthulhuEyeRenderer;
 import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
-import org.confluence.terraentity.client.entity.renderer.BloodCrawlerRenderer;
-import org.confluence.terraentity.client.entity.renderer.BloodySporeRenderer;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
-import org.confluence.terraentity.client.entity.renderer.DemonEyeRenderer;
-import org.confluence.terraentity.init.ModEntities;
+import org.confluence.terraentity.init.TEEntities;
 
-import static org.confluence.terraentity.init.ModEntities.CROWN_OF_KING_SLIME_MODEL;
+import static org.confluence.terraentity.init.TEEntities.CROWN_OF_KING_SLIME_MODEL;
 
 
 @SuppressWarnings("deprecation")
@@ -50,7 +46,7 @@ public final class ModClient {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(CROWN_OF_KING_SLIME_MODEL.get(), CrownOfKingSlimeModelRenderer::new);
 
-        ModEntities.registerRenderers(event);
+        TEEntities.registerRenderers(event);
     }
 
     @SubscribeEvent

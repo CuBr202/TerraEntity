@@ -7,21 +7,17 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.BossSkill;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
-import org.confluence.terraentity.init.ModEntities;
-import org.confluence.terraentity.init.ModSounds;
+import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TESounds;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animation.RawAnimation;
-
-import static org.confluence.terraentity.utils.ModUtils.switchByDifficulty;
 
 
 @SuppressWarnings("all")
@@ -63,11 +59,11 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
         
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
 
-        this.playSound(ModSounds.ROAR.get());
+        this.playSound(TESounds.ROAR.get());
     }
 
     public CthulhuEye(Level level) {
-        this(ModEntities.CTHULHU_EYE.get(), level);
+        this(TEEntities.CTHULHU_EYE.get(), level);
     }
 
 
@@ -154,7 +150,7 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
                     }
                     summonCD = 0;
                     summonCDAll = 7;
-                    this.playSound(ModSounds.HURRIED_ROARING.get());
+                    this.playSound(TESounds.HURRIED_ROARING.get());
                 },
                 terraBossBase -> {
                     spawnMinions(getTarget());
@@ -189,12 +185,12 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
                         state2_dash.timeTrigger = 5;
                         state2_dash.timeContinue = 15;
                         speedFactor = 3;
-                        this.playSound(ModSounds.HURRIED_ROARING.get());
+                        this.playSound(TESounds.HURRIED_ROARING.get());
                     }else {
                         state2_dash.timeTrigger = 10;
                         state2_dash.timeContinue = 20;
                         speedFactor = 2;
-                        this.playSound(ModSounds.ROAR.get());
+                        this.playSound(TESounds.ROAR.get());
                     }
 
                 },
@@ -254,7 +250,7 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
         if (level() instanceof ServerLevel serverLevel) {
             if (--summonCD > 0) return;
             summonCD = summonCDAll;
-            DemonEye eye = new DemonEye(ModEntities.DEMON_EYE.get(), serverLevel) {
+            DemonEye eye = new DemonEye(TEEntities.DEMON_EYE.get(), serverLevel) {
                 @Override
                 protected boolean shouldDropLoot() {
                     return false;
@@ -269,7 +265,7 @@ public class CthulhuEye extends AbstractTerraBossBase implements GeoEntity, Boss
     }
 
     @Override // 受伤音效
-    protected SoundEvent getHurtSound(DamageSource damageSource) {return ModSounds.ROUTINE_HURT.get();}
+    protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
 
     @Override
     public boolean isNoGravity(){ return true; }

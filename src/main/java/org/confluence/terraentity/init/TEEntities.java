@@ -41,7 +41,7 @@ import static org.confluence.terraentity.TerraEntity.MODID;
 
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
-public final class ModEntities {
+public final class TEEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MODID);
 
 

@@ -8,7 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.init.ModEntities;
+import org.confluence.terraentity.init.TEEntities;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -46,7 +46,7 @@ public class CrownOfKingSlimeModelEntity extends Entity {
     }
 
     public CrownOfKingSlimeModelEntity(Level level, Vec3 pos) {
-        this(ModEntities.CROWN_OF_KING_SLIME_MODEL.get(), level);
+        this(TEEntities.CROWN_OF_KING_SLIME_MODEL.get(), level);
         setPos(pos);
         setDeltaMovement(
                 random.nextFloat() * (random.nextBoolean() ? 0.5 : -0.5),

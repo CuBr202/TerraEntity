@@ -18,22 +18,22 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-
-import org.confluence.terraentity.utils.FloatRGB;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.IBossFSM;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
-import org.confluence.terraentity.init.ModEntities;
-import org.confluence.terraentity.init.ModParticles;
+import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
-import org.confluence.terraentity.utils.ModUtils;
+import org.confluence.terraentity.utils.FloatRGB;
+import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static org.confluence.terraentity.utils.ModUtils.*;
+import static org.confluence.terraentity.utils.TEUtils.isAtLeastExpert;
+import static org.confluence.terraentity.utils.TEUtils.switchByDifficulty;
 
 
 @SuppressWarnings("all")
@@ -98,7 +98,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                     }
                 }
                 // 调整速度
-                horVel = ModUtils.rotToDir(boss.getYRot(), 0).scale(horizontalSpd);
+                horVel = TEUtils.rotToDir(boss.getYRot(), 0).scale(horizontalSpd);
                 if (verticalAcc != 0) {
                     Vec3 motion = boss.getDeltaMovement();
                     motion = motion.add(0, verticalAcc, 0);
@@ -195,7 +195,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     }
 
     public KingSlime(Level level) {
-        this(ModEntities.KING_SLIME.get(), level);
+        this(TEEntities.KING_SLIME.get(), level);
     }
 
     @Override
@@ -275,7 +275,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                 float f1 = random.nextFloat() * 0.5F + 0.5F;
                 float f2 = Mth.sin(f) * (float) i * 0.5F * f1;
                 float f3 = Mth.cos(f) * (float) i * 0.5F * f1;
-                level().addParticle(ModParticles.ITEM_GEL.get(), getX() + (double) f2, getY(), getZ() + (double) f3, COLOR.red(), COLOR.green(), COLOR.blue());
+                level().addParticle(TEParticles.ITEM_GEL.get(), getX() + (double) f2, getY(), getZ() + (double) f3, COLOR.red(), COLOR.green(), COLOR.blue());
             }
         }
 
@@ -302,7 +302,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     }
     private void spawnSlime(LivingEntity target) {
         if (level() instanceof ServerLevel serverLevel) {
-            BaseSlime slime = new BaseSlime(ModEntities.BLUE_SLIME.get(), serverLevel, COLOR_INT, 2);
+            BaseSlime slime = new BaseSlime(TEEntities.BLUE_SLIME.get(), serverLevel, COLOR_INT, 2);
             slime.setPos(getOnPos().getX(), getOnPos().getY() + 0.5, getOnPos().getZ());
             slime.setTarget(target);
             if (isAtLeastExpert(serverLevel)) {

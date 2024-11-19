@@ -29,7 +29,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public final class ModUtils {
+public final class TEUtils {
     public static final Direction[] DIRECTIONS = Direction.values();
     public static final Direction[] HORIZONTAL = new Direction[]{Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH};
 

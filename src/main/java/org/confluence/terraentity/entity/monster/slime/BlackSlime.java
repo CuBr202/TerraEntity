@@ -15,12 +15,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-
-import org.confluence.terraentity.utils.FloatRGB;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
-import org.confluence.terraentity.init.ModParticles;
+import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
-import org.confluence.terraentity.utils.ModUtils;
+import org.confluence.terraentity.utils.FloatRGB;
+import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -43,7 +42,7 @@ public class BlackSlime extends Slime implements DeathAnimOptions {
                 float f1 = random.nextFloat() * 0.5F + 0.5F;
                 float f2 = Mth.sin(f) * (float) i * 0.5F * f1;
                 float f3 = Mth.cos(f) * (float) i * 0.5F * f1;
-                level().addParticle(ModParticles.ITEM_GEL.get(), getX() + (double) f2, getY(), getZ() + (double) f3, color.red(), color.green(), color.blue());
+                level().addParticle(TEParticles.ITEM_GEL.get(), getX() + (double) f2, getY(), getZ() + (double) f3, color.red(), color.green(), color.blue());
             }
         }
         super.tick();
@@ -123,7 +122,7 @@ public class BlackSlime extends Slime implements DeathAnimOptions {
                 DamageSource damagesource = this.damageSources().mobAttack(this);
                 if (this.level() instanceof ServerLevel serverlevel)
                     EnchantmentHelper.doPostAttackEffects(serverlevel, pLivingEntity, damagesource);
-                if (ModUtils.isMaster(level()) || (ModUtils.isAtLeastExpert(level()) && level().random.nextBoolean())) {
+                if (TEUtils.isMaster(level()) || (TEUtils.isAtLeastExpert(level()) && level().random.nextBoolean())) {
                     pLivingEntity.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 300, 0), this);
                 }
             }

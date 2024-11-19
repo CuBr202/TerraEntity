@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
-import org.confluence.terraentity.utils.ModUtils;
+import org.confluence.terraentity.utils.TEUtils;
 
 /**
  * 飞行冲撞目标的AI
@@ -88,7 +88,7 @@ public class DashGoal extends Goal {
     }
 
     protected float getAngle(LivingEntity target){
-        return (float) ModUtils.angleBetween(target.position().subtract(mob.position()), mob.getForward());
+        return (float) TEUtils.angleBetween(target.position().subtract(mob.position()), mob.getForward());
     }
 
 

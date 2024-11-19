@@ -1,19 +1,14 @@
 package org.confluence.terraentity.init;
 
-import com.mojang.serialization.Codec;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
-public final class ModParticles {
+public final class TEParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, TerraEntity.MODID);
 
     public static final Supplier<SimpleParticleType> ITEM_GEL = PARTICLES.register("item_gel", () -> new SimpleParticleType(false));
