@@ -4,8 +4,7 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredRegister;
-
-import org.confluence.terraentity.init.ModItems;
+import org.confluence.terraentity.init.TEItems;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,9 +13,9 @@ import java.util.Map;
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 
-public class ModItemModelProvider extends ItemModelProvider {
+public class TEItemModelProvider extends ItemModelProvider {
 
-    public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
+    public TEItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, MODID, existingFileHelper);
     }
 
@@ -40,7 +39,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
 
         List<Map<DeferredRegister.Items,List<String>>> customModels = List.of(
-                createDir(ModItems.SPAWN_EGGS,"egg/")
+                createDir(TEItems.SPAWN_EGGS,"egg/")
         );
         genModels(customModels,"minecraft:item/template_spawn_egg");
 

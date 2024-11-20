@@ -8,7 +8,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 
 
-public final class ModSounds {
+public final class TESounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, TerraEntity.MODID);
 
     public static final DeferredHolder<SoundEvent,SoundEvent> TRANSMISSION = register("transmission");

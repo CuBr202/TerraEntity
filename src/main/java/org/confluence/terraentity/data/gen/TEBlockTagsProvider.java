@@ -13,8 +13,8 @@ import java.util.concurrent.CompletableFuture;
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 
-public class ModBlockTagsProvider extends BlockTagsProvider {
-    public ModBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+public class TEBlockTagsProvider extends BlockTagsProvider {
+    public TEBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, MODID, existingFileHelper);
     }
 

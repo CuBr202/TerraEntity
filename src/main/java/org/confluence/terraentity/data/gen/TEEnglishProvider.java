@@ -2,16 +2,17 @@ package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
-import org.confluence.terraentity.init.ModEffects;
-import org.confluence.terraentity.init.ModEntities;
-import org.confluence.terraentity.init.ModItems;
+import org.confluence.terraentity.init.TEEffects;
+import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TEItems;
+
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
-public class ModEnglishProvider extends LanguageProvider {
-    public ModEnglishProvider(PackOutput output) {
+public class TEEnglishProvider extends LanguageProvider {
+    public TEEnglishProvider(PackOutput output) {
         super(output, MODID, "en_us");
     }
 
@@ -24,9 +25,9 @@ public class ModEnglishProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
 
-        ModItems.SPAWN_EGGS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
-        ModEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
-        ModEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get(), toTitleCase(effect.getId().getPath())));
+        TEItems.SPAWN_EGGS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
+        TEEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
+        TEEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get(), toTitleCase(effect.getId().getPath())));
 
         add("itemGroup.terraentity.title", "tab.terraentity.name");
         add("message.terraentity.boss_spawn", "%s Has Awoken!");

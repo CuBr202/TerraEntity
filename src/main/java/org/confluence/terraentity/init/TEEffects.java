@@ -7,7 +7,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.effect.harmful.DemonicThoughtsEffect;
 
-public class ModEffects {
+public class TEEffects {
     public static final DeferredRegister<MobEffect> EFFECTS =
             DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, TerraEntity.MODID);
 

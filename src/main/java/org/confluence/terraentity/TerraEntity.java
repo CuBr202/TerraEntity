@@ -3,18 +3,11 @@ package org.confluence.terraentity;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.confluence.terraentity.init.*;
 import org.slf4j.Logger;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mod(TerraEntity.MODID)
 public class TerraEntity {
@@ -24,12 +17,12 @@ public class TerraEntity {
 
 
     public TerraEntity (IEventBus modEventBus, ModContainer modContainer) {
-        ModEntities.ENTITIES.register(modEventBus);
-        ModSounds.SOUNDS.register(modEventBus);
-        ModParticles.PARTICLES.register(modEventBus);
-        ModItems.SPAWN_EGGS.register(modEventBus);
-        ModItems.TABS.register(modEventBus);
-        ModEffects.EFFECTS.register(modEventBus);
+        TEEntities.ENTITIES.register(modEventBus);
+        TESounds.SOUNDS.register(modEventBus);
+        TEParticles.PARTICLES.register(modEventBus);
+        TEItems.SPAWN_EGGS.register(modEventBus);
+        TEItems.TABS.register(modEventBus);
+        TEEffects.EFFECTS.register(modEventBus);
     }
 
     public static ResourceLocation asResource(String path) {

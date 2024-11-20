@@ -1,6 +1,5 @@
 package org.confluence.terraentity.init;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -8,7 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.confluence.terraentity.TerraEntity;
 
-public class ModTags {
+public class TETags {
     public static class Blocks {
         public static final TagKey<Block> CAN_BALL_REPLACED =
             tag("can_ball_replaced");

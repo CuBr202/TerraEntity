@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.boss;
 
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -16,6 +17,10 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -25,12 +30,11 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.BossSkill;
 import org.confluence.terraentity.entity.ai.CircleBossSkills;
-import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -38,20 +42,16 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DataTickets;
-
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Predicate;
 
-import static org.confluence.terraentity.utils.ModUtils.switchByDifficulty;
+import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
 
 @SuppressWarnings("all")
 public abstract class AbstractTerraBossBase extends Monster implements GeoEntity {
 
-    public int difficultyIdx;
 
     public float ironGlomResistance = 0.4f;
     public float explosionResistance = 0.5f;
@@ -65,14 +65,32 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         super(type, level);
         this.moveControl = new FlyingMoveControl(this, 10, false);
         setNoGravity(true);
-        this.difficultyIdx = switchByDifficulty(level(), 0, 1, 2);
+
     }
 
     public abstract void addSkills();
 
+    public float getAttributeMultiplier(Holder<Attribute> attribute){
+        return getMultiple(level(), attribute);
+    }
+
     public void onAddedToLevel(){
+        float multiplier = getAttributeMultiplier(Attributes.MAX_HEALTH);
+        this.getAttribute(Attributes.MAX_HEALTH).addTransientModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_max_health"), multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+        this.setHealth(this.getMaxHealth());
+        this.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_attack_damage"), multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+
         super.onAddedToLevel();
         this.addSkills();
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Mob.createMobAttributes()
+                .add(Attributes.ATTACK_DAMAGE, 1)
+                .add(Attributes.ATTACK_KNOCKBACK, 2.2)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
+                .add(Attributes.FOLLOW_RANGE, 100.0);
+
     }
 
     // 攻击目标
@@ -89,30 +107,32 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     // 技能动画
     public CircleBossSkills skills = new CircleBossSkills(this);
 
-    private final Map<String, RawAnimation> skillMap = new HashMap<>();
-    private int lastAnimIndex = -1;
-    private static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> DATA_SKILL_TICK = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Vector3f> DATA_ROTATE = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.VECTOR3);
-
     // 动画数据同步
+    private int lastAnimIndex = -1;
+    public static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> DATA_SKILL_TICK = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
+
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_SKILL_INDEX, 0);
         builder.define(DATA_SKILL_TICK, 0);
-        builder.define(DATA_ROTATE, new Vector3f());
     }
-
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+    }
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, 20, state -> {
             AbstractTerraBossBase entity = (AbstractTerraBossBase) state.getData(DataTickets.ENTITY);
             if (!entity.isAlive()) return PlayState.STOP;
             if (skills.count() == 0) return PlayState.STOP;
-            String skillString = entity.skills.getCurSkill();
-            if (skillString == null) return PlayState.STOP;
-            RawAnimation skill = skillMap.get(skillString);
+
+            RawAnimation skill = skills.getCurAnim();
+            if(skill == null) return PlayState.STOP;
+            String name = skill.toString();
             if (skill != null) {
                 state.setAnimation(skill);
                 if (lastAnimIndex != skills.index) {
@@ -130,10 +150,8 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
 
     // 技能逻辑
 
-    public void addSkill(BossSkill bossSkill, RawAnimation anim) {
+    public void addSkill(BossSkill bossSkill) {
         this.skills.pushSkill(bossSkill);
-        //if(anim==null)return;
-        skillMap.put(bossSkill.skill, anim);
     }
 
     public void addSkillNoAnim(BossSkill bossSkill) {
@@ -145,15 +163,16 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     @Override
     public void tick() {
         // 动画同步
+        skills.tick();
         if (level().isClientSide) {
             skills.index = this.entityData.get(DATA_SKILL_INDEX);
             skills.tick = this.entityData.get(DATA_SKILL_TICK);
-
         } else {
-            skills.tick();
+
             this.entityData.set(DATA_SKILL_INDEX, skills.index);
             this.entityData.set(DATA_SKILL_TICK, skills.tick);
         }
+
         collisionHurt();
         super.tick();
         attackInternal--;
@@ -290,21 +309,8 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         return false;
     }
 
-    // 旋转同步
 
-    public Vector3f rotCli = new Vector3f();
 
-    public Vector3f getRot() {
-        return rotCli;
-    }
-
-    public void syncRot() {
-        if (level().isClientSide) {
-            rotCli = entityData.get(DATA_ROTATE);
-        } else {
-            if (xRotO != 0) entityData.set(DATA_ROTATE, new Vector3f(xRotO, yBodyRot, 0));
-        }
-    }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {

@@ -7,8 +7,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.level.Level;
 
-public class DemonPossession extends Skeleton {
-    public DemonPossession(EntityType<? extends Skeleton> entityType, Level level) {
+public class Decayeder extends Skeleton {
+    public Decayeder(EntityType<? extends Skeleton> entityType, Level level) {
         super(entityType, level);
     }
 

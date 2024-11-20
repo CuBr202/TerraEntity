@@ -13,7 +13,7 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
-import org.confluence.terraentity.init.ModEntities;
+import org.confluence.terraentity.init.TEEntities;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -75,7 +75,7 @@ public class BloodySpore extends Creeper implements GeoEntity {
             int number = (random.nextInt(2, 4)) * $$0;
             for (int i = 0; i < number; i++){
                 //summon
-                BloodCrawler crawler = new BloodCrawler(ModEntities.BLOOD_CRAWLER.get(), level());
+                BloodCrawler crawler = new BloodCrawler(TEEntities.BLOOD_CRAWLER.get(), level());
                 crawler.setPos(this.getX(), this.getY(), this.getZ());
                 level().addFreshEntity(crawler);
             }

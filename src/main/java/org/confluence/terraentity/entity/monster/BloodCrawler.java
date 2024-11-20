@@ -15,13 +15,12 @@ import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import org.confluence.terraentity.init.ModSounds;
+import org.confluence.terraentity.init.TESounds;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.constant.DefaultAnimations;
-
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Random;
@@ -74,20 +73,20 @@ public class BloodCrawler extends Spider implements GeoEntity {
     }
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.BLOOD_CRAWLER_DEATH.get();
+        return TESounds.BLOOD_CRAWLER_DEATH.get();
     }
     @Override
     protected SoundEvent getAmbientSound() {
         Random rand = new Random();
-        SoundEvent sound1 = ModSounds.BLOOD_CRAWLER_FREE.get();
-        SoundEvent sound2 = ModSounds.BLOOD_CRAWLER_FREE_2.get();
+        SoundEvent sound1 = TESounds.BLOOD_CRAWLER_FREE.get();
+        SoundEvent sound2 = TESounds.BLOOD_CRAWLER_FREE_2.get();
 
         // 随机选择音效
         return rand.nextBoolean() ? sound1 : sound2;
     }
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
-        return ModSounds.BLOOD_CRAWLER_HURT.get();
+        return TESounds.BLOOD_CRAWLER_HURT.get();
     }
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

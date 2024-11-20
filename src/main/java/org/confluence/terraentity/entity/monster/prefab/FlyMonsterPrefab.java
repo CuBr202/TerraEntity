@@ -5,7 +5,7 @@ import org.confluence.terraentity.entity.ai.goal.DashGoal;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.ai.goal.MeleeAttackNoLookGoal;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
-import org.confluence.terraentity.init.ModSounds;
+import org.confluence.terraentity.init.TESounds;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
@@ -23,18 +23,18 @@ public class FlyMonsterPrefab extends AbstractPrefab {
     //在预制体上修改参数
     public static Supplier<AbstractMonster.Builder> CRIMSON_KEMERA_BUILDER =
             ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
-                    .setHurtSound(ModSounds.ROUTINE_HURT)
-                    .setDeathSound(ModSounds.ROUTINE_DEATH)
+                    .setHurtSound(TESounds.ROUTINE_HURT)
+                    .setDeathSound(TESounds.ROUTINE_DEATH)
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
 
                     })
             ;
 
-    public static Supplier<AbstractMonster.Builder> SOULS_EATER_BUILDER =
+    public static Supplier<AbstractMonster.Builder> EATER_OF_SOULS_BUILDER =
             ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
-                    .setHurtSound(ModSounds.ROUTINE_HURT)
-                    .setDeathSound(ModSounds.ROUTINE_DEATH)
+                    .setHurtSound(TESounds.ROUTINE_HURT)
+                    .setDeathSound(TESounds.ROUTINE_DEATH)
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
 
@@ -43,8 +43,8 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     public static Supplier<AbstractMonster.Builder> DRIPPLER_BUILDER  =
             ()->new FlyMonsterPrefab(26,3,14,30,0.5f,0.2f).getPrefab()
-                .setHurtSound(ModSounds.DRIPPLER_HURT)
-                .setDeathSound(ModSounds.DRIPPLER_DEATH)
+                .setHurtSound(TESounds.DRIPPLER_HURT)
+                .setDeathSound(TESounds.DRIPPLER_DEATH)
                 .addGoal((g,e)->{
                     g.addGoal(0, new DashGoal(e,0.8f,0.2f,10));
 
@@ -53,8 +53,8 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     public static Supplier<AbstractMonster.Builder> FLYING_FISH_BUILDER  =
             ()->new FlyMonsterPrefab(10,1,4,30,0.5f,0.3f).getPrefab()
-                .setHurtSound(ModSounds.ROUTINE_HURT)
-                .setDeathSound(ModSounds.ROUTINE_DEATH)
+                .setHurtSound(TESounds.ROUTINE_HURT)
+                .setDeathSound(TESounds.ROUTINE_DEATH)
                 .addGoal((g,e)->{
                     g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
                             0.02f,5,10,45));

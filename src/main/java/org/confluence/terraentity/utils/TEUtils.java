@@ -2,6 +2,7 @@ package org.confluence.terraentity.utils;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -10,6 +11,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -27,7 +29,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public final class ModUtils {
+public final class TEUtils {
     public static final Direction[] DIRECTIONS = Direction.values();
     public static final Direction[] HORIZONTAL = new Direction[]{Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH};
 
@@ -223,6 +225,18 @@ public final class ModUtils {
             case NORMAL -> expert;
             case HARD -> master;
         };
+    }
+
+    /**
+     * 获取当前难度的不同属性加成倍率
+     * @return 倍率
+     */
+    public static float getMultiple(Level level, Holder<Attribute> attribute) {
+        if(attribute == Attributes.MAX_HEALTH)
+            return switchByDifficulty(level, 1f, 1.5f, 2f);
+        else if(attribute == Attributes.ATTACK_DAMAGE)
+            return switchByDifficulty(level, 1f, 1.5f, 2f);
+        else return 1f;
     }
 
     /**
