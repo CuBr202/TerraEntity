@@ -114,11 +114,12 @@ public class GameEntityEvent {
 
     @SubscribeEvent
     public static void livingDamageEntity(LivingDamageEvent.Post event) {
-        LivingEntity e = (LivingEntity) event.getSource().getEntity();
+        // LivingEntity e = (LivingEntity) event.getSource().getEntity();
+        // Caused by: java.lang.ClassCastException: class net.minecraft.world.entity.projectile.Arrow cannot be cast to class net.minecraft.world.entity.LivingEntity
         LivingEntity e1 = event.getEntity();
         Level level = event.getEntity().level();
         if (!(level instanceof ServerLevel serverLevel)) return;
-        if (e instanceof Decayeder dp){
+        if (event.getSource().getEntity() instanceof Decayeder dp){
             if (!e1.hasEffect(TEEffects.DEMONIC_THOUGHTS)){
                 e1.addEffect(new MobEffectInstance(
                         TEEffects.DEMONIC_THOUGHTS, 200
