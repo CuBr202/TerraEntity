@@ -32,6 +32,7 @@ public class DataGenerator {
         boolean server = event.includeServer();
         TEBlockTagsProvider blockTagsProvider = new TEBlockTagsProvider(output, lookup, helper);
         generator.addProvider(server, blockTagsProvider);
+        generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TEItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
 //        generator.addProvider(server, new ModLootTableProvider(output));
 //        generator.addProvider(server, new ModDamageTypeTagsProvider(output, lookup, helper));
