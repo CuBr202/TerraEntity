@@ -2,12 +2,10 @@ package org.confluence.terraentity.entity.ai;
 
 import net.minecraft.world.entity.Mob;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
-import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CircleBossSkills<T extends Mob> {
     public T owner;

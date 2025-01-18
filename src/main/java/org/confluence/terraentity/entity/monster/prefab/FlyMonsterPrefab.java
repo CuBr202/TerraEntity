@@ -7,10 +7,11 @@ import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.ai.goal.MeleeAttackNoLookGoal;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TESounds;
-import software.bernie.geckolib.animatable.GeoAnimatable;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+
 
 import java.util.function.Supplier;
 
@@ -66,7 +67,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     //从一个预制体复制参数再调整参数
     public static Supplier<AbstractMonster.Builder> DO_NOTHING  = ()->copyFrom(CRIMSON_KEMERA_BUILDER)
-            .setController((c,e)->c.add(new AnimationController<GeoAnimatable>(e,"move",10,s->PlayState.CONTINUE)));
+            .setController((c,e)->c.add(new AnimationController<GeoAnimatable>(e,"move",10, s-> PlayState.CONTINUE)));
 
 
 

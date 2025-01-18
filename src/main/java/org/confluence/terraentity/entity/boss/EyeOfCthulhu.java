@@ -17,7 +17,7 @@ import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.core.animation.RawAnimation;
 
 
 @SuppressWarnings("all")

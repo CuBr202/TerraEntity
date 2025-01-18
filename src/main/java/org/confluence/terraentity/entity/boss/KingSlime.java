@@ -145,7 +145,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                         } else {
                             closestPlayerPos = serverLevel.getRandomPlayer().getOnPos().getCenter();
                         }
-                        serverLevel.addFreshEntity(new CrownOfKingSlimeModelEntity(serverLevel, boss.position().add(0.0, boss.getDimensions(boss.getPose()).height(), 0.0)));
+                        serverLevel.addFreshEntity(new CrownOfKingSlimeModelEntity(serverLevel, boss.position().add(0.0, boss.getDimensions(boss.getPose()).height, 0.0)));
                         boss.teleportTo(closestPlayerPos.x, closestPlayerPos.y + 0.75F, closestPlayerPos.z);
                     }
                 }

@@ -53,7 +53,7 @@ public class CrownOfKingSlimeModel extends EntityModel<CrownOfKingSlimeModelEnti
 	public void setupAnim(CrownOfKingSlimeModelEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
-		bone6.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay,  float r, float g, float b, float a) {
+		bone6.render(poseStack, vertexConsumer, packedLight, packedOverlay, r,g,b,a);
 	}
 }

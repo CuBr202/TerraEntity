@@ -3,6 +3,7 @@ package org.confluence.terraentity.entity.ai.goal;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.phys.Vec3;
 
 public class JumpAttack extends JumpOverBlockGoal {
     private final double distanceToJump;
@@ -26,6 +27,7 @@ public class JumpAttack extends JumpOverBlockGoal {
         if(mob.getTarget() == null) return;
         mob.getLookControl().setLookAt(mob.getTarget(), 30.0F, 30.0F);
         mob.jumpFromGround();
+//        mob.addDeltaMovement(new Vec3(0,2f,0));
         mob.addDeltaMovement(mob.getTarget().position().subtract(mob.position())
                 .multiply(1,0,1).normalize().scale(mob.getSpeed() * speedModifier));
         mob.setAggressive(true);

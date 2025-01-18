@@ -11,8 +11,8 @@ import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.entity.monster.BloodySpore;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.util.Color;
 
 import static net.minecraft.client.renderer.entity.LivingEntityRenderer.getOverlayCoords;
 
@@ -28,14 +28,16 @@ public class BloodySporeRenderer extends GeoEntityRenderer<BloodySpore> {
     }
 
     @Override
-    public void preRender(PoseStack poseStack, BloodySpore animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+    public void preRender(PoseStack poseStack, BloodySpore animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         scale(animatable, poseStack, partialTick);
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     public int getPackedOverlay(BloodySpore animatable, float u, float partialTick) {
         return getOverlayCoords(animatable, this.getWhiteOverlayProgress(animatable, partialTick));
     }
+
+
     public Color getRenderColor(BloodySpore animatable, float partialTick, int packedLight) {
         Color from = Color.ORANGE;
         Color to = Color.RED;
@@ -44,7 +46,7 @@ public class BloodySporeRenderer extends GeoEntityRenderer<BloodySpore> {
         int r = (int) (from.getRed() + (to.getRed() - from.getRed()) * f);
         int g = (int) (from.getGreen() + (to.getGreen() - from.getGreen()) * f);
         int b = (int) (from.getBlue() + (to.getBlue() - from.getBlue()) * f);
-        return Color.ofARGB(255, r, g, b);
+        return Color.ofRGBA( r, g, b,255);
     }
 
 

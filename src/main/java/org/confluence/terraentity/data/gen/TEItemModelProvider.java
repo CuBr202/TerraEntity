@@ -1,9 +1,11 @@
 package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.DeferredRegister;
+
 import org.confluence.terraentity.init.TEItems;
 
 import java.util.Arrays;
@@ -19,10 +21,10 @@ public class TEItemModelProvider extends ItemModelProvider {
         super(output, MODID, existingFileHelper);
     }
 
-    private Map<DeferredRegister.Items,List<String>> createDir(DeferredRegister.Items reg, String... packPaths) {
+    private Map<DeferredRegister<Item>,List<String>> createDir(DeferredRegister<Item> reg, String... packPaths) {
         return Map.of(reg, Arrays.stream(packPaths).toList());
     }
-    private void genModels(List<Map<DeferredRegister.Items,List<String>>> list, String parent){
+    private void genModels(List<Map<DeferredRegister<Item>,List<String>>> list, String parent){
         list.forEach(mp-> mp.forEach((items, packPaths) -> {
             items.getEntries().forEach(item -> {
                 String path = item.getId().getPath().toLowerCase();
@@ -38,7 +40,7 @@ public class TEItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
 
-        List<Map<DeferredRegister.Items,List<String>>> customModels = List.of(
+        List<Map<DeferredRegister<Item>,List<String>>> customModels = List.of(
                 createDir(TEItems.SPAWN_EGGS,"egg/")
         );
         genModels(customModels,"minecraft:item/template_spawn_egg");

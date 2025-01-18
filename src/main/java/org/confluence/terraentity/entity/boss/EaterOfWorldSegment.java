@@ -25,9 +25,9 @@ public class EaterOfWorldSegment extends AbstractTerraBossBase {
     public boolean ifTail = false;
     public static final EntityDataAccessor<Boolean> DATA_TAIL = SynchedEntityData.defineId(EaterOfWorldSegment.class, EntityDataSerializers.BOOLEAN);
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_TAIL, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_TAIL, false);
     }
 
     @Override

@@ -17,8 +17,8 @@ import org.confluence.terraentity.entity.ai.goal.JumpAttack;
 import org.confluence.terraentity.entity.ai.goal.JumpOverBlockGoal;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TEEntities;
-import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.core.animation.AnimationController;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -69,7 +69,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
 
                     })
                     .setController((c,e)->{
-                        c.add(new AnimationController<>(e,10,state -> state.setAndContinue(!state.isMoving() ? DefaultAnimations.IDLE :
+                        c.add(new AnimationController<>(e,10, state -> state.setAndContinue(!state.isMoving() ? DefaultAnimations.IDLE :
                                 e.clientTarget != null && e.clientTarget.isAlive()  ? RUN :WALK )
                         ));
                         c.add(DefaultAnimations.genericAttackAnimation(e,DefaultAnimations.ATTACK_STRIKE));

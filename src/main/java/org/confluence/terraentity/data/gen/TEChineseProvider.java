@@ -1,7 +1,7 @@
 package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.minecraftforge.common.data.LanguageProvider;
 import org.confluence.terraentity.init.TEItems;
 
 import static org.confluence.terraentity.TerraEntity.MODID;

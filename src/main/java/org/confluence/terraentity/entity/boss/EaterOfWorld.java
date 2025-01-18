@@ -171,8 +171,8 @@ public class EaterOfWorld extends AbstractTerraBossBase {
 
 
     @Override
-    public void onAddedToLevel(){
-        super.onAddedToLevel();
+    public void onAddedToWorld(){
+        super.onAddedToWorld();
         this.setAttactDamage(DAMAGE);
     }
 
@@ -185,9 +185,9 @@ public class EaterOfWorld extends AbstractTerraBossBase {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_SEG_COUNT, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_SEG_COUNT, 0);
     }
 
     @Override
@@ -331,7 +331,7 @@ public class EaterOfWorld extends AbstractTerraBossBase {
     }
 
     @Override
-    public void onRemovedFromLevel() {
+    public void onRemovedFromWorld() {
         this.bossEvent.removeAllPlayers();
         if(!level().isClientSide && ifBaseHead && discardTick < DISCARD_TICK){
             int aliveCount = 0;
@@ -358,7 +358,7 @@ public class EaterOfWorld extends AbstractTerraBossBase {
 
             }
         }
-        super.onRemovedFromLevel();
+        super.onRemovedFromWorld();
     }
 
     public void transformHead(EaterOfWorld newHead){

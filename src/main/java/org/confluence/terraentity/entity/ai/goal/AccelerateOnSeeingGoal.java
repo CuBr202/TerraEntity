@@ -10,10 +10,11 @@ import org.confluence.terraentity.TerraEntity;
 public class AccelerateOnSeeingGoal extends Goal {
     protected final Mob mob;
     protected float speedModifier;
-    private static final ResourceLocation name = TerraEntity.space("accelerate_on_seeing_goal");
+    private AttributeModifier modifier;
     public AccelerateOnSeeingGoal(Mob mob,float speedModifier) {
         this.mob = mob;
         this.speedModifier = speedModifier;
+        modifier = new AttributeModifier("accelerate_on_seeing_goal",speedModifier,AttributeModifier.Operation.ADDITION);
 
     }
 
@@ -21,10 +22,10 @@ public class AccelerateOnSeeingGoal extends Goal {
     public boolean canUse() {
         boolean canUse = mob.getTarget()!= null && mob.getTarget().isAlive();
         if (canUse) 
-            if(!mob.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(name))
-            mob.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(new AttributeModifier(name,speedModifier,AttributeModifier.Operation.ADD_VALUE));
-        else if(mob.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(name))
-            mob.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(name);
+            if(!mob.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(modifier))
+            mob.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(modifier);
+        else if(mob.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(modifier))
+            mob.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(modifier);
         return false;
     }
 }

@@ -7,10 +7,12 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
@@ -18,11 +20,13 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraftforge.common.ForgeMod;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -57,16 +61,16 @@ public class AbstractMonster extends Monster implements GeoEntity {
         this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(builder.ATTACK_KNOCKBACK);
         this.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(builder.ATTACK_SPEED);
         this.getAttribute(Attributes.FLYING_SPEED).setBaseValue(builder.FLYING_SPEED);
-        this.getAttribute(Attributes.SAFE_FALL_DISTANCE).setBaseValue(builder.SAFE_FALL);
+        this.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).setBaseValue(builder.SAFE_FALL);
         this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(builder.JUMP_STRENGTH);
-        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(builder.STEP_HEIGHT);
+        this.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08f);
 
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_CLIENT_TARGET_DATA, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_CLIENT_TARGET_DATA, 0);
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
@@ -101,7 +105,9 @@ public class AbstractMonster extends Monster implements GeoEntity {
                 .add(Attributes.ATTACK_KNOCKBACK)
                 .add(Attributes.ATTACK_SPEED)
                 .add(Attributes.FLYING_SPEED)
-
+                .add(ForgeMod.STEP_HEIGHT_ADDITION.get())
+                .add(ForgeMod.ENTITY_GRAVITY.get(),0.01f)
+                .add(Attributes.JUMP_STRENGTH)
                 ;
     }
     public static boolean checkFlyingFishSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
@@ -199,6 +205,10 @@ public class AbstractMonster extends Monster implements GeoEntity {
         */
     }
 
+    public float getJumpBoostPower() {
+        return (float) (super.getJumpBoostPower() + getAttributeValue(Attributes.JUMP_STRENGTH));
+    }
+    @Override
     public boolean isNoGravity() {
         if(builder == null)return true;
         return builder.noGravity;

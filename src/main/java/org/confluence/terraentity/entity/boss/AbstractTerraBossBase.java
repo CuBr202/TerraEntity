@@ -30,7 +30,6 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.Config;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.BossSkill;
 import org.confluence.terraentity.entity.ai.CircleBossSkills;
@@ -38,12 +37,13 @@ import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
+
 import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Predicate;
@@ -73,31 +73,31 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
 
     public abstract void addSkills();
 
-    public float getAttributeMultiplier(Holder<Attribute> attribute){
+    public float getAttributeMultiplier(Attribute attribute){
         return getMultiple(level(), attribute);
     }
 
     public void firstSpawn(){};
     @Override
-    public void onAddedToLevel(){
+    public void onAddedToWorld(){
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.baseHealth);
         float multiplier = getAttributeMultiplier(Attributes.MAX_HEALTH);
         int size = level().players().size();
         if(!level().isClientSide){
 
             if(dirty){
-                this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_max_health"), multiplier*size - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-                this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), Config.boss_attributes_multiplier_health-1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+//                this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_max_health"), multiplier*size - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+//                this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), Config.boss_attributes_multiplier_health-1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
                 this.setHealth(this.getMaxHealth());
                 firstSpawn();
 
             }
-            this.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_attack_damage"), multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-            this.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), Config.boss_attributes_multiplier_damage-1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+//            this.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_attack_damage"), multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+//            this.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), Config.boss_attributes_multiplier_damage-1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
         }
 
-        super.onAddedToLevel();
+        super.onAddedToWorld();
         this.addSkills();
     }
 
@@ -120,8 +120,8 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
 
-        if(!Config.bossClearWhenNoTarget && !(this instanceof EaterOfWorldSegment))
-            this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f));
+//        if(!Config.bossClearWhenNoTarget && !(this instanceof EaterOfWorldSegment))
+//            this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f));
 
     }
 
@@ -137,9 +137,9 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(damage);
     }
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_SKILL_INDEX, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_SKILL_INDEX, 0);
 //        builder.define(DATA_SKILL_TICK, 0);
     }
     @Override
@@ -198,10 +198,12 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
             target = getTarget();
             if(target==null){
                 discardTick++;
-                if(!level().isClientSide && discardTick>DISCARD_TICK && Config.bossClearWhenNoTarget){
-                    this.bossEvent.getPlayers().forEach(p->p.sendSystemMessage(this.getDisplayName().copy().append(Component.translatable("message.terraentity.boss_discard"))));
-                    this.discard();
-                }
+
+//                if(!level().isClientSide && discardTick>DISCARD_TICK && Config.bossClearWhenNoTarget){
+//                    this.bossEvent.getPlayers().forEach(p->p.sendSystemMessage(this.getDisplayName().copy().append(Component.translatable("message.terraentity.boss_discard"))));
+//                    this.discard();
+//                }
+
                 return;
             }
             discardTick = 0;
@@ -280,7 +282,7 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
                         entity instanceof Player ||
                                         entity != this
                                         &&!(entity instanceof AbstractTerraBossBase)
-                                        && entity instanceof LivingEntity living && living.canBeSeenAsEnemy()
+                                        && entity.canBeSeenAsEnemy()
                 );
     }
 
@@ -311,8 +313,8 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     }
 
     @Override // 从客户端移除时
-    public void onRemovedFromLevel() {
-        super.onRemovedFromLevel();
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
     }
 
     @Override // 取消墙体窒息伤害

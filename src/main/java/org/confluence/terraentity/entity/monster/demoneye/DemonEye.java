@@ -23,10 +23,11 @@ import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
+
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVariant>, GeoEntity, DeathAnimOptions {
@@ -74,9 +75,9 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_VARIANT_ID, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_VARIANT_ID, 0);
     }
 
     public @NotNull DemonEyeVariant getVariant() {
@@ -185,8 +186,8 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
     }
 
     @Override
-    public void onAddedToLevel() {
-        super.onAddedToLevel();
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
         setNoGravity(true);
     }
 

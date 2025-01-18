@@ -2,15 +2,17 @@ package org.confluence.terraentity.init;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.effect.harmful.DemonicThoughtsEffect;
 
 public class TEEffects {
     public static final DeferredRegister<MobEffect> EFFECTS =
-            DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, TerraEntity.MODID);
+            DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, TerraEntity.MODID);
 
-    public static final DeferredHolder<MobEffect, DemonicThoughtsEffect> DEMONIC_THOUGHTS =
+    public static final RegistryObject<DemonicThoughtsEffect> DEMONIC_THOUGHTS =
             EFFECTS.register("demonic_thoughts", DemonicThoughtsEffect::new);
 }

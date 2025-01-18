@@ -67,8 +67,8 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
     }
 
 
@@ -94,8 +94,8 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
         this.shoot(f, f1, f2, pVelocity, pInaccuracy);
     }
     @Override
-    public void onAddedToLevel(){
-        super.onAddedToLevel();
+    public void onAddedToWorld(){
+        super.onAddedToWorld();
         if(!level().isClientSide()){
             if(getOwner()==null){
                 discard();
@@ -134,10 +134,10 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
                 super.canHitEntity(pTarget);
     }
 
-    @Override//流体阻力
-    protected float getLiquidInertia() {
-        return 1;
-    }
+//    @Override//流体阻力
+//    protected float getLiquidInertia() {
+//        return 1;
+//    }
 
     @Override//火焰效果
     protected boolean shouldBurn() {

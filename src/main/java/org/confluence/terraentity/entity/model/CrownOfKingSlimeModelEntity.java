@@ -45,6 +45,11 @@ public class CrownOfKingSlimeModelEntity extends Entity {
         }
     }
 
+    @Override
+    protected void defineSynchedData() {
+
+    }
+
     public CrownOfKingSlimeModelEntity(Level level, Vec3 pos) {
         this(TEEntities.CROWN_OF_KING_SLIME_MODEL.get(), level);
         setPos(pos);
@@ -55,8 +60,6 @@ public class CrownOfKingSlimeModelEntity extends Entity {
         );
     }
 
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {}
 
     @Override
     protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {}

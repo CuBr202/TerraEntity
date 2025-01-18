@@ -1,7 +1,7 @@
 package org.confluence.terraentity.entity.ai;
 
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
-import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.function.Consumer;
 

@@ -1,7 +1,7 @@
 package org.confluence.terraentity.entity.ai;
 
 import net.minecraft.world.entity.Mob;
-import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.function.Consumer;
 

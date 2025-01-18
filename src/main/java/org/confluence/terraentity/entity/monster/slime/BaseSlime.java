@@ -145,7 +145,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
                 playSound(SoundEvents.SLIME_ATTACK, 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
                 DamageSource damagesource = this.damageSources().mobAttack(this);
                 if (this.level() instanceof ServerLevel serverlevel)
-                    EnchantmentHelper.doPostAttackEffects(serverlevel, pLivingEntity, damagesource);
+                    doEnchantDamageEffects(this, pLivingEntity);
                 if (getType() == TEEntities.ICE_SLIME.get()) {
                     if (TEUtils.isMaster(level()) || (TEUtils.isAtLeastExpert(level()) && level().random.nextBoolean())) {
                         pLivingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 0), this);
