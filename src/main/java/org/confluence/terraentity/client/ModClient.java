@@ -12,6 +12,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.model.CabbageProjModel;
 import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
@@ -50,6 +51,14 @@ public final class ModClient {
     }
 */
 
+    @SubscribeEvent
+    public static void onClientSetup(final FMLClientSetupEvent evt) {
+//        ModList.get().getModContainerById(MODID).ifPresent(container -> {
+//            container.registerExtensionPoint(
+//                    ConfigScreenHandler.ConfigScreenFactory.class,
+//                    () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> new ConfigScreen(screen)));
+//        });
+    }
 
     @SubscribeEvent
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {

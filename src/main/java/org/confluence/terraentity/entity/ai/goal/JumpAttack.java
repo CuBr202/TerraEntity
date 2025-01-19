@@ -18,7 +18,7 @@ public class JumpAttack extends JumpOverBlockGoal {
         LivingEntity target = mob.getTarget();
         if(target == null) return false;
         float distance = (float) mob.distanceToSqr(target);
-        return mob.onGround() && lastAttackTime < mob.tickCount - 40 && distance < distanceToJump * distanceToJump
+        return mob.onGround() && lastAttackTime < mob.tickCount - 100 && distance < distanceToJump * distanceToJump
                 && distance > 4*4;
     }
 

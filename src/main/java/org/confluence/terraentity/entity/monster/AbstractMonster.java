@@ -7,12 +7,10 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
@@ -22,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.ForgeMod;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
+import org.confluence.terraentity.init.TEEntities;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 
@@ -147,23 +146,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
 
         return true;
     }
-/*
-    public static boolean checkBloodCrawlerSpawn(EntityType<? extends CrimsonKemera> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
-            return false; // 如果 pLevel 不是 Level 的实例，返回 false
-        }
 
-        if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
-            return false; // 如果不满足基本生成规则，返回 false
-        }
-
-        int y = pPos.getY();
-        if (y >= 260) {
-            return false; // 不能生成在 y = 260 或更高的位置
-        }
-
-        return true;
-    }*/
     @Override
     protected SoundEvent getDeathSound() {
         if(builder.deathSound == null) return super.getDeathSound();
@@ -213,9 +196,24 @@ public class AbstractMonster extends Monster implements GeoEntity {
         if(builder == null)return true;
         return builder.noGravity;
     }
+
+    @Override
+    protected int calculateFallDamage(float p_21237_, float p_21238_) {
+        int damage = super.calculateFallDamage(p_21237_, p_21238_);
+        if(builder != null && builder.SAFE_FALL > 0)
+            damage -= (int) (builder.SAFE_FALL);
+        return damage;
+    }
+
+    @Override
+    public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
+        return super.causeFallDamage(p_147187_, p_147188_, p_147189_) && builder.SAFE_FALL < p_147187_;
+    }
+
     public void tick(){
         super.tick();
-
+        if(this.getType() == TEEntities.FACE_MONSTER.get() && this.fallDistance > 0.0F)
+        System.out.println( this.fallDistance);
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
         if(!level().isClientSide){
             if(getTarget() != clientTarget){

@@ -5,9 +5,11 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "terra_entity.refmap.json",
   "mixins": [
+    "accessor.EntityAccessor",
     "accessor.SlimeAccessor"
   ],
   "client": [
+    "ShaderInstanceMixin"
   ],
   "injectors": {
     "defaultRequire": 1

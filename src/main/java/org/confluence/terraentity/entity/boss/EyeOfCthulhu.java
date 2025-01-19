@@ -126,6 +126,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                         dashDir = dashPos.subtract(position());
                         return;
                     }
+                    if(dashPos == null || dashDir == null) return;
                     this.lookControl.setLookAt(dashPos);
                     // 冲刺增加伤害
                     //getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(
@@ -178,7 +179,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
         );
         this.state2_dash = new BossSkill(type2run, 20, 10,
                 terraBossBase -> {
-
+                    if (getTarget() == null) return;
                     if(this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount <= stage2_dashCount_max){
                         state2_dash.timeTrigger = 5;
                         state2_dash.timeContinue = 15;
@@ -208,6 +209,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                         if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashPos.normalize().scale(-1));
                         return;
                     }
+                    if(dashPos == null || dashDir == null) return;
                     this.lookControl.setLookAt(dashPos);
                     // 冲刺增加伤害
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE * dashFactor);

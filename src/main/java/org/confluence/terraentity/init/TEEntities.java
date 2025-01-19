@@ -102,7 +102,7 @@ public final class TEEntities {
     }
 
     // tip Boss
-    public static final RegistryObject<EntityType<KingSlime>> KING_SLIME = ENTITIES.register("king_slime", () -> EntityType.Builder.<KingSlime>of(KingSlime::new, MobCategory.MONSTER).sized(0.6f, 0.6f).clientTrackingRange(10).build(Key("king_slime")));
+    public static final RegistryObject<EntityType<KingSlime>> KING_SLIME = ENTITIES.register("king_slime", () -> EntityType.Builder.<KingSlime>of(KingSlime::new, MobCategory.MONSTER).sized(2.04F, 2.04F).clientTrackingRange(10).build(Key("king_slime")));
     public static final RegistryObject<EntityType<CrownOfKingSlimeModelEntity>> CROWN_OF_KING_SLIME_MODEL = ENTITIES.register("crown_of_king_slime_model", () -> EntityType.Builder.<CrownOfKingSlimeModelEntity>of(CrownOfKingSlimeModelEntity::new, MobCategory.MISC).sized(0.0F, 0.0F).clientTrackingRange(10).build(Key("crown_of_king_slime_model")));
 
     public static final RegistryObject<EntityType<EyeOfCthulhu>> EYE_OF_CTHULHU = registerEntity("eye_of_cthulhu", EyeOfCthulhu::new, 2.04F, 2.04F);

@@ -46,13 +46,14 @@ public class EaterOfWorldSegment extends AbstractTerraBossBase {
 
     public EaterOfWorldSegment(EntityType<? extends Monster> type, Level level) {
         super(type, level,MAX_HEALTHS);
-        this.noPhysics = true;
         setAttactDamage(DAMAGE);
+        this.noPhysics = true;
     }
 
     public EaterOfWorldSegment(EaterOfWorld head, Level level) {
         this(TEEntities.EATER_OF_WORLD_SEGMENT.get(), level);
         this.head = head;
+        this.noPhysics = true;
     }
 
     public Vec3 getNextPos(){
