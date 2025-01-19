@@ -199,6 +199,7 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         if (!level().isClientSide){
             //没有目标禁止行为
             target = getTarget();
+            skills.tick();
             if(target==null){
                 discardTick++;
                 if(!level().isClientSide && discardTick>DISCARD_TICK && Config.bossClearWhenNoTarget){
@@ -208,12 +209,8 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
                 return;
             }
             discardTick = 0;
-            skills.tick();
             collisionHurt();
         }
-
-
-
 
         this.setDeltaMovement(getDeltaMovement().scale(0.95));//空气阻力
     }
