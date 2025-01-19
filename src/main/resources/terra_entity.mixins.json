@@ -8,6 +8,7 @@
     "accessor.SlimeAccessor"
   ],
   "client": [
+    "ShaderInstanceMixin"
   ],
   "injectors": {
     "defaultRequire": 1
