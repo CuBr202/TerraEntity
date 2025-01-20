@@ -2,7 +2,6 @@ package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
@@ -36,8 +35,6 @@ public class AbstractMonster extends Monster implements GeoEntity {
     private int attackInternal = 0;
     private int _attackInternal = 20;
     public Builder builder;
-    public LivingEntity clientTarget;
-    public static final EntityDataAccessor<Integer> DATA_CLIENT_TARGET_DATA = SynchedEntityData.defineId(AbstractMonster.class, EntityDataSerializers.INT);
 
     public AbstractMonster(EntityType<? extends Monster> type, Level level,Builder builder) {
         super(type, level);
@@ -66,22 +63,10 @@ public class AbstractMonster extends Monster implements GeoEntity {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_CLIENT_TARGET_DATA, 0);
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        if (DATA_CLIENT_TARGET_DATA.equals(key)) {
-            int id = entityData.get(DATA_CLIENT_TARGET_DATA);
-            if (id == 0) {
-                this.clientTarget = null;
-                return;
-            }
-            var entity = level().getEntity(id);
-            if (entity instanceof LivingEntity living)
-                this.clientTarget = living;
-        }
-
     }
     @Override
     protected void registerGoals() {
@@ -141,23 +126,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
 
         return true;
     }
-/*
-    public static boolean checkBloodCrawlerSpawn(EntityType<? extends CrimsonKemera> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
-            return false; // 如果 pLevel 不是 Level 的实例，返回 false
-        }
 
-        if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
-            return false; // 如果不满足基本生成规则，返回 false
-        }
-
-        int y = pPos.getY();
-        if (y >= 260) {
-            return false; // 不能生成在 y = 260 或更高的位置
-        }
-
-        return true;
-    }*/
     @Override
     protected SoundEvent getDeathSound() {
         if(builder.deathSound == null) return super.getDeathSound();
@@ -205,14 +174,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
     }
     public void tick(){
         super.tick();
-
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
-        if(!level().isClientSide){
-            if(getTarget() != clientTarget){
-                clientTarget = getTarget();
-                entityData.set(DATA_CLIENT_TARGET_DATA, clientTarget == null? 0 : clientTarget.getId());
-            }
-        }
         if(!level().isClientSide && --attackInternal<0 && builder.attachAttack){
             var entities = level().getEntities(this, this.getBoundingBox());
             if (!entities.isEmpty()) {
@@ -224,16 +186,12 @@ public class AbstractMonster extends Monster implements GeoEntity {
                 }
             }
         }
-
     }
-
 
     public boolean canAttack(LivingEntity entity) {
         return attackInternal < 0 && entity.canBeSeenAsEnemy() &&
                         entity != this &&!(entity instanceof AbstractTerraBossBase);
     }
-
-
 
     public static class Builder {
         public int ATTACK_DAMAGE = 15;

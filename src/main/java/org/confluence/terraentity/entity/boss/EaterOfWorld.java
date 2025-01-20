@@ -16,6 +16,8 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.BossSkill;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.utils.CameraShakeData;
+import org.confluence.terraentity.utils.CameraShakeManager;
 import org.confluence.terraentity.utils.TEUtils;
 
 
@@ -63,6 +65,9 @@ public class EaterOfWorld extends AbstractTerraBossBase {
             }
         }
         this.noPhysics = true;
+
+
+
     }
 
     public EaterOfWorld(Level level, boolean genSegments) {
@@ -212,6 +217,11 @@ public class EaterOfWorld extends AbstractTerraBossBase {
                 level().getNearbyPlayers(attackTargeting,this,this.getBoundingBox().inflate(200))
                         .forEach(p->bossEvent.addPlayer((ServerPlayer) p));
                 bossEvent.setProgress(1);
+
+                CameraShakeManager.addCameraShake(new CameraShakeData(
+                    200,
+                    this.position(), 30));
+
             }
 
             //没有目标禁止行为
