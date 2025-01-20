@@ -20,11 +20,15 @@ public class AccelerateOnSeeingGoal extends Goal {
     @Override
     public boolean canUse() {
         boolean canUse = mob.getTarget()!= null && mob.getTarget().isAlive();
-        if (canUse) 
-            if(!mob.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(name))
-            mob.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(new AttributeModifier(name,speedModifier,AttributeModifier.Operation.ADD_VALUE));
-        else if(mob.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(name))
+        if (canUse) {
+            if (!mob.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(name)) {
+                mob.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(new AttributeModifier(name, speedModifier, AttributeModifier.Operation.ADD_VALUE));
+                mob.setSprinting(true);
+            }
+        }else if (mob.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(name)) {
             mob.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(name);
+            mob.setSprinting(false);
+        }
         return false;
     }
 }
