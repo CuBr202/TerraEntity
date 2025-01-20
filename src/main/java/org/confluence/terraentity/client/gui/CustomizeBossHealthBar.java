@@ -15,6 +15,8 @@ import org.confluence.terraentity.mixinauxiliary.IShaderInstance;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.confluence.terraentity.client.ClientConfig.bossBarStyle;
+
 
 public class CustomizeBossHealthBar {
     public ResourceLocation tex;
@@ -36,23 +38,28 @@ public class CustomizeBossHealthBar {
         int to = w - from;
         int pos = (int) (from + (to - from) * progress);
 
-        // 流动速度
-        float speed = 0.03f;
-        ((IShaderInstance) ModRenderTypes.Shaders.floatBarShader).getTerra_entity$Time().set(System.currentTimeMillis() % 100000 * speed);
-        // 噪声强度
-        ((IShaderInstance) ModRenderTypes.Shaders.floatBarShader).getTerra_entity$Radius().set(0.9f);
-        g.blit(tex, x, y, 0, 0, w, (int) (h * segment), w, h);
+        if(bossBarStyle == 1){
+            g.blit(tex, x, y, 0, 0, w, (int) (h * segment), w, h);
+            g.blit(tex, x, (int) (y + 0.1f * h), 0, (int) (h * (segment - 0.015f)), pos, (int) (h * (1 - segment)), w, h);
+        } else if(bossBarStyle == 2) {
+            // 流动速度
+            float speed = 0.03f;
+            ((IShaderInstance) ModRenderTypes.Shaders.floatBarShader).getTerra_entity$Time().set(System.currentTimeMillis() % 100000 * speed);
+            // 噪声强度
+            ((IShaderInstance) ModRenderTypes.Shaders.floatBarShader).getTerra_entity$Radius().set(0.9f);
+            g.blit(tex, x, y, 0, 0, w, (int) (h * segment), w, h);
 
-        RenderSystem.setShaderTexture(0, tex);
-        RenderSystem.setShaderTexture(1, TerraEntity.space("textures/gui/noise.png"));
-        RenderSystem.setShader(() -> ModRenderTypes.Shaders.floatBarShader);
+            RenderSystem.setShaderTexture(0, tex);
+            RenderSystem.setShaderTexture(1, TerraEntity.space("textures/gui/noise.png"));
+            RenderSystem.setShader(() -> ModRenderTypes.Shaders.floatBarShader);
 
-        ShaderUtil.shaderBlit(g.pose().last().pose(),
-                x, (int) (y + 0.1f * h),
-                0, (int) (h * (segment - 0.015f)),
-                pos, (int) (h * (1 - segment)),
-                w, h
-        );
+            ShaderUtil.shaderBlit(g.pose().last().pose(),
+                    x, (int) (y + 0.1f * h),
+                    0, (int) (h * (segment - 0.015f)),
+                    pos, (int) (h * (1 - segment)),
+                    w, h
+            );
+        }
 
         event.setIncrement(40);
         event.setCanceled(true);
