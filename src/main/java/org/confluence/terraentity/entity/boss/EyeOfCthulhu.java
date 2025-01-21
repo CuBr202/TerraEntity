@@ -176,12 +176,12 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE);
                 }
         );
-        this.state2_dash = new BossSkill(type2run, 20, 10,
+        this.state2_dash = new BossSkill(type2run, 30, 20,
                 terraBossBase -> {
                     if (getTarget() == null) return;
                     if(this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount <= stage2_dashCount_max){
-                        state2_dash.timeTrigger = 5;
-                        state2_dash.timeContinue = 15;
+                        state2_dash.timeTrigger = 10;
+                        state2_dash.timeContinue = 20;
                         speedFactor = 3;
                         this.playSound(TESounds.HURRIED_ROARING.get());
                     }else {

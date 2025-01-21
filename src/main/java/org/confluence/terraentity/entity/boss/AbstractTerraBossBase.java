@@ -120,8 +120,9 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         //this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 100F));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
 
         if(!Config.bossClearWhenNoTarget && !(this instanceof EaterOfWorldSegment))
             this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f));

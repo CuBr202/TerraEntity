@@ -1,6 +1,5 @@
 package org.confluence.terraentity.client;
 
-import net.minecraft.client.Camera;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -9,8 +8,6 @@ import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
-
-import java.lang.reflect.Method;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 import static org.confluence.terraentity.client.ClientConfig.bossBarStyle;
