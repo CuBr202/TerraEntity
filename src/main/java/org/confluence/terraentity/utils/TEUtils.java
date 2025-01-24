@@ -1,23 +1,17 @@
 package org.confluence.terraentity.utils;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -30,9 +24,6 @@ import java.util.List;
 
 
 public final class TEUtils {
-    public static final Direction[] DIRECTIONS = Direction.values();
-    public static final Direction[] HORIZONTAL = new Direction[]{Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH};
-
     public static float nextFloat(RandomSource randomSource, float origin, float bound) {
         if (origin >= bound) {
             throw new IllegalArgumentException("bound - origin is non positive");
@@ -47,37 +38,6 @@ public final class TEUtils {
         } else {
             return origin + randomSource.nextDouble() * (bound - origin);
         }
-    }
-
-    public static void createItemEntity(ItemStack itemStack, double x, double y, double z, Level level) {
-        createItemEntity(itemStack, x, y, z, level, 40);
-    }
-
-    public static void createItemEntity(List<ItemStack> itemStacks, double x, double y, double z, Level level) {
-        for (ItemStack itemStack : itemStacks) {
-            createItemEntity(itemStack, x, y, z, level, 40);
-        }
-    }
-
-    public static void createItemEntity(ItemStack itemStack, double x, double y, double z, Level level, int pickUpDelay) {
-        ItemEntity itemEntity = new ItemEntity(level, x, y, z, itemStack);
-        itemEntity.setPickUpDelay(pickUpDelay);
-        level.addFreshEntity(itemEntity);
-    }
-
-    public static void createItemEntity(Item item, int count, double x, double y, double z, Level level) {
-        createItemEntity(item, count, x, y, z, level, 40);
-    }
-
-    public static void createItemEntity(Item item, int count, double x, double y, double z, Level level, int pickUpDelay) {
-        if (count <= 0) return;
-        ItemEntity itemEntity = new ItemEntity(level, x, y, z, new ItemStack(item, count));
-        itemEntity.setPickUpDelay(pickUpDelay);
-        level.addFreshEntity(itemEntity);
-    }
-
-    public static void createItemEntity(ItemStack itemStack, Vec3 vec, Level level) {
-        createItemEntity(itemStack, vec.x, vec.y, vec.z, level, 40);
     }
 
 
@@ -280,13 +240,6 @@ public final class TEUtils {
         return new Vec3(Math.max(vec1.x, vec2.x), Math.max(vec1.y, vec2.y), Math.max(vec1.z, vec2.z));
     }
 
-    public static Direction[] directionsInAxis(Direction.Axis axis) {
-        return switch (axis) {
-            case X -> new Direction[]{Direction.EAST, Direction.WEST};
-            case Y -> new Direction[]{Direction.UP, Direction.DOWN};
-            default -> new Direction[]{Direction.SOUTH, Direction.NORTH};
-        };
-    }
 
     /**
      * 将输入的向量的某个轴乘一个缩放
@@ -303,30 +256,6 @@ public final class TEUtils {
         return new Vec3(x, y, z);
     }
 
-    public static void addPotionTooltip(MobEffect effect, List<Component> components,
-                                        int amplifier, int duration) {
-        if (effect == null){
-            components.add(Component.translatable("effect.none").withStyle(ChatFormatting.GRAY));
-            return;
-        }
-        components.add(Component.translatable(effect.getDescriptionId()).append(amplifier == 0 ? "" : " ")
-                .append(Component.translatable(amplifier == 0 ? "" : ("enchantment.level." + (amplifier + 1))))
-                .append("（" + tickFormat(duration) + "）").withStyle(getPotionCategoryColor(effect)));
-    }
-
-    private static ChatFormatting getPotionCategoryColor(MobEffect effect) {
-        return effect.getCategory().equals(MobEffectCategory.NEUTRAL) ?
-                ChatFormatting.GRAY : effect.getCategory().equals(MobEffectCategory.BENEFICIAL) ?
-                ChatFormatting.BLUE : ChatFormatting.RED;
-    }
-
-    public static String tickFormat(int tick){
-        int sec = tick / 20;
-        return (sec / 60 < 10 ? "0" : "") + sec / 60
-                + ":" +
-                (sec % 60 < 10 ? "0" : "") + sec % 60;
-    }
-
     /**
      * 计算向量夹角
      * @param v1
@@ -341,6 +270,14 @@ public final class TEUtils {
                                                            Class<? extends Entity> entity, AABB box) {
         return level.getEntitiesOfClass(entity, box.inflate(radius));
     }
+
+    public static Vec3 sphere(float r, float theta, float beta){
+        double x = r * Math.sin(theta) * Math.cos(beta);
+        double y = r * Math.sin(theta) * Math.sin(beta);
+        double z = r * Math.cos(theta);
+        return new Vec3(x, y, z);
+    }
+
 /*
     public static boolean hasBoss(double radius, Level level,
                                   AABB box){

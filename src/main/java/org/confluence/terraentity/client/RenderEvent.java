@@ -1,5 +1,6 @@
 package org.confluence.terraentity.client;
 
+import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -8,6 +9,7 @@ import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
+import org.confluence.terraentity.client.post.BrainTranslucent;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 import static org.confluence.terraentity.client.ClientConfig.bossBarStyle;
@@ -37,8 +39,14 @@ public class RenderEvent {
 
     @SubscribeEvent
     public static void renderLevelStage(RenderLevelStageEvent event) {
-        if(event.getStage()== RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS){
-
+//        if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES){
+//            if(!BrainTranslucent.entityMap.isEmpty())
+//                for(var entry : BrainTranslucent.entityMap.values()){
+//                    entry.target.copyDepthFrom(Minecraft.getInstance().getMainRenderTarget());
+//                }
+//        }
+        if(event.getStage()== RenderLevelStageEvent.Stage.AFTER_LEVEL){
+            BrainTranslucent.render();
         }
     }
 }

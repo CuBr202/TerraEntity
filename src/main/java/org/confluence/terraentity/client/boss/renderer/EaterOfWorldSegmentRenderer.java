@@ -9,7 +9,7 @@ import software.bernie.geckolib.model.GeoModel;
 public class EaterOfWorldSegmentRenderer extends GeoBossRenderer<EaterOfWorldSegment, GeoBossModel<EaterOfWorldSegment>> {
     static GeoBossModel<EaterOfWorldSegment> tailModel = new GeoBossModel<>("eater_of_world_tail");
     public EaterOfWorldSegmentRenderer(EntityRendererProvider.Context renderManager,float scale,float yOffset) {
-        super(renderManager, new GeoBossModel<>("eater_of_world_segment"), scale,yOffset);
+        super(renderManager, new GeoBossModel<>("eater_of_world_segment"), scale,yOffset,true);
     }
 
     public GeoModel<EaterOfWorldSegment> getGeoModel() {

@@ -34,6 +34,7 @@ import java.util.function.Supplier;
 public class AbstractMonster extends Monster implements GeoEntity {
     private int attackInternal = 0;
     private int _attackInternal = 20;
+    private int _detectInternal = 10;
     public Builder builder;
 
     public AbstractMonster(EntityType<? extends Monster> type, Level level,Builder builder) {
@@ -151,7 +152,8 @@ public class AbstractMonster extends Monster implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        builder.controller.accept(controllers,this);
+        if(builder != null && builder.controller != null)
+            builder.controller.accept(controllers,this);
     }
 
     @Override
@@ -175,21 +177,29 @@ public class AbstractMonster extends Monster implements GeoEntity {
     public void tick(){
         super.tick();
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
-        if(!level().isClientSide && --attackInternal<0 && builder.attachAttack){
-            var entities = level().getEntities(this, this.getBoundingBox());
-            if (!entities.isEmpty()) {
-                for (var e : entities) {
-                    if (e instanceof LivingEntity living && canAttack(living) && !(e instanceof Monster)){
-                        attackInternal = _attackInternal;
-                        e.hurt(this.damageSources().generic(),(float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
+        if(!level().isClientSide && builder.attachAttack && isAlive()){
+            if(--attackInternal < 0){
+                attackInternal = _detectInternal;
+                var entities = level().getEntities(this, this.getBoundingBox().inflate(builder.attackIncrease));
+                if (!entities.isEmpty()) {
+                    for (var e : entities) {
+                        if (e instanceof LivingEntity living && canAttack(living) && !(e instanceof Monster)){
+                            doAttack(living);
+                        }
                     }
                 }
             }
         }
     }
 
+    public void doAttack(LivingEntity entity) {
+        attackInternal = _attackInternal;
+        entity.hurt(this.damageSources().generic(),(float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
+    }
+
+    @Override
     public boolean canAttack(LivingEntity entity) {
-        return attackInternal < 0 && entity.canBeSeenAsEnemy() &&
+        return entity.canBeSeenAsEnemy() &&
                         entity != this &&!(entity instanceof AbstractTerraBossBase);
     }
 
@@ -210,6 +220,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
         public boolean attachAttack = true;
         public boolean noGravity = false;
         public boolean noFriction = false;
+        public int attackIncrease = 0;
 
 
         public Supplier<SoundEvent> deathSound;
@@ -227,6 +238,11 @@ public class AbstractMonster extends Monster implements GeoEntity {
             return modifier.apply(this);
         }
 
+        public Builder setAttachIncrease(int attackIncrease) {
+            this.attackIncrease = attackIncrease;
+            return this;
+
+        }
         public Builder setAttackDamage(int attackDamage) {
             this.ATTACK_DAMAGE = attackDamage;
             return this;

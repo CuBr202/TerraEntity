@@ -17,6 +17,7 @@ public final class ModRenderTypes {
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class Shaders {
         public static ShaderInstance floatBarShader;
+        public static ShaderInstance colorBlitShader;
 
 
         @SubscribeEvent
@@ -28,6 +29,13 @@ public final class ModRenderTypes {
                             DefaultVertexFormat.POSITION_TEX),
                     shader -> {
                         floatBarShader = shader;
+                    }
+            );
+            event.registerShader(new ShaderInstance(resourceProvider,
+                            TerraEntity.space("color_blit"),
+                            DefaultVertexFormat.BLIT_SCREEN),
+                    shader -> {
+                        colorBlitShader = shader;
                     }
             );
 

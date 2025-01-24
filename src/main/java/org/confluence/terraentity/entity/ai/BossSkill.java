@@ -50,4 +50,17 @@ public class BossSkill<T extends Mob> {
     public void addStateOver(Consumer<T> stateOver){
         this.stateOver = stateOver;
     };
+
+    public BossSkill<T> onTick (Consumer<T> stateTick){
+        this.stateTick = stateTick;
+        return this;
+    };
+    public BossSkill<T> onInit (Consumer<T> stateInit){
+        this.stateInit = stateInit;
+        return this;
+    };
+    public BossSkill<T> onOver (Consumer<T> stateOver){
+        this.stateOver = stateOver;
+        return this;
+    };
 }

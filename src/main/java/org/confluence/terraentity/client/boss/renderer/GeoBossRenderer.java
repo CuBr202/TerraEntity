@@ -1,9 +1,12 @@
 package org.confluence.terraentity.client.boss.renderer;
 
+import com.mojang.blaze3d.pipeline.MainTarget;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 import net.minecraft.util.Mth;
@@ -17,14 +20,16 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class GeoBossRenderer<T extends AbstractTerraBossBase, M extends GeoBossModel<T>> extends GeoEntityRenderer<T> {
     float scale;
     float yOffset;
+    boolean rotX;
     public GeoBossRenderer(EntityRendererProvider.Context renderManager, M model) {
-        this(renderManager, model, 1.0f,0);
+        this(renderManager, model, 1.0f,0, true);
     }
 
-    public GeoBossRenderer(EntityRendererProvider.Context renderManager, M model, float scale, float yOffset) {
+    public GeoBossRenderer(EntityRendererProvider.Context renderManager, M model, float scale, float yOffset, boolean rotX) {
         super(renderManager, model);
         this.scale = scale;
         this.yOffset = yOffset;
+        this.rotX = rotX;
     }
 
     @Override
@@ -39,17 +44,17 @@ public class GeoBossRenderer<T extends AbstractTerraBossBase, M extends GeoBossM
 
     }
 
-//    @Override
-//    protected float getDeathMaxRotation(CthulhuEye animatable){
-//        return 0;
-//    }
+    public void reRender(BakedGeoModel model, PoseStack poseStack, MultiBufferSource bufferSource, T animatable,
+                          RenderType renderType, VertexConsumer buffer, float partialTick,
+                          int packedLight, int packedOverlay, int colour) {
+
+        super.reRender(model, poseStack, bufferSource, animatable, renderType, buffer, partialTick, packedLight, packedOverlay, colour);
+    }
 
     @Override
     public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
 
-
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-
     }
 /*
     public RenderType getRenderType(CthulhuEye animatable, ResourceLocation texture,

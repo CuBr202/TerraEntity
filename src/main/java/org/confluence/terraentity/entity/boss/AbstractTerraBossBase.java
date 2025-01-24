@@ -59,6 +59,7 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     public float explosionResistance = 0.5f;
     public int attackInternal = 20;
     private int _attackInternal = 20;
+    protected int lastSkillTick;
     protected boolean dirty = true;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
@@ -149,8 +150,10 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        if (key == DATA_SKILL_INDEX) {
+        if (level().isClientSide && key == DATA_SKILL_INDEX) {
             skills.index = this.entityData.get(DATA_SKILL_INDEX);
+            lastSkillTick = tickCount;
+            skills.tick = 0;
         }
     }
     @Override
@@ -197,10 +200,12 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     public void tick() {
         super.tick();
         attackInternal--;
+
         if (!level().isClientSide){
-            //没有目标禁止行为
             target = getTarget();
             skills.tick();
+            //没有目标禁止行为
+
             if(target==null){
                 discardTick++;
                 if(!level().isClientSide && discardTick>DISCARD_TICK && Config.bossClearWhenNoTarget){
@@ -264,6 +269,15 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
        }
     }
 
+    public void LookAt(float maxAngleY) {
+        var pEntity = getTarget();
+        if (pEntity != null) {
+            lookAt(getTarget(), maxAngleY, 85);
+            this.lookControl.setLookAt(getTarget());
+        }
+    }
+
+    @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         if(pSource.getEntity() instanceof IronGolem){
             pAmount *= ironGlomResistance;

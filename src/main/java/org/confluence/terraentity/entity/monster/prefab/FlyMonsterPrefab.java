@@ -63,6 +63,17 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                 })
             ;
 
+    public static Supplier<AbstractMonster.Builder> FLY_EYE  =
+            ()->new FlyMonsterPrefab(10,1,2,30,0.5f,0.3f).getPrefab()
+                    .setHurtSound(TESounds.ROUTINE_HURT)
+                    .setDeathSound(TESounds.ROUTINE_DEATH)
+                    .addGoal((g,e)->{
+                        g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
+                                0.02f,5,10,45));
+
+                    })
+            ;
+
 
     //从一个预制体复制参数再调整参数
     public static Supplier<AbstractMonster.Builder> DO_NOTHING  = ()->copyFrom(CRIMSON_KEMERA_BUILDER)
