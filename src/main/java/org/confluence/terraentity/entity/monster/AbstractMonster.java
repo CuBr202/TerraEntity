@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 public class AbstractMonster extends Monster implements GeoEntity {
     private int attackInternal = 0;
     private int _attackInternal = 20;
-    private int _detectInternal = 10;
+    protected int _detectInternal = 10;
     public Builder builder;
 
     public AbstractMonster(EntityType<? extends Monster> type, Level level,Builder builder) {

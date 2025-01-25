@@ -1,7 +1,5 @@
 package org.confluence.terraentity.client.boss.renderer;
 
-import com.mojang.blaze3d.pipeline.MainTarget;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -43,24 +41,4 @@ public class GeoBossRenderer<T extends AbstractTerraBossBase, M extends GeoBossM
         super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
 
     }
-
-    public void reRender(BakedGeoModel model, PoseStack poseStack, MultiBufferSource bufferSource, T animatable,
-                          RenderType renderType, VertexConsumer buffer, float partialTick,
-                          int packedLight, int packedOverlay, int colour) {
-
-        super.reRender(model, poseStack, bufferSource, animatable, renderType, buffer, partialTick, packedLight, packedOverlay, colour);
-    }
-
-    @Override
-    public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-    }
-/*
-    public RenderType getRenderType(CthulhuEye animatable, ResourceLocation texture,
-                                     @Nullable MultiBufferSource bufferSource,
-                                     float partialTick) {
-        return ModRenderTypes.cthRenderType(texture);
-    }
-    */
 }

@@ -18,7 +18,7 @@ public final class ModRenderTypes {
     public static class Shaders {
         public static ShaderInstance floatBarShader;
         public static ShaderInstance colorBlitShader;
-
+        public static ShaderInstance mixAddShader;
 
         @SubscribeEvent
         public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
@@ -38,7 +38,13 @@ public final class ModRenderTypes {
                         colorBlitShader = shader;
                     }
             );
-
+            event.registerShader(new ShaderInstance(resourceProvider,
+                            TerraEntity.space("mix_add"),
+                            DefaultVertexFormat.BLIT_SCREEN),
+                    shader -> {
+                        mixAddShader = shader;
+                    }
+            );
         }
     }
 

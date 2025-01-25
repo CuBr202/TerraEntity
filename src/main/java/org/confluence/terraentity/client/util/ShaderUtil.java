@@ -34,6 +34,8 @@ public class ShaderUtil {
 
 
     public static void blitScreen(ShaderInstance shader, Consumer<ShaderInstance> setupShader){
+
+
         RenderSystem.assertOnRenderThread();
         GlStateManager._disableDepthTest();
         GlStateManager._viewport(0, 0, Minecraft.getInstance().getMainRenderTarget().width, Minecraft.getInstance().getMainRenderTarget().height);

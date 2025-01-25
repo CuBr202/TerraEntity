@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -8,6 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.boss.BrainOfCthulhu;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
+import org.confluence.terraentity.utils.TEUtils;
 
 public class FlyEye extends AbstractMonster{
 
@@ -16,13 +18,15 @@ public class FlyEye extends AbstractMonster{
     public LivingEntity target;
     public boolean ready = true;
     private static final float MOVE_SPEED = 0.5f;
+    private int backDelay = 5;
 
     // 0 为攻击， 1 为返回
     public int state = 1;
     public FlyEye(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(5,0,1,0,0,0.1f)
+        super(type, level, new AbstractPrefab(20,0,3,0,0,0.1f)
                 .getPrefab().setNoGravity());
         this.noPhysics = true;
+        _detectInternal = 1;
     }
 
     public void setOwner(BrainOfCthulhu owner) {
@@ -40,24 +44,39 @@ public class FlyEye extends AbstractMonster{
 
     public void tick(){
         super.tick();
-        if(owner == null) return;
+
+        if(!level().isClientSide &&  (owner == null || !owner.isAlive()))
+            discard();
 
         if(!level().isClientSide && isAlive()){
+
             if(state == 0){
                 ready = false;
                 if(target != null && target.isAlive()) {
-                    this.setDeltaMovement(target.position().subtract(position()).normalize().scale(MOVE_SPEED));
-
+                    this.addDeltaMovement(target.getEyePosition().subtract(position()).normalize().scale(MOVE_SPEED/ 5));
+                    if(TEUtils.angleBetween(getDeltaMovement(), target.getEyePosition().subtract(position())) > Math.PI / 2 ) {
+                        state = 1;
+                        backDelay = 5;
+                    }
                 }else {
                     state = 1;
                 }
             }else {
+                backDelay--;
                 if(homePos != null){
                     if(position().distanceToSqr(homePos) < 0.1f)
                         ready = true;
                     addDeltaMovement(homePos.subtract(position()).normalize().scale(MOVE_SPEED / 10));
                 }
             }
+
+            if(target != null && target.isAlive()){
+                lookAt(target, 30, 30);
+            }else{
+                lookAt(EntityAnchorArgument.Anchor.EYES, position().scale(2).subtract(owner.position()));
+            }
+
+
         }
     }
 
@@ -74,7 +93,7 @@ public class FlyEye extends AbstractMonster{
     }
 
     public void doAttack(LivingEntity entity) {
-        if(state == 1) return;
+        if(state == 1 && backDelay <= 0) return;
         super.doAttack(entity);
         if(state == 0) state = 1;
     }

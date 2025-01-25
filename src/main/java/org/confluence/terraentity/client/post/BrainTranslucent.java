@@ -2,43 +2,92 @@ package org.confluence.terraentity.client.post;
 
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import net.minecraft.client.Minecraft;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.confluence.terraentity.client.ModRenderTypes;
 import org.confluence.terraentity.client.util.ShaderUtil;
 import org.confluence.terraentity.entity.boss.BrainOfCthulhu;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BrainTranslucent {
     public static class tuple{
         public TextureTarget target;
-        public float alpha;
-        public tuple(TextureTarget target, float alpha){
+        public int light;
+        public tuple(TextureTarget target, int light){
             this.target = target;
-            this.alpha = alpha;
+            this.light = light;
         }
     }
+
     public static Map<BrainOfCthulhu, tuple> entityMap = new HashMap<>();
 
-    public static void render(){
+    static TextureTarget temp;
+    static TextureTarget temp2;
+    public static void render(RenderLevelStageEvent event){
 
         if(entityMap.isEmpty()) return;
 
         Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
+        List<BrainOfCthulhu> shouldBeRemoved = new ArrayList<>();
+        if(temp == null || temp.width != Minecraft.getInstance().getMainRenderTarget().width || temp.height != Minecraft.getInstance().getMainRenderTarget().height) {
+            temp = new TextureTarget(Minecraft.getInstance().getMainRenderTarget().width, Minecraft.getInstance().getMainRenderTarget().height, false, true);
+            temp2 = new TextureTarget(Minecraft.getInstance().getMainRenderTarget().width, Minecraft.getInstance().getMainRenderTarget().height, false, true);
+        }
+        temp.setClearColor(0, 0, 0, 0);
+        temp.clear(true);
+        temp2.setClearColor(0, 0, 0, 0);
+        temp2.clear(true);
+
+        temp.bindWrite(true);
+        Minecraft.getInstance().getMainRenderTarget().blitToScreen(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
+        temp2.bindWrite(true);
+        Minecraft.getInstance().getMainRenderTarget().blitToScreen(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
+
+        Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
+        //将maintarget拷贝到
+        temp.bindWrite(true);
+
+        TextureTarget out = null;
+        TextureTarget in;
+        int c = 0;
         for(BrainOfCthulhu brain : entityMap.keySet()){
             if(brain!= null && brain.isAlive()){
+                // 对每个BOSS本体虚影渲染
+                c++;
+                out = c % 2 == 0? temp: temp2;
+                in = c % 2 == 0? temp2: temp;
+                out.bindWrite(true);
                 tuple tuple = entityMap.get(brain);
-                TextureTarget target = tuple.target;
-//                target.copyDepthFrom(Minecraft.getInstance().getMainRenderTarget());
-                ShaderUtil.blitScreen(ModRenderTypes.Shaders.colorBlitShader,shader->{
-                    shader.COLOR_MODULATOR.set(1f, 1f, 1f, tuple.alpha);
-                    shader.setSampler("Sampler0", Minecraft.getInstance().getMainRenderTarget());
-                    shader.setSampler("Sampler1", target);
-                });
-                target.clear(true);
+                float alpha = Math.clamp(brain.getFadeProgress(), 0, 1);
+                if(alpha < 0.99f){
+                    TextureTarget target = tuple.target;
+                    TextureTarget finalIn = in;
+                    ShaderUtil.blitScreen(ModRenderTypes.Shaders.colorBlitShader, shader->{
+                        shader.COLOR_MODULATOR.set(1f, 1f, 1f, alpha);
+                        shader.setSampler("Sampler0", finalIn);
+                        shader.setSampler("Sampler1", target);
+                    });
+                }else{
+                    shouldBeRemoved.add(brain);
+                }
             }else{
-                entityMap.remove(brain);
+                shouldBeRemoved.add(brain);
             }
+        }
+        for(BrainOfCthulhu brain : shouldBeRemoved){
+            entityMap.remove(brain);
+        }
+
+        Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
+
+        if(out != null)
+            out.blitToScreen(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
+        temp.clear(true);
+        for(tuple t : entityMap.values()){
+            t.target.clear(true);
         }
     }
 }

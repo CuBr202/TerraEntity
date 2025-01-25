@@ -15,8 +15,8 @@ import org.confluence.terraentity.entity.monster.FlyEye;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.utils.TEUtils;
+import org.joml.Quaternionf;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.ArrayList;
@@ -26,27 +26,28 @@ import java.util.List;
 
 public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Boss {
     private static final float MAX_HEALTHS = 728f;
-    private static final float DAMAGE = 1f;//接触伤害
+    private static final float DAMAGE = 5f;//接触伤害
     private static final float MOVE_SPEED = 0.3f;
+    private int minionsCount = 20; // 随从数量
+    private int minionsSummonInternal = 10; // 随从攻击间隔
+    private int dashCount = 2; // 冲刺次数, 血量低于30%时冲刺3次
 
+    private float _dashCount = dashCount;
     private float _moveSpeed = MOVE_SPEED;
-
-
-    private int minionsCount = 2; // 随从数量
     private final List<FlyEye> minions = new LinkedList<>(); // 随从实体
     private final List<Vec3> homePoses = new ArrayList<>(); // 随从初始位置
 
     public int stage = 1; //阶段
     private Vec3 inertia;
-
     private Curve curve;
 
-    public BrainOfCthulhu(EntityType<BrainOfCthulhu> entityType, Level level) {
-        super(entityType, level,MAX_HEALTHS);
+    public BrainOfCthulhu(EntityType<? extends BrainOfCthulhu> entityType, Level level) {
+        super(entityType, level, MAX_HEALTHS);
         //初始属性
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-        SingletonGeoAnimatable.registerSyncedAnimatable(this);
+//        SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.playSound(TESounds.ROAR.get());
+        this.noPhysics = true;
     }
 
     public BrainOfCthulhu(Level level) {
@@ -82,8 +83,8 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
                         minions.add(minion);
 
                         float r = random.nextFloat() + 5;
-                        float theta = random.nextFloat() * 2 * (float) Math.PI;
-                        float beta = random.nextFloat() * (float) Math.PI;
+                        float theta = random.nextFloat()  * (float) Math.PI;
+                        float beta = random.nextFloat() * (float) Math.PI ;
                         Vec3 pos = TEUtils.sphere(r,theta,beta);
 
                         homePoses.add(pos);
@@ -105,18 +106,18 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
 
                     if (getTarget() == null) return;
 
-                    if(skills.tick % 20 == 0)
+                    if(skills.tick % minionsSummonInternal == 0)
                         for(FlyEye m : minions){
                             if(m.isReady()){
                                 m.attack(getTarget());
                                 break;
                             }
                         }
-
                     LookAt(10);
 
-                    // 向玩家正上方移动
-                    Vec3 tar = getTarget().position().add(0,3,0);
+                    // 向玩家斜上方移动
+                    Vec3 dir = position().subtract(target.position()).normalize().multiply(1,0,1);
+                    Vec3 tar = target.position().add(0,5,0).add(dir.scale(10));
                     if (distanceToSqr(tar) > 2)
                         setDeltaMovement(tar.subtract(position()).normalize().scale(_moveSpeed / 2));
                 })
@@ -150,44 +151,68 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
                 })
         ;
 
-        switch_1_to_2 = new BossSkill<BrainOfCthulhu>(switching, 20, 0)
+        switch_1_to_2 = new BossSkill<BrainOfCthulhu>(switching, 15, 0)
                 .onTick(e->{
                     LookAt(10);
                 })
                 .onOver(e->{
                     _moveSpeed = 0.5f;
                     noPhysics = true;
+                    for(int i=1;i<4;i++){
+                        BrainFake fake = TEEntities.BRAIN_FAKE.get().create(level());
+                        fake.setPos(position());
+                        fake.setOwner(this);
+                        fake.tag = i;
+                        level().addFreshEntity(fake);
+                    }
                 })
         ;
 
         stage2_stare = new BossSkill<BrainOfCthulhu>(open, 40, 0)
                 .onInit(e->{
                     if(target != null){
-                        Vec3 control = target.position().add(random.nextFloat() * 8, 0, random.nextFloat() * 8);
-                        Vec3 end = control.add(0,5,0);
+                        float r = random.nextFloat() + 16;
+                        float theta = random.nextFloat() * 2 * (float) Math.PI;
+                        Vec3 control = target.position().add(r * Math.sin(theta), 2, r * Math.cos(theta));
+                        Vec3 end = control.add(0,3,0);
                         curve = new Bezier3Curse(position(), control, end);
                     }
                 })
                 .onTick(e->{
-                    setPos(curve.cal(skills.tick / 30f));
+                    if(target == null || curve == null) return;
+                    setPos(curve.cal(skills.tick / 40f));
                     LookAt(10);
                 })
         ;
 
-        state2_dash = new BossSkill<BrainOfCthulhu>(open, 25, 10)
+        state2_dash = new BossSkill<BrainOfCthulhu>(open, 30, 10)
                 .onInit(e->{
 
                 })
                 .onTick(e->{
                     if(target == null) return;
+                    if(!skills.canContinue()){
+                        setDeltaMovement(position().subtract(target.position()).normalize().scale(0.3f));
+                    }
                     if(skills.canTrigger()){
                         Vec3 control = target.position().add(random.nextFloat() - 0.5f, -2, random.nextFloat() - 0.5f);
-                        Vec3 end = control.add(0,5,0);
+                        Vec3 end = target.position().add(target.position().subtract(position()).normalize().multiply(10,0,10)).add(0,2,0);
                         curve = new Bezier3Curse(position(), control, end);
+                        playSound(TESounds.ROAR.get(),5,1);
                     }
                     if(skills.canContinue()) {
-                        setPos(curve.cal((skills.tick - 10 ) / 15f));
+                        setPos(curve.cal((skills.tick - 10 ) / 20f));
                         LookAt(10);
+                    }
+                })
+                .onOver(e->{
+                    if(getHealth() / getMaxHealth() < 0.3f)
+                        dashCount = 3;
+                    if(_dashCount > 0){
+                        _dashCount--;
+                        skills.forceStartIndex(5);
+                    }else{
+                        _dashCount = dashCount;
                     }
                 })
         ;
@@ -196,26 +221,27 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
                 .onTick(e->{
                     if(target != null){
                         Vec3 dir = position().subtract(target.position()).normalize();
-                        setDeltaMovement(dir.scale(0.2f));
+                        setDeltaMovement(dir.scale(0.3f));
                     }
                 })
         ;
-        stage2_fade_out = new BossSkill<BrainOfCthulhu>(open, 30, 0)
+        stage2_fade_out = new BossSkill<BrainOfCthulhu>(open, 100, 30)
                 .onInit(e->{
                     if(getTarget() != null) {
-                        float r = random.nextFloat() + 5;
+                        float r = random.nextFloat() + 10;
                         float theta = random.nextFloat() * 2 * (float) Math.PI;
-                        float beta = random.nextFloat() * (float) Math.PI;
+                        float beta = (random.nextFloat() * 0.3f + 0.35f) * (float) Math.PI;
                         Vec3 pos = TEUtils.sphere(r, theta, beta);
-                        setPos(getTarget().position().add(pos));
+                        setPos(getTarget().position().add(pos).add(0,2,0));
                     }
                 })
                 .onTick(e->{
                     if(getTarget() == null) return;
                     LookAt(10);
+
                     // 向玩家正上方移动
-                    Vec3 tar = getTarget().position().add(0,3,0);
-                    if (distanceToSqr(tar) > 2)
+                    Vec3 tar = getTarget().position().add(0,1,0);
+                    if (distanceToSqr(tar) > 2 && hurtTime == 0)
                         setDeltaMovement(tar.subtract(position()).normalize().scale(_moveSpeed / 2));
                 })
                 .onOver(e->{
@@ -225,6 +251,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
 
 
         addSkill(first_spawn);// 0
+
         addSkill(stage1_stare);//1
         addSkill(stage1_fade_in);//2
         addSkill(stage1_fade_out);
@@ -263,12 +290,31 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
             for(int i = 0; i < minions.size(); i++){
                 FlyEye m = minions.get(i);
                 if(m.isAlive()){
-                    m.homePos = position().add(homePoses.get(i));
+                    Vec3 dir = homePoses.get(i);
+                    if(dir != null && random.nextFloat() < 0.5f){
+                        // 随机旋转homePos
+                        Quaternionf q = new Quaternionf().rotateY((float) (random.nextDouble() * 20) );
+                        dir = new Vec3(q.transform(dir.toVector3f()));
+                        m.homePos = position().add(dir);
+                    }else{
+                        m.homePos = position().add(homePoses.get(i));
+                    }
                     c++;
                 }
             }
             minionsCount = c;
         }
+    }
+
+    @Override
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
+        this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5f);
+    }
+
+    @Override
+    public int getDetectInternal() {
+        return 1;
     }
 
     @Override // 受伤音效

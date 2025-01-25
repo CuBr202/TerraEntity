@@ -5,9 +5,7 @@ import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CircleBossSkills<T extends Mob> {
     public T owner;
@@ -35,7 +33,10 @@ public class CircleBossSkills<T extends Mob> {
             bossSkills.get(index).stateTick.accept(owner);
         }
         if(bossSkills.isEmpty())return;
-        if(bossSkills.get(index).timeContinue < tick) forceEnd();
+        if(bossSkills.get(index).timeContinue < tick) {
+            forceEnd();
+            forceStartIndex(index);
+        }
     }
 
 
@@ -47,15 +48,16 @@ public class CircleBossSkills<T extends Mob> {
 
         //状态结束
         if(bossSkills.get(lastIndex).stateOver!=null) bossSkills.get(lastIndex).stateOver.accept(owner);
-
-        //初次进入状态
-        if(bossSkills.get(index).stateInit!=null) bossSkills.get(index).stateInit.accept(owner);
         owner.getEntityData().set(AbstractTerraBossBase.DATA_SKILL_INDEX, index);
     }
     /** 强制跳转状态 **/
     public void forceStartIndex(int index){
         tick = 0;
         this.index = index;
+
+        //初次进入状态
+        if(bossSkills.get(index).stateInit!=null) bossSkills.get(index).stateInit.accept(owner);
+        owner.getEntityData().set(AbstractTerraBossBase.DATA_SKILL_INDEX, index);
     }
 
 

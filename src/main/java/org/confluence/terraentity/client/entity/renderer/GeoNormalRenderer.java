@@ -43,7 +43,7 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
         if(ifRotX) {
             double rad = animatable.yBodyRot * Math.PI / 180;
             poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(animatable.xRotO));
-            poseStack.translate(0, 0.5, 0);
+//            poseStack.translate(0, 0, 0);
         }
 
     }

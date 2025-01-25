@@ -59,6 +59,7 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     public float explosionResistance = 0.5f;
     public int attackInternal = 20;
     private int _attackInternal = 20;
+    private int _detectInternal = 10;
     protected int lastSkillTick;
     protected boolean dirty = true;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -82,6 +83,7 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     }
 
     public void firstSpawn(){};
+
     @Override
     public void onAddedToLevel(){
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.baseHealth);
@@ -193,13 +195,21 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         //skillMap.put(bossSkill.skill,anim);
     }
 
+    public int getDetectInternal() {
+        return _detectInternal;
+    }
+
+    public int getAttackInternal() {
+        return _attackInternal;
+    }
+
     LivingEntity target;
     protected static final int DISCARD_TICK = 100;
     protected int discardTick = 0;
     @Override
     public void tick() {
         super.tick();
-        attackInternal--;
+
 
         if (!level().isClientSide){
             target = getTarget();
@@ -253,7 +263,8 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     }
 
     public void collisionHurt() {
-        if (canCollisionHurt() && !level().isClientSide) {
+        if (canCollisionHurt() && !level().isClientSide && --attackInternal <= 0) {
+            attackInternal = getDetectInternal();
             // 包围盒检测造成伤害
             var entities = level().getEntities(this, this.getBoundingBox(), e->e instanceof LivingEntity living&& e!= this );
             if (!entities.isEmpty()) {

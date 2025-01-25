@@ -9,7 +9,9 @@
     "accessor.SlimeAccessor"
   ],
   "client": [
-    "ShaderInstanceMixin"
+    "GameRendererMixin",
+    "ShaderInstanceMixin",
+    "accessor.GameRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

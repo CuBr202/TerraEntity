@@ -76,7 +76,7 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> EATER_OF_SOULS = registerSimpleMonster("eater_of_souls", FlyMonsterPrefab.EATER_OF_SOULS_BUILDER,1.2f,1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER,1.6f,1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.75F,0.75F);
-    public static final DeferredHolder<EntityType<?>, EntityType<FlyEye>> FLY_EYE = registerEntity("fly_eye", FlyEye::new, 1.2f, 1.2f);
+    public static final DeferredHolder<EntityType<?>, EntityType<FlyEye>> FLY_EYE = registerEntity("visual_neuron", FlyEye::new, 1.2f, 1.2f);
 
     // tip 陆生怪
     public static final DeferredHolder<EntityType<?>, EntityType<Decayeder>> DECAYEDER = ENTITIES.register("decayeder", () -> EntityType.Builder.of(Decayeder::new, MobCategory.MONSTER).build(Key("decayeder")));
@@ -107,6 +107,7 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<EaterOfWorldSegment>> EATER_OF_WORLD_SEGMENT = registerEntity("eater_of_world_segment", EaterOfWorldSegment::new, 2F, 2F);
     public static final DeferredHolder<EntityType<?>, EntityType<EaterOfWorld>> EATER_OF_WORLD = registerEntity("eater_of_world", EaterOfWorld::new, 3F, 2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BrainOfCthulhu>> BRAIN_OF_CTHULHU = registerEntity("brain_of_cthulhu", BrainOfCthulhu::new, 4F, 4F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BrainFake>> BRAIN_FAKE = registerEntity("brain_fake", BrainFake::new, 4F, 4F);
 
 
 
@@ -153,7 +154,7 @@ public final class TEEntities {
         event.registerEntityRenderer(CRIMSON_KEMERA.get(), c->new GeoNormalRenderer<>(c,CRIMSON_KEMERA.getId(),true));
         event.registerEntityRenderer(EATER_OF_SOULS.get(), c->new GeoNormalRenderer<>(c,EATER_OF_SOULS.getId(),true));
         event.registerEntityRenderer(DRIPPLER.get(), c->new GeoNormalRenderer<>(c,DRIPPLER.getId(),false,2f,0));
-        event.registerEntityRenderer(FLYING_FISH.get(), c->new GeoNormalRenderer<>(c,FLYING_FISH.getId(),true,0.75f,-0.5f));
+        event.registerEntityRenderer(FLYING_FISH.get(), c->new GeoNormalRenderer<>(c,FLYING_FISH.getId(),true,0.75f,0));
 
 
         event.registerEntityRenderer(DEMON_EYE.get(), DemonEyeRenderer::new);
@@ -173,9 +174,8 @@ public final class TEEntities {
         event.registerEntityRenderer(EATER_OF_WORLD_SEGMENT.get(), c-> new EaterOfWorldSegmentRenderer(c,3f, 0f));
         event.registerEntityRenderer(EATER_OF_WORLD.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(EATER_OF_WORLD),3f,0, true));
         event.registerEntityRenderer(BRAIN_OF_CTHULHU.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
-        event.registerEntityRenderer(FLY_EYE.get(), c->new GeoNormalRenderer<>(c,BLOOD_TUMORS.getId(),true));
-
-
+        event.registerEntityRenderer(FLY_EYE.get(), c->new GeoNormalRenderer<>(c,FLY_EYE.getId(),true));
+        event.registerEntityRenderer(BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
 
     }
 
@@ -231,7 +231,7 @@ public final class TEEntities {
         event.put(EATER_OF_WORLD.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(BRAIN_OF_CTHULHU.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(FLY_EYE.get(), AbstractMonster.createAttributes().build());
-
+        event.put(BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
 
     }
 
