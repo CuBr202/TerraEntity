@@ -11,7 +11,7 @@ import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.BossSkill;
 import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
 import org.confluence.terraentity.entity.ai.motion.curve.Curve;
-import org.confluence.terraentity.entity.monster.FlyEye;
+import org.confluence.terraentity.entity.monster.VisualNeuron;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.utils.TEUtils;
@@ -25,8 +25,8 @@ import java.util.List;
 
 
 public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Boss {
-    private static final float MAX_HEALTHS = 728f;
-    private static final float DAMAGE = 5f;//接触伤害
+    private static final float MAX_HEALTHS = 552f;
+    private static final float DAMAGE = 14f;//接触伤害
     private static final float MOVE_SPEED = 0.3f;
     private int minionsCount = 20; // 随从数量
     private int minionsSummonInternal = 10; // 随从攻击间隔
@@ -34,7 +34,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
 
     private float _dashCount = dashCount;
     private float _moveSpeed = MOVE_SPEED;
-    private final List<FlyEye> minions = new LinkedList<>(); // 随从实体
+    private final List<VisualNeuron> minions = new LinkedList<>(); // 随从实体
     private final List<Vec3> homePoses = new ArrayList<>(); // 随从初始位置
 
     public int stage = 1; //阶段
@@ -79,7 +79,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
                     int interval = 2;
                     int cur = skills.tick - 21;
                     if(skills.canContinue() && cur % interval == 0 && minions.size() < minionsCount ){
-                        FlyEye minion = TEEntities.FLY_EYE.get().create(level());
+                        VisualNeuron minion = TEEntities.VISUAL_NEURON.get().create(level());
                         minions.add(minion);
 
                         float r = random.nextFloat() + 5;
@@ -107,7 +107,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
                     if (getTarget() == null) return;
 
                     if(skills.tick % minionsSummonInternal == 0)
-                        for(FlyEye m : minions){
+                        for(VisualNeuron m : minions){
                             if(m.isReady()){
                                 m.attack(getTarget());
                                 break;
@@ -280,7 +280,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
     }
 
     public boolean canAttack(LivingEntity target) {
-        return super.canAttack(target) && !(target instanceof FlyEye);
+        return super.canAttack(target) && !(target instanceof VisualNeuron);
     }
 
     public void tick() {
@@ -288,7 +288,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
         if(stage == 1 && !level().isClientSide && tickCount > 50){
             int c = 0;
             for(int i = 0; i < minions.size(); i++){
-                FlyEye m = minions.get(i);
+                VisualNeuron m = minions.get(i);
                 if(m.isAlive()){
                     Vec3 dir = homePoses.get(i);
                     if(dir != null && random.nextFloat() < 0.5f){

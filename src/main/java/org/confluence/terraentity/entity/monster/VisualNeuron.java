@@ -11,7 +11,7 @@ import org.confluence.terraentity.entity.boss.BrainOfCthulhu;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.utils.TEUtils;
 
-public class FlyEye extends AbstractMonster{
+public class VisualNeuron extends AbstractMonster{
 
     private BrainOfCthulhu owner;
     public Vec3 homePos;
@@ -22,8 +22,8 @@ public class FlyEye extends AbstractMonster{
 
     // 0 为攻击， 1 为返回
     public int state = 1;
-    public FlyEye(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(20,0,3,0,0,0.1f)
+    public VisualNeuron(EntityType<? extends Monster> type, Level level) {
+        super(type, level, new AbstractPrefab(44,2,9,0,0,0.1f)
                 .getPrefab().setNoGravity());
         this.noPhysics = true;
         _detectInternal = 1;
