@@ -96,13 +96,11 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         float multiplier = getAttributeMultiplier(Attributes.MAX_HEALTH);
         int size = level().players().size();
         if(!level().isClientSide){
-
             if(dirty){
                 this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_max_health"), multiplier*size - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
                 this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), Config.boss_attributes_multiplier_health-1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
                 this.setHealth(this.getMaxHealth());
                 firstSpawn();
-
             }
             this.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_attack_damage"), multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
             this.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), Config.boss_attributes_multiplier_damage-1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
@@ -133,7 +131,7 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
 
-        if(!Config.bossClearWhenNoTarget)
+        if(!Config.bossClearWhenNoTarget && !(this instanceof EaterOfWorldsSegment))
             this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f));
 
     }
@@ -336,11 +334,15 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
             this.bossEvent.removePlayer(player);
     }
 
+    public float getBossEventProgress(){
+        return this.getHealth() / this.getMaxHealth();
+    }
+
     @Override // boss条更新
     protected void customServerAiStep() {
         super.customServerAiStep();
         if (shouldShowBossBar())
-            this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+            this.bossEvent.setProgress(getBossEventProgress());
     }
 
     @Override // 从客户端移除时
@@ -383,7 +385,7 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         return false;
     }
 
-
+    @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("dirty", false);

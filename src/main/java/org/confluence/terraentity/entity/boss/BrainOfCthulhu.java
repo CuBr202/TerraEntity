@@ -310,6 +310,18 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
     public void onAddedToLevel() {
         super.onAddedToLevel();
         this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5f);
+        this.skills.forceStartIndex(0);
+    }
+
+    @Override
+    public float getBossEventProgress(){
+        float hp = getHealth();
+        float maxHp = getMaxHealth();
+        for(VisualNeuron m : minions){
+            hp += m.getHealth();
+            maxHp += m.getMaxHealth();
+        }
+        return hp / maxHp;
     }
 
     @Override

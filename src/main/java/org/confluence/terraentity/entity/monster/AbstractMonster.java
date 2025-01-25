@@ -1,6 +1,8 @@
 package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
@@ -10,6 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
@@ -31,11 +34,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static org.confluence.terraentity.utils.TEUtils.getMultiple;
+
 public class AbstractMonster extends Monster implements GeoEntity {
     private int attackInternal = 0;
     private int _attackInternal = 20;
     protected int _detectInternal = 10;
     public Builder builder;
+    protected boolean dirty = true;
 
     public AbstractMonster(EntityType<? extends Monster> type, Level level,Builder builder) {
         super(type, level);
@@ -45,7 +51,6 @@ public class AbstractMonster extends Monster implements GeoEntity {
         this.navigation = createNavigation(level);
         this.setDiscardFriction(builder.noFriction);
 
-        this.setHealth(builder.MAX_HEALTH);
         this.getAttribute(Attributes.ARMOR).setBaseValue(builder.ARMOR);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(builder.ATTACK_DAMAGE);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(builder.MOVEMENT_SPEED);
@@ -64,16 +69,53 @@ public class AbstractMonster extends Monster implements GeoEntity {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
+
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
+
     }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putBoolean("dirty", false);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if (tag.contains("dirty")) {
+            dirty = false;
+        }
+    }
+
+
     @Override
     protected void registerGoals() {
         if(builder!= null) builder.goals.forEach(g->g.accept(goalSelector,this));
         if(builder!= null) builder.targets.forEach(t->t.accept(targetSelector,this));
     }
+
+    public void firstSpawn(){};
+
+    @Override
+    public void onAddedToLevel(){
+        super.onAddedToLevel();
+        if(!level().isClientSide){
+            if(dirty){
+                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.MAX_HEALTH);
+                this.setHealth(getMaxHealth());
+                firstSpawn();
+            }
+        }
+    }
+
+    public float getAttributeMultiplier(Holder<Attribute> attribute){
+        return getMultiple(level(), attribute);
+    }
+
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()

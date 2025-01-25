@@ -3,16 +3,16 @@ package org.confluence.terraentity.client.boss.renderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
-import org.confluence.terraentity.entity.boss.EaterOfWorldSegment;
+import org.confluence.terraentity.entity.boss.EaterOfWorldsSegment;
 import software.bernie.geckolib.model.GeoModel;
 
-public class EaterOfWorldSegmentRenderer extends GeoBossRenderer<EaterOfWorldSegment, GeoBossModel<EaterOfWorldSegment>> {
-    static GeoBossModel<EaterOfWorldSegment> tailModel = new GeoBossModel<>("eater_of_world_tail");
+public class EaterOfWorldSegmentRenderer extends GeoBossRenderer<EaterOfWorldsSegment, GeoBossModel<EaterOfWorldsSegment>> {
+    static GeoBossModel<EaterOfWorldsSegment> tailModel = new GeoBossModel<>("eater_of_worlds_tail");
     public EaterOfWorldSegmentRenderer(EntityRendererProvider.Context renderManager,float scale,float yOffset) {
-        super(renderManager, new GeoBossModel<>("eater_of_world_segment"), scale,yOffset,true);
+        super(renderManager, new GeoBossModel<>("eater_of_worlds_segment"), scale,yOffset,true);
     }
 
-    public GeoModel<EaterOfWorldSegment> getGeoModel() {
+    public GeoModel<EaterOfWorldsSegment> getGeoModel() {
         if(animatable.ifTail)
             return tailModel;
         return this.model;
