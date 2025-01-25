@@ -45,7 +45,7 @@ public class EaterOfWorldSegment extends AbstractTerraBossBase {
     }
 
     public EaterOfWorldSegment(EntityType<? extends Monster> type, Level level) {
-        super(type, level,MAX_HEALTHS);
+        super(type, level,MAX_HEALTHS, 1);
         this.noPhysics = true;
         setAttactDamage(DAMAGE);
     }

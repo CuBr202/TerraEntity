@@ -42,7 +42,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
     private Curve curve;
 
     public BrainOfCthulhu(EntityType<? extends BrainOfCthulhu> entityType, Level level) {
-        super(entityType, level, MAX_HEALTHS);
+        super(entityType, level, MAX_HEALTHS, 3);
         //初始属性
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
 //        SingletonGeoAnimatable.registerSyncedAnimatable(this);

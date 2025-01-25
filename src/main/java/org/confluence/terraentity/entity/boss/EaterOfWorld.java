@@ -4,15 +4,22 @@ package org.confluence.terraentity.entity.boss;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.ModLoader;
+import net.neoforged.neoforge.common.CommonHooks;
+import org.confluence.terraentity.api.event.BossDeathEvent;
 import org.confluence.terraentity.entity.ai.BossSkill;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
@@ -33,7 +40,7 @@ public class EaterOfWorld extends AbstractTerraBossBase {
     private static final float projDamage = 3;
 
     private float segmentInternal = 2f;
-    int segmentCount = 60;//体节长度
+    int segmentCount = 3;//体节长度
     static float turnSpeedBase = 3f;//转向速度
     static float moveSpeedBase = 0.6f;//移动速度
     float wanderPosRadius = 10;//寻点半径
@@ -58,7 +65,7 @@ public class EaterOfWorld extends AbstractTerraBossBase {
 
 
     public EaterOfWorld(EntityType<? extends Monster> type, Level level) {
-        super(type, level,MAX_HEALTHS);
+        super(type, level,1, 0);
         if(!level.isClientSide){
             if(getTarget()!=null){
                 this.moveTo(getTarget().position());
@@ -352,8 +359,7 @@ public class EaterOfWorld extends AbstractTerraBossBase {
             int aliveCount = 0;
             for(var n : baseSegments){
                 if(n==null || !n.isAlive() ) continue;
-                if(n.getHealth()>0.0 && n!=this
-                        && !level().getNearbyPlayers(TargetingConditions.DEFAULT,this,this.getBoundingBox().inflate(200)).isEmpty()){
+                if(n.getHealth()>0.0 && n!=this){
                     if(n instanceof EaterOfWorldSegment){
                         EaterOfWorld newHead = new EaterOfWorld(level(),false);
                         newHead.setPos(n.position());
@@ -366,11 +372,14 @@ public class EaterOfWorld extends AbstractTerraBossBase {
                     }
                     break;
                 }
-                if(n.isAlive()) aliveCount++;
             }
-            if(aliveCount==0){
+            for(var n : baseSegments){
+                if(n==null || !n.isAlive() ) continue;
+                aliveCount++;
+            }
+            if(aliveCount==0 && baseSegments.indexOf(this) != 0){
                 //生成掉落物
-
+                ModLoader.postEvent(new BossDeathEvent(this));
             }
         }
         super.onRemovedFromLevel();
@@ -433,5 +442,32 @@ public class EaterOfWorld extends AbstractTerraBossBase {
 
     public void setBossEvent(ServerPlayer player){
         this.bossEvent.addPlayer(player);
+    }
+    @Override
+    public void die(DamageSource damageSource) {
+        if (!CommonHooks.onLivingDeath(this, damageSource)) {
+            if (!this.isRemoved() && !this.dead) {
+                LivingEntity livingentity = this.getKillCredit();
+                if (this.deathScore >= 0 && livingentity != null) {
+                    livingentity.awardKillScore(this, this.deathScore, damageSource);
+                }
+                this.dead = true;
+                this.getCombatTracker().recheckStatus();
+                Level var5 = this.level();
+                if (var5 instanceof ServerLevel) {
+                    ServerLevel serverlevel = (ServerLevel)var5;
+                    this.gameEvent(GameEvent.ENTITY_DIE);
+                    this.dropAllDeathLoot(serverlevel, damageSource);
+                    this.createWitherRose(livingentity);
+                    this.level().broadcastEntityEvent(this, (byte)3);
+                }
+                this.setPose(Pose.DYING);
+            }
+        }
+    }
+
+    @Override
+    protected void postDeath(){
+
     }
 }

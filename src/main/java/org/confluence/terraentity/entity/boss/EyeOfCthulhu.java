@@ -50,7 +50,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
 
 
     public EyeOfCthulhu(EntityType<EyeOfCthulhu> entityType, Level level) {
-        super(entityType, level,MAX_HEALTHS);
+        super(entityType, level,MAX_HEALTHS,2);
         //初始属性
 
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);

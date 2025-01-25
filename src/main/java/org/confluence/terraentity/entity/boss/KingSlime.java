@@ -221,9 +221,11 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         return Mob.createMobAttributes()
             .add(Attributes.ATTACK_DAMAGE, 1.0)
             .add(Attributes.ATTACK_KNOCKBACK, 2.2)
-            .add(Attributes.ARMOR, 10.0)
-            .add(Attributes.KNOCKBACK_RESISTANCE, 10.00)
-            .add(Attributes.FOLLOW_RANGE, 100.0);
+            .add(Attributes.ARMOR, 2)
+            .add(Attributes.KNOCKBACK_RESISTANCE, 1)
+            .add(Attributes.FOLLOW_RANGE, 100.0)
+
+                ;
     }
 
     private void setHorizontalSpeed(Vec3 newDir) {

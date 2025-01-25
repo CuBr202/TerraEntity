@@ -7,6 +7,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -14,10 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -29,10 +27,15 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.ModLoader;
+import net.neoforged.neoforge.common.CommonHooks;
 import org.confluence.terraentity.Config;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.event.BossDeathEvent;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
+import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.BossSkill;
 import org.confluence.terraentity.entity.ai.CircleBossSkills;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
@@ -65,11 +68,13 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
     private final float baseHealth;
-    public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level, float health) {
+    private final int baseArmor;
+    public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level, float health, int armor) {
         super(type, level);
         this.moveControl = new FlyingMoveControl(this, 10, false);
         setNoGravity(true);
         this.baseHealth = health;
+        this.baseArmor = armor;
         var a = bossEvent.getOverlay();
         if(level().isClientSide){
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
@@ -87,6 +92,7 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     @Override
     public void onAddedToLevel(){
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.baseHealth);
+        this.getAttribute(Attributes.ARMOR).setBaseValue(baseArmor);
         float multiplier = getAttributeMultiplier(Attributes.MAX_HEALTH);
         int size = level().players().size();
         if(!level().isClientSide){
@@ -123,11 +129,11 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         //this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 100F));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+//        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
 
-        if(!Config.bossClearWhenNoTarget && !(this instanceof EaterOfWorldSegment))
+        if(!Config.bossClearWhenNoTarget)
             this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f));
 
     }
@@ -398,5 +404,10 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     public void setCustomName(@Nullable Component pName) {
         super.setCustomName(pName);
         bossEvent.setName(getDisplayName());
+    }
+
+    protected void postDeath(){
+        if(this instanceof Boss boss && boss.isMainBody())
+            ModLoader.postEvent(new BossDeathEvent(this));
     }
 }
