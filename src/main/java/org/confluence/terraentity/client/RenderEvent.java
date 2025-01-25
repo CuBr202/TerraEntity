@@ -58,10 +58,10 @@ public class RenderEvent {
 
     @SubscribeEvent
     public static void renderHand(RenderHandEvent event) {
-        if(!HotSwap.consume){
-            event.setCanceled(true);
-            return;
-        }
-        HotSwap.consume = false;
+//        if(HotSwap.consume > 0){
+//            event.setCanceled(true);
+//            return;
+//        }
+//        HotSwap.consume --;
     }
 }
