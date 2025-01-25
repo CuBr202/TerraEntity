@@ -3,7 +3,6 @@ package org.confluence.terraentity.entity.monster;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -71,7 +70,7 @@ public class VisualNeuron extends AbstractMonster{
             }else {
                 backDelay--;
                 if(homePos != null){
-                    if(position().distanceToSqr(homePos) < 0.1f)
+                    if(position().distanceToSqr(homePos) < 4f)
                         ready = true;
                     addDeltaMovement(homePos.subtract(position()).normalize().scale(MOVE_SPEED / 10));
                 }

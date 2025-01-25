@@ -137,15 +137,16 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                 terraBossBase -> {
                     // 结束冲刺移除加成
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
+                    if (stage == 1){
+                        skills.forceStartIndex(0);
+                        return;
+                    }
                 }
         );
         // 转换阶段
         this.switch_1_to_2 = new BossSkill(switching, 40, 0,
                 terraBossBase -> {
-                    if (stage == 1){
-                        skills.forceStartIndex(0);
-                        return;
-                    }
+
                     summonCD = 0;
                     summonCDAll = 7;
                     this.playSound(TESounds.HURRIED_ROARING.get());

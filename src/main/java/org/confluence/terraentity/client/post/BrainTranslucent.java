@@ -1,11 +1,14 @@
 package org.confluence.terraentity.client.post;
 
 import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.ModRenderTypes;
 import org.confluence.terraentity.client.util.ShaderUtil;
 import org.confluence.terraentity.entity.boss.BrainOfCthulhu;
+import org.confluence.terraentity.mixinauxiliary.IShaderInstance;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,10 +68,20 @@ public class BrainTranslucent {
                 if(alpha < 0.99f){
                     TextureTarget target = tuple.target;
                     TextureTarget finalIn = in;
-                    ShaderUtil.blitScreen(ModRenderTypes.Shaders.colorBlitShader, shader->{
-                        shader.COLOR_MODULATOR.set(1f, 1f, 1f, alpha);
+
+//                    ShaderUtil.blitScreen(ModRenderTypes.Shaders.colorBlitShader, shader->{
+//                        shader.COLOR_MODULATOR.set(1f, 1f, 1f, alpha);
+//                        shader.setSampler("Sampler0", finalIn);
+//                        shader.setSampler("Sampler1", target);
+//                    });
+
+                    float p = Math.clamp(brain.getDissolveProgress(), 0, 1);
+                    ((IShaderInstance)ModRenderTypes.Shaders.dissolveBlitShader).getTerra_entity$Progress().set(1-p);
+                    ShaderUtil.blitScreen(ModRenderTypes.Shaders.dissolveBlitShader, shader->{
+                        shader.COLOR_MODULATOR.set(1f, 0f, 1f, alpha);
                         shader.setSampler("Sampler0", finalIn);
                         shader.setSampler("Sampler1", target);
+                        shader.setSampler("Sampler2",Minecraft.getInstance().getTextureManager().getTexture(TerraEntity.space("textures/gui/noise.png")) );
                     });
                 }else{
                     shouldBeRemoved.add(brain);
@@ -83,8 +96,9 @@ public class BrainTranslucent {
 
         Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
 
-        if(out != null)
+        if(out != null) {
             out.blitToScreen(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
+        }
         temp.clear(true);
         for(tuple t : entityMap.values()){
             t.target.clear(true);

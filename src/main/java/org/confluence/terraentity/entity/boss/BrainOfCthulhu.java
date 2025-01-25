@@ -106,13 +106,19 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
 
                     if (getTarget() == null) return;
 
-                    if(skills.tick % minionsSummonInternal == 0)
-                        for(VisualNeuron m : minions){
-                            if(m.isReady()){
+                    if(skills.tick % minionsSummonInternal == 0) {
+                        boolean exist = false;
+                        for (VisualNeuron m : minions) {
+                            if (m.isReady()) {
                                 m.attack(getTarget());
+                                exist = true;
                                 break;
                             }
                         }
+                        if(!exist && skills.tick > 60){{
+                            skills.forceEnd();
+                        }}
+                    }
                     LookAt(10);
 
                     // 向玩家斜上方移动
@@ -142,7 +148,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
                     if(getTarget() == null) return;
                     LookAt(10);
                     // 向玩家正上方移动
-                    Vec3 tar = getTarget().position().add(0,3,0);
+                    Vec3 tar = getTarget().position().add(0,1,0);
                     if (distanceToSqr(tar) > 2)
                         setDeltaMovement(tar.subtract(position()).normalize().scale(_moveSpeed / 2));
                 })
@@ -200,7 +206,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
                         curve = new Bezier3Curse(position(), control, end);
                         playSound(TESounds.ROAR.get(),5,1);
                     }
-                    if(skills.canContinue()) {
+                    if(skills.canContinue() && curve != null) {
                         setPos(curve.cal((skills.tick - 10 ) / 20f));
                         LookAt(10);
                     }
@@ -277,6 +283,10 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
             return (tickCount -lastSkillTick) / 31f;
 
         return 1;
+    }
+
+    public float getDissolveProgress(){
+        return getFadeProgress();
     }
 
     public boolean canAttack(LivingEntity target) {

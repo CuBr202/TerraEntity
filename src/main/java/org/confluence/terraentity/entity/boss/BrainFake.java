@@ -8,6 +8,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import org.confluence.terraentity.entity.ai.BossSkill;
 import software.bernie.geckolib.animation.RawAnimation;
 
@@ -21,6 +22,8 @@ public class BrainFake extends BrainOfCthulhu {
     public BrainFake(EntityType<BrainFake> entityType, Level level) {
         super(entityType, level);
         this.noPhysics = true;
+        if(!level.isClientSide())
+            this.setBoundingBox(new AABB(0, 0,0,0,0,0));
     }
 
     public static final EntityDataAccessor<Integer> DATA_OWNER_ID = SynchedEntityData.defineId(BrainFake.class, EntityDataSerializers.INT);
@@ -71,6 +74,13 @@ public class BrainFake extends BrainOfCthulhu {
             float v =  Math.min(1 - (owner.getHealth() / owner.getMaxHealth()) * 0.5f,owner.getFadeProgress());
             return v;
         }
+        return 1;
+    }
+
+    @Override
+    public float getDissolveProgress(){
+        if(owner != null)
+            return owner.getDissolveProgress();
         return 1;
     }
 

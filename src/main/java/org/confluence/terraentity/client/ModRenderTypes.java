@@ -19,6 +19,7 @@ public final class ModRenderTypes {
         public static ShaderInstance floatBarShader;
         public static ShaderInstance colorBlitShader;
         public static ShaderInstance mixAddShader;
+        public static ShaderInstance dissolveBlitShader;
 
         @SubscribeEvent
         public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
@@ -43,6 +44,13 @@ public final class ModRenderTypes {
                             DefaultVertexFormat.BLIT_SCREEN),
                     shader -> {
                         mixAddShader = shader;
+                    }
+            );
+            event.registerShader(new ShaderInstance(resourceProvider,
+                            TerraEntity.space("dissolve_blit"),
+                            DefaultVertexFormat.BLIT_SCREEN),
+                    shader -> {
+                        dissolveBlitShader = shader;
                     }
             );
         }
