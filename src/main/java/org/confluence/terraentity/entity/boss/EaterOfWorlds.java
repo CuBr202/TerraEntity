@@ -10,15 +10,11 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.ModLoader;
-import net.neoforged.neoforge.common.CommonHooks;
-import org.confluence.terraentity.api.event.BossDeathEvent;
+import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.BossSkill;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
@@ -32,7 +28,7 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-public class EaterOfWorlds extends AbstractTerraBossBase {
+public class EaterOfWorlds extends AbstractTerraBossBase implements Boss {
     private static final float MAX_HEALTHS = 54f;
     private static final float DAMAGE = 5f;//接触伤害
     private static final float projDamage = 3;
@@ -110,7 +106,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase {
         BossSkill<AbstractTerraBossBase> direct = new BossSkill<>(null,300,0,
                 (AbstractTerraBossBase)->{
                     isDashing = true;
-                    moveSpeed = moveSpeedBase;
+                    moveSpeed = moveSpeedBase * 1.5f;
                     turnSpeed = 5F;
                     shouldMove = true;
                     shouldFollowTarget=true;
@@ -121,7 +117,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase {
                         return;
                     }
                     //设置触发条件，否则取消tick
-                    if(TEUtils.angleBetween(getForward(),target.position().subtract(position()))<20    //角度
+                    if(TEUtils.angleBetween(getForward(),target.position().subtract(position()))<Math.PI / 8    //角度
                             && distanceToSqr(target) < 20   //距离
                     ){
                         skills.forceEnd();
@@ -140,11 +136,11 @@ public class EaterOfWorlds extends AbstractTerraBossBase {
                     float random1 = random.nextFloat()*360;
                     double random2 = wanderPosRadius * Math.sin(random1);
                     double random3 = wanderPosRadius * Math.cos(random1);
-                    double h = 8 + random.nextFloat() * 4;
+                    double h = 10 + random.nextFloat() * 4;
                     if(wanderType ==WonderType.DOWN){
                         targetPos = target.position().add(random2,-h,random3);
                     }else if(wanderType ==WonderType.UP){
-                        targetPos = target.position().add(random2,h ,random3);
+                        targetPos = target.position().add(random2,h*0.5 ,random3);
                     }else{
                         targetPos = target.position().add(random1,random2,random3);
                     }
@@ -174,7 +170,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase {
         addSkillNoAnim(wonder);
         addSkillNoAnim(direct);
         addSkillNoAnim(dash);
-        addSkillNoAnim(wonder);
+//        addSkillNoAnim(wonder);
 
     }
 
@@ -231,6 +227,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase {
 
             //没有目标禁止行为
             target = getTarget();
+            if(targetPos!=null) targetPos = targetPos.add(0,0.05,0);
             if(target!=null) {
                 if (!firstWander) {
                     skills.forceStartIndex(2);
@@ -296,8 +293,18 @@ public class EaterOfWorlds extends AbstractTerraBossBase {
                             last.ifTail = true;
                             last.getEntityData().set(EaterOfWorldsSegment.DATA_TAIL,true);
                         }else{//连续的头应该死亡
-                            if(lastSeg!=null && lastSeg.isAlive())
-                                lastSeg.setHealth(0.0f);
+                            DamageSource source = baseSegments.get(i).getLastDamageSource();
+                            if(lastSeg!=null && lastSeg.isAlive()) {
+                                if(source!=null){
+                                    lastSeg.setHealth(0.0f);
+                                    lastSeg.die(source);
+                                }
+                                else{
+                                    lastSeg.setHealth(0.0f);
+                                    lastSeg.die(this.getLastDamageSource()==null?damageSources().generic():this.getLastDamageSource());
+                                }
+
+                            }
                         }
                         cur = 0;
                         continue;
@@ -346,6 +353,15 @@ public class EaterOfWorlds extends AbstractTerraBossBase {
                     }
                     cur++;
                 }
+
+                // todo 尾部单独死亡
+//                if(baseSegments.getLast().isAlive() && !baseSegments.get(baseSegments.size() - 2).isAlive()){
+//                    baseSegments.getLast().setHealth(0.0f);
+//                    DamageSource source = this.getLastDamageSource()==null?damageSources().generic():this.getLastDamageSource();
+//                    baseSegments.getLast().die(source);
+//                    if(! baseSegments.get(baseSegments.size() - 2).isRemoved())
+//                        baseSegments.get(baseSegments.size() - 2).die(source);
+//                }
             }
         }
     }
@@ -354,7 +370,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase {
     public void onRemovedFromLevel() {
         this.bossEvent.removeAllPlayers();
         if(!level().isClientSide && ifBaseHead && discardTick < DISCARD_TICK){
-            int aliveCount = 0;
+
             for(var n : baseSegments){
                 if(n==null || !n.isAlive() ) continue;
                 if(n.getHealth()>0.0 && n!=this){
@@ -371,14 +387,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase {
                     break;
                 }
             }
-            for(var n : baseSegments){
-                if(n==null || !n.isAlive() ) continue;
-                aliveCount++;
-            }
-            if(aliveCount==0 && baseSegments.indexOf(this) != 0){
-                //生成掉落物
-                ModLoader.postEvent(new BossDeathEvent(this));
-            }
+
         }
         super.onRemovedFromLevel();
     }
@@ -444,23 +453,29 @@ public class EaterOfWorlds extends AbstractTerraBossBase {
 
     @Override
     public void die(DamageSource damageSource) {
-        if (!CommonHooks.onLivingDeath(this, damageSource)) {
-            if (!this.isRemoved() && !this.dead) {
-                LivingEntity livingentity = this.getKillCredit();
-                if (this.deathScore >= 0 && livingentity != null) {
-                    livingentity.awardKillScore(this, this.deathScore, damageSource);
+        if(ifBaseHead) {
+            int aliveCount = 0;
+            for (var n : baseSegments) {
+                if (n == null || !n.isAlive()) continue;
+                aliveCount++;
+            }
+            if (aliveCount == 0) {
+                //生成掉落物
+                super.die(damageSource);
+            }else{
+                // 生成体节掉落物
+                if(level() instanceof ServerLevel serverLevel){
+                    EaterOfWorldsSegment seg = new EaterOfWorldsSegment(this,level());
+                    seg.setPos(position());
+                    seg.die(damageSource);
                 }
-                this.dead = true;
-                this.getCombatTracker().recheckStatus();
-                Level var5 = this.level();
-                if (var5 instanceof ServerLevel) {
-                    ServerLevel serverlevel = (ServerLevel)var5;
-                    this.gameEvent(GameEvent.ENTITY_DIE);
-                    this.dropAllDeathLoot(serverlevel, damageSource);
-                    this.createWitherRose(livingentity);
-                    this.level().broadcastEntityEvent(this, (byte)3);
-                }
-                this.setPose(Pose.DYING);
+            }
+        }else{
+            // 生成体节掉落物
+            if(level() instanceof ServerLevel serverLevel){
+                EaterOfWorldsSegment seg = new EaterOfWorldsSegment(this,level());
+                seg.setPos(position());
+                seg.die(damageSource);
             }
         }
     }
@@ -468,5 +483,10 @@ public class EaterOfWorlds extends AbstractTerraBossBase {
     @Override
     protected void postDeath(){
 
+    }
+
+    @Override
+    public boolean isMainBody(){
+        return ifBaseHead;
     }
 }
