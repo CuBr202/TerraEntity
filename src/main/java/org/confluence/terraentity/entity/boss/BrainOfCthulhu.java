@@ -273,7 +273,9 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
     }
 
     public float getFadeProgress(){
-        if(skills.index == 2)
+        if(skills.index == 0){
+            return (tickCount -lastSkillTick) / 51f;
+        } else if(skills.index == 2)
             return 1 - (tickCount -lastSkillTick) / 41f;
         else if(skills.index == 3 )
             return (tickCount -lastSkillTick) / 41f;
