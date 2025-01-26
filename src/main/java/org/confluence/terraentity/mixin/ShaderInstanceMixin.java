@@ -27,6 +27,8 @@ public abstract class ShaderInstanceMixin implements IShaderInstance {
     public Uniform getTerra_entity$Radius(){return terra_entity$Radius;}
     @Unique private  Uniform terra_entity$Progress;
     public Uniform getTerra_entity$Progress(){return terra_entity$Progress;}
+    @Unique private  Uniform terra_entity$Distance;
+    public Uniform getTerra_entity$Distance(){return terra_entity$Distance;}
 
     @Inject(method = "<init>(Lnet/minecraft/server/packs/resources/ResourceProvider;Lnet/minecraft/resources/ResourceLocation;Lcom/mojang/blaze3d/vertex/VertexFormat;)V", at = @At("RETURN"))
     public void ShaderInstance(ResourceProvider p_173336_, ResourceLocation shaderLocation, VertexFormat p_173338_, CallbackInfo ci) {
@@ -35,6 +37,7 @@ public abstract class ShaderInstanceMixin implements IShaderInstance {
         terra_entity$Time = this.getUniform("Time");
         terra_entity$Radius = this.getUniform("Radius");
         terra_entity$Progress = this.getUniform("Progress");
+        terra_entity$Distance = this.getUniform("Distance");
     }
 
 

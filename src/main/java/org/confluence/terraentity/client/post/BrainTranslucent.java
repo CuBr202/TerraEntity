@@ -77,6 +77,7 @@ public class BrainTranslucent {
 
                     float p = Math.clamp(brain.getDissolveProgress(), 0, 1);
                     ((IShaderInstance)ModRenderTypes.Shaders.dissolveBlitShader).getTerra_entity$Progress().set(1-p);
+                    ((IShaderInstance)ModRenderTypes.Shaders.dissolveBlitShader).getTerra_entity$Distance().set(Minecraft.getInstance().player.distanceTo(brain));
                     ShaderUtil.blitScreen(ModRenderTypes.Shaders.dissolveBlitShader, shader->{
                         shader.COLOR_MODULATOR.set(1f, 0f, 1f, alpha);
                         shader.setSampler("Sampler0", finalIn);
