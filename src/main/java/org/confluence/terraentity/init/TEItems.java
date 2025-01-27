@@ -10,7 +10,6 @@ import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.confluence.terraentity.item.DebugItem;
 
 import java.util.function.Supplier;
 
@@ -54,7 +53,7 @@ public class TEItems {
 
     public static final DeferredItem<Item> KING_SLIME_SPAWN_EGG = register("king_slime_spawn_egg", TEEntities.KING_SLIME, 0x73bcf4, 0xf8e234);
     public static final DeferredItem<Item> EYE_OF_CTHULHU_SPAWN_EGG = register("cthulhu_eye_spawn_egg", TEEntities.EYE_OF_CTHULHU, 0xffffff, 0xab0d0d);
-    public static final DeferredItem<Item> EATER_OF_WORLD_SPAWN_EGG = register("eater_of_world_spawn_egg", TEEntities.EATER_OF_WORLD, 0x5d478b, 0x8968cd);
+    public static final DeferredItem<Item> EATER_OF_WORLD_SPAWN_EGG = register("eater_of_world_spawn_egg", TEEntities.EATER_OF_WORLDS, 0x5d478b, 0x8968cd);
     public static final DeferredItem<Item> BRAIN_OF_CTHULHU_SPAWN_EGG = register("brain_of_cthulhu_spawn_egg", TEEntities.BRAIN_OF_CTHULHU, 0xa75049, 0x65292c);
 
 //    public static final DeferredItem<Item> DEBUG_ITEM = SPAWN_EGGS.register("debug_item", () -> new DebugItem(new Item.Properties().stacksTo(1)));

@@ -21,8 +21,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.client.boss.renderer.BrainOfCthulhuRenderer;
-import org.confluence.terraentity.client.boss.renderer.GeoBossRenderer;
 import org.confluence.terraentity.client.boss.renderer.EaterOfWorldSegmentRenderer;
+import org.confluence.terraentity.client.boss.renderer.GeoBossRenderer;
 import org.confluence.terraentity.client.entity.renderer.*;
 import org.confluence.terraentity.entity.boss.*;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
@@ -105,7 +105,7 @@ public final class TEEntities {
 
     public static final DeferredHolder<EntityType<?>, EntityType<EyeOfCthulhu>> EYE_OF_CTHULHU = registerEntity("eye_of_cthulhu", EyeOfCthulhu::new, 2.04F, 2.04F);
     public static final DeferredHolder<EntityType<?>, EntityType<EaterOfWorldsSegment>> EATER_OF_WORLD_SEGMENT = registerEntity("eater_of_worlds_segment", EaterOfWorldsSegment::new, 2F, 2F);
-    public static final DeferredHolder<EntityType<?>, EntityType<EaterOfWorlds>> EATER_OF_WORLD = registerEntity("eater_of_worlds", EaterOfWorlds::new, 3F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<EaterOfWorlds>> EATER_OF_WORLDS = registerEntity("eater_of_worlds", EaterOfWorlds::new, 3F, 2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BrainOfCthulhu>> BRAIN_OF_CTHULHU = registerEntity("brain_of_cthulhu", BrainOfCthulhu::new, 4F, 4F);
     public static final DeferredHolder<EntityType<?>, EntityType<BrainFake>> BRAIN_FAKE = registerEntity("brain_fake", BrainFake::new, 4F, 4F);
 
@@ -172,7 +172,7 @@ public final class TEEntities {
         event.registerEntityRenderer(KING_SLIME.get(), KingSlimeRenderer::new);
         event.registerEntityRenderer(EYE_OF_CTHULHU.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(EYE_OF_CTHULHU),1,0.5f, true));
         event.registerEntityRenderer(EATER_OF_WORLD_SEGMENT.get(), c-> new EaterOfWorldSegmentRenderer(c,3f, 0f));
-        event.registerEntityRenderer(EATER_OF_WORLD.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(EATER_OF_WORLD),3f,0, true));
+        event.registerEntityRenderer(EATER_OF_WORLDS.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(EATER_OF_WORLDS),3f,0, true));
         event.registerEntityRenderer(BRAIN_OF_CTHULHU.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
         event.registerEntityRenderer(VISUAL_NEURON.get(), c->new GeoNormalRenderer<>(c, VISUAL_NEURON.getId(),true));
         event.registerEntityRenderer(BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
@@ -228,7 +228,7 @@ public final class TEEntities {
         event.put(KING_SLIME.get(), KingSlime.createSlimeAttributes().build());
         event.put(EYE_OF_CTHULHU.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(EATER_OF_WORLD_SEGMENT.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(EATER_OF_WORLD.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(EATER_OF_WORLDS.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(BRAIN_OF_CTHULHU.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(VISUAL_NEURON.get(), AbstractMonster.createAttributes().build());
         event.put(BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());

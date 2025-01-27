@@ -22,7 +22,6 @@ import org.confluence.terraentity.utils.CameraShakeData;
 import org.confluence.terraentity.utils.CameraShakeManager;
 import org.confluence.terraentity.utils.TEUtils;
 
-
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -72,7 +71,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase implements Boss {
     }
 
     public EaterOfWorlds(Level level, boolean genSegments) {
-        this(TEEntities.EATER_OF_WORLD.get(),level);
+        this(TEEntities.EATER_OF_WORLDS.get(),level);
         this.genSegments = genSegments;
     }
 
