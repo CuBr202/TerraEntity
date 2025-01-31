@@ -41,4 +41,8 @@ public class GeoBossRenderer<T extends AbstractTerraBossBase, M extends GeoBossM
         super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
 
     }
+
+    public float getYOffset(){
+        return yOffset;
+    }
 }
