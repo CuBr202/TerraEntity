@@ -36,6 +36,8 @@ public class TEEnglishProvider extends LanguageProvider {
 
         // Config
         add("terra_entity.configuration.boss_clear_when_no_target", "Clear Boss When No Target");
+        add("terra_entity.configuration.boss_attributes_multiplier_health", "Boss Attributes Multiplier-Health");
+        add("terra_entity.configuration.boss_attributes_multiplier_damage", "Boss Attributes Multiplier-Damage");
 
     }
 }

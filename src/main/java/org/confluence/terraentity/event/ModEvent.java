@@ -5,7 +5,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import org.confluence.terraentity.Config;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.network.s2c.SyncCameraShakePacket;
 
@@ -15,7 +14,6 @@ public class ModEvent {
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            Config.load();
 
         });
     }

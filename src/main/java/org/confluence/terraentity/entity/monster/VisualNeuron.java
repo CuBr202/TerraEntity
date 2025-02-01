@@ -5,13 +5,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.Config;
-import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.boss.BrainOfCthulhu;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.utils.TEUtils;
@@ -81,21 +77,12 @@ public class VisualNeuron extends AbstractMonster{
             }else{
                 lookAt(EntityAnchorArgument.Anchor.EYES, position().scale(2).subtract(owner.position()));
             }
-
-
         }
-
     }
 
     @Override
     public void firstSpawn(){
-        float multiplier = getAttributeMultiplier(Attributes.MAX_HEALTH);
-        int size = level().players().size();
-        this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_max_health"), multiplier*size - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-        this.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), Config.boss_attributes_multiplier_health-1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-        this.setHealth(this.getMaxHealth());
-        this.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_attack_damage"), multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-        this.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), Config.boss_attributes_multiplier_damage-1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        TEUtils.multiplePlayerEnhance(this, dirty);
     }
 
     @Override

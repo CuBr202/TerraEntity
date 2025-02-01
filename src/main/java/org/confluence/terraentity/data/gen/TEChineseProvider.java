@@ -94,6 +94,8 @@ public class TEChineseProvider extends LanguageProvider {
 
         // config
         add("terra_entity.configuration.boss_clear_when_no_target", "丢失目标时清除BOSS");
+        add("terra_entity.configuration.boss_attributes_multiplier_health", "BOSS属性倍率-生命");
+        add("terra_entity.configuration.boss_attributes_multiplier_damage", "BOSS属性倍率-伤害");
 
 
     }

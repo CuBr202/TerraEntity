@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -18,6 +19,8 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.ServerConfig;
+import org.confluence.terraentity.TerraEntity;
 
 import java.util.Calendar;
 import java.util.List;
@@ -197,6 +200,20 @@ public final class TEUtils {
         else if(attribute == Attributes.ATTACK_DAMAGE)
             return switchByDifficulty(level, 1f, 1.5f, 2f);
         else return 1f;
+    }
+
+    public static void multiplePlayerEnhance(LivingEntity entity, boolean dirty) {
+        if(!entity.level().isClientSide) {
+            float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
+            if (dirty) {
+                int size = Math.min(entity.level().players().size(), 8);
+                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_max_health"), multiplier * size - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+                entity.setHealth(entity.getMaxHealth());
+            }
+            entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_attack_damage"), multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+            entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
     }
 
     /**
