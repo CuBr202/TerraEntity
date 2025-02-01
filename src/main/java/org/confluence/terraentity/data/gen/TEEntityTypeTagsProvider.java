@@ -3,6 +3,8 @@ package org.confluence.terraentity.data.gen;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -40,6 +42,12 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
                 .add(TEEntities.HONEY_SLIME.get())
                 .add(TEEntities.BLACK_SLIME.get())
                 .add(EntityType.SLIME);
+        tag(Tags.EntityTypes.BOSSES)
+                .add(TEEntities.EYE_OF_CTHULHU.get())
+                .add(TEEntities.KING_SLIME.get())
+                .add(TEEntities.EATER_OF_WORLDS.get())
+                .add(TEEntities.EATER_OF_WORLD_SEGMENT.get())
+                .add(TEEntities.BRAIN_OF_CTHULHU.get());
     }
 
 }
