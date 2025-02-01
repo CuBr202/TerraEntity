@@ -13,7 +13,7 @@ public class EaterOfWorldSegmentRenderer extends GeoBossRenderer<EaterOfWorldsSe
     }
 
     public GeoModel<EaterOfWorldsSegment> getGeoModel() {
-        if(animatable.ifTail)
+        if(animatable!=null && animatable.ifTail)
             return tailModel;
         return this.model;
     }
