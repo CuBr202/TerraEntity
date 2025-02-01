@@ -15,7 +15,7 @@ public class ClientTerraEntity {
 
     public ClientTerraEntity(IEventBus modEventBus, ModContainer container) {
 
-        container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
+        container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 }
