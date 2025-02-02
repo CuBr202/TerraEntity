@@ -24,6 +24,8 @@ import org.confluence.terraentity.TerraEntity;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public final class TEUtils {
@@ -293,6 +295,35 @@ public final class TEUtils {
         double y = r * Math.sin(theta) * Math.sin(beta);
         double z = r * Math.cos(theta);
         return new Vec3(x, y, z);
+    }
+
+    /**
+     * 根据权重随机获取物品
+     */
+    public static <T> T getRandomByWeight(Map<T, Float> map) {
+        // 计算总权重
+        float totalWeight = 0.0f;
+
+        for (var pair : map.values()) {
+            totalWeight += pair;
+        }
+
+        if (totalWeight == 0.0f) {
+            throw new IllegalArgumentException("Total weight cannot be zero.");
+        }
+
+        float randomValue = ThreadLocalRandom.current().nextFloat(0, totalWeight);
+
+        // 遍历物品，累积权重，直到累积权重超过随机数
+        float cumulativeWeight = 0.0f;
+        for (var entry : map.entrySet()) {
+            cumulativeWeight += entry.getValue();
+            if (cumulativeWeight >= randomValue) {
+                return entry.getKey();
+            }
+        }
+        // 理论上不会走到这里
+        throw new IllegalStateException("Failed to find random item.");
     }
 
 /*
