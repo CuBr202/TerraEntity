@@ -36,6 +36,7 @@ public class TETags {
 
     public static class EntityTypes {
         public static final TagKey<EntityType<?>> SLIME = registerEntityType("slime");
+
     }
 
     private static TagKey<Item> registerItem(String id) {

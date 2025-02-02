@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
@@ -91,6 +92,10 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
             this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 500, 4, false, true));
         }
         super.tick();
+    }
+
+    public Vec3 getVehicleAttachmentPoint(Entity entity) {
+        return super.getVehicleAttachmentPoint(entity).add(0, 0.7f, 0);
     }
 
     @Override
