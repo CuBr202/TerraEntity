@@ -45,4 +45,8 @@ public class GeoBossRenderer<T extends AbstractTerraBossBase, M extends GeoBossM
     public float getYOffset(){
         return yOffset;
     }
+
+    public float getScale(){
+        return scale;
+    }
 }
