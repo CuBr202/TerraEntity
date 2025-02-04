@@ -35,6 +35,7 @@ import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.entity.proj.ThrowableProj;
+import org.confluence.terraentity.entity.summon.AbstractSummonMob;
 
 import java.util.function.Supplier;
 
@@ -89,15 +90,18 @@ public final class TEEntities {
 
 
 
-
     // 用于调整包围盒
-
     public static DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AbstractMonster.Builder> builder, float width, float height) {
         return ENTITIES.register(name, () -> EntityType.Builder.<AbstractMonster>of((type,level)->new AbstractMonster(type,level,builder.get()), MobCategory.MONSTER).clientTrackingRange(10).setTrackingRange(50).sized(width,height).build(Key(name)));
     }
     public static DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AbstractMonster.Builder> builder) {
         return registerSimpleMonster(name, builder, 1, 1);
     }
+
+    // tip 召唤物
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractSummonMob>> SOMMON_SLIME = registerEntity("sommon_slime",AbstractSummonMob::new ,1F,1F);
+
+
 
     // tip Boss
     public static final DeferredHolder<EntityType<?>, EntityType<KingSlime>> KING_SLIME = ENTITIES.register("king_slime", () -> EntityType.Builder.<KingSlime>of(KingSlime::new, MobCategory.MONSTER).sized(0.6f, 0.6f).clientTrackingRange(10).build(Key("king_slime")));
@@ -112,7 +116,11 @@ public final class TEEntities {
 
 
     public static <T extends Mob> DeferredHolder<EntityType<?>,EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> entityFactory, float width, float height){
-        return ENTITIES.register(name, () -> EntityType.Builder.of(entityFactory, MobCategory.MONSTER).sized(width, height).clientTrackingRange(10).build(Key(name)));
+        return registerEntity(name, entityFactory, MobCategory.MONSTER, width, height);
+    }
+
+    public static <T extends Mob> DeferredHolder<EntityType<?>,EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> entityFactory, MobCategory category, float width, float height){
+        return ENTITIES.register(name, () -> EntityType.Builder.of(entityFactory, category).sized(width, height).clientTrackingRange(10).build(Key(name)));
     }
 
     // tip 弹幕
@@ -177,6 +185,9 @@ public final class TEEntities {
         event.registerEntityRenderer(VISUAL_NEURON.get(), c->new GeoNormalRenderer<>(c, VISUAL_NEURON.getId(),true));
         event.registerEntityRenderer(BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
 
+        // sommon
+        event.registerEntityRenderer(SOMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c,FACE_MONSTER.getId(),false));
+
     }
 
     // tip 属性
@@ -232,6 +243,8 @@ public final class TEEntities {
         event.put(BRAIN_OF_CTHULHU.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(VISUAL_NEURON.get(), AbstractMonster.createAttributes().build());
         event.put(BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
+
+        event.put(SOMMON_SLIME.get(), Monster.createMonsterAttributes().build());
 
     }
 

@@ -32,8 +32,10 @@ public class DebugItem extends Item {
             proj.setPos(player.getEyePosition());
             level.addFreshEntity(proj);
 
-
-
+            var entity = TEEntities.SOMMON_SLIME.get().create(level);
+            entity.setPos(player.getEyePosition());
+            entity.setOwnerUUID(player.getUUID());
+            level.addFreshEntity(entity);
 
 
         }
