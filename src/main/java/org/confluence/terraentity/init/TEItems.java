@@ -57,7 +57,7 @@ public class TEItems {
     public static final DeferredItem<Item> EATER_OF_WORLD_SPAWN_EGG = register("eater_of_world_spawn_egg", TEEntities.EATER_OF_WORLDS, 0x5d478b, 0x8968cd);
     public static final DeferredItem<Item> BRAIN_OF_CTHULHU_SPAWN_EGG = register("brain_of_cthulhu_spawn_egg", TEEntities.BRAIN_OF_CTHULHU, 0xa75049, 0x65292c);
 
-//    public static final DeferredItem<Item> DEBUG_ITEM = SPAWN_EGGS.register("debug_item", () -> new DebugItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<Item> DEBUG_ITEM = SPAWN_EGGS.register("debug_item", () -> new DebugItem(new Item.Properties().stacksTo(1)));
 
 
     public static DeferredItem<Item> register(String name, Supplier<? extends EntityType<? extends Mob>>  entityType, int primaryColor, int secondaryColor){

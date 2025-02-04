@@ -1,5 +1,6 @@
 package org.confluence.terraentity.utils;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -13,11 +14,15 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.ServerConfig;
 import org.confluence.terraentity.TerraEntity;
@@ -26,6 +31,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static net.minecraft.world.item.Item.getPlayerPOVHitResult;
 
 
 public final class TEUtils {
@@ -324,6 +331,31 @@ public final class TEUtils {
         }
         // 理论上不会走到这里
         throw new IllegalStateException("Failed to find random item.");
+    }
+
+    /**
+     * 获取玩家视角下距离指定距离的实体
+     * @param player
+     * @param distance
+     * @return
+     */
+    public static EntityHitResult getEyeTraceHitResult(Player player, double distance){
+        AABB aabb = player.getBoundingBox().inflate(distance);
+        Vec3 from = player.getEyePosition();
+        Vec3 to = player.getEyePosition().add(player.getLookAngle().scale(distance));
+        return ProjectileUtil.getEntityHitResult(player.level(), player, from, to, aabb, e-> true, 0.1F);
+    }
+
+    /**
+     * 获取玩家视角下方块
+     * @param player
+     * @return
+     */
+    public static BlockPos getEyeBlockHitResult(Player player){
+        final BlockHitResult result = getPlayerPOVHitResult(player.level(), player, ClipContext.Fluid.SOURCE_ONLY);
+        final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos().above());
+        final BlockPos pos = raytraceResult.getBlockPos();
+        return pos;
     }
 
 /*

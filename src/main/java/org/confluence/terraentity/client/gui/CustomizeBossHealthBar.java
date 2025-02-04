@@ -31,7 +31,7 @@ public class CustomizeBossHealthBar {
         int h = 64;
         float segment = 0.6f;
         int x = (int) (Minecraft.getInstance().getWindow().getWidth() * 0.5f / Minecraft.getInstance().getWindow().getGuiScale() - w * 0.5f);
-        int y = event.getY() - 10;
+        int y = event.getY();
 
         float progress = event.getBossEvent().getProgress();
         int from = 37;
@@ -43,7 +43,7 @@ public class CustomizeBossHealthBar {
             g.blit(tex, x, (int) (y + 0.1f * h), 0, (int) (h * (segment - 0.015f)), pos, (int) (h * (1 - segment)), w, h);
         } else if(bossBarStyle == 2) {
             // 流动速度
-            float speed = 0.03f;
+            float speed = 0.01f;
             ((IShaderInstance) ModRenderTypes.Shaders.floatBarShader).getTerra_entity$Time().set(System.currentTimeMillis() % 100000 * speed);
             // 噪声强度
             ((IShaderInstance) ModRenderTypes.Shaders.floatBarShader).getTerra_entity$Radius().set(0.9f);
