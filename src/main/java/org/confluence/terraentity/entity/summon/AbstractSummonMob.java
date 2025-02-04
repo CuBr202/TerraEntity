@@ -1,16 +1,18 @@
 
 package org.confluence.terraentity.entity.summon;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -22,18 +24,14 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
 import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.init.TETags;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.EnumSet;
-import java.util.UUID;
 
 public abstract class AbstractSummonMob extends TamableAnimal implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -53,6 +51,8 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
         this.setOwnerUUID(player.getUUID());
         this.setTame(true, true);
         ModLoader.postEvent(new SummonEvent(player, stack, this));
+
+
     }
 
 
@@ -88,15 +88,23 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
             attackInternal = getDetectInternal();
             // 包围盒检测造成伤害
             var entities = level().getEntities(this, this.getBoundingBox(). inflate(0.25), e->e instanceof LivingEntity living&& e!= this );
-            if (!entities.isEmpty()) {
+            if (!entities.isEmpty() && getOwner() instanceof LivingEntity owner) {
                 for (var e : entities) {
                     if ( e instanceof LivingEntity living&& canAttack(living)){
                         attackInternal = _attackInternal;
-                        e.hurt(this.damageSources().generic(),(float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
+                        float damage = (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+
+                        e.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMONER, owner), damage);
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        if(target == getOwner()) return false;
+        return target instanceof Enemy || target == getTarget();
     }
 
     @Override
@@ -112,11 +120,26 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
     public void onRemovedFromLevel() {
         if(getOwner()!= null){
             var data = getOwner().getData(TEAttachments.SUMMONER_STORAGE.get());
-            if(data.canRemove(cost))
+            if(data.canRemove(cost)){
                 data.remove(cost);
+                if(getOwner() instanceof ServerPlayer serverPlayer)
+                    data.sync(serverPlayer);
+            }
+
         }
     }
 
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("cost", cost);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        cost = compound.getInt("cost");
+    }
     @Override
     public boolean hurt(DamageSource source, float amount) {
         return false;

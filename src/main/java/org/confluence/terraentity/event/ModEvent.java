@@ -7,6 +7,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.network.s2c.SyncCameraShakePacket;
+import org.confluence.terraentity.network.s2c.SyncSummonPacket;
 
 @EventBusSubscriber(modid = TerraEntity.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ModEvent {
@@ -22,6 +23,7 @@ public class ModEvent {
     public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar("1.0.0");
         registrar.playToClient(SyncCameraShakePacket.TYPE, SyncCameraShakePacket.STREAM_CODEC, SyncCameraShakePacket::handle);
+        registrar.playToClient(SyncSummonPacket.TYPE, SyncSummonPacket.STREAM_CODEC, SyncSummonPacket::handle);
 
 
     }

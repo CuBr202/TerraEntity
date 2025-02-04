@@ -3,6 +3,7 @@ package org.confluence.terraentity.event;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -28,6 +29,7 @@ import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
+import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TETags;
@@ -71,6 +73,9 @@ public class GameEntityEvent {
                     player.sendSystemMessage(mes);
                 }
             }
+        }
+        if(event.getEntity() instanceof ServerPlayer player){
+            player.getData(TEAttachments.SUMMONER_STORAGE.get()).sync(player);
         }
     }
 

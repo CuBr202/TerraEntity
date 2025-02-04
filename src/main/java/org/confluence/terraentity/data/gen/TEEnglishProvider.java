@@ -43,16 +43,13 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.display_summon_items", "Display Summon Items In Creative Tab");
 
 
-
-
         add("terra_entity.configuration.boss_bar_style", "Boss Health Bar Style");
 
 
-
-
         // Tooltip
-        add("tooltip.terra_entity.summon_item_cost", "Summon Cost: %s");
+        add("tooltip.terra_entity.summon_item_cost", "Summon Cost: %d");
         add("tooltip.terra_entity.summon_item_entity", "Summon Entity: %s");
+        add("tooltip.terra_entity.summon_info", "Summon Info: %d / %d");
 
 
     }

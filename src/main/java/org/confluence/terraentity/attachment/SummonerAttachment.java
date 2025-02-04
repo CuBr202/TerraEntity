@@ -2,13 +2,19 @@ package org.confluence.terraentity.attachment;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.terraentity.network.s2c.SyncSummonPacket;
 
 public class SummonerAttachment implements INBTSerializable<CompoundTag> {
     int currentCapacity = 1;
     int maxCapacity = 1;
     int additionalCapacity = 0;
 
+    public void sync(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, new SyncSummonPacket(currentCapacity, maxCapacity, additionalCapacity));
+    }
 
     public boolean canSummon(int cost) {
         return getCurrentCapacity() >= cost;
@@ -39,6 +45,10 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
 
     public void setMaxCapacity(int maxCapacity) {
         this.maxCapacity = maxCapacity;
+    }
+
+    public void setAdditionalCapacity(int additionalCapacity) {
+        this.additionalCapacity = additionalCapacity;
     }
 
     public void addAdditionalCapacity(int additionalCapacity) {

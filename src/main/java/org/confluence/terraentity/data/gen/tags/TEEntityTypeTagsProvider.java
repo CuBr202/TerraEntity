@@ -1,11 +1,9 @@
-package org.confluence.terraentity.data.gen;
+package org.confluence.terraentity.data.gen.tags;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -14,7 +12,6 @@ import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TETags;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 

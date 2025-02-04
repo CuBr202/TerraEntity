@@ -5,10 +5,16 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import org.confluence.terraentity.data.gen.tags.ModDamageTypeTagsProvider;
+import org.confluence.terraentity.data.gen.tags.TEBlockTagsProvider;
+import org.confluence.terraentity.data.gen.tags.TEEntityTypeTagsProvider;
+import org.confluence.terraentity.data.gen.tags.TEItemTagsProvider;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -24,18 +30,24 @@ public class DataGenerator {
         ExistingFileHelper helper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookup = event.getLookupProvider();
 
+        DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookup, RegisterDataPack.DATA_BUILDER, Set.of(MODID));
+        lookup = provider.getRegistryProvider();
+
+
         boolean client = event.includeClient();
         generator.addProvider(client, new TEChineseProvider(output));
         generator.addProvider(client, new TEEnglishProvider(output));
         generator.addProvider(client, new TEItemModelProvider(output, helper));
 
         boolean server = event.includeServer();
+        generator.addProvider(server, provider);
         TEBlockTagsProvider blockTagsProvider = new TEBlockTagsProvider(output, lookup, helper);
         generator.addProvider(server, blockTagsProvider);
         generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TEItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
+
 //        generator.addProvider(server, new ModLootTableProvider(output));
-//        generator.addProvider(server, new ModDamageTypeTagsProvider(output, lookup, helper));
+        generator.addProvider(server, new ModDamageTypeTagsProvider(output, lookup, helper));
 //        generator.addProvider(server, new ModPoiTypeTagsProvider(output, lookup, helper));
 
         PROVIDERS = generator.getProvidersView();

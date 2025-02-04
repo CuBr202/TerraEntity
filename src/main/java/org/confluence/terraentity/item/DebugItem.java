@@ -24,6 +24,7 @@ public class DebugItem extends Item {
 
             EntityHitResult hit =  TEUtils.getEyeTraceHitResult(player, player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE));
             if(hit!= null){
+
                 hit.getEntity().discard();
                 return InteractionResultHolder.success(player.getItemInHand(usedHand));
             }
