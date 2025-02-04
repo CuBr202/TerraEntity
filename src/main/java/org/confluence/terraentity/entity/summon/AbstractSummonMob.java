@@ -104,7 +104,7 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
     @Override
     public boolean canAttack(LivingEntity target) {
         if(target == getOwner()) return false;
-        return target instanceof Enemy || target == getTarget();
+        return super.canAttack(target) && (target instanceof Enemy || target == getTarget());
     }
 
     @Override
