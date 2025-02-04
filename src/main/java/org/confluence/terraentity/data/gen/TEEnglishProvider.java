@@ -29,7 +29,9 @@ public class TEEnglishProvider extends LanguageProvider {
         TEEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
         TEEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get(), toTitleCase(effect.getId().getPath())));
 
-        add("itemGroup.terraentity.title", "tab.terraentity.name");
+        add("itemGroup.terraentity.title", "Terra Entity");
+
+
         add("message.terraentity.boss_spawn", "%s Has Awoken!");
         add("message.terraentity.boss_leave", "%s Have Been Defeated!");
         add("message.terraentity.boss_discard", "Has Been Discarded！");
@@ -38,8 +40,19 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.boss_clear_when_no_target", "Clear Boss When No Target");
         add("terra_entity.configuration.boss_attributes_multiplier_health", "Boss Attributes Multiplier-Health");
         add("terra_entity.configuration.boss_attributes_multiplier_damage", "Boss Attributes Multiplier-Damage");
+        add("terra_entity.configuration.display_summon_items", "Display Summon Items In Creative Tab");
+
+
+
 
         add("terra_entity.configuration.boss_bar_style", "Boss Health Bar Style");
+
+
+
+
+        // Tooltip
+        add("tooltip.terra_entity.summon_item_cost", "Summon Cost: %s");
+        add("tooltip.terra_entity.summon_item_entity", "Summon Entity: %s");
 
 
     }

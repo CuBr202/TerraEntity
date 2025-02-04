@@ -6,6 +6,8 @@ public class ServerConfig {
     public static ModConfigSpec.ConfigValue<Boolean> BOSS_CLEAR_WHEN_NO_TARGET;
     public static ModConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_HEALTH;
     public static ModConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE ;
+    public static ModConfigSpec.ConfigValue<Boolean> DISPLAY_SUMMON_ITEMS;
+
 
     public static ModConfigSpec init(){
         final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
@@ -20,6 +22,9 @@ public class ServerConfig {
                 .comment("Multiplier for boss attributes damage.")
                 .defineInRange("boss_attributes_multiplier_damage", 0.7F, 0.0625f, 10f);
 
+        DISPLAY_SUMMON_ITEMS = BUILDER
+                .comment("Should summon items be displayed in this mod?")
+                .define("display_summon_items", true);
         return BUILDER.build();
     }
 }

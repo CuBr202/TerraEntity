@@ -35,7 +35,7 @@ import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.entity.proj.ThrowableProj;
-import org.confluence.terraentity.entity.summon.AbstractSummonMob;
+import org.confluence.terraentity.entity.summon.SummonSlime;
 
 import java.util.function.Supplier;
 
@@ -99,7 +99,7 @@ public final class TEEntities {
     }
 
     // tip 召唤物
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractSummonMob>> SOMMON_SLIME = registerEntity("sommon_slime", AbstractSummonMob::new ,1F,1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<SummonSlime>> SUMMON_SLIME = registerEntity("slime_baby", SummonSlime::new ,1F,1F);
 
 
 
@@ -186,7 +186,7 @@ public final class TEEntities {
         event.registerEntityRenderer(BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
 
         // sommon
-        event.registerEntityRenderer(SOMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c, VISUAL_NEURON.getId(),true));
+        event.registerEntityRenderer(SUMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c, VISUAL_NEURON.getId(),true));
 
     }
 
@@ -244,7 +244,7 @@ public final class TEEntities {
         event.put(VISUAL_NEURON.get(), AbstractMonster.createAttributes().build());
         event.put(BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
 
-        event.put(SOMMON_SLIME.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(SUMMON_SLIME.get(), AbstractTerraBossBase.createAttributes().build());
 
     }
 

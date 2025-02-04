@@ -1,0 +1,19 @@
+package org.confluence.terraentity.init;
+
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.attachment.SummonerAttachment;
+
+
+import java.util.function.Supplier;
+
+
+public final class TEAttachments {
+    public static final DeferredRegister<AttachmentType<?>> TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, TerraEntity.MODID);
+
+    public static final Supplier<AttachmentType<SummonerAttachment>> SUMMONER_STORAGE = TYPES.register("summoner_storage", () -> AttachmentType.serializable(SummonerAttachment::new).copyOnDeath().build());
+
+
+}

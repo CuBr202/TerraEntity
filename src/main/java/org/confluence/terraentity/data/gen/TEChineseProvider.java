@@ -2,6 +2,7 @@ package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEItems;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -15,6 +16,7 @@ public class TEChineseProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add("itemGroup.terraentity.title", "泰拉生物");
+
 
         add("entity.terra_entity.ice_slime", "冰冻史莱姆");
         add("entity.terra_entity.blue_slime", "蓝色史莱姆");
@@ -52,6 +54,9 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.visual_neuron", "视神经元");
 
         add("effect.terra_entity.demonic_thoughts", "邪念");
+
+        add(TEEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
+
         // 刷怪蛋
         add(TEItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
         add(TEItems.RED_SLIME_SPAWN_EGG.get(), "红色史莱姆刷怪蛋");
@@ -96,10 +101,14 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.boss_clear_when_no_target", "丢失目标时清除BOSS");
         add("terra_entity.configuration.boss_attributes_multiplier_health", "BOSS属性倍率-生命");
         add("terra_entity.configuration.boss_attributes_multiplier_damage", "BOSS属性倍率-伤害");
+        add("terra_entity.configuration.display_summon_items", "在创造栏显示召唤物品");
+
         add("terra_entity.configuration.boss_bar_style", "BOSS血条样式");
 
 
-
+        // Tooltip
+        add("tooltip.terra_entity.summon_item_cost", "仆从栏位: %s");
+        add("tooltip.terra_entity.summon_item_entity", "仆从类型: %s");
 
     }
 }

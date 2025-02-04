@@ -21,9 +21,9 @@ public class TerraEntity {
         TEEntities.ENTITIES.register(modEventBus);
         TESounds.SOUNDS.register(modEventBus);
         TEParticles.PARTICLES.register(modEventBus);
-        TEItems.SPAWN_EGGS.register(modEventBus);
-        TEItems.TABS.register(modEventBus);
+        TEItems.register(modEventBus);
         TEEffects.EFFECTS.register(modEventBus);
+        TEAttachments.TYPES.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);

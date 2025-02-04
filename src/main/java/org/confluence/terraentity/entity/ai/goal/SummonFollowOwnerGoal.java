@@ -6,13 +6,13 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.pathfinder.PathType;
-import org.confluence.terraentity.entity.summon.AbstractSummonMob;
+import org.confluence.terraentity.entity.summon.SummonSlime;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 public class SummonFollowOwnerGoal extends Goal {
-    private final AbstractSummonMob tamable;
+    private final SummonSlime tamable;
     @Nullable
     private LivingEntity owner;
     private final double speedModifier;
@@ -22,7 +22,7 @@ public class SummonFollowOwnerGoal extends Goal {
     private final float startDistance;
     private float oldWaterCost;
 
-    public SummonFollowOwnerGoal(AbstractSummonMob tamable, double speedModifier, float startDistance, float stopDistance) {
+    public SummonFollowOwnerGoal(SummonSlime tamable, double speedModifier, float startDistance, float stopDistance) {
         this.tamable = tamable;
         this.speedModifier = speedModifier;
         this.navigation = tamable.getNavigation();

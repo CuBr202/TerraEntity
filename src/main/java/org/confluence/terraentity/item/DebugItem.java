@@ -4,15 +4,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.proj.ThrowableProj;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.utils.TEUtils;
 
@@ -45,12 +40,6 @@ public class DebugItem extends Item {
 //            proj.setOwner(player);
 //            proj.setPos(player.getEyePosition());
 //            level.addFreshEntity(proj);
-
-            var entity = TEEntities.SOMMON_SLIME.get().create(level);
-            entity.setPos(player.getEyePosition());
-            entity.setOwnerUUID(player.getUUID());
-            level.addFreshEntity(entity);
-
 
         }
         return super.use(level, player, usedHand);

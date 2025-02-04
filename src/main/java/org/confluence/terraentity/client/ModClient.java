@@ -95,7 +95,7 @@ public final class ModClient {
 
 //    @SubscribeEvent
 //    public static void registerTextureAtlasSpriteLoaders(RegisterTextureAtlasSpriteLoadersEvent event) {
-//        event.register("still_fluid", new ITextureAtlasSpriteLoader() {
+//        event.registerEgg("still_fluid", new ITextureAtlasSpriteLoader() {
 //            @Override
 //            public SpriteContents loadContents(ResourceLocation name, Resource resource, FrameSize frameSize, NativeImage image, AnimationMetadataSection animationMeta, ForgeTextureMetadata forgeMeta) {
 //                return new SpriteContents(name, frameSize, image, animationMeta, forgeMeta);
