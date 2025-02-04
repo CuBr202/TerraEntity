@@ -179,8 +179,8 @@ public final class TEEntities {
         // boss
         event.registerEntityRenderer(KING_SLIME.get(), KingSlimeRenderer::new);
         event.registerEntityRenderer(EYE_OF_CTHULHU.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(EYE_OF_CTHULHU),1,0.5f, true));
-        event.registerEntityRenderer(EATER_OF_WORLD_SEGMENT.get(), c-> new EaterOfWorldSegmentRenderer(c,3f, 0f));
-        event.registerEntityRenderer(EATER_OF_WORLDS.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(EATER_OF_WORLDS),3f,0, true));
+        event.registerEntityRenderer(EATER_OF_WORLD_SEGMENT.get(), c-> new EaterOfWorldSegmentRenderer(c,2.2f, 0f));
+        event.registerEntityRenderer(EATER_OF_WORLDS.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(EATER_OF_WORLDS),2.2f,0, true));
         event.registerEntityRenderer(BRAIN_OF_CTHULHU.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
         event.registerEntityRenderer(VISUAL_NEURON.get(), c->new GeoNormalRenderer<>(c, VISUAL_NEURON.getId(),true));
         event.registerEntityRenderer(BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));

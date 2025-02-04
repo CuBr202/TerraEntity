@@ -92,6 +92,9 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.EATER_OF_WORLD_SPAWN_EGG.get(), "世界吞噬怪刷怪蛋");
         add(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
 
+
+        add(TEItems.SLIME_SUMMONER.get(), "史莱姆召唤杖");
+
         add("message.terraentity.boss_spawn", "%s已苏醒！");
         add("message.terraentity.boss_leave", "%s已被打败！");
         add("message.terraentity.boss_discard", "已离开！");
