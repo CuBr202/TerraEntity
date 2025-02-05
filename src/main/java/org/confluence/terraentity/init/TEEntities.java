@@ -99,7 +99,7 @@ public final class TEEntities {
     }
 
     // tip 召唤物
-    public static final DeferredHolder<EntityType<?>, EntityType<SummonSlime>> SUMMON_SLIME = registerEntity("slime_baby", SummonSlime::new ,1F,1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<SummonSlime>> SUMMON_SLIME = registerEntity("slime_baby", SummonSlime::new ,0.5F,0.5F);
 
 
 
@@ -186,7 +186,7 @@ public final class TEEntities {
         event.registerEntityRenderer(BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
 
         // sommon
-        event.registerEntityRenderer(SUMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c, VISUAL_NEURON.getId(),true));
+        event.registerEntityRenderer(SUMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c, SUMMON_SLIME.getId().withPrefix("summon/"),false));
 
     }
 

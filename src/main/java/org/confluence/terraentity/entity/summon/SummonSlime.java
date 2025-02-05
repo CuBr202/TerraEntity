@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.summon;
 
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -9,13 +10,24 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
 
 import java.util.EnumSet;
 
+import static software.bernie.geckolib.constant.DefaultAnimations.*;
+
 public class SummonSlime extends AbstractSummonMob {
+
+
+    private float distanceToFlyToOwner = 25.0f;
+    private float distanceToStopToOwner = 4.0f;
+    private float distanceToSlowDownToOwner = 6.0f;
 
     private float baseJump = 0.5f;
     private float enhanceJump = 1.0f;
+
+    private boolean isFlying = false;
+
     public SummonSlime(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.7f);
@@ -28,12 +40,13 @@ public class SummonSlime extends AbstractSummonMob {
         this.moveControl = new SlimeMoveControl(this);
     }
 
-
+    @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new SlimeFloatGoal(this));
         this.goalSelector.addGoal(2, new SlimeAttackGoal(this));
-        this.goalSelector.addGoal(5, new SlimeKeepOnJumpingGoal(this));
+        this.goalSelector.addGoal(3, new SlimeKeepOnJumpingGoal(this));
+        this.goalSelector.addGoal(5, new SlimeFlyToOwnerGoal(this));
 
 //        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0, true));
 
@@ -44,6 +57,17 @@ public class SummonSlime extends AbstractSummonMob {
     protected int getJumpDelay() {
         return this.random.nextInt(10) + 5;
     }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (DATA_SHARED_FLAGS_ID.equals(key) && level().isClientSide) {
+            this.isFlying = getSharedFlag(6);
+            System.out.println("isFlying: " + this.isFlying);
+        }
+
+    }
+
 
 
     static class SlimeMoveControl extends MoveControl {
@@ -124,24 +148,21 @@ public class SummonSlime extends AbstractSummonMob {
         public void tick() {
             MoveControl var2 = this.slime.getMoveControl();
 
-            if (var2 instanceof SummonSlime.SlimeMoveControl slime$slimemovecontrol) {
+            if (var2 instanceof SummonSlime.SlimeMoveControl control) {
                 Vec3 dir = this.slime.getOwner().position().subtract(this.slime.position()).normalize();
                 float yaw = -(float)Math.atan2(dir.x, dir.z) * 57.295776F;
-                slime$slimemovecontrol.setDirection( yaw , true);
-                float distance = this.slime.distanceTo(this.slime.getOwner());
+                control.setDirection( yaw , true);
+                System.out.println(control.jumpDelay == 0);
+                if(slime.distanceToOwner < slime.distanceToStopToOwner){
 
-                if(distance < 4){
-
-                }else if(distance < 6) {
-                    slime$slimemovecontrol.setWantedMovement(0.8f);
+                }else if(slime.distanceToOwner < slime.distanceToSlowDownToOwner) {
+                    control.setWantedMovement(0.8f);
                     this.slime.lookControl.setLookAt(this.slime.getOwner());
                 }
                 else
-                    slime$slimemovecontrol.setWantedMovement(1.5f);
+                    control.setWantedMovement(1.5f);
 
             }
-
-
         }
     }
 
@@ -160,8 +181,7 @@ public class SummonSlime extends AbstractSummonMob {
                 return false;
             } else {
                 if(slime.getOwner() == null) return false;
-                float distance = this.slime.distanceTo(this.slime.getOwner());
-                if(distance > 16) return false  ;
+                if(slime.distanceToOwner > slime.distanceToFlyToOwner) return false;
 
                 return this.slime.canAttack(livingentity) && this.slime.getMoveControl() instanceof SlimeMoveControl;
             }
@@ -178,8 +198,7 @@ public class SummonSlime extends AbstractSummonMob {
                 return false;
             } else {
                 if(slime.getOwner() == null) return false;
-                float distance = this.slime.distanceTo(this.slime.getOwner());
-                if(distance > 16) return false  ;
+                if(slime.distanceToOwner > slime.distanceToFlyToOwner) return false;
 
                 return this.slime.canAttack(livingentity) && --this.growTiredTimer > 0;
             }
@@ -197,11 +216,56 @@ public class SummonSlime extends AbstractSummonMob {
             }
 
             MoveControl var3 = this.slime.getMoveControl();
-            if (var3 instanceof SummonSlime.SlimeMoveControl slime$slimemovecontrol) {
-                slime$slimemovecontrol.setDirection(this.slime.getYRot(), this.slime.isDealsDamage());
-                slime$slimemovecontrol.setWantedMovement(1.5);
+            if (var3 instanceof SummonSlime.SlimeMoveControl control) {
+                control.setDirection(this.slime.getYRot(), this.slime.isDealsDamage());
+                control.setWantedMovement(1.5);
             }
 
+        }
+    }
+
+    static class SlimeFlyToOwnerGoal extends Goal {
+        private final SummonSlime slime;
+
+        public SlimeFlyToOwnerGoal(SummonSlime slime) {
+            this.slime = slime;
+            this.setFlags(EnumSet.of(Flag.LOOK));
+        }
+
+        public boolean canUse() {
+            LivingEntity owner = this.slime.getOwner();
+            if (owner == null) {
+                return false;
+            }
+            return !slime.shouldTryTeleportToOwner() && slime.distanceToOwner > slime.distanceToFlyToOwner && this.slime.getMoveControl() instanceof SlimeMoveControl;
+        }
+
+        public boolean canContinueToUse() {
+            return slime.distanceToOwner > slime.distanceToStopToOwner;
+        }
+
+        public void start() {
+            super.start();
+            slime.setSharedFlag(6, true);
+            this.slime.noPhysics = true;
+//            System.out.println("true");
+        }
+
+        public void stop() {
+            slime.isFlying = false;
+            slime.setSharedFlag(6, false);
+            this.slime.noPhysics = false;
+//            System.out.println("false");
+
+
+        }
+
+        public void tick() {
+            LivingEntity owner = this.slime.getOwner();
+            if (owner != null) {
+                this.slime.lookAt(owner, 20.0F, 20.0F);
+                slime.setDeltaMovement(owner.position().add(0,3,0).subtract(slime.position()).normalize().scale(1f));
+            }
         }
     }
 
@@ -228,13 +292,16 @@ public class SummonSlime extends AbstractSummonMob {
             }
 
             MoveControl var2 = this.slime.getMoveControl();
-            if (var2 instanceof SummonSlime.SlimeMoveControl slime$slimemovecontrol) {
-                slime$slimemovecontrol.setWantedMovement(1.2);
+            if (var2 instanceof SummonSlime.SlimeMoveControl control) {
+                control.setWantedMovement(1.2);
             }
 
         }
     }
 
+    public boolean isFlying(){
+        return this.isFlying;
+    }
 
     protected boolean isDealsDamage() {
         return this.isEffectiveAi();
@@ -242,6 +309,9 @@ public class SummonSlime extends AbstractSummonMob {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
+        controllers.add(new AnimationController<>(this, "Fly/Idle/Move", 0, state ->
+                state.setAndContinue(this.isFlying() ? FLY :
+                        ((this.onGround() ? IDLE  : WALK)
+                ))));
     }
 }

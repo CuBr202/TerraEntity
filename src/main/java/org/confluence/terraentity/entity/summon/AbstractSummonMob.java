@@ -34,13 +34,16 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public abstract class AbstractSummonMob extends TamableAnimal implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
+    public int cost;
+    protected float distanceToOwner;
+
     private int _detectInternal = 5;
     private int _attackInternal = 5;
     public int attackInternal = 5;
     public float attackRange = 0.75f;
 
-    private float teleportDistance = 10.0f;
-    public int cost;
+    private float distanceToTeleportToOwner = 30.0f;
+
 
     public AbstractSummonMob(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
@@ -69,9 +72,10 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
 
     }
 
+    @Override
     public boolean shouldTryTeleportToOwner() {
         LivingEntity livingentity = this.getOwner();
-        return livingentity != null && this.distanceToSqr(this.getOwner()) >= teleportDistance * teleportDistance;
+        return livingentity != null && distanceToOwner >= distanceToTeleportToOwner;
     }
 
 
@@ -120,6 +124,8 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
         if(!level().isClientSide){
             collisionHurt();
         }
+        if(this.getOwner() != null)
+            this.distanceToOwner = this.distanceTo(this.getOwner());
     }
 
     @Override
