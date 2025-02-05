@@ -63,7 +63,6 @@ public class SummonSlime extends AbstractSummonMob {
         super.onSyncedDataUpdated(key);
         if (DATA_SHARED_FLAGS_ID.equals(key) && level().isClientSide) {
             this.isFlying = getSharedFlag(6);
-            System.out.println("isFlying: " + this.isFlying);
         }
 
     }
@@ -152,7 +151,6 @@ public class SummonSlime extends AbstractSummonMob {
                 Vec3 dir = this.slime.getOwner().position().subtract(this.slime.position()).normalize();
                 float yaw = -(float)Math.atan2(dir.x, dir.z) * 57.295776F;
                 control.setDirection( yaw , true);
-                System.out.println(control.jumpDelay == 0);
                 if(slime.distanceToOwner < slime.distanceToStopToOwner){
 
                 }else if(slime.distanceToOwner < slime.distanceToSlowDownToOwner) {
@@ -248,15 +246,12 @@ public class SummonSlime extends AbstractSummonMob {
             super.start();
             slime.setSharedFlag(6, true);
             this.slime.noPhysics = true;
-//            System.out.println("true");
         }
 
         public void stop() {
             slime.isFlying = false;
             slime.setSharedFlag(6, false);
             this.slime.noPhysics = false;
-//            System.out.println("false");
-
 
         }
 
