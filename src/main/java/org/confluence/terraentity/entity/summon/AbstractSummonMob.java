@@ -25,6 +25,7 @@ import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.item.SummonItem;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -48,8 +49,9 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
     public void summon(Player player, ItemStack stack) {
         this.setOwnerUUID(player.getUUID());
         this.setTame(true, true);
+        if(stack.getItem() instanceof SummonItem<?> summonItem)
+            this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(summonItem.baseAttackDamage);
         ModLoader.postEvent(new SummonEvent(player, stack, this));
-
 
     }
 
@@ -104,6 +106,11 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
     public boolean canAttack(LivingEntity target) {
         if(target == getOwner()) return false;
         return super.canAttack(target);
+    }
+
+    @Override
+    public boolean canBeSeenAsEnemy() {
+        return false;
     }
 
     @Override

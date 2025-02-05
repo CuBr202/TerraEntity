@@ -108,11 +108,13 @@ public class SummonItem<T extends AbstractSummonMob> extends Item {
 
     @Override
     public void onStopUsing(ItemStack stack, LivingEntity livingEntity, int count) {
-        if (livingEntity instanceof ServerPlayer player) {
-            var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
-            // 召唤
-            if (count > getUseDuration(stack, livingEntity) - 20) {
-                // 创造
+
+        // 召唤
+        if (count > getUseDuration(stack, livingEntity) - 20) {
+            livingEntity.swing(livingEntity.getUsedItemHand());
+            if (livingEntity instanceof ServerPlayer player) {
+                var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
+                    // 创造
                 if (!player.canBeSeenAsEnemy()) {
                     summon(player, stack);
                     return;
@@ -127,13 +129,12 @@ public class SummonItem<T extends AbstractSummonMob> extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
-        if (livingEntity instanceof ServerPlayer player) {
-            var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
-            // 收回所有召唤物
-            if (getUseDuration(stack, livingEntity) - remainingUseDuration == 20) {
+        // 收回所有召唤物
+        if (getUseDuration(stack, livingEntity) - remainingUseDuration == 20) {
+            if (livingEntity instanceof ServerPlayer player) {
+                var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
                 data.clear(player);
                 data.sync(player);
-                player.swing(InteractionHand.MAIN_HAND);
             }
         }
     }

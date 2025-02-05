@@ -14,13 +14,16 @@ import java.util.EnumSet;
 
 public class SummonSlime extends AbstractSummonMob {
 
+    private float baseJump = 0.5f;
+    private float enhanceJump = 1.0f;
     public SummonSlime(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.7f);
         this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(0);
-        this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(0.5f);
+        this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(baseJump);
         this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(10.0D);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5.0D);
+
+
 
         this.moveControl = new SlimeMoveControl(this);
     }
@@ -83,6 +86,10 @@ public class SummonSlime extends AbstractSummonMob {
                             this.jumpDelay /= 3;
                         }
 
+                        LivingEntity target  = slime.getTarget();
+                        if(target !=null && target.distanceTo(slime) < 8 && target.getY()> slime.getY() + 2){
+                            slime.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(slime.enhanceJump);
+                        }else slime.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(slime.baseJump);
                         this.slime.getJumpControl().jump();
 
                     } else {
@@ -123,7 +130,7 @@ public class SummonSlime extends AbstractSummonMob {
                 slime$slimemovecontrol.setDirection( yaw , true);
                 float distance = this.slime.distanceTo(this.slime.getOwner());
 
-                if(distance < 3){
+                if(distance < 4){
 
                 }else if(distance < 6) {
                     slime$slimemovecontrol.setWantedMovement(0.8f);

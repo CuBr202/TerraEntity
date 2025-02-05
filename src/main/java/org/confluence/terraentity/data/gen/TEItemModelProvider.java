@@ -58,7 +58,7 @@ public class TEItemModelProvider extends ItemModelProvider {
         List<Map<DeferredRegister.Items,List<String>>> customModels = List.of(
                 createDir(TEItems.SUMMON_ITEMS,"")
         );
-        genModels(customModels,"item/generated", (path, resourcePath, builder) -> {
+        genModels(customModels,"item/handheld", (path, resourcePath, builder) -> {
             builder.texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
         });
 
