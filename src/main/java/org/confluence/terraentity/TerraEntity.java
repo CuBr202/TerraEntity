@@ -24,6 +24,7 @@ public class TerraEntity {
         TEItems.register(modEventBus);
         TEEffects.EFFECTS.register(modEventBus);
         TEAttachments.TYPES.register(modEventBus);
+        TEAttributes.ATTRIBUTES.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);

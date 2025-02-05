@@ -8,7 +8,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.utils.TEUtils;
 
 public class DebugItem extends Item {

@@ -1,13 +1,18 @@
 package org.confluence.terraentity.event;
 
+import net.minecraft.world.entity.EntityType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.network.s2c.SyncCameraShakePacket;
 import org.confluence.terraentity.network.s2c.SyncSummonPacket;
+
+import java.util.List;
 
 @EventBusSubscriber(modid = TerraEntity.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ModEvent {
@@ -27,4 +32,13 @@ public class ModEvent {
 
 
     }
+
+    @SubscribeEvent
+    public static void registerAttributes(EntityAttributeModificationEvent event) {
+        // 召唤师属性
+        List.of(TEAttributes.MINION_CAPACITY, TEAttributes.SENTRY_CAPACITY, TEAttributes.SUMMON_DAMAGE, TEAttributes.SUMMON_KNOCKBACK, TEAttributes.WHIP_RANGE)
+                .forEach(att-> event.add(EntityType.PLAYER, att));
+
+    }
+
 }

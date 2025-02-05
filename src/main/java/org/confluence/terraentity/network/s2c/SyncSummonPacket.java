@@ -11,37 +11,36 @@ import org.confluence.terraentity.init.TEAttachments;
 public class SyncSummonPacket implements CustomPacketPayload {
 
     int currentCapability;
-    int maxCapability;
-    int additionalCapability;
+
+//    List<Integer> indexList;
     public static final CustomPacketPayload.Type<SyncSummonPacket> TYPE = new CustomPacketPayload.Type<>(TerraEntity.asResource(TerraEntity.MODID, "sync_summon_packet"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SyncSummonPacket> STREAM_CODEC = CustomPacketPayload.codec(SyncSummonPacket::write, SyncSummonPacket::new);
 
-    public SyncSummonPacket(int currentCapability, int maxCapability, int additionalCapability) {
+    public SyncSummonPacket(int currentCapability) {
         this.currentCapability = currentCapability;
-        this.maxCapability = maxCapability;
-        this.additionalCapability = additionalCapability;
+
+//        this.indexList = indexList;
     }
 
     public SyncSummonPacket(FriendlyByteBuf buf) {
         this.currentCapability = buf.readInt();
-        this.maxCapability = buf.readInt();
-        this.additionalCapability = buf.readInt();
+
+//        this.indexList = new LinkedList<>(Arrays.stream(buf.readVarIntArray()).boxed().toList());
     }
 
 
     public void write(FriendlyByteBuf buf) {
         buf.writeInt(currentCapability);
-        buf.writeInt(maxCapability);
-        buf.writeInt(additionalCapability);
+
+//        buf.writeVarIntArray(indexList.stream().mapToInt(Integer::intValue).toArray());
 
     }
 
     public static void handle(SyncSummonPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var data = context.player().getData(TEAttachments.SUMMONER_STORAGE.get());
-            data.setAdditionalCapacity(packet.additionalCapability);
             data.setCurrentCapacity(packet.currentCapability);
-            data.setMaxCapacity(packet.maxCapability);
+//            data.setIds(packet.indexList);
         });
     }
 

@@ -16,7 +16,7 @@ public class SummonSlime extends AbstractSummonMob {
 
     public SummonSlime(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.5f);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.7f);
         this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(0);
         this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(0.5f);
         this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(10.0D);
@@ -184,11 +184,9 @@ public class SummonSlime extends AbstractSummonMob {
 
         public void tick() {
 
-
-
             LivingEntity livingentity = this.slime.getTarget();
             if (livingentity != null) {
-                this.slime.lookAt(livingentity, 10.0F, 10.0F);
+                this.slime.lookAt(livingentity, 20.0F, 20.0F);
             }
 
             MoveControl var3 = this.slime.getMoveControl();

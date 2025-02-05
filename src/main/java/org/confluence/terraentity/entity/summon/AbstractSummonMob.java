@@ -2,15 +2,11 @@
 package org.confluence.terraentity.entity.summon;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -39,6 +35,7 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
     private int _detectInternal = 5;
     private int _attackInternal = 5;
     public int attackInternal = 5;
+    public float attackRange = 0.75f;
 
     private float teleportDistance = 10.0f;
     public int cost;
@@ -64,8 +61,8 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
 
         this.targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(3, new OwnerHurtTargetGoal(this));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Monster.class, 10, true, true, living -> (living instanceof Enemy)));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Slime.class, 10, true, true, living -> (living instanceof Enemy)));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Monster.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Slime.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
 
     }
 
@@ -87,10 +84,10 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
         if (canCollisionHurt() && !level().isClientSide && --attackInternal <= 0) {
             attackInternal = getDetectInternal();
             // 包围盒检测造成伤害
-            var entities = level().getEntities(this, this.getBoundingBox(). inflate(0.25), e->e instanceof LivingEntity living&& e!= this );
+            var entities = level().getEntities(this, this.getBoundingBox(). inflate(attackRange), e->e instanceof LivingEntity&& e!= this );
             if (!entities.isEmpty() && getOwner() instanceof LivingEntity owner) {
                 for (var e : entities) {
-                    if ( e instanceof LivingEntity living&& canAttack(living)){
+                    if ( e instanceof LivingEntity living && canAttack(living) && (living instanceof Enemy && !(living instanceof NeutralMob) || living == getTarget()) ){
                         attackInternal = _attackInternal;
                         float damage = (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
 
@@ -104,7 +101,7 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
     @Override
     public boolean canAttack(LivingEntity target) {
         if(target == getOwner()) return false;
-        return super.canAttack(target) && (target instanceof Enemy || target == getTarget());
+        return super.canAttack(target);
     }
 
     @Override
@@ -118,14 +115,22 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
 
     @Override
     public void onRemovedFromLevel() {
-        if(getOwner()!= null){
+        if(getOwner() instanceof ServerPlayer owner){
             var data = getOwner().getData(TEAttachments.SUMMONER_STORAGE.get());
             if(data.canRemove(cost)){
-                data.remove(cost);
+                data.remove(owner, cost, this.getId());
                 if(getOwner() instanceof ServerPlayer serverPlayer)
                     data.sync(serverPlayer);
             }
 
+        }
+    }
+
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
+        if(!level().isClientSide){
+            var data = getOwner().getData(TEAttachments.SUMMONER_STORAGE.get());
+            data.getIds().add(this.getId());
         }
     }
 
@@ -142,7 +147,7 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
     }
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        return false;
+        return source.is(DamageTypes.GENERIC_KILL) && super.hurt(source, amount);
     }
 
     @Override
