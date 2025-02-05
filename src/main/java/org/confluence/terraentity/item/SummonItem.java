@@ -15,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.api.event.SummonEvent;
@@ -85,6 +87,7 @@ public class SummonItem<T extends AbstractSummonMob> extends Item {
     }
 
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         float additionAttackDamage = (float) Minecraft.getInstance().player.getAttributeValue(TEAttributes.SUMMON_DAMAGE) - 1;

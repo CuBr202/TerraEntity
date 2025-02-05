@@ -57,8 +57,8 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     public float ironGlomResistance = 0.4f;
     public float explosionResistance = 0.5f;
     public int attackInternal = 20;
-    private int _attackInternal = 20;
-    private int _detectInternal = 10;
+    protected int _attackInternal = 20;
+    protected int _detectInternal = 10;
     protected int lastSkillTick;
     protected boolean dirty = true;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

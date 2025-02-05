@@ -71,9 +71,7 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
         currentCapacity -= cost;
         if(!ids.contains(id))
             ids.add(id);
-        if(currentCapacity < 0){
-            currentCapacity = 0;
-        }
+
     }
 
     /**

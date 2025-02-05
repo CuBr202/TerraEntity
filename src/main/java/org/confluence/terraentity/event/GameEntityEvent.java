@@ -17,7 +17,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.confluence.terraentity.entity.ai.Boss;
@@ -29,10 +31,7 @@ import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
-import org.confluence.terraentity.init.TEAttachments;
-import org.confluence.terraentity.init.TEEffects;
-import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.utils.FloatRGB;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -80,6 +79,13 @@ public class GameEntityEvent {
     }
 
     @SubscribeEvent
+    public static void entityLeaveLevelEvent (EntityLeaveLevelEvent event) {
+        if(event.getEntity() instanceof ServerPlayer player){
+            player.getData(TEAttachments.SUMMONER_STORAGE.get()).clear(player);
+        }
+    }
+
+    @SubscribeEvent
     public static void FinalizeSpawnRegister(FinalizeSpawnEvent event) {
         if(event.getEntity() instanceof BlackSlime entity){
             entity.finalizeSpawn(entity.getRandom(),event.getDifficulty());
@@ -115,6 +121,9 @@ public class GameEntityEvent {
                     player.sendSystemMessage(mes);   //todo 报两次
                 }
             }
+        }
+        if(event.getEntity() instanceof ServerPlayer player){
+            player.getData(TEAttachments.SUMMONER_STORAGE.get()).clear(player);
         }
     }
 

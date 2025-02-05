@@ -124,8 +124,11 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
         if(!level().isClientSide){
             collisionHurt();
         }
-        if(this.getOwner() != null)
+        if(this.getOwner() != null) {
             this.distanceToOwner = this.distanceTo(this.getOwner());
+            if(!level().getEntity(getOwner().getId()).isAlive())
+                discard();
+        }
     }
 
     @Override
