@@ -51,6 +51,8 @@ public class TEEnglishProvider extends LanguageProvider {
         add("tooltip.terra_entity.summon_item_entity", "Summon Entity: %s");
         add("tooltip.terra_entity.summon_info", "Summon Info: %d / %d");
 
+        // attribute
+        add("attribute.name.player.summon_damage", "Summon Damage");
 
     }
 }

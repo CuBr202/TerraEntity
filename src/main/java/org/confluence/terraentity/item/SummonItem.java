@@ -21,6 +21,7 @@ import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.attachment.SummonerAttachment;
 import org.confluence.terraentity.entity.summon.AbstractSummonMob;
 import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.List;
@@ -29,24 +30,27 @@ public class SummonItem<T extends AbstractSummonMob> extends Item {
     public final DeferredHolder<EntityType<?>, EntityType<T>> entityType;
     public final int consume;
 
-    public SummonItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume) {
+    public final float baseAttackDamage;
+
+    public SummonItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume, float baseAttackDamage) {
         super(properties.stacksTo(1));
         this.entityType = entityType;
         this.consume = consume;
+        this.baseAttackDamage = baseAttackDamage;
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
 
-        if(!level.isClientSide) {
+        if (!level.isClientSide) {
 
             var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
             data.refresh((ServerPlayer) player);
 
             EntityHitResult hit = TEUtils.getEyeTraceHitResult(player, player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE));
-            if(hit!= null){
-                if(hit.getEntity() instanceof AbstractSummonMob) {
+            if (hit != null) {
+                if (hit.getEntity() instanceof AbstractSummonMob) {
                     hit.getEntity().discard();
                     return InteractionResultHolder.success(player.getItemInHand(hand));
                 }
@@ -76,20 +80,25 @@ public class SummonItem<T extends AbstractSummonMob> extends Item {
         level.addFreshEntity(entity);
         var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
         data.summon(consume, entity.getId());
-        if(player instanceof ServerPlayer serverPlayer)
+        if (player instanceof ServerPlayer serverPlayer)
             data.sync(serverPlayer);
     }
 
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        float additionAttackDamage = (float) Minecraft.getInstance().player.getAttributeValue(TEAttributes.SUMMON_DAMAGE) - 1;
+        tooltipComponents.add(Component.translatable("attribute.name.player.summon_damage").append(": " +
+                        (baseAttackDamage + (additionAttackDamage > 0 ? "  +%d%%".formatted((int)(additionAttackDamage * 100)): "")))
+                .withColor(0x00AB00));
+
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_item_cost", consume).withColor(0xABAC00));
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_item_entity", entityType.get().getDescription()).withColor(0x1E90FF));
 
         var data = Minecraft.getInstance().player.getData(TEAttachments.SUMMONER_STORAGE.get());
         int a = data.getCurrentCapacity();
         int b = SummonerAttachment.getMaxCapacity(Minecraft.getInstance().player);
-        tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_info", b - a ,  b).withColor(a <= 0? 0xAB0000 : 0x00ABAC));
+        tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_info", b - a, b).withColor(a <= 0 ? 0xAB0000 : 0x00ABAC));
     }
 
     @Override
@@ -99,17 +108,17 @@ public class SummonItem<T extends AbstractSummonMob> extends Item {
 
     @Override
     public void onStopUsing(ItemStack stack, LivingEntity livingEntity, int count) {
-        if(livingEntity instanceof ServerPlayer player) {
+        if (livingEntity instanceof ServerPlayer player) {
             var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
             // 召唤
-            if (count > getUseDuration( stack, livingEntity) - 20){
+            if (count > getUseDuration(stack, livingEntity) - 20) {
                 // 创造
                 if (!player.canBeSeenAsEnemy()) {
                     summon(player, stack);
                     return;
                 }
                 if (data.canSummon(consume)) {
-                    summon(player,  stack);
+                    summon(player, stack);
                     return;
                 }
             }
@@ -118,10 +127,10 @@ public class SummonItem<T extends AbstractSummonMob> extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
-        if(livingEntity instanceof ServerPlayer player) {
+        if (livingEntity instanceof ServerPlayer player) {
             var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
             // 收回所有召唤物
-            if(getUseDuration(stack, livingEntity) - remainingUseDuration == 20){
+            if (getUseDuration(stack, livingEntity) - remainingUseDuration == 20) {
                 data.clear(player);
                 data.sync(player);
                 player.swing(InteractionHand.MAIN_HAND);

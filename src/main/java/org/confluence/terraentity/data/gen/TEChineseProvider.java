@@ -93,8 +93,6 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
 
 
-        add(TEItems.SLIME_STAFF.get(), "史莱姆召唤杖");
-
         // 召唤杖
         add(TEItems.SLIME_STAFF.get(), "史莱姆法杖");
 
@@ -117,6 +115,9 @@ public class TEChineseProvider extends LanguageProvider {
         add("tooltip.terra_entity.summon_item_entity", "仆从类型: %s");
         add("tooltip.terra_entity.summon_info", "仆从栏位: %d / %d");
 
+
+        // attribute
+        add("attribute.name.player.summon_damage", "召唤伤害");
 
     }
 }

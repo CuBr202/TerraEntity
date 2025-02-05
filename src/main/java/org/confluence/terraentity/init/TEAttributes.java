@@ -21,7 +21,7 @@ public final class TEAttributes {
     /**
      * 召唤伤害
      */
-    public static final Holder<Attribute> SUMMON_DAMAGE = ATTRIBUTES.register("player.summon_damage", () -> new RangedAttribute("attribute.name.player.summon_damage", 2.0, 0.0, 2048.0).setSyncable(true));
+    public static final Holder<Attribute> SUMMON_DAMAGE = ATTRIBUTES.register("player.summon_damage", () -> new RangedAttribute("attribute.name.player.summon_damage", 1.0, 0.0, 2048.0).setSyncable(true));
     /**
      * 仆从击退
      */

@@ -23,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.fml.ModLoader;
 import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TETags;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -89,7 +90,8 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
                 for (var e : entities) {
                     if ( e instanceof LivingEntity living && canAttack(living) && (living instanceof Enemy && !(living instanceof NeutralMob) || living == getTarget()) ){
                         attackInternal = _attackInternal;
-                        float damage = (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+                        float damage = (float) (this.getAttribute(Attributes.ATTACK_DAMAGE).getValue()
+                                * owner.getAttributeValue(TEAttributes.SUMMON_DAMAGE));
 
                         e.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMONER, owner), damage);
                     }
