@@ -130,4 +130,9 @@ public class BrainFake extends BrainOfCthulhu {
         return false;
     }
 
+    @Override
+    public boolean isPickable() {
+        return false;
+    }
+
 }

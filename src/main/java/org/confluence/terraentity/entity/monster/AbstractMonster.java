@@ -8,10 +8,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -37,8 +34,8 @@ import java.util.function.Supplier;
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
 public class AbstractMonster extends Monster implements GeoEntity {
-    private int attackInternal = 0;
-    private int _attackInternal = 20;
+    protected int attackInternal = 0;
+    protected int _attackInternal = 20;
     protected int _detectInternal = 10;
     public Builder builder;
     protected boolean dirty = true;
@@ -222,13 +219,17 @@ public class AbstractMonster extends Monster implements GeoEntity {
         if(!level().isClientSide && builder.attachAttack && isAlive()){
             if(--attackInternal < 0){
                 attackInternal = _detectInternal;
-                var entities = level().getEntities(this, this.getBoundingBox().inflate(builder.attackIncrease));
-                if (!entities.isEmpty()) {
-                    for (var e : entities) {
-                        if (e instanceof LivingEntity living && canAttack(living) && !(e instanceof Monster)){
-                            doAttack(living);
-                        }
-                    }
+                doCollisionAttack(this, builder.attackIncrease);
+            }
+        }
+    }
+
+    public void doCollisionAttack(Entity entity, float range){
+        var entities = level().getEntities(entity, entity.getBoundingBox().inflate(range));
+        if (!entities.isEmpty()) {
+            for (var e : entities) {
+                if (e instanceof LivingEntity living && canAttack(living) && !(e instanceof Monster)){
+                    doAttack(living);
                 }
             }
         }

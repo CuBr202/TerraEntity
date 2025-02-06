@@ -65,9 +65,6 @@ public class EaterOfWorlds extends AbstractTerraBossBase implements Boss {
             }
         }
         this.noPhysics = true;
-
-
-
     }
 
     public EaterOfWorlds(Level level, boolean genSegments) {

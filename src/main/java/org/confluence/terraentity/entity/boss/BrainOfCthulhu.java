@@ -358,4 +358,9 @@ public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, 
         return super.hurt(pSource, pAmount);
     }
 
+    @Override
+    public boolean isPickable() {
+        return this.stage != 1;
+    }
+
 }

@@ -17,10 +17,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
@@ -74,14 +74,24 @@ public class GameEntityEvent {
             }
         }
         if(event.getEntity() instanceof ServerPlayer player){
-            player.getData(TEAttachments.SUMMONER_STORAGE.get()).sync(player);
+            // debug
+//            player.getInventory().add(TEItems.SLIME_STAFF.toStack());
         }
     }
 
     @SubscribeEvent
     public static void entityLeaveLevelEvent (EntityLeaveLevelEvent event) {
         if(event.getEntity() instanceof ServerPlayer player){
+            // 清除召唤物
             player.getData(TEAttachments.SUMMONER_STORAGE.get()).clear(player);
+        }
+    }
+
+    @SubscribeEvent
+    public static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if(event.getEntity() instanceof ServerPlayer player) {
+            // 同步召唤栏信息
+            player.getData(TEAttachments.SUMMONER_STORAGE.get()).sync(player);
         }
     }
 

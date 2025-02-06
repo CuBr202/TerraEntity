@@ -120,7 +120,6 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
     @Override
     public void tick() {
         super.tick();
-
         if(!level().isClientSide){
             collisionHurt();
         }
@@ -147,6 +146,10 @@ public abstract class AbstractSummonMob extends TamableAnimal implements GeoEnti
     public void onAddedToLevel() {
         super.onAddedToLevel();
         if(!level().isClientSide){
+            if(getOwner() == null) {
+                discard();
+                return;
+            }
             var data = getOwner().getData(TEAttachments.SUMMONER_STORAGE.get());
             data.getIds().add(this.getId());
         }
