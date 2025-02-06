@@ -219,25 +219,29 @@ public class AbstractMonster extends Monster implements GeoEntity {
         if(!level().isClientSide && builder.attachAttack && isAlive()){
             if(--attackInternal < 0){
                 attackInternal = _detectInternal;
-                doCollisionAttack(this, builder.attackIncrease);
+                doCollisionAttack(this, builder.attackIncrease, 1);
             }
         }
     }
 
-    public void doCollisionAttack(Entity entity, float range){
-        var entities = level().getEntities(entity, entity.getBoundingBox().inflate(range));
+    public void doCollisionAttack(Entity entity, float expand, float modify){
+        var entities = level().getEntities(entity, entity.getBoundingBox().inflate(expand));
         if (!entities.isEmpty()) {
             for (var e : entities) {
                 if (e instanceof LivingEntity living && canAttack(living) && !(e instanceof Monster)){
-                    doAttack(living);
+                    doAttack(living, modify);
                 }
             }
         }
     }
 
-    public void doAttack(LivingEntity entity) {
+    public void doAttack(LivingEntity entity, float modify) {
         attackInternal = _attackInternal;
-        entity.hurt(this.damageSources().generic(),(float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
+        entity.hurt(this.damageSources().generic(), (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue() * modify);
+    }
+
+    public void doAttack(LivingEntity entity) {
+        doAttack(entity, 1);
     }
 
     @Override

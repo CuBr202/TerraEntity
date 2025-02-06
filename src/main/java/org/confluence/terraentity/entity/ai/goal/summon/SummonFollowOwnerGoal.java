@@ -1,18 +1,19 @@
-package org.confluence.terraentity.entity.ai.goal;
+package org.confluence.terraentity.entity.ai.goal.summon;
 
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.pathfinder.PathType;
-import org.confluence.terraentity.entity.summon.SummonSlime;
+import org.confluence.terraentity.entity.summon.ISummonMob;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class SummonFollowOwnerGoal extends Goal {
-    private final SummonSlime tamable;
+public class SummonFollowOwnerGoal<T extends Mob & ISummonMob<?>> extends Goal {
+    private final T tamable;
     @Nullable
     private LivingEntity owner;
     private final double speedModifier;
@@ -22,7 +23,7 @@ public class SummonFollowOwnerGoal extends Goal {
     private final float startDistance;
     private float oldWaterCost;
 
-    public SummonFollowOwnerGoal(SummonSlime tamable, double speedModifier, float startDistance, float stopDistance) {
+    public SummonFollowOwnerGoal(T tamable, double speedModifier, float startDistance, float stopDistance) {
         this.tamable = tamable;
         this.speedModifier = speedModifier;
         this.navigation = tamable.getNavigation();
@@ -35,10 +36,10 @@ public class SummonFollowOwnerGoal extends Goal {
     }
 
     public boolean canUse() {
-        LivingEntity livingentity = this.tamable.getOwner();
+        LivingEntity livingentity = this.tamable.summon_getOwner();
         if (livingentity == null) {
             return false;
-        } else if (this.tamable.unableToMoveToOwner()) {
+        } else if (this.tamable.summon_unableToMoveToOwner()) {
             return false;
         } else if (this.tamable.distanceToSqr(livingentity) < (double)(this.startDistance * this.startDistance)) {
             return false;
@@ -52,7 +53,7 @@ public class SummonFollowOwnerGoal extends Goal {
         if (this.navigation.isDone()) {
             return false;
         } else {
-            return !this.tamable.unableToMoveToOwner() && !(this.tamable.distanceToSqr(this.owner) <= (double) (this.stopDistance * this.stopDistance));
+            return !this.tamable.summon_unableToMoveToOwner() && !(this.tamable.distanceToSqr(this.owner) <= (double) (this.stopDistance * this.stopDistance));
         }
     }
 
@@ -69,7 +70,7 @@ public class SummonFollowOwnerGoal extends Goal {
     }
 
     public void tick() {
-        boolean flag = this.tamable.shouldTryTeleportToOwner();
+        boolean flag = this.tamable.summon_shouldTryTeleportToOwner();
         if (!flag) {
             this.tamable.getLookControl().setLookAt(this.owner, 10.0F, (float)this.tamable.getMaxHeadXRot());
         }
@@ -77,7 +78,7 @@ public class SummonFollowOwnerGoal extends Goal {
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = this.adjustedTickDelay(10);
             if (flag) {
-                this.tamable.tryToTeleportToOwner();
+                this.tamable.summon_tryToTeleportToOwner();
             } else {
                 this.navigation.moveTo(this.owner, this.speedModifier);
             }

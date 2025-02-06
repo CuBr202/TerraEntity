@@ -1,5 +1,6 @@
 package org.confluence.terraentity.init;
 
+import net.minecraft.client.renderer.entity.IronGolemRenderer;
 import net.minecraft.client.renderer.entity.SkeletonRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
@@ -8,6 +9,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.api.distmarker.Dist;
@@ -35,6 +37,7 @@ import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.entity.proj.ThrowableProj;
+import org.confluence.terraentity.entity.summon.SummonIronGolem;
 import org.confluence.terraentity.entity.summon.SummonSlime;
 
 import java.util.function.Supplier;
@@ -101,6 +104,7 @@ public final class TEEntities {
 
     // tip 召唤物
     public static final DeferredHolder<EntityType<?>, EntityType<SummonSlime>> SUMMON_SLIME = registerEntity("slime_baby", SummonSlime::new ,0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<SummonIronGolem>> SUMMON_IRON_GOLEM = registerEntity("iron_golem_baby", SummonIronGolem::new,1.5F,3F);
 
 
 
@@ -176,7 +180,6 @@ public final class TEEntities {
         event.registerEntityRenderer(BLOOD_TUMORS.get(), c-> new GeoNormalRenderer<>(c,BLOOD_TUMORS.getId(),false));
         event.registerEntityRenderer(BLOOD_ZOMBIE.get(), c-> new GeoNormalRenderer<>(c,BLOOD_ZOMBIE.getId(),false));
         event.registerEntityRenderer(DEVOURER.get(), c-> new GeoWormRenderer<>(c, DEVOURER.getId(),2.0f, 0.0f));
-        event.registerEntityRenderer(DEVOURER.get(), c-> new GeoWormRenderer<>(c, DEVOURER.getId(),2.0f, 0.0f));
 
 
         // boss
@@ -190,6 +193,7 @@ public final class TEEntities {
 
         // sommon
         event.registerEntityRenderer(SUMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c, SUMMON_SLIME.getId().withPrefix("summon/"),false));
+        event.registerEntityRenderer(SUMMON_IRON_GOLEM.get(), IronGolemRenderer::new);
 
     }
 
@@ -250,6 +254,7 @@ public final class TEEntities {
         event.put(BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
 
         event.put(SUMMON_SLIME.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(SUMMON_IRON_GOLEM.get(), IronGolem.createAttributes().build());
 
     }
 

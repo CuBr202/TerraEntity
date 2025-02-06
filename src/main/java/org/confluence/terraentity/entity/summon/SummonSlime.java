@@ -13,10 +13,12 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 
 import java.util.EnumSet;
+import java.util.Optional;
+import java.util.UUID;
 
 import static software.bernie.geckolib.constant.DefaultAnimations.*;
 
-public class SummonSlime extends AbstractSummonMob {
+public class SummonSlime extends AbstractSummonMob<SummonSlime> {
 
 
     private float distanceToFlyToOwner = 25.0f;
@@ -67,6 +69,10 @@ public class SummonSlime extends AbstractSummonMob {
 
     }
 
+    @Override
+    public EntityDataAccessor<Optional<UUID>> get_DATA_OWNERUUID_ID() {
+        return DATA_OWNERUUID_ID;
+    }
 
 
     static class SlimeMoveControl extends MoveControl {

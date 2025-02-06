@@ -1,17 +1,18 @@
 package org.confluence.terraentity.api.event;
 
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.event.IModBusEvent;
-import org.confluence.terraentity.entity.summon.AbstractSummonMob;
+import org.confluence.terraentity.entity.summon.ISummonMob;
 
-public class SummonEvent extends Event implements IModBusEvent {
+public class SummonEvent<T extends Mob> extends Event implements IModBusEvent {
     ItemStack itemStack;
     Player player;
-    AbstractSummonMob summon;
-    public SummonEvent(Player player, ItemStack itemStack, AbstractSummonMob summon) {
+    ISummonMob<T> summon;
+    public SummonEvent(Player player, ItemStack itemStack, ISummonMob<T> summon) {
         this.itemStack = itemStack;
         this.player = player;
         this.summon = summon;
@@ -25,11 +26,11 @@ public class SummonEvent extends Event implements IModBusEvent {
         return player;
     }
 
-    public AbstractSummonMob getSummonMob() {
+    public ISummonMob<T> getSummonMob() {
         return summon;
     }
 
-    public static class Pre<T extends AbstractSummonMob> extends Event implements IModBusEvent {
+    public static class Pre<T extends Mob> extends Event implements IModBusEvent {
         ItemStack itemStack;
         Player player;
         EntityType<T> summonType;

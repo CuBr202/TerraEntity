@@ -8,6 +8,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -21,14 +22,14 @@ import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.attachment.SummonerAttachment;
-import org.confluence.terraentity.entity.summon.AbstractSummonMob;
+import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.List;
 
-public class SummonItem<T extends AbstractSummonMob> extends Item {
+public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
     public final DeferredHolder<EntityType<?>, EntityType<T>> entityType;
     public final int consume;
 
@@ -52,7 +53,7 @@ public class SummonItem<T extends AbstractSummonMob> extends Item {
 
             EntityHitResult hit = TEUtils.getEyeTraceHitResult(player, player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE));
             if (hit != null) {
-                if (hit.getEntity() instanceof AbstractSummonMob) {
+                if (hit.getEntity() instanceof ISummonMob) {
                     hit.getEntity().discard();
                     return InteractionResultHolder.success(player.getItemInHand(hand));
                 }
@@ -78,7 +79,7 @@ public class SummonItem<T extends AbstractSummonMob> extends Item {
         BlockPos pos = TEUtils.getEyeBlockHitResult(player);
         entity.setPos(pos.getX(), pos.getY(), pos.getZ());
         entity.summon(player, stack);
-        entity.cost = consume;
+        entity.setCost(consume);
         level.addFreshEntity(entity);
         var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
         data.summon(consume, entity.getId());

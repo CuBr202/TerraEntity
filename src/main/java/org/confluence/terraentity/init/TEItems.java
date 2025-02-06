@@ -71,6 +71,7 @@ public class TEItems {
 
     // Summon Items
     public static final DeferredItem<Item> SLIME_STAFF = SUMMON_ITEMS.register("slime_staff", () -> new SummonItem<>(new Item.Properties(), TEEntities.SUMMON_SLIME, 1, 5));
+    public static final DeferredItem<Item> IRON_GOLEM_STAFF = SUMMON_ITEMS.register("iron_golem_staff", () -> new SummonItem<>(new Item.Properties(), TEEntities.SUMMON_IRON_GOLEM, 1, 8));
 
 
     public static final DeferredItem<Item> DEBUG_ITEM = SUMMON_ITEMS.register("debug_item", () -> new DebugItem(new Item.Properties().stacksTo(1)));

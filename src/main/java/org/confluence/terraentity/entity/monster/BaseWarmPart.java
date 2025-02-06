@@ -2,7 +2,6 @@ package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -35,16 +34,6 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity {
     public double yyo;
     public double zzo;
 
-
-    protected int newPosRotationIncrements;
-    protected double interpTargetX;
-    protected double interpTargetY;
-    protected double interpTargetZ;
-    protected double interpTargetYaw;
-    protected double interpTargetPitch;
-    public float renderYawOffset;
-    public float prevRenderYawOffset;
-
     public int deathTime;
     public int hurtTime;
 
@@ -56,33 +45,7 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity {
         this.zzo = this.getZ();
         this.deathTime = this.getParent().deathTime;
         this.hurtTime = Math.max(0, this.hurtTime - 1);
-        this.yRotO = this.getYRot();
-        this.xRotO = this.getXRot();
-        this.xOld = this.getX();
-        this.yOld = this.getY();
-        this.zOld = this.getZ();
         super.tick();
-        if (this.newPosRotationIncrements > 0) {
-            double d0 = this.getX() + (this.interpTargetX - this.getX()) / (double) this.newPosRotationIncrements;
-            double d2 = this.getY() + (this.interpTargetY - this.getY()) / (double) this.newPosRotationIncrements;
-            double d4 = this.getZ() + (this.interpTargetZ - this.getZ()) / (double) this.newPosRotationIncrements;
-            double d6 = Mth.wrapDegrees(this.interpTargetYaw - (double) this.getYRot());
-            this.setYRot((float) ((double) this.getYRot() + d6 / (double) this.newPosRotationIncrements));
-            this.setXRot((float) ((double) this.getXRot() + (this.interpTargetPitch - (double) this.getXRot()) / (double) this.newPosRotationIncrements));
-            --this.newPosRotationIncrements;
-            this.setPos(d0, d2, d4);
-            this.setRot(this.getYRot(), this.getXRot());
-        }
-
-        while (getYRot() - this.yRotO < -180F) this.yRotO -= 360F;
-        while (getYRot() - this.yRotO >= 180F) this.yRotO += 360F;
-
-        while (this.renderYawOffset - this.prevRenderYawOffset < -180F) this.prevRenderYawOffset -= 360F;
-        while (this.renderYawOffset - this.prevRenderYawOffset >= 180F) this.prevRenderYawOffset += 360F;
-
-        while (getXRot() - this.xRotO < -180F) this.xRotO -= 360F;
-        while (getXRot() - this.xRotO >= 180F) this.xRotO += 360F;
-
     }
 
     public boolean hurt(DamageSource source, float amount) {
