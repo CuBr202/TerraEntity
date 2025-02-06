@@ -72,7 +72,7 @@ public final class TEEntities {
 
 
     // tip 飞行怪
-    public static final DeferredHolder<EntityType<?>, EntityType<DemonEye>> DEMON_EYE = registerEntity("demon_eye", DemonEye::new,1F, 1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<DemonEye>> DEMON_EYE = registerEntity("demon_eye", DemonEye::new,1.2F, 1.2F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMSON_KEMERA = registerSimpleMonster("crimson_kemera", FlyMonsterPrefab.CRIMSON_KEMERA_BUILDER,1.2f,1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> EATER_OF_SOULS = registerSimpleMonster("eater_of_souls", FlyMonsterPrefab.EATER_OF_SOULS_BUILDER,1.2f,1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER,1.6f,1.6f);
@@ -86,7 +86,7 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FACE_MONSTER = registerSimpleMonster("face_monster", LandMonsterPrefab.FACE_MONSTER_BUILDER,0.75F,1.95F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> BLOOD_TUMORS = registerSimpleMonster("blood_tumors", LandMonsterPrefab.BLOOD_TUMORS,0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> BLOOD_ZOMBIE = registerSimpleMonster("blood_zombie", LandMonsterPrefab.BLOOD_ZOMBIE_BUILDER,0.75F,1.95F);
-    public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> DEVOURER = registerEntity("devourer", BaseWarm::new,1F,1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> DEVOURER = registerEntity("devourer", BaseWarm::new,2F,2F);
 
 
 
@@ -175,7 +175,8 @@ public final class TEEntities {
         event.registerEntityRenderer(FACE_MONSTER.get(), c-> new GeoNormalRenderer<>(c,FACE_MONSTER.getId(),false));
         event.registerEntityRenderer(BLOOD_TUMORS.get(), c-> new GeoNormalRenderer<>(c,BLOOD_TUMORS.getId(),false));
         event.registerEntityRenderer(BLOOD_ZOMBIE.get(), c-> new GeoNormalRenderer<>(c,BLOOD_ZOMBIE.getId(),false));
-        event.registerEntityRenderer(DEVOURER.get(), c-> new GeoWormRenderer<>(c, DEVOURER.getId()));
+        event.registerEntityRenderer(DEVOURER.get(), c-> new GeoWormRenderer<>(c, DEVOURER.getId(),2.0f, 0.0f));
+        event.registerEntityRenderer(DEVOURER.get(), c-> new GeoWormRenderer<>(c, DEVOURER.getId(),2.0f, 0.0f));
 
 
         // boss
@@ -275,6 +276,7 @@ public final class TEEntities {
         event.register(CRIMSON_KEMERA.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(FACE_MONSTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(DECAYEDER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(DEVOURER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
         event.register(FLYING_FISH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkFlyingFishSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 

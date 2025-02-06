@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BaseWarm extends AbstractMonster {
 
-    private int currentSegmentCount = 5;
+    private int currentSegmentCount = 12;
     public BaseWarmPart[] bodySegments;
 
     public BaseWarm(EntityType<? extends Monster> type, Level level) {

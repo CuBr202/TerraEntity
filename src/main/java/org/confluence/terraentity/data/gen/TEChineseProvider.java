@@ -43,6 +43,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.crimson_kemera", "猩红喀迈拉");
         add("entity.terra_entity.eater_of_souls", "噬魂怪");
         add("entity.terra_entity.decayeder", "腐骴");
+        add("entity.terra_entity.devourer", "吞噬怪");
 
 
         add("entity.terra_entity.king_slime", "史莱姆王");
@@ -86,6 +87,7 @@ public class TEChineseProvider extends LanguageProvider {
 
         add(TEItems.EATER_OF_SOULS_SPAWN_EGG.get(), "噬魂怪刷怪蛋");
         add(TEItems.DECAYEDER_SPAWN_EGG.get(), "腐骴刷怪蛋");
+        add(TEItems.DEVOURER_SPAWN_EGG.get(), "吞噬怪刷怪蛋");
 
         add(TEItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
         add(TEItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");

@@ -47,6 +47,7 @@ public class TEItems {
     public static final DeferredItem<Item> BLOOD_CRAWLER_SPAWN_EGG = registerEgg("blood_crawler_spawn_egg", TEEntities.BLOOD_CRAWLER, 0xf2d4ca, 0xa75049);
     public static final DeferredItem<Item> BLOODY_SPORE_SPAWN_EGG = registerEgg("bloody_spore_spawn_egg", TEEntities.BLOODY_SPORE, 0xa75049, 0x65292c);
     public static final DeferredItem<Item> DECAYEDER_SPAWN_EGG = registerEgg("decayeder_spawn_egg", TEEntities.DECAYEDER, 0x5d478b, 0x8968cd);
+    public static final DeferredItem<Item> DEVOURER_SPAWN_EGG = registerEgg("devourer_spawn_egg", TEEntities.DEVOURER, 0x5d478b, 0x8968cd);
 
     public static final DeferredItem<Item> FLYING_FISH_SPAWN_EGG = registerEgg("flying_fish_spawn_egg", TEEntities.FLYING_FISH, 0xffe8fa, 0x002348);
     public static final DeferredItem<Item> DRIPPLER_SPAWN_EGG = registerEgg("drippler_spawn_egg", TEEntities.DRIPPLER, 0xe9dbc2, 0x830022);
