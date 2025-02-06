@@ -15,6 +15,9 @@ import org.jetbrains.annotations.Nullable;
 public class GeoWormRenderer<T extends BaseWarm> extends GeoNormalRenderer<T> {
 
     GeoWormSegmentRenderer<BaseWarmPart> partRenderer;
+    public double lerpx;
+    public double lerpy;
+    public double lerpz;
 
     /**
      * 文件命名：
@@ -49,6 +52,9 @@ public class GeoWormRenderer<T extends BaseWarm> extends GeoNormalRenderer<T> {
 
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
 
+        lerpx = Mth.lerp(partialTick, entity.xOld, entity.getX());
+        lerpy = Mth.lerp(partialTick, entity.yOld, entity.getY());
+        lerpz = Mth.lerp(partialTick, entity.zOld, entity.getZ());
         for(BaseWarmPart part : entity.bodySegments){
             poseStack.pushPose();
             float lerpYRot = Mth.lerp(partialTick, part.yRotO, part.getYRot());
