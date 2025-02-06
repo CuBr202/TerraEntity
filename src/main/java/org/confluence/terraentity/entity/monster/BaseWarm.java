@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public class BaseWarm extends AbstractMonster {
 
     private int currentSegmentCount = 12;
+    private float segInternal = 2f;
     public BaseWarmPart[] bodySegments;
 
     public BaseWarm(EntityType<? extends Monster> type, Level level) {
@@ -165,7 +166,7 @@ public class BaseWarm extends AbstractMonster {
             // 方向
 
             Vec3 diff = new Vec3(cur.getX() - followX, cur.getY() - followY, cur.getZ() - followZ);
-            diff = diff.normalize();
+            diff = diff.normalize().scale(1.6f);
 
             // 弹簧恢复力
 //            float angle = (((leader.getYRot() + 180) * Mth.PI) / 180.0F);
@@ -227,4 +228,9 @@ public class BaseWarm extends AbstractMonster {
     protected boolean isAlwaysExperienceDropper() {
         return true;
     }
+
+    public boolean isInWall() {
+        return false;
+    }
+
 }

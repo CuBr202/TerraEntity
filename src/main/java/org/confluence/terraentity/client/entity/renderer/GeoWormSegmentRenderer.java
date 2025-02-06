@@ -38,21 +38,19 @@ public class GeoWormSegmentRenderer<T extends BaseWarmPart> extends GeoEntityRen
 
     @Override
     public void render(T part, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-
         BaseWarm entity = part.getParent();
         double lerpx = Mth.lerp(partialTick, part.xOld, part.getX());
         double lerpy = Mth.lerp(partialTick, part.yOld, part.getY());
         double lerpz = Mth.lerp(partialTick, part.zOld, part.getZ());
         poseStack.translate(lerpx - entity.getX(), lerpy - entity.getY(), lerpz - entity.getZ());
 
-        float yaw =  entityYaw;
-        poseStack.mulPose(Axis.YN.rotationDegrees(yaw));
+        poseStack.mulPose(Axis.YN.rotationDegrees(entityYaw));
 //        poseStack.mulPose(parent.resetX);
 
-        double rad1 = yaw * Math.PI / 180;
         float lerpXRot = Mth.lerp(partialTick, part.xRotO, part.getXRot());
 //        poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad1), 0, (float) Math.sin(rad1))).rotationDegrees(-lerpXRot));
         poseStack.mulPose(Axis.XN.rotationDegrees(lerpXRot));
+        poseStack.scale(scale, scale, scale);
 
         super.render(part, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }

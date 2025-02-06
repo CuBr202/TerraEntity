@@ -47,7 +47,7 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity {
     @Override
     public void tick() {
         updateLastPos();
-        super.tick();
+
         this.deathTime = this.getParent().deathTime;
         this.hurtTime = Math.max(0, this.hurtTime - 1);
         this.yRotO = this.getYRot();
@@ -55,6 +55,7 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity {
         this.xOld = this.getX();
         this.yOld = this.getY();
         this.zOld = this.getZ();
+        super.tick();
         if (this.newPosRotationIncrements > 0) {
             double d0 = this.getX() + (this.interpTargetX - this.getX()) / (double) this.newPosRotationIncrements;
             double d2 = this.getY() + (this.interpTargetY - this.getY()) / (double) this.newPosRotationIncrements;
