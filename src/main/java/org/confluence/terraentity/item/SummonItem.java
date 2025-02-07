@@ -29,7 +29,7 @@ import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.List;
 
-public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
+public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
     public final DeferredHolder<EntityType<?>, EntityType<T>> entityType;
     public final int consume;
 

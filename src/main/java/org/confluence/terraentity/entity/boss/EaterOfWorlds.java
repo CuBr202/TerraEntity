@@ -260,7 +260,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase implements Boss {
                 }
 
                 //移动机制
-                if (shouldMove) {
+                if (shouldMove && this.isAlive()) {
                     this.setPos(position().add(getForward().normalize().scale(moveSpeed)));
                 }
 
