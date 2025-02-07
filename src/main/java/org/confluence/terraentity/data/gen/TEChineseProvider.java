@@ -57,6 +57,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("effect.terra_entity.demonic_thoughts", "邪念");
 
         add(TEEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
+        add(TEEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
 
         // 刷怪蛋
         add(TEItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
@@ -97,6 +98,7 @@ public class TEChineseProvider extends LanguageProvider {
 
         // 召唤杖
         add(TEItems.SLIME_STAFF.get(), "史莱姆法杖");
+        add(TEItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
 
         add("message.terraentity.boss_spawn", "%s已苏醒！");
         add("message.terraentity.boss_leave", "%s已被打败！");

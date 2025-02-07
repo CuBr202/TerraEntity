@@ -21,7 +21,7 @@ public class DemonEyeRenderer extends GeoEntityRenderer<DemonEye> {
     @Override
     public void preRender(PoseStack poseStack, DemonEye animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
-        poseStack.scale(1.8f, 1.8f, 1.8f);
+        poseStack.scale(1.55f, 1.55f, 1.55f);
         double rad = animatable.yBodyRot * Math.PI / 180;
         poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(animatable.xRotO));
     }

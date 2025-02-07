@@ -75,11 +75,11 @@ public final class TEEntities {
 
 
     // tip 飞行怪
-    public static final DeferredHolder<EntityType<?>, EntityType<DemonEye>> DEMON_EYE = registerEntity("demon_eye", DemonEye::new,1.2F, 1.2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<DemonEye>> DEMON_EYE = registerEntity("demon_eye", DemonEye::new,1.1F, 1.1F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMSON_KEMERA = registerSimpleMonster("crimson_kemera", FlyMonsterPrefab.CRIMSON_KEMERA_BUILDER,1.2f,1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> EATER_OF_SOULS = registerSimpleMonster("eater_of_souls", FlyMonsterPrefab.EATER_OF_SOULS_BUILDER,1.2f,1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER,1.6f,1.6f);
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.75F,0.75F);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.9F,0.9F);
     public static final DeferredHolder<EntityType<?>, EntityType<VisualNeuron>> VISUAL_NEURON = registerEntity("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
 
     // tip 陆生怪
@@ -104,7 +104,7 @@ public final class TEEntities {
 
     // tip 召唤物
     public static final DeferredHolder<EntityType<?>, EntityType<SummonSlime>> SUMMON_SLIME = registerEntity("slime_baby", SummonSlime::new ,0.5F,0.5F);
-    public static final DeferredHolder<EntityType<?>, EntityType<SummonIronGolem>> SUMMON_IRON_GOLEM = registerEntity("iron_golem_baby", SummonIronGolem::new,1.5F,3F);
+    public static final DeferredHolder<EntityType<?>, EntityType<SummonIronGolem>> SUMMON_IRON_GOLEM = registerEntity("i_32_iron_golem", SummonIronGolem::new,1.5F,3F);
 
 
 
