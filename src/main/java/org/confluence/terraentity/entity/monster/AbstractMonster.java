@@ -264,10 +264,11 @@ public class AbstractMonster extends Monster implements GeoEntity {
         public float SAFE_FALL = 5f;
         public float JUMP_STRENGTH = 0.41999998688697815f;
         public float STEP_HEIGHT = 0.6f;
+        public float attackIncrease = 0;
+
         public boolean attachAttack = true;
         public boolean noGravity = false;
         public boolean noFriction = false;
-        public int attackIncrease = 0;
 
 
         public Supplier<SoundEvent> deathSound;
@@ -285,7 +286,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
             return modifier.apply(this);
         }
 
-        public Builder setAttachIncrease(int attackIncrease) {
+        public Builder setAttachIncrease(float attackIncrease) {
             this.attackIncrease = attackIncrease;
             return this;
 

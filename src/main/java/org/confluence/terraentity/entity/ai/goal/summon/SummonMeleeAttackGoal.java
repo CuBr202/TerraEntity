@@ -61,7 +61,7 @@ public class SummonMeleeAttackGoal<T extends Mob & ISummonMob<T>> extends Goal {
                 }
             } else {
                 this.path = this.mob.getNavigation().createPath(livingentity, 0);
-                return this.path != null ? true : this.mob.isWithinMeleeAttackRange(livingentity);
+                return this.path != null || this.mob.isWithinMeleeAttackRange(livingentity);
             }
         }
     }

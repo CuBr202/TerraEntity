@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRenderer<T> {
@@ -29,11 +30,15 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
         this(renderManager, path, ifRotX,1,0);
     }
     public GeoNormalRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path, boolean ifRotX, float scale, float offsetY) {
-        super(renderManager, new GeoNormalModel<>(path));
+        this(renderManager, new GeoNormalModel<>(path), ifRotX,scale,offsetY);
+    }
+    public GeoNormalRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model, boolean ifRotX, float scale, float offsetY) {
+        super(renderManager, model);
         this.ifRotX = ifRotX;
         this.scale=scale;
         this.offsetY=offsetY;
     }
+
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);

@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.ai;
 
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Mob;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -14,8 +15,11 @@ public class CircleBossSkills<T extends Mob> {
     public int tick = 0;
     public int index = 0;
     public boolean ifStateInit = false;
-
-    public CircleBossSkills(T owner){ this.owner = owner;}
+    public EntityDataAccessor<Integer> skillIndexData;
+    public CircleBossSkills(T owner, EntityDataAccessor<Integer> skillIndexData){
+        this.owner = owner;
+        this.skillIndexData = skillIndexData;
+    }
     public int count(){return bossSkills.size();};
 
     public boolean pushSkill(BossSkill skill){
@@ -26,6 +30,7 @@ public class CircleBossSkills<T extends Mob> {
 
 
     public void tick(){
+        if(owner.level().isClientSide()) return ;
         if(bossSkills.isEmpty()) return ;
         this.tick++;
 
@@ -48,7 +53,7 @@ public class CircleBossSkills<T extends Mob> {
 
         //状态结束
         if(bossSkills.get(lastIndex).stateOver!=null) bossSkills.get(lastIndex).stateOver.accept(owner);
-        owner.getEntityData().set(AbstractTerraBossBase.DATA_SKILL_INDEX, index);
+        owner.getEntityData().set(skillIndexData, index);
     }
     /** 强制跳转状态 **/
     public void forceStartIndex(int index){
@@ -57,7 +62,7 @@ public class CircleBossSkills<T extends Mob> {
 
         //初次进入状态
         if(bossSkills.get(index).stateInit!=null) bossSkills.get(index).stateInit.accept(owner);
-        owner.getEntityData().set(AbstractTerraBossBase.DATA_SKILL_INDEX, index);
+        owner.getEntityData().set(skillIndexData, index);
     }
 
 

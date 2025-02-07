@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Boss {
+public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implements GeoEntity, Boss {
     private static final float MAX_HEALTHS = 552f;
     private static final float DAMAGE = 14f;//接触伤害
     private static final float MOVE_SPEED = 0.3f;

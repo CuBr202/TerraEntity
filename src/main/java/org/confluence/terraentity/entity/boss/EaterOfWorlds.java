@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-public class EaterOfWorlds extends AbstractTerraBossBase implements Boss {
+public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implements Boss {
     private static final float MAX_HEALTHS = 54f;
     private static final float DAMAGE = 5f;//接触伤害
     private static final float projDamage = 3;
@@ -163,9 +163,9 @@ public class EaterOfWorlds extends AbstractTerraBossBase implements Boss {
                 }
         );
 
-        addSkillNoAnim(wonder);
-        addSkillNoAnim(direct);
-        addSkillNoAnim(dash);
+        addSkill(wonder);
+        addSkill(direct);
+        addSkill(dash);
 //        addSkillNoAnim(wonder);
 
     }

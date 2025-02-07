@@ -21,7 +21,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 
 
 @SuppressWarnings("all")
-public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Boss {
+public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements GeoEntity, Boss {
     private static final float MAX_HEALTHS = 728f;
     private static final float DAMAGE = 4f;//一阶段接触伤害
     private static final float CRAZY_DAMAGE = 6f;//二阶段接触伤害

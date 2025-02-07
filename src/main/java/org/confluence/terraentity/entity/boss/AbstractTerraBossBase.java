@@ -22,6 +22,7 @@ import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -30,9 +31,7 @@ import net.neoforged.fml.ModLoader;
 import org.confluence.terraentity.ServerConfig;
 import org.confluence.terraentity.api.event.BossDeathEvent;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
-import org.confluence.terraentity.entity.ai.Boss;
-import org.confluence.terraentity.entity.ai.BossSkill;
-import org.confluence.terraentity.entity.ai.CircleBossSkills;
+import org.confluence.terraentity.entity.ai.*;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -46,25 +45,25 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
 
 @SuppressWarnings("all")
-public abstract class AbstractTerraBossBase extends Monster implements GeoEntity {
+public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackMob<T> {
+
+/* 属性 */
 
     public float ironGlomResistance = 0.4f;
     public float explosionResistance = 0.5f;
-    public int attackInternal = 20;
-    protected int _attackInternal = 20;
-    protected int _detectInternal = 10;
-    protected int lastSkillTick;
+
     protected boolean dirty = true;
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
     private final float baseHealth;
     private final int baseArmor;
+
     public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level, float health, int armor) {
         super(type, level);
         this.moveControl = new FlyingMoveControl(this, 10, false);
@@ -76,8 +75,6 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
         }
     }
-
-    public abstract void addSkills();
 
     public float getAttributeMultiplier(Holder<Attribute> attribute){
         return getMultiple(level(), attribute);
@@ -109,14 +106,20 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
 
     }
 
-    // 攻击目标
+    protected void setAttactDamage(float damage){
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(damage);
+    }
+
+
+/* 攻击目标 */
+
     private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = entity -> entity instanceof Player;
 
     protected void registerGoals() {
         //this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 100F));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-//        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
 
@@ -125,17 +128,42 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
 
     }
 
-    // 技能动画
-    public CircleBossSkills skills = new CircleBossSkills(this);
 
-    // 动画数据同步
+
+/* FSM */
+
     private int lastAnimIndex = -1;
+    public CircleBossSkills skills = new CircleBossSkills(this, DATA_SKILL_INDEX);
     public static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
-//    public static final EntityDataAccessor<Integer> DATA_SKILL_TICK = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
 
-    protected void setAttactDamage(float damage){
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(damage);
+    protected int lastSkillTick;
+    @Override
+    public CircleBossSkills getSkills() {
+        return skills;
     }
+
+    @Override
+    public int getLastAnimIndex() {
+        return this.lastAnimIndex;
+    }
+
+    @Override
+    public void setLastAnimIndex(int lastAnimIndex) {
+        this.lastAnimIndex = lastAnimIndex;
+    }
+
+    @Override
+    public int getLastSkillTick() {
+        return this.lastSkillTick;
+    }
+
+    @Override
+    public void setLastSkillTick(int lastSkillTick) {
+        this.lastSkillTick = lastSkillTick;
+    }
+
+
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
@@ -151,42 +179,13 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
             skills.tick = 0;
         }
     }
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, 20, state -> {
-            AbstractTerraBossBase entity = (AbstractTerraBossBase) state.getData(DataTickets.ENTITY);
-            if (!entity.isAlive()) return PlayState.STOP;
-            if (skills.count() == 0) return PlayState.STOP;
-
-            RawAnimation skill = skills.getCurAnim();
-            if(skill == null) return PlayState.STOP;
-            String name = skill.toString();
-            if (skill != null) {
-                state.setAnimation(skill);
-                if (lastAnimIndex != skills.index) {
-                    lastAnimIndex = skills.index;
-                    state.resetCurrentAnimation();
-
-                    return PlayState.STOP;
-                }
-                return PlayState.CONTINUE;
-            }
-            return PlayState.STOP;
-        }));
-    }
 
 
-    // 技能逻辑
+/* Collision */
 
-    public void addSkill(BossSkill bossSkill) {
-        this.skills.pushSkill(bossSkill);
-    }
-
-    public void addSkillNoAnim(BossSkill bossSkill) {
-        this.skills.pushSkill(bossSkill);
-        //if(anim==null)return;
-        //skillMap.put(bossSkill.skill,anim);
-    }
+    public int attackInternal = 20;
+    protected int _attackInternal = 20;
+    protected int _detectInternal = 10;
 
     public int getDetectInternal() {
         return _detectInternal;
@@ -196,13 +195,30 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         return _attackInternal;
     }
 
+    @Override
+    public int getActualAttackInterval() {
+        return attackInternal;
+    }
+
+    @Override
+    public void setActualAttackInterval(int interval) {
+        this.attackInternal = interval;
+    }
+
+    @Override
+    public float getAttackRangeExtent() {
+        return 0;
+    }
+
+/* discard */
+
     LivingEntity target;
     protected static final int DISCARD_TICK = 100;
     protected int discardTick = 0;
+
     @Override
     public void tick() {
         super.tick();
-
 
         if (!level().isClientSide){
             target = getTarget();
@@ -218,12 +234,18 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
                 return;
             }
             discardTick = 0;
-            collisionHurt();
+
+            doCollisionAttack(
+                    living -> (true),
+                    e -> e.hurt(this.damageSources().generic(), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE))
+            );
+
         }
 
         this.setDeltaMovement(getDeltaMovement().scale(0.95));//空气阻力
     }
 
+/* func */
 
     public void lookAtPos(Vec3 target, float pMaxYRotIncrease, float pMaxXRotIncrease) {
         double d0 = target.x - this.getX();
@@ -248,29 +270,6 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
         }
 
         return pAngle + f;
-    }
-
-    // 开启碰撞伤害
-    public boolean canCollisionHurt() {
-        return true;
-    }
-
-    public void collisionHurt() {
-        if (canCollisionHurt() && !level().isClientSide && --attackInternal <= 0) {
-            attackInternal = getDetectInternal();
-            // 包围盒检测造成伤害
-            var entities = level().getEntities(this, this.getBoundingBox(), e->e instanceof LivingEntity living&& e!= this );
-            if (!entities.isEmpty()) {
-                for (var e : entities) {
-                    if ( e instanceof LivingEntity living&& canAttack(living)){
-                        attackInternal = _attackInternal;
-                        //测试末影龙
-                        e.hurt(this.damageSources().generic(),(float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
-                        //e.hurt(this.damageSources().explosion(new Explosion(level(), this, 0.0f, 0,0,3, List.of(this.blockPosition()))), (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
-                    }
-                }
-            }
-       }
     }
 
     public void LookAt(float maxAngleY) {
@@ -303,7 +302,8 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
                 );
     }
 
-    // boss条
+/* boss条 */
+
     public boolean shouldShowBossBar() {
         return true;
     }
@@ -334,11 +334,6 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
             this.bossEvent.setProgress(getBossEventProgress());
     }
 
-    @Override // 从客户端移除时
-    public void onRemovedFromLevel() {
-        super.onRemovedFromLevel();
-    }
-
     @Override // 取消墙体窒息伤害
     public boolean isInWall() {
         return false;
@@ -358,6 +353,8 @@ public abstract class AbstractTerraBossBase extends Monster implements GeoEntity
     protected SoundEvent getHurtSound(DamageSource damageSource) {
         return SoundEvents.SKELETON_HURT;
     }
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
