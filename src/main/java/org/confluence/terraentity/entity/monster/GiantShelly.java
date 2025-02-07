@@ -13,7 +13,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.ai.BossSkill;
+import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -37,15 +37,15 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVar
         this._detectInternal = 1;
 
     }
-    BossSkill<GiantShelly> walk;
-    BossSkill<GiantShelly> free;
-    BossSkill<GiantShelly> shrinking_shell;
-    BossSkill<GiantShelly> turn;
-    BossSkill<GiantShelly> turn2;
+    MobSkill<GiantShelly> walk;
+    MobSkill<GiantShelly> free;
+    MobSkill<GiantShelly> shrinking_shell;
+    MobSkill<GiantShelly> turn;
+    MobSkill<GiantShelly> turn2;
 
     @Override
     public void addSkills() {
-        free = new BossSkill<GiantShelly>(RawAnimation.begin().thenLoop("free"), 40, 0)
+        free = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("free"), 40, 0)
                 .onInit(e->{
                     if(e.getAttribute(Attributes.ARMOR).hasModifier(armorAddition)){
                         e.getAttribute(Attributes.ARMOR).removeModifier(armorAddition);
@@ -53,7 +53,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVar
                 })
         ;
 
-        walk = new BossSkill<GiantShelly>(RawAnimation.begin().thenLoop("walk"), 60, 0)
+        walk = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("walk"), 60, 0)
                 .onInit(e->{
                     cachedTarget = LandRandomPos.getPos(e, 15, 7);
                 })
@@ -69,7 +69,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVar
                 })
         ;
 
-        shrinking_shell = new BossSkill<GiantShelly>(RawAnimation.begin().thenPlay("shrinking_shell"), 50, 0)
+        shrinking_shell = new MobSkill<GiantShelly>(RawAnimation.begin().thenPlay("shrinking_shell"), 50, 0)
                 .onInit(e->{
                     e.navigation.stop();
                     if(!e.getAttribute(Attributes.ARMOR).hasModifier(armorAddition)){
@@ -78,7 +78,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVar
                 })
         ;
 
-        turn = new BossSkill<GiantShelly>(RawAnimation.begin().thenLoop("turn"), 50, 20)
+        turn = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("turn"), 50, 20)
                 .onTick(e->{
                     if(e.getTarget() == null) {
 //                        skills.forceStartIndex(0);
@@ -90,7 +90,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVar
                     }
                 })
         ;
-        turn2 = new BossSkill<GiantShelly>(RawAnimation.begin().thenLoop("turn2"), 20, 0)
+        turn2 = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("turn2"), 20, 0)
 
 
         ;

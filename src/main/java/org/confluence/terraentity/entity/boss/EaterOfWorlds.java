@@ -15,7 +15,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.Boss;
-import org.confluence.terraentity.entity.ai.BossSkill;
+import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.utils.CameraShakeData;
@@ -99,7 +99,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
 
     @Override
     public void addSkills() {
-        BossSkill<AbstractTerraBossBase> direct = new BossSkill<>(null,300,0,
+        MobSkill<AbstractTerraBossBase> direct = new MobSkill<>(null,300,0,
                 (AbstractTerraBossBase)->{
                     isDashing = true;
                     moveSpeed = moveSpeedBase * 1.5f;
@@ -123,8 +123,8 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                 (AbstractTerraBossBase)->{
 
                 });
-        BossSkill<AbstractTerraBossBase> dash = new BossSkill<>(null,120,0);
-        BossSkill<AbstractTerraBossBase> wonder=new BossSkill<>(null,120,0,
+        MobSkill<AbstractTerraBossBase> dash = new MobSkill<>(null,120,0);
+        MobSkill<AbstractTerraBossBase> wonder=new MobSkill<>(null,120,0,
                 (AbstractTerraBossBase)->{
                     //设置状态触发时目的点
                     wanderType = wanderType==WonderType.DOWN?WonderType.UP:WonderType.DOWN;

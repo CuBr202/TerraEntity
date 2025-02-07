@@ -2,43 +2,42 @@ package org.confluence.terraentity.entity.ai;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Mob;
-import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CircleBossSkills<T extends Mob> {
+public class CircleMobSkills<T extends Mob> {
     public T owner;
-    protected final List<BossSkill> bossSkills = new ArrayList<>();
+    protected final List<MobSkill> mobSkills = new ArrayList<>();
 
     public int tick = 0;
     public int index = 0;
     public boolean ifStateInit = false;
     public EntityDataAccessor<Integer> skillIndexData;
-    public CircleBossSkills(T owner, EntityDataAccessor<Integer> skillIndexData){
+    public CircleMobSkills(T owner, EntityDataAccessor<Integer> skillIndexData){
         this.owner = owner;
         this.skillIndexData = skillIndexData;
     }
-    public int count(){return bossSkills.size();};
+    public int count(){return mobSkills.size();};
 
-    public boolean pushSkill(BossSkill skill){
-        bossSkills.add(skill);
-        if(bossSkills.size()==1) tick = 0;
+    public boolean pushSkill(MobSkill skill){
+        mobSkills.add(skill);
+        if(mobSkills.size()==1) tick = 0;
         return true;
     }
 
 
     public void tick(){
         if(owner.level().isClientSide()) return ;
-        if(bossSkills.isEmpty()) return ;
+        if(mobSkills.isEmpty()) return ;
         this.tick++;
 
-        if(bossSkills.get(index).stateTick !=null) {
-            bossSkills.get(index).stateTick.accept(owner);
+        if(mobSkills.get(index).stateTick !=null) {
+            mobSkills.get(index).stateTick.accept(owner);
         }
-        if(bossSkills.isEmpty())return;
-        if(bossSkills.get(index).timeContinue < tick) {
+        if(mobSkills.isEmpty())return;
+        if(mobSkills.get(index).timeContinue < tick) {
             forceEnd();
             forceStartIndex(index);
         }
@@ -49,10 +48,10 @@ public class CircleBossSkills<T extends Mob> {
     public void forceEnd(){
         tick = 0;
         int lastIndex = index;
-        index = (index +1) % bossSkills.size();
+        index = (index +1) % mobSkills.size();
 
         //状态结束
-        if(bossSkills.get(lastIndex).stateOver!=null) bossSkills.get(lastIndex).stateOver.accept(owner);
+        if(mobSkills.get(lastIndex).stateOver!=null) mobSkills.get(lastIndex).stateOver.accept(owner);
         owner.getEntityData().set(skillIndexData, index);
     }
     /** 强制跳转状态 **/
@@ -61,29 +60,29 @@ public class CircleBossSkills<T extends Mob> {
         this.index = index;
 
         //初次进入状态
-        if(bossSkills.get(index).stateInit!=null) bossSkills.get(index).stateInit.accept(owner);
+        if(mobSkills.get(index).stateInit!=null) mobSkills.get(index).stateInit.accept(owner);
         owner.getEntityData().set(skillIndexData, index);
     }
 
 
     /** tick == triggerTime **/
     public boolean canTrigger(){
-        if(bossSkills.isEmpty()) return false;
-        return bossSkills.get(index).timeTrigger == this.tick;
+        if(mobSkills.isEmpty()) return false;
+        return mobSkills.get(index).timeTrigger == this.tick;
     }
     /** tick > triggerTime **/
     public boolean canContinue(){
-        if(bossSkills.isEmpty()) return false;
-        return bossSkills.get(index).timeTrigger < this.tick;
+        if(mobSkills.isEmpty()) return false;
+        return mobSkills.get(index).timeTrigger < this.tick;
     }
     public RawAnimation getCurAnim(){
-        if(!bossSkills.isEmpty())
-            return bossSkills.get(index).anim;
+        if(!mobSkills.isEmpty())
+            return mobSkills.get(index).anim;
         return null;
     }
     public int getCurAnimFullTick(){
-        if(!bossSkills.isEmpty())
-            return bossSkills.get(index).timeContinue;
+        if(!mobSkills.isEmpty())
+            return mobSkills.get(index).timeContinue;
         return -1;
     }
 

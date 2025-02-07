@@ -9,7 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import org.confluence.terraentity.entity.ai.BossSkill;
+import org.confluence.terraentity.entity.ai.MobSkill;
 import software.bernie.geckolib.animation.RawAnimation;
 
 
@@ -17,7 +17,7 @@ public class BrainFake extends BrainOfCthulhu {
 
     public int tag;
     BrainOfCthulhu owner;
-    BossSkill<BrainFake> first_spawn;
+    MobSkill<BrainFake> first_spawn;
 
     public BrainFake(EntityType<BrainFake> entityType, Level level) {
         super(entityType, level);
@@ -59,7 +59,7 @@ public class BrainFake extends BrainOfCthulhu {
     @Override
     public void addSkills() {
         RawAnimation open = RawAnimation.begin().thenPlay("open");
-        first_spawn = new BossSkill<BrainFake>(open, 50, 20);
+        first_spawn = new MobSkill<BrainFake>(open, 50, 20);
         addSkill(first_spawn);
     }
 

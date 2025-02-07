@@ -16,7 +16,7 @@ import software.bernie.geckolib.constant.DataTickets;
  */
 public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
 
-    CircleBossSkills<T> getSkills();
+    CircleMobSkills<T> getSkills();
 
     int getLastAnimIndex();
 
@@ -28,8 +28,8 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
 
     void addSkills();
 
-    default void addSkill(BossSkill bossSkill) {
-        getSkills().pushSkill(bossSkill);
+    default void addSkill(MobSkill mobSkill) {
+        getSkills().pushSkill(mobSkill);
     }
 
     default void syncSkillIndex(){

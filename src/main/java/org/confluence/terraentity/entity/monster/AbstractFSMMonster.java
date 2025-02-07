@@ -9,7 +9,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import org.confluence.terraentity.entity.ai.CircleBossSkills;
+import org.confluence.terraentity.entity.ai.CircleMobSkills;
 import org.confluence.terraentity.entity.ai.IFSMGeoMob;
 import software.bernie.geckolib.animation.AnimatableManager;
 
@@ -17,14 +17,14 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
 
     protected int lastAnimIndex;
     protected int lastSkillTick;
-    protected CircleBossSkills<T> skills;
+    protected CircleMobSkills<T> skills;
 
     public static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractFSMMonster.class, EntityDataSerializers.INT);
 
     public AbstractFSMMonster(EntityType<? extends Monster> type, Level level, Builder builder) {
         super(type, level, builder);
 
-        skills = new CircleBossSkills(this, DATA_SKILL_INDEX);
+        skills = new CircleMobSkills(this, DATA_SKILL_INDEX);
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
     }
 
     @Override
-    public CircleBossSkills<T> getSkills() {
+    public CircleMobSkills<T> getSkills() {
         return skills;
     }
 

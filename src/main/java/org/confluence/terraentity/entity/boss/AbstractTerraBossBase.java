@@ -22,7 +22,6 @@ import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -38,14 +37,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
@@ -133,12 +126,12 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 /* FSM */
 
     private int lastAnimIndex = -1;
-    public CircleBossSkills skills = new CircleBossSkills(this, DATA_SKILL_INDEX);
+    public CircleMobSkills skills = new CircleMobSkills(this, DATA_SKILL_INDEX);
     public static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
 
     protected int lastSkillTick;
     @Override
-    public CircleBossSkills getSkills() {
+    public CircleMobSkills getSkills() {
         return skills;
     }
 

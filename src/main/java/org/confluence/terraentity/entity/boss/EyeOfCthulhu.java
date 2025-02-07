@@ -11,7 +11,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.Boss;
-import org.confluence.terraentity.entity.ai.BossSkill;
+import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
@@ -67,11 +67,11 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
 
     // 定义技能类型
-    BossSkill stage1_stare;
-    BossSkill state1_dash;
-    BossSkill switch_1_to_2;
-    BossSkill stage2_stare;
-    BossSkill state2_dash;
+    MobSkill stage1_stare;
+    MobSkill state1_dash;
+    MobSkill switch_1_to_2;
+    MobSkill stage2_stare;
+    MobSkill state2_dash;
 
     @Override
     public void addSkills() {
@@ -84,7 +84,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
         // 定义技能实现
         // 定格在玩家正上方
-        this.stage1_stare = new BossSkill( type1, 5 * 20, 0,
+        this.stage1_stare = new MobSkill( type1, 5 * 20, 0,
                 terraBossBase -> {},
                 terraBossBase -> {
                     if (getTarget() == null) return;
@@ -111,7 +111,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 terraBossBase -> {}
         );
         // 延迟20tick冲刺10tick
-        this.state1_dash = new BossSkill( type1run, 30, 20,
+        this.state1_dash = new MobSkill( type1run, 30, 20,
                 terraBossBase -> {},
                 terraBossBase -> {
                     // 延迟冲刺
@@ -145,7 +145,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 }
         );
         // 转换阶段
-        this.switch_1_to_2 = new BossSkill(switching, 40, 0,
+        this.switch_1_to_2 = new MobSkill(switching, 40, 0,
                 terraBossBase -> {
 
                     summonCD = 0;
@@ -160,7 +160,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE);
 
                 });
-        this.stage2_stare = new BossSkill(type2, 3 * 20, 0,
+        this.stage2_stare = new MobSkill(type2, 3 * 20, 0,
                 terraBossBase -> {
                 },
                 terraBossBase -> {
@@ -178,7 +178,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE);
                 }
         );
-        this.state2_dash = new BossSkill(type2run, 30, 20,
+        this.state2_dash = new MobSkill(type2run, 30, 20,
                 terraBossBase -> {
                     if (getTarget() == null) return;
                     if(this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount <= stage2_dashCount_max){

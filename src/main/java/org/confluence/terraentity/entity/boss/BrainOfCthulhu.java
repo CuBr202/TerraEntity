@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.Boss;
-import org.confluence.terraentity.entity.ai.BossSkill;
+import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
 import org.confluence.terraentity.entity.ai.motion.curve.Curve;
 import org.confluence.terraentity.entity.monster.VisualNeuron;
@@ -55,17 +55,17 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
     }
 
     // 定义技能类型
-    BossSkill<BrainOfCthulhu> first_spawn;
+    MobSkill<BrainOfCthulhu> first_spawn;
 
-    BossSkill<BrainOfCthulhu> stage1_stare;
-    BossSkill<BrainOfCthulhu> stage1_fade_in;
-    BossSkill<BrainOfCthulhu> stage1_fade_out;
+    MobSkill<BrainOfCthulhu> stage1_stare;
+    MobSkill<BrainOfCthulhu> stage1_fade_in;
+    MobSkill<BrainOfCthulhu> stage1_fade_out;
 
-    BossSkill<BrainOfCthulhu> switch_1_to_2;
-    BossSkill<BrainOfCthulhu> stage2_stare;
-    BossSkill<BrainOfCthulhu> stage2_fade_in;
-    BossSkill<BrainOfCthulhu> stage2_fade_out;
-    BossSkill<BrainOfCthulhu> state2_dash;
+    MobSkill<BrainOfCthulhu> switch_1_to_2;
+    MobSkill<BrainOfCthulhu> stage2_stare;
+    MobSkill<BrainOfCthulhu> stage2_fade_in;
+    MobSkill<BrainOfCthulhu> stage2_fade_out;
+    MobSkill<BrainOfCthulhu> state2_dash;
 
     @Override
     public void addSkills() {
@@ -74,7 +74,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         RawAnimation open = RawAnimation.begin().thenPlay("open");
         RawAnimation switching = RawAnimation.begin().thenPlay("to_open");
 
-        first_spawn = new BossSkill<BrainOfCthulhu>(close, 50, 20)
+        first_spawn = new MobSkill<BrainOfCthulhu>(close, 50, 20)
                 .onTick(e->{
                     int interval = 2;
                     int cur = skills.tick - 21;
@@ -96,7 +96,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 })
         ;
 
-        stage1_stare = new BossSkill<BrainOfCthulhu>(close, 200, 0)
+        stage1_stare = new MobSkill<BrainOfCthulhu>(close, 200, 0)
                 .onTick(e->{
                     if(minionsCount <= 0){
                         skills.forceStartIndex(4);
@@ -128,13 +128,13 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                         setDeltaMovement(tar.subtract(position()).normalize().scale(_moveSpeed / 2));
                 })
         ;
-        stage1_fade_in = new BossSkill<BrainOfCthulhu>(close, 40, 0)
+        stage1_fade_in = new MobSkill<BrainOfCthulhu>(close, 40, 0)
                 .onInit(e->inertia = getDeltaMovement())
                 .onTick(e->{
                     this.setDeltaMovement(inertia);
                 })
         ;
-        stage1_fade_out = new BossSkill<BrainOfCthulhu>(close, 40, 0)
+        stage1_fade_out = new MobSkill<BrainOfCthulhu>(close, 40, 0)
                 .onInit(e->{
                     if(getTarget() != null) {
                         float r = random.nextFloat() + 5;
@@ -157,7 +157,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 })
         ;
 
-        switch_1_to_2 = new BossSkill<BrainOfCthulhu>(switching, 15, 0)
+        switch_1_to_2 = new MobSkill<BrainOfCthulhu>(switching, 15, 0)
                 .onTick(e->{
                     LookAt(10);
                 })
@@ -174,7 +174,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 })
         ;
 
-        stage2_stare = new BossSkill<BrainOfCthulhu>(open, 40, 0)
+        stage2_stare = new MobSkill<BrainOfCthulhu>(open, 40, 0)
                 .onInit(e->{
                     if(target != null){
                         float r = random.nextFloat() + 16;
@@ -191,7 +191,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 })
         ;
 
-        state2_dash = new BossSkill<BrainOfCthulhu>(open, 30, 10)
+        state2_dash = new MobSkill<BrainOfCthulhu>(open, 30, 10)
                 .onInit(e->{
 
                 })
@@ -223,7 +223,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 })
         ;
 
-        stage2_fade_in = new BossSkill<BrainOfCthulhu>(open, 30, 0)
+        stage2_fade_in = new MobSkill<BrainOfCthulhu>(open, 30, 0)
                 .onTick(e->{
                     if(target != null){
                         Vec3 dir = position().subtract(target.position()).normalize();
@@ -231,7 +231,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                     }
                 })
         ;
-        stage2_fade_out = new BossSkill<BrainOfCthulhu>(open, 100, 30)
+        stage2_fade_out = new MobSkill<BrainOfCthulhu>(open, 100, 30)
                 .onInit(e->{
                     if(getTarget() != null) {
                         float r = random.nextFloat() + 10;

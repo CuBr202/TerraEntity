@@ -5,7 +5,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.function.Consumer;
 
-public class BossSkill<T extends Mob> {
+public class MobSkill<T extends Mob> {
 
 
     public int timeContinue;
@@ -17,21 +17,20 @@ public class BossSkill<T extends Mob> {
     public Consumer<T> stateOver;
 
     /**
-     *
      * @param anim 动画名称
      * @param timeContinue 状态持续时间
      * @param timeTrigger 逻辑触发时间
      */
-    public BossSkill(RawAnimation anim, int timeContinue, int timeTrigger){
+    public MobSkill(RawAnimation anim, int timeContinue, int timeTrigger){
         this.anim = anim;
         this.timeContinue = timeContinue;
         this.timeTrigger = timeTrigger;
     }
 
-    public BossSkill(RawAnimation anim, int timeContinue, int timeTrigger,
-                     Consumer<T> stateInit,
-                     Consumer<T> stateTick,
-                     Consumer<T> stateOver
+    public MobSkill(RawAnimation anim, int timeContinue, int timeTrigger,
+                    Consumer<T> stateInit,
+                    Consumer<T> stateTick,
+                    Consumer<T> stateOver
     ){
         this.anim = anim;
         this.timeContinue = timeContinue;
@@ -51,15 +50,15 @@ public class BossSkill<T extends Mob> {
         this.stateOver = stateOver;
     };
 
-    public BossSkill<T> onTick (Consumer<T> stateTick){
+    public MobSkill<T> onTick (Consumer<T> stateTick){
         this.stateTick = stateTick;
         return this;
     };
-    public BossSkill<T> onInit (Consumer<T> stateInit){
+    public MobSkill<T> onInit (Consumer<T> stateInit){
         this.stateInit = stateInit;
         return this;
     };
-    public BossSkill<T> onOver (Consumer<T> stateOver){
+    public MobSkill<T> onOver (Consumer<T> stateOver){
         this.stateOver = stateOver;
         return this;
     };
