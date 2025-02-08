@@ -27,7 +27,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVar
     Vec3 cachedTarget = null;
     static final ResourceLocation armorAddition = TerraEntity.space("shrink");
     public GiantShelly(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(20,1,1,10,0,0)
+        super(type, level, new AbstractPrefab(26,3,9,10,0,0.4f)
                 .getPrefab()
                 .setMovementSpeed(0.1f)
                 .setAttachIncrease(0.2f)
