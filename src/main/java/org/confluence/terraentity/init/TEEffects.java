@@ -6,6 +6,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.effect.harmful.DemonicThoughtsEffect;
+import org.confluence.terraentity.effect.harmful.SummonFocusEffect;
 
 public class TEEffects {
     public static final DeferredRegister<MobEffect> EFFECTS =
@@ -13,4 +14,6 @@ public class TEEffects {
 
     public static final DeferredHolder<MobEffect, DemonicThoughtsEffect> DEMONIC_THOUGHTS =
             EFFECTS.register("demonic_thoughts", DemonicThoughtsEffect::new);
+    public static final DeferredHolder<MobEffect, SummonFocusEffect> SUMMON_FOCUS =
+            EFFECTS.register("summon_focus", SummonFocusEffect::new);
 }

@@ -20,6 +20,7 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -32,6 +33,7 @@ import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonFollowOwnerGoal;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonOwnerHurtByTargetGoal;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonOwnerHurtTargetGoal;
+import org.confluence.terraentity.entity.ai.goal.summon.SummonPriorAttackGoal;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TETags;
@@ -228,6 +230,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
         te$getSelf().goalSelector.addGoal(10, new LookAtPlayerGoal(te$getSelf(), Player.class, 8.0F));
         te$getSelf().goalSelector.addGoal(10, new RandomLookAroundGoal(te$getSelf()));
 
+        te$getSelf().targetSelector.addGoal(1, new SummonPriorAttackGoal<>(te$getSelf(), false));
         te$getSelf().targetSelector.addGoal(2, new SummonOwnerHurtByTargetGoal(te$getSelf()));
         te$getSelf().targetSelector.addGoal(3, new SummonOwnerHurtTargetGoal(te$getSelf()));
         te$getSelf().targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(te$getSelf(), Monster.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
