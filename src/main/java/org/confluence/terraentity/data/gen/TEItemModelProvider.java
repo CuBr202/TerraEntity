@@ -52,7 +52,11 @@ public class TEItemModelProvider extends ItemModelProvider {
         List<Map<DeferredRegister.Items,List<String>>> eggModels = List.of(
                 createDir(TEItems.SPAWN_EGGS,"egg/")
         );
-        genModels(eggModels,"minecraft:item/template_spawn_egg", (path, resourcePath, builder) -> {});
+        genModels(eggModels,"item/generated", (path, resourcePath, builder) -> {
+
+            builder.texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
+
+        });
 
 
         List<Map<DeferredRegister.Items,List<String>>> customModels = List.of(
