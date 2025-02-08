@@ -32,10 +32,6 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
         getSkills().pushSkill(mobSkill);
     }
 
-    default void syncSkillIndex(){
-        te$getSelf().getEntityData().set(getSkills().skillIndexData, getSkills().index);
-    }
-
     default void syncSkills(EntityDataAccessor<?> key) {
         if(te$getSelf().level().isClientSide() && getSkills()!= null && key == getSkills().skillIndexData){
             getSkills().index = te$getSelf().getEntityData().get(getSkills().skillIndexData);
