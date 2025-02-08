@@ -1,3 +1,6 @@
 {
-  "parent": "terra_entity:item/missing"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "terra_entity:item/egg/slime_spawn_egg"
+  }
 }
