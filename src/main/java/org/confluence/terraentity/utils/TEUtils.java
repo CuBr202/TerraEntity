@@ -60,8 +60,10 @@ public final class TEUtils {
 
     public static boolean isHalloween() {
         Calendar calendar = Calendar.getInstance();
-        return (calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DATE) >= 15) || // 从 十月中旬
-                (calendar.get(Calendar.MONTH) == Calendar.NOVEMBER && calendar.get(Calendar.DATE) <= 15); // 到 十一月中旬
+        int month = calendar.get(Calendar.MONTH);
+        int date = calendar.get(Calendar.DATE);
+        return (month == Calendar.OCTOBER && date >= 10) || // 从 10月10日
+                (month == Calendar.NOVEMBER && date == 1);  // 到 11月01日
     }
 
     /**
