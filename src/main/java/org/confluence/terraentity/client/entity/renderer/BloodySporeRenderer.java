@@ -36,8 +36,6 @@ public class BloodySporeRenderer extends GeoEntityRenderer<BloodySpore> {
     public int getPackedOverlay(BloodySpore animatable, float u, float partialTick) {
         return getOverlayCoords(animatable, this.getWhiteOverlayProgress(animatable, partialTick));
     }
-
-
     public Color getRenderColor(BloodySpore animatable, float partialTick, int packedLight) {
         Color from = Color.ORANGE;
         Color to = Color.RED;

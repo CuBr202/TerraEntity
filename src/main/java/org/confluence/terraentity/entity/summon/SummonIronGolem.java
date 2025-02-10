@@ -1,0 +1,139 @@
+package org.confluence.terraentity.entity.summon;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
+import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.ai.goal.summon.SummonMeleeAttackGoal;
+
+import java.util.Optional;
+import java.util.UUID;
+
+public class SummonIronGolem extends IronGolem implements ISummonMob<SummonIronGolem> {
+
+    static AttributeModifier moveSpeedModify = new AttributeModifier("452f475f-5b04-41a8-8ba4-deb6279659c5",0.2, AttributeModifier.Operation.MULTIPLY_BASE ) ;
+    public SummonIronGolem(EntityType<? extends IronGolem> entityType, Level level) {
+        super(entityType, level);
+        if(!this.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(moveSpeedModify))
+            this.getAttribute(Attributes.MOVEMENT_SPEED).addTransientModifier(moveSpeedModify);
+    }
+
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, new SummonMeleeAttackGoal<>(this, 1.0, true));
+        this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.9, 32.0F));
+
+        summon_registerCommonGoals();
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity entity) {
+//        this.attackAnimationTick = 10; todo: 攻击动画
+        this.level().broadcastEntityEvent(this, (byte)4);
+        boolean flag = summon_doHurtTarget(this, entity);
+        if (flag) {
+            double resistance;
+            if (entity instanceof LivingEntity living) {
+                resistance = living.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
+            } else {
+                resistance = 0.0;
+            }
+            double d1 = Math.max(0.0, 1.0 - resistance);
+            entity.setDeltaMovement(entity.getDeltaMovement().add(0.0, 0.4000000059604645 * d1, 0.0));
+            Level var11 = this.level();
+            if (var11 instanceof ServerLevel serverLevel) {
+                this.doEnchantDamageEffects(this, entity);
+            }
+        }
+
+        this.playSound(SoundEvents.IRON_GOLEM_ATTACK, 1.0F, 1.0F);
+        return flag;
+    }
+
+    /* Summon API */
+    /* 以下是通用写法 */
+
+    int cost;
+
+    @Override
+    public EntityDataAccessor<Optional<UUID>> get_DATA_OWNERUUID_ID() {
+        return DATA_OWNERUUID_ID;
+    }
+
+    @Override
+    public int getCost() {
+        return 1;
+    }
+
+    @Override
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(SummonIronGolem.class, EntityDataSerializers.OPTIONAL_UUID);
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);this.registerGoals();
+        this.summon_addData(compound);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.summon_readData(compound);
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        summon_onAddedToLevel();
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+        summon_onRemovedFromLevel();
+    }
+
+
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        if(target == summon_getOwner()) return false;
+        return super.canAttack(target);
+    }
+
+    @Override
+    public boolean canBeSeenAsEnemy() {
+        return false;
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        return source.is(DamageTypes.GENERIC_KILL) && super.hurt(source, amount);
+    }
+
+
+
+}

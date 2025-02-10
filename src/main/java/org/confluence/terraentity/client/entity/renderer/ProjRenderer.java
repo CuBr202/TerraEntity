@@ -13,20 +13,14 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.proj.BaseProj;
 
 
-public class ProjRenderer<T extends BaseProj> extends EntityRenderer<T> {
-    private final EntityModel<T> bulletModel;
-    float size;
-    float offsetY;
-    public ProjRenderer(EntityRendererProvider.Context pContext, EntityModel<T> pModel, float size, float offsetY) {
-        super(pContext);
-        bulletModel = pModel;
-        this.size = size;
-        this.offsetY = offsetY;
+public class ProjRenderer<T extends BaseProj, M extends EntityModel<T>> extends BaseEntityRenderer<T, T, M> {
+
+    public ProjRenderer(EntityRendererProvider.Context pContext, M pModel, float size, float offsetY) {
+        super(pContext, pModel, size, offsetY);
     }
 
-    public ProjRenderer(EntityRendererProvider.Context pContext, EntityModel<T> pModel) {
-        super(pContext);
-        bulletModel = pModel;
+    public ProjRenderer(EntityRendererProvider.Context pContext, M pModel) {
+        super(pContext, pModel);
     }
 
     @Override
@@ -39,11 +33,17 @@ public class ProjRenderer<T extends BaseProj> extends EntityRenderer<T> {
     public void render(T pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         super.render(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
         pPoseStack.pushPose();
-        pPoseStack.scale(size,size,size);
-        pPoseStack.translate(0,offsetY,0);
-        VertexConsumer buffer = pBuffer.getBuffer(this.bulletModel.renderType(this.getTextureLocation(pEntity)));
-        this.bulletModel.renderToBuffer(pPoseStack,buffer,pPackedLight, OverlayTexture.NO_OVERLAY,1,1,1,1);
+
+        preRender(pEntity, pEntityYaw, pPartialTick, pPoseStack, pPackedLight);
+
+        VertexConsumer buffer = pBuffer.getBuffer(this.model.renderType(this.getTextureLocation(pEntity)));
+        this.model.renderToBuffer(pPoseStack,buffer,pPackedLight, OverlayTexture.NO_OVERLAY,1,1,1,1);
         pPoseStack.popPose();
+    }
+
+    public void preRender(T pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, int pPackedLight){
+        pPoseStack.translate(0,offsetY,0);
+        pPoseStack.scale(size,size,size);
     }
 
 }

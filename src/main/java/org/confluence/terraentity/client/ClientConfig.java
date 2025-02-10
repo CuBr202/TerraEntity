@@ -9,17 +9,24 @@ import net.minecraftforge.fml.common.Mod;
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 @OnlyIn(Dist.CLIENT)
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientConfig {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    public static ForgeConfigSpec.ConfigValue<Integer> BossBarStyle  = BUILDER.comment("boss bar style").define("boss_bar_style", 0);
-
+    public static ForgeConfigSpec.ConfigValue<Integer> BossBarStyle;
+    public static ForgeConfigSpec SPEC;
     public static int bossBarStyle;
 
     public static void load(){
         bossBarStyle = BossBarStyle.get();
     }
-    public static final ForgeConfigSpec SPEC = BUILDER.build();
+
+    public static ForgeConfigSpec init(){
+        final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+        BossBarStyle  = BUILDER
+                .comment("Boss Bar Style.")
+                .comment("0: Default, 1: Still Style, 2: Dynamic Style")
+                .defineInRange("boss_bar_style", 0, 0, 2);
+        SPEC = BUILDER.build();
+        return SPEC;
+    }
 
 }

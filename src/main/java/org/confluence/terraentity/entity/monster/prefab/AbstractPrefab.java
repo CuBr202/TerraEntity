@@ -6,12 +6,12 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 
-public abstract class AbstractPrefab {
+public class AbstractPrefab {
     /**
      * @param health 生命值
      * @param armor 防御值
      * @param attack 攻击力
-     * @param followRange 跟随距离
+     * @param followRange 索敌距离
      * @param knockBack 击退力
      * @param knockbackResistance 击退抗性
      */

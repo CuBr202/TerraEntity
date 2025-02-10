@@ -17,14 +17,16 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class GeoBossRenderer<T extends AbstractTerraBossBase, M extends GeoBossModel<T>> extends GeoEntityRenderer<T> {
     float scale;
     float yOffset;
+    boolean rotX;
     public GeoBossRenderer(EntityRendererProvider.Context renderManager, M model) {
-        this(renderManager, model, 1.0f,0);
+        this(renderManager, model, 1.0f,0, true);
     }
 
-    public GeoBossRenderer(EntityRendererProvider.Context renderManager, M model, float scale, float yOffset) {
+    public GeoBossRenderer(EntityRendererProvider.Context renderManager, M model, float scale, float yOffset, boolean rotX) {
         super(renderManager, model);
         this.scale = scale;
         this.yOffset = yOffset;
+        this.rotX = rotX;
     }
 
     @Override
@@ -39,23 +41,11 @@ public class GeoBossRenderer<T extends AbstractTerraBossBase, M extends GeoBossM
 
     }
 
-//    @Override
-//    protected float getDeathMaxRotation(CthulhuEye animatable){
-//        return 0;
-//    }
-
-    @Override
-    public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-
-
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-
+    public float getYOffset(){
+        return yOffset;
     }
-/*
-    public RenderType getRenderType(CthulhuEye animatable, ResourceLocation texture,
-                                     @Nullable MultiBufferSource bufferSource,
-                                     float partialTick) {
-        return ModRenderTypes.cthRenderType(texture);
+
+    public float getScale(){
+        return scale;
     }
-    */
 }

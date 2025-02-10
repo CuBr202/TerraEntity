@@ -18,6 +18,7 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.IBossFSM;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
@@ -195,6 +196,10 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         horMoveDir = Vec3.ZERO;
 
         attrInit(this.getNearbyPlayers(100.0D));
+
+        if(level().isClientSide){
+            CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
+        }
     }
 
     public KingSlime(Level level) {
@@ -221,9 +226,11 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         return Mob.createMobAttributes()
             .add(Attributes.ATTACK_DAMAGE, 1.0)
             .add(Attributes.ATTACK_KNOCKBACK, 2.2)
-            .add(Attributes.ARMOR, 10.0)
-            .add(Attributes.KNOCKBACK_RESISTANCE, 10.00)
-            .add(Attributes.FOLLOW_RANGE, 100.0);
+            .add(Attributes.ARMOR, 2)
+            .add(Attributes.KNOCKBACK_RESISTANCE, 1)
+            .add(Attributes.FOLLOW_RANGE, 100.0)
+
+                ;
     }
 
     private void setHorizontalSpeed(Vec3 newDir) {

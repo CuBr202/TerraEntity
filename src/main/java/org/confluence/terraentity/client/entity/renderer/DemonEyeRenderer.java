@@ -10,7 +10,6 @@ import net.minecraft.util.Mth;
 import org.confluence.terraentity.client.entity.model.DemonEyeModel;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 

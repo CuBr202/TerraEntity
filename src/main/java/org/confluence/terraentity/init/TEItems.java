@@ -9,10 +9,13 @@ import net.minecraft.world.item.Item;
 
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.confluence.terraentity.ServerConfig;
 import org.confluence.terraentity.item.DebugItem;
+import org.confluence.terraentity.item.SummonItem;
 
 import java.util.function.Supplier;
 
@@ -20,6 +23,8 @@ import static org.confluence.terraentity.TerraEntity.MODID;
 
 public class TEItems {
     public static DeferredRegister<Item> SPAWN_EGGS = DeferredRegister.create(ForgeRegistries.ITEMS,MODID);
+    public static DeferredRegister<Item> SUMMON_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,MODID);
+
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
 
@@ -44,6 +49,8 @@ public class TEItems {
     public static final RegistryObject<Item> BLOOD_CRAWLER_SPAWN_EGG = register("blood_crawler_spawn_egg", TEEntities.BLOOD_CRAWLER, 0xf2d4ca, 0xa75049);
     public static final RegistryObject<Item> BLOODY_SPORE_SPAWN_EGG = register("bloody_spore_spawn_egg", TEEntities.BLOODY_SPORE, 0xa75049, 0x65292c);
     public static final RegistryObject<Item> DECAYEDER_SPAWN_EGG = register("decayeder_spawn_egg", TEEntities.DECAYEDER, 0x5d478b, 0x8968cd);
+    public static final RegistryObject<Item> DEVOURER_SPAWN_EGG = register("devourer_spawn_egg", TEEntities.DEVOURER, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> GIANT_SHELLY_SPAWN_EGG = register("giant_shelly_spawn_egg", TEEntities.GIANT_SHELLY, 0xffffff, 0xffffff);
 
     public static final RegistryObject<Item> FLYING_FISH_SPAWN_EGG = register("flying_fish_spawn_egg", TEEntities.FLYING_FISH, 0xffe8fa, 0x002348);
     public static final RegistryObject<Item> DRIPPLER_SPAWN_EGG = register("drippler_spawn_egg", TEEntities.DRIPPLER, 0xe9dbc2, 0x830022);
@@ -56,15 +63,25 @@ public class TEItems {
 
     public static final RegistryObject<Item> KING_SLIME_SPAWN_EGG = register("king_slime_spawn_egg", TEEntities.KING_SLIME, 0x73bcf4, 0xf8e234);
     public static final RegistryObject<Item> EYE_OF_CTHULHU_SPAWN_EGG = register("cthulhu_eye_spawn_egg", TEEntities.EYE_OF_CTHULHU, 0xffffff, 0xab0d0d);
-    public static final RegistryObject<Item> EATER_OF_WORLD_SPAWN_EGG = register("eater_of_world_spawn_egg", TEEntities.EATER_OF_WORLD, 0x5d478b, 0x8968cd);
+    public static final RegistryObject<Item> EATER_OF_WORLD_SPAWN_EGG = register("eater_of_world_spawn_egg", TEEntities.EATER_OF_WORLDS, 0x5d478b, 0x8968cd);
+    public static final RegistryObject<Item> BRAIN_OF_CTHULHU_SPAWN_EGG = register("brain_of_cthulhu_spawn_egg", TEEntities.BRAIN_OF_CTHULHU, 0xffffff, 0xffffff);
+
 
 //    public static final DeferredItem<Item> DEBUG_ITEM = SPAWN_EGGS.register("debug_item", () -> new DebugItem(new Item.Properties().stacksTo(1)));
 
 
     public static RegistryObject<Item> register(String name, Supplier<? extends EntityType<? extends Mob>>  entityType, int primaryColor, int secondaryColor){
-
         return SPAWN_EGGS.register(name, () -> new ForgeSpawnEggItem(entityType, primaryColor, secondaryColor,new Item.Properties()));
     }
+
+    // Summon Items
+    public static final RegistryObject<Item> SLIME_STAFF = SUMMON_ITEMS.register("slime_staff", () -> new SummonItem<>(new Item.Properties(), TEEntities.SUMMON_SLIME, 1, 5));
+    public static final RegistryObject<Item> IRON_GOLEM_STAFF = SUMMON_ITEMS.register("iron_golem_staff", () -> new SummonItem<>(new Item.Properties(), TEEntities.SUMMON_IRON_GOLEM, 1, 8));
+
+
+    public static final RegistryObject<Item> DEBUG_ITEM = SUMMON_ITEMS.register("debug_item", () -> new DebugItem(new Item.Properties().stacksTo(1)));
+
+
 
     public static final RegistryObject<CreativeModeTab> NEO_TERRA =
             TABS.register(MODID + "_tab", ()-> CreativeModeTab.builder()
@@ -72,6 +89,15 @@ public class TEItems {
                     .icon(()-> TEItems.KING_SLIME_SPAWN_EGG.get().getDefaultInstance())
                     .displayItems((itemDisplayParameters, output) -> {
                         SPAWN_EGGS.getEntries().forEach(item -> output.accept(item.get()));
+                        if(ServerConfig.DISPLAY_SUMMON_ITEMS.get())
+                            SUMMON_ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                     })
                     .build());
+
+
+    public static void register(IEventBus bus) {
+        SPAWN_EGGS.register(bus);
+        SUMMON_ITEMS.register(bus);
+        TABS.register(bus);
+    }
 }

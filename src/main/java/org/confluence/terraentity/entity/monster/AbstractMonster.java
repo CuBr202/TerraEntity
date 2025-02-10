@@ -1,16 +1,13 @@
 package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
@@ -20,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.ForgeMod;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
-import org.confluence.terraentity.init.TEEntities;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 
@@ -35,12 +31,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static org.confluence.terraentity.utils.TEUtils.getMultiple;
+
 public class AbstractMonster extends Monster implements GeoEntity {
-    private int attackInternal = 0;
-    private int _attackInternal = 20;
+    protected int attackInternal = 0;
+    protected int _attackInternal = 20;
+    protected int _detectInternal = 10;
     public Builder builder;
-    public LivingEntity clientTarget;
-    public static final EntityDataAccessor<Integer> DATA_CLIENT_TARGET_DATA = SynchedEntityData.defineId(AbstractMonster.class, EntityDataSerializers.INT);
+    protected boolean dirty = true;
 
     public AbstractMonster(EntityType<? extends Monster> type, Level level,Builder builder) {
         super(type, level);
@@ -69,28 +67,52 @@ public class AbstractMonster extends Monster implements GeoEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_CLIENT_TARGET_DATA, 0);
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        if (DATA_CLIENT_TARGET_DATA.equals(key)) {
-            int id = entityData.get(DATA_CLIENT_TARGET_DATA);
-            if (id == 0) {
-                this.clientTarget = null;
-                return;
-            }
-            var entity = level().getEntity(id);
-            if (entity instanceof LivingEntity living)
-                this.clientTarget = living;
-        }
 
     }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putBoolean("dirty", false);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if (tag.contains("dirty")) {
+            dirty = false;
+        }
+    }
+
+
     @Override
     protected void registerGoals() {
         if(builder!= null) builder.goals.forEach(g->g.accept(goalSelector,this));
         if(builder!= null) builder.targets.forEach(t->t.accept(targetSelector,this));
     }
+
+    public void firstSpawn(){};
+
+    @Override
+    public void onAddedToWorld(){
+        super.onAddedToWorld();
+        if(!level().isClientSide){
+            if(dirty){
+                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.MAX_HEALTH);
+                this.setHealth(getMaxHealth());
+                firstSpawn();
+            }
+        }
+    }
+
+    public float getAttributeMultiplier(Attribute attribute){
+        return getMultiple(level(), attribute);
+    }
+
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
@@ -171,7 +193,8 @@ public class AbstractMonster extends Monster implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        builder.controller.accept(controllers,this);
+        if(builder != null && builder.controller != null)
+            builder.controller.accept(controllers,this);
     }
 
     @Override
@@ -212,27 +235,33 @@ public class AbstractMonster extends Monster implements GeoEntity {
 
     public void tick(){
         super.tick();
-        if(this.getType() == TEEntities.FACE_MONSTER.get() && this.fallDistance > 0.0F)
-        System.out.println( this.fallDistance);
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
-        if(!level().isClientSide){
-            if(getTarget() != clientTarget){
-                clientTarget = getTarget();
-                entityData.set(DATA_CLIENT_TARGET_DATA, clientTarget == null? 0 : clientTarget.getId());
+        if(!level().isClientSide && builder.attachAttack && isAlive()){
+            if(--attackInternal < 0){
+                attackInternal = _detectInternal;
+                doCollisionAttack(this, builder.attackIncrease, 1);
             }
         }
-        if(!level().isClientSide && --attackInternal<0 && builder.attachAttack){
-            var entities = level().getEntities(this, this.getBoundingBox());
-            if (!entities.isEmpty()) {
-                for (var e : entities) {
-                    if (e instanceof LivingEntity living && canAttack(living) && !(e instanceof Monster)){
-                        attackInternal = _attackInternal;
-                        e.hurt(this.damageSources().generic(),(float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
-                    }
+    }
+
+    public void doCollisionAttack(Entity entity, float expand, float modify){
+        var entities = level().getEntities(entity, entity.getBoundingBox().inflate(expand));
+        if (!entities.isEmpty()) {
+            for (var e : entities) {
+                if (e instanceof LivingEntity living && canAttack(living) && !(e instanceof Monster)){
+                    doAttack(living, modify);
                 }
             }
         }
+    }
 
+    public void doAttack(LivingEntity entity, float modify) {
+        attackInternal = _attackInternal;
+        entity.hurt(this.damageSources().generic(), (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue() * modify);
+    }
+
+    public void doAttack(LivingEntity entity) {
+        doAttack(entity, 1);
     }
 
 
@@ -257,6 +286,8 @@ public class AbstractMonster extends Monster implements GeoEntity {
         public float SAFE_FALL = 5f;
         public float JUMP_STRENGTH = 0.41999998688697815f;
         public float STEP_HEIGHT = 0.6f;
+        public float attackIncrease = 0;
+
         public boolean attachAttack = true;
         public boolean noGravity = false;
         public boolean noFriction = false;
@@ -277,6 +308,11 @@ public class AbstractMonster extends Monster implements GeoEntity {
             return modifier.apply(this);
         }
 
+        public Builder setAttachIncrease(float attackIncrease) {
+            this.attackIncrease = attackIncrease;
+            return this;
+
+        }
         public Builder setAttackDamage(int attackDamage) {
             this.ATTACK_DAMAGE = attackDamage;
             return this;

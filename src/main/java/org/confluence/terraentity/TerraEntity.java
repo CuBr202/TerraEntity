@@ -17,28 +17,28 @@ import org.slf4j.Logger;
 public class TerraEntity {
     public static final String MODID = "terra_entity";
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static ResourceLocation space(String path) {return ResourceLocation.fromNamespaceAndPath(MODID, path);}
+    public static ResourceLocation space(String path) {return new ResourceLocation(MODID, path);}
 
-    public TerraEntity (FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModEventBus();
+    public TerraEntity () {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         TEEntities.ENTITIES.register(modEventBus);
         TESounds.SOUNDS.register(modEventBus);
         TEParticles.PARTICLES.register(modEventBus);
-        TEItems.SPAWN_EGGS.register(modEventBus);
-        TEItems.TABS.register(modEventBus);
+        TEItems.register(modEventBus);
         TEEffects.EFFECTS.register(modEventBus);
+        TEAttributes.ATTRIBUTES.register(modEventBus);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON,Config.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 
 //        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SPEC);
     }
 
     public static ResourceLocation asResource(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+        return new ResourceLocation(MODID, path);
     }
 
     public static ResourceLocation asResource(String id, String path) {
-        return ResourceLocation.fromNamespaceAndPath(id, path);
+        return new ResourceLocation(id, path);
     }
 }

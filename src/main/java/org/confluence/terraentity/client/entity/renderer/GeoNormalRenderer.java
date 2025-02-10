@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRenderer<T> {
@@ -29,11 +30,15 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
         this(renderManager, path, ifRotX,1,0);
     }
     public GeoNormalRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path, boolean ifRotX, float scale, float offsetY) {
-        super(renderManager, new GeoNormalModel<>(path));
+        this(renderManager, new GeoNormalModel<>(path), ifRotX,scale,offsetY);
+    }
+    public GeoNormalRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model, boolean ifRotX, float scale, float offsetY) {
+        super(renderManager, model);
         this.ifRotX = ifRotX;
         this.scale=scale;
         this.offsetY=offsetY;
     }
+
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay,  float r, float g, float b, float a) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, r,g,b,a);
@@ -43,7 +48,7 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
         if(ifRotX) {
             double rad = animatable.yBodyRot * Math.PI / 180;
             poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(animatable.xRotO));
-            poseStack.translate(0, 0.5, 0);
+//            poseStack.translate(0, 0, 0);
         }
 
     }

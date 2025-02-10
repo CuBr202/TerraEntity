@@ -18,7 +18,6 @@ import org.confluence.terraentity.entity.ai.goal.JumpOverBlockGoal;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TEEntities;
 import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.core.animation.AnimationController;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -62,16 +61,14 @@ public class LandMonsterPrefab extends AbstractPrefab {
 
     public static Supplier<AbstractMonster.Builder> BLOOD_ZOMBIE_BUILDER =
             ()->new LandMonsterPrefab(39,2,10,60,0.5f,0.1f).getPrefab()
-                    .setMovementSpeed(0.12f)
+                    .setMovementSpeed(0.15f)
                     .addTarget((t,e)-> {
-                        t.addGoal(1,new AccelerateOnSeeingGoal(e,0.55f));
+                        t.addGoal(1,new AccelerateOnSeeingGoal(e,0.25f));
                         t.addGoal(2, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
 
                     })
                     .setController((c,e)->{
-                        c.add(new AnimationController<>(e,10, state -> state.setAndContinue(!state.isMoving() ? DefaultAnimations.IDLE :
-                                e.clientTarget != null && e.clientTarget.isAlive()  ? RUN :WALK )
-                        ));
+                        c.add(genericWalkRunIdleController(e));
                         c.add(DefaultAnimations.genericAttackAnimation(e,DefaultAnimations.ATTACK_STRIKE));
                     })
                     .addGoal((g,e)-> {

@@ -2,6 +2,7 @@ package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
+import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEItems;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -15,6 +16,7 @@ public class TEChineseProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add("itemGroup.terraentity.title", "泰拉生物");
+
 
         add("entity.terra_entity.ice_slime", "冰冻史莱姆");
         add("entity.terra_entity.blue_slime", "蓝色史莱姆");
@@ -33,6 +35,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.lava_slime", "岩浆史莱姆");
         add("entity.terra_entity.demon_eye", "恶魔眼");
         add("entity.terra_entity.flying_fish", "飞鱼");
+        add("entity.terra_entity.giant_shelly", "巨型卷壳怪");
         add("entity.terra_entity.drippler", "滴滴怪");
         add("entity.terra_entity.blood_zombie", "血腥僵尸");
         add("entity.terra_entity.blood_crawler", "血爬虫");
@@ -41,14 +44,22 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.crimson_kemera", "猩红喀迈拉");
         add("entity.terra_entity.eater_of_souls", "噬魂怪");
         add("entity.terra_entity.decayeder", "腐骴");
+        add("entity.terra_entity.devourer", "吞噬怪");
 
 
         add("entity.terra_entity.king_slime", "史莱姆王");
         add("entity.terra_entity.eye_of_cthulhu", "克苏鲁之眼");
         add("entity.terra_entity.eater_of_world", "世界吞噬怪");
         add("entity.terra_entity.eater_of_world_segment", "世界吞噬怪体节");
+        add("entity.terra_entity.brain_of_cthulhu", "克苏鲁之脑");
+        add("entity.terra_entity.brain_fake", "克苏鲁之脑幻象");
+        add("entity.terra_entity.visual_neuron", "视神经元");
 
         add("effect.terra_entity.demonic_thoughts", "邪念");
+
+        add(TEEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
+        add(TEEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
+
         // 刷怪蛋
         add(TEItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
         add(TEItems.RED_SLIME_SPAWN_EGG.get(), "红色史莱姆刷怪蛋");
@@ -68,6 +79,7 @@ public class TEChineseProvider extends LanguageProvider {
 
         add(TEItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
         add(TEItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
+        add(TEItems.GIANT_SHELLY_SPAWN_EGG.get(), "巨型卷壳怪刷怪蛋");
         add(TEItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
         add(TEItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
 
@@ -78,10 +90,17 @@ public class TEChineseProvider extends LanguageProvider {
 
         add(TEItems.EATER_OF_SOULS_SPAWN_EGG.get(), "噬魂怪刷怪蛋");
         add(TEItems.DECAYEDER_SPAWN_EGG.get(), "腐骴刷怪蛋");
+        add(TEItems.DEVOURER_SPAWN_EGG.get(), "吞噬怪刷怪蛋");
 
         add(TEItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
         add(TEItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
         add(TEItems.EATER_OF_WORLD_SPAWN_EGG.get(), "世界吞噬怪刷怪蛋");
+        add(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
+
+
+        // 召唤杖
+        add(TEItems.SLIME_STAFF.get(), "史莱姆法杖");
+        add(TEItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
 
         add("message.terraentity.boss_spawn", "%s已苏醒！");
         add("message.terraentity.boss_leave", "%s已被打败！");
@@ -90,7 +109,21 @@ public class TEChineseProvider extends LanguageProvider {
 
         // config
         add("terra_entity.configuration.boss_clear_when_no_target", "丢失目标时清除BOSS");
+        add("terra_entity.configuration.boss_attributes_multiplier_health", "BOSS属性倍率-生命");
+        add("terra_entity.configuration.boss_attributes_multiplier_damage", "BOSS属性倍率-伤害");
+        add("terra_entity.configuration.display_summon_items", "在创造栏显示召唤物品");
 
+        add("terra_entity.configuration.boss_bar_style", "BOSS血条样式");
+
+
+        // Tooltip
+        add("tooltip.terra_entity.summon_item_cost", "仆从占用: %s");
+        add("tooltip.terra_entity.summon_item_entity", "仆从类型: %s");
+        add("tooltip.terra_entity.summon_info", "仆从栏位: %d / %d");
+
+
+        // attribute
+        add("attribute.name.player.summon_damage", "召唤伤害");
 
     }
 }

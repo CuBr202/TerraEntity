@@ -11,7 +11,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.Boss;
-import org.confluence.terraentity.entity.ai.BossSkill;
+import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
@@ -21,7 +21,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 
 @SuppressWarnings("all")
-public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Boss {
+public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements GeoEntity, Boss {
     private static final float MAX_HEALTHS = 728f;
     private static final float DAMAGE = 4f;//一阶段接触伤害
     private static final float CRAZY_DAMAGE = 6f;//二阶段接触伤害
@@ -50,14 +50,15 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
 
 
     public EyeOfCthulhu(EntityType<EyeOfCthulhu> entityType, Level level) {
-        super(entityType, level,MAX_HEALTHS);
+        super(entityType, level,MAX_HEALTHS,2);
         //初始属性
-
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-        
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
-
         this.playSound(TESounds.ROAR.get());
+        this.noPhysics = true;
+
+        _attackInternal = 1;
+        _detectInternal = 1;
     }
 
     public EyeOfCthulhu(Level level) {
@@ -66,11 +67,11 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
 
 
     // 定义技能类型
-    BossSkill stage1_stare;
-    BossSkill state1_dash;
-    BossSkill switch_1_to_2;
-    BossSkill stage2_stare;
-    BossSkill state2_dash;
+    MobSkill stage1_stare;
+    MobSkill state1_dash;
+    MobSkill switch_1_to_2;
+    MobSkill stage2_stare;
+    MobSkill state2_dash;
 
     @Override
     public void addSkills() {
@@ -83,11 +84,11 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
 
         // 定义技能实现
         // 定格在玩家正上方
-        this.stage1_stare = new BossSkill( type1, 5 * 20, 0,
+        this.stage1_stare = new MobSkill( type1, 5 * 20, 0,
                 terraBossBase -> {},
                 terraBossBase -> {
                     if (getTarget() == null) return;
-                    cslLookAt(10);
+                    LookAt(10);
                     // 生成粒子
                     for (int i = 0; i < 10; i++) {
                         BlockPos pos = BlockPos.containing(position());
@@ -110,7 +111,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                 terraBossBase -> {}
         );
         // 延迟20tick冲刺10tick
-        this.state1_dash = new BossSkill( type1run, 30, 20,
+        this.state1_dash = new MobSkill( type1run, 30, 20,
                 terraBossBase -> {},
                 terraBossBase -> {
                     // 延迟冲刺
@@ -118,7 +119,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                         return;
                     if (!skills.canContinue()) {
                         // 调整方向
-                        cslLookAt(360);
+                        LookAt(360);
 
                         this.addDeltaMovement(new Vec3(0, 0.02, 0));
                         // 不精准度
@@ -126,7 +127,6 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                         dashDir = dashPos.subtract(position());
                         return;
                     }
-                    if(dashPos == null || dashDir == null) return;
                     this.lookControl.setLookAt(dashPos);
                     // 冲刺增加伤害
                     //getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(
@@ -138,15 +138,16 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                 terraBossBase -> {
                     // 结束冲刺移除加成
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-                }
-        );
-        // 转换阶段
-        this.switch_1_to_2 = new BossSkill(switching, 40, 0,
-                terraBossBase -> {
                     if (stage == 1){
                         skills.forceStartIndex(0);
                         return;
                     }
+                }
+        );
+        // 转换阶段
+        this.switch_1_to_2 = new MobSkill(switching, 40, 0,
+                terraBossBase -> {
+
                     summonCD = 0;
                     summonCDAll = 7;
                     this.playSound(TESounds.HURRIED_ROARING.get());
@@ -159,12 +160,12 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE);
 
                 });
-        this.stage2_stare = new BossSkill(type2, 3 * 20, 0,
+        this.stage2_stare = new MobSkill(type2, 3 * 20, 0,
                 terraBossBase -> {
                 },
                 terraBossBase -> {
                     if (getTarget() == null) return;
-                    cslLookAt(10);
+                    LookAt(10);
 
                     // 向玩家正上方移动
                     Vec3 tar = getTarget().position().add(new Vec3(0, distanceAbove, 0));
@@ -177,12 +178,12 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE);
                 }
         );
-        this.state2_dash = new BossSkill(type2run, 20, 10,
+        this.state2_dash = new MobSkill(type2run, 30, 20,
                 terraBossBase -> {
                     if (getTarget() == null) return;
                     if(this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount <= stage2_dashCount_max){
-                        state2_dash.timeTrigger = 5;
-                        state2_dash.timeContinue = 15;
+                        state2_dash.timeTrigger = 10;
+                        state2_dash.timeContinue = 20;
                         speedFactor = 3;
                         this.playSound(TESounds.HURRIED_ROARING.get());
                     }else {
@@ -196,7 +197,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                 terraBossBase -> {
                     // 延迟冲刺
                     if (getTarget() == null) return;
-                    cslLookAt(360);
+                    LookAt(360);
                     if (!skills.canContinue()) {
                         // 调整方向
 
@@ -209,7 +210,6 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
                         if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashPos.normalize().scale(-1));
                         return;
                     }
-                    if(dashPos == null || dashDir == null) return;
                     this.lookControl.setLookAt(dashPos);
                     // 冲刺增加伤害
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE * dashFactor);
@@ -238,12 +238,10 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
         addSkill(state2_dash); // 6
     }
 
-    private void cslLookAt(float maxAngleY) {
-        var pEntity = getTarget();
-        if (pEntity != null) {
-            lookAt(getTarget(), maxAngleY, 85);
-            this.lookControl.setLookAt(getTarget());
-        }
+
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        return super.canAttack(target) && !(target instanceof DemonEye);
     }
 
     private void spawnMinions(LivingEntity target) {

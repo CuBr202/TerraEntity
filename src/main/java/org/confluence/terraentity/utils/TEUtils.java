@@ -1,38 +1,39 @@
 package org.confluence.terraentity.utils;
 
-import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
+import org.confluence.terraentity.ServerConfig;
+import org.confluence.terraentity.TerraEntity;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public final class TEUtils {
-    public static final Direction[] DIRECTIONS = Direction.values();
-    public static final Direction[] HORIZONTAL = new Direction[]{Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH};
-
     public static float nextFloat(RandomSource randomSource, float origin, float bound) {
         if (origin >= bound) {
             throw new IllegalArgumentException("bound - origin is non positive");
@@ -49,37 +50,6 @@ public final class TEUtils {
         }
     }
 
-    public static void createItemEntity(ItemStack itemStack, double x, double y, double z, Level level) {
-        createItemEntity(itemStack, x, y, z, level, 40);
-    }
-
-    public static void createItemEntity(List<ItemStack> itemStacks, double x, double y, double z, Level level) {
-        for (ItemStack itemStack : itemStacks) {
-            createItemEntity(itemStack, x, y, z, level, 40);
-        }
-    }
-
-    public static void createItemEntity(ItemStack itemStack, double x, double y, double z, Level level, int pickUpDelay) {
-        ItemEntity itemEntity = new ItemEntity(level, x, y, z, itemStack);
-        itemEntity.setPickUpDelay(pickUpDelay);
-        level.addFreshEntity(itemEntity);
-    }
-
-    public static void createItemEntity(Item item, int count, double x, double y, double z, Level level) {
-        createItemEntity(item, count, x, y, z, level, 40);
-    }
-
-    public static void createItemEntity(Item item, int count, double x, double y, double z, Level level, int pickUpDelay) {
-        if (count <= 0) return;
-        ItemEntity itemEntity = new ItemEntity(level, x, y, z, new ItemStack(item, count));
-        itemEntity.setPickUpDelay(pickUpDelay);
-        level.addFreshEntity(itemEntity);
-    }
-
-    public static void createItemEntity(ItemStack itemStack, Vec3 vec, Level level) {
-        createItemEntity(itemStack, vec.x, vec.y, vec.z, level, 40);
-    }
-
 
     @SuppressWarnings("unchecked")
     public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> getTicker(BlockEntityType<A> a, BlockEntityType<E> b, BlockEntityTicker<? super E> ticker) {
@@ -88,8 +58,10 @@ public final class TEUtils {
 
     public static boolean isHalloween() {
         Calendar calendar = Calendar.getInstance();
-        return (calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DATE) >= 15) || // 从 十月中旬
-                (calendar.get(Calendar.MONTH) == Calendar.NOVEMBER && calendar.get(Calendar.DATE) <= 15); // 到 十一月中旬
+        int month = calendar.get(Calendar.MONTH);
+        int date = calendar.get(Calendar.DATE);
+        return (month == Calendar.OCTOBER && date >= 10) || // 从 10月10日
+                (month == Calendar.NOVEMBER && date == 1);  // 到 11月01日
     }
 
     /**
@@ -239,6 +211,20 @@ public final class TEUtils {
         else return 1f;
     }
 
+    public static void multiplePlayerEnhance(LivingEntity entity, boolean dirty) {
+        if(!entity.level().isClientSide) {
+            float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
+            if (dirty) {
+                int size = Math.min(entity.level().players().size(), 8);
+                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier("difficulty_modifier_max_health", multiplier * size - 1, AttributeModifier.Operation.MULTIPLY_BASE));
+                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier("server_modifier_max_health", ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.ADDITION));
+                entity.setHealth(entity.getMaxHealth());
+            }
+            entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier("difficulty_modifier_attack_damage", multiplier - 1, AttributeModifier.Operation.MULTIPLY_BASE));
+            entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier("server_modifier_max_health", ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADDITION));
+        }
+    }
+
     /**
      * 获得从实体A到实体B的单位向量，即A→B
      *
@@ -280,13 +266,6 @@ public final class TEUtils {
         return new Vec3(Math.max(vec1.x, vec2.x), Math.max(vec1.y, vec2.y), Math.max(vec1.z, vec2.z));
     }
 
-    public static Direction[] directionsInAxis(Direction.Axis axis) {
-        return switch (axis) {
-            case X -> new Direction[]{Direction.EAST, Direction.WEST};
-            case Y -> new Direction[]{Direction.UP, Direction.DOWN};
-            default -> new Direction[]{Direction.SOUTH, Direction.NORTH};
-        };
-    }
 
     /**
      * 将输入的向量的某个轴乘一个缩放
@@ -303,30 +282,6 @@ public final class TEUtils {
         return new Vec3(x, y, z);
     }
 
-    public static void addPotionTooltip(MobEffect effect, List<Component> components,
-                                        int amplifier, int duration) {
-        if (effect == null){
-            components.add(Component.translatable("effect.none").withStyle(ChatFormatting.GRAY));
-            return;
-        }
-        components.add(Component.translatable(effect.getDescriptionId()).append(amplifier == 0 ? "" : " ")
-                .append(Component.translatable(amplifier == 0 ? "" : ("enchantment.level." + (amplifier + 1))))
-                .append("（" + tickFormat(duration) + "）").withStyle(getPotionCategoryColor(effect)));
-    }
-
-    private static ChatFormatting getPotionCategoryColor(MobEffect effect) {
-        return effect.getCategory().equals(MobEffectCategory.NEUTRAL) ?
-                ChatFormatting.GRAY : effect.getCategory().equals(MobEffectCategory.BENEFICIAL) ?
-                ChatFormatting.BLUE : ChatFormatting.RED;
-    }
-
-    public static String tickFormat(int tick){
-        int sec = tick / 20;
-        return (sec / 60 < 10 ? "0" : "") + sec / 60
-                + ":" +
-                (sec % 60 < 10 ? "0" : "") + sec % 60;
-    }
-
     /**
      * 计算向量夹角
      * @param v1
@@ -341,6 +296,70 @@ public final class TEUtils {
                                                            Class<? extends Entity> entity, AABB box) {
         return level.getEntitiesOfClass(entity, box.inflate(radius));
     }
+
+    public static Vec3 sphere(float r, float theta, float beta){
+        double x = r * Math.sin(theta) * Math.cos(beta);
+        double y = r * Math.sin(theta) * Math.sin(beta);
+        double z = r * Math.cos(theta);
+        return new Vec3(x, y, z);
+    }
+
+    /**
+     * 根据权重随机获取物品
+     */
+    public static <T> T getRandomByWeight(Map<T, Float> map) {
+        // 计算总权重
+        float totalWeight = 0.0f;
+
+        for (var pair : map.values()) {
+            totalWeight += pair;
+        }
+
+        if (totalWeight == 0.0f) {
+            throw new IllegalArgumentException("Total weight cannot be zero.");
+        }
+
+        float randomValue = ThreadLocalRandom.current().nextFloat(0, totalWeight);
+
+        // 遍历物品，累积权重，直到累积权重超过随机数
+        float cumulativeWeight = 0.0f;
+        for (var entry : map.entrySet()) {
+            cumulativeWeight += entry.getValue();
+            if (cumulativeWeight >= randomValue) {
+                return entry.getKey();
+            }
+        }
+        // 理论上不会走到这里
+        throw new IllegalStateException("Failed to find random item.");
+    }
+
+    /**
+     * 获取玩家视角下距离指定距离的实体
+     * @param player
+     * @param distance
+     * @return
+     */
+    public static EntityHitResult getEyeTraceHitResult(Player player, double distance){
+        AABB aabb = player.getBoundingBox().inflate(distance);
+        Vec3 from = player.getEyePosition();
+        Vec3 to = player.getEyePosition().add(player.getLookAngle().scale(distance));
+        return ProjectileUtil.getEntityHitResult(player.level(), player, from, to, aabb, e-> true, 0.1F);
+    }
+
+    /**
+     * 获取玩家视角下方块
+     * @param player
+     * @return
+     */
+    public static BlockPos getEyeBlockHitResult(Player player){
+        Vec3 vec3 = player.getEyePosition();
+        Vec3 vec31 = vec3.add(player.getLookAngle().scale(player.getAttributeValue(ForgeMod.BLOCK_REACH.get())));
+        BlockHitResult result =  player.level().clip(new ClipContext(vec3, vec31, net.minecraft.world.level.ClipContext.Block.OUTLINE, ClipContext.Fluid.WATER, player));
+        final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos().above());
+        final BlockPos pos = raytraceResult.getBlockPos();
+        return pos;
+    }
+
 /*
     public static boolean hasBoss(double radius, Level level,
                                   AABB box){

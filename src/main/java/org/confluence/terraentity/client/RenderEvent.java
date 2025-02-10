@@ -4,10 +4,13 @@ package org.confluence.terraentity.client;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
+import org.confluence.terraentity.client.post.BrainTranslucent;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -24,5 +27,24 @@ public class RenderEvent {
         }catch (Exception e){
             TerraEntity.LOGGER.warn(e.getLocalizedMessage());
         }
+    }
+
+
+    @SubscribeEvent
+    public static void renderLevelStage(RenderLevelStageEvent event) {
+        if(event.getStage()== RenderLevelStageEvent.Stage.AFTER_LEVEL){
+            BrainTranslucent.render(event);
+        }
+
+    }
+
+
+    @SubscribeEvent
+    public static void renderHand(RenderHandEvent event) {
+//        if(HotSwap.consume > 0){
+//            event.setCanceled(true);
+//            return;
+//        }
+//        HotSwap.consume --;
     }
 }

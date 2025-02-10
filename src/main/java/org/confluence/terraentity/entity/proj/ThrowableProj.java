@@ -8,7 +8,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.ai.motion.curve.Bezier2Curse;
+import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
 import org.confluence.terraentity.entity.ai.motion.curve.Curve;
 import org.joml.Vector3f;
 
@@ -95,7 +95,7 @@ public class ThrowableProj extends BaseProj {
         if(curse==null) {
             if(targetPos==null || controlPos ==null) return;
 
-            curse = new Bezier2Curse(position(), controlPos,targetPos);
+            curse = new Bezier3Curse(position(), controlPos,targetPos);
         }
         this.setPos(getNexPos());
     }

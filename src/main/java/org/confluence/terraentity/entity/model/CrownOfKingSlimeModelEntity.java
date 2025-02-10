@@ -1,7 +1,6 @@
 package org.confluence.terraentity.entity.model;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -45,11 +44,6 @@ public class CrownOfKingSlimeModelEntity extends Entity {
         }
     }
 
-    @Override
-    protected void defineSynchedData() {
-
-    }
-
     public CrownOfKingSlimeModelEntity(Level level, Vec3 pos) {
         this(TEEntities.CROWN_OF_KING_SLIME_MODEL.get(), level);
         setPos(pos);
@@ -60,6 +54,8 @@ public class CrownOfKingSlimeModelEntity extends Entity {
         );
     }
 
+    @Override
+    protected void defineSynchedData() {}
 
     @Override
     protected void readAdditionalSaveData(@NotNull CompoundTag pCompound) {}

@@ -1,11 +1,14 @@
 package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.DeferredRegister;
 
+import org.apache.logging.log4j.util.TriConsumer;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEItems;
 
 import java.util.Arrays;
@@ -16,6 +19,7 @@ import static org.confluence.terraentity.TerraEntity.MODID;
 
 
 public class TEItemModelProvider extends ItemModelProvider {
+    private static final ResourceLocation MISSING_ITEM = TerraEntity.space("item/missing");
 
     public TEItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, MODID, existingFileHelper);
@@ -24,15 +28,12 @@ public class TEItemModelProvider extends ItemModelProvider {
     private Map<DeferredRegister<Item>,List<String>> createDir(DeferredRegister<Item> reg, String... packPaths) {
         return Map.of(reg, Arrays.stream(packPaths).toList());
     }
-    private void genModels(List<Map<DeferredRegister<Item>,List<String>>> list, String parent){
+    private void genModels(List<Map<DeferredRegister<Item>,List<String>>> list, String parent, TriConsumer<String,String, String> appender){
         list.forEach(mp-> mp.forEach((items, packPaths) -> {
             items.getEntries().forEach(item -> {
                 String path = item.getId().getPath().toLowerCase();
-                for(String ignored : packPaths){
-                    try {
-                        withExistingParent(path, parent);
-                        break;
-                    } catch (Exception e) { }
+                for(String resourcePath : packPaths){
+                    appender.accept(parent, resourcePath, path);
                 }
             });
         }));
@@ -40,10 +41,28 @@ public class TEItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
 
-        List<Map<DeferredRegister<Item>,List<String>>> customModels = List.of(
+        // spawn eggs
+        genModels(List.of(
                 createDir(TEItems.SPAWN_EGGS,"egg/")
-        );
-        genModels(customModels,"minecraft:item/template_spawn_egg");
+        ),"item/generated", (parent, resourcePath, path) -> {
+            try {
+                withExistingParent(path, parent).texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
+            } catch (Exception e) {
+                withExistingParent(path, "minecraft:item/template_spawn_egg");
+            }
+        });
+
+        // summon items
+        genModels(List.of(
+                createDir(TEItems.SUMMON_ITEMS,"")
+        ),"item/handheld", (parent, resourcePath, path) -> {
+            try {
+                withExistingParent(path, parent).texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
+            } catch (Exception e) {
+                withExistingParent(path, MISSING_ITEM);
+                System.out.println("Failed to generate model for " + path + " in " + resourcePath);
+            }
+        });
 
 
     }

@@ -3,6 +3,7 @@ package org.confluence.terraentity.event;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -16,14 +17,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.attachment.SummonerProvider;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.Decayeder;
@@ -33,6 +39,7 @@ import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
+import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TETags;
@@ -55,28 +62,27 @@ public class GameEntityEvent {
                 level.addFreshEntity(slime);
             }
         }
-        if (event.getEntity() instanceof Boss boss && !level.isClientSide){
-            if (boss.shouldShowMessage()){
-                Component mes;
-                FloatRGB color;
-                if (event.getEntity() instanceof DeathAnimOptions dao){
-                    float[] _color = dao.getBloodColor();
-                    color = new FloatRGB(_color[0], _color[1], _color[2]);
-                } else {
-                    color = new FloatRGB(0.7F, 0, 0);
-                }
-                if (event.getEntity().getCustomName() != null){
-                    mes = Component.translatable("message.terraentity.boss_spawn",
-                            event.getEntity().getCustomName().getString()).withStyle(Style.EMPTY.withColor(color.get()).withBold(true));
-                } else {
-                    mes = Component.translatable("message.terraentity.boss_spawn",
-                            event.getEntity().getName().getString()).withStyle(Style.EMPTY.withColor(color.get()).withBold(true));
-                }
-                for (Player player : level.players()){
-                    player.sendSystemMessage(mes);
+        // 生成信息
+        Boss.sendBossSpawnMessage(event.getEntity());
+        if(event.getEntity() instanceof ServerPlayer player){
+            // debug
+//            player.getInventory().add(TEItems.SLIME_STAFF.toStack());
+        }
+    }
 
-                }
-            }
+    @SubscribeEvent
+    public static void entityLeaveLevelEvent (EntityLeaveLevelEvent event) {
+        if(event.getEntity() instanceof ServerPlayer player){
+            // 清除召唤物
+            player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data->data.clear(player));
+        }
+    }
+
+    @SubscribeEvent
+    public static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if(event.getEntity() instanceof ServerPlayer player) {
+            // 同步召唤栏信息
+            player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data->data.sync(player));
         }
     }
 
@@ -95,28 +101,9 @@ public class GameEntityEvent {
     @SubscribeEvent
     public static void entityDeathLevel(LivingDeathEvent event) {
         Level level = event.getEntity().level();
-        if (event.getEntity() instanceof Boss boss && !level.isClientSide){
-            if (boss.shouldShowMessage()){
-                Component mes;
-                FloatRGB color;
-                if (event.getEntity() instanceof DeathAnimOptions dao){
-                    float[] _color = dao.getBloodColor();
-                    color = new FloatRGB(_color[0], _color[1], _color[2]);
-                } else {
-                    color = new FloatRGB(0.7F, 0, 0);
-                }
-                if (event.getEntity().getCustomName() != null){
-                    mes = Component.translatable("message.terraentity.boss_leave",
-                            event.getEntity().getCustomName().getString()).withStyle(Style.EMPTY.withColor(color.get()).withBold(true));
-                } else {
-                    mes = Component.translatable("message.terraentity.boss_leave",
-                            event.getEntity().getName().getString()).withStyle(Style.EMPTY.withColor(color.get()).withBold(true));
-                }
-                for (Player player : level.players()){
-
-                    player.sendSystemMessage(mes);   //todo 报两次
-                }
-            }
+        Boss.sendBossDeathMessage(event.getEntity());
+        if(event.getEntity() instanceof ServerPlayer player){
+            player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data->data.clear(player));
         }
     }
 
@@ -197,5 +184,7 @@ public class GameEntityEvent {
             blackSlime.finalizeSpawn(randomSource, event.getDifficulty());
         }
     }
+
+
 
 }
