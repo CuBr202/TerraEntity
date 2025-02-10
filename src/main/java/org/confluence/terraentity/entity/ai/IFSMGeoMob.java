@@ -18,13 +18,7 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
 
     CircleMobSkills<T> getSkills();
 
-    int getLastAnimIndex();
-
-    void setLastAnimIndex(int lastAnimIndex);
-
-    int getLastSkillTick();
-
-    void setLastSkillTick(int lastSkillTick);
+    ClientBoundAnimationMessage getAnimationMessage();
 
     void addSkills();
 
@@ -35,7 +29,7 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
     default void syncSkills(EntityDataAccessor<?> key) {
         if(te$getSelf().level().isClientSide() && getSkills()!= null && key == getSkills().skillIndexData){
             getSkills().index = te$getSelf().getEntityData().get(getSkills().skillIndexData);
-            setLastSkillTick(te$getSelf().tickCount);
+            getAnimationMessage().lastSkillTick = te$getSelf().tickCount;
             getSkills().tick = 0;
         }
     }
@@ -53,13 +47,20 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
             RawAnimation pose = getSkills().getCurAnim();
             if(pose == null) return PlayState.STOP;
             state.setAnimation(pose);
-            if (getLastAnimIndex() != getSkills().index) {
-                setLastAnimIndex(getSkills().index);
+            if (getAnimationMessage().lastAnimIndex != getSkills().index) {
+                getAnimationMessage().lastAnimIndex = getSkills().index;
                 state.resetCurrentAnimation();
 
                 return PlayState.STOP;
             }
             return PlayState.CONTINUE;
         }));
+    }
+
+
+
+    class ClientBoundAnimationMessage {
+        public int lastAnimIndex;
+        public int lastSkillTick;
     }
 }

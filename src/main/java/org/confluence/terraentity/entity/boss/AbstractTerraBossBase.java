@@ -125,10 +125,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
 /* FSM */
 
-    private int lastAnimIndex = -1;
     public CircleMobSkills skills = new CircleMobSkills(this, DATA_SKILL_INDEX);
     public static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
-
+    protected ClientBoundAnimationMessage skillMessage = new ClientBoundAnimationMessage();
     protected int lastSkillTick;
     @Override
     public CircleMobSkills getSkills() {
@@ -136,26 +135,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     }
 
     @Override
-    public int getLastAnimIndex() {
-        return this.lastAnimIndex;
+    public ClientBoundAnimationMessage getAnimationMessage() {
+        return skillMessage;
     }
-
-    @Override
-    public void setLastAnimIndex(int lastAnimIndex) {
-        this.lastAnimIndex = lastAnimIndex;
-    }
-
-    @Override
-    public int getLastSkillTick() {
-        return this.lastSkillTick;
-    }
-
-    @Override
-    public void setLastSkillTick(int lastSkillTick) {
-        this.lastSkillTick = lastSkillTick;
-    }
-
-
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
@@ -166,11 +148,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        if (level().isClientSide && key == DATA_SKILL_INDEX) {
-            skills.index = this.entityData.get(DATA_SKILL_INDEX);
-            lastSkillTick = tickCount;
-            skills.tick = 0;
-        }
+        syncSkills(DATA_SKILL_INDEX);
     }
 
 

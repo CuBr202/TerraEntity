@@ -1,5 +1,13 @@
 package org.confluence.terraentity.entity.ai;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import org.confluence.terraentity.entity.util.DeathAnimOptions;
+import org.confluence.terraentity.utils.FloatRGB;
+
 /**
  * All bosses should implement this interface
  * <p>
@@ -12,5 +20,50 @@ public interface Boss {
 
     default boolean isMainBody(){
         return true;
+    }
+
+    static void sendBossSpawnMessage(Entity entity){
+        Level level = entity.level();
+        if (entity instanceof Boss boss && !level.isClientSide){
+            if (boss.shouldShowMessage()){
+                Component mes;
+                FloatRGB color;
+                if (entity instanceof DeathAnimOptions dao){
+                    float[] _color = dao.getBloodColor();
+                    color = new FloatRGB(_color[0], _color[1], _color[2]);
+                } else {
+                    color = new FloatRGB(0.7F, 0, 0);
+                }
+
+                mes = Component.translatable("message.terraentity.boss_spawn",
+                        entity.getDisplayName()).withColor(color.get()).withStyle(ChatFormatting.BOLD);
+
+                for (Player player : level.players()){
+                    player.sendSystemMessage(mes);
+                }
+            }
+        }
+    }
+
+    static void sendBossDeathMessage(Entity entity){
+        Level level = entity.level();
+        if (entity instanceof Boss boss && !level.isClientSide){
+            if (boss.shouldShowMessage()){
+                Component mes;
+                FloatRGB color;
+                if (entity instanceof DeathAnimOptions dao){
+                    float[] _color = dao.getBloodColor();
+                    color = new FloatRGB(_color[0], _color[1], _color[2]);
+                } else {
+                    color = new FloatRGB(0.7F, 0, 0);
+                }
+                mes = Component.translatable("message.terraentity.boss_leave",
+                            entity.getDisplayName()).withColor(color.get()).withStyle(ChatFormatting.BOLD);
+
+                for (Player player : level.players()){
+                    player.sendSystemMessage(mes);
+                }
+            }
+        }
     }
 }

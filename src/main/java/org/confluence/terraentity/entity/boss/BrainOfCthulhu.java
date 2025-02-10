@@ -274,15 +274,15 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
 
     public float getFadeProgress(){
         if(skills.index == 0){
-            return (tickCount -lastSkillTick) / 51f;
+            return (tickCount -skillMessage.lastSkillTick) / 51f;
         } else if(skills.index == 2)
-            return 1 - (tickCount -lastSkillTick) / 41f;
+            return 1 - (tickCount -skillMessage.lastSkillTick) / 41f;
         else if(skills.index == 3 )
-            return (tickCount -lastSkillTick) / 41f;
+            return (tickCount -skillMessage.lastSkillTick) / 41f;
         else if(skills.index == 7)
-            return 1 - (tickCount -lastSkillTick) / 31f;
+            return 1 - (tickCount -skillMessage.lastSkillTick) / 31f;
         else if(skills.index == 8)
-            return (tickCount -lastSkillTick) / 31f;
+            return (tickCount -skillMessage.lastSkillTick) / 31f;
 
         return 1;
     }

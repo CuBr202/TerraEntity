@@ -90,6 +90,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         ((EaterOfWorldsSegment)baseSegments.get(segmentCount)).ifTail = true;
         baseSegments.get(segmentCount).getEntityData().set(EaterOfWorldsSegment.DATA_TAIL,true);
         ifBaseHead = true;
+        Boss.sendBossSpawnMessage(this);
     }
 
     @Override

@@ -51,28 +51,8 @@ public class GameEntityEvent {
                 level.addFreshEntity(slime);
             }
         }
-        if (event.getEntity() instanceof Boss boss && !level.isClientSide){
-            if (boss.shouldShowMessage()){
-                Component mes;
-                FloatRGB color;
-                if (event.getEntity() instanceof DeathAnimOptions dao){
-                    float[] _color = dao.getBloodColor();
-                    color = new FloatRGB(_color[0], _color[1], _color[2]);
-                } else {
-                    color = new FloatRGB(0.7F, 0, 0);
-                }
-                if (event.getEntity().getCustomName() != null){
-                    mes = Component.translatable("message.terraentity.boss_spawn",
-                            event.getEntity().getCustomName().getString()).withColor(color.get()).withStyle(ChatFormatting.BOLD);
-                } else {
-                    mes = Component.translatable("message.terraentity.boss_spawn",
-                            event.getEntity().getName().getString()).withColor(color.get()).withStyle(ChatFormatting.BOLD);
-                }
-                for (Player player : level.players()){
-                    player.sendSystemMessage(mes);
-                }
-            }
-        }
+        // 生成信息
+        Boss.sendBossSpawnMessage(event.getEntity());
         if(event.getEntity() instanceof ServerPlayer player){
             // debug
 //            player.getInventory().add(TEItems.SLIME_STAFF.toStack());
@@ -110,28 +90,7 @@ public class GameEntityEvent {
     @SubscribeEvent
     public static void entityDeathLevel(LivingDeathEvent event) {
         Level level = event.getEntity().level();
-        if (event.getEntity() instanceof Boss boss && !level.isClientSide){
-            if (boss.shouldShowMessage()){
-                Component mes;
-                FloatRGB color;
-                if (event.getEntity() instanceof DeathAnimOptions dao){
-                    float[] _color = dao.getBloodColor();
-                    color = new FloatRGB(_color[0], _color[1], _color[2]);
-                } else {
-                    color = new FloatRGB(0.7F, 0, 0);
-                }
-                if (event.getEntity().getCustomName() != null){
-                    mes = Component.translatable("message.terraentity.boss_leave",
-                            event.getEntity().getCustomName().getString()).withColor(color.get()).withStyle(ChatFormatting.BOLD);
-                } else {
-                    mes = Component.translatable("message.terraentity.boss_leave",
-                            event.getEntity().getName().getString()).withColor(color.get()).withStyle(ChatFormatting.BOLD);
-                }
-                for (Player player : level.players()){
-                    player.sendSystemMessage(mes);   //todo 报两次
-                }
-            }
-        }
+        Boss.sendBossDeathMessage(event.getEntity());
         if(event.getEntity() instanceof ServerPlayer player){
             player.getData(TEAttachments.SUMMONER_STORAGE.get()).clear(player);
         }

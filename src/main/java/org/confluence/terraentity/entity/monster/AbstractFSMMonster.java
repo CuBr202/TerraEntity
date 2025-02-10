@@ -15,9 +15,8 @@ import software.bernie.geckolib.animation.AnimatableManager;
 
 public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extends AbstractMonster implements IFSMGeoMob<T> {
 
-    protected int lastAnimIndex;
-    protected int lastSkillTick;
     protected CircleMobSkills<T> skills;
+    protected ClientBoundAnimationMessage clientBoundAnimationMessage = new ClientBoundAnimationMessage();
 
     public static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractFSMMonster.class, EntityDataSerializers.INT);
 
@@ -65,23 +64,8 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
     }
 
     @Override
-    public int getLastAnimIndex() {
-        return lastAnimIndex;
-    }
-
-    @Override
-    public void setLastAnimIndex(int lastAnimIndex) {
-        this.lastAnimIndex = lastAnimIndex;
-    }
-
-    @Override
-    public int getLastSkillTick() {
-        return lastSkillTick;
-    }
-
-    @Override
-    public void setLastSkillTick(int lastSkillTick) {
-        this.lastSkillTick = lastSkillTick;
+    public ClientBoundAnimationMessage getAnimationMessage() {
+        return clientBoundAnimationMessage;
     }
 
     @Override

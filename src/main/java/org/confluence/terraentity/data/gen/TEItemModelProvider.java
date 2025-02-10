@@ -11,9 +11,7 @@ import org.apache.commons.lang3.function.TriConsumer;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEItems;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -29,19 +27,12 @@ public class TEItemModelProvider extends ItemModelProvider {
     private Map<DeferredRegister.Items,List<String>> createDir(DeferredRegister.Items reg, String... packPaths) {
         return Map.of(reg, Arrays.stream(packPaths).toList());
     }
-    private void genModels(List<Map<DeferredRegister.Items,List<String>>> list, String parent, TriConsumer<String,String, ModelBuilder<ItemModelBuilder>> appender){
+    private void genModels(List<Map<DeferredRegister.Items,List<String>>> list, String parent, TriConsumer<String,String, String> appender){
         list.forEach(mp-> mp.forEach((items, packPaths) -> {
             items.getEntries().forEach(item -> {
                 String path = item.getId().getPath().toLowerCase();
                 for(String resourcePath : packPaths){
-                    try {
-                        ModelBuilder<ItemModelBuilder> builder = withExistingParent(path, parent);
-                        appender.accept(path, resourcePath, builder);
-                        break;
-                    } catch (Exception e) {
-                        withExistingParent(path, MISSING_ITEM);
-                        System.out.println("Failed to generate model for " + item.getId() + " in " + resourcePath);
-                    }
+                        appender.accept(parent, resourcePath, path);
                 }
             });
         }));
@@ -49,24 +40,29 @@ public class TEItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
 
-        List<Map<DeferredRegister.Items,List<String>>> eggModels = List.of(
+        // spawn eggs
+        genModels(List.of(
                 createDir(TEItems.SPAWN_EGGS,"egg/")
-        );
-        genModels(eggModels,"item/generated", (path, resourcePath, builder) -> {
-
-            builder.texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
-
+        ),"item/generated", (parent, resourcePath, path) -> {
+            try {
+                withExistingParent(path, parent).texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
+            } catch (Exception e) {
+                withExistingParent(path, "minecraft:item/template_spawn_egg");
+            }
         });
 
-
-        List<Map<DeferredRegister.Items,List<String>>> customModels = List.of(
+        // summon items
+        genModels(List.of(
                 createDir(TEItems.SUMMON_ITEMS,"")
-        );
-        genModels(customModels,"item/handheld", (path, resourcePath, builder) -> {
-            builder.texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
+        ),"item/handheld", (parent, resourcePath, path) -> {
+            try {
+                withExistingParent(path, parent).texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
+            } catch (Exception e) {
+                withExistingParent(path, MISSING_ITEM);
+                System.out.println("Failed to generate model for " + path + " in " + resourcePath);
+            }
         });
 
 
     }
-
 }
