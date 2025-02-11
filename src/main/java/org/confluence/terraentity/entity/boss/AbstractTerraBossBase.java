@@ -155,8 +155,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 /* Collision */
 
     public int attackInternal = 20;
-    protected int _attackInternal = 20;
-    protected int _detectInternal = 10;
+    protected int _attackInternal = 10;
+    protected int _detectInternal = 5;
 
     public int getDetectInternal() {
         return _detectInternal;

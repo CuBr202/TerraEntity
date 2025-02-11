@@ -13,20 +13,18 @@ import org.confluence.terraentity.entity.ai.motion.curve.Curve;
 import org.joml.Vector3f;
 
 
-public class ThrowableProj extends BaseProj {
+public class ThrowableProj extends BaseProj<ThrowableProj> {
     private float step = 0f;
     private Vec3 controlPos;
     private Vec3 targetPos;
     private Curve curse;
 
-    public ThrowableProj(EntityType<? extends ThrowableProj> pEntityType, Level pLevel, ResourceLocation texture) {
-        this(pEntityType,pLevel,texture,null);
-        this.texture = texture;
+    public ThrowableProj(EntityType<? extends ThrowableProj> pEntityType, Level pLevel) {
+        this(pEntityType,pLevel,null);
     }
 
-    public ThrowableProj(EntityType<? extends ThrowableProj> pEntityType, Level pLevel, ResourceLocation texture, MobEffectInstance pEffect) {
+    public ThrowableProj(EntityType<? extends ThrowableProj> pEntityType, Level pLevel, MobEffectInstance pEffect) {
         super(pEntityType,pLevel, pEffect);
-        this.texture = texture;
     }
 
 
@@ -39,10 +37,6 @@ public class ThrowableProj extends BaseProj {
         return this;
     }
 
-    public ThrowableProj setEffect(MobEffectInstance effect) {
-        this.effect = effect;
-        return this;
-    }
 
     public Vec3 getNexPos(){
         step += 0.05f;

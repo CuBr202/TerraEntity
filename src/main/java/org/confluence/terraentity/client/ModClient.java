@@ -25,8 +25,7 @@ import java.lang.reflect.Field;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.confluence.terraentity.init.TEEntities.CABBAGE_PROJ;
-import static org.confluence.terraentity.init.TEEntities.CROWN_OF_KING_SLIME_MODEL;
+import static org.confluence.terraentity.init.TEEntities.*;
 
 
 @SuppressWarnings("deprecation")
@@ -79,6 +78,8 @@ public final class ModClient {
         event.registerEntityRenderer(CROWN_OF_KING_SLIME_MODEL.get(), CrownOfKingSlimeModelRenderer::new);
 
         registerProj(event,CABBAGE_PROJ.get(),c->new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION)));
+        registerProj(event,BEE_STICK_PROJ.get(),c->new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION)));
+
 
         TEEntities.registerRenderers(event);
     }
