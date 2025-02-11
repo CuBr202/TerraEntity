@@ -59,6 +59,10 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
         _attackInternal = 1;
         _detectInternal = 1;
+
+        this.xpReward = 1000;
+
+
     }
 
     public EyeOfCthulhu(Level level) {

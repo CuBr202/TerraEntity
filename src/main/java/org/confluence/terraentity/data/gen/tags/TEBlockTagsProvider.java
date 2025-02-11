@@ -1,4 +1,4 @@
-package org.confluence.terraentity.data.gen;
+package org.confluence.terraentity.data.gen.tags;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import org.confluence.terraentity.TerraEntity;
 
 public class TETags {
@@ -56,6 +57,13 @@ public class TETags {
         }
     }
 
+    public static class Biomes{
+//        public static final TagKey<Biome> UNDERGROUND = registerBiome("underground");
+
+
+    }
+
+
     private static TagKey<Item> registerItem(String id) {
         return ItemTags.create(TerraEntity.asResource(id));
     }
@@ -64,5 +72,8 @@ public class TETags {
     }
     private static ResourceKey<DamageType> registerDamageType(String id) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, TerraEntity.space(id));
+    }
+    private static TagKey<Biome> registerBiome(String id) {
+        return TagKey.create(Registries.BIOME, TerraEntity.asResource(id));
     }
 }

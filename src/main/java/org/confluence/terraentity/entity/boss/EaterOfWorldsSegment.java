@@ -53,6 +53,9 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
         super(type, level,MAX_HEALTHS, 1);
         this.noPhysics = true;
         setAttactDamage(DAMAGE);
+
+        this.xpReward = 30;
+
     }
 
     public EaterOfWorldsSegment(EaterOfWorlds head, Level level) {

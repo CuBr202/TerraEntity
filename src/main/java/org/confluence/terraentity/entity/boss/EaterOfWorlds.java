@@ -65,6 +65,8 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
             }
         }
         this.noPhysics = true;
+
+        this.xpReward = 30;
     }
 
     public EaterOfWorlds(Level level, boolean genSegments) {

@@ -8,7 +8,10 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.confluence.terraentity.data.gen.loot.ModLootTableProvider;
 import org.confluence.terraentity.data.gen.tags.ModDamageTypeTagsProvider;
+import org.confluence.terraentity.data.gen.tags.TEBlockTagsProvider;
+import org.confluence.terraentity.data.gen.tags.TEItemTagsProvider;
 
 import java.util.Map;
 import java.util.Set;
@@ -30,12 +33,6 @@ public class DataGenerator {
         DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookup, RegisterDataPack.DATA_BUILDER, Set.of(MODID));
         lookup = provider.getRegistryProvider();
 
-
-        boolean client = event.includeClient();
-        generator.addProvider(client, new TEChineseProvider(output));
-        generator.addProvider(client, new TEEnglishProvider(output));
-        generator.addProvider(client, new TEItemModelProvider(output, helper));
-
         boolean server = event.includeServer();
         generator.addProvider(server, provider);
         TEBlockTagsProvider blockTagsProvider = new TEBlockTagsProvider(output, lookup, helper);
@@ -43,9 +40,15 @@ public class DataGenerator {
         generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TEItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
 
-//        generator.addProvider(server, new ModLootTableProvider(output));
+        generator.addProvider(server, ModLootTableProvider.getProvider(output,lookup));
         generator.addProvider(server, new ModDamageTypeTagsProvider(output, lookup, helper));
 //        generator.addProvider(server, new ModPoiTypeTagsProvider(output, lookup, helper));
+
+
+        boolean client = event.includeClient();
+        generator.addProvider(client, new TEChineseProvider(output));
+        generator.addProvider(client, new TEEnglishProvider(output));
+        generator.addProvider(client, new TEItemModelProvider(output, helper));
 
         PROVIDERS = generator.getProvidersView();
 

@@ -48,6 +48,9 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
 //        SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.playSound(TESounds.ROAR.get());
         this.noPhysics = true;
+
+        this.xpReward = 2000;
+
     }
 
     public BrainOfCthulhu(Level level) {
