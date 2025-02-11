@@ -7,6 +7,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import org.confluence.terraentity.data.gen.biome.TEBiomes;
 import org.confluence.terraentity.init.*;
 import org.slf4j.Logger;
 
@@ -25,6 +26,7 @@ public class TerraEntity {
         TEEffects.EFFECTS.register(modEventBus);
         TEAttachments.TYPES.register(modEventBus);
         TEAttributes.ATTRIBUTES.register(modEventBus);
+        TEBiomes.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);

@@ -10,6 +10,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +36,7 @@ import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.utils.FloatRGB;
+import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -51,6 +55,10 @@ public class GameEntityEvent {
                 level.addFreshEntity(slime);
             }
         }
+        if(event.getEntity() instanceof Monster living)
+            TEUtils.monsterEnhance(living);
+        else if(event.getEntity() instanceof Slime slime)
+            TEUtils.monsterEnhance(slime);
         // 生成信息
         Boss.sendBossSpawnMessage(event.getEntity());
         if(event.getEntity() instanceof ServerPlayer player){

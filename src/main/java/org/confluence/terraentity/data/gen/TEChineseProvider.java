@@ -112,6 +112,9 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.boss_attributes_multiplier_health", "BOSS属性倍率-生命");
         add("terra_entity.configuration.boss_attributes_multiplier_damage", "BOSS属性倍率-伤害");
         add("terra_entity.configuration.display_summon_items", "在创造栏显示召唤物品");
+        add("terra_entity.configuration.enhance_all_monster", "增强所有怪物");
+        add("terra_entity.configuration.monster_attributes_multiplier_health", "Monster属性倍率-生命");
+        add("terra_entity.configuration.monster_attributes_multiplier_damage", "Monster属性倍率-伤害");
 
         add("terra_entity.configuration.boss_bar_style", "BOSS血条样式");
 

@@ -9,14 +9,14 @@ import net.minecraft.world.level.block.Block;
 import java.util.Collections;
 import java.util.Set;
 
-public class ModBlockLootProvider extends BlockLootSubProvider {
+public class TEBlockLootProvider extends BlockLootSubProvider {
 
     public static final Set<Block> BLOCK = Set.of(
 //            ModBlock.YU_YAN_ORE.get(),
 //            ModBlock.BA_JIN_ORE.get()
     );
 
-    public ModBlockLootProvider(HolderLookup.Provider registries) {
+    public TEBlockLootProvider(HolderLookup.Provider registries) {
         super(Collections.emptySet(), FeatureFlags.REGISTRY.allFlags(),registries);
     }
 

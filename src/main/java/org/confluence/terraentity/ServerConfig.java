@@ -8,6 +8,10 @@ public class ServerConfig {
     public static ModConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE ;
     public static ModConfigSpec.ConfigValue<Boolean> DISPLAY_SUMMON_ITEMS;
 
+    public static ModConfigSpec.ConfigValue<Boolean> ENHANCE_ALL_MONSTER;
+    public static ModConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH;
+    public static ModConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE ;
+
 
     public static ModConfigSpec init(){
         final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
@@ -25,6 +29,18 @@ public class ServerConfig {
         DISPLAY_SUMMON_ITEMS = BUILDER
                 .comment("Should summon items be displayed in this mod?")
                 .define("display_summon_items", true);
+
+        ENHANCE_ALL_MONSTER = BUILDER
+                .comment("Should all monsters be enhanced?\nIf false, only specific monsters in this mod.")
+                .define("enhance_all_monster", false);
+
+        MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH = BUILDER
+                .comment("Multiplier for monster attributes health.")
+                .defineInRange("monster_attributes_multiplier_health", 1F, 0.0625f, 100f);
+        MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE = BUILDER
+                .comment("Multiplier for monster attributes damage.")
+                .defineInRange("monster_attributes_multiplier_damage", 1F, 0.0625f, 100f);
+
         return BUILDER.build();
     }
 }

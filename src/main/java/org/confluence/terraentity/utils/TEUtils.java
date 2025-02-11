@@ -3,7 +3,9 @@ package org.confluence.terraentity.utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -26,6 +28,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.ServerConfig;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.ai.Boss;
+import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 
 import java.util.Calendar;
 import java.util.List;
@@ -213,17 +217,38 @@ public final class TEUtils {
         else return 1f;
     }
 
+    static ResourceLocation healthKey = TerraEntity.space("server_modifier_max_health");
+    static ResourceLocation damageKey = TerraEntity.space("server_modifier_max_attack_damage");
+    static ResourceLocation difficultyHealthKey = TerraEntity.space("difficulty_modifier_max_health");
+    static ResourceLocation difficultyDamageKey = TerraEntity.space("difficulty_modifier_attack_damage");
+
     public static void multiplePlayerEnhance(LivingEntity entity, boolean dirty) {
         if(!entity.level().isClientSide) {
             float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
             if (dirty) {
                 int size = Math.min(entity.level().players().size(), 8);
-                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_max_health"), multiplier * size - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(difficultyHealthKey, multiplier * size - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(healthKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
                 entity.setHealth(entity.getMaxHealth());
             }
-            entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(TerraEntity.space("difficulty_modifier_attack_damage"), multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-            entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(TerraEntity.space("server_modifier_max_health"), ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(difficultyDamageKey, multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+            entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
+    }
+
+    public static void monsterEnhance(LivingEntity entity) {
+        if(entity instanceof Boss || entity instanceof AbstractTerraBossBase<?>) return;
+        if(!ServerConfig.ENHANCE_ALL_MONSTER.get() && !BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getNamespace().equals(TerraEntity.MODID)) return;
+        if(!entity.level().isClientSide) {
+            float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
+            if(!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(healthKey)){
+                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(healthKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+                entity.setHealth(entity.getMaxHealth());
+            }
+            if(!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(damageKey))
+                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            if(!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(difficultyDamageKey))
+                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(difficultyDamageKey, multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         }
     }
 

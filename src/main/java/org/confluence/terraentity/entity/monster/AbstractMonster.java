@@ -18,6 +18,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
+import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -61,6 +62,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
         this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(builder.JUMP_STRENGTH);
         this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(builder.STEP_HEIGHT);
 
+        this.xpReward = builder.xpReward;
     }
 
     @Override
@@ -270,8 +272,9 @@ public class AbstractMonster extends Monster implements GeoEntity {
         public int ATTACK_DAMAGE = 15;
         public int MAX_HEALTH = 31;
         public int ARMOR = 2;
-        public float MOVEMENT_SPEED = 0.38f;
+        public int xpReward = 5;
         public int FOLLOW_RANGE = 32;
+        public float MOVEMENT_SPEED = 0.38f;
         public float SPAWN_REINFORCEMENTS_CHANCE = 0.01f;
         public float KNOCKBACK_RESISTANCE = 0.8f;
         public float ATTACK_KNOCKBACK = 0.5f;
@@ -281,6 +284,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
         public float JUMP_STRENGTH = 0.41999998688697815f;
         public float STEP_HEIGHT = 0.6f;
         public float attackIncrease = 0;
+
 
         public boolean attachAttack = true;
         public boolean noGravity = false;
@@ -297,6 +301,11 @@ public class AbstractMonster extends Monster implements GeoEntity {
         public List<BiConsumer<GoalSelector,AbstractMonster>> targets = new ArrayList<>();
         public Function<AbstractMonster,PathNavigation> navigation;
 
+
+        public Builder setXpReward(int xpReward) {
+            this.xpReward = xpReward;
+            return this;
+        }
 
         public Builder modify(Function<Builder, Builder> modifier){
             return modifier.apply(this);

@@ -4,7 +4,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.DamageTypeTagsProvider;
 import net.minecraft.tags.DamageTypeTags;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.init.TETags;
 import org.jetbrains.annotations.Nullable;
@@ -14,8 +13,8 @@ import java.util.concurrent.CompletableFuture;
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 
-public class ModDamageTypeTagsProvider extends DamageTypeTagsProvider {
-    public ModDamageTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+public class TEDamageTypeTagsProvider extends DamageTypeTagsProvider {
+    public TEDamageTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, provider, MODID, existingFileHelper);
     }
     @Override
