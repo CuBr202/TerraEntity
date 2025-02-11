@@ -227,12 +227,16 @@ public final class TEUtils {
             float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
             if (dirty) {
                 int size = Math.min(entity.level().players().size(), 8);
-                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(difficultyHealthKey, multiplier * size - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(healthKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+                if (!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(difficultyHealthKey))
+                    entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(difficultyHealthKey, multiplier * size - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+                if (!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(healthKey))
+                    entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(new AttributeModifier(healthKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
                 entity.setHealth(entity.getMaxHealth());
             }
-            entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(difficultyDamageKey, multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-            entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            if(!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(difficultyDamageKey))
+                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(difficultyDamageKey, multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+            if(!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(damageKey))
+                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
     }
 
