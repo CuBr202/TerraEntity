@@ -54,6 +54,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.brain_of_cthulhu", "克苏鲁之脑");
         add("entity.terra_entity.brain_fake", "克苏鲁之脑幻象");
         add("entity.terra_entity.visual_neuron", "视神经元");
+        add("entity.terra_entity.queue_bee", "蜂王");
 
         add("effect.terra_entity.demonic_thoughts", "邪念");
 
@@ -96,6 +97,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
         add(TEItems.EATER_OF_WORLD_SPAWN_EGG.get(), "世界吞噬怪刷怪蛋");
         add(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
+        add(TEItems.QUEUE_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
 
 
         // 召唤杖

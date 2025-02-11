@@ -21,7 +21,7 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
 public class QueueBee extends AbstractTerraBossBase<QueueBee> implements Boss {
-    private static final int health = 20;
+    private static final int health = 1237;
     private static final int armor = 2;
 
     public boolean isAngry = false;
