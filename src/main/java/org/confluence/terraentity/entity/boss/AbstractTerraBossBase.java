@@ -45,7 +45,7 @@ import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
 
 @SuppressWarnings("all")
-public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackMob<T> {
+public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackEntity<T> {
 
 /* 属性 */
 
@@ -155,31 +155,11 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
 /* Collision */
 
-    public int attackInternal = 20;
-    protected int _attackInternal = 10;
-    protected int _detectInternal = 5;
-
-    public int getDetectInternal() {
-        return _detectInternal;
-    }
-
-    public int getAttackInternal() {
-        return _attackInternal;
-    }
+    CollisionProperties collisionProperties = new CollisionProperties(5, 10, 0);
 
     @Override
-    public int getActualAttackInterval() {
-        return attackInternal;
-    }
-
-    @Override
-    public void setActualAttackInterval(int interval) {
-        this.attackInternal = interval;
-    }
-
-    @Override
-    public float getAttackRangeExtent() {
-        return 0;
+    public CollisionProperties getCollisionProperties() {
+        return collisionProperties;
     }
 
 /* discard */
@@ -208,7 +188,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             discardTick = 0;
 
             doCollisionAttack(
-                    living -> (true),
+                    living -> canAttack(living),
                     e -> e.hurt(this.damageSources().generic(), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE))
             );
 

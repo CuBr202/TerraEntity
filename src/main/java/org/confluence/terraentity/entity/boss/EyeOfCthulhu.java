@@ -57,8 +57,8 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         this.playSound(TESounds.ROAR.get());
         this.noPhysics = true;
 
-        _attackInternal = 1;
-        _detectInternal = 1;
+        collisionProperties.attackInternal = 1;
+        collisionProperties.detectInternal = 1;
 
         this.xpReward = 1000;
     }

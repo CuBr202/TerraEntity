@@ -34,7 +34,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
     public QueenBee(EntityType<? extends Monster> type, Level level) {
         super(type, level, health, armor);
 
-        this._detectInternal = 2;
+        collisionProperties.detectInternal = 2;
         this.noPhysics = true;
         this.setAttactDamage(1);
         this.xpReward = 1000;

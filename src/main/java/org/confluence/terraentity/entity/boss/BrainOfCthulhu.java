@@ -48,6 +48,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
 //        SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.playSound(TESounds.ROAR.get());
+        collisionProperties.detectInternal = 1;
         this.noPhysics = true;
 
         this.xpReward = 2000;
@@ -339,10 +340,6 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         return hp / maxHp;
     }
 
-    @Override
-    public int getDetectInternal() {
-        return 1;
-    }
 
     @Override // 受伤音效
     protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
