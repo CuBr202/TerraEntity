@@ -96,8 +96,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
                     hitList.add(id);
                     if(e instanceof LivingEntity living) {
                         doHurt(living);
-                        //doKnockBack(living);
-
+                        doKnockBack(living);
                     }
                 }
             }
@@ -191,6 +190,8 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
 
     @Override
     protected boolean canHitEntity(@NotNull Entity target) {
+        if(getOwner()!=null && getOwner() instanceof LivingEntity living && target instanceof LivingEntity living1) return target.canBeHitByProjectile() &&
+                target != living && living.canAttack(living1);
         return target.canBeHitByProjectile() &&
                 target != getOwner();
     }

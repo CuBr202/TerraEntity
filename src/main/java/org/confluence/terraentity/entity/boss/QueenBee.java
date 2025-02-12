@@ -3,11 +3,13 @@ package org.confluence.terraentity.entity.boss;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.phys.Vec3;
@@ -15,6 +17,7 @@ import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.IAngryMob;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
+import org.confluence.terraentity.entity.monster.Hornet;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.utils.TEUtils;
@@ -34,7 +37,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
     public QueenBee(EntityType<? extends Monster> type, Level level) {
         super(type, level, health, armor);
 
-        collisionProperties.detectInternal = 2;
+        collisionProperties.detectInternal = 1;
         this.noPhysics = true;
         this.setAttactDamage(1);
         this.xpReward = 1000;
@@ -85,13 +88,20 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                 })
         ;
 
-        summon_bee = new MobSkill<QueenBee>(summon_animation, 10, 10)
+        summon_bee = new MobSkill<QueenBee>(summon_animation, 60, 10)
                 .onTick(e->{
                     LookAt(10);
                     dashComponent.hangOn(getTarget(), 5, 4, getMoveSpeed());
+                    if(skills.tick % 10 == 0) {
+                        Hornet bee = TEEntities.HORNET.get().create(level());
+                        bee.setOwner(e);
+                        bee.setPos(e.position());
+                        bee.setYRot(e.getYRot());
+                        level().addFreshEntity(bee);
+                    }
                 })
         ;
-        summon_proj = new MobSkill<QueenBee>(summon_animation, 100, 10)
+        summon_proj = new MobSkill<QueenBee>(summon_animation, 60, 10)
                 .onTick(e->{
                     LivingEntity target = e.getTarget();
                     if(target!=null){
@@ -147,6 +157,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
         dash = new MobSkill<QueenBee>(dash_animation, 50, 0)
 
                 .onTick(e->{
+                    if(getTarget() == null) return;
                     dashComponent.uniformMove(getMoveSpeed() * 2f * (isAngry()? 1.5f:1f));
                     if(distanceToSqr(target) > 15 * 15) skills.forceEnd();
 
@@ -201,6 +212,11 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
             }
             setAngry(shouldAnger());
         }
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        return super.canAttack(target) && !(target instanceof Hornet);
     }
 
     @Override

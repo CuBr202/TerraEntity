@@ -97,6 +97,7 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
         super.readAdditionalSaveData(compound);
         cost = compound.getInt("cost");
     }
+
     @Override
     public boolean hurt(DamageSource source, float amount) {
         return source.is(DamageTypes.GENERIC_KILL) && super.hurt(source, amount);
