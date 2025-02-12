@@ -32,7 +32,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.tropic_slime", "热带史莱姆");
         add("entity.terra_entity.green_slime", "绿色史莱姆");
         add("entity.terra_entity.black_slime", "史莱姆之母");
-        add("entity.terra_entity.lava_slime", "岩浆史莱姆");
+        add("entity.terra_entity.lava_slime", "熔岩史莱姆");
         add("entity.terra_entity.demon_eye", "恶魔眼");
         add("entity.terra_entity.flying_fish", "飞鱼");
         add("entity.terra_entity.giant_shelly", "巨型卷壳怪");
@@ -76,7 +76,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.CRIMSON_SLIME_SPAWN_EGG.get(), "猩红史莱姆刷怪蛋");
         add(TEItems.TROPIC_SLIME_SPAWN_EGG.get(), "热带史莱姆刷怪蛋");
         add(TEItems.LUMINOUS_SLIME_SPAWN_EGG.get(), "夜明史莱姆刷怪蛋");
-        add(TEItems.LAVA_SLIME_SPAWN_EGG.get(), "岩浆史莱姆刷怪蛋");
+        add(TEItems.LAVA_SLIME_SPAWN_EGG.get(), "熔岩史莱姆刷怪蛋");
 
         add(TEItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
         add(TEItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
