@@ -92,6 +92,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 1)
                 .add(Attributes.ATTACK_DAMAGE, 1)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.2)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
@@ -271,6 +272,14 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                                         &&!(entity instanceof AbstractTerraBossBase)
                                         && entity instanceof LivingEntity living && living.canBeSeenAsEnemy()
                 );
+    }
+
+    public float getHealthPercentage(){
+        return this.getHealth() / this.getMaxHealth();
+    }
+
+    public float getMoveSpeed(){
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
 /* boss条 */

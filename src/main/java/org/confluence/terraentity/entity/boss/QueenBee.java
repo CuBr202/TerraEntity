@@ -1,35 +1,37 @@
 package org.confluence.terraentity.entity.boss;
 
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.Boss;
+import org.confluence.terraentity.entity.ai.IAngryMob;
 import org.confluence.terraentity.entity.ai.MobSkill;
+import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.utils.TEUtils;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
-public class QueueBee extends AbstractTerraBossBase<QueueBee> implements Boss {
+public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, IAngryMob {
     private static final int health = 1237;
     private static final int armor = 2;
 
-    public boolean isAngry = false;
-    Vec3 targetPos = null;
-    Vec3 targetDir = null;
-    public static final EntityDataAccessor<Boolean> DATA_ANGRY = SynchedEntityData.defineId(QueueBee.class, EntityDataSerializers.BOOLEAN);
+    DashComponent dashComponent;
+    public static final EntityDataAccessor<Boolean> DATA_ANGRY = SynchedEntityData.defineId(QueenBee.class, EntityDataSerializers.BOOLEAN);
 
-    public QueueBee(EntityType<? extends Monster> type, Level level) {
+    public QueenBee(EntityType<? extends Monster> type, Level level) {
         super(type, level, health, armor);
 
         this._detectInternal = 2;
@@ -37,6 +39,7 @@ public class QueueBee extends AbstractTerraBossBase<QueueBee> implements Boss {
         this.setAttactDamage(1);
         this.xpReward = 1000;
 
+        this.dashComponent = new DashComponent(this);
     }
 
     @Override
@@ -48,30 +51,18 @@ public class QueueBee extends AbstractTerraBossBase<QueueBee> implements Boss {
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        if (key == DATA_ANGRY && level().isClientSide) {
-            this.isAngry = this.getEntityData().get(DATA_ANGRY);
-        }
     }
 
-    MobSkill<QueueBee> first_spawn;
-    MobSkill<QueueBee> idle;
-    MobSkill<QueueBee> summon_bee;
-    MobSkill<QueueBee> summon_proj;
+    MobSkill<QueenBee> first_spawn;
+    MobSkill<QueenBee> idle;
+    MobSkill<QueenBee> summon_bee;
+    MobSkill<QueenBee> summon_proj;
 
-    MobSkill<QueueBee> pre_dash_idle;
-    MobSkill<QueueBee> pre_dash;
-    MobSkill<QueueBee> dash;
+    MobSkill<QueenBee> pre_dash_idle;
+    MobSkill<QueenBee> pre_dash;
+    MobSkill<QueenBee> dash;
 
     RawAnimation wing = RawAnimation.begin().thenPlay("wing");
-
-
-    void hangOn(LivingEntity target,float distance, float height, float speed){
-        if(target!=null){
-            Vec3 targetPos = position().subtract(target.position()).multiply(1,0,1).normalize().scale(distance).add(0,height,0).add(target.position());
-            Vec3 targetDir = targetPos.subtract(position());
-            addDeltaMovement(targetDir.scale(speed * 0.02f));
-        }
-    }
 
     @Override
     public void addSkills() {
@@ -81,27 +72,26 @@ public class QueueBee extends AbstractTerraBossBase<QueueBee> implements Boss {
         RawAnimation dash_animation = RawAnimation.begin().thenPlay("dash");
 
 
-        first_spawn = new MobSkill<QueueBee>(summon_animation, 50, 0)
-                .onInit(e->{
-                    if(e.tickCount > 10)
+        first_spawn = new MobSkill<QueenBee>(summon_animation, 50, 0)
+                .onTick(e->{
+                    if(e.tickCount > 50)
                         skills.forceStartIndex(1);
                 })
         ;
-        idle = new MobSkill<QueueBee>(idle_animation, 25, 0)
+        idle = new MobSkill<QueenBee>(idle_animation, 25, 0)
                 .onTick(e->{
                     LookAt(10);
-                    hangOn(getTarget(), 5, 4, 1);
+                    dashComponent.hangOn(getTarget(), 5, 1.5f, getMoveSpeed());
                 })
         ;
 
-        summon_bee = new MobSkill<QueueBee>(summon_animation, 10, 10)
+        summon_bee = new MobSkill<QueenBee>(summon_animation, 10, 10)
                 .onTick(e->{
                     LookAt(10);
-
-                    hangOn(getTarget(), 5, 4, 1);
+                    dashComponent.hangOn(getTarget(), 5, 4, getMoveSpeed());
                 })
         ;
-        summon_proj = new MobSkill<QueueBee>(summon_animation, 100, 10)
+        summon_proj = new MobSkill<QueenBee>(summon_animation, 100, 10)
                 .onTick(e->{
                     LivingEntity target = e.getTarget();
                     if(target!=null){
@@ -111,41 +101,55 @@ public class QueueBee extends AbstractTerraBossBase<QueueBee> implements Boss {
                             LineProj proj = TEEntities.BEE_STICK_PROJ.get().create(level());
                             proj.setOwner(e);
                             proj.setPos(e.position());
+                            proj.addEffect(new MobEffectInstance(MobEffects.POISON, 100, isAngry()? 1:0));
                             Vec3 dir = target.getEyePosition().subtract(e.position());
                             proj.shoot(dir.x, dir.y, dir.z, 1, 5f);
                             level().addFreshEntity(proj);
                         }
                     }
+                    // 低血量减少弹幕次数
+                    if(getHealthPercentage() < 0.3f && skills.tick > 50){
+                        skills.forceEnd();
+                    }
                 })
         ;
 
-        pre_dash_idle = new MobSkill<QueueBee>(idle_animation, 20, 0)
+        pre_dash_idle = new MobSkill<QueenBee>(idle_animation, 20, 0)
                 .onTick(e->{
-                    if(target!=null && distanceToSqr(target) > 10*10) skills.tick = 15;
-                    hangOn(getTarget(), 5, 1.5f, 1);
+                    if(target== null) return;
+                    if(
+                            distanceToSqr(target) > 10 * 10 ||
+                            Math.abs(target.getY() - e.getY()) > 2 ||
+                            Math.abs(this.getXRot()) > 10
+                    )
+                        skills.tick = 15;
+
+                    dashComponent.hangOn(getTarget(), 5, 0, getMoveSpeed() * 1.2f);
                     LookAt(10);
                 })
         ;
-        pre_dash = new MobSkill<QueueBee>(pre_dash_animation, 15, 0)
+        pre_dash = new MobSkill<QueenBee>(pre_dash_animation, 15, 0)
                 .onTick(e->{
                     setDeltaMovement(0,0,0);
                     if(target!=null) {
-                        LookAt(10);
+                        // 预判冲
+                        dashComponent.setPredictDirection(target);
+                        dashComponent.lookAtDirection();
                     }
                 })
                 .onOver(e->{
                     if(getTarget()!=null) {
-                        // 预判冲
-                        targetDir = getTarget().position().add(0, 1, 0).add(target.getKnownMovement().scale(10)).subtract(position());
-                        lookAt(EntityAnchorArgument.Anchor.EYES, targetDir.add(position()));
+
                     }
                 })
 
         ;
-        dash = new MobSkill<QueueBee>(dash_animation, 50, 0)
+        dash = new MobSkill<QueenBee>(dash_animation, 50, 0)
+
                 .onTick(e->{
-                    setDeltaMovement(targetDir.normalize().scale(1));
+                    dashComponent.uniformMove(getMoveSpeed() * 2f * (isAngry()? 1.5f:1f));
                     if(distanceToSqr(target) > 15 * 15) skills.forceEnd();
+
                 })
         ;
 
@@ -162,13 +166,30 @@ public class QueueBee extends AbstractTerraBossBase<QueueBee> implements Boss {
         addSkill(pre_dash);
         addSkill(dash);
 
-        addSkill(pre_dash_idle);
+        addSkill(pre_dash_idle); // 10
         addSkill(pre_dash);
         addSkill(dash);
 
         addSkill(pre_dash_idle);
         addSkill(pre_dash);
         addSkill(dash);
+    }
+
+/* anger */
+
+    @Override
+    public boolean isAngry() {
+        return this.getEntityData().get(DATA_ANGRY);
+    }
+
+    @Override
+    public boolean shouldAnger() {
+        return !level().getBiome(blockPosition()).is(Biomes.JUNGLE);
+    }
+
+    @Override
+    public void setAngry(boolean angry) {
+        this.getEntityData().set(DATA_ANGRY, angry);
     }
 
     @Override
@@ -178,6 +199,7 @@ public class QueueBee extends AbstractTerraBossBase<QueueBee> implements Boss {
             if(getTarget() == null){
                 skills.forceStartIndex(1);
             }
+            setAngry(shouldAnger());
         }
     }
 

@@ -97,7 +97,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
         add(TEItems.EATER_OF_WORLD_SPAWN_EGG.get(), "世界吞噬怪刷怪蛋");
         add(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
-        add(TEItems.QUEUE_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
+        add(TEItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
 
 
         // 召唤杖

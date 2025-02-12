@@ -12,7 +12,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.ServerConfig;
-import org.confluence.terraentity.item.DebugItem;
 import org.confluence.terraentity.item.SummonItem;
 
 import java.util.function.Supplier;
@@ -64,7 +63,7 @@ public class TEItems {
     public static final DeferredItem<Item> EYE_OF_CTHULHU_SPAWN_EGG = registerEgg("cthulhu_eye_spawn_egg", TEEntities.EYE_OF_CTHULHU, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> EATER_OF_WORLD_SPAWN_EGG = registerEgg("eater_of_world_spawn_egg", TEEntities.EATER_OF_WORLDS, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> BRAIN_OF_CTHULHU_SPAWN_EGG = registerEgg("brain_of_cthulhu_spawn_egg", TEEntities.BRAIN_OF_CTHULHU, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> QUEUE_BEE_SPAWN_EGG = registerEgg("queue_bee_spawn_egg", TEEntities.QUEUE_BEE, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> QUEEN_BEE_SPAWN_EGG = registerEgg("queen_bee_spawn_egg", TEEntities.QUEEN_BEE, 0xffffff, 0xffffff);
 
 
 
