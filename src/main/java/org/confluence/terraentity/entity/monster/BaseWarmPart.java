@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -50,7 +51,10 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity {
 
     public boolean hurt(DamageSource source, float amount) {
         this.getParent().setHealth(this.getParent().getHealth() - amount);
-        this.getParent().playSound(this.getParent().getHurtSound(source));
+        SoundEvent hurtSound = this.getParent().getHurtSound(source);
+        if(hurtSound!=null) {
+            this.getParent().playSound(hurtSound);
+        }
         if(this.getParent().getHealth() <= 0) {
             this.getParent().die(source);
         }

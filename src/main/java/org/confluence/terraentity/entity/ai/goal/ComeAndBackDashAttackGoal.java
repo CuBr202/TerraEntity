@@ -21,7 +21,7 @@ public class ComeAndBackDashAttackGoal extends Goal {
     }
 
     public boolean canContinueToUse() {
-        return this.canUse() && warm.getTarget().isAlive();
+        return this.canUse() && warm.getTarget()!=null&&warm.getTarget().isAlive();
     }
 
     public void tick() {

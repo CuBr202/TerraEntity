@@ -6,7 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -154,18 +154,19 @@ public class SummonSlime extends AbstractSummonMob<SummonSlime> {
             MoveControl var2 = this.slime.getMoveControl();
 
             if (var2 instanceof SummonSlime.SlimeMoveControl control) {
-                Vec3 dir = this.slime.getOwner().position().subtract(this.slime.position()).normalize();
-                float yaw = -(float)Math.atan2(dir.x, dir.z) * 57.295776F;
-                control.setDirection( yaw , true);
-                if(slime.distanceToOwner < slime.distanceToStopToOwner){
+                LivingEntity owner = this.slime.getOwner();
+                if (owner!=null) {
+                    Vec3 dir = owner.position().subtract(this.slime.position()).normalize();
+                    float yaw = -(float) Math.atan2(dir.x, dir.z) * 57.295776F;
+                    control.setDirection(yaw, true);
+                    if (slime.distanceToOwner < slime.distanceToStopToOwner) {
 
-                }else if(slime.distanceToOwner < slime.distanceToSlowDownToOwner) {
-                    control.setWantedMovement(0.8f);
-                    this.slime.lookControl.setLookAt(this.slime.getOwner());
+                    } else if (slime.distanceToOwner < slime.distanceToSlowDownToOwner) {
+                        control.setWantedMovement(0.8f);
+                        this.slime.lookControl.setLookAt(owner);
+                    } else
+                        control.setWantedMovement(1.5f);
                 }
-                else
-                    control.setWantedMovement(1.5f);
-
             }
         }
     }

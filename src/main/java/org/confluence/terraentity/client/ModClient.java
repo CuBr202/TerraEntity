@@ -29,7 +29,6 @@ import java.util.function.Supplier;
 import static org.confluence.terraentity.init.TEEntities.*;
 
 
-@SuppressWarnings("deprecation")
 @EventBusSubscriber(modid = TerraEntity.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ModClient {
 /*

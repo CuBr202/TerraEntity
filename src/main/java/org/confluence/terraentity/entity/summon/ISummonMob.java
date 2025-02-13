@@ -3,6 +3,7 @@ package org.confluence.terraentity.entity.summon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.OldUsersConverter;
@@ -20,7 +21,6 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -104,12 +104,15 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     }
 
     default void summon_readData(CompoundTag compound) {
-        UUID uuid;
+        UUID uuid=null;
         if (compound.hasUUID("Owner")) {
             uuid = compound.getUUID("Owner");
         } else {
             String s = compound.getString("Owner");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(te$getSelf().getServer(), s);
+            MinecraftServer server = te$getSelf().getServer();
+            if(server!=null) {
+                uuid = OldUsersConverter.convertMobOwnerIfNecessary(server, s);
+            }
         }
         if (uuid != null) {
             this.summon_setOwnerUUID(uuid);
@@ -172,7 +175,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
         summon_setTame(true, true);
         if(stack.getItem() instanceof SummonItem<?> summonItem)
             te$getSelf().getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(summonItem.baseAttackDamage);
-        ModLoader.postEvent(new SummonEvent(player, stack, this));
+        ModLoader.postEvent(new SummonEvent<>(player, stack, this));
     }
 
     /* Attack API */
@@ -264,7 +267,8 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     default boolean summon_discardWhenOwnerDie(){
         if(te$getSelf().level().isClientSide) return false;
         if(summon_getOwner() != null) {
-            if(!te$getSelf().level().getEntity(summon_getOwner().getId()).isAlive()) {
+            Entity entity = te$getSelf().level().getEntity(summon_getOwner().getId());
+            if(entity == null || !entity.isAlive()) {
                 te$getSelf().discard();
                 return true;
             }

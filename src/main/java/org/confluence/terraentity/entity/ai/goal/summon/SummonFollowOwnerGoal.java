@@ -52,9 +52,10 @@ public class SummonFollowOwnerGoal<T extends Mob & ISummonMob<?>> extends Goal {
     public boolean canContinueToUse() {
         if (this.navigation.isDone()) {
             return false;
-        } else {
+        } else if (owner!=null) {
             return !this.tamable.summon_unableToMoveToOwner() && !(this.tamable.distanceToSqr(this.owner) <= (double) (this.stopDistance * this.stopDistance));
         }
+        return false;
     }
 
     public void start() {
@@ -71,7 +72,7 @@ public class SummonFollowOwnerGoal<T extends Mob & ISummonMob<?>> extends Goal {
 
     public void tick() {
         boolean flag = this.tamable.summon_shouldTryTeleportToOwner();
-        if (!flag) {
+        if (!flag && owner!=null) {
             this.tamable.getLookControl().setLookAt(this.owner, 10.0F, (float)this.tamable.getMaxHeadXRot());
         }
 

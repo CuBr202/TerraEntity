@@ -87,8 +87,9 @@ public class EffectStrategy {
             (owner, entity) ->{
                 if(entity.getRandom().nextFloat() < possibility) {
                     if (entity.hasEffect(effect)) {
-                        if (entity.getEffect(effect).getAmplifier() < maxAmplifier) {
-                            entity.addEffect(new MobEffectInstance(effect, ticks, entity.getEffect(effect).getAmplifier() + 1, false, true, false));
+                        MobEffectInstance effect1 = entity.getEffect(effect);
+                        if (effect1!=null&& effect1.getAmplifier() < maxAmplifier) {
+                            entity.addEffect(new MobEffectInstance(effect, ticks, effect1.getAmplifier() + 1, false, true, false));
                         } else {
                             entity.addEffect(new MobEffectInstance(effect, ticks, maxAmplifier, false, true, false));
                         }

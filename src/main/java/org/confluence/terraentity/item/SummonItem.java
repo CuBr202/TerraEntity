@@ -1,6 +1,7 @@
 package org.confluence.terraentity.item;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -76,11 +77,13 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
         }
 
         var entity = entityType.get().create(level);
-        BlockPos pos = TEUtils.getEyeBlockHitResult(player);
-        entity.setPos(pos.getX(), pos.getY(), pos.getZ());
-        entity.summon(player, stack);
-        entity.setCost(consume);
-        level.addFreshEntity(entity);
+        if (entity!=null) {
+            BlockPos pos = TEUtils.getEyeBlockHitResult(player);
+            entity.setPos(pos.getX(), pos.getY(), pos.getZ());
+            entity.summon(player, stack);
+            entity.setCost(consume);
+            level.addFreshEntity(entity);
+        }
         var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
         data.summon(consume, entity.getId());
         if (player instanceof ServerPlayer serverPlayer)
@@ -91,7 +94,9 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        float additionAttackDamage = (float) Minecraft.getInstance().player.getAttributeValue(TEAttributes.SUMMON_DAMAGE) - 1;
+        LocalPlayer localPlayer = Minecraft.getInstance().player;
+        if (localPlayer==null)return;
+        float additionAttackDamage = (float) localPlayer.getAttributeValue(TEAttributes.SUMMON_DAMAGE) - 1;
         tooltipComponents.add(Component.translatable("attribute.name.player.summon_damage").append(": " +
                         (baseAttackDamage + (additionAttackDamage > 0 ? "  +%d%%".formatted((int)(additionAttackDamage * 100)): "")))
                 .withColor(0x00AB00));
@@ -99,9 +104,9 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_item_cost", consume).withColor(0xABAC00));
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_item_entity", entityType.get().getDescription()).withColor(0x1E90FF));
 
-        var data = Minecraft.getInstance().player.getData(TEAttachments.SUMMONER_STORAGE.get());
+        var data = localPlayer.getData(TEAttachments.SUMMONER_STORAGE.get());
         int a = data.getCurrentCapacity();
-        int b = SummonerAttachment.getMaxCapacity(Minecraft.getInstance().player);
+        int b = SummonerAttachment.getMaxCapacity(localPlayer);
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_info", b - a, b).withColor(a <= 0 ? 0xAB0000 : 0x00ABAC));
     }
 

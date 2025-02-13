@@ -18,7 +18,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -229,20 +231,21 @@ public class Hornet extends AbstractMonster implements FlyingAnimal {
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        UUID uuid;
+        UUID uuid=null;
         if (compound.hasUUID("Owner")) {
             uuid = compound.getUUID("Owner");
-        } else {
+        } else if(getServer()!=null) {
             String s = compound.getString("Owner");
             uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s);
         }
-        this.setOwnerUUID(uuid);
-        if(level() instanceof  ServerLevel sl){
-            Entity owner = sl.getEntity(uuid);
-            if(owner instanceof QueenBee bee)
-                setOwner(bee);
+        if(uuid!=null) {
+            this.setOwnerUUID(uuid);
+            if (level() instanceof ServerLevel sl) {
+                Entity owner = sl.getEntity(uuid);
+                if (owner instanceof QueenBee bee)
+                    setOwner(bee);
+            }
         }
-
     }
 }
 

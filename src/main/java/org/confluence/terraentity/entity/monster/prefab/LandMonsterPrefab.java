@@ -17,13 +17,12 @@ import org.confluence.terraentity.entity.ai.goal.JumpAttack;
 import org.confluence.terraentity.entity.ai.goal.JumpOverBlockGoal;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TEEntities;
-import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-import static software.bernie.geckolib.constant.DefaultAnimations.*;
+import static software.bernie.geckolib.constant.DefaultAnimations.genericWalkRunIdleController;
 
 public class LandMonsterPrefab extends AbstractPrefab {
 
@@ -49,10 +48,12 @@ public class LandMonsterPrefab extends AbstractPrefab {
                         if(!e.level().isClientSide && e.isAlive() && e.tickCount == e.getAttributeValue(Attributes.ATTACK_DAMAGE)){
                             List<EntityType<? extends Entity>> entities = List.of(TEEntities.BLOOD_CRAWLER.get(),TEEntities.FACE_MONSTER.get(),TEEntities.CRIMSON_KEMERA.get());
                             Entity summon = entities.get(e.getRandom().nextIntBetweenInclusive(0,entities.size()-1)).create(e.level());
-                            summon.setPos(e.getX(),e.getY(),e.getZ());
-                            summon.setDeltaMovement(new Vec3(0,0.4f,0));
-                            e.level().addFreshEntity(summon);
-                            e.kill();
+                            if(summon!=null) {
+                                summon.setPos(e.getX(), e.getY(), e.getZ());
+                                summon.setDeltaMovement(new Vec3(0, 0.4f, 0));
+                                e.level().addFreshEntity(summon);
+                                e.kill();
+                            }
                         }
                     })
                     .setController((c,e)->{

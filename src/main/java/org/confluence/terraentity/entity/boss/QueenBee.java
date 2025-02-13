@@ -3,13 +3,11 @@ package org.confluence.terraentity.entity.boss;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.phys.Vec3;
@@ -20,7 +18,6 @@ import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.monster.Hornet;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.utils.TEUtils;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -94,10 +91,12 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                     dashComponent.hangOn(getTarget(), 5, 4, getMoveSpeed());
                     if(skills.tick % 10 == 0) {
                         Hornet bee = TEEntities.HORNET.get().create(level());
-                        bee.setOwner(e);
-                        bee.setPos(e.position());
-                        bee.setYRot(e.getYRot());
-                        level().addFreshEntity(bee);
+                        if (bee!=null) {
+                            bee.setOwner(e);
+                            bee.setPos(e.position());
+                            bee.setYRot(e.getYRot());
+                            level().addFreshEntity(bee);
+                        }
                     }
                 })
         ;
@@ -109,12 +108,14 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                         if(position().y < target.position().y + 2) addDeltaMovement(new Vec3(0,0.02f,0));
                         if( skills.tick % 10 ==0) {
                             LineProj proj = TEEntities.BEE_STICK_PROJ.get().create(level());
-                            proj.setOwner(e);
-                            proj.setPos(e.position());
-                            proj.addEffect(new MobEffectInstance(MobEffects.POISON, 100, isAngry()? 1:0));
-                            Vec3 dir = target.getEyePosition().subtract(e.position());
-                            proj.shoot(dir.x, dir.y, dir.z, 1, 5f);
-                            level().addFreshEntity(proj);
+                            if (proj!=null) {
+                                proj.setOwner(e);
+                                proj.setPos(e.position());
+                                proj.addEffect(new MobEffectInstance(MobEffects.POISON, 100, isAngry() ? 1 : 0));
+                                Vec3 dir = target.getEyePosition().subtract(e.position());
+                                proj.shoot(dir.x, dir.y, dir.z, 1, 5f);
+                                level().addFreshEntity(proj);
+                            }
                         }
                     }
                     // 低血量减少弹幕次数

@@ -232,7 +232,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                     skills.forceEnd();
                     firstWander = true;
                 }
-                if (targetPos.x == 0 && targetPos.y == 0 && targetPos.z == 0) {
+                if (targetPos!=null&& targetPos.x == 0 && targetPos.y == 0 && targetPos.z == 0) {
                     targetPos = target.position();
                 }
                 //头部发射弹幕
