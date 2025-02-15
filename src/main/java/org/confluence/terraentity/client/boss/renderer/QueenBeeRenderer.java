@@ -26,7 +26,7 @@ public class QueenBeeRenderer extends GeoBossRenderer<QueenBee, GeoBossModel<Que
             }
             @Override
             protected RenderType getRenderType(QueenBee animatable, @Nullable MultiBufferSource bufferSource) {
-                return RenderType.eyes(getTextureResource(animatable));
+                return RenderType.entityTranslucentEmissive(getTextureResource(animatable));
             }
         });
     }
