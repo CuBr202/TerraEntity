@@ -88,6 +88,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
         super.onAddedToLevel();
         this.addSkills();
+        if(skills.count() > 0)
+            skills.forceStartIndex(0);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -174,7 +176,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
         if (!level().isClientSide){
             target = getTarget();
-            skills.tick();
+            if(this.isAlive())
+                skills.tick();
             //没有目标禁止行为
 
             if(target==null){

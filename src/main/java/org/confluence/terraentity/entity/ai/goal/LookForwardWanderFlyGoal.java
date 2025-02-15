@@ -22,7 +22,7 @@ public class LookForwardWanderFlyGoal extends DemonEyeWanderGoal {
     public float getOffsetY(){
         float period = 10f;
         float radians = Mth.TWO_PI * (locateCount % period) / period;
-        return 2.57f * Mth.cos(radians)-3;
+        return 2.57f * Mth.cos(radians)-10;
     }
     public void tick(){
         super.tick();

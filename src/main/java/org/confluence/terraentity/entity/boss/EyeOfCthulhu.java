@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.ServerConfig;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
@@ -55,7 +56,8 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.playSound(TESounds.ROAR.get());
-        this.noPhysics = true;
+        if(ServerConfig.BOSS_NO_PHYSICS.get())
+            this.noPhysics = true;
 
         collisionProperties.attackInternal = 1;
         collisionProperties.detectInternal = 1;

@@ -6,6 +6,9 @@ public class ServerConfig {
     public static ModConfigSpec.ConfigValue<Boolean> BOSS_CLEAR_WHEN_NO_TARGET;
     public static ModConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_HEALTH;
     public static ModConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE ;
+    public static ModConfigSpec.ConfigValue<Boolean> BOSS_NO_PHYSICS;
+
+
     public static ModConfigSpec.ConfigValue<Boolean> DISPLAY_SUMMON_ITEMS;
 
     public static ModConfigSpec.ConfigValue<Boolean> ENHANCE_ALL_MONSTER;
@@ -25,6 +28,10 @@ public class ServerConfig {
         BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE = BUILDER
                 .comment("Multiplier for boss attributes damage.")
                 .defineInRange("boss_attributes_multiplier_damage", 0.7F, 0.0625f, 10f);
+
+        BOSS_NO_PHYSICS = BUILDER
+                .comment("Should the boss have no physics? Only for some bosses.")
+                .define("boss_no_physics", true);
 
         DISPLAY_SUMMON_ITEMS = BUILDER
                 .comment("Should summon items be displayed in this mod?")

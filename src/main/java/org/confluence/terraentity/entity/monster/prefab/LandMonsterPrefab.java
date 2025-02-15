@@ -80,6 +80,8 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     });
 
 
+
+
     public LandMonsterPrefab(int health,int armor,int attack,int followRange,float knockBack,float knockbackResistance) {
         this(health,armor,attack,0.3f,followRange,knockBack,knockbackResistance);
     }

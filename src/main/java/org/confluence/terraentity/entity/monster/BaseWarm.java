@@ -27,11 +27,8 @@ public class BaseWarm extends AbstractMonster {
     private float segInternal = 1.6f;
     public BaseWarmPart[] bodySegments;
 
-    public BaseWarm(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(44,2,1,60,0,0.1f)
-                .getPrefab()
-                .setNoGravity()
-        );
+    public BaseWarm(EntityType<? extends Monster> type, Level level, AbstractMonster.Builder builder) {
+        super(type, level, builder);
         this._detectInternal = 3;
         this._attackInternal = 3;
         bodySegments = new BaseWarmPart[currentSegmentCount];

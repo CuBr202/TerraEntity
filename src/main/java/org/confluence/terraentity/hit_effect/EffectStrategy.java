@@ -49,7 +49,7 @@ public class EffectStrategy {
     /**
      * 效果描述
      */
-    public static void appendDescription(List<Component> tooltipComponents, List<EffectStrategy> effectStrategy, Component title) {
+    public static void appendDescription(List<Component> tooltipComponents, List<? extends EffectStrategy> effectStrategy, Component title) {
         int size = effectStrategy.size();
         if(size == 0) return;
         tooltipComponents.add(title);
