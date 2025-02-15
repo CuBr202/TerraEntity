@@ -48,6 +48,8 @@ public class TEItems {
     public static final DeferredItem<Item> DECAYEDER_SPAWN_EGG = registerEgg("decayeder_spawn_egg", TEEntities.DECAYEDER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> DEVOURER_SPAWN_EGG = registerEgg("devourer_spawn_egg", TEEntities.DEVOURER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> GIANT_SHELLY_SPAWN_EGG = registerEgg("giant_shelly_spawn_egg", TEEntities.GIANT_SHELLY, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> GIANT_WORM_SPAWN_EGG = registerEgg("giant_worm_spawn_egg", TEEntities.GIANT_WORM, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> TOMB_CRAWLER_SPAWN_EGG = registerEgg("tomb_crawler_spawn_egg", TEEntities.TOMB_CRAWLER, 0xffffff, 0xffffff);
 
 
     public static final DeferredItem<Item> FLYING_FISH_SPAWN_EGG = registerEgg("flying_fish_spawn_egg", TEEntities.FLYING_FISH, 0xffffff, 0xffffff);

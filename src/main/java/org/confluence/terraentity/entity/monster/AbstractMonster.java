@@ -178,8 +178,8 @@ public class AbstractMonster extends Monster implements GeoEntity {
         }
 
         int y = pPos.getY();
-        if (y < -60 || y > 30) {
-            return false; // 只能生成在 y = -60 到 y = 30 之间
+        if (y < -55 || y > 30) {
+            return false; // 只能生成在 y = -55 到 y = 30 之间
         }
 
         return true;

@@ -81,6 +81,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
         add(TEItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
         add(TEItems.GIANT_SHELLY_SPAWN_EGG.get(), "巨型卷壳怪刷怪蛋");
+        add(TEItems.GIANT_WORM_SPAWN_EGG.get(), "巨型蠕虫刷怪蛋");
+        add(TEItems.TOMB_CRAWLER_SPAWN_EGG.get(), "墓穴爬虫刷怪蛋");
         add(TEItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
         add(TEItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
 

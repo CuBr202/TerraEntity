@@ -99,7 +99,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                 .withPool(LOOT_POOL.apply(TEItems.EATER_OF_WORLD_SPAWN_EGG, 0.05F))
         );
         this.add(TEEntities.DEVOURER.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.EATER_OF_WORLD_SPAWN_EGG, 0.1F))
+                .withPool(LOOT_POOL.apply(TEItems.DEVOURER_SPAWN_EGG, 0.1F))
         );
 
         this.add(TEEntities.EATER_OF_WORLDS.get(), LootTable.lootTable()
