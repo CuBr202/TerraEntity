@@ -37,8 +37,11 @@ public class TEItems {
     public static final DeferredItem<Item> PINK_SLIME_SPAWN_EGG = registerEgg("pink_slime_spawn_egg", TEEntities.PINK_SLIME, 0xFF87B3, 0xf89fe3);
     public static final DeferredItem<Item> DESERT_SLIME_SPAWN_EGG = registerEgg("desert_slime_spawn_egg", TEEntities.DESERT_SLIME, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> JUNGLE_SLIME_SPAWN_EGG = registerEgg("jungle_slime_spawn_egg", TEEntities.JUNGLE_SLIME, 0x9ae920, 0xC7AB5E);
+    public static final DeferredItem<Item> JUNGLE_BAT_SPAWN_EGG = registerEgg("jungle_bat_spawn_egg", TEEntities.JUNGLE_BAT, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> ICE_SLIME_SPAWN_EGG = registerEgg("ice_slime_spawn_egg", TEEntities.ICE_SLIME, 0xB3F0EA, 0x7FDEDF);
+    public static final DeferredItem<Item> ICE_BAT_SPAWN_EGG = registerEgg("ice_bat_spawn_egg", TEEntities.ICE_BAT, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> LAVA_SLIME_SPAWN_EGG = registerEgg("lava_slime_spawn_egg", TEEntities.LAVA_SLIME, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> HELL_BAT_SPAWN_EGG = registerEgg("hell_bat_spawn_egg", TEEntities.HELL_BAT, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> CRIMSON_SLIME_SPAWN_EGG = registerEgg("crimson_slime_spawn_egg", TEEntities.CRIMSON_SLIME, 0x8B4949, 0x7D1D1D);
     public static final DeferredItem<Item> TROPIC_SLIME_SPAWN_EGG = registerEgg("tropic_slime_spawn_egg", TEEntities.TROPIC_SLIME, 0x73bcf4, 0x7374f4);
     public static final DeferredItem<Item> LUMINOUS_SLIME_SPAWN_EGG = registerEgg("evil_slime_spawn_egg", TEEntities.LUMINOUS_SLIME, 0xFF00FF, 0xEDFFFA);
@@ -49,6 +52,9 @@ public class TEItems {
     public static final DeferredItem<Item> DEVOURER_SPAWN_EGG = registerEgg("devourer_spawn_egg", TEEntities.DEVOURER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> GIANT_SHELLY_SPAWN_EGG = registerEgg("giant_shelly_spawn_egg", TEEntities.GIANT_SHELLY, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> GIANT_WORM_SPAWN_EGG = registerEgg("giant_worm_spawn_egg", TEEntities.GIANT_WORM, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> CAVE_BAT_SPAWN_EGG = registerEgg("cave_bat_spawn_egg", TEEntities.CAVE_BAT, 0xffffff, 0xffffff);
+
+    public static final DeferredItem<Item> SPORE_BAT_SPAWN_EGG = registerEgg("spore_bat_spawn_egg", TEEntities.SPORE_BAT, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> TOMB_CRAWLER_SPAWN_EGG = registerEgg("tomb_crawler_spawn_egg", TEEntities.TOMB_CRAWLER, 0xffffff, 0xffffff);
 
 

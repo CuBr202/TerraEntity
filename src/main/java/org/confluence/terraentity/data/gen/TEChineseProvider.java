@@ -45,6 +45,13 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.eater_of_souls", "噬魂怪");
         add("entity.terra_entity.decayeder", "腐骴");
         add("entity.terra_entity.devourer", "吞噬怪");
+        add("entity.terra_entity.giant_worm", "巨型蠕虫");
+        add("entity.terra_entity.tomb_crawler", "墓穴爬虫");
+        add("entity.terra_entity.cave_bat", "洞穴蝙蝠");
+        add("entity.terra_entity.jungle_bat", "丛林蝙蝠");
+        add("entity.terra_entity.hell_bat", "地狱蝙蝠");
+        add("entity.terra_entity.ice_bat", "冰雪蝙蝠");
+        add("entity.terra_entity.spore_bat", "孢子蝙蝠");
 
 
         add("entity.terra_entity.king_slime", "史莱姆王");
@@ -83,6 +90,11 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.GIANT_SHELLY_SPAWN_EGG.get(), "巨型卷壳怪刷怪蛋");
         add(TEItems.GIANT_WORM_SPAWN_EGG.get(), "巨型蠕虫刷怪蛋");
         add(TEItems.TOMB_CRAWLER_SPAWN_EGG.get(), "墓穴爬虫刷怪蛋");
+        add(TEItems.CAVE_BAT_SPAWN_EGG.get(), "洞穴蝙蝠刷怪蛋");
+        add(TEItems.ICE_BAT_SPAWN_EGG.get(), "冰雪蝙蝠刷怪蛋");
+        add(TEItems.JUNGLE_BAT_SPAWN_EGG.get(), "丛林蝙蝠刷怪蛋");
+        add(TEItems.HELL_BAT_SPAWN_EGG.get(), "地狱蝙蝠刷怪蛋");
+        add(TEItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");
         add(TEItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
         add(TEItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
 

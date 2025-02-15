@@ -63,8 +63,8 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                 })
             ;
 
-    public static Supplier<AbstractMonster.Builder> FLY_EYE  =
-            ()->new FlyMonsterPrefab(10,1,2,30,0.5f,0.3f).getPrefab()
+    public static Supplier<AbstractMonster.Builder> CAVE_BAT_BUILDER  =
+            ()->new FlyMonsterPrefab(8,1,6,60,0.2f,0.5f).getPrefab()
                     .setHurtSound(TESounds.ROUTINE_HURT)
                     .setDeathSound(TESounds.ROUTINE_DEATH)
                     .addGoal((g,e)->{
@@ -73,6 +73,48 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
                     })
             ;
+
+    public static Supplier<AbstractMonster.Builder> SPORE_BAT_BUILDER  =
+            ()->new FlyMonsterPrefab(8,1,6,60,0.2f,0.5f).getPrefab()
+                    .setHurtSound(TESounds.ROUTINE_HURT)
+                    .setDeathSound(TESounds.ROUTINE_DEATH)
+                    .addGoal((g,e)->{
+                        g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
+                                0.02f,5,10,45));
+
+                    })
+            ;
+    public static Supplier<AbstractMonster.Builder> JUNGLE_BAT_BUILDER =
+            ()->new FlyMonsterPrefab(17,1,10,60,0.2f,0.5f).getPrefab()
+                    .setHurtSound(TESounds.ROUTINE_HURT)
+                    .setDeathSound(TESounds.ROUTINE_DEATH)
+                    .addGoal((g,e)->{
+                        g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
+                                0.02f,5,10,45));
+
+                    })
+            ;
+    public static Supplier<AbstractMonster.Builder> HELL_BAT_BUILDER  =
+            ()->new FlyMonsterPrefab(23,2,18,60,0.2f,0.5f).getPrefab()
+                    .setHurtSound(TESounds.ROUTINE_HURT)
+                    .setDeathSound(TESounds.ROUTINE_DEATH)
+                    .addGoal((g,e)->{
+                        g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
+                                0.02f,5,10,45));
+
+                    })
+            ;
+    public static Supplier<AbstractMonster.Builder> ICE_BAT_BUILDER  =
+            ()->new FlyMonsterPrefab(15,1,9,60,0.2f,0.5f).getPrefab()
+                    .setHurtSound(TESounds.ROUTINE_HURT)
+                    .setDeathSound(TESounds.ROUTINE_DEATH)
+                    .addGoal((g,e)->{
+                        g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
+                                0.02f,5,10,45));
+
+                    })
+            ;
+
 
 
     //从一个预制体复制参数再调整参数
