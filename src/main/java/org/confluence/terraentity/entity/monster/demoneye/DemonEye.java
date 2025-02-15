@@ -14,6 +14,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
@@ -114,6 +115,8 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
         goalSelector.addGoal(0, surroundTargetGoal);
         goalSelector.addGoal(1, new DemonEyeWanderGoal(this));
         goalSelector.addGoal(2, new DemonEyeLeaveGoal(this));
+
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
     }
 
     @Override

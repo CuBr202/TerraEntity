@@ -13,6 +13,7 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.ServerConfig;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.MobSkill;
+import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
@@ -49,6 +50,10 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
     private Vec3 dashPos;
     private Vec3 dashDir;
 
+    private int stage1_dashCount = 3;
+
+    DashComponent dashComponent;
+
 
     public EyeOfCthulhu(EntityType<EyeOfCthulhu> entityType, Level level) {
         super(entityType, level,MAX_HEALTHS,2);
@@ -63,6 +68,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         collisionProperties.detectInternal = 1;
 
         this.xpReward = 1000;
+        dashComponent = new DashComponent(this);
     }
 
     public EyeOfCthulhu(Level level) {
@@ -108,8 +114,9 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                     // 生成仆从
                     spawnMinions(getTarget());
                     // 向玩家正上方移动
-                    Vec3 tar = getTarget().position().add(new Vec3(0, distanceAbove, 0));
-                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED / 10));
+                    dashComponent.hangOn(getTarget(), 3, 3, MOVE_SPEED);
+//                    Vec3 tar = getTarget().position().add(new Vec3(0, distanceAbove, 0));
+//                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED / 10));
 
                 },
                 terraBossBase -> {}
@@ -142,14 +149,17 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 terraBossBase -> {
                     // 结束冲刺移除加成
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-                    if (stage == 1){
-                        skills.forceStartIndex(0);
-                        return;
+                    if (stage == 1 ){
+                        if(--stage1_dashCount <= 0) {
+                            stage1_dashCount = 3;
+                            skills.forceStartIndex(0);
+                            return;
+                        }
                     }
                 }
         );
         // 转换阶段
-        this.switch_1_to_2 = new MobSkill(switching, 40, 0,
+        this.switch_1_to_2 = new MobSkill(switching, 32, 0,
                 terraBossBase -> {
 
                     summonCD = 0;
@@ -172,8 +182,9 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                     LookAt(10);
 
                     // 向玩家正上方移动
-                    Vec3 tar = getTarget().position().add(new Vec3(0, distanceAbove, 0));
-                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED * stage2SpeedFactor / 10));
+                    dashComponent.hangOn(getTarget(), 3, 3, MOVE_SPEED * stage2SpeedFactor);
+//                    Vec3 tar = getTarget().position().add(new Vec3(0, distanceAbove, 0));
+//                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED * stage2SpeedFactor / 10));
                 },
                 terraBossBase -> {
                     // 生成冲撞次数
