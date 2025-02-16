@@ -65,7 +65,11 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
             return pLevel.getBrightness(LightLayer.SKY, pPos) == 0 && pPos.getY() > 30;
         } else if (type == TEEntities.BLACK_SLIME.get()) {
             return pLevel.getBrightness(LightLayer.SKY, pPos) == 0 && pPos.getY() <= 30;
+        } else if (type == TEEntities.LAVA_SLIME.get()) {  // 新增岩浆史莱姆的限制条件
+            int y = pPos.getY();
+            return y >= 30 && y <= 100;
         }
+
         // 剩下的条件用方块的isValidSpawn方法
         return false;
     }
