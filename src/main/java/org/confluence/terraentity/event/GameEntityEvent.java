@@ -11,6 +11,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -44,6 +46,7 @@ import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.utils.FloatRGB;
+import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -62,6 +65,10 @@ public class GameEntityEvent {
                 level.addFreshEntity(slime);
             }
         }
+        if(event.getEntity() instanceof Monster living)
+            TEUtils.monsterEnhance(living);
+        else if(event.getEntity() instanceof Slime slime)
+            TEUtils.monsterEnhance(slime);
         // 生成信息
         Boss.sendBossSpawnMessage(event.getEntity());
         if(event.getEntity() instanceof ServerPlayer player){
@@ -89,7 +96,7 @@ public class GameEntityEvent {
     @SubscribeEvent
     public static void FinalizeSpawnRegister(MobSpawnEvent event) {
         if(event.getEntity() instanceof BlackSlime entity){
-            entity.finalizeSpawn(entity.getRandom(),new DifficultyInstance(event.getLevel().getDifficulty(),1,1,1) );
+//            entity.finalizeSpawn(entity.getRandom(),new DifficultyInstance(event.getLevel().getDifficulty(),1,1,1) );
         }
 
     }
@@ -123,9 +130,11 @@ public class GameEntityEvent {
                 e1.removeEffect(TEEffects.DEMONIC_THOUGHTS.get());
                 e1.hurt(event.getSource(), 6);
                 AbstractMonster soulEater = TEEntities.EATER_OF_SOULS.get().create(level);
-                soulEater.setPos(e1.getEyePosition());
-                soulEater.setTarget(e1);
-                level.addFreshEntity(soulEater);
+                if (soulEater!=null) {
+                    soulEater.setPos(e1.getEyePosition());
+                    soulEater.setTarget(e1);
+                    level.addFreshEntity(soulEater);
+                }
                 e1.removeEffect(TEEffects.DEMONIC_THOUGHTS.get());
             }
         }
@@ -142,30 +151,36 @@ public class GameEntityEvent {
                 entity.getType().equals(TEEntities.PURPLE_SLIME.get())){
             if (item.is(TETags.Items.HONEY_TRANSLATION_BUCKET)){
                 HoneySlime slime = TEEntities.HONEY_SLIME.get().create(level);
-                item.shrink(1);
-                player.addItem(new ItemStack(Items.BUCKET));
-                slime.setSize(2, true);
-                slime.setPos(entity.position());
-                slime.setXRot(entity.getXRot());
-                slime.setYRot(entity.getYRot());
-                level.addFreshEntity(slime);
+                if (slime!=null) {
+                    item.shrink(1);
+                    player.addItem(new ItemStack(Items.BUCKET));
+                    slime.setSize(2, true);
+                    slime.setPos(entity.position());
+                    slime.setXRot(entity.getXRot());
+                    slime.setYRot(entity.getYRot());
+                    level.addFreshEntity(slime);
+                }
                 entity.remove(Entity.RemovalReason.DISCARDED);
             } else if (item.is(TETags.Items.HONEY_TRANSLATION)){
                 HoneySlime slime = TEEntities.HONEY_SLIME.get().create(level);
-                item.shrink(1);
-                slime.setSize(2, true);
-                slime.setPos(entity.position());
-                slime.setXRot(entity.getXRot());
-                slime.setYRot(entity.getYRot());
-                level.addFreshEntity(slime);
+                if (slime!=null) {
+                    item.shrink(1);
+                    slime.setSize(2, true);
+                    slime.setPos(entity.position());
+                    slime.setXRot(entity.getXRot());
+                    slime.setYRot(entity.getYRot());
+                    level.addFreshEntity(slime);
+                }
                 entity.remove(Entity.RemovalReason.DISCARDED);
             } else if (item.is(TETags.Items.HONEY_TRANSLATION_NOT_CONSUMED)){
                 HoneySlime slime = TEEntities.HONEY_SLIME.get().create(level);
-                slime.setSize(2, true);
-                slime.setPos(entity.position());
-                slime.setXRot(entity.getXRot());
-                slime.setYRot(entity.getYRot());
-                level.addFreshEntity(slime);
+                if(slime!=null) {
+                    slime.setSize(2, true);
+                    slime.setPos(entity.position());
+                    slime.setXRot(entity.getXRot());
+                    slime.setYRot(entity.getYRot());
+                    level.addFreshEntity(slime);
+                }
                 entity.remove(Entity.RemovalReason.DISCARDED);
                 event.setCanceled(true);
                 return;
@@ -184,7 +199,5 @@ public class GameEntityEvent {
             blackSlime.finalizeSpawn(randomSource, event.getDifficulty());
         }
     }
-
-
 
 }

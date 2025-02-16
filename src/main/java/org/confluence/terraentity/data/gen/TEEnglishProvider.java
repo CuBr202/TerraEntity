@@ -41,7 +41,9 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.boss_attributes_multiplier_health", "Boss Attributes Multiplier-Health");
         add("terra_entity.configuration.boss_attributes_multiplier_damage", "Boss Attributes Multiplier-Damage");
         add("terra_entity.configuration.display_summon_items", "Display Summon Items In Creative Tab");
-
+        add("terra_entity.configuration.enhance_all_monster", "Enhance All Monster");
+        add("terra_entity.configuration.monster_attributes_multiplier_health", "Monster Attributes Multiplier-Health");
+        add("terra_entity.configuration.monster_attributes_multiplier_damage", "Monster Attributes Multiplier-Damage");
 
         add("terra_entity.configuration.boss_bar_style", "Boss Health Bar Style");
 

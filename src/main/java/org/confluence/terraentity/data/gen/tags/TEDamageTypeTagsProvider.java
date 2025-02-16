@@ -14,8 +14,8 @@ import java.util.concurrent.CompletableFuture;
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 
-public class ModDamageTypeTagsProvider extends DamageTypeTagsProvider {
-    public ModDamageTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+public class TEDamageTypeTagsProvider extends DamageTypeTagsProvider {
+    public TEDamageTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, provider, MODID, existingFileHelper);
     }
     @Override

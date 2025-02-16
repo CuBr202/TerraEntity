@@ -1,7 +1,6 @@
 package org.confluence.terraentity.data.gen.loot;
 
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.models.blockstates.PropertyDispatch;
 import net.minecraft.world.entity.EntityType;
@@ -26,11 +25,10 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class ModEntityLootProvider extends EntityLootSubProvider {
-    public ModEntityLootProvider() {
+public class TEEntityLootProvider extends EntityLootSubProvider {
+    public TEEntityLootProvider() {
         super(FeatureFlags.REGISTRY.allFlags());
     }
-
 
     @Override
     public void generate() {
@@ -85,6 +83,9 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
                 .withPool(LOOT_POOL.apply(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.05F))
         );
         this.add(TEEntities.DRIPPLER.get(), LootTable.lootTable()
+                .withPool(LOOT_POOL.apply(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.05F))
+        );
+        this.add(TEEntities.BLOOD_ZOMBIE.get(), LootTable.lootTable()
                 .withPool(LOOT_POOL.apply(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.05F))
         );
 
@@ -159,6 +160,7 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
                 TEEntities.BLOODY_SPORE,
                 TEEntities.BLOOD_CRAWLER,
                 TEEntities.DRIPPLER,
+                TEEntities.BLOOD_ZOMBIE,
 
                 TEEntities.BRAIN_OF_CTHULHU,
 

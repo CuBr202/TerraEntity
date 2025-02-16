@@ -33,7 +33,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     private static final float projDamage = 3;
 
     private float segmentInternal = 2.8f;
-    int segmentCount = 60;//体节长度
+    int segmentCount = 2;//体节长度
     static float turnSpeedBase = 3f;//转向速度
     static float moveSpeedBase = 0.6f;//移动速度
     float wanderPosRadius = 10;//寻点半径
@@ -368,7 +368,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     @Override
     public void onRemovedFromWorld() {
         this.bossEvent.removeAllPlayers();
-        if(!level().isClientSide && ifBaseHead && discardTick < DISCARD_TICK){
+        if(!level().isClientSide && ifBaseHead){
 
             for(var n : baseSegments){
                 if(n==null || !n.isAlive() ) continue;

@@ -4,13 +4,15 @@ package org.confluence.terraentity;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ServerConfig {
-
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-
     public static ForgeConfigSpec.ConfigValue<Boolean> BOSS_CLEAR_WHEN_NO_TARGET;
     public static ForgeConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_HEALTH;
     public static ForgeConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE;
     public static ForgeConfigSpec.ConfigValue<Boolean> DISPLAY_SUMMON_ITEMS;
+
+    public static ForgeConfigSpec.ConfigValue<Boolean> ENHANCE_ALL_MONSTER;
+    public static ForgeConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH;
+    public static ForgeConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE ;
+
 
     public static ForgeConfigSpec init(){
         final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
@@ -28,7 +30,18 @@ public class ServerConfig {
         DISPLAY_SUMMON_ITEMS = BUILDER
                 .comment("Should summon items be displayed in this mod?")
                 .define("display_summon_items", true);
+
+        ENHANCE_ALL_MONSTER = BUILDER
+                .comment("Should all monsters be enhanced?\nIf false, only specific monsters in this mod.")
+                .define("enhance_all_monster", false);
+
+        MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH = BUILDER
+                .comment("Multiplier for monster attributes health.")
+                .defineInRange("monster_attributes_multiplier_health", 1F, 0.0625f, 100f);
+        MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE = BUILDER
+                .comment("Multiplier for monster attributes damage.")
+                .defineInRange("monster_attributes_multiplier_damage", 1F, 0.0625f, 100f);
+
         return BUILDER.build();
     }
-    public static final ForgeConfigSpec SPEC = BUILDER.build();
 }

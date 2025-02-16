@@ -1,13 +1,11 @@
 package org.confluence.terraentity.data.gen.biome;
 
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -15,7 +13,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEEntities;
 
 
-public class ModBiomeModifier {
+public class TEBiomeModifier {
     private static ResourceKey<BiomeModifier> createModifierKey(String name) {return ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, TerraEntity.space(name));}
 
     public static final ResourceKey<BiomeModifier> DEVOURER_SPAWN = createModifierKey("spawn/devourer_spawns");

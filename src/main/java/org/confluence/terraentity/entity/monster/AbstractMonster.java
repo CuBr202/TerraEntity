@@ -48,7 +48,6 @@ public class AbstractMonster extends Monster implements GeoEntity {
         this.navigation = createNavigation(level);
         this.setDiscardFriction(builder.noFriction);
 
-        this.setHealth(builder.MAX_HEALTH);
         this.getAttribute(Attributes.ARMOR).setBaseValue(builder.ARMOR);
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(builder.ATTACK_DAMAGE);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(builder.MOVEMENT_SPEED);
@@ -62,6 +61,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
         this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(builder.JUMP_STRENGTH);
         this.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08f);
 
+        this.xpReward = builder.xpReward;
     }
 
     @Override
@@ -264,20 +264,19 @@ public class AbstractMonster extends Monster implements GeoEntity {
         doAttack(entity, 1);
     }
 
-
+    @Override
     public boolean canAttack(LivingEntity entity) {
-        return attackInternal < 0 && entity.canBeSeenAsEnemy() &&
+        return entity.canBeSeenAsEnemy() &&
                         entity != this &&!(entity instanceof AbstractTerraBossBase);
     }
-
-
 
     public static class Builder {
         public int ATTACK_DAMAGE = 15;
         public int MAX_HEALTH = 31;
         public int ARMOR = 2;
-        public float MOVEMENT_SPEED = 0.38f;
+        public int xpReward = 5;
         public int FOLLOW_RANGE = 32;
+        public float MOVEMENT_SPEED = 0.38f;
         public float SPAWN_REINFORCEMENTS_CHANCE = 0.01f;
         public float KNOCKBACK_RESISTANCE = 0.8f;
         public float ATTACK_KNOCKBACK = 0.5f;
@@ -287,6 +286,7 @@ public class AbstractMonster extends Monster implements GeoEntity {
         public float JUMP_STRENGTH = 0.41999998688697815f;
         public float STEP_HEIGHT = 0.6f;
         public float attackIncrease = 0;
+
 
         public boolean attachAttack = true;
         public boolean noGravity = false;
@@ -303,6 +303,11 @@ public class AbstractMonster extends Monster implements GeoEntity {
         public List<BiConsumer<GoalSelector,AbstractMonster>> targets = new ArrayList<>();
         public Function<AbstractMonster,PathNavigation> navigation;
 
+
+        public Builder setXpReward(int xpReward) {
+            this.xpReward = xpReward;
+            return this;
+        }
 
         public Builder modify(Function<Builder, Builder> modifier){
             return modifier.apply(this);

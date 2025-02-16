@@ -8,8 +8,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.confluence.terraentity.data.gen.loot.ModLootTableProvider;
-import org.confluence.terraentity.data.gen.tags.ModDamageTypeTagsProvider;
+import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
+import org.confluence.terraentity.data.gen.tags.TEDamageTypeTagsProvider;
 import org.confluence.terraentity.data.gen.tags.TEBlockTagsProvider;
 import org.confluence.terraentity.data.gen.tags.TEItemTagsProvider;
 
@@ -40,8 +40,8 @@ public class DataGenerator {
         generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TEItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
 
-        generator.addProvider(server, ModLootTableProvider.getProvider(output,lookup));
-        generator.addProvider(server, new ModDamageTypeTagsProvider(output, lookup, helper));
+        generator.addProvider(server, TELootTableProvider.getProvider(output,lookup));
+        generator.addProvider(server, new TEDamageTypeTagsProvider(output, lookup, helper));
 //        generator.addProvider(server, new ModPoiTypeTagsProvider(output, lookup, helper));
 
 
