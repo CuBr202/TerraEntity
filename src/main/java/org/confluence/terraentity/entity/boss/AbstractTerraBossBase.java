@@ -14,7 +14,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -30,7 +33,10 @@ import net.neoforged.fml.ModLoader;
 import org.confluence.terraentity.ServerConfig;
 import org.confluence.terraentity.api.event.BossDeathEvent;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
-import org.confluence.terraentity.entity.ai.*;
+import org.confluence.terraentity.entity.ai.Boss;
+import org.confluence.terraentity.entity.ai.CircleMobSkills;
+import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
+import org.confluence.terraentity.entity.ai.IFSMGeoMob;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -191,8 +197,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             discardTick = 0;
 
             doCollisionAttack(
-                    living -> canAttack(living),
-                    e -> e.hurt(this.damageSources().generic(), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE))
+                    this::canAttack,
+                    this::doHurtTarget
             );
 
         }
@@ -200,7 +206,12 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         this.setDeltaMovement(getDeltaMovement().scale(0.95));//空气阻力
     }
 
-/* func */
+    @Override
+    public boolean doHurtTarget(Entity entity) {
+        return entity.hurt(this.damageSources().generic(), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+    }
+
+    /* func */
 
     public void lookAtPos(Vec3 target, float pMaxYRotIncrease, float pMaxXRotIncrease) {
         double d0 = target.x - this.getX();
