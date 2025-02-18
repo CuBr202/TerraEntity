@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.client.post.BrainTranslucent;
+import org.confluence.terraentity.config.ClientConfig;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -20,12 +21,15 @@ public class RenderEvent {
     @SubscribeEvent
     public static void drawBossBar(CustomizeGuiOverlayEvent.BossEventProgress event) {
 //        String name = ((TranslatableContents)event.getBossEvent().getName().getContents()).getKey().split("\\.",2)[1];
-        try{
-            CustomizeBossHealthBar bar = CustomizeBossHealthBar.getBossHealthBars((event.getBossEvent().getName().getString()));
-            if(bar!= null)
-                bar.render(event);
-        }catch (Exception e){
-            TerraEntity.LOGGER.warn(e.getLocalizedMessage());
+        if(ClientConfig.BossBarStyle.get() != 0){
+            try{
+                CustomizeBossHealthBar bar = CustomizeBossHealthBar.getBossHealthBars((event.getBossEvent().getName().getString()));
+                if(bar!= null)
+                    bar.render(event);
+            }catch (Exception e){
+                TerraEntity.LOGGER.warn(e.getLocalizedMessage());
+            }
+
         }
     }
 

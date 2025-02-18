@@ -13,11 +13,13 @@ import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.model.CabbageProjModel;
 import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
+import org.confluence.terraentity.client.gui.config_container.ConfigContainerRegister;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.init.TEEntities;
 
@@ -29,7 +31,7 @@ import static org.confluence.terraentity.init.TEEntities.CABBAGE_PROJ;
 import static org.confluence.terraentity.init.TEEntities.CROWN_OF_KING_SLIME_MODEL;
 
 
-@SuppressWarnings("deprecation")
+
 @Mod.EventBusSubscriber(modid = TerraEntity.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ModClient {
 /*
@@ -50,6 +52,12 @@ public final class ModClient {
         return IntegerRGB.HALLOW_C.mixture(IntegerRGB.HALLOW_A, (m - 8) * 0.25F);
     }
 */
+
+    @SubscribeEvent
+    public static void onEnqueue(final InterModEnqueueEvent event) {
+        ConfigContainerRegister.registerModsPage(event);
+    }
+
 
     @SubscribeEvent
     public static void onClientSetup(final FMLClientSetupEvent evt) {

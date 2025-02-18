@@ -1,0 +1,19 @@
+package org.confluence.terraentity.config;
+
+import net.minecraftforge.common.ForgeConfigSpec;
+
+public class ConfigRegistry {
+
+
+    public static ForgeConfigSpec SPEC;
+
+    public static ForgeConfigSpec register(){
+        ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+
+        ClientConfig.init(BUILDER);
+        ServerConfig.init(BUILDER);
+
+        SPEC = BUILDER.build();
+        return SPEC;
+    }
+}

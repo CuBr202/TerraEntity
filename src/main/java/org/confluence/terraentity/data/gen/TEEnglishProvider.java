@@ -37,15 +37,17 @@ public class TEEnglishProvider extends LanguageProvider {
         add("message.terraentity.boss_discard", "Has Been Discarded！");
 
         // Config
-        add("terra_entity.configuration.boss_clear_when_no_target", "Clear Boss When No Target");
-        add("terra_entity.configuration.boss_attributes_multiplier_health", "Boss Attributes Multiplier-Health");
-        add("terra_entity.configuration.boss_attributes_multiplier_damage", "Boss Attributes Multiplier-Damage");
-        add("terra_entity.configuration.display_summon_items", "Display Summon Items In Creative Tab");
-        add("terra_entity.configuration.enhance_all_monster", "Enhance All Monster");
-        add("terra_entity.configuration.monster_attributes_multiplier_health", "Monster Attributes Multiplier-Health");
-        add("terra_entity.configuration.monster_attributes_multiplier_damage", "Monster Attributes Multiplier-Damage");
+        add("terra_entity.options.title", "Terra Entity Options");
 
-        add("terra_entity.configuration.boss_bar_style", "Boss Health Bar Style");
+        add("terra_entity.configuration.server.boss_clear_when_no_target", "Clear Boss When No Target");
+        add("terra_entity.configuration.server.boss_attributes_multiplier_health", "Boss Attributes Multiplier-Health");
+        add("terra_entity.configuration.server.boss_attributes_multiplier_damage", "Boss Attributes Multiplier-Damage");
+        add("terra_entity.configuration.server.display_summon_items", "Display Summon Items In Creative Tab");
+        add("terra_entity.configuration.server.enhance_all_monster", "Enhance All Monster");
+        add("terra_entity.configuration.server.monster_attributes_multiplier_health", "Monster Attributes Multiplier-Health");
+        add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster Attributes Multiplier-Damage");
+
+        add("terra_entity.configuration.client.boss_bar_style", "Boss Health Bar Style");
 
 
         // Tooltip

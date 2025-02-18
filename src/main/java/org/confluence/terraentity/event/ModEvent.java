@@ -1,21 +1,18 @@
 package org.confluence.terraentity.event;
 
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.attachment.SummonerProvider;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.network.NetworkHandler;
 
 import java.util.List;
-
+@SuppressWarnings("all")
 @Mod.EventBusSubscriber(modid = TerraEntity.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEvent {
 
@@ -43,5 +40,12 @@ public class ModEvent {
 
     }
 
+
+
+    private static void checkModLoad(String modId, Runnable runnable) {
+        if (ModList.get().isLoaded(modId)) {
+            runnable.run();
+        }
+    }
 
 }

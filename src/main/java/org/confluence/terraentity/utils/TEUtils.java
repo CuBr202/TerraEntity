@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -26,7 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import org.confluence.terraentity.ServerConfig;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
@@ -35,6 +34,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 
@@ -221,30 +221,30 @@ public final class TEUtils {
     static String difficultyHealthKey = "difficulty_modifier_max_health";
     static String difficultyDamageKey = "difficulty_modifier_attack_damage";
 
-  static Supplier<AttributeModifier> boss_healthModifier = ()->new AttributeModifier(healthKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.MULTIPLY_BASE);
-    static Supplier<AttributeModifier> boss_damageModifier = ()->new AttributeModifier(damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_BASE);
-    static Supplier<AttributeModifier> difficultyDamageModifier = ()->new AttributeModifier(difficultyDamageKey, 1f, AttributeModifier.Operation.MULTIPLY_BASE);
-    static Supplier<AttributeModifier> difficultyHealthModifier = ()->new AttributeModifier(difficultyHealthKey, 1f, AttributeModifier.Operation.MULTIPLY_BASE);
+  static Supplier<AttributeModifier> boss_healthModifier = ()->new AttributeModifier(healthKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Supplier<AttributeModifier> boss_damageModifier = ()->new AttributeModifier(damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Function<Float,AttributeModifier> difficultyDamageModifier = (f)->new AttributeModifier(difficultyDamageKey, f - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Function<Float,AttributeModifier> difficultyHealthModifier = (f)->new AttributeModifier(difficultyHealthKey, f - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
     public static void multiplePlayerEnhance(LivingEntity entity, boolean dirty) {
         if(!entity.level().isClientSide) {
             float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
             if (dirty) {
                 int size = Math.min(entity.level().players().size(), 8);
-                if (!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(difficultyHealthModifier.get()))
-                    entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(difficultyHealthModifier.get());
+                if (!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(difficultyHealthModifier.apply(multiplier)))
+                    entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(difficultyHealthModifier.apply(multiplier));
                 if (!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(boss_healthModifier.get()))
-                    entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(boss_healthModifier.get());
+                    entity.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(boss_healthModifier.get());
                 entity.setHealth(entity.getMaxHealth());
             }
-            if (!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(difficultyDamageModifier.get()))
-                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(difficultyDamageModifier.get());
+            if (!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(difficultyDamageModifier.apply(multiplier)))
+                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(difficultyDamageModifier.apply(multiplier));
             if (!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(boss_damageModifier.get()))
-                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(boss_healthModifier.get());
+                entity.getAttribute(Attributes.MAX_HEALTH).addTransientModifier(boss_healthModifier.get());
         }
     }
 
-    static Supplier<AttributeModifier> monster_healthModifier = ()->new AttributeModifier(healthKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.MULTIPLY_BASE);
-    static Supplier<AttributeModifier> monster_damageModifier = ()->new AttributeModifier(damageKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_BASE);
+    static Supplier<AttributeModifier> monster_healthModifier = ()->new AttributeModifier(healthKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Supplier<AttributeModifier> monster_damageModifier = ()->new AttributeModifier(damageKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     public static void monsterEnhance(LivingEntity entity) {
         if(entity instanceof Boss || entity instanceof AbstractTerraBossBase<?>) return;
@@ -257,8 +257,8 @@ public final class TEUtils {
             }
             if(!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(monster_damageModifier.get()))
                 entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(monster_damageModifier.get());
-            if(!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(difficultyDamageModifier.get()))
-                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(difficultyDamageModifier.get());
+            if(!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(difficultyDamageModifier.apply(multiplier)))
+                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(difficultyDamageModifier.apply(multiplier));
         }
     }
 

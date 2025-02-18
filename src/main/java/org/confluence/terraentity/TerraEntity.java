@@ -9,6 +9,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.confluence.terraentity.config.ConfigRegistry;
 import org.confluence.terraentity.data.gen.biome.TEBiomes;
 import org.confluence.terraentity.init.*;
 import org.slf4j.Logger;
@@ -31,8 +32,7 @@ public class TerraEntity {
         TEAttributes.ATTRIBUTES.register(modEventBus);
         TEBiomes.register(modEventBus);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
-
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigRegistry.register());
 //        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SPEC);
     }
 

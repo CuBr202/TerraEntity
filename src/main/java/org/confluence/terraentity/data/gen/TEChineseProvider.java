@@ -108,15 +108,17 @@ public class TEChineseProvider extends LanguageProvider {
 
 
         // config
-        add("terra_entity.configuration.boss_clear_when_no_target", "丢失目标时清除BOSS");
-        add("terra_entity.configuration.boss_attributes_multiplier_health", "BOSS属性倍率-生命");
-        add("terra_entity.configuration.boss_attributes_multiplier_damage", "BOSS属性倍率-伤害");
-        add("terra_entity.configuration.display_summon_items", "在创造栏显示召唤物品");
-        add("terra_entity.configuration.enhance_all_monster", "增强所有怪物");
-        add("terra_entity.configuration.monster_attributes_multiplier_health", "Monster属性倍率-生命");
-        add("terra_entity.configuration.monster_attributes_multiplier_damage", "Monster属性倍率-伤害");
+        add("terra_entity.options.title", "Terra Entity 配置");
 
-        add("terra_entity.configuration.boss_bar_style", "BOSS血条样式");
+        add("terra_entity.configuration.server.boss_clear_when_no_target", "丢失目标时清除BOSS");
+        add("terra_entity.configuration.server.boss_attributes_multiplier_health", "BOSS属性倍率-生命");
+        add("terra_entity.configuration.server.boss_attributes_multiplier_damage", "BOSS属性倍率-伤害");
+        add("terra_entity.configuration.server.display_summon_items", "在创造栏显示召唤物品");
+        add("terra_entity.configuration.server.enhance_all_monster", "增强所有怪物");
+        add("terra_entity.configuration.server.monster_attributes_multiplier_health", "Monster属性倍率-生命");
+        add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster属性倍率-伤害");
+
+        add("terra_entity.configuration.client.boss_bar_style", "BOSS血条样式");
 
 
         // Tooltip

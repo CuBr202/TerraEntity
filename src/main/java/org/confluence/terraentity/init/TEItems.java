@@ -7,14 +7,12 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 
-import net.minecraft.world.item.SpawnEggItem;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.confluence.terraentity.ServerConfig;
-import org.confluence.terraentity.item.DebugItem;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.item.SummonItem;
 
 import java.util.function.Supplier;

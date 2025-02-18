@@ -1,4 +1,4 @@
-package org.confluence.terraentity;
+package org.confluence.terraentity.config;
 
 
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -14,8 +14,9 @@ public class ServerConfig {
     public static ForgeConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE ;
 
 
-    public static ForgeConfigSpec init(){
-        final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    public static ForgeConfigSpec.Builder init(ForgeConfigSpec.Builder BUILDER){
+        BUILDER.push("server");
+
 
         BOSS_CLEAR_WHEN_NO_TARGET = BUILDER
                 .comment("When a boss has no target, should it be cleared?")
@@ -42,6 +43,8 @@ public class ServerConfig {
                 .comment("Multiplier for monster attributes damage.")
                 .defineInRange("monster_attributes_multiplier_damage", 1F, 0.0625f, 100f);
 
-        return BUILDER.build();
+
+        BUILDER.pop();
+        return BUILDER;
     }
 }

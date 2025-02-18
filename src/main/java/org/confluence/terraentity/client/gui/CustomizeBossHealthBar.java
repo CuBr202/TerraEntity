@@ -10,6 +10,7 @@ import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.ModRenderTypes;
 import org.confluence.terraentity.client.util.ShaderUtil;
+import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.mixinauxiliary.IShaderInstance;
 
 import java.util.HashMap;
@@ -29,30 +30,35 @@ public class CustomizeBossHealthBar {
         int h = 64;
         float segment = 0.6f;
         int x = (int) (Minecraft.getInstance().getWindow().getWidth() * 0.5f / Minecraft.getInstance().getWindow().getGuiScale() - w * 0.5f);
-        int y = event.getY() - 10;
+        int y = event.getY();
 
         float progress = event.getBossEvent().getProgress();
         int from = 37;
         int to = w - from;
         int pos = (int) (from + (to - from) * progress);
 
-        // 流动速度
-        float speed = 0.03f;
-        ((IShaderInstance) ModRenderTypes.Shaders.floatBarShader).getTerra_entity$Time().set(System.currentTimeMillis() % 100000 * speed);
-        // 噪声强度
-        ((IShaderInstance) ModRenderTypes.Shaders.floatBarShader).getTerra_entity$Radius().set(0.9f);
-        g.blit(tex, x, y, 0, 0, w, (int) (h * segment), w, h);
+        if(ClientConfig.BossBarStyle.get() == 1){
+            g.blit(tex, x, y, 0, 0, w, (int) (h * segment), w, h);
+            g.blit(tex, x, (int) (y + 0.1f * h), 0, (int) (h * (segment - 0.015f)), pos, (int) (h * (1 - segment)), w, h);
+        } else if(ClientConfig.BossBarStyle.get() == 2) {
+            // 流动速度
+            float speed = 0.01f;
+            ((IShaderInstance) ModRenderTypes.Shaders.floatBarShader).getTerra_entity$Time().set(System.currentTimeMillis() % 100000 * speed);
+            // 噪声强度
+            ((IShaderInstance) ModRenderTypes.Shaders.floatBarShader).getTerra_entity$Radius().set(0.9f);
+            g.blit(tex, x, y, 0, 0, w, (int) (h * segment), w, h);
 
-        RenderSystem.setShaderTexture(0, tex);
-        RenderSystem.setShaderTexture(1, TerraEntity.space("textures/gui/noise.png"));
-        RenderSystem.setShader(() -> ModRenderTypes.Shaders.floatBarShader);
+            RenderSystem.setShaderTexture(0, tex);
+            RenderSystem.setShaderTexture(1, TerraEntity.space("textures/gui/noise.png"));
+            RenderSystem.setShader(() -> ModRenderTypes.Shaders.floatBarShader);
 
-        ShaderUtil.shaderBlit(g.pose().last().pose(),
-                x, (int) (y + 0.1f * h),
-                0, (int) (h * (segment - 0.015f)),
-                pos, (int) (h * (1 - segment)),
-                w, h
-        );
+            ShaderUtil.shaderBlit(g.pose().last().pose(),
+                    x, (int) (y + 0.1f * h),
+                    0, (int) (h * (segment - 0.015f)),
+                    pos, (int) (h * (1 - segment)),
+                    w, h
+            );
+        }
 
         event.setIncrement(40);
         event.setCanceled(true);
