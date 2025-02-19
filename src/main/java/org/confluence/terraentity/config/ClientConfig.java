@@ -1,4 +1,4 @@
-package org.confluence.terraentity.client;
+package org.confluence.terraentity.config;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;

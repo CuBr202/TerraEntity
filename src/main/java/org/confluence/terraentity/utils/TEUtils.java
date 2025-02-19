@@ -26,7 +26,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.ServerConfig;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;

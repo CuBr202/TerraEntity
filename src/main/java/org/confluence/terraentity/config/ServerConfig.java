@@ -1,4 +1,4 @@
-package org.confluence.terraentity;
+package org.confluence.terraentity.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 

@@ -21,6 +21,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.ai.IMinion;
+import org.confluence.terraentity.entity.boss.EyeOfCthulhu;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.mixin.accessor.EntityAccessor;
@@ -33,12 +35,16 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVariant>, GeoEntity, DeathAnimOptions {
+import java.util.Optional;
+import java.util.UUID;
+
+public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVariant>, GeoEntity, DeathAnimOptions, IMinion<DemonEye> {
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(DemonEye.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
     public Vec3 moveTargetPoint;
     public DemonEyeSurroundTargetGoal surroundTargetGoal;
     private boolean dead = false;
+    Mob owner;
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
@@ -81,6 +87,7 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_VARIANT_ID, 0);
+        builder.define(DATA_OWNER_UUID, Optional.empty());
     }
 
     public @NotNull DemonEyeVariant getVariant() {
@@ -101,12 +108,14 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putInt("Variant", this.getVariant().id);
+        minion_saveData(pCompound);
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.setVariant(DemonEyeVariant.byId(pCompound.getInt("Variant")));
+        minion_readData(pCompound);
     }
 
     @Override
@@ -169,6 +178,9 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
         super.tick();
         // 在super.tick()结束后更新面向方向即可覆盖原版AI
         TEUtils.updateEntityRotation(this, this.getDeltaMovement().multiply(1, -1, 1));
+
+        if(owner!=null)
+            setTarget(owner.getTarget());
     }
 
     @Override
@@ -223,6 +235,23 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return CACHE;
+    }
+
+    /* Minion API */
+
+    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(DemonEye.class, EntityDataSerializers.OPTIONAL_UUID);;
+
+
+    @Override
+    public EntityDataAccessor<Optional<UUID>> getDATA_OWNER_UUID() {
+        return DATA_OWNER_UUID;
+    }
+
+    public void minion_setOwner(Entity owner){
+        if(owner instanceof EyeOfCthulhu eye) {
+            minion_setOwnerUUID(owner.getUUID());
+            this.owner = eye;
+        }
     }
 }
 

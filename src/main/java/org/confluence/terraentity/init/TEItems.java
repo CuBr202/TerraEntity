@@ -11,7 +11,7 @@ import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.confluence.terraentity.ServerConfig;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.item.SummonItem;
 
 import java.util.function.Supplier;

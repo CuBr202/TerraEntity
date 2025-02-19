@@ -8,6 +8,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.data.gen.biome.TEBiomes;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.registries.EffectStrategies;

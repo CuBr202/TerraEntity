@@ -19,6 +19,7 @@ import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
 import org.confluence.terraentity.client.entity.model.Stinger;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
+import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.init.TEEntities;
 

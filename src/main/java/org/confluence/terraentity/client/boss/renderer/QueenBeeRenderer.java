@@ -15,8 +15,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
 public class QueenBeeRenderer extends GeoBossRenderer<QueenBee, GeoBossModel<QueenBee>> {
-    static RenderBuffers bf = new RenderBuffers(Runtime.getRuntime().availableProcessors());
-    public boolean consumeRender = false;
+
     public QueenBeeRenderer(EntityRendererProvider.Context renderManager, GeoBossModel<QueenBee> model) {
         super(renderManager, model,1.0f,0.5f,false);
         this.addRenderLayer(new AutoGlowingGeoLayer<>(this){
