@@ -7,6 +7,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
@@ -15,7 +16,7 @@ import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.IAngryMob;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
-import org.confluence.terraentity.entity.monster.Hornet;
+import org.confluence.terraentity.entity.monster.LittleHornet;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.TEEntities;
 import software.bernie.geckolib.animatable.GeoAnimatable;
@@ -90,7 +91,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                     LookAt(10);
                     dashComponent.hangOn(getTarget(), 5, 4, getMoveSpeed());
                     if(skills.tick % 10 == 0) {
-                        Hornet bee = TEEntities.HORNET.get().create(level());
+                        LittleHornet bee = TEEntities.LITTLE_HORNET.get().create(level());
                         if (bee!=null) {
                             bee.minion_setOwner(e);
                             bee.setPos(e.position());
@@ -109,6 +110,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                         if( skills.tick % 10 ==0) {
                             LineProj proj = TEEntities.BEE_STICK_PROJ.get().create(level());
                             if (proj!=null) {
+                                proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
                                 proj.setOwner(e);
                                 proj.setPos(e.position());
                                 proj.addEffect(new MobEffectInstance(MobEffects.POISON, 100, isAngry() ? 1 : 0));
@@ -217,7 +219,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
 
     @Override
     public boolean canAttack(LivingEntity target) {
-        return super.canAttack(target) && !(target instanceof Hornet);
+        return super.canAttack(target) && !(target instanceof LittleHornet);
     }
 
     @Override

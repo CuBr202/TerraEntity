@@ -115,6 +115,13 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     })
             ;
 
+    public static Supplier<AbstractMonster.Builder> BEE_BUILDER  =
+            ()->new AbstractPrefab(20,1,3,32,0,0.2f)
+                    .getPrefab()
+                    .setMovementSpeed(0.5f)
+                    .setNoGravity()
+            ;
+
 
 
     //从一个预制体复制参数再调整参数

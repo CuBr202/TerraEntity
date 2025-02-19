@@ -86,7 +86,9 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER,1.6f,1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.9F,0.9F);
     public static final DeferredHolder<EntityType<?>, EntityType<VisualNeuron>> VISUAL_NEURON = registerEntity("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
-    public static final DeferredHolder<EntityType<?>, EntityType<Hornet>> HORNET = registerEntity("hornet", Hornet::new, 0.8f, 1.2f);
+    public static final DeferredHolder<EntityType<?>, EntityType<Hornet>> HORNET = registerEntity("hornet", (e,l)->new Hornet(e,l, FlyMonsterPrefab.BEE_BUILDER.get().setHealth(32)), 0.8f, 1.2f);
+
+    public static final DeferredHolder<EntityType<?>, EntityType<LittleHornet>> LITTLE_HORNET = registerEntity("little_hornet", LittleHornet::new, 0.8f, 1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CAVE_BAT = registerSimpleMonster("cave_bat", FlyMonsterPrefab.CAVE_BAT_BUILDER,1.6f,1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> JUNGLE_BAT = registerSimpleMonster("jungle_bat", FlyMonsterPrefab.JUNGLE_BAT_BUILDER,1.6f,1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> HELL_BAT = registerSimpleMonster("hell_bat", FlyMonsterPrefab.HELL_BAT_BUILDER,1.6f,1.6f);
@@ -215,6 +217,7 @@ public final class TEEntities {
         event.registerEntityRenderer(VISUAL_NEURON.get(), c->new GeoNormalRenderer<>(c, VISUAL_NEURON.getId(),true));
         event.registerEntityRenderer(BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
         event.registerEntityRenderer(QUEEN_BEE.get(), c->new QueenBeeRenderer(c,new GeoBossModel<>(QUEEN_BEE)));
+        event.registerEntityRenderer(LITTLE_HORNET.get(), c->new GeoNormalRenderer<>(c, LITTLE_HORNET.getId(),true, 1, 0.5f));
         event.registerEntityRenderer(HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 1, 0.5f));
 
         // sommon
@@ -287,6 +290,7 @@ public final class TEEntities {
         event.put(VISUAL_NEURON.get(), AbstractMonster.createAttributes().build());
         event.put(BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(QUEEN_BEE.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(LITTLE_HORNET.get(), AbstractMonster.createAttributes().build());
         event.put(HORNET.get(), AbstractMonster.createAttributes().build());
 
         // sommon

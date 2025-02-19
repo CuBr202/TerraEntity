@@ -2,11 +2,8 @@ package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
@@ -20,8 +17,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.AirAndWaterRandomPos;
@@ -29,51 +26,81 @@ import net.minecraft.world.entity.ai.util.AirRandomPos;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.ai.IMinion;
-import org.confluence.terraentity.entity.boss.QueenBee;
-import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
+import org.confluence.terraentity.entity.proj.LineProj;
+import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.utils.TEUtils;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
-import java.util.Optional;
-import java.util.UUID;
 
-public class Hornet extends AbstractMonster implements FlyingAnimal, IMinion<Hornet> {
-    QueenBee owner;
+public class Hornet extends AbstractMonster implements FlyingAnimal{
 
-    public Hornet(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(20,1,3,20,0,0.2f)
-                .getPrefab()
-                .setNoGravity()
-        );
+    public Hornet(EntityType<? extends Monster> type, Level level, Builder builder) {
+        super(type, level, builder);
         this.moveControl = new FlyingMoveControl(this, 20, true);
 
     }
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 2, true));
-        this.goalSelector.addGoal(9, new FloatGoal(this));
+//        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 2, true));
+        this.goalSelector.addGoal(1, new BeeShootGoal(this));
+        this.goalSelector.addGoal(2, new BeeKeepOnTargetGoal(this));
         this.goalSelector.addGoal(8, new BeeWanderGoal());
+        this.goalSelector.addGoal(9, new FloatGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2,new NearestAttackableTargetGoal<>(this, Player.class, false));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+    }
+
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(DefaultAnimations.genericIdleController(this));
+        controllers.add(DefaultAnimations.genericAttackAnimation(this, DefaultAnimations.ATTACK_STRIKE));
+    }
+
+    @Override
+    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
+    }
+
+
+    @Override
+    public boolean isFlying() {
+        return true;
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_OWNERUUID_ID, Optional.empty());
-
     }
 
-    class BeeWanderGoal extends Goal {
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+    }
+
+    // move control
+
+    protected class BeeWanderGoal extends Goal {
         private static final int WANDER_THRESHOLD = 22;
 
         BeeWanderGoal() {
@@ -81,7 +108,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal, IMinion<Hor
         }
 
         public boolean canUse() {
-            return Hornet.this.navigation.isDone() && Hornet.this.random.nextInt(10) == 0;
+            return Hornet.this.getTarget() != null &&  Hornet.this.navigation.isDone() && Hornet.this.random.nextInt(10) == 0;
         }
 
         public boolean canContinueToUse() {
@@ -105,6 +132,98 @@ public class Hornet extends AbstractMonster implements FlyingAnimal, IMinion<Hor
         }
     }
 
+    protected class BeeKeepOnTargetGoal extends Goal {
+        private final int FIND_PATH_TIME = 200;
+        int timeToRepath;
+        Hornet bee;
+
+        BeeKeepOnTargetGoal(Hornet bee) {
+            this.setFlags(EnumSet.of(Flag.MOVE));
+            this.bee = bee;
+        }
+
+        public boolean canUse() {
+
+            return bee.getTarget() != null && bee.getTarget().isAlive() && (--timeToRepath <= 0 || bee.getTarget()!=null && timeToRepath < 180);
+        }
+
+        public boolean canContinueToUse() {
+            return canUse();
+        }
+
+        public void start() {
+            Vec3 vec3 = this.findPos();
+            if (vec3 != null) {
+                bee.swing(InteractionHand.MAIN_HAND);
+                timeToRepath = FIND_PATH_TIME;
+                bee.navigation.moveTo(bee.navigation.createPath(BlockPos.containing(vec3), 1), 2.0);
+            }
+        }
+
+        @Nullable
+        private Vec3 findPos() {
+            Vec3 vec3= Hornet.this.getViewVector(0.0F);
+
+            Vec3 vec32 = HoverRandomPos.getPos(Hornet.this, 8, 7, vec3.x, vec3.z, 1.5707964F, 6, 3);
+            return vec32 != null ? vec32 : AirAndWaterRandomPos.getPos(Hornet.this, 8, 4, -2, vec3.x, vec3.z, 1.5707963705062866);
+        }
+
+        public void tick() {
+            bee.lookControl.setLookAt(bee.getTarget());
+            bee.lookAt(bee.getTarget(), 360, 360);
+            if(bee.distanceTo(bee.getTarget()) < 10){
+//                System.out.println("Bee Keep on Target");
+            }
+
+
+        }
+    }
+
+    protected class BeeShootGoal extends Goal {
+        private final int SHOOT_TIME = 50;
+        int timeToShoot;
+        int prepareTime = 20;
+        Hornet bee;
+
+        BeeShootGoal(Hornet bee) {
+            this.bee = bee;
+        }
+
+        public boolean canUse() {
+            return bee.getTarget() != null && bee.getTarget().isAlive() && --timeToShoot <= 0;
+        }
+
+        public boolean canContinueToUse() {
+            return canUse();
+        }
+
+        public void start() {
+        }
+
+        public void tick() {
+            bee.lookControl.setLookAt(bee.getTarget());
+            if(TEUtils.angleBetween(bee.getLookAngle(), bee.getTarget().position().subtract(bee.position())) < 0.2f){
+                prepareTime--;
+                if(prepareTime <= 0) {
+                    bee.swing(InteractionHand.MAIN_HAND);
+                    LineProj proj = TEEntities.BEE_STICK_PROJ.get().create(level());
+                    if (proj!=null) {
+                        proj.setOwner(bee);
+                        proj.setPos(bee.position());
+                        proj.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
+                        Vec3 dir = bee.getTarget().getEyePosition().subtract(bee.position());
+                        proj.shoot(dir.x, dir.y, dir.z, 1, 5f);
+                        level().addFreshEntity(proj);
+                    }
+                    timeToShoot = SHOOT_TIME;
+                    prepareTime = 10 + bee.random.nextInt(10);
+                }
+
+            }
+        }
+    }
+
+
     @Override
     protected PathNavigation createNavigation(Level p_level) {
         FlyingPathNavigation flyingpathnavigation = new FlyingPathNavigation(this, p_level) {
@@ -120,57 +239,6 @@ public class Hornet extends AbstractMonster implements FlyingAnimal, IMinion<Hor
         flyingpathnavigation.setCanFloat(false);
         flyingpathnavigation.setCanPassDoors(true);
         return flyingpathnavigation;
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        if (level() instanceof ServerLevel  sl&& this.owner != null && tickCount % 20 == 0) {
-            setTarget(this.owner.getTarget());
-            if(distanceTo(this.owner) > 30 && sl.getBlockState(owner.blockPosition()).is(Blocks.AIR))
-                setPos(this.owner.position());
-        }
-    }
-
-    @Override
-    public boolean doHurtTarget(Entity entity) {
-        DamageSource damagesource = this.damageSources().sting(this);
-        this.swing(InteractionHand.MAIN_HAND);
-        boolean flag = entity.hurt(damagesource, (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
-        if (flag) {
-            Level var5 = this.level();
-            if (var5 instanceof ServerLevel) {
-                ServerLevel serverlevel = (ServerLevel)var5;
-                EnchantmentHelper.doPostAttackEffects(serverlevel, entity, damagesource);
-            }
-            if (entity instanceof LivingEntity) {
-                LivingEntity livingentity = (LivingEntity)entity;
-                livingentity.setStingerCount(livingentity.getStingerCount() + 1);
-                int i = 0;
-                if (this.level().getDifficulty() == Difficulty.NORMAL) {
-                    i = 10;
-                } else if (this.level().getDifficulty() == Difficulty.HARD) {
-                    i = 18;
-                }
-
-                if (i > 0) {
-                    livingentity.addEffect(new MobEffectInstance(MobEffects.POISON, i * 20, 0), this);
-                }
-            }
-            this.playSound(SoundEvents.BEE_STING, 1.0F, 1.0F);
-        }
-        return flag;
-    }
-
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(DefaultAnimations.genericIdleController(this));
-        controllers.add(DefaultAnimations.genericAttackAnimation(this, DefaultAnimations.ATTACK_STRIKE));
-    }
-
-    @Override
-    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
     }
 
     void pathfindRandomlyTowards(BlockPos pos) {
@@ -200,38 +268,37 @@ public class Hornet extends AbstractMonster implements FlyingAnimal, IMinion<Hor
 
     }
 
-    @Override
-    public boolean isFlying() {
-        return true;
-    }
 
-    /* minion API */
-
-    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(Hornet.class, EntityDataSerializers.OPTIONAL_UUID);;
+    // attack
 
     @Override
-    public EntityDataAccessor<Optional<UUID>> getDATA_OWNER_UUID() {
-        return DATA_OWNERUUID_ID;
-    }
+    public boolean doHurtTarget(Entity entity) {
+        DamageSource damagesource = this.damageSources().sting(this);
+        this.swing(InteractionHand.MAIN_HAND);
+        boolean flag = entity.hurt(damagesource, (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+        if (flag) {
+            Level var5 = this.level();
+            if (var5 instanceof ServerLevel) {
+                ServerLevel serverlevel = (ServerLevel)var5;
+                EnchantmentHelper.doPostAttackEffects(serverlevel, entity, damagesource);
+            }
+            if (entity instanceof LivingEntity) {
+                LivingEntity livingentity = (LivingEntity)entity;
+                livingentity.setStingerCount(livingentity.getStingerCount() + 1);
+                int i = 0;
+                if (this.level().getDifficulty() == Difficulty.NORMAL) {
+                    i = 10;
+                } else if (this.level().getDifficulty() == Difficulty.HARD) {
+                    i = 18;
+                }
 
-    @Override
-    public void minion_setOwner(Entity owner){
-        if(owner instanceof QueenBee queenBee) {
-            minion_setOwnerUUID(owner.getUUID());
-            this.owner = queenBee;
+                if (i > 0) {
+                    livingentity.addEffect(new MobEffectInstance(MobEffects.POISON, i * 20, 0), this);
+                }
+            }
+            this.playSound(SoundEvents.BEE_STING, 1.0F, 1.0F);
         }
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        minion_saveData(compound);
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        minion_readData(compound);
+        return flag;
     }
 }
 
