@@ -110,6 +110,8 @@ public class TEChineseProvider extends LanguageProvider {
         // config
         add("terra_entity.options.title", "Terra Entity 配置");
 
+        add("terra_entity.configuration.server", "服务端配置");
+
         add("terra_entity.configuration.server.boss_clear_when_no_target", "丢失目标时清除BOSS");
         add("terra_entity.configuration.server.boss_attributes_multiplier_health", "BOSS属性倍率-生命");
         add("terra_entity.configuration.server.boss_attributes_multiplier_damage", "BOSS属性倍率-伤害");
@@ -118,6 +120,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.server.monster_attributes_multiplier_health", "Monster属性倍率-生命");
         add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster属性倍率-伤害");
 
+        add("terra_entity.configuration.client", "客户端配置");
         add("terra_entity.configuration.client.boss_bar_style", "BOSS血条样式");
 
 

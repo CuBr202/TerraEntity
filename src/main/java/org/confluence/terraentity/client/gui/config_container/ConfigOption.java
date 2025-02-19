@@ -1,7 +1,6 @@
 package org.confluence.terraentity.client.gui.config_container;
 
 import net.minecraft.client.gui.components.*;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
@@ -18,8 +17,10 @@ public abstract class ConfigOption<V, W extends AbstractWidget> {
     public ConfigOption(ForgeConfigSpec.ConfigValue<V> value, W widget) {
 //            this.name = String.join(".", value.getPath().stream().flatMap(s -> Arrays.stream(s.split("\\.")).collect(Collectors.toList())));
         this.name = "terra_entity.configuration.";
-        value.getPath().forEach(s -> this.name += s + ".");
-        this.name = this.name.substring(0, this.name.length() - 1);
+        if(value != null) {
+            value.getPath().forEach(s -> this.name += s + ".");
+            this.name = this.name.substring(0, this.name.length() - 1);
+        }
         this.value = value;
         this.widget = widget;
         this.onInit();
@@ -102,6 +103,25 @@ public abstract class ConfigOption<V, W extends AbstractWidget> {
         }
     }
 
+    // 分隔标签
+    public static class Separator extends ConfigOption<Void, StringWidget> {
+        public Button tabButton;
+        public int location;
+        public Separator(StringWidget widget, int location) {
+            super(null, widget);
+            this.location = location;
+        }
+
+        @Override
+        public void onSave() {
+
+        }
+
+        @Override
+        public void onInit() {
+
+        }
+    }
 
 
 

@@ -38,6 +38,7 @@ public class TEEnglishProvider extends LanguageProvider {
 
         // Config
         add("terra_entity.options.title", "Terra Entity Options");
+        add("terra_entity.configuration.server", "Server Configuration");
 
         add("terra_entity.configuration.server.boss_clear_when_no_target", "Clear Boss When No Target");
         add("terra_entity.configuration.server.boss_attributes_multiplier_health", "Boss Attributes Multiplier-Health");
@@ -47,6 +48,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.server.monster_attributes_multiplier_health", "Monster Attributes Multiplier-Health");
         add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster Attributes Multiplier-Damage");
 
+        add("terra_entity.configuration.client", "Client Configuration");
         add("terra_entity.configuration.client.boss_bar_style", "Boss Health Bar Style");
 
 

@@ -1,13 +1,14 @@
 package org.confluence.terraentity.client.gui.config_container;
 
-import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.layouts.LayoutSettings;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.confluence.terraentity.client.gui.widget.FloatButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public class ConfigScreenBuilder {
     public List<ConfigOption<?,?>> options = new ArrayList<>();
+    public List<ConfigOption.Separator> tabs = new ArrayList<>();
     private ConfigOption<?,?> lastOption;
     ConfigScreen screen;
 
@@ -30,15 +32,31 @@ public class ConfigScreenBuilder {
     }
 
     public ConfigScreenBuilder comment(String comment){
-        lastOption.displayText = comment;
+        lastOption.setDisplayText(comment);
         return this;
     }
 
     public void build() {
         options.forEach(op->{
-            op.label = new StringWidget(Component.translatable(op.name), screen.getMinecraft().font);
-            screen.grid.addChild(op.label);
-            screen.grid.addChild(op.widget);
+            if(op instanceof ConfigOption.Separator separator) {
+                op.label = new StringWidget(Component.empty(), screen.getMinecraft().font);
+                screen.grid.addChild(op.label, LayoutSettings.defaults().padding(10));
+                screen.grid.addChild(op.widget);
+                tabs.add(separator);
+            }
+            else {
+                op.label = new StringWidget(Component.translatable(op.name), screen.getMinecraft().font);
+                screen.grid.addChild(op.label);
+                screen.grid.addChild(op.widget);
+            }
+
+        });
+        tabs.forEach(tab -> {
+            tab.tabButton = new FloatButton(Button.builder(
+                    tab.widget.getMessage().copy(),
+                    p->screen.setScrollAmount(tab.location)
+            ).width(screen.tabWidth));
+            screen.tabGrid.addChild(tab.tabButton);
         });
     }
 
@@ -76,8 +94,17 @@ public class ConfigScreenBuilder {
         lastOption = opt;
         return this;
     }
+
     public ConfigScreenBuilder addCheckBox(ForgeConfigSpec.ConfigValue<Boolean> option) {
         var opt = new ConfigOption.BooleanToggleModifier(option, new Checkbox(0,0,100,20,Component.empty(), option.get()));
+        options.add(opt);
+        lastOption = opt;
+        return this;
+    }
+
+    public ConfigScreenBuilder addTab(String tabName, int location) {
+        var tab = new StringWidget(100,20,Component.translatable("terra_entity.configuration."+tabName).withStyle(Style.EMPTY.withBold(true).withColor(0x85c9a2)), screen.getMinecraft().font);
+        var opt = new ConfigOption.Separator(tab, location);
         options.add(opt);
         lastOption = opt;
         return this;

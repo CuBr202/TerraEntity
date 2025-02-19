@@ -32,7 +32,7 @@ public class CustomizeBossHealthBar {
         int x = (int) (Minecraft.getInstance().getWindow().getWidth() * 0.5f / Minecraft.getInstance().getWindow().getGuiScale() - w * 0.5f);
         int y = event.getY();
 
-        float progress = event.getBossEvent().getProgress();
+        float progress = Math.min(1.0f, event.getBossEvent().getProgress());
         int from = 37;
         int to = w - from;
         int pos = (int) (from + (to - from) * progress);

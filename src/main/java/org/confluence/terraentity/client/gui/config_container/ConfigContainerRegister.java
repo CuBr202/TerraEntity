@@ -14,8 +14,14 @@ public class ConfigContainerRegister {
     public static ConfigScreenBuilder init(ConfigScreen screen){
         ConfigScreenBuilder builder;
         builder = ConfigScreenBuilder.builder(screen);
+
+        builder.addTab("client",45);
+
         builder.addIntSliderEditBox(ClientConfig.BossBarStyle,0 , 2)
                 .comment("0: Default, 1: Still Style, 2: Dynamic Style");
+
+        builder.addTab("server",98);
+
         builder.addDoubleEditBox(ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE)
                 .comment("0.0625 ~ 10.0");
         builder.addDoubleEditBox(ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH)

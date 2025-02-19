@@ -27,6 +27,12 @@ public class ShaderUtil {
         bufferbuilder.vertex(matrix4f, (float)x1, (float)y2, (float)blitOffset).uv(minU, maxV).endVertex();
         bufferbuilder.vertex(matrix4f, (float)x2, (float)y2, (float)blitOffset).uv(maxU, maxV).endVertex();
         bufferbuilder.vertex(matrix4f, (float)x2, (float)y1, (float)blitOffset).uv(maxU, minV).endVertex();
+
+//        bufferbuilder.vertex(0.0, (double)f1, 0.0).uv(0.0F, 0.0F).color(255, 255, 255, 255).endVertex();
+//        bufferbuilder.vertex((double)f, (double)f1, 0.0).uv(f2, 0.0F).color(255, 255, 255, 255).endVertex();
+//        bufferbuilder.vertex((double)f, 0.0, 0.0).uv(f2, f3).color(255, 255, 255, 255).endVertex();
+//        bufferbuilder.vertex(0.0, 0.0, 0.0).uv(0.0F, f3).color(255, 255, 255, 255).endVertex();
+
         BufferUploader.drawWithShader(bufferbuilder.end());
     }
 
