@@ -433,6 +433,11 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         }
     }
 
+    @Override
+    public boolean canAttack(LivingEntity entity) {
+        return super.canAttack(entity) && !(entity instanceof EaterOfWorldsSegment)  && !(entity instanceof EaterOfWorlds);
+    }
+
     @Override//boss条更新
     protected void customServerAiStep() {
         super.customServerAiStep();

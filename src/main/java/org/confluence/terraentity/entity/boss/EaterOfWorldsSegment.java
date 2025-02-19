@@ -106,6 +106,11 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
         }
     }
 
+    @Override
+    public boolean canAttack(LivingEntity entity) {
+        return super.canAttack(entity) && !(entity instanceof EaterOfWorldsSegment)  && !(entity instanceof EaterOfWorlds);
+    }
+
 
     @Override // 受伤音效
     protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
