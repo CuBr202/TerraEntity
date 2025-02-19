@@ -3,6 +3,7 @@ package org.confluence.terraentity.entity.ai;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
@@ -13,7 +14,7 @@ import org.confluence.terraentity.utils.FloatRGB;
  * <p>
  * 所有boss都应该实现这个接口
  */
-public interface Boss {
+public interface Boss extends Enemy {
     default boolean shouldShowMessage(){
         return isMainBody();
     }
