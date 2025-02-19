@@ -1,11 +1,5 @@
 package org.confluence.terraentity.client;
 
-import com.mojang.blaze3d.pipeline.MainTarget;
-import com.mojang.blaze3d.pipeline.TextureTarget;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -16,13 +10,9 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.client.post.BrainTranslucent;
-import org.confluence.terraentity.mixin.accessor.GameRendererAccessor;
-import org.confluence.terraentity.mixinauxiliary.HotSwap;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
-import static org.confluence.terraentity.client.ClientConfig.bossBarStyle;
+import static org.confluence.terraentity.config.ClientConfig.bossBarStyle;
 
 @EventBusSubscriber(modid = MODID,bus = EventBusSubscriber.Bus.GAME,value = Dist.CLIENT)
 public class RenderEvent {

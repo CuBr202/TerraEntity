@@ -34,6 +34,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.ai.IMinion;
 import org.confluence.terraentity.entity.boss.QueenBee;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -44,7 +45,7 @@ import java.util.EnumSet;
 import java.util.Optional;
 import java.util.UUID;
 
-public class Hornet extends AbstractMonster implements FlyingAnimal {
+public class Hornet extends AbstractMonster implements FlyingAnimal, IMinion<Hornet> {
     QueenBee owner;
 
     public Hornet(EntityType<? extends Monster> type, Level level) {
@@ -71,6 +72,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal {
         builder.define(DATA_OWNERUUID_ID, Optional.empty());
 
     }
+
     class BeeWanderGoal extends Goal {
         private static final int WANDER_THRESHOLD = 22;
 
@@ -167,11 +169,6 @@ public class Hornet extends AbstractMonster implements FlyingAnimal {
         controllers.add(DefaultAnimations.genericAttackAnimation(this, DefaultAnimations.ATTACK_STRIKE));
     }
 
-    public void setOwner(QueenBee owner) {
-        this.owner = owner;
-        this.setOwnerUUID(owner.getUUID());
-    }
-
     @Override
     protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
     }
@@ -208,44 +205,33 @@ public class Hornet extends AbstractMonster implements FlyingAnimal {
         return true;
     }
 
+    /* minion API */
 
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(Hornet.class, EntityDataSerializers.OPTIONAL_UUID);;
 
-    @Nullable
-    public UUID getOwnerUUID() {
-        return (UUID)((Optional)this.entityData.get(DATA_OWNERUUID_ID)).orElse((Object)null);
+    @Override
+    public EntityDataAccessor<Optional<UUID>> getDATA_OWNER_UUID() {
+        return DATA_OWNERUUID_ID;
     }
 
-    public void setOwnerUUID(@Nullable UUID uuid) {
-        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(uuid));
+    @Override
+    public void minion_setOwner(Entity owner){
+        if(owner instanceof QueenBee queenBee) {
+            minion_setOwnerUUID(owner.getUUID());
+            this.owner = queenBee;
+        }
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        if (this.getOwnerUUID() != null) {
-            compound.putUUID("Owner", this.getOwnerUUID());
-        }
+        minion_saveData(compound);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        UUID uuid=null;
-        if (compound.hasUUID("Owner")) {
-            uuid = compound.getUUID("Owner");
-        } else if(getServer()!=null) {
-            String s = compound.getString("Owner");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s);
-        }
-        if(uuid!=null) {
-            this.setOwnerUUID(uuid);
-            if (level() instanceof ServerLevel sl) {
-                Entity owner = sl.getEntity(uuid);
-                if (owner instanceof QueenBee bee)
-                    setOwner(bee);
-            }
-        }
+        minion_readData(compound);
     }
 }
 

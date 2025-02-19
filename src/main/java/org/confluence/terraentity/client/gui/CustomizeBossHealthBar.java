@@ -15,7 +15,7 @@ import org.confluence.terraentity.mixinauxiliary.IShaderInstance;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.confluence.terraentity.client.ClientConfig.bossBarStyle;
+import static org.confluence.terraentity.config.ClientConfig.bossBarStyle;
 
 
 public class CustomizeBossHealthBar {

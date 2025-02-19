@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.ServerConfig;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
@@ -269,6 +269,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                     return false;
                 }
             };
+            eye.minion_setOwner(this);
             eye.setHealth(8);
             eye.getAttribute(Attributes.MAX_HEALTH).setBaseValue(8);
             eye.setPos(position().add(getForward().normalize().scale(-1)));

@@ -2,14 +2,15 @@ package org.confluence.terraentity.entity.ai.goal;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeWanderGoal;
 
 public class LookForwardWanderFlyGoal extends DemonEyeWanderGoal {
 
 
-    public LookForwardWanderFlyGoal(Mob mob,float speed) {
+    float offsetY;
+    public LookForwardWanderFlyGoal(Mob mob,float speed, float offsetY) {
         super(mob,speed);
+        this.offsetY = offsetY;
 
     }
     public boolean canUse() {
@@ -22,7 +23,7 @@ public class LookForwardWanderFlyGoal extends DemonEyeWanderGoal {
     public float getOffsetY(){
         float period = 10f;
         float radians = Mth.TWO_PI * (locateCount % period) / period;
-        return 2.57f * Mth.cos(radians)-10;
+        return 2.57f * Mth.cos(radians)-3 + this.offsetY;
     }
     public void tick(){
         super.tick();

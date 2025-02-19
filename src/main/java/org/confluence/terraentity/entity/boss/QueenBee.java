@@ -92,7 +92,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                     if(skills.tick % 10 == 0) {
                         Hornet bee = TEEntities.HORNET.get().create(level());
                         if (bee!=null) {
-                            bee.setOwner(e);
+                            bee.minion_setOwner(e);
                             bee.setPos(e.position());
                             bee.setYRot(e.getYRot());
                             level().addFreshEntity(bee);
