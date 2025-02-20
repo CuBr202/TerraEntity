@@ -17,6 +17,7 @@ import org.confluence.terraentity.entity.ai.goal.JumpAttack;
 import org.confluence.terraentity.entity.ai.goal.JumpOverBlockGoal;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TESounds;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.List;
@@ -29,6 +30,8 @@ public class LandMonsterPrefab extends AbstractPrefab {
     public static Supplier<AbstractMonster.Builder> FACE_MONSTER_BUILDER =
             ()->new LandMonsterPrefab(36,2,13,64,0.7f,0.1f).getPrefab()
                     .setStepHeight(3.2f)
+                    .setAmbientSound(TESounds.FACE_HOOT)
+                    .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .setJumpStrength(0.8f)
                     .addTarget((t,e)-> t.addGoal(1, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy)))
                     .addGoal((g,e)-> {
@@ -64,6 +67,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
     public static Supplier<AbstractMonster.Builder> BLOOD_ZOMBIE_BUILDER =
             ()->new LandMonsterPrefab(39,2,10,60,0.5f,0.1f).getPrefab()
                     .setMovementSpeed(0.15f)
+                    .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .addTarget((t,e)-> {
                         t.addGoal(1,new AccelerateOnSeeingGoal(e,0.25f));
                         t.addGoal(2, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
