@@ -49,6 +49,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.tomb_crawler", "墓穴爬虫");
         add("entity.terra_entity.cave_bat", "洞穴蝙蝠");
         add("entity.terra_entity.jungle_bat", "丛林蝙蝠");
+        add("entity.terra_entity.hornet", "黄蜂");
         add("entity.terra_entity.hell_bat", "地狱蝙蝠");
         add("entity.terra_entity.ice_bat", "冰雪蝙蝠");
         add("entity.terra_entity.spore_bat", "孢子蝙蝠");
@@ -62,6 +63,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.brain_fake", "克苏鲁之脑幻象");
         add("entity.terra_entity.visual_neuron", "视神经元");
         add("entity.terra_entity.queue_bee", "蜂王");
+        add("entity.terra_entity.little_hornet", "小黄蜂");
 
         add("effect.terra_entity.demonic_thoughts", "邪念");
 
@@ -93,6 +95,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.CAVE_BAT_SPAWN_EGG.get(), "洞穴蝙蝠刷怪蛋");
         add(TEItems.ICE_BAT_SPAWN_EGG.get(), "冰雪蝙蝠刷怪蛋");
         add(TEItems.JUNGLE_BAT_SPAWN_EGG.get(), "丛林蝙蝠刷怪蛋");
+        add(TEItems.HORNET_SPAWN_EGG.get(), "黄蜂刷怪蛋");
         add(TEItems.HELL_BAT_SPAWN_EGG.get(), "地狱蝙蝠刷怪蛋");
         add(TEItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");
         add(TEItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");

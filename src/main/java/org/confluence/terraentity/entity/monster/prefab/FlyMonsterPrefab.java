@@ -116,8 +116,10 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
     public static Supplier<AbstractMonster.Builder> BEE_BUILDER  =
-            ()->new AbstractPrefab(20,1,3,32,0,0.2f)
+            ()->new AbstractPrefab(23,3,13,32,0,0.55f)
                     .getPrefab()
+                    .setHurtSound(TESounds.ROUTINE_HURT)
+                    .setDeathSound(TESounds.ROUTINE_DEATH)
                     .setMovementSpeed(0.5f)
                     .setNoGravity()
             ;
