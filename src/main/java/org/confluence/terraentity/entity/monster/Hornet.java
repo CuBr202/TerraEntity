@@ -1,8 +1,6 @@
 package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Difficulty;
@@ -61,13 +59,6 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-    }
-
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(DefaultAnimations.genericIdleController(this));
         controllers.add(DefaultAnimations.genericAttackAnimation(this, DefaultAnimations.ATTACK_STRIKE));
@@ -83,20 +74,6 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         return true;
     }
 
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-    }
 
     // move control
 

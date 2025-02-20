@@ -86,9 +86,10 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER,1.6f,1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.9F,0.9F);
     public static final DeferredHolder<EntityType<?>, EntityType<VisualNeuron>> VISUAL_NEURON = registerEntity("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
+        // 蜜蜂
     public static final DeferredHolder<EntityType<?>, EntityType<Hornet>> HORNET = registerEntity("hornet", (e,l)->new Hornet(e,l, FlyMonsterPrefab.BEE_BUILDER.get().setHealth(32)), 0.8f, 1.2f);
-
     public static final DeferredHolder<EntityType<?>, EntityType<LittleHornet>> LITTLE_HORNET = registerEntity("little_hornet", LittleHornet::new, 0.8f, 1.2f);
+        // 蝙蝠
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CAVE_BAT = registerSimpleMonster("cave_bat", FlyMonsterPrefab.CAVE_BAT_BUILDER,1.6f,1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> JUNGLE_BAT = registerSimpleMonster("jungle_bat", FlyMonsterPrefab.JUNGLE_BAT_BUILDER,1.6f,1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> HELL_BAT = registerSimpleMonster("hell_bat", FlyMonsterPrefab.HELL_BAT_BUILDER,1.6f,1.6f);
@@ -102,9 +103,11 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FACE_MONSTER = registerSimpleMonster("face_monster", LandMonsterPrefab.FACE_MONSTER_BUILDER,0.75F,1.95F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> BLOOD_TUMORS = registerSimpleMonster("blood_tumors", LandMonsterPrefab.BLOOD_TUMORS,0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> BLOOD_ZOMBIE = registerSimpleMonster("blood_zombie", LandMonsterPrefab.BLOOD_ZOMBIE_BUILDER,0.75F,1.95F);
+        // 蠕虫
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> DEVOURER = registerEntity("devourer", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get()),2F,2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> TOMB_CRAWLER = registerEntity("tomb_crawler", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(16).setAttackDamage(4).setArmor(2)),2F,2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> GIANT_WORM = registerEntity("giant_worm", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(31).setAttackDamage(9).setArmor(3)),2F,2F);
+
     public static final DeferredHolder<EntityType<?>, EntityType<GiantShelly>> GIANT_SHELLY = registerEntity("giant_shelly", GiantShelly::new,0.8F,0.8F);
 
 
@@ -117,6 +120,8 @@ public final class TEEntities {
     public static DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AbstractMonster.Builder> builder) {
         return registerSimpleMonster(name, builder, 1, 1);
     }
+
+/* *********************************************************************** */
 
     // tip 召唤物
     public static final DeferredHolder<EntityType<?>, EntityType<SummonSlime>> SUMMON_SLIME = registerEntity("slime_baby", SummonSlime::new ,0.5F,0.5F);
@@ -144,6 +149,9 @@ public final class TEEntities {
     public static <T extends Mob> DeferredHolder<EntityType<?>,EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> entityFactory, MobCategory category, float width, float height){
         return ENTITIES.register(name, () -> EntityType.Builder.of(entityFactory, category).sized(width, height).clientTrackingRange(10).build(Key(name)));
     }
+
+
+/* *********************************************************************** */
 
     // tip 弹幕
     public static final DeferredHolder<EntityType<?>, EntityType<ThrowableProj>> CABBAGE_PROJ = registerProj("cabbage_proj",(e,l)->

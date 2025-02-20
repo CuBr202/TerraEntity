@@ -19,16 +19,16 @@ public class GiantShellyModel<T extends Entity & IVariant<Integer> & GeoEntity> 
     }
 
     @Override
-    public ResourceLocation getModelResource(T animatable) {
+    public ResourceLocation getModelResource(T entity) {
         return model;
     }
 
     @Override
-    public ResourceLocation getTextureResource(T animatable) {
-        return animatable.getTexture();
+    public ResourceLocation getTextureResource(T entity) {
+        return entity.getTexture();
     }
     @Override
-    public ResourceLocation getAnimationResource(T animatable) {
+    public ResourceLocation getAnimationResource(T entity) {
         return animation;
     }
 }
