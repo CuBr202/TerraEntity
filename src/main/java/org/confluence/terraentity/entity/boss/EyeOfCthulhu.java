@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.Boss;
+import org.confluence.terraentity.entity.ai.IAutoLeaveMob;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
@@ -23,7 +24,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 
 
 @SuppressWarnings("all")
-public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements GeoEntity, Boss {
+public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements GeoEntity, Boss, IAutoLeaveMob {
     private static final float MAX_HEALTHS = 728f;
     private static final float DAMAGE = 4f;//一阶段接触伤害
     private static final float CRAZY_DAMAGE = 6f;//二阶段接触伤害
@@ -252,8 +253,14 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         addSkill(stage2_stare); // 5
         addSkill(state2_dash); // 6
     }
-    
-    
+
+    public void tick() {
+         super.tick();
+         if(!this.level().isClientSide && shouldLeave()){
+             doLeave();
+         }
+    }
+
     @Override
     public boolean canAttack(LivingEntity target) {
         return super.canAttack(target) && !(target instanceof DemonEye);
@@ -296,5 +303,16 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
             skills.forceStartIndex(4); // 强制执行技能序列
         }
         return super.hurt(pSource, pAmount);
+    }
+
+    @Override
+    public boolean shouldLeave() {
+        return IAutoLeaveMob.super.shouldLeave() && level().isDay();
+    }
+
+    @Override
+    public void doLeave() {
+        dashComponent.setDirection(new Vec3(Math.cos(tickCount * 0.1) * 2,1,Math.sin(tickCount * 0.1) * 2));
+        dashComponent.uniformMove(1);
     }
 }
