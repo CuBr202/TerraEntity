@@ -36,10 +36,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVar
                 .setMovementSpeed(0.1f)
                 .setAttachIncrease(0.2f)
         );
-
-        this._attackInternal = 1;
-        this._detectInternal = 1;
-
+        this.collisionProperties = new CollisionProperties(1,20,1);
     }
     MobSkill<GiantShelly> walk;
     MobSkill<GiantShelly> free;

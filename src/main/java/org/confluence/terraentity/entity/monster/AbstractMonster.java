@@ -6,8 +6,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -17,7 +19,10 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.neoforged.neoforge.common.Tags;
+import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -34,10 +39,9 @@ import java.util.function.Supplier;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
-public class AbstractMonster extends Monster implements GeoEntity {
-    protected int attackInternal = 0;
-    protected int _attackInternal = 20;
-    protected int _detectInternal = 10;
+public class AbstractMonster extends Monster implements GeoEntity , ICollisionAttackEntity<AbstractMonster> {
+
+    protected CollisionProperties collisionProperties = new CollisionProperties(10, 20, 0);
     public Builder builder;
     protected boolean dirty = true;
 
@@ -251,37 +255,21 @@ public class AbstractMonster extends Monster implements GeoEntity {
         super.tick();
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
         if(!level().isClientSide && builder.attachAttack && isAlive()){
-            if(--attackInternal < 0){
-                attackInternal = _detectInternal;
-                doCollisionAttack(this, builder.attackIncrease, 1);
-            }
+            doCollisionAttack(this::canAttack,
+                    this::doHurtTarget
+                    );
         }
-    }
-
-    public void doCollisionAttack(Entity entity, float expand, float modify){
-        var entities = level().getEntities(entity, entity.getBoundingBox().inflate(expand));
-        if (!entities.isEmpty()) {
-            for (var e : entities) {
-                if (e instanceof LivingEntity living && canAttack(living) && !(e instanceof Monster)){
-                    doAttack(living, modify);
-                }
-            }
-        }
-    }
-
-    public void doAttack(LivingEntity entity, float modify) {
-        attackInternal = _attackInternal;
-        entity.hurt(this.damageSources().generic(), (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue() * modify);
-    }
-
-    public void doAttack(LivingEntity entity) {
-        doAttack(entity, 1);
     }
 
     @Override
     public boolean canAttack(LivingEntity entity) {
         return entity.canBeSeenAsEnemy() &&
                         entity != this &&!(entity instanceof AbstractTerraBossBase);
+    }
+
+    @Override
+    public CollisionProperties getCollisionProperties() {
+        return collisionProperties;
     }
 
     public static class Builder {

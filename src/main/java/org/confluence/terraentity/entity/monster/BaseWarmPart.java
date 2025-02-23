@@ -8,12 +8,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.neoforged.neoforge.entity.PartEntity;
+import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity {
+public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICollisionAttackEntity<BaseWarmPart> {
 
     private final EntityDimensions size;
     public boolean isTail = false;
@@ -103,5 +104,11 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+    CollisionProperties collisionProperties = new CollisionProperties(10,20,0);
+    @Override
+    public CollisionProperties getCollisionProperties() {
+        return collisionProperties;
     }
 }

@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.monster.prefab;
 
 import com.google.common.base.Suppliers;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.goal.DashGoal;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.ai.goal.MeleeAttackNoLookGoal;
@@ -68,52 +69,17 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     .setHurtSound(TESounds.ROUTINE_HURT)
                     .setDeathSound(TESounds.ROUTINE_DEATH)
                     .addGoal((g,e)->{
-                        g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
-                                0.02f,5,10,45));
-
+                        g.addGoal(0, new DashGoal(e,1f,0.5f,30,
+                                0.02f,20,20,45));
+                    })
+                    .setTicker(e->{
+                        e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));
                     })
             ;
+    public static Supplier<AbstractMonster.Builder> JUNGLE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(17).setAttackDamage(10);
+    public static Supplier<AbstractMonster.Builder> HELL_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(23).setArmor(2).setAttackDamage(18);
+    public static Supplier<AbstractMonster.Builder> ICE_BAT_BUILDER  =()-> copyFrom(CAVE_BAT_BUILDER).setHealth(15).setAttackDamage(9);
 
-    public static Supplier<AbstractMonster.Builder> SPORE_BAT_BUILDER  =
-            ()->new FlyMonsterPrefab(8,1,6,60,0.2f,0.5f).getPrefab()
-                    .setHurtSound(TESounds.ROUTINE_HURT)
-                    .setDeathSound(TESounds.ROUTINE_DEATH)
-                    .addGoal((g,e)->{
-                        g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
-                                0.02f,5,10,45));
-
-                    })
-            ;
-    public static Supplier<AbstractMonster.Builder> JUNGLE_BAT_BUILDER =
-            ()->new FlyMonsterPrefab(17,1,10,60,0.2f,0.5f).getPrefab()
-                    .setHurtSound(TESounds.ROUTINE_HURT)
-                    .setDeathSound(TESounds.ROUTINE_DEATH)
-                    .addGoal((g,e)->{
-                        g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
-                                0.02f,5,10,45));
-
-                    })
-            ;
-    public static Supplier<AbstractMonster.Builder> HELL_BAT_BUILDER  =
-            ()->new FlyMonsterPrefab(23,2,18,60,0.2f,0.5f).getPrefab()
-                    .setHurtSound(TESounds.ROUTINE_HURT)
-                    .setDeathSound(TESounds.ROUTINE_DEATH)
-                    .addGoal((g,e)->{
-                        g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
-                                0.02f,5,10,45));
-
-                    })
-            ;
-    public static Supplier<AbstractMonster.Builder> ICE_BAT_BUILDER  =
-            ()->new FlyMonsterPrefab(15,1,9,60,0.2f,0.5f).getPrefab()
-                    .setHurtSound(TESounds.ROUTINE_HURT)
-                    .setDeathSound(TESounds.ROUTINE_DEATH)
-                    .addGoal((g,e)->{
-                        g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
-                                0.02f,5,10,45));
-
-                    })
-            ;
 
     public static Supplier<AbstractMonster.Builder> BEE_BUILDER  =
             ()->new AbstractPrefab(23,3,13,32,0,0.55f)

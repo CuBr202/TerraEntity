@@ -2,7 +2,6 @@ package org.confluence.terraentity.entity.ai;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.confluence.terraentity.mixinauxiliary.SelfGetter;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -11,7 +10,11 @@ import java.util.function.Predicate;
  * <h1>包围盒碰撞接口</h1>
  * @param <T> 实体类型
  */
-public interface ICollisionAttackEntity<T extends Entity> extends SelfGetter<T> {
+public interface ICollisionAttackEntity<T extends Entity>{
+
+    default T collision$getSelf(){
+        return (T) this;
+    }
 
     CollisionProperties getCollisionProperties();
 
@@ -21,12 +24,12 @@ public interface ICollisionAttackEntity<T extends Entity> extends SelfGetter<T> 
     }
 
     default void doCollisionAttack(Predicate<LivingEntity> filter, Consumer<Entity> attackCallback){
-        if(te$getSelf().level().isClientSide) return;
+        if(collision$getSelf().level().isClientSide) return;
         getCollisionProperties().reduceAttackInterval();
-        if (canCollisionHurt() && !te$getSelf().level().isClientSide && getCollisionProperties().canAttack()) {
+        if (canCollisionHurt() && !collision$getSelf().level().isClientSide && getCollisionProperties().canAttack()) {
             getCollisionProperties().reDetect();
             // 包围盒检测造成伤害
-            var entities = te$getSelf().level().getEntities(te$getSelf(), te$getSelf().getBoundingBox().inflate(getCollisionProperties().attackRangeExtent), e-> e instanceof LivingEntity && e!= te$getSelf());
+            var entities = collision$getSelf().level().getEntities(collision$getSelf(), collision$getSelf().getBoundingBox().inflate(getCollisionProperties().attackRangeExtent), e-> e instanceof LivingEntity && e!= collision$getSelf());
             if (!entities.isEmpty()) {
                 for (var e : entities) {
                     if ( e instanceof LivingEntity living && filter.test(living) ){

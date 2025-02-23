@@ -32,7 +32,7 @@ public class VisualNeuron extends AbstractMonster{
         super(type, level, new AbstractPrefab(44,2,9,0,0,0.1f)
                 .getPrefab().setNoGravity());
         this.noPhysics = true;
-        _detectInternal = 1;
+        this.collisionProperties = new CollisionProperties(1,20,0);
     }
 
     public void setOwner(BrainOfCthulhu owner) {
@@ -121,10 +121,4 @@ public class VisualNeuron extends AbstractMonster{
         return TESounds.VISUAL_NEURON_HURT.get();
     }
 
-
-    public void doAttack(LivingEntity entity) {
-        if(state == 1 && backDelay <= 0) return;
-        super.doAttack(entity);
-        if(state == 0) state = 1;
-    }
 }
