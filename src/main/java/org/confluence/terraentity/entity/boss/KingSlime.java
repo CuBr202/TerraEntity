@@ -8,19 +8,22 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.JumpControl;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.IBossFSM;
+import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
@@ -31,6 +34,9 @@ import org.confluence.terraentity.utils.FloatRGB;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
+import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.confluence.terraentity.utils.TEUtils.isAtLeastExpert;
@@ -38,7 +44,7 @@ import static org.confluence.terraentity.utils.TEUtils.switchByDifficulty;
 
 
 @SuppressWarnings("all")
-public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss {
+public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss, ICollisionAttackEntity<KingSlime> {
     private static final int COLOR_INT = 0x73bcf4;
     // 缩小/膨胀时长，单位：刻
     private static final int SHRINK_ENLARGE_DURATION = 20;
@@ -206,7 +212,6 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
             }catch (Exception e){}
         }
         this.xpReward = 500;
-
     }
 
     public KingSlime(Level level) {
@@ -274,6 +279,13 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
 //            ModUtils.testMessage(level(), this.jumping + ", " + getJumpDelay());
         }
     }
+
+    protected void registerGoals() {
+        this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
+        super.registerGoals();
+    }
+
+
     @Override
     public void tick() {
         // 先进行super.tick()
@@ -299,6 +311,10 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         // 额外的AI行为
         if (! isNoAi()) {
             AI();
+            doCollisionAttack(
+                    living -> canAttack(living),
+                    e->doHurtTarget(e)
+            );
         }
     }
 
@@ -317,6 +333,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     private int getSlimesLeft() {
         return (int) (getHealth() / getMaxHealth() * TOTAL_SPLITS[difficultyIdx]);
     }
+
     private void spawnSlime(LivingEntity target) {
         if (level() instanceof ServerLevel serverLevel) {
             BaseSlime slime = new BaseSlime(TEEntities.BLUE_SLIME.get(), serverLevel, COLOR_INT, 2);
@@ -398,5 +415,124 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     @Override
     public float[] getBloodColor() {
         return BLOOD_COLOR;
+    }
+
+    CollisionProperties collisionProperties = new CollisionProperties(5,5,1);
+    @Override
+    public CollisionProperties getCollisionProperties() {
+        return collisionProperties;
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        return super.canAttack(target) && !(target instanceof Slime);
+    }
+
+
+    static class HurtByTargetGoal extends TargetGoal {
+        private static final TargetingConditions HURT_BY_TARGETING = TargetingConditions.forCombat().ignoreLineOfSight().ignoreInvisibilityTesting();
+        private static final int ALERT_RANGE_Y = 10;
+        private boolean alertSameType;
+        private int timestamp;
+        private final Class<?>[] toIgnoreDamage;
+        @Nullable
+        private Class<?>[] toIgnoreAlert;
+
+        public HurtByTargetGoal(Slime mob, Class<?>... toIgnoreDamage) {
+            super(mob, true);
+            this.toIgnoreDamage = toIgnoreDamage;
+            this.setFlags(EnumSet.of(Flag.TARGET));
+        }
+
+        public boolean canUse() {
+            int i = this.mob.getLastHurtByMobTimestamp();
+            LivingEntity livingentity = this.mob.getLastHurtByMob();
+            if (i != this.timestamp && livingentity != null) {
+                if (livingentity.getType() == EntityType.PLAYER && this.mob.level().getGameRules().getBoolean(GameRules.RULE_UNIVERSAL_ANGER)) {
+                    return false;
+                } else {
+                    Class[] var3 = this.toIgnoreDamage;
+                    int var4 = var3.length;
+
+                    for(int var5 = 0; var5 < var4; ++var5) {
+                        Class<?> oclass = var3[var5];
+                        if (oclass.isAssignableFrom(livingentity.getClass())) {
+                            return false;
+                        }
+                    }
+
+                    return this.canAttack(livingentity, HURT_BY_TARGETING);
+                }
+            } else {
+                return false;
+            }
+        }
+
+        public HurtByTargetGoal setAlertOthers(Class<?>... reinforcementTypes) {
+            this.alertSameType = true;
+            this.toIgnoreAlert = reinforcementTypes;
+            return this;
+        }
+
+        public void start() {
+            this.mob.setTarget(this.mob.getLastHurtByMob());
+            this.targetMob = this.mob.getTarget();
+            this.timestamp = this.mob.getLastHurtByMobTimestamp();
+            this.unseenMemoryTicks = 300;
+            if (this.alertSameType) {
+                this.alertOthers();
+            }
+
+            super.start();
+        }
+
+        protected void alertOthers() {
+            double d0 = this.getFollowDistance();
+            AABB aabb = AABB.unitCubeFromLowerCorner(this.mob.position()).inflate(d0, 10.0, d0);
+            List<? extends Mob> list = this.mob.level().getEntitiesOfClass(this.mob.getClass(), aabb, EntitySelector.NO_SPECTATORS);
+            Iterator iterator = list.iterator();
+
+            while(true) {
+                Mob mob;
+                boolean flag;
+                do {
+                    do {
+                        do {
+                            do {
+                                do {
+                                    if (!iterator.hasNext()) {
+                                        return;
+                                    }
+
+                                    mob = (Mob)iterator.next();
+                                } while(this.mob == mob);
+                            } while(mob.getTarget() != null);
+                        } while(this.mob instanceof TamableAnimal && ((TamableAnimal)this.mob).getOwner() != ((TamableAnimal)mob).getOwner());
+                    } while(mob.isAlliedTo(this.mob.getLastHurtByMob()));
+
+                    if (this.toIgnoreAlert == null) {
+                        break;
+                    }
+
+                    flag = false;
+                    Class[] var8 = this.toIgnoreAlert;
+                    int var9 = var8.length;
+
+                    for(int var10 = 0; var10 < var9; ++var10) {
+                        Class<?> oclass = var8[var10];
+                        if (mob.getClass() == oclass) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                } while(flag);
+
+                this.alertOther(mob, this.mob.getLastHurtByMob());
+            }
+        }
+
+        protected void alertOther(Mob mob, LivingEntity target) {
+            mob.setTarget(target);
+        }
     }
 }

@@ -58,9 +58,7 @@ public class BrainOfCthulhuRenderer extends GeoBossRenderer<BrainOfCthulhu,GeoBo
             bf.bufferSource().endBatch();
 
             target.unbindWrite();
-
             Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
-
         }else{
             super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
         }

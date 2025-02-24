@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("removal")
 public class GeoBossModel<T extends AbstractTerraBossBase> extends GeoModel<T> {
     private final ResourceLocation MODEL ;
-    private final ResourceLocation TEXTURES ;
+    protected ResourceLocation TEXTURES ;
     private final ResourceLocation ANIMATION ;
 
     public GeoBossModel(Supplier<EntityType<T>> entityType) {

@@ -80,11 +80,13 @@ public class BloodySpore extends Creeper implements GeoEntity {
             for (int i = 0; i < number; i++){
                 //summon
                 Entity summon = TEEntities.BLOOD_TUMORS.get().create(level());
-                summon.setPos(this.getX(), this.getY(), this.getZ());
+                if (summon!=null) {
+                    summon.setPos(this.getX(), this.getY(), this.getZ());
 
-                Vec3 dir = new Vec3(Math.sin((f*+i*1)*3.14159)*0.3,random.nextDouble()*0.5+0.2f,Math.cos((f*+i*1)*3.14159)*0.3);
-                summon.addDeltaMovement(dir);
-                level().addFreshEntity(summon);
+                    Vec3 dir = new Vec3(Math.sin((f * +i * 1) * 3.14159) * 0.3, random.nextDouble() * 0.5 + 0.2f, Math.cos((f * +i * 1) * 3.14159) * 0.3);
+                    summon.addDeltaMovement(dir);
+                    level().addFreshEntity(summon);
+                }
             }
             this.discard();
         }

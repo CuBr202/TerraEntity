@@ -21,9 +21,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
@@ -66,7 +68,11 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
             return pLevel.getBrightness(LightLayer.SKY, pPos) == 0 && pPos.getY() > 30;
         } else if (type == TEEntities.BLACK_SLIME.get()) {
             return pLevel.getBrightness(LightLayer.SKY, pPos) == 0 && pPos.getY() <= 30;
+        } else if (type == TEEntities.LAVA_SLIME.get()) {  // 新增岩浆史莱姆的限制条件
+            int y = pPos.getY();
+            return y >= 30 && y <= 100;
         }
+
         // 剩下的条件用方块的isValidSpawn方法
         return false;
     }
@@ -92,6 +98,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         }
         super.tick();
     }
+
 
     @Override
     protected boolean spawnCustomParticles() {
@@ -160,16 +167,12 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
     @Override
     protected void tickDeath() {
         super.tickDeath();
-        if (this.getType().equals(TEEntities.LAVA_SLIME.get())) {
-            StateDefinition<Block, BlockState> stateDefinition = Blocks.LAVA.getStateDefinition();
-            Property<?> levelProperty = stateDefinition.getProperty("level");
-            if (levelProperty instanceof IntegerProperty integerProperty) {
-                if (TEUtils.isAtLeastExpert(level())) {
-                    if (level().getBlockState(BlockPos.containing(this.position())).isAir() || level().getBlockState(BlockPos.containing(position())).canBeReplaced(Fluids.LAVA)) {
-                        //todo 未知且非固定出现的渲染bug
-                        level().setBlock(BlockPos.containing(position()), Blocks.LAVA.defaultBlockState().setValue(integerProperty, 14), 2);
-                    }
-                }
+        if (level() instanceof ServerLevel level && getType() == TEEntities.LAVA_SLIME.get() && TEUtils.isAtLeastExpert(level)) {
+            BlockPos containing = BlockPos.containing(position());
+            BlockState blockState = level.getBlockState(containing);
+            if (blockState.isAir() || blockState.canBeReplaced(Fluids.LAVA)) {
+                level.setBlock(containing, Blocks.LAVA.defaultBlockState().setValue(BlockStateProperties.LEVEL, 14), Block.UPDATE_ALL);
+                level.scheduleTick(containing, Blocks.LAVA, 2);
             }
         }
     }

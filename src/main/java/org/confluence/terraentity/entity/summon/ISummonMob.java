@@ -3,6 +3,7 @@ package org.confluence.terraentity.entity.summon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.OldUsersConverter;
@@ -108,12 +109,15 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     }
 
     default void summon_readData(CompoundTag compound) {
-        UUID uuid;
+        UUID uuid = null;
         if (compound.hasUUID("Owner")) {
             uuid = compound.getUUID("Owner");
         } else {
             String s = compound.getString("Owner");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(te$getSelf().getServer(), s);
+            MinecraftServer server = te$getSelf().getServer();
+            if(server!=null) {
+                uuid = OldUsersConverter.convertMobOwnerIfNecessary(server, s);
+            }
         }
         if (uuid != null) {
             this.summon_setOwnerUUID(uuid);

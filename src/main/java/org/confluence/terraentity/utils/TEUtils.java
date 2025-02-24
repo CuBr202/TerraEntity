@@ -232,14 +232,16 @@ public final class TEUtils {
                 int size = Math.min(entity.level().players().size(), 8);
                 if (!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(difficultyHealthModifier.apply(multiplier)))
                     entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(difficultyHealthModifier.apply(multiplier));
-                if (!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(boss_healthModifier.get()))
-                    entity.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(boss_healthModifier.get());
+                if (!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(boss_damageModifier.get()))
+                    entity.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(boss_damageModifier.get());
+
+                if (!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(boss_healthModifier.get()))
+                    entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(boss_healthModifier.get());
                 entity.setHealth(entity.getMaxHealth());
             }
             if (!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(difficultyDamageModifier.apply(multiplier)))
                 entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(difficultyDamageModifier.apply(multiplier));
-            if (!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(boss_damageModifier.get()))
-                entity.getAttribute(Attributes.MAX_HEALTH).addTransientModifier(boss_healthModifier.get());
+
         }
     }
 

@@ -17,6 +17,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.model.CabbageProjModel;
 import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
+import org.confluence.terraentity.client.entity.model.Stinger;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
 import org.confluence.terraentity.client.gui.config_container.ConfigContainerRegister;
@@ -27,9 +28,7 @@ import java.lang.reflect.Field;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.confluence.terraentity.init.TEEntities.CABBAGE_PROJ;
-import static org.confluence.terraentity.init.TEEntities.CROWN_OF_KING_SLIME_MODEL;
-
+import static org.confluence.terraentity.init.TEEntities.*;
 
 
 @Mod.EventBusSubscriber(modid = TerraEntity.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -73,6 +72,8 @@ public final class ModClient {
 //        event.registerLayerDefinition(CrownOfKingSlimeModel.LAYER_LOCATION, CrownOfKingSlimeModel::createBodyLayer);
         registerModel(event, CrownOfKingSlimeModel.class);
         registerModel(event, CabbageProjModel.class);
+        registerModel(event, Stinger.class);
+
 
     }
 
@@ -81,6 +82,8 @@ public final class ModClient {
         event.registerEntityRenderer(CROWN_OF_KING_SLIME_MODEL.get(), CrownOfKingSlimeModelRenderer::new);
 
         registerProj(event,CABBAGE_PROJ.get(),c->new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION)));
+        registerProj(event,BEE_STICK_PROJ.get(),c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
+
 
         TEEntities.registerRenderers(event);
     }
@@ -89,6 +92,8 @@ public final class ModClient {
     public static void registerParticles(RegisterParticleProvidersEvent event) {
 
     }
+
+
 
 
 

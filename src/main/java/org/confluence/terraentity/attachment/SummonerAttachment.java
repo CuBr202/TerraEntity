@@ -137,6 +137,4 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
 
 //        ids = Arrays.stream(tag.getIntArray("ids")).boxed().toList();
     }
-
-
 }

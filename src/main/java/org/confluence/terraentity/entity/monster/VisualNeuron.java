@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.boss.BrainOfCthulhu;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +30,7 @@ public class VisualNeuron extends AbstractMonster{
         super(type, level, new AbstractPrefab(44,2,9,0,0,0.1f)
                 .getPrefab().setNoGravity());
         this.noPhysics = true;
-        _detectInternal = 1;
+        this.collisionProperties = new CollisionProperties(1,20,0);
     }
 
     public void setOwner(BrainOfCthulhu owner) {
@@ -108,9 +110,13 @@ public class VisualNeuron extends AbstractMonster{
         return super.hurt(source, amount);
     }
 
-    public void doAttack(LivingEntity entity) {
-        if(state == 1 && backDelay <= 0) return;
-        super.doAttack(entity);
-        if(state == 0) state = 1;
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.VISUAL_NEURON_DEATH.get();
     }
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+        return TESounds.VISUAL_NEURON_HURT.get();
+    }
+
 }

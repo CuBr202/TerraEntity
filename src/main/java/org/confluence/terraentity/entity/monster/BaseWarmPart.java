@@ -2,18 +2,20 @@ package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.minecraftforge.entity.PartEntity;
+import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity {
+public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICollisionAttackEntity<BaseWarmPart> {
 
     private final EntityDimensions size;
     public boolean isTail = false;
@@ -51,7 +53,10 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity {
 
     public boolean hurt(DamageSource source, float amount) {
         this.getParent().setHealth(this.getParent().getHealth() - amount);
-        this.getParent().playSound(this.getParent().getHurtSound(source));
+        SoundEvent hurtSound = this.getParent().getHurtSound(source);
+        if(hurtSound!=null) {
+            this.getParent().playSound(hurtSound);
+        }
         if(this.getParent().getHealth() <= 0) {
             this.getParent().die(source);
         }
@@ -100,5 +105,11 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+    CollisionProperties collisionProperties = new CollisionProperties(10,20,0);
+    @Override
+    public CollisionProperties getCollisionProperties() {
+        return collisionProperties;
     }
 }

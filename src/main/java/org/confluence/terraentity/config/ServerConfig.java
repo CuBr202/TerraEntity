@@ -7,6 +7,11 @@ public class ServerConfig {
     public static ForgeConfigSpec.ConfigValue<Boolean> BOSS_CLEAR_WHEN_NO_TARGET;
     public static ForgeConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_HEALTH;
     public static ForgeConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE;
+    public static ForgeConfigSpec.ConfigValue<Boolean> BOSS_NO_PHYSICS;
+    public static ForgeConfigSpec.ConfigValue<Boolean> BOSS_LEAVE_ON_DAY;
+
+
+
     public static ForgeConfigSpec.ConfigValue<Boolean> DISPLAY_SUMMON_ITEMS;
 
     public static ForgeConfigSpec.ConfigValue<Boolean> ENHANCE_ALL_MONSTER;
@@ -17,7 +22,6 @@ public class ServerConfig {
     public static ForgeConfigSpec.Builder init(ForgeConfigSpec.Builder BUILDER){
         BUILDER.push("server");
 
-
         BOSS_CLEAR_WHEN_NO_TARGET = BUILDER
                 .comment("When a boss has no target, should it be cleared?")
                 .define("boss_clear_when_no_target", false);
@@ -27,6 +31,14 @@ public class ServerConfig {
         BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE = BUILDER
                 .comment("Multiplier for boss attributes damage.")
                 .defineInRange("boss_attributes_multiplier_damage", 0.7F, 0.0625f, 10f);
+
+        BOSS_NO_PHYSICS = BUILDER
+                .comment("Should the boss have no physics? Only for some bosses.")
+                .define("boss_no_physics", true);
+
+        BOSS_LEAVE_ON_DAY = BUILDER
+                .comment("Should the boss leave on day? Only for some bosses.")
+                .define("boss_leave_on_day", false);
 
         DISPLAY_SUMMON_ITEMS = BUILDER
                 .comment("Should summon items be displayed in this mod?")
@@ -42,7 +54,6 @@ public class ServerConfig {
         MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE = BUILDER
                 .comment("Multiplier for monster attributes damage.")
                 .defineInRange("monster_attributes_multiplier_damage", 1F, 0.0625f, 100f);
-
 
         BUILDER.pop();
         return BUILDER;

@@ -13,49 +13,32 @@ import org.confluence.terraentity.TerraEntity;
 public final class TESounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, TerraEntity.MODID);
 
-    public static final RegistryObject<SoundEvent> TRANSMISSION = register("transmission");
-    public static final RegistryObject<SoundEvent> WAVING = register("waving");
-    public static final RegistryObject<SoundEvent> DOUBLE_JUMP = register("double_jump");
-    public static final RegistryObject<SoundEvent> LASER = register("laser");
-    public static final RegistryObject<SoundEvent> LIGHTSABER_QUICK = register("lightsaber_quick");
-    public static final RegistryObject<SoundEvent> LIGHTSABER_SLOW = register("lightsaber_slow");
-    public static final RegistryObject<SoundEvent> LIGHTSABER_OPEN = register("lightsaber_open");
-    public static final RegistryObject<SoundEvent> REGULAR_STAFF_SHOOT = register("regular_staff_shoot");
-    public static final RegistryObject<SoundEvent> SHOES_FLY = register("shoes_fly");
-    public static final RegistryObject<SoundEvent> SHOES_FLY_JET = register("shoes_fly_jet");
-    public static final RegistryObject<SoundEvent> SHOES_WALK = register("shoes_walk");
-    public static final RegistryObject<SoundEvent> SHOOT = register("shoot");
-    public static final RegistryObject<SoundEvent> SPARKLE_SHOOT = register("sparkle_shoot");
-    public static final RegistryObject<SoundEvent> FART_SOUND = register("fart_sound");
-    public static final RegistryObject<SoundEvent> LIFE_CRYSTAL_USE = register("life_crystal_use");
-    public static final RegistryObject<SoundEvent> MANA_STAR_USE = register("mana_star_use");
     public static final RegistryObject<SoundEvent> COINS = register("coins");
-    public static final RegistryObject<SoundEvent> ALPHA = register("alpha");
     public static final RegistryObject<SoundEvent> ROUTINE_HURT = register("routine_hurt"); // 常规受伤音效
     public static final RegistryObject<SoundEvent> ROUTINE_DEATH = register("routine_death"); // 常规死亡音效
     public static final RegistryObject<SoundEvent> DRIPPLER_HURT = register("drippler_hurt"); // 滴滴怪受伤音效
     public static final RegistryObject<SoundEvent> DRIPPLER_DEATH = register("drippler_death"); // 滴滴怪死亡音效
-    public static final RegistryObject<SoundEvent> COOLDOWN_RECOVERY = register("cooldown_recovery"); // CD冷却
-    public static final RegistryObject<SoundEvent> FROZEN_ARROW = register("frozen_arrow"); // 冰雪射弹
-    public static final RegistryObject<SoundEvent> FROZEN_BROKEN = register("frozen_broken");
-    public static final RegistryObject<SoundEvent> SHIMMER_DETACHMENT = register("shimmer_detachment"); // 脱离微光
-    public static final RegistryObject<SoundEvent> SHIMMER_EVOLUTION = register("shimmer_evolution"); // 嬗变
-    public static final RegistryObject<SoundEvent> SHIMMER_IMMERSION = register("shimmer_immersion"); // 生物入微光
-    public static final RegistryObject<SoundEvent> SHIMMER_ITEM_INTERACTIONS = register("shimmer_item_interactions"); // 物品入微光
-    public static final RegistryObject<SoundEvent> STAR = register("star"); // 坠星
-    public static final RegistryObject<SoundEvent> STAR_LANDS = register("star_lands"); // 星星落地
-    public static final RegistryObject<SoundEvent> TERRA_OPERATION = register("terra_operation"); // 操作音效
-    public static final RegistryObject<SoundEvent> USE_MOUNTS = register("use_mounts"); // 召唤坐骑
-    public static final RegistryObject<SoundEvent> ACHIEVEMENTS = register("achievements"); // 成就音效
     public static final RegistryObject<SoundEvent> REGULAR_STAFF_SHOOT_2 = register("regular_staff_shoot_2"); // 射弹2
     public static final RegistryObject<SoundEvent> ROAR = register("roar"); // boss吼叫
     public static final RegistryObject<SoundEvent> HURRIED_ROARING = register("hurried_roaring"); //疯狗冲刺
-    public static final RegistryObject<SoundEvent> DECOUPLING = register("decoupling"); //脱钩
+    public static final RegistryObject<SoundEvent> DIG_SOUND = register("dig_sound"); //蠕虫挖掘
     // 血爬虫
     public static final RegistryObject<SoundEvent> BLOOD_CRAWLER_DEATH = register("blood_crawler_death");
     public static final RegistryObject<SoundEvent> BLOOD_CRAWLER_FREE = register("blood_crawler_free");
     public static final RegistryObject<SoundEvent> BLOOD_CRAWLER_FREE_2 = register("blood_crawler_free_2");
     public static final RegistryObject<SoundEvent> BLOOD_CRAWLER_HURT = register("blood_crawler_hurt");
+    // 巨型卷壳怪
+    public static final RegistryObject<SoundEvent> GIANT_SHELLY_DEATH = register("giant_shelly_death");
+    public static final RegistryObject<SoundEvent> GIANT_SHELLY_FREE_0 = register("giant_shelly_free_0");
+    public static final RegistryObject<SoundEvent> GIANT_SHELLY_FREE_1 = register("giant_shelly_free_1");
+    public static final RegistryObject<SoundEvent> GIANT_SHELLY_HURT = register("giant_shelly_hurt");
+    // 飞眼怪
+    public static final RegistryObject<SoundEvent> VISUAL_NEURON_DEATH = register("visual_neuron_death");
+    public static final RegistryObject<SoundEvent> VISUAL_NEURON_HURT = register("visual_neuron_hurt");
+    // 脸怪
+    public static final RegistryObject<SoundEvent> FACE_HOOT = register("face_hoot");
+    public static final RegistryObject<SoundEvent> TR_ZOMBIE_DEATH = register("tr_zombie_death");
+
 
     private static RegistryObject<SoundEvent> register(String id) {
         return SOUNDS.register(id, () -> SoundEvent.createVariableRangeEvent(TerraEntity.space(id)));

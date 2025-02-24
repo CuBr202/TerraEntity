@@ -76,7 +76,7 @@ public class CircleMobSkills<T extends Mob> {
         return mobSkills.get(index).timeTrigger < this.tick;
     }
     public RawAnimation getCurAnim(){
-        if(!mobSkills.isEmpty())
+        if(!mobSkills.isEmpty() && index < mobSkills.size())
             return mobSkills.get(index).anim;
         return null;
     }

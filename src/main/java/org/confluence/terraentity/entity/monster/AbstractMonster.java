@@ -16,6 +16,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.ForgeMod;
+import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -33,10 +34,9 @@ import java.util.function.Supplier;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
-public class AbstractMonster extends Monster implements GeoEntity {
-    protected int attackInternal = 0;
-    protected int _attackInternal = 20;
-    protected int _detectInternal = 10;
+public class AbstractMonster extends Monster implements GeoEntity , ICollisionAttackEntity<AbstractMonster> {
+
+    protected CollisionProperties collisionProperties = new CollisionProperties(10, 20, 0);
     public Builder builder;
     protected boolean dirty = true;
 
@@ -168,6 +168,38 @@ public class AbstractMonster extends Monster implements GeoEntity {
 
         return true;
     }
+    public static boolean checkUndergroundMonsterSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+        if (!(pLevel instanceof Level level)) {
+            return false; // 如果 pLevel 不是 Level 的实例，返回 false
+        }
+
+        if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
+            return false;
+        }
+
+        int y = pPos.getY();
+        if (y < -55 || y > 30) {
+            return false; // 只能生成在 y = -55 到 y = 30 之间
+        }
+
+        return true;
+    }
+    public static boolean checkNetherMonsterSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+        if (!(pLevel instanceof Level level)) {
+            return false; // 如果 pLevel 不是 Level 的实例，返回 false
+        }
+
+        if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
+            return false;
+        }
+
+        int y = pPos.getY();
+        if (y < 30 || y > 100) {
+            return false; // 只能生成在 y = 30 到 y = 100 之间
+        }
+
+        return true;
+    }
 
     @Override
     protected SoundEvent getDeathSound() {
@@ -237,37 +269,22 @@ public class AbstractMonster extends Monster implements GeoEntity {
         super.tick();
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
         if(!level().isClientSide && builder.attachAttack && isAlive()){
-            if(--attackInternal < 0){
-                attackInternal = _detectInternal;
-                doCollisionAttack(this, builder.attackIncrease, 1);
-            }
+            doCollisionAttack(
+                    e->canAttack(e) && e.getType() != this.getType(),
+                    this::doHurtTarget
+            );
         }
-    }
-
-    public void doCollisionAttack(Entity entity, float expand, float modify){
-        var entities = level().getEntities(entity, entity.getBoundingBox().inflate(expand));
-        if (!entities.isEmpty()) {
-            for (var e : entities) {
-                if (e instanceof LivingEntity living && canAttack(living) && !(e instanceof Monster)){
-                    doAttack(living, modify);
-                }
-            }
-        }
-    }
-
-    public void doAttack(LivingEntity entity, float modify) {
-        attackInternal = _attackInternal;
-        entity.hurt(this.damageSources().generic(), (float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue() * modify);
-    }
-
-    public void doAttack(LivingEntity entity) {
-        doAttack(entity, 1);
     }
 
     @Override
     public boolean canAttack(LivingEntity entity) {
         return entity.canBeSeenAsEnemy() &&
-                        entity != this &&!(entity instanceof AbstractTerraBossBase);
+                        entity != this && !(entity instanceof AbstractTerraBossBase);
+    }
+
+    @Override
+    public CollisionProperties getCollisionProperties() {
+        return collisionProperties;
     }
 
     public static class Builder {

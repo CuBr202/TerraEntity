@@ -55,7 +55,6 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
         setAttactDamage(DAMAGE);
 
         this.xpReward = 30;
-
     }
 
     public EaterOfWorldsSegment(EaterOfWorlds head, Level level) {
@@ -99,13 +98,19 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
                 discardTimer++;
                 if(discardTimer > 100) {
                     discard();
-
                 }
                 return;
             }
             discardTimer = 0;
         }
     }
+
+    @Override
+    public boolean canAttack(LivingEntity entity) {
+        return super.canAttack(entity) && !(entity instanceof EaterOfWorldsSegment)  && !(entity instanceof EaterOfWorlds);
+    }
+
+
     @Override // 受伤音效
     protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
 

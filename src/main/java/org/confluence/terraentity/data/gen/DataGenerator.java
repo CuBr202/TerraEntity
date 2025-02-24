@@ -28,20 +28,22 @@ public class DataGenerator {
         net.minecraft.data.DataGenerator generator = event.getGenerator();
         PackOutput output = generator.getPackOutput();
         ExistingFileHelper helper = event.getExistingFileHelper();
+
         CompletableFuture<HolderLookup.Provider> lookup = event.getLookupProvider();
+        boolean server = event.includeServer();
+
 
         DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookup, RegisterDataPack.DATA_BUILDER, Set.of(MODID));
         lookup = provider.getRegistryProvider();
 
-        boolean server = event.includeServer();
+
         generator.addProvider(server, provider);
+        generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
+        generator.addProvider(server, new TEDamageTypeTagsProvider(output, lookup, helper));
         TEBlockTagsProvider blockTagsProvider = new TEBlockTagsProvider(output, lookup, helper);
         generator.addProvider(server, blockTagsProvider);
-        generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TEItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
-
         generator.addProvider(server, TELootTableProvider.getProvider(output,lookup));
-        generator.addProvider(server, new TEDamageTypeTagsProvider(output, lookup, helper));
 //        generator.addProvider(server, new ModPoiTypeTagsProvider(output, lookup, helper));
 
 
@@ -49,6 +51,7 @@ public class DataGenerator {
         generator.addProvider(client, new TEChineseProvider(output));
         generator.addProvider(client, new TEEnglishProvider(output));
         generator.addProvider(client, new TEItemModelProvider(output, helper));
+
 
         PROVIDERS = generator.getProvidersView();
 

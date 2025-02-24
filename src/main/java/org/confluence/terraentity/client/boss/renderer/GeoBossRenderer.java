@@ -29,16 +29,19 @@ public class GeoBossRenderer<T extends AbstractTerraBossBase, M extends GeoBossM
         this.rotX = rotX;
     }
 
-    @Override
-    public void preRender(PoseStack poseStack, T entity, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float r, float g, float b, float a) {
+    public void setPoseStack(PoseStack poseStack, T entity, float partialTick){
         poseStack.scale(scale, scale, scale);
         float yRot = Mth.lerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
         double rad = yRot*Math.PI/180;
         float xRot = Mth.lerp(partialTick, entity.xRotO, entity.getXRot());
         poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(xRot));
         poseStack.translate(0,yOffset,0);
-        super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, r, g, b, a);
+    }
 
+    @Override
+    public void preRender(PoseStack poseStack, T entity, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        setPoseStack(poseStack, entity, partialTick);
+        super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     public float getYOffset(){

@@ -18,6 +18,7 @@ import static org.confluence.terraentity.TerraEntity.MODID;
 @Mod.EventBusSubscriber(modid = MODID,bus = Mod.EventBusSubscriber.Bus.FORGE,value = Dist.CLIENT)
 public class RenderEvent {
 
+
     @SubscribeEvent
     public static void drawBossBar(CustomizeGuiOverlayEvent.BossEventProgress event) {
 //        String name = ((TranslatableContents)event.getBossEvent().getName().getContents()).getKey().split("\\.",2)[1];

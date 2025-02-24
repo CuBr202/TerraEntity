@@ -17,6 +17,7 @@ import org.confluence.terraentity.entity.ai.goal.JumpAttack;
 import org.confluence.terraentity.entity.ai.goal.JumpOverBlockGoal;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TESounds;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.List;
@@ -29,6 +30,8 @@ public class LandMonsterPrefab extends AbstractPrefab {
     public static Supplier<AbstractMonster.Builder> FACE_MONSTER_BUILDER =
             ()->new LandMonsterPrefab(20,2,5,30,0.5f,0.1f).getPrefab()
                     .setStepHeight(3.2f)
+                    .setAmbientSound(TESounds.FACE_HOOT)
+                    .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .setJumpStrength(0.6f)
                     .addTarget((t,e)-> t.addGoal(1, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy)))
                     .addGoal((g,e)-> {
@@ -48,10 +51,12 @@ public class LandMonsterPrefab extends AbstractPrefab {
                         if(!e.level().isClientSide && e.isAlive() && e.tickCount == e.getAttributeValue(Attributes.ATTACK_DAMAGE)){
                             List<EntityType<? extends Entity>> entities = List.of(TEEntities.BLOOD_CRAWLER.get(),TEEntities.FACE_MONSTER.get(),TEEntities.CRIMSON_KEMERA.get());
                             Entity summon = entities.get(e.getRandom().nextIntBetweenInclusive(0,entities.size()-1)).create(e.level());
-                            summon.setPos(e.getX(),e.getY(),e.getZ());
-                            summon.setDeltaMovement(new Vec3(0,0.4f,0));
-                            e.level().addFreshEntity(summon);
-                            e.kill();
+                            if(summon!=null) {
+                                summon.setPos(e.getX(), e.getY(), e.getZ());
+                                summon.setDeltaMovement(new Vec3(0, 0.4f, 0));
+                                e.level().addFreshEntity(summon);
+                                e.kill();
+                            }
                         }
                     })
                     .setController((c,e)->{
@@ -62,6 +67,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
     public static Supplier<AbstractMonster.Builder> BLOOD_ZOMBIE_BUILDER =
             ()->new LandMonsterPrefab(39,2,10,60,0.5f,0.1f).getPrefab()
                     .setMovementSpeed(0.15f)
+                    .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .addTarget((t,e)-> {
                         t.addGoal(1,new AccelerateOnSeeingGoal(e,0.25f));
                         t.addGoal(2, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
@@ -76,6 +82,8 @@ public class LandMonsterPrefab extends AbstractPrefab {
                         g.addGoal(3, new MeleeAttackGoal(e,  0.8f, true));
                         g.addGoal(7, new WaterAvoidingRandomStrollGoal(e, 1.0));
                     });
+
+
 
 
     public LandMonsterPrefab(int health,int armor,int attack,int followRange,float knockBack,float knockbackResistance) {

@@ -23,22 +23,26 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.client.boss.renderer.BrainOfCthulhuRenderer;
 import org.confluence.terraentity.client.boss.renderer.GeoBossRenderer;
 import org.confluence.terraentity.client.boss.renderer.EaterOfWorldSegmentRenderer;
+import org.confluence.terraentity.client.boss.renderer.QueenBeeRenderer;
 import org.confluence.terraentity.client.entity.model.GiantShellyModel;
 import org.confluence.terraentity.client.entity.renderer.*;
 import org.confluence.terraentity.entity.boss.*;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.*;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
+import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.monster.prefab.LandMonsterPrefab;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.proj.BaseProj;
+import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.entity.proj.ThrowableProj;
 import org.confluence.terraentity.entity.summon.SummonIronGolem;
 import org.confluence.terraentity.entity.summon.SummonSlime;
@@ -84,6 +88,15 @@ public final class TEEntities {
     public static final RegistryObject<EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER,1.6f,1.6f);
     public static final RegistryObject<EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.75F,0.75F);
     public static final RegistryObject<EntityType<VisualNeuron>> VISUAL_NEURON = registerEntity("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
+    // 蜜蜂
+    public static final RegistryObject<EntityType<Hornet>> HORNET = registerEntity("hornet", (e,l)->new Hornet(e,l, FlyMonsterPrefab.BEE_BUILDER.get().setHealth(32)), 0.8f, 1.2f);
+    public static final RegistryObject<EntityType<LittleHornet>> LITTLE_HORNET = registerEntity("little_hornet", LittleHornet::new, 0.8f, 1.2f);
+    // 蝙蝠
+    public static final RegistryObject<EntityType<AbstractMonster>> CAVE_BAT = registerSimpleMonster("cave_bat", FlyMonsterPrefab.CAVE_BAT_BUILDER,1.6f,1.6f);
+    public static final RegistryObject<EntityType<AbstractMonster>> JUNGLE_BAT = registerSimpleMonster("jungle_bat", FlyMonsterPrefab.JUNGLE_BAT_BUILDER,1.6f,1.6f);
+    public static final RegistryObject<EntityType<AbstractMonster>> HELL_BAT = registerSimpleMonster("hell_bat", FlyMonsterPrefab.HELL_BAT_BUILDER,1.6f,1.6f);
+    public static final RegistryObject<EntityType<AbstractMonster>> ICE_BAT = registerSimpleMonster("ice_bat", FlyMonsterPrefab.ICE_BAT_BUILDER,1.6f,1.6f);
+    public static final RegistryObject<EntityType<AbstractMonster>> SPORE_BAT = registerSimpleMonster("spore_bat", FlyMonsterPrefab.CAVE_BAT_BUILDER,1.6f,1.6f);
 
     // tip 陆生怪
     public static final RegistryObject<EntityType<Decayeder>> DECAYEDER = ENTITIES.register("decayeder", () -> EntityType.Builder.of(Decayeder::new, MobCategory.MONSTER).build(Key("decayeder")));
@@ -92,7 +105,11 @@ public final class TEEntities {
     public static final RegistryObject<EntityType<AbstractMonster>> FACE_MONSTER = registerSimpleMonster("face_monster", LandMonsterPrefab.FACE_MONSTER_BUILDER,0.75F,1.95F);
     public static final RegistryObject<EntityType<AbstractMonster>> BLOOD_TUMORS = registerSimpleMonster("blood_tumors", LandMonsterPrefab.BLOOD_TUMORS,0.5F,0.5F);
     public static final RegistryObject<EntityType<AbstractMonster>> BLOOD_ZOMBIE = registerSimpleMonster("blood_zombie", LandMonsterPrefab.BLOOD_ZOMBIE_BUILDER,0.75F,1.95F);
-    public static final RegistryObject<EntityType<BaseWarm>> DEVOURER = registerEntity("devourer", BaseWarm::new,2F,2F);
+    // 蠕虫
+    public static final RegistryObject<EntityType<BaseWarm>> DEVOURER = registerEntity("devourer", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get()),2F,2F);
+    public static final RegistryObject<EntityType<BaseWarm>> TOMB_CRAWLER = registerEntity("tomb_crawler", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(16).setAttackDamage(4).setArmor(2)),2F,2F);
+    public static final RegistryObject<EntityType<BaseWarm>> GIANT_WORM = registerEntity("giant_worm", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(31).setAttackDamage(9).setArmor(3)),2F,2F);
+
     public static final RegistryObject<EntityType<GiantShelly>> GIANT_SHELLY = registerEntity("giant_shelly", GiantShelly::new,0.8F,0.8F);
 
 
@@ -105,6 +122,8 @@ public final class TEEntities {
     public static RegistryObject<EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AbstractMonster.Builder> builder) {
         return registerSimpleMonster(name, builder, 1, 1);
     }
+
+/* *********************************************************************** */
 
     // tip 召唤物
     public static final RegistryObject<EntityType<SummonSlime>> SUMMON_SLIME = registerEntity("slime_baby", SummonSlime::new ,0.5F,0.5F);
@@ -121,6 +140,7 @@ public final class TEEntities {
     public static final RegistryObject<EntityType<EaterOfWorlds>> EATER_OF_WORLDS = registerEntity("eater_of_worlds", EaterOfWorlds::new, 3F, 2F);
     public static final RegistryObject<EntityType<BrainOfCthulhu>> BRAIN_OF_CTHULHU = registerEntity("brain_of_cthulhu", BrainOfCthulhu::new, 4F, 4F);
     public static final RegistryObject<EntityType<BrainFake>> BRAIN_FAKE = registerEntity("brain_fake", BrainFake::new, 4F, 4F);
+    public static final RegistryObject<EntityType<QueenBee>> QUEEN_BEE = registerEntity("queen_bee", QueenBee::new, 2.5F, 2.5F);
 
 
 
@@ -132,17 +152,22 @@ public final class TEEntities {
         return ENTITIES.register(name, () -> EntityType.Builder.of(entityFactory, category).sized(width, height).clientTrackingRange(10).build(Key(name)));
     }
 
+
+/* *********************************************************************** */
+
     // tip 弹幕
     public static final RegistryObject<EntityType<ThrowableProj>> CABBAGE_PROJ = registerProj("cabbage_proj",(e,l)->
-            new ThrowableProj(e,l, null),0.5F,0.5F);
+            new ThrowableProj(e,l),0.5F,0.5F);
+
+    public static final RegistryObject<EntityType<LineProj>> BEE_STICK_PROJ = registerProj("bee_stick_proj",(e, l)->
+            new LineProj(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
 
 
 
-
-    public static <T extends BaseProj> RegistryObject<EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory,float w,float h) {
+    public static <T extends BaseProj<T>> RegistryObject<EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory,float w,float h) {
         return ENTITIES.register(name, () -> EntityType.Builder.of(entityFactory , MobCategory.MISC).clientTrackingRange(10).sized(w,h).build("rhyme:entity.proj."+name));
     }
-    public static <T extends BaseProj> RegistryObject<EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory) {
+    public static <T extends BaseProj<T>> RegistryObject<EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory) {
         return registerProj(name,entityFactory,1,1);
     }
 
@@ -184,7 +209,15 @@ public final class TEEntities {
         event.registerEntityRenderer(BLOOD_TUMORS.get(), c-> new GeoNormalRenderer<>(c,BLOOD_TUMORS.getId(),false));
         event.registerEntityRenderer(BLOOD_ZOMBIE.get(), c-> new GeoNormalRenderer<>(c,BLOOD_ZOMBIE.getId(),false));
         event.registerEntityRenderer(DEVOURER.get(), c-> new GeoWormRenderer<>(c, DEVOURER.getId(),2.0f, 0.0f));
+        event.registerEntityRenderer(GIANT_WORM.get(), c-> new GeoWormRenderer<>(c, GIANT_WORM.getId(),2.0f, 0.0f));
+        event.registerEntityRenderer(TOMB_CRAWLER.get(), c-> new GeoWormRenderer<>(c, TOMB_CRAWLER.getId(),2.0f, 0.0f));
         event.registerEntityRenderer(GIANT_SHELLY.get(), c-> new GeoNormalRenderer<>(c, new GiantShellyModel<>(GIANT_SHELLY.getId()),false,2,0));
+        // 蝙蝠
+        event.registerEntityRenderer(CAVE_BAT.get(), c-> new GeoNormalRenderer<>(c,CAVE_BAT.getId(),false));
+        event.registerEntityRenderer(JUNGLE_BAT.get(), c-> new GeoNormalRenderer<>(c, JUNGLE_BAT.getId(),false));
+        event.registerEntityRenderer(HELL_BAT.get(), c-> new GeoNormalRenderer<>(c,HELL_BAT.getId(),false));
+        event.registerEntityRenderer(ICE_BAT.get(), c-> new GeoNormalRenderer<>(c,ICE_BAT.getId(),false));
+        event.registerEntityRenderer(SPORE_BAT.get(), c-> new GeoNormalRenderer<>(c,SPORE_BAT.getId(),false));
 
         // boss
         event.registerEntityRenderer(KING_SLIME.get(), KingSlimeRenderer::new);
@@ -194,6 +227,9 @@ public final class TEEntities {
         event.registerEntityRenderer(BRAIN_OF_CTHULHU.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
         event.registerEntityRenderer(VISUAL_NEURON.get(), c->new GeoNormalRenderer<>(c, VISUAL_NEURON.getId(),true));
         event.registerEntityRenderer(BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
+        event.registerEntityRenderer(QUEEN_BEE.get(), c->new QueenBeeRenderer(c,new GeoBossModel<>(QUEEN_BEE)));
+        event.registerEntityRenderer(LITTLE_HORNET.get(), c->new GeoNormalRenderer<>(c, LITTLE_HORNET.getId(),true, 1, 0.5f));
+        event.registerEntityRenderer(HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 1, 0.5f));
 
         // sommon
         event.registerEntityRenderer(SUMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c, SUMMON_SLIME.getId().withPrefix("summon/"),false));
@@ -208,7 +244,6 @@ public final class TEEntities {
                 .add(Attributes.FOLLOW_RANGE, 100)
                 .add(Attributes.MAX_HEALTH, 100)
 //                .add(Attributes.GRAVITY, 0)
-
                 .add(Attributes.MOVEMENT_SPEED, 0.15f)
                 .add(Attributes.ATTACK_DAMAGE, 1)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 10)
@@ -248,7 +283,14 @@ public final class TEEntities {
         event.put(BLOOD_TUMORS.get(), AbstractMonster.createAttributes().build());
         event.put(BLOOD_ZOMBIE.get(), AbstractMonster.createAttributes().build());
         event.put(DEVOURER.get(), AbstractMonster.createAttributes().build());
+        event.put(TOMB_CRAWLER.get(), AbstractMonster.createAttributes().build());
+        event.put(GIANT_WORM.get(), AbstractMonster.createAttributes().build());
         event.put(GIANT_SHELLY.get(), AbstractMonster.createAttributes().build());
+        event.put(CAVE_BAT.get(), AbstractMonster.createAttributes().build());
+        event.put(JUNGLE_BAT.get(), AbstractMonster.createAttributes().build());
+        event.put(HELL_BAT.get(), AbstractMonster.createAttributes().build());
+        event.put(ICE_BAT.get(), AbstractMonster.createAttributes().build());
+        event.put(SPORE_BAT.get(), AbstractMonster.createAttributes().build());
 
         // boss
         event.put(KING_SLIME.get(), KingSlime.createSlimeAttributes().build());
@@ -258,6 +300,9 @@ public final class TEEntities {
         event.put(BRAIN_OF_CTHULHU.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(VISUAL_NEURON.get(), AbstractMonster.createAttributes().build());
         event.put(BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(QUEEN_BEE.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(LITTLE_HORNET.get(), AbstractMonster.createAttributes().build());
+        event.put(HORNET.get(), AbstractMonster.createAttributes().build());
 
         // sommon
         event.put(SUMMON_SLIME.get(), AbstractTerraBossBase.createAttributes().build());
@@ -281,6 +326,7 @@ public final class TEEntities {
         event.register(YELLOW_SLIME.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(RED_SLIME.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(BLACK_SLIME.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(LAVA_SLIME.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
         event.register(DEMON_EYE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DemonEye::checkDemonEyeSpawn,  SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(BLOOD_CRAWLER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BloodCrawler::checkBloodCrawlerSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
@@ -289,9 +335,17 @@ public final class TEEntities {
         event.register(FACE_MONSTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(DECAYEDER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(DEVOURER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(GIANT_WORM.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(TOMB_CRAWLER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(HORNET.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
         event.register(FLYING_FISH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkFlyingFishSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(GIANT_SHELLY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(CAVE_BAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(JUNGLE_BAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(HELL_BAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkNetherMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(ICE_BAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(SPORE_BAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
         event.register(EATER_OF_SOULS.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
 

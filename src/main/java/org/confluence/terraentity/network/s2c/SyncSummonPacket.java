@@ -1,6 +1,7 @@
 package org.confluence.terraentity.network.s2c;
 
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 import org.confluence.terraentity.TerraEntity;
@@ -41,7 +42,7 @@ public class SyncSummonPacket{
 
     public static void handle(SyncSummonPacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            var data = ctx.get().getSender().getCapability(TEAttachments.SUMMONER_STORAGE).resolve().get();
+            var data = Minecraft.getInstance().player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().get();
             data.setCurrentCapacity(packet.currentCapability);
 //            data.setIds(packet.indexList);
         });

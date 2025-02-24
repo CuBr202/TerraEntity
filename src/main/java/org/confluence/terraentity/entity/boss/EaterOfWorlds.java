@@ -1,19 +1,25 @@
 package org.confluence.terraentity.entity.boss;
 
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeHooks;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.init.TEEntities;
@@ -22,6 +28,7 @@ import org.confluence.terraentity.utils.CameraShakeData;
 import org.confluence.terraentity.utils.CameraShakeManager;
 import org.confluence.terraentity.utils.TEUtils;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -33,7 +40,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     private static final float projDamage = 3;
 
     private float segmentInternal = 2.8f;
-    int segmentCount = 2;//体节长度
+    int segmentCount =  60;//体节长度
     static float turnSpeedBase = 3f;//转向速度
     static float moveSpeedBase = 0.6f;//移动速度
     float wanderPosRadius = 10;//寻点半径
@@ -70,7 +77,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     }
 
     public EaterOfWorlds(Level level, boolean genSegments) {
-        this(TEEntities.EATER_OF_WORLDS.get(),level);
+        this(TEEntities.EATER_OF_WORLDS.get(),level);this.onAddedToWorld();
         this.genSegments = genSegments;
     }
 
@@ -89,6 +96,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
             baseSegmentsHealth.add(newSegment.getMaxHealth());
             level().addFreshEntity(newSegment);
         }
+
         ((EaterOfWorldsSegment)baseSegments.get(segmentCount)).ifTail = true;
         baseSegments.get(segmentCount).getEntityData().set(EaterOfWorldsSegment.DATA_TAIL,true);
         ifBaseHead = true;
@@ -121,6 +129,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                     ){
                         skills.forceEnd();
                     }
+                    targetPos = target.position();
 
                 },
                 (AbstractTerraBossBase)->{
@@ -131,6 +140,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                 (AbstractTerraBossBase)->{
                     //设置状态触发时目的点
                     wanderType = wanderType==WonderType.DOWN?WonderType.UP:WonderType.DOWN;
+                    target = getTarget();
                     if(target==null)return;
                     float random1 = random.nextFloat()*360;
                     double random2 = wanderPosRadius * Math.sin(random1);
@@ -150,15 +160,28 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                 (AbstractTerraBossBase)->{
                     shouldFollowTarget = false;
                     isDashing = false;
-
+                    if(target == null ) return;
                     shouldMove = true;
-
-                    //提前结束
-                    if(wanderType ==WonderType.DOWN){
-                        if(distanceToSqr(targetPos)<=4){
-                            skills.forceEnd();
+                    if(targetPos.distanceToSqr( target.position()) > 25 * 25){
+                        float random1 = random.nextFloat()*360;
+                        double random2 = wanderPosRadius * Math.sin(random1);
+                        double random3 = wanderPosRadius * Math.cos(random1);
+                        double h = 10 + random.nextFloat() * 4;
+                        if(wanderType ==WonderType.DOWN){
+                            targetPos = target.position().add(random2,-h,random3);
+                        }else if(wanderType ==WonderType.UP){
+                            targetPos = target.position().add(random2,h*0.5 ,random3);
+                        }else{
+                            targetPos = target.position().add(random1,random2,random3);
                         }
                     }
+
+                    //提前结束
+
+                    if(distanceToSqr(targetPos)<=16){
+                        skills.forceEnd();
+                    }
+
                 },
                 (AbstractTerraBossBase)->{
                     turnSpeed = turnSpeedBase;
@@ -227,13 +250,14 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
             //没有目标禁止行为
             target = getTarget();
             if(targetPos!=null) targetPos = targetPos.add(0,0.05,0);
+
             if(target!=null) {
                 if (!firstWander) {
                     skills.forceStartIndex(2);
                     skills.forceEnd();
                     firstWander = true;
                 }
-                if (targetPos.x == 0 && targetPos.y == 0 && targetPos.z == 0) {
+                if (targetPos!=null&& targetPos.x == 0 && targetPos.y == 0 && targetPos.z == 0) {
                     targetPos = target.position();
                 }
                 //头部发射弹幕
@@ -270,29 +294,57 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
             }
             //中枢头刷新和重现机制
             if(ifBaseHead){
+                if(tickCount < 100){//forge 奇怪的bug，延迟加boss条
+
+                        if(level() instanceof  ServerLevel serverLevel){
+                            var players = serverLevel.players();
+                            for(var p : players){
+                                if(p.distanceToSqr(position())<100*100){
+                                    bossEvent.addPlayer(p);
+                                }
+                                else bossEvent.removePlayer(p);
+                            }
+                        }
+
+                }
                 int cur = 0;
                 EaterOfWorlds newHead = null;
                 AbstractTerraBossBase lastSeg = null;
 
                 for(int i=0;i<baseSegments.size();i++){
-                    baseSegmentsHealth.set(i,baseSegments.get(i).getHealth());
+                    var current = baseSegments.get(i);
+                    baseSegmentsHealth.set(i,current.getHealth());
 
-                    if(baseSegments.get(i) instanceof EaterOfWorlds eater){
-                        if(!eater.ifBaseHead || !eater.isAlive()){
-                            eater.removeBossEvent();
-                        }else{
-                            if(target instanceof ServerPlayer player){
-                                ((EaterOfWorlds) baseSegments.get(i)).setBossEvent(player);
+                    if(current instanceof EaterOfWorlds eater){
+                        if(!eater.ifBaseHead){
+                            // 普通的头
+                            if(!eater.isAlive())
+                                eater.removeBossEvent();
+                            else{
+                                // 给分段目标
+                                if(eater.getTarget() == null || !eater.getTarget().isAlive()){
+                                    eater.setTarget(target);
+                                }
                             }
                         }
                     }
+
+                    // 给自己设置目标
+                    if(current instanceof EaterOfWorldsSegment seg)
+                        if(current.isAlive() && (this.getTarget() == null || !this.getTarget().isAlive())){
+                            LivingEntity tar = seg.getLastHurtByMob();
+                            if(tar != null && tar.isAlive() && tar.canBeSeenAsEnemy()){
+                                this.setTarget(seg.getLastHurtByMob());
+                            }
+                        }
+
                     //死亡则跳过
                     if(baseSegmentsHealth.get(i)<=0.0){
                         if(lastSeg instanceof EaterOfWorldsSegment last){
                             last.ifTail = true;
                             last.getEntityData().set(EaterOfWorldsSegment.DATA_TAIL,true);
                         }else{//连续的头应该死亡
-                            DamageSource source = baseSegments.get(i).getLastDamageSource();
+                            DamageSource source = current.getLastDamageSource();
                             if(lastSeg!=null && lastSeg.isAlive()) {
                                 if(source!=null){
                                     lastSeg.setHealth(0.0f);
@@ -302,7 +354,6 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                                     lastSeg.setHealth(0.0f);
                                     lastSeg.die(this.getLastDamageSource()==null?damageSources().generic():this.getLastDamageSource());
                                 }
-
                             }
                         }
                         cur = 0;
@@ -312,16 +363,16 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                     if(cur==0){
 
                         //错误体节，替换为头                                       //被区块刷新掉的重现
-                        if(baseSegments.get(i) instanceof EaterOfWorldsSegment || baseSegmentsHealth.get(i)>0 && baseSegments.get(i).isRemoved()){
+                        if(current instanceof EaterOfWorldsSegment || baseSegmentsHealth.get(i)>0 && current.isRemoved()){
                             newHead = new EaterOfWorlds(level(),false);
-                            newHead.setHealth(baseSegments.get(i).getHealth());
-                            newHead.setPos(baseSegments.get(i).position());
-                            newHead.setYRot(baseSegments.get(i).yRotO);
-                            newHead.setXRot(baseSegments.get(i).xRotO);
+                            newHead.setHealth(current.getHealth());
+                            newHead.setPos(current.position());
+                            newHead.setYRot(current.yRotO);
+                            newHead.setXRot(current.xRotO);
                             newHead.genSegments =  false;
                             newHead.ifBaseHead = false;
                             //newHead.segments.add(newHead);
-                            baseSegments.get(i).discard();
+                            current.discard();
                             baseSegments.set(i,newHead);
                             level().addFreshEntity(newHead);
                         }
@@ -329,10 +380,10 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                         newHead = (EaterOfWorlds) baseSegments.get(i);
                         lastSeg = newHead;
                     }else{//体节
-                        EaterOfWorldsSegment curSeg = (EaterOfWorldsSegment)baseSegments.get(i);
+                        EaterOfWorldsSegment curSeg = (EaterOfWorldsSegment)current;
 
                         //TODO 被区块刷新掉的体节重现
-                        if(baseSegments.get(i).isRemoved() && tickCount % 50 == 0){
+                        if(current.isRemoved() && tickCount % 50 == 0){
 /*
                             curSeg = new EaterOfWorld_Segment(newHead,level());
                             curSeg.setPos(newHead.position());
@@ -368,7 +419,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     @Override
     public void onRemovedFromWorld() {
         this.bossEvent.removeAllPlayers();
-        if(!level().isClientSide && ifBaseHead){
+        if(!level().isClientSide && ifBaseHead && discardTick < DISCARD_TICK){
 
             for(var n : baseSegments){
                 if(n==null || !n.isAlive() ) continue;
@@ -398,9 +449,15 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         newHead.genSegments = false;
         if(ifBaseHead) {
             newHead.ifBaseHead = true;
+            newHead.bossEvent = this.bossEvent;
             newHead.baseSegments = new CopyOnWriteArrayList<>(baseSegments);
             newHead.baseSegmentsHealth = new CopyOnWriteArrayList<>(baseSegmentsHealth);
         }
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity entity) {
+        return super.canAttack(entity) && !(entity instanceof EaterOfWorldsSegment)  && !(entity instanceof EaterOfWorlds);
     }
 
     @Override//boss条更新
@@ -421,7 +478,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     @Override // boss条显示
     public void startSeenByPlayer(ServerPlayer player) {
         super.startSeenByPlayer(player);
-        if (ifBaseHead) this.bossEvent.addPlayer(player);
+
     }
 
     @Override
@@ -453,22 +510,23 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     @Override
     public void die(DamageSource damageSource) {
         if(ifBaseHead) {
-            int aliveCount = 0;
-            for (var n : baseSegments) {
-                if (n == null || !n.isAlive()) continue;
-                aliveCount++;
-            }
-            if (aliveCount == 0) {
-                //生成掉落物
-                super.die(damageSource);
-            }else{
-                // 生成体节掉落物
-                if(level() instanceof ServerLevel serverLevel){
-                    EaterOfWorldsSegment seg = new EaterOfWorldsSegment(this,level());
-                    seg.setPos(position());
-                    seg.die(damageSource);
+                int aliveCount = 0;
+                for (var n : baseSegments) {
+                    if (n == null || !n.isAlive()) continue;
+                    aliveCount++;
                 }
-            }
+                if (aliveCount <= 1) {
+//                    ForgeHooks.onLivingDeath(this, damageSource);
+                    //生成掉落物
+                    super.die(damageSource);
+                } else {
+                    // 生成体节掉落物
+                    if (level() instanceof ServerLevel serverLevel) {
+                        EaterOfWorldsSegment seg = new EaterOfWorldsSegment(this, level());
+                        seg.setPos(position());
+                        seg.die(damageSource);
+                    }
+                }
         }else{
             // 生成体节掉落物
             if(level() instanceof ServerLevel serverLevel){

@@ -32,7 +32,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.tropic_slime", "热带史莱姆");
         add("entity.terra_entity.green_slime", "绿色史莱姆");
         add("entity.terra_entity.black_slime", "史莱姆之母");
-        add("entity.terra_entity.lava_slime", "岩浆史莱姆");
+        add("entity.terra_entity.lava_slime", "熔岩史莱姆");
         add("entity.terra_entity.demon_eye", "恶魔眼");
         add("entity.terra_entity.flying_fish", "飞鱼");
         add("entity.terra_entity.giant_shelly", "巨型卷壳怪");
@@ -45,6 +45,14 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.eater_of_souls", "噬魂怪");
         add("entity.terra_entity.decayeder", "腐骴");
         add("entity.terra_entity.devourer", "吞噬怪");
+        add("entity.terra_entity.giant_worm", "巨型蠕虫");
+        add("entity.terra_entity.tomb_crawler", "墓穴爬虫");
+        add("entity.terra_entity.cave_bat", "洞穴蝙蝠");
+        add("entity.terra_entity.jungle_bat", "丛林蝙蝠");
+        add("entity.terra_entity.hornet", "黄蜂");
+        add("entity.terra_entity.hell_bat", "地狱蝙蝠");
+        add("entity.terra_entity.ice_bat", "冰雪蝙蝠");
+        add("entity.terra_entity.spore_bat", "孢子蝙蝠");
 
 
         add("entity.terra_entity.king_slime", "史莱姆王");
@@ -54,6 +62,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.brain_of_cthulhu", "克苏鲁之脑");
         add("entity.terra_entity.brain_fake", "克苏鲁之脑幻象");
         add("entity.terra_entity.visual_neuron", "视神经元");
+        add("entity.terra_entity.queue_bee", "蜂王");
+        add("entity.terra_entity.little_hornet", "小黄蜂");
 
         add("effect.terra_entity.demonic_thoughts", "邪念");
 
@@ -75,7 +85,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.CRIMSON_SLIME_SPAWN_EGG.get(), "猩红史莱姆刷怪蛋");
         add(TEItems.TROPIC_SLIME_SPAWN_EGG.get(), "热带史莱姆刷怪蛋");
         add(TEItems.LUMINOUS_SLIME_SPAWN_EGG.get(), "夜明史莱姆刷怪蛋");
-        add(TEItems.LAVA_SLIME_SPAWN_EGG.get(), "岩浆史莱姆刷怪蛋");
+        add(TEItems.LAVA_SLIME_SPAWN_EGG.get(), "熔岩史莱姆刷怪蛋");
 
         add(TEItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
         add(TEItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
@@ -108,20 +118,23 @@ public class TEChineseProvider extends LanguageProvider {
 
 
         // config
-        add("terra_entity.options.title", "Terra Entity 配置");
-
-        add("terra_entity.configuration.server", "服务端配置");
-
         add("terra_entity.configuration.server.boss_clear_when_no_target", "丢失目标时清除BOSS");
         add("terra_entity.configuration.server.boss_attributes_multiplier_health", "BOSS属性倍率-生命");
         add("terra_entity.configuration.server.boss_attributes_multiplier_damage", "BOSS属性倍率-伤害");
+        add("terra_entity.configuration.server.boss_no_physics", "BOSS能否穿墙");
+        add("terra_entity.configuration.server.boss_leave_on_day", "Specify BOSS Leave on Day");
+
+
         add("terra_entity.configuration.server.display_summon_items", "在创造栏显示召唤物品");
         add("terra_entity.configuration.server.enhance_all_monster", "增强所有怪物");
         add("terra_entity.configuration.server.monster_attributes_multiplier_health", "Monster属性倍率-生命");
         add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster属性倍率-伤害");
 
-        add("terra_entity.configuration.client", "客户端配置");
         add("terra_entity.configuration.client.boss_bar_style", "BOSS血条样式");
+
+        add("terra_entity.options.title", "Terra Entity 配置");
+        add("terra_entity.configuration.server", "服务端配置");
+        add("terra_entity.configuration.client", "客户端配置");
 
 
         // Tooltip

@@ -24,6 +24,8 @@ public class BrainFake extends BrainOfCthulhu {
         this.noPhysics = true;
         if(!level.isClientSide())
             this.setBoundingBox(new AABB(0, 0,0,0,0,0));
+
+        collisionProperties.detectInternal = 9999;
     }
 
     public static final EntityDataAccessor<Integer> DATA_OWNER_ID = SynchedEntityData.defineId(BrainFake.class, EntityDataSerializers.INT);
@@ -114,11 +116,6 @@ public class BrainFake extends BrainOfCthulhu {
                 setPos(x, y, z);
             }
         }
-    }
-
-    @Override
-    public int getDetectInternal() {
-        return 9999;
     }
 
     @Override

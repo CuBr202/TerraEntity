@@ -34,6 +34,7 @@ import org.confluence.terraentity.api.event.BossDeathEvent;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.entity.ai.*;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +49,7 @@ import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
 
 @SuppressWarnings("all")
-public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackMob<T> {
+public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackEntity<T> {
 
 /* 属性 */
 
@@ -91,10 +92,13 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
         super.onAddedToWorld();
         this.addSkills();
+        if(skills.count() > 0)
+            skills.forceStartIndex(0);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 1)
                 .add(Attributes.ATTACK_DAMAGE, 1)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.2)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
@@ -121,7 +125,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
 
         if(!ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get() && !(this instanceof EaterOfWorldsSegment))
-            this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f));
+            this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f, 0));
 
     }
 
@@ -158,31 +162,11 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
 /* Collision */
 
-    public int attackInternal = 20;
-    protected int _attackInternal = 20;
-    protected int _detectInternal = 10;
-
-    public int getDetectInternal() {
-        return _detectInternal;
-    }
-
-    public int getAttackInternal() {
-        return _attackInternal;
-    }
+    CollisionProperties collisionProperties = new CollisionProperties(5, 10, 0);
 
     @Override
-    public int getActualAttackInterval() {
-        return attackInternal;
-    }
-
-    @Override
-    public void setActualAttackInterval(int interval) {
-        this.attackInternal = interval;
-    }
-
-    @Override
-    public float getAttackRangeExtent() {
-        return 0;
+    public CollisionProperties getCollisionProperties() {
+        return collisionProperties;
     }
 
 /* discard */
@@ -197,7 +181,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
         if (!level().isClientSide){
             target = getTarget();
-            skills.tick();
+            if(this.isAlive())
+                skills.tick();
             //没有目标禁止行为
 
             if(target==null){
@@ -211,8 +196,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             discardTick = 0;
 
             doCollisionAttack(
-                    living -> (true),
-                    e -> e.hurt(this.damageSources().generic(), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE))
+                    this::canAttack,
+                    this::doHurtTarget
             );
 
         }
@@ -220,7 +205,12 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         this.setDeltaMovement(getDeltaMovement().scale(0.95));//空气阻力
     }
 
-/* func */
+    @Override
+    public boolean doHurtTarget(Entity entity) {
+        return entity.hurt(TETags.DamageTypes.of(level(), DamageTypes.GENERIC, this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+    }
+
+    /* func */
 
     public void lookAtPos(Vec3 target, float pMaxYRotIncrease, float pMaxXRotIncrease) {
         double d0 = target.x - this.getX();
@@ -272,9 +262,17 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                 (
                         entity instanceof Player ||
                                         entity != this
-                                        &&!(entity instanceof AbstractTerraBossBase)
-                                        && entity.canBeSeenAsEnemy()
+//                                        &&!(entity instanceof AbstractTerraBossBase)
+                                         && entity.canBeSeenAsEnemy()
                 );
+    }
+
+    public float getHealthPercentage(){
+        return this.getHealth() / this.getMaxHealth();
+    }
+
+    public float getMoveSpeed(){
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
 /* boss条 */

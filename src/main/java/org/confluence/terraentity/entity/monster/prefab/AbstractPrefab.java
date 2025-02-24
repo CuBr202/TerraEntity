@@ -6,7 +6,15 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 
+import java.util.function.Supplier;
+
 public class AbstractPrefab {
+
+
+    public static Supplier<AbstractMonster.Builder> WARM_BUILDER =
+            ()-> new AbstractPrefab(44,2,1,60,0,0.1f).getPrefab().setNoGravity();
+
+
     /**
      * @param health 生命值
      * @param armor 防御值

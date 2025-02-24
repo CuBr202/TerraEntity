@@ -2,6 +2,7 @@ package org.confluence.terraentity.client.gui.config_container;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -33,6 +34,9 @@ public class ConfigContainerRegister {
         builder.addCheckBox(ServerConfig.DISPLAY_SUMMON_ITEMS);
         builder.addCheckBox(ServerConfig.ENHANCE_ALL_MONSTER);
         builder.addCheckBox(ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET);
+        builder.addCheckBox(ServerConfig.BOSS_NO_PHYSICS);
+        builder.addCheckBox(ServerConfig.BOSS_LEAVE_ON_DAY);
+
 
         builder.build();
         return builder;

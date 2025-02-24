@@ -1,9 +1,10 @@
 package org.confluence.terraentity.entity.proj;
 
-
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -15,44 +16,87 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.RegistryObject;
+import org.confluence.terraentity.TerraEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
-public abstract class BaseProj extends AbstractHurtingProjectile{
+
+public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingProjectile{
     private final long starttime = System.currentTimeMillis();
-    public float damage;
-    public int penetration = 1;
-    protected MobEffectInstance effect;
-    public ResourceLocation texture;
+    public float damage = 1;
+    private List<Integer> hitList = new ArrayList<>();
+    public int penetration =1;
+    protected List<MobEffectInstance> effects = new ArrayList<>();
+    public ResourceLocation texture = TerraEntity.space("textures/entity/projectile/default.png");
+    protected RegistryObject<SoundEvent> hitSound;
+    public Consumer<BaseProj> clientTickCallback;
 
     public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
         super(pEntityType, pLevel);
-        this.effect = pEffect;
+        if (pEffect != null){
+            this.effects.add(pEffect);
+        }
+    }
+    public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, List<MobEffectInstance> pEffects) {
+        super(pEntityType, pLevel);
+        this.effects = pEffects;
     }
 
-
+    public T setHitSound(RegistryObject<SoundEvent> hitSound){
+        this.hitSound = hitSound;
+        return (T) this;
+    }
+    public T setEffect(List<MobEffectInstance> effects) {
+        this.effects = effects;
+        return (T) this;
+    }
+    public T addEffect(MobEffectInstance effect) {
+        if (effect != null) {
+            this.effects.add(effect);
+        }
+        return (T) this;
+    }
     public float getDamage() {return damage;}
-    public void setDamage(int damage) {this.damage = damage;}
-    public void setPenetrate(int penetration){this.penetration = penetration;}
-    public void setTexture(ResourceLocation texture){this.texture = texture;}
+    public void addDamage(float damage) {this.damage += damage;}
+    public T setDamage(float damage) {
+        this.damage = damage;
+        return (T) this;
+    }
+    public T setPenetrate(int penetration){
+        this.penetration = penetration;
+        return (T) this;
+    }
+    public T setClientTickCallback(Consumer<BaseProj> clientTickCallback){
+        this.clientTickCallback = clientTickCallback;
+        return (T) this;
+    }
+    public T setTexture(ResourceLocation texture){
+        this.texture = texture;
+        return (T) this;
+    }
+
     public ResourceLocation getTexture(){return texture;}
     public abstract int waveDur();
-
+    public boolean shouldBeSaved(){
+        return false;
+    }
     public void doAABBHurt(){
         //包围盒检测造成伤害
-        var entities=level().getEntities(this,this.getBoundingBox());
+        var entities = level().getEntities(this, this.getBoundingBox());
         if(!entities.isEmpty() && penetration > 0){
             for (var e:entities) {
-                if(canHitEntity(e)) {
+                int id = e.getId();
+                if(canHitEntity(e) && !hitList.contains(id)) {
+                    hitList.add(id);
                     if(e instanceof LivingEntity living) {
-                        living.hurt(this.damageSources().mobProjectile(this,living), getDamage());
-
-                        //doKnockBack(living);
-                        penetration--;
-                        if(penetration <= 0) discard();
+                        doHurt(living);
+                        doKnockBack(living);
                     }
-                    break;
                 }
             }
         }
@@ -74,15 +118,18 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
 
     @Override
     public void tick() {
+        super.tick();
         if(!level().isClientSide){
             if(System.currentTimeMillis()-starttime > waveDur() * 50L) {
                 discard();
                 return;
             }
             doAABBHurt();
-            if(penetration <= 0) return;
+
+        }else if(clientTickCallback!= null){
+            clientTickCallback.accept(this);
         }
-        super.tick();
+
     }
 
     //弹幕设置
@@ -106,32 +153,45 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
     }
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
-
-        if(!this.level().isClientSide()) {
-            if(this.isRemoved()) return;
-            Entity entity1 = pResult.getEntity();
-            Entity entity = this.getOwner();
-            if(effect!= null && entity1 != entity && entity1 instanceof LivingEntity living){
-                living.addEffect(effect);
-                living.hurt(this.damageSources().mobProjectile(this,living), getDamage());
-            }
-            this.discard();
-
-        }
+        Entity hurter = pResult.getEntity();
+        if(!hitList.contains(hurter.getId()) && hurter instanceof LivingEntity living && canHitEntity(living))
+            doHurt(living);
         super.onHitEntity(pResult);
     }
 
+    protected void doHurt(LivingEntity hurter){
+        Entity entity = this.getOwner();
+        for (MobEffectInstance effect : effects) {
+            hurter.addEffect(effect);
+        }
+        if(hitSound != null)
+            level().playSound(this,this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
+        if(entity!= null && entity instanceof LivingEntity living)
+            hurter.hurt(entity.damageSources().mobProjectile(this, living), 1);
+        else if(hurter!= null)
+            hurter.hurt(this.damageSources().generic(), getDamage());
+        Vec3 pos = hurter.position();
 
-    @Nullable
+        if(this.level() instanceof ServerLevel serverlevel){
+            penetration--;
+            if(penetration <= 0) {
+                discard();
+            }
+        }
+    }
+
+
     @Override//设置粒子效果
     protected ParticleOptions getTrailParticle() {
-        return null;
+        return super.getTrailParticle();
     }
 
     @Override
-    protected boolean canHitEntity(@NotNull Entity pTarget) {
-        return pTarget != getOwner() &&
-                super.canHitEntity(pTarget);
+    protected boolean canHitEntity(@NotNull Entity target) {
+        if(getOwner()!=null && getOwner() instanceof LivingEntity living && target instanceof LivingEntity living1) return target.canBeHitByProjectile() &&
+                target != living && living.canAttack(living1);
+        return target.canBeHitByProjectile() &&
+                target != getOwner();
     }
 
 //    @Override//流体阻力
@@ -158,12 +218,4 @@ public abstract class BaseProj extends AbstractHurtingProjectile{
         super.onHitBlock(pResult);
         if(!this.level().isClientSide()) discard();
     }
-
-
-    public static class TextureLib{
-
-
-
-    }
-
 }

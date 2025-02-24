@@ -38,8 +38,8 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
         addSkills();
     }
 
-    default void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, 20, state -> {
+    default AnimationController<IFSMGeoMob<T>> fsmAnimationController() {
+        return new AnimationController<>(this, 10, state -> {
             Entity entity =  state.getData(DataTickets.ENTITY);
             if (!entity.isAlive()) return PlayState.STOP;
             if (getSkills().count() == 0) return PlayState.STOP;
@@ -54,7 +54,11 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
                 return PlayState.STOP;
             }
             return PlayState.CONTINUE;
-        }));
+        });
+    }
+
+    default void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(fsmAnimationController());
     }
 
 
