@@ -34,23 +34,23 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
     public static final Supplier<AbstractMonster.Builder> EATER_OF_SOULS_BUILDER =
-            Suppliers.memoize(()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
+            ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
                     .setHurtSound(TESounds.ROUTINE_HURT)
                     .setDeathSound(TESounds.ROUTINE_DEATH)
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
 
-                    }))
+                    })
             ;
 
     public static final Supplier<AbstractMonster.Builder> DRIPPLER_BUILDER  =
-            Suppliers.memoize(()->new FlyMonsterPrefab(26,3,14,64,0.5f,0.2f).getPrefab()
+            ()->new FlyMonsterPrefab(26,3,14,64,0.5f,0.2f).getPrefab()
                 .setHurtSound(TESounds.DRIPPLER_HURT)
                 .setDeathSound(TESounds.DRIPPLER_DEATH)
                 .addGoal((g,e)->{
                     g.addGoal(0, new DashGoal(e,0.8f,0.2f,10));
 
-                }))
+                })
             ;
 
     public static Supplier<AbstractMonster.Builder> FLYING_FISH_BUILDER  =
@@ -106,9 +106,10 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                 .setNavigation((e)->new FlyingPathNavigation(e,e.level()))
                 .setSafeFall(1000)
                 .setNoGravity()
+                .setPushable(false)
                 .setNoFriction()
                 .addGoal((g,e)-> {
-                    g.addGoal(1, new MeleeAttackNoLookGoal(e,  false));
+//                    g.addGoal(1, new MeleeAttackNoLookGoal(e,  false));
                     g.addGoal(2, new LookForwardWanderFlyGoal(e,0.2f, 0));
                 })
                 .setController((c,e)->c.add(new AnimationController<GeoAnimatable>(e,"move",10,

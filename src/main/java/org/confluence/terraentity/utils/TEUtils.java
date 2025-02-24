@@ -250,7 +250,7 @@ public final class TEUtils {
                 entity.setHealth(entity.getMaxHealth());
             }
             if(!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(damageKey))
-                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(damageKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             if(!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(difficultyDamageKey))
                 entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(difficultyDamageKey, multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         }

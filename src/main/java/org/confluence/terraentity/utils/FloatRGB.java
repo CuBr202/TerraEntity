@@ -34,4 +34,11 @@ public record FloatRGB(float red, float green, float blue) {
     public float[] toArray() {
         return new float[]{red, green, blue};
     }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FloatRGB that = (FloatRGB) o;
+        return Float.compare(that.red, red) == 0 && Float.compare(that.green, green) == 0 && Float.compare(that.blue, blue) == 0;
+    }
 }

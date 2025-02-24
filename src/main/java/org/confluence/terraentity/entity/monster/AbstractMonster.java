@@ -135,6 +135,13 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
 
                 ;
     }
+
+
+    public boolean isPushable() {
+        return super.isPushable() && builder.pushable;
+    }
+
+
     public static boolean checkFlyingFishSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!(pLevel instanceof Level level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
@@ -255,9 +262,10 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         super.tick();
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
         if(!level().isClientSide && builder.attachAttack && isAlive()){
-            doCollisionAttack(this::canAttack,
+            doCollisionAttack(
+                    this::canAttack,
                     this::doHurtTarget
-                    );
+            );
         }
     }
 
@@ -293,6 +301,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         public boolean attachAttack = true;
         public boolean noGravity = false;
         public boolean noFriction = false;
+        public boolean pushable = true;
 
 
         public Supplier<SoundEvent> deathSound;
@@ -416,6 +425,11 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         }
         public Builder setTicker(Consumer<AbstractMonster> ticker) {
             this.ticker = ticker;
+            return this;
+        }
+
+        public Builder setPushable(boolean pushable) {
+            this.pushable = pushable;
             return this;
         }
     }

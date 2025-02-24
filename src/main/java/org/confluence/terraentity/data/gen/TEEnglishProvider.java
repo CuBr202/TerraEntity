@@ -41,6 +41,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.boss_attributes_multiplier_health", "Boss Attributes Multiplier-Health");
         add("terra_entity.configuration.boss_attributes_multiplier_damage", "Boss Attributes Multiplier-Damage");
         add("terra_entity.configuration.boss_no_physics", "BOSS have no physics");
+        add("terra_entity.configuration.boss_leave_on_day", "Specify BOSS Leave on Day");
 
 
         add("terra_entity.configuration.display_summon_items", "Display Summon Items In Creative Tab");
