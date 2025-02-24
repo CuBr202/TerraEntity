@@ -6,10 +6,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -19,11 +17,8 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.neoforged.neoforge.common.Tags;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
-import org.confluence.terraentity.init.TETags;
-import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -262,8 +257,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         super.tick();
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
         if(!level().isClientSide && builder.attachAttack && isAlive()){
-            doCollisionAttack(
-                    this::canAttack,
+            doCollisionAttack(e->canAttack(e) && e.getType() != this.getType(),
                     this::doHurtTarget
             );
         }

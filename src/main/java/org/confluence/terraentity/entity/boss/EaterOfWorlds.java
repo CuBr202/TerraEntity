@@ -10,7 +10,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
@@ -287,6 +286,19 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
             }
             //中枢头刷新和重现机制
             if(ifBaseHead){
+                if(tickCount < 50){//forge 奇怪的bug，延迟加boss条
+
+                    if(level() instanceof  ServerLevel serverLevel){
+                        var players = serverLevel.players();
+                        for(var p : players){
+                            if(p.distanceToSqr(position())<100*100){
+                                bossEvent.addPlayer(p);
+                            }
+                            else bossEvent.removePlayer(p);
+                        }
+                    }
+
+                }
                 int cur = 0;
                 EaterOfWorlds newHead = null;
                 AbstractTerraBossBase lastSeg = baseSegments.getFirst();
@@ -312,7 +324,8 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                     // 给自己设置目标
                     if(current instanceof EaterOfWorldsSegment seg)
                         if(current.isAlive() && (this.getTarget() == null || !this.getTarget().isAlive())){
-                            if(seg.getLastHurtByMob() != null){
+                            LivingEntity tar = seg.getLastHurtByMob();
+                            if(tar != null && tar.isAlive() && tar.canBeSeenAsEnemy()){
                                 this.setTarget(seg.getLastHurtByMob());
                             }
                         }
@@ -428,6 +441,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         newHead.genSegments = false;
         if(ifBaseHead) {
             newHead.ifBaseHead = true;
+//            newHead.bossEvent = this.bossEvent;
             newHead.baseSegments = new CopyOnWriteArrayList<>(baseSegments);
             newHead.baseSegmentsHealth = new CopyOnWriteArrayList<>(baseSegmentsHealth);
         }
@@ -490,11 +504,18 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         if(ifBaseHead) {
             int aliveCount = 0;
             for (var n : baseSegments) {
-                if (n == null || !n.isAlive()) continue;
+                if (n == null || !n.isAlive()) {
+                    if (n != null) {
+                        n.bossEvent.removeAllPlayers();
+                    }
+                    continue;
+                }
                 aliveCount++;
             }
             if (aliveCount == 0) {
                 //生成掉落物
+                this.bossEvent.removeAllPlayers();
+
                 super.die(damageSource);
             }else{
                 // 生成体节掉落物

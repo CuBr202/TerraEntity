@@ -5,6 +5,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -16,6 +17,11 @@ import net.minecraft.world.level.block.Blocks;
 import org.confluence.terraentity.entity.ai.IMinion;
 import org.confluence.terraentity.entity.boss.QueenBee;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -56,6 +62,12 @@ public class LittleHornet extends Hornet implements IMinion<LittleHornet> {
         }
     }
 
+    @Override
+    public boolean hurt(DamageSource source, float pAmount) {
+        if(source.getEntity() == this.owner)
+            return false;
+        return super.hurt(source, pAmount);
+    }
 
     /* Minion API */
 
@@ -84,6 +96,15 @@ public class LittleHornet extends Hornet implements IMinion<LittleHornet> {
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         minion_readData(compound);
+    }
+
+    RawAnimation wing = RawAnimation.begin().thenLoop("wing");
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<GeoAnimatable>(this, "wing", state->{
+            state.setAnimation(wing);
+            return PlayState.CONTINUE;
+        }));
     }
 }
 
