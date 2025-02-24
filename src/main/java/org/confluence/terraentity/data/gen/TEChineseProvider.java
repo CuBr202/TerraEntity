@@ -57,12 +57,12 @@ public class TEChineseProvider extends LanguageProvider {
 
         add("entity.terra_entity.king_slime", "史莱姆王");
         add("entity.terra_entity.eye_of_cthulhu", "克苏鲁之眼");
-        add("entity.terra_entity.eater_of_world", "世界吞噬怪");
-        add("entity.terra_entity.eater_of_world_segment", "世界吞噬怪体节");
+        add("entity.terra_entity.eater_of_worlds", "世界吞噬怪");
+        add("entity.terra_entity.eater_of_worlds_segment", "世界吞噬怪体节");
         add("entity.terra_entity.brain_of_cthulhu", "克苏鲁之脑");
         add("entity.terra_entity.brain_fake", "克苏鲁之脑幻象");
         add("entity.terra_entity.visual_neuron", "视神经元");
-        add("entity.terra_entity.queue_bee", "蜂王");
+        add("entity.terra_entity.queen_bee", "蜂王");
         add("entity.terra_entity.little_hornet", "小黄蜂");
 
         add("effect.terra_entity.demonic_thoughts", "邪念");

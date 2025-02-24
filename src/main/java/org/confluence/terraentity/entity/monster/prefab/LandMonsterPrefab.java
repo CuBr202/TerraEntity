@@ -32,6 +32,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     .setStepHeight(3.2f)
                     .setAmbientSound(TESounds.FACE_HOOT)
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
+                    .setHurtSound(TESounds.ROUTINE_HURT)
                     .setJumpStrength(0.8f)
                     .addTarget((t,e)-> t.addGoal(1, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy)))
                     .addGoal((g,e)-> {
