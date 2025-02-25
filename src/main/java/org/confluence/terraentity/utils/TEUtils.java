@@ -211,9 +211,9 @@ public final class TEUtils {
      */
     public static float getMultiple(Level level, Holder<Attribute> attribute) {
         if(attribute == Attributes.MAX_HEALTH)
-            return switchByDifficulty(level, 1f, 1.5f, 2f);
+            return switchByDifficulty(level, 0.66f, 1f, 1.5f);
         else if(attribute == Attributes.ATTACK_DAMAGE)
-            return switchByDifficulty(level, 1f, 1.5f, 2f);
+            return switchByDifficulty(level, 0.66f, 1f, 1.5f);
         else return 1f;
     }
 
