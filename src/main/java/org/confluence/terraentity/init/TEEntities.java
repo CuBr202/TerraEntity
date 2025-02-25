@@ -104,7 +104,7 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> BLOOD_TUMORS = registerSimpleMonster("blood_tumors", LandMonsterPrefab.BLOOD_TUMORS,0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> BLOOD_ZOMBIE = registerSimpleMonster("blood_zombie", LandMonsterPrefab.BLOOD_ZOMBIE_BUILDER,0.75F,1.95F);
         // 蠕虫
-    public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> DEVOURER = registerEntity("devourer", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get()),2F,2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> DEVOURER = registerEntity("devourer", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(52).setAttackDamage(8).setArmor(2)),2F,2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> TOMB_CRAWLER = registerEntity("tomb_crawler", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(16).setAttackDamage(4).setArmor(2)),2F,2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> GIANT_WORM = registerEntity("giant_worm", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(31).setAttackDamage(9).setArmor(3)),2F,2F);
 
