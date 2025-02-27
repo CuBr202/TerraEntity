@@ -22,7 +22,6 @@ import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.confluence.terraentity.entity.ai.Boss;
@@ -82,18 +81,6 @@ public class GameEntityEvent {
             // 同步召唤栏信息
             player.getData(TEAttachments.SUMMONER_STORAGE.get()).sync(player);
         }
-    }
-
-    @SubscribeEvent
-    public static void FinalizeSpawnRegister(FinalizeSpawnEvent event) {
-        if(event.getEntity() instanceof BlackSlime entity){
-            entity.finalizeSpawn(entity.getRandom(),event.getDifficulty());
-        }
-
-    }
-    @SubscribeEvent
-    public static void FinalizeSpawnRegister(LivingEvent.LivingJumpEvent event) {
-
     }
 
     @SubscribeEvent
