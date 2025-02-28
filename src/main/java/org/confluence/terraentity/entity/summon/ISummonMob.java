@@ -155,16 +155,16 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     }
 
     default boolean summon_canTeleportTo(BlockPos pos, boolean canFly) {
-        BlockPathTypes $$1 = WalkNodeEvaluator.getBlockPathTypeStatic(te$getSelf().level(), pos.mutable());
-        if ($$1 != BlockPathTypes.WALKABLE) {
+        BlockPathTypes pathtype = WalkNodeEvaluator.getBlockPathTypeStatic(te$getSelf().level(), pos.mutable());
+        if (pathtype != BlockPathTypes.WALKABLE && !summon_canFlyToOwner()) {
             return false;
         } else {
-            BlockState $$2 = te$getSelf().level().getBlockState(pos.below());
-            if (canFly && $$2.getBlock() instanceof LeavesBlock) {
+            BlockState blockstate = te$getSelf().level().getBlockState(pos.below());
+            if (canFly && blockstate.getBlock() instanceof LeavesBlock) {
                 return false;
             } else {
-                BlockPos $$3 = pos.subtract(te$getSelf().blockPosition());
-                return te$getSelf().level().noCollision(te$getSelf(), te$getSelf().getBoundingBox().move($$3));
+                BlockPos blockpos = pos.subtract(te$getSelf().blockPosition());
+                return te$getSelf().level().noCollision(te$getSelf(), te$getSelf().getBoundingBox().move(blockpos));
             }
         }
     }
@@ -230,7 +230,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     /* 以下方法需要被写入对应重写方法 */
     
     default void summon_registerCommonGoals(){
-        te$getSelf().goalSelector.addGoal(6, new SummonFollowOwnerGoal(te$getSelf(), 1.0, 10.0F, 2.0F, false));
+        summon_registerMoveGoal();
         te$getSelf().goalSelector.addGoal(10, new LookAtPlayerGoal(te$getSelf(), Player.class, 8.0F));
         te$getSelf().goalSelector.addGoal(10, new RandomLookAroundGoal(te$getSelf()));
 
@@ -241,6 +241,9 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
         te$getSelf().targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(te$getSelf(), Slime.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
     }
 
+    default void summon_registerMoveGoal(){
+        te$getSelf().goalSelector.addGoal(6, new SummonFollowOwnerGoal(te$getSelf(), 1.0, 10.0F, 2.0F, false));
+    }
 
     default void summon_onAddedToLevel() {
         if(!te$getSelf().level().isClientSide){
@@ -271,7 +274,8 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     default boolean summon_discardWhenOwnerDie(){
         if(te$getSelf().level().isClientSide) return false;
         if(summon_getOwner() != null) {
-            if(!te$getSelf().level().getEntity(summon_getOwner().getId()).isAlive()) {
+            Entity entity = te$getSelf().level().getEntity(summon_getOwner().getId());
+            if(entity == null || !entity.isAlive()) {
                 te$getSelf().discard();
                 return true;
             }

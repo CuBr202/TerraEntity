@@ -46,6 +46,8 @@ import static org.confluence.terraentity.TerraEntity.MODID;
 public class GameEntityEvent {
     @SubscribeEvent
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
+
+
         Level level = event.getLevel();
         if (event.loadedFromDisk() || !(level instanceof ServerLevel serverLevel)) return;
         if (event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < 0.05F) {
@@ -63,10 +65,6 @@ public class GameEntityEvent {
             TEUtils.monsterEnhance(slime);
         // 生成信息
         Boss.sendBossSpawnMessage(event.getEntity());
-        if(event.getEntity() instanceof ServerPlayer player){
-            // debug
-//            player.getInventory().add(TEItems.SLIME_STAFF.toStack());
-        }
     }
 
     @SubscribeEvent
@@ -75,6 +73,7 @@ public class GameEntityEvent {
             // 清除召唤物
             player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data->data.clear(player));
         }
+
     }
 
     @SubscribeEvent

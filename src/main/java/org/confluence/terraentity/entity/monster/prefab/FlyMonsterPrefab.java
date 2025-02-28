@@ -107,6 +107,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                 .setNavigation((e)->new FlyingPathNavigation(e,e.level()))
                 .setSafeFall(1000)
                 .setNoGravity()
+                .setPushable(false)
                 .setNoFriction()
                 .addGoal((g,e)-> {
                     g.addGoal(1, new MeleeAttackNoLookGoal(e,  false));

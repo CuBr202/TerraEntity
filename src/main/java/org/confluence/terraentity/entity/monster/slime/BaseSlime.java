@@ -12,20 +12,18 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
@@ -34,7 +32,13 @@ import org.confluence.terraentity.utils.FloatRGB;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Predicate;
+
 public class BaseSlime extends Slime implements DeathAnimOptions {
+    static FloatRGB SlimeColor_Green = FloatRGB.fromInteger(0x48E920);
+    static FloatRGB SlimeColor_Blue = FloatRGB.fromInteger(0x73bcf4);
+    static FloatRGB SlimeColor_Purple = FloatRGB.fromInteger(0xf334f8);
+
     private final int size;
     private final FloatRGB color;
 
@@ -45,6 +49,20 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         setSize(size, false);
         this.color = FloatRGB.fromInteger(color);
     }
+
+    Predicate<FloatRGB> colorTest = c->c.equals(SlimeColor_Green) || c.equals(SlimeColor_Blue) || c.equals(SlimeColor_Purple);
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.targetSelector.removeAllGoals(gt->true);
+
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, (liv) -> {
+            return Math.abs(liv.getY() - this.getY()) <= 4.0 && (!colorTest.test(this.color) || this.level().isNight());
+        }));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
+    }
+
 
     public static AttributeSupplier.Builder createSlimeAttributes(float attackDamage, int armor, float maxHealth) {
         return Mob.createMobAttributes()

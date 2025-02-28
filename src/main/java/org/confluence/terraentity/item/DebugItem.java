@@ -2,7 +2,6 @@ package org.confluence.terraentity.item;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -12,6 +11,8 @@ import net.minecraftforge.common.ForgeMod;
 import org.confluence.terraentity.utils.TEUtils;
 
 public class DebugItem extends Item {
+
+
     public DebugItem(Properties properties) {
         super(properties);
     }

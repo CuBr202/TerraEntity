@@ -27,16 +27,17 @@ public interface ICollisionAttackEntity<T extends Entity>{
         if(collision$getSelf().level().isClientSide) return;
         getCollisionProperties().reduceAttackInterval();
         if (canCollisionHurt() && !collision$getSelf().level().isClientSide && getCollisionProperties().canAttack()) {
-            getCollisionProperties().reDetect();
             // 包围盒检测造成伤害
             var entities = collision$getSelf().level().getEntities(collision$getSelf(), collision$getSelf().getBoundingBox().inflate(getCollisionProperties().attackRangeExtent), e-> e instanceof LivingEntity && e!= collision$getSelf());
             if (!entities.isEmpty()) {
                 for (var e : entities) {
                     if ( e instanceof LivingEntity living && filter.test(living) ){
-                        getCollisionProperties().rewind();
                         attackCallback.accept(e);
                     }
                 }
+                getCollisionProperties().rewind();
+            }else{
+                getCollisionProperties().reDetect();
             }
         }
     }

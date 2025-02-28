@@ -43,7 +43,9 @@ import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.entity.proj.LineProj;
+import org.confluence.terraentity.entity.proj.SummonBeeStick;
 import org.confluence.terraentity.entity.proj.ThrowableProj;
+import org.confluence.terraentity.entity.summon.SummonHornet;
 import org.confluence.terraentity.entity.summon.SummonIronGolem;
 import org.confluence.terraentity.entity.summon.SummonSlime;
 
@@ -128,6 +130,7 @@ public final class TEEntities {
     // tip 召唤物
     public static final RegistryObject<EntityType<SummonSlime>> SUMMON_SLIME = registerEntity("slime_baby", SummonSlime::new ,0.5F,0.5F);
     public static final RegistryObject<EntityType<SummonIronGolem>> SUMMON_IRON_GOLEM = registerEntity("i_32_iron_golem", SummonIronGolem::new,1.5F,3F);
+    public static final RegistryObject<EntityType<SummonHornet>> SUMMON_HORNET = registerEntity("hornet_baby", SummonHornet::new,0.5F,0.8F);
 
 
 
@@ -161,6 +164,8 @@ public final class TEEntities {
 
     public static final RegistryObject<EntityType<LineProj>> BEE_STICK_PROJ = registerProj("bee_stick_proj",(e, l)->
             new LineProj(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
+    public static final RegistryObject<EntityType<LineProj>> SUMMON_BEE_STICK_PROJ = registerProj("summon_bee_stick_proj",(e, l)->
+            new SummonBeeStick(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
 
 
 
@@ -219,6 +224,11 @@ public final class TEEntities {
         event.registerEntityRenderer(ICE_BAT.get(), c-> new GeoNormalRenderer<>(c,ICE_BAT.getId(),false));
         event.registerEntityRenderer(SPORE_BAT.get(), c-> new GeoNormalRenderer<>(c,SPORE_BAT.getId(),false));
 
+        // bee
+        event.registerEntityRenderer(LITTLE_HORNET.get(), c->new GeoNormalRenderer<>(c, LITTLE_HORNET.getId(),true, 1, 0.5f));
+        event.registerEntityRenderer(HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 1, 0.5f));
+
+
         // boss
         event.registerEntityRenderer(KING_SLIME.get(), KingSlimeRenderer::new);
         event.registerEntityRenderer(EYE_OF_CTHULHU.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(EYE_OF_CTHULHU),1,0.5f, true));
@@ -228,12 +238,12 @@ public final class TEEntities {
         event.registerEntityRenderer(VISUAL_NEURON.get(), c->new GeoNormalRenderer<>(c, VISUAL_NEURON.getId(),true));
         event.registerEntityRenderer(BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
         event.registerEntityRenderer(QUEEN_BEE.get(), c->new QueenBeeRenderer(c,new GeoBossModel<>(QUEEN_BEE)));
-        event.registerEntityRenderer(LITTLE_HORNET.get(), c->new GeoNormalRenderer<>(c, LITTLE_HORNET.getId(),true, 1, 0.5f));
-        event.registerEntityRenderer(HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 1, 0.5f));
 
         // sommon
         event.registerEntityRenderer(SUMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c, SUMMON_SLIME.getId().withPrefix("summon/"),false));
         event.registerEntityRenderer(SUMMON_IRON_GOLEM.get(), IronGolemRenderer::new);
+        event.registerEntityRenderer(SUMMON_HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 0.6f, 0.5f));
+
 
     }
 
@@ -269,28 +279,38 @@ public final class TEEntities {
         event.put(YELLOW_SLIME.get(), BaseSlime.createSlimeAttributes(6.0F, 2, 25.0F).build());
         event.put(HONEY_SLIME.get(), HoneySlime.createSlimeAttributes(0F, 0, 16.0F).build());
         event.put(BLACK_SLIME.get(), Monster.createMonsterAttributes().build()); // 由finalizeSpawn设置
-
-        // monster
-        event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());
+        // land
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
         event.put(DECAYEDER.get(), Decayeder.createAttributes().build());
         event.put(BLOODY_SPORE.get(), BloodySpore.createAttributes().build());
-        event.put(CRIMSON_KEMERA.get(), AbstractMonster.createAttributes().build());
-        event.put(EATER_OF_SOULS.get(), AbstractMonster.createAttributes().build());
-        event.put(DRIPPLER.get(), AbstractMonster.createAttributes().build());
-        event.put(FLYING_FISH.get(), AbstractMonster.createAttributes().build());
         event.put(FACE_MONSTER.get(), AbstractMonster.createAttributes().build());
         event.put(BLOOD_TUMORS.get(), AbstractMonster.createAttributes().build());
         event.put(BLOOD_ZOMBIE.get(), AbstractMonster.createAttributes().build());
-        event.put(DEVOURER.get(), AbstractMonster.createAttributes().build());
-        event.put(TOMB_CRAWLER.get(), AbstractMonster.createAttributes().build());
-        event.put(GIANT_WORM.get(), AbstractMonster.createAttributes().build());
         event.put(GIANT_SHELLY.get(), AbstractMonster.createAttributes().build());
+
+        // fly
+        event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());
+        event.put(FLYING_FISH.get(), AbstractMonster.createAttributes().build());
+        event.put(CRIMSON_KEMERA.get(), AbstractMonster.createAttributes().build());
+        event.put(DRIPPLER.get(), AbstractMonster.createAttributes().build());
+        event.put(EATER_OF_SOULS.get(), AbstractMonster.createAttributes().build());
+
+
+        // bat
         event.put(CAVE_BAT.get(), AbstractMonster.createAttributes().build());
         event.put(JUNGLE_BAT.get(), AbstractMonster.createAttributes().build());
         event.put(HELL_BAT.get(), AbstractMonster.createAttributes().build());
         event.put(ICE_BAT.get(), AbstractMonster.createAttributes().build());
         event.put(SPORE_BAT.get(), AbstractMonster.createAttributes().build());
+        // worm
+        event.put(GIANT_WORM.get(), AbstractMonster.createAttributes().build());
+        event.put(DEVOURER.get(), AbstractMonster.createAttributes().build());
+        event.put(TOMB_CRAWLER.get(), AbstractMonster.createAttributes().build());
+
+        // bee
+        event.put(HORNET.get(), AbstractMonster.createAttributes().build());
+        event.put(LITTLE_HORNET.get(), AbstractMonster.createAttributes().build());
+
 
         // boss
         event.put(KING_SLIME.get(), KingSlime.createSlimeAttributes().build());
@@ -301,12 +321,11 @@ public final class TEEntities {
         event.put(VISUAL_NEURON.get(), AbstractMonster.createAttributes().build());
         event.put(BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(QUEEN_BEE.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(LITTLE_HORNET.get(), AbstractMonster.createAttributes().build());
-        event.put(HORNET.get(), AbstractMonster.createAttributes().build());
 
         // sommon
         event.put(SUMMON_SLIME.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(SUMMON_IRON_GOLEM.get(), IronGolem.createAttributes().build());
+        event.put(SUMMON_HORNET.get(), AbstractMonster.createAttributes().build());
 
     }
 
@@ -328,28 +347,37 @@ public final class TEEntities {
         event.register(BLACK_SLIME.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(LAVA_SLIME.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
-        event.register(DEMON_EYE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DemonEye::checkDemonEyeSpawn,  SpawnPlacementRegisterEvent.Operation.REPLACE);
+
+        // land
         event.register(BLOOD_CRAWLER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BloodCrawler::checkBloodCrawlerSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(BLOOD_ZOMBIE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(BLOODY_SPORE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BloodySpore::checkBloodySporeSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(CRIMSON_KEMERA.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(FACE_MONSTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(DECAYEDER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(GIANT_SHELLY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
+        // fly
+        event.register(DEMON_EYE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DemonEye::checkDemonEyeSpawn,  SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(FLYING_FISH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkFlyingFishSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(CRIMSON_KEMERA.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(EATER_OF_SOULS.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
+        // worm
         event.register(DEVOURER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(GIANT_WORM.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(TOMB_CRAWLER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
+        // bee
         event.register(HORNET.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
-        event.register(FLYING_FISH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkFlyingFishSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(GIANT_SHELLY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        // bat
         event.register(CAVE_BAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(JUNGLE_BAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(HELL_BAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkNetherMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(ICE_BAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(SPORE_BAT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
-        event.register(EATER_OF_SOULS.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
-        event.register(BLOOD_ZOMBIE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
 
     }

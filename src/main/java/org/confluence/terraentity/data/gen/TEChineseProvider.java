@@ -57,18 +57,20 @@ public class TEChineseProvider extends LanguageProvider {
 
         add("entity.terra_entity.king_slime", "史莱姆王");
         add("entity.terra_entity.eye_of_cthulhu", "克苏鲁之眼");
-        add("entity.terra_entity.eater_of_world", "世界吞噬怪");
-        add("entity.terra_entity.eater_of_world_segment", "世界吞噬怪体节");
+        add("entity.terra_entity.eater_of_worlds", "世界吞噬怪");
+        add("entity.terra_entity.eater_of_worlds_segment", "世界吞噬怪体节");
         add("entity.terra_entity.brain_of_cthulhu", "克苏鲁之脑");
         add("entity.terra_entity.brain_fake", "克苏鲁之脑幻象");
         add("entity.terra_entity.visual_neuron", "视神经元");
-        add("entity.terra_entity.queue_bee", "蜂王");
+        add("entity.terra_entity.queen_bee", "蜂王");
         add("entity.terra_entity.little_hornet", "小黄蜂");
 
         add("effect.terra_entity.demonic_thoughts", "邪念");
 
         add(TEEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
         add(TEEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
+        add(TEEntities.SUMMON_HORNET.get(), "仆役黄蜂");
+
 
         // 刷怪蛋
         add(TEItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
@@ -90,6 +92,14 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
         add(TEItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
         add(TEItems.GIANT_SHELLY_SPAWN_EGG.get(), "巨型卷壳怪刷怪蛋");
+        add(TEItems.GIANT_WORM_SPAWN_EGG.get(), "巨型蠕虫刷怪蛋");
+        add(TEItems.TOMB_CRAWLER_SPAWN_EGG.get(), "墓穴爬虫刷怪蛋");
+        add(TEItems.CAVE_BAT_SPAWN_EGG.get(), "洞穴蝙蝠刷怪蛋");
+        add(TEItems.ICE_BAT_SPAWN_EGG.get(), "冰雪蝙蝠刷怪蛋");
+        add(TEItems.JUNGLE_BAT_SPAWN_EGG.get(), "丛林蝙蝠刷怪蛋");
+        add(TEItems.HORNET_SPAWN_EGG.get(), "黄蜂刷怪蛋");
+        add(TEItems.HELL_BAT_SPAWN_EGG.get(), "地狱蝙蝠刷怪蛋");
+        add(TEItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");
         add(TEItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
         add(TEItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
 
@@ -106,11 +116,14 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
         add(TEItems.EATER_OF_WORLD_SPAWN_EGG.get(), "世界吞噬怪刷怪蛋");
         add(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
+        add(TEItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
 
 
         // 召唤杖
         add(TEItems.SLIME_STAFF.get(), "史莱姆法杖");
         add(TEItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
+        add(TEItems.HORNET_STAFF.get(), "黄蜂法杖");
+
 
         add("message.terraentity.boss_spawn", "%s已苏醒！");
         add("message.terraentity.boss_leave", "%s已被打败！");

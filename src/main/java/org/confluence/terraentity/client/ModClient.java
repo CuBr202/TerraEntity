@@ -83,6 +83,7 @@ public final class ModClient {
 
         registerProj(event,CABBAGE_PROJ.get(),c->new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION)));
         registerProj(event,BEE_STICK_PROJ.get(),c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
+        registerProj(event,SUMMON_BEE_STICK_PROJ.get(),c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
 
 
         TEEntities.registerRenderers(event);
