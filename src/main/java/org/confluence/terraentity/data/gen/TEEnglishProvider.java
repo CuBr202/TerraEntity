@@ -1,12 +1,15 @@
 package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEItems;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -25,7 +28,9 @@ public class TEEnglishProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
 
-        TEItems.SPAWN_EGGS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
+        Consumer<DeferredHolder<Item, ? extends Item>> itemAction = item -> add(item.get(), toTitleCase(item.getId().getPath()));
+        TEItems.SPAWN_EGGS.getEntries().forEach(itemAction);
+        TEItems.SUMMON_ITEMS.getEntries().forEach(itemAction);
         TEEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
         TEEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get(), toTitleCase(effect.getId().getPath())));
 

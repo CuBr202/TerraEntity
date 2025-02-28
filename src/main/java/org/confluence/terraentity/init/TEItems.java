@@ -19,8 +19,8 @@ import java.util.function.Supplier;
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 public class TEItems {
-    public static DeferredRegister.Items SPAWN_EGGS = DeferredRegister.createItems(MODID);
-    public static DeferredRegister.Items SUMMON_ITEMS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Items SPAWN_EGGS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Items SUMMON_ITEMS = DeferredRegister.createItems(MODID);
 
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
