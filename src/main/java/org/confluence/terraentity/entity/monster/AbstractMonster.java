@@ -94,6 +94,15 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     protected void registerGoals() {
         if(builder!= null) builder.goals.forEach(g->g.accept(goalSelector,this));
         if(builder!= null) builder.targets.forEach(t->t.accept(targetSelector,this));
+        registerTargetGoal(targetSelector);
+    }
+
+    protected void registerTargetGoal(GoalSelector targetSelector){
+
+    }
+
+    public boolean ignoreAttributeModify(){
+        return false;
     }
 
     public void firstSpawn(){};
@@ -101,7 +110,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     @Override
     public void onAddedToLevel(){
         super.onAddedToLevel();
-        if(!level().isClientSide){
+        if(!level().isClientSide && !ignoreAttributeModify()){
             if(dirty){
                 this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.MAX_HEALTH);
                 this.setHealth(getMaxHealth());

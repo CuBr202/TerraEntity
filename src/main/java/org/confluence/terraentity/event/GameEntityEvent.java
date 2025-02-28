@@ -24,6 +24,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.Decayeder;
@@ -32,6 +33,7 @@ import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
+import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
@@ -44,6 +46,8 @@ import static org.confluence.terraentity.TerraEntity.MODID;
 public class GameEntityEvent {
     @SubscribeEvent
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
+
+
         Level level = event.getLevel();
         if (event.loadedFromDisk() || !(level instanceof ServerLevel serverLevel)) return;
         if (event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < 0.05F) {
@@ -55,16 +59,12 @@ public class GameEntityEvent {
                 level.addFreshEntity(slime);
             }
         }
-        if(event.getEntity() instanceof Monster living)
+        if(event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
             TEUtils.monsterEnhance(living);
         else if(event.getEntity() instanceof Slime slime)
             TEUtils.monsterEnhance(slime);
         // 生成信息
         Boss.sendBossSpawnMessage(event.getEntity());
-        if(event.getEntity() instanceof ServerPlayer player){
-            // debug
-//            player.getInventory().add(TEItems.SLIME_STAFF.toStack());
-        }
     }
 
     @SubscribeEvent
@@ -73,6 +73,7 @@ public class GameEntityEvent {
             // 清除召唤物
             player.getData(TEAttachments.SUMMONER_STORAGE.get()).clear(player);
         }
+
     }
 
     @SubscribeEvent
@@ -176,6 +177,12 @@ public class GameEntityEvent {
         } else if (mob instanceof BlackSlime blackSlime) {
             blackSlime.finalizeSpawn(randomSource, event.getDifficulty());
         }
+
+    }
+
+    @SubscribeEvent
+    public static void tickEntity(EntityTickEvent.Post event) {
+
     }
 
 }

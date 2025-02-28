@@ -77,7 +77,7 @@ public class SummonIronGolem extends IronGolem implements ISummonMob<SummonIronG
 
     @Override
     public int getCost() {
-        return 1;
+        return cost;
     }
 
     @Override

@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
@@ -22,6 +23,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.AirAndWaterRandomPos;
 import net.minecraft.world.entity.ai.util.AirRandomPos;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
+import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -40,6 +42,7 @@ import java.util.EnumSet;
 
 public class Hornet extends AbstractMonster implements FlyingAnimal{
 
+    protected  int attackInternal = 40;
     public Hornet(EntityType<? extends Monster> type, Level level, Builder builder) {
         super(type, level, builder);
         this.moveControl = new FlyingMoveControl(this, 20, true);
@@ -54,8 +57,12 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         this.goalSelector.addGoal(8, new BeeWanderGoal());
         this.goalSelector.addGoal(9, new FloatGoal(this));
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2,new NearestAttackableTargetGoal<>(this, Player.class, false));
+        registerTargetGoal(this.targetSelector);
+    }
+
+    protected void registerTargetGoal(GoalSelector targetSelector){
+        targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        targetSelector.addGoal(2,new NearestAttackableTargetGoal<>(this, Player.class, false));
     }
 
     @Override
@@ -114,18 +121,22 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         int timeToRepath;
         Hornet bee;
 
-        BeeKeepOnTargetGoal(Hornet bee) {
+        public BeeKeepOnTargetGoal(Hornet bee) {
             this.setFlags(EnumSet.of(Flag.MOVE));
             this.bee = bee;
         }
 
         public boolean canUse() {
 
-            return bee.getTarget() != null && bee.getTarget().isAlive() && (--timeToRepath <= 0 || bee.getTarget()!=null && timeToRepath < 180);
+            return bee.getTarget() != null && bee.getTarget().isAlive() && (--timeToRepath <= 0 || bee.getTarget()!=null && timeToRepath < FIND_PATH_TIME - attackInternal);
         }
 
         public boolean canContinueToUse() {
             return canUse();
+        }
+
+        public boolean requiresUpdateEveryTick() {
+            return true;
         }
 
         public void start() {
@@ -157,13 +168,20 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
     }
 
     protected class BeeShootGoal extends Goal {
-        private final int SHOOT_TIME = 50;
+        protected int SHOOT_TIME;
         int timeToShoot;
         int prepareTime = 20;
         Hornet bee;
+        float inaccuracy;
 
-        BeeShootGoal(Hornet bee) {
+        public BeeShootGoal(Hornet bee) {
+            this(bee, 5.0F, 50);
+        }
+
+        public BeeShootGoal(Hornet bee, float inaccuracy, int shootTime) {
             this.bee = bee;
+            this.inaccuracy = inaccuracy;
+            this.SHOOT_TIME = shootTime;
         }
 
         public boolean canUse() {
@@ -177,29 +195,36 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         public void start() {
         }
 
+
         public void tick() {
             bee.lookControl.setLookAt(bee.getTarget());
-            if(TEUtils.angleBetween(bee.getLookAngle(), bee.getTarget().position().subtract(bee.position())) < 0.2f){
-                prepareTime--;
-                if(prepareTime <= 0) {
-                    bee.swing(InteractionHand.MAIN_HAND);
-                    LineProj proj = TEEntities.BEE_STICK_PROJ.get().create(level());
-                    if (proj!=null) {
-                        proj.setOwner(bee);
-                        proj.setPos(bee.position());
-                        proj.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
-                        Vec3 dir = bee.getTarget().getEyePosition().subtract(bee.position());
-                        proj.shoot(dir.x, dir.y, dir.z, 1, 5f);
-                        level().addFreshEntity(proj);
-                    }
-                    timeToShoot = SHOOT_TIME;
-                    prepareTime = 10 + bee.random.nextInt(10);
+            if (canShoot(bee.getTarget())) {
+                bee.swing(InteractionHand.MAIN_HAND);
+                LineProj proj = createProj();
+                if (proj != null) {
+                    proj.setOwner(bee);
+                    proj.setPos(bee.position());
+                    proj.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
+                    Vec3 dir = bee.getTarget().getEyePosition().subtract(bee.position());
+                    proj.shoot(dir.x, dir.y, dir.z, 1, inaccuracy);
+                    level().addFreshEntity(proj);
                 }
-
+                timeToShoot = SHOOT_TIME;
+                prepareTime = 10 + bee.random.nextInt(10);
             }
         }
+        protected boolean canShoot(Entity target) {
+            if(TEUtils.angleBetween(bee.getLookAngle(), target.position().subtract(bee.position())) < 0.2f){
+                return --prepareTime <= 0;
+            }
+            return false;
+        }
+
     }
 
+    protected LineProj createProj(){
+        return TEEntities.BEE_STICK_PROJ.get().create(level());
+    }
 
     @Override
     protected PathNavigation createNavigation(Level p_level) {

@@ -151,7 +151,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
 
     default boolean summon_canTeleportTo(BlockPos pos) {
         PathType pathtype = WalkNodeEvaluator.getPathTypeStatic(te$getSelf(), pos);
-        if (pathtype != PathType.WALKABLE) {
+        if (pathtype != PathType.WALKABLE && !summon_canFlyToOwner()) {
             return false;
         } else {
             BlockState blockstate = te$getSelf().level().getBlockState(pos.below());
@@ -229,7 +229,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     /* 以下方法需要被写入对应重写方法 */
     
     default void summon_registerCommonGoals(){
-        te$getSelf().goalSelector.addGoal(6, new SummonFollowOwnerGoal(te$getSelf(), 1.0, 10.0F, 2.0F));
+        summon_registerMoveGoal();
         te$getSelf().goalSelector.addGoal(10, new LookAtPlayerGoal(te$getSelf(), Player.class, 8.0F));
         te$getSelf().goalSelector.addGoal(10, new RandomLookAroundGoal(te$getSelf()));
 
@@ -240,6 +240,9 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
         te$getSelf().targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(te$getSelf(), Slime.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
     }
 
+    default void summon_registerMoveGoal(){
+        te$getSelf().goalSelector.addGoal(6, new SummonFollowOwnerGoal(te$getSelf(), 1.0, 10.0F, 2.0F));
+    }
 
     default void summon_onAddedToLevel() {
         if(!te$getSelf().level().isClientSide){

@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -149,7 +150,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
                 discard();
                 return;
             }
-            this.damage = (int) ((LivingEntity)getOwner()).getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+            this.damage = defaultDamage();
         }
     }
     @Override
@@ -160,6 +161,12 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
         super.onHitEntity(pResult);
     }
 
+    public float defaultDamage(){
+        if(getOwner() != null)
+            return (int) ((LivingEntity)getOwner()).getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+        return 1;
+    }
+
     protected void doHurt(LivingEntity hurter){
         Entity entity = this.getOwner();
         for (MobEffectInstance effect : effects) {
@@ -167,11 +174,8 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
         }
         if(hitSound != null)
             level().playSound(this,this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
-        if(entity!= null && entity instanceof LivingEntity living)
-            hurter.hurt(entity.damageSources().mobProjectile(this, living), 1);
-        else if(hurter!= null)
-            hurter.hurt(this.damageSources().generic(), getDamage());
-        Vec3 pos = hurter.position();
+
+        hurter.hurt(getDamageSource(hurter), damage);
 
         if(this.level() instanceof ServerLevel serverlevel){
             penetration--;
@@ -179,6 +183,13 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
                 discard();
             }
         }
+    }
+
+    public DamageSource getDamageSource(LivingEntity hurter){
+        if(getOwner() != null && getOwner() instanceof LivingEntity living){
+            return damageSources().mobProjectile(this, living);
+        }
+        return this.damageSources().generic();
     }
 
 

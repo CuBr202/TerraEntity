@@ -13,11 +13,11 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 public class SummonFollowOwnerGoal<T extends Mob & ISummonMob<?>> extends Goal {
-    private final T tamable;
+    protected final T tamable;
     @Nullable
-    private LivingEntity owner;
-    private final double speedModifier;
-    private final PathNavigation navigation;
+    protected LivingEntity owner;
+    protected final double speedModifier;
+    protected final PathNavigation navigation;
     private int timeToRecalcPath;
     private final float stopDistance;
     private final float startDistance;
@@ -77,14 +77,22 @@ public class SummonFollowOwnerGoal<T extends Mob & ISummonMob<?>> extends Goal {
         }
 
         if (--this.timeToRecalcPath <= 0) {
-            this.timeToRecalcPath = this.adjustedTickDelay(10);
+            this.timeToRecalcPath = getInterval();
             if (flag) {
                 this.tamable.summon_tryToTeleportToOwner();
             } else {
-                this.navigation.moveTo(this.owner, this.speedModifier);
+                createPath();
             }
         }
 
+    }
+
+    public void createPath(){
+        this.navigation.moveTo(this.owner, this.speedModifier);
+    }
+
+    public int getInterval() {
+        return this.adjustedTickDelay(10);
     }
 
 }
