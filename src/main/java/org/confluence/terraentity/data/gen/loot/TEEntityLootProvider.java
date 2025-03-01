@@ -6,7 +6,8 @@ import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.models.blockstates.PropertyDispatch;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCon
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
 import org.apache.commons.lang3.function.TriFunction;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEItems;
@@ -105,9 +105,18 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         this.add(TEEntities.EATER_OF_WORLDS.get(), LootTable.lootTable()
                 .withPool(LOOT_POOL.apply(TEItems.IRON_GOLEM_STAFF, 1F))
         );
+
+        // 蜂王
+        this.add(TEEntities.HORNET.get(), LootTable.lootTable()
+                .withPool(LOOT_POOL.apply(TEItems.QUEEN_BEE_SPAWN_EGG, 0.05F))
+        );
+
+        this.add(TEEntities.QUEEN_BEE.get(), LootTable.lootTable()
+                .withPool(LOOT_POOL.apply(Items.BEE_SPAWN_EGG, 1f))
+        );
     }
 
-    private final TriFunction<DeferredItem<Item>,Float,Integer,  LootPool.Builder> COUNT_LOOT_POOL = (item, chance, count)->
+    private final TriFunction<ItemLike,Float,Integer,  LootPool.Builder> COUNT_LOOT_POOL = (item, chance, count)->
             LootPool.lootPool()
                     .setRolls(BinomialDistributionGenerator.binomial(1, chance))
                     .add(LootItem.lootTableItem(item)
@@ -116,9 +125,9 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
             ;
 
 
-    private final BiFunction<DeferredItem<Item>,Float, LootPool.Builder> LOOT_POOL = (item, chance)->COUNT_LOOT_POOL.apply(item, chance, 1);
+    private final BiFunction<ItemLike,Float, LootPool.Builder> LOOT_POOL = (item, chance)->COUNT_LOOT_POOL.apply(item, chance, 1);
 
-    private final PropertyDispatch.TriFunction<DeferredItem<Item>,Float,Float, LootPool.Builder> LOOT_POOL_CONDITIONAL = (item, chance, condition)->
+    private final PropertyDispatch.TriFunction<ItemLike,Float,Float, LootPool.Builder> LOOT_POOL_CONDITIONAL = (item, chance, condition)->
             LOOT_POOL.apply(item, chance).when(LootItemRandomChanceCondition.randomChance(condition));
 
     private final Function<LootTable.Builder, LootTable.Builder> COMMON_LOOT_TABLE = (loot)-> loot
@@ -170,7 +179,11 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                 TEEntities.EATER_OF_SOULS,
                 TEEntities.DEVOURER,
 
-                TEEntities.EATER_OF_WORLDS
+                TEEntities.EATER_OF_WORLDS,
+
+                // 蜂王
+                TEEntities.HORNET,
+                TEEntities.QUEEN_BEE
 
 
         ).map(DeferredHolder::get);
