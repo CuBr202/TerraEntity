@@ -6,17 +6,17 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.ai.ICollisionAttackMob;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal implements GeoEntity, ISummonMob<T>, ICollisionAttackMob<T> {
+public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal implements GeoEntity, ISummonMob<T>, ICollisionAttackEntity<T> {
 
     protected float distanceToOwner;
 
@@ -26,29 +26,10 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
 
 /* Collision Attack API */
 
-    private int _detectInternal = 5;
-    private int _attackInternal = 5;
-    public int attackInternal = 5;
-    public float attackRange = 0.75f;
+    ICollisionAttackEntity.CollisionProperties collisionProperties = new CollisionProperties(5,5,0.75f);
 
-    public int getDetectInternal() {
-        return _detectInternal;
-    }
-    // 攻击间隔
-    public int getAttackInternal(){
-        return _attackInternal;
-    }
-
-    public int getActualAttackInterval(){
-        return attackInternal;
-    }
-
-    public void setActualAttackInterval(int interval){
-        attackInternal = interval;
-    }
-    // 攻击范围
-    public float getAttackRangeExtent() {
-        return attackRange;
+    public ICollisionAttackEntity.CollisionProperties getCollisionProperties() {
+        return collisionProperties;
     }
 
     @Override
@@ -56,7 +37,7 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
         super.tick();
         if(summon_discardWhenOwnerDie()) return;
 
-        doCollisionAttack(living->
+        doCollisionAttack(living -> canAttack(living) &&
                         (living instanceof Enemy && !(living instanceof NeutralMob) || living == getTarget()),
                 this::doHurtTarget);
 
@@ -117,6 +98,7 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
         super.readAdditionalSaveData(compound);
         cost = compound.getInt("cost");
     }
+
     @Override
     public boolean hurt(DamageSource source, float amount) {
         return source.is(DamageTypes.GENERIC_KILL) && super.hurt(source, amount);

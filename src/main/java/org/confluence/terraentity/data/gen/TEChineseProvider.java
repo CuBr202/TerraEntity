@@ -135,7 +135,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.server.boss_attributes_multiplier_health", "BOSS属性倍率-生命");
         add("terra_entity.configuration.server.boss_attributes_multiplier_damage", "BOSS属性倍率-伤害");
         add("terra_entity.configuration.server.boss_no_physics", "BOSS能否穿墙");
-        add("terra_entity.configuration.server.boss_leave_on_day", "Specify BOSS Leave on Day");
+        add("terra_entity.configuration.server.boss_leave_on_day", "特定的BOSS是否在白天离开");
 
 
         add("terra_entity.configuration.server.display_summon_items", "在创造栏显示召唤物品");

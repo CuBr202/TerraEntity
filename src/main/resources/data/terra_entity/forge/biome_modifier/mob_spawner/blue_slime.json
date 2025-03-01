@@ -25,7 +25,7 @@
     ],
     "spawners": {
         "type": "terra_entity:blue_slime",
-        "weight": 60,
+        "weight": 40,
         "minCount": 2,
         "maxCount": 4
     }

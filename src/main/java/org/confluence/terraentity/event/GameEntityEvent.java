@@ -34,6 +34,7 @@ import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
+import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
@@ -59,7 +60,7 @@ public class GameEntityEvent {
                 level.addFreshEntity(slime);
             }
         }
-        if(event.getEntity() instanceof Monster living)
+        if(event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
             TEUtils.monsterEnhance(living);
         else if(event.getEntity() instanceof Slime slime)
             TEUtils.monsterEnhance(slime);

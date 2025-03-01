@@ -109,7 +109,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     }
 
     default void summon_readData(CompoundTag compound) {
-        UUID uuid = null;
+        UUID uuid=null;
         if (compound.hasUUID("Owner")) {
             uuid = compound.getUUID("Owner");
         } else {
@@ -254,7 +254,6 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
             summon_getOwner().getCapability(TEAttachments.SUMMONER_STORAGE).ifPresent(cap->{
                 cap.getIds().add(te$getSelf().getId());
             });
-
         }
     }
 

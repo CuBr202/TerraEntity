@@ -3,7 +3,7 @@
     "biomes":"minecraft:nether_wastes",
     "spawners": {
         "type": "terra_entity:crimson_kemera",
-        "weight": 60,
+        "weight": 30,
         "minCount": 1,
         "maxCount": 1
     }

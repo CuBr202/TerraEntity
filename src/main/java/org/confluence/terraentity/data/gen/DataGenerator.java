@@ -9,6 +9,7 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
+import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 import org.confluence.terraentity.data.gen.tags.TEDamageTypeTagsProvider;
 import org.confluence.terraentity.data.gen.tags.TEBlockTagsProvider;
 import org.confluence.terraentity.data.gen.tags.TEItemTagsProvider;
@@ -44,6 +45,8 @@ public class DataGenerator {
         generator.addProvider(server, blockTagsProvider);
         generator.addProvider(server, new TEItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
         generator.addProvider(server, TELootTableProvider.getProvider(output,lookup));
+        generator.addProvider(server, new TERecipeProvider(output));
+
 //        generator.addProvider(server, new ModPoiTypeTagsProvider(output, lookup, helper));
 
 

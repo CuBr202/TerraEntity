@@ -87,6 +87,7 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_VARIANT_ID, 0);
+        this.entityData.define(DATA_OWNER_UUID, Optional.empty());
     }
 
     public @NotNull DemonEyeVariant getVariant() {

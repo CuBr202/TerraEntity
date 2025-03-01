@@ -49,7 +49,9 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
 
         this.dashComponent = new DashComponent(this);
     }
-
+    public QueenBee(Level level) {
+        this(TEEntities.QUEEN_BEE.get(), level);
+    }
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();

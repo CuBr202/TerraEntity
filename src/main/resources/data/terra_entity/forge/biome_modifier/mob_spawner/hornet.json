@@ -8,7 +8,7 @@
     ],
     "spawners": {
         "type": "terra_entity:hornet",
-        "weight": 260,
+        "weight": 60,
         "minCount": 1,
         "maxCount": 1
     }
