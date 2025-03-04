@@ -33,7 +33,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     private static final float projDamage = 3;
 
     private float segmentInternal = 2.8f;
-    int segmentCount = 20;//体节长度
+    int segmentCount = 60;//体节长度
     static float turnSpeedBase = 3f;//转向速度
     static float moveSpeedBase = 0.6f;//移动速度
     float wanderPosRadius = 10;//寻点半径

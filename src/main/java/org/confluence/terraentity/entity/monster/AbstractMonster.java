@@ -415,7 +415,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
             this.SAFE_FALL = value;
             return this;
         }
-        public Builder setNoAttackAttack() {
+        public Builder setNoAttachAttack() {
             this.attachAttack = false;
             return this;
         }

@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.ai.goal;
 
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
@@ -30,7 +31,8 @@ public class DashGoal extends Goal {
     enum States{
         dashing,
         dashing_back,
-        idle
+        idle,
+        away
     }
 
     public DashGoal(AbstractMonster entity,float friction, float maxSpeed,int additionTime) {
@@ -100,16 +102,39 @@ public class DashGoal extends Goal {
             state = States.idle;
 
         }
+
+        double distance = mob.position().distanceTo(target.getEyePosition());
+        if(distance < 0.5F && mob.swingTime == 0){
+            // 距离近攻击玩家
+            mob.doHurtTarget(target);
+            mob.swing(InteractionHand.MAIN_HAND);
+            state = States.away;
+            return;
+        }
+        if(state == States.away){
+            // 攻击后远离玩家
+            mob.addDeltaMovement(mob.getForward().normalize().scale(0.1F));
+            if(distance > 5){
+                state = States.idle;
+            }
+        }
+        System.out.println(mob.swingTime);
+
         if(state == States.dashing_back){
             --dashTime;
             downSpeed();
+
             mob.addDeltaMovement( new Vec3(0,0.05f,0));
             if(dashTime <= _dashTime) state = States.idle;
             return;
         }
         else if(state == States.idle) {
+            // 转向玩家
             lookAtTarget(target);
             downSpeed();
+            if(mob.getDeltaMovement().length() <= 0.1f){
+                mob.setDeltaMovement(mob.getForward().normalize().scale(0.1F));
+            }
 
             float angle = getAngle(target);
             if(angle < triggerAngle / 180 * 3.14159) {

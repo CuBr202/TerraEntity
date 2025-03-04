@@ -32,6 +32,7 @@ public class LittleHornet extends Hornet implements IMinion<LittleHornet> {
     public LittleHornet(EntityType<? extends Monster> type, Level level) {
         super(type, level, new AbstractPrefab(20,1,3,20,0,0.2f)
                 .getPrefab()
+                .setNoAttachAttack()
                 .setNoGravity()
         );
     }

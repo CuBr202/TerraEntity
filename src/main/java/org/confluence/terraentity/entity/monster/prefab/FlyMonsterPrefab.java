@@ -1,11 +1,9 @@
 package org.confluence.terraentity.entity.monster.prefab;
 
-import com.google.common.base.Suppliers;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.goal.DashGoal;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
-import org.confluence.terraentity.entity.ai.goal.MeleeAttackNoLookGoal;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TESounds;
 import software.bernie.geckolib.animatable.GeoAnimatable;
@@ -86,6 +84,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     .getPrefab()
                     .setHurtSound(TESounds.ROUTINE_HURT)
                     .setDeathSound(TESounds.ROUTINE_DEATH)
+                    .setNoAttachAttack()
                     .setMovementSpeed(0.5f)
                     .setNoGravity()
             ;

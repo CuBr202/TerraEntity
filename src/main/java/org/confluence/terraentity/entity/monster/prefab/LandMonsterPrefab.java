@@ -46,7 +46,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
     public static Supplier<AbstractMonster.Builder> BLOOD_TUMORS =
             ()->new LandMonsterPrefab(1,0,0,0,0,0,0).getPrefab()
                     .setSafeFall(80)
-                    .setNoAttackAttack()
+                    .setNoAttachAttack()
                     .setAttackDamage((int) (Math.random() * 60 + 100))
                     .setTicker(e->{
                         if(!e.level().isClientSide && e.isAlive() && e.tickCount == e.getAttributeValue(Attributes.ATTACK_DAMAGE)){
@@ -96,7 +96,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
         SIMPLE_MONSTER
                 .setNavigation((e)->new GroundPathNavigation(e,e.level()))
                 .setSafeFall(8)
-
+                .setNoAttachAttack()
                 .setMovementSpeed(moveSpeed)
                 .addTarget((t,e)->{
                     t.addGoal(2,new HurtByTargetGoal(e, Monster.class));
