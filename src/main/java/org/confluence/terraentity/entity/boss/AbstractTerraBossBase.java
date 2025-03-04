@@ -28,6 +28,7 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.PersistentEntitySectionManager;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
 import org.confluence.terraentity.config.ServerConfig;
@@ -171,6 +172,11 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         return collisionProperties;
     }
 
+    @Override
+    public boolean shouldDoCollision(){
+        return getTarget() != null;
+    }
+
 /* discard */
 
     LivingEntity target;
@@ -189,7 +195,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
             if(target==null){
                 discardTick++;
-                if(!level().isClientSide && discardTick>DISCARD_TICK && ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get()){
+                if(!level().isClientSide && discardTick > DISCARD_TICK && ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get()){
                     this.bossEvent.getPlayers().forEach(p->p.sendSystemMessage(this.getDisplayName().copy().append(Component.translatable("message.terraentity.boss_discard"))));
                     this.discard();
                 }
@@ -198,7 +204,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             discardTick = 0;
 
             doCollisionAttack(
-                    this::canAttack,
+                    e->canAttack(e) && e!= this && e.canBeSeenAsEnemy(),
                     this::doHurtTarget
             );
 

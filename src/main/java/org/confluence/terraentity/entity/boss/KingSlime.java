@@ -428,6 +428,11 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     }
 
     @Override
+    public boolean shouldDoCollision() {
+        return getTarget() != null;
+    }
+
+    @Override
     public boolean canAttack(LivingEntity target) {
         return super.canAttack(target) && !(target instanceof Slime);
     }

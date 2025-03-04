@@ -23,8 +23,10 @@ public interface ICollisionAttackEntity<T extends Entity>{
         return true;
     }
 
+    boolean shouldDoCollision();
+
     default void doCollisionAttack(Predicate<LivingEntity> filter, Consumer<Entity> attackCallback){
-        if(collision$getSelf().level().isClientSide) return;
+        if(!shouldDoCollision() || collision$getSelf().level().isClientSide) return;
         getCollisionProperties().reduceAttackInterval();
         if (canCollisionHurt() && !collision$getSelf().level().isClientSide && getCollisionProperties().canAttack()) {
             // 包围盒检测造成伤害

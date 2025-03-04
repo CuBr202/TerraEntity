@@ -32,6 +32,11 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
     }
 
     @Override
+    public boolean shouldDoCollision(){
+        return getTarget() != null;
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if(summon_discardWhenOwnerDie()) return;

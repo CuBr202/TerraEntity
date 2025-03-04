@@ -283,6 +283,11 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         return collisionProperties;
     }
 
+    @Override
+    public boolean shouldDoCollision() {
+        return getTarget() != null;
+    }
+
     public static class Builder {
         public int ATTACK_DAMAGE = 15;
         public int MAX_HEALTH = 31;

@@ -61,6 +61,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     public EaterOfWorldsSegment(EaterOfWorlds head, Level level) {
         this(TEEntities.EATER_OF_WORLD_SEGMENT.get(), level);
         this.head = head;
+        this._discardTimer = random.nextInt(25) + 100;
     }
 
     public Vec3 getNextPos(){
@@ -88,6 +89,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     }
 
     int discardTimer = 0;
+    int _discardTimer;
     @Override
     public void tick(){
         super.tick();
@@ -97,7 +99,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
                 this.setPos(getNextPos());
             if(head == null || !head.isAlive() ){
                 discardTimer++;
-                if(discardTimer > 100) {
+                if(discardTimer > _discardTimer) {
                     discard();
                 }
                 return;
@@ -105,6 +107,8 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
             discardTimer = 0;
         }
     }
+
+
 
     @Override
     public boolean canAttack(LivingEntity entity) {

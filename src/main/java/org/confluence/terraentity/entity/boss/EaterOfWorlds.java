@@ -33,7 +33,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     private static final float projDamage = 3;
 
     private float segmentInternal = 2.8f;
-    int segmentCount = 60;//体节长度
+    int segmentCount = 20;//体节长度
     static float turnSpeedBase = 3f;//转向速度
     static float moveSpeedBase = 0.6f;//移动速度
     float wanderPosRadius = 10;//寻点半径
@@ -99,6 +99,8 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     public boolean isNoGravity(){
         return true;
     }
+
+
 
     @Override
     public void addSkills() {
@@ -219,9 +221,11 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     private int shootTickBase = 20;
     boolean isDashing = false;
     boolean firstWander = false;
+
     @Override
-    public void tick(){
-        super.tick();
+    public void aiStep() {
+        super.aiStep();
+
         if(!level().isClientSide){
             entityData.set(DATA_SEG_COUNT,segmentCount);
             //召唤的瞬间位置为初始值，要延迟召唤segments
@@ -413,6 +417,12 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         this.bossEvent.removeAllPlayers();
         if(!level().isClientSide && ifBaseHead && discardTick < DISCARD_TICK){
 
+            // 区块卸载时防止读写冲突
+            var entityies = ((ServerLevel)level()).getPlayers(e->true,200);
+            if(entityies.isEmpty()){
+                super.onRemovedFromLevel();
+                return;
+            }
             for(var n : baseSegments){
                 if(n==null || !n.isAlive() ) continue;
                 if(n.getHealth()>0.0 && n!=this){
