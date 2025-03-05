@@ -115,7 +115,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                     // 生成仆从
                     spawnMinions(getTarget());
                     // 向玩家正上方移动
-                    dashComponent.hangOn(getTarget(), 3, 3, MOVE_SPEED);
+                    dashComponent.hangOn(getTarget(), 3, 1, MOVE_SPEED);
 //                    Vec3 tar = getTarget().position().add(new Vec3(0, distanceAbove, 0));
 //                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED / 10));
 
@@ -180,10 +180,11 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 },
                 terraBossBase -> {
                     if (getTarget() == null) return;
+                    if(getTarget().distanceTo(this) > 8) skills.tick -= 1;
                     LookAt(10);
 
                     // 向玩家正上方移动
-                    dashComponent.hangOn(getTarget(), 3, 3, MOVE_SPEED * stage2SpeedFactor);
+                    dashComponent.hangOn(getTarget(), 3, 0, MOVE_SPEED * stage2SpeedFactor);
 //                    Vec3 tar = getTarget().position().add(new Vec3(0, distanceAbove, 0));
 //                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED * stage2SpeedFactor / 10));
                 },
@@ -208,7 +209,9 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         speedFactor = 2;
                         this.playSound(TESounds.ROAR.get());
                     }
-
+                    if(distanceTo(getTarget()) < 8){
+                        skills.tick -= 1;
+                    }
                 },
                 terraBossBase -> {
                     // 延迟冲刺

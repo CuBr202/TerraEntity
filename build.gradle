@@ -17,6 +17,15 @@ base {
     archivesName = mod_id
 }
 
+configurations {
+    libraries
+    // This way, you only need one dependency declaration for both runtime and compile dependencies
+    implementation.extendsFrom libraries
+}
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 neoForge {
@@ -131,6 +140,10 @@ dependencies {
     compileOnly "mezz.jei:jei-1.21-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-1.21-neoforge:${jei_version}"
 
+    // 数学库
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    jarJar(group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1')
+    additionalRuntimeClasspath "org.apache.commons:commons-math3:3.6.1"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

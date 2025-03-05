@@ -48,7 +48,7 @@ import static org.confluence.terraentity.utils.TEUtils.switchByDifficulty;
 
 
 @SuppressWarnings("all")
-public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss, ICollisionAttackEntity<KingSlime> {
+public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss{
     private static final int COLOR_INT = 0x73bcf4;
     // 缩小/膨胀时长，单位：刻
     private static final int SHRINK_ENLARGE_DURATION = 20;
@@ -315,10 +315,6 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         // 额外的AI行为
         if (! isNoAi()) {
             AI();
-            doCollisionAttack(
-                    living -> canAttack(living),
-                    e->doHurtTarget(e)
-            );
         }
     }
 
@@ -419,17 +415,6 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     @Override
     public float[] getBloodColor() {
         return BLOOD_COLOR;
-    }
-
-    CollisionProperties collisionProperties = new CollisionProperties(5,5,1);
-    @Override
-    public CollisionProperties getCollisionProperties() {
-        return collisionProperties;
-    }
-
-    @Override
-    public boolean shouldDoCollision() {
-        return getTarget() != null;
     }
 
     @Override

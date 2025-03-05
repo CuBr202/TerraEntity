@@ -7,6 +7,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -106,7 +107,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                 .add(Attributes.ATTACK_DAMAGE, 1)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.2)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
-                .add(Attributes.FOLLOW_RANGE, 100.0);
+                .add(Attributes.FOLLOW_RANGE, 300.0);
 
     }
 
@@ -194,6 +195,14 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             //没有目标禁止行为
 
             if(target==null){
+                var entity = ((ServerLevel)level()).getNearestPlayer(this, getAttributeValue(Attributes.FOLLOW_RANGE));
+                if(entity!= null){
+                    if(entity.canBeSeenAsEnemy()){
+                        setTarget(entity);
+                        return;
+                    }
+                }
+
                 discardTick++;
                 if(!level().isClientSide && discardTick > DISCARD_TICK && ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get()){
                     this.bossEvent.getPlayers().forEach(p->p.sendSystemMessage(this.getDisplayName().copy().append(Component.translatable("message.terraentity.boss_discard"))));
