@@ -169,7 +169,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
 
                 .onTick(e->{
                     if(getTarget() == null) return;
-                    dashComponent.uniformMove(getMoveSpeed() * 2f * (isAngry()? 1.5f:1f));
+                    dashComponent.uniformMove(getMoveSpeed() * 2f * (isAngry() && difficult? 1.5f : 1f));
                     if(distanceToSqr(target) > 15 * 15) skills.forceEnd();
 
                 })

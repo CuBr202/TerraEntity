@@ -52,6 +52,9 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         this.noPhysics = true;
 
         this.xpReward = 2000;
+        if(difficult){
+            minionsSummonInternal = 6;
+        }
     }
 
     public BrainOfCthulhu(Level level) {

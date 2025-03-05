@@ -60,7 +60,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     public float ironGlomResistance = 0.4f;
     public float explosionResistance = 0.5f;
-
+    protected boolean difficult = true;
     protected boolean dirty = true;
     protected ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
     private final float baseHealth;
@@ -75,6 +75,11 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         var a = bossEvent.getOverlay();
         if(level().isClientSide){
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
+        }
+        if(level.getDifficulty().equals(level.getDifficulty().EASY)
+                || level.getDifficulty().equals(level.getDifficulty().NORMAL)
+        ){
+            difficult = true;
         }
     }
 

@@ -107,7 +107,10 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         MobSkill<AbstractTerraBossBase> direct = new MobSkill<>(null,300,0,
                 (AbstractTerraBossBase)->{
                     isDashing = true;
-                    moveSpeed = moveSpeedBase * 1.5f;
+
+                    if(difficult) moveSpeed = moveSpeedBase * 2f;
+                    else moveSpeed = moveSpeedBase * 1.5f;
+
                     turnSpeed = 5F;
                     shouldMove = true;
                     shouldFollowTarget=true;

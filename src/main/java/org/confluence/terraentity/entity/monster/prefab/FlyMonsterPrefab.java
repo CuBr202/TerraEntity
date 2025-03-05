@@ -66,6 +66,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ()->new FlyMonsterPrefab(8,1,4,60,0.2f,0.5f).getPrefab()
                     .setHurtSound(TESounds.ROUTINE_HURT)
                     .setDeathSound(TESounds.ROUTINE_DEATH)
+                    .setFollowRange(16) // 蝙蝠是瞎子，检测距离近点
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,1f,0.5f,30,
                                 0.02f,20,20,45));

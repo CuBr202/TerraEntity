@@ -56,6 +56,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
     DashComponent dashComponent;
 
 
+
     public EyeOfCthulhu(EntityType<EyeOfCthulhu> entityType, Level level) {
         super(entityType, level,MAX_HEALTHS,2);
         //初始属性
@@ -70,6 +71,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
         this.xpReward = 1000;
         dashComponent = new DashComponent(this);
+
     }
 
     public EyeOfCthulhu(Level level) {
@@ -180,7 +182,8 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 },
                 terraBossBase -> {
                     if (getTarget() == null) return;
-                    if(getTarget().distanceTo(this) > 8) skills.tick -= 1;
+                    if(difficult && getTarget().distanceTo(this) > 8)
+                        skills.tick -= 1;
                     LookAt(10);
 
                     // 向玩家正上方移动
@@ -209,7 +212,8 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         speedFactor = 2;
                         this.playSound(TESounds.ROAR.get());
                     }
-                    if(distanceTo(getTarget()) < 8){
+
+                    if(difficult && distanceTo(getTarget()) < 8){
                         skills.tick -= 1;
                     }
                 },
