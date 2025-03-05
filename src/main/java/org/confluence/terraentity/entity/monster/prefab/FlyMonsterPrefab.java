@@ -75,7 +75,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     })
             ;
     public static Supplier<AbstractMonster.Builder> JUNGLE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(17).setAttackDamage(8);
-    public static Supplier<AbstractMonster.Builder> HELL_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(23).setArmor(2).setAttackDamage(16);
+    public static Supplier<AbstractMonster.Builder> HELL_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(23).setArmor(2).setAttackDamage(15);
     public static Supplier<AbstractMonster.Builder> ICE_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(15).setAttackDamage(7);
 
 
