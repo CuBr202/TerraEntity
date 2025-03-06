@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.boss.KingSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
@@ -58,7 +59,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
     protected void registerGoals() {
         super.registerGoals();
         this.targetSelector.removeAllGoals(gt->true);
-
+        this.targetSelector.addGoal(1,new KingSlime.HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, (liv) -> {
             return Math.abs(liv.getY() - this.getY()) <= 4.0 && (!colorTest.test(this.color) || this.level().isNight());
         }));

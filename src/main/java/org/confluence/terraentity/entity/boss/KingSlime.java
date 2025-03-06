@@ -423,7 +423,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     }
 
 
-    static class HurtByTargetGoal extends TargetGoal {
+    public static class HurtByTargetGoal extends TargetGoal {
         private static final TargetingConditions HURT_BY_TARGETING = TargetingConditions.forCombat().ignoreLineOfSight().ignoreInvisibilityTesting();
         private static final int ALERT_RANGE_Y = 10;
         private boolean alertSameType;
