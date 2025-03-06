@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.boss;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.PersistentEntitySectionManager;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
@@ -88,6 +90,10 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     }
 
     public void firstSpawn(){};
+
+    @Override
+    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
+    }
 
     @Override
     public void onAddedToLevel(){

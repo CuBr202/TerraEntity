@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.boss;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +23,7 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
@@ -411,6 +413,9 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
 //        invalidateCaps();
     }
 
+    @Override
+    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
+    }
 
     @Override
     public float[] getBloodColor() {
