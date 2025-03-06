@@ -142,8 +142,12 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                             distanceToSqr(target) > 10 * 10 ||
                             Math.abs(target.getY() - e.getY()) > 2 ||
                             Math.abs(this.getXRot()) > 10
-                    )
-                        skills.tick = 15;
+                    ){
+
+                    }else{
+                        if(random.nextBoolean())
+                            skills.tick--;
+                    }
 
                     dashComponent.hangOn(getTarget(), 5, 0, getMoveSpeed() * 1.2f);
                     LookAt(10);
