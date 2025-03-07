@@ -31,12 +31,11 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.entity.PersistentEntitySectionManager;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
-import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.api.event.BossDeathEvent;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.CircleMobSkills;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
@@ -64,7 +63,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public float explosionResistance = 0.5f;
     protected boolean difficult = true;
     protected boolean dirty = true;
-    protected ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
+    protected ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
     private final float baseHealth;
     private final int baseArmor;
 
