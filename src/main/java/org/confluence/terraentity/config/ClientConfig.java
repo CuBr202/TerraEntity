@@ -20,7 +20,7 @@ public class ClientConfig {
         BossBarStyle  = BUILDER
                 .comment("Boss Bar Style.")
                 .comment("0: Default, 1: Still Style, 2: Dynamic Style")
-                .defineInRange("boss_bar_style", 0, 2, 2);
+                .defineInRange("boss_bar_style", 1, 0, 2);
         SPEC = BUILDER.build();
         return SPEC;
     }

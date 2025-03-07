@@ -161,8 +161,8 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         }
 
         int y = pPos.getY();
-        if (y >= 260) {
-            return false; // 不能生成在 y = 260 或更高的位置
+        if (y < 60 || y >= 260) {
+            return false; // 只能生成在 y = 60 到 y = 260 之间
         }
 
         return true;
