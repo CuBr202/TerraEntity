@@ -138,6 +138,11 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     public boolean summon_canFlyToOwner(){
         return true;
     }
+
+    @Override
+    public boolean isPickable() {
+        return false;
+    }
 }
 
 

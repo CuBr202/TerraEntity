@@ -134,6 +134,9 @@ public class SummonIronGolem extends IronGolem implements ISummonMob<SummonIronG
         return source.is(DamageTypes.GENERIC_KILL) && super.hurt(source, amount);
     }
 
-
+    @Override
+    public boolean isPickable() {
+        return false;
+    }
 
 }

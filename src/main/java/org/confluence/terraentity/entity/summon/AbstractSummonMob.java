@@ -113,6 +113,11 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
         return summon_doHurtTarget(entity);
     }
 
+    @Override
+    public boolean isPickable() {
+        return false;
+    }
+
 /* Geo API */
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
