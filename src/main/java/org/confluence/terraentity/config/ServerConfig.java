@@ -26,10 +26,10 @@ public class ServerConfig {
                 .define("boss_clear_when_no_target", false);
         BOSS_ATTRIBUTES_MULTIPLIER_HEALTH = BUILDER
                 .comment("Multiplier for boss attributes health.")
-                .defineInRange("boss_attributes_multiplier_health", 0.5F, 0.0625f, 10f);
+                .defineInRange("boss_attributes_multiplier_health", 1F, 0.0625f, 10f);
         BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE = BUILDER
                 .comment("Multiplier for boss attributes damage.")
-                .defineInRange("boss_attributes_multiplier_damage", 0.7F, 0.0625f, 10f);
+                .defineInRange("boss_attributes_multiplier_damage", 1F, 0.0625f, 10f);
 
         BOSS_NO_PHYSICS = BUILDER
                 .comment("Should the boss have no physics? Only for some bosses.")
