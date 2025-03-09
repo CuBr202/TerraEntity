@@ -64,7 +64,7 @@ public class ReplacedSpiderRenderer<T extends Spider> extends GeoReplacedEntityR
                 if (entity instanceof Spider spider) {
                     if (!spider.isClimbing() && !spider.onGround()) {
                         return state.setAndContinue(DefaultAnimations.JUMP);
-                    } else if (state.isMoving() && spider.getDeltaMovement().lengthSqr() > 0.11 * 0.11) {
+                    } else if (state.isMoving() && spider.getDeltaMovement().lengthSqr() > 0.115 * 0.115) {
                         return state.setAndContinue(DefaultAnimations.RUN);
                     }
                 }
