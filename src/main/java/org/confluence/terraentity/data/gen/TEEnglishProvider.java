@@ -56,6 +56,9 @@ public class TEEnglishProvider extends LanguageProvider {
 
         add("terra_entity.configuration.boss_bar_style", "Boss Health Bar Style");
 
+        add("terra_entity.configuration.enableNonSpiderModel", "Spider Harmonization");
+        add("terra_entity.configuration.enableNonSpiderModel.tooltip", "Enable this option if you dislike spiders or want to beautify them.");
+
 
         // Tooltip
         add("tooltip.terra_entity.summon_item_cost", "Summon Cost: %d");

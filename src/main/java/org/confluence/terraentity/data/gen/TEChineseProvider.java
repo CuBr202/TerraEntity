@@ -145,6 +145,9 @@ public class TEChineseProvider extends LanguageProvider {
 
         add("terra_entity.configuration.boss_bar_style", "BOSS血条样式");
 
+        add("terra_entity.configuration.enableNonSpiderModel", "蜘蛛和谐");
+        add("terra_entity.configuration.enableNonSpiderModel.tooltip", "如果你对蜘蛛反感或想美化他们，请开启这个选项");
+
 
         // Tooltip
         add("tooltip.terra_entity.summon_item_cost", "仆从占用: %s");
