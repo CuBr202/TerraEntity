@@ -29,6 +29,7 @@ import org.confluence.terraentity.client.boss.renderer.GeoBossRenderer;
 import org.confluence.terraentity.client.boss.renderer.QueenBeeRenderer;
 import org.confluence.terraentity.client.entity.model.GiantShellyModel;
 import org.confluence.terraentity.client.entity.renderer.*;
+import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.boss.*;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.*;
@@ -203,7 +204,9 @@ public final class TEEntities {
 
 
         event.registerEntityRenderer(DEMON_EYE.get(), DemonEyeRenderer::new);
-        event.registerEntityRenderer(BLOOD_CRAWLER.get(), c-> new GeoNormalRenderer<>(c,BLOOD_CRAWLER.getId()));
+        if (!ClientConfig.ENABLE_NON_SPIDER_MODEL.get()) {
+            event.registerEntityRenderer(BLOOD_CRAWLER.get(), c -> new GeoNormalRenderer<>(c, BLOOD_CRAWLER.getId()));
+        }
         event.registerEntityRenderer(BLOODY_SPORE.get(), BloodySporeRenderer::new);
         event.registerEntityRenderer(DECAYEDER.get(), SkeletonRenderer::new);  //todo
 
