@@ -59,6 +59,7 @@ public class VisualNeuron extends AbstractMonster{
             if(state == 0){
                 ready = false;
                 if(target != null && target.isAlive()) {
+                    setTarget(target);
                     this.addDeltaMovement(target.getEyePosition().subtract(position()).normalize().scale(MOVE_SPEED/ 5));
                     if(TEUtils.angleBetween(getDeltaMovement(), target.getEyePosition().subtract(position())) > Math.PI / 4 ) {
                         state = 1;

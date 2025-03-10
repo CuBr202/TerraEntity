@@ -145,7 +145,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                     ){
 
                     }else{
-                        if(random.nextBoolean())
+                        if(difficult || random.nextBoolean())
                             skills.tick--;
                     }
 
