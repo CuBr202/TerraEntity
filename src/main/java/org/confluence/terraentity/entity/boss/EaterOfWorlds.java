@@ -441,42 +441,43 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                 return;
             }
             int aliveCount = 0;
-            for(var n : baseSegments){
-                if(n == null || !n.isAlive() ) continue;
-                aliveCount++;
-                if(n.getHealth()>0.0 && n!=this){
-                    if(n instanceof EaterOfWorldsSegment){
-                        EaterOfWorlds newHead = new EaterOfWorlds(level(),false);
-                        newHead.setPos(n.position());
-                        transformHead(newHead);
-                        level().addFreshEntity(newHead);
-                        n.discard();
+//            if(discardTick <= DISCARD_TICK) {
+                for (var n : baseSegments) {
+                    if (n == null || !n.isAlive()) continue;
+                    aliveCount++;
+                    if (n instanceof EaterOfWorlds nn && n.getHealth() > 0.0 && n != this) {
+                        transformHead(nn);
+                        break;
                     }
-                    else{
-                        transformHead((EaterOfWorlds) n);
-                    }
-                    break;
                 }
-            }
-            // 延迟转换头导致的没有发送死亡事件
-            if(!truthDie && aliveCount == 0){
-                super.die(getLastDamageSource() == null ? damageSources().magic() : getLastDamageSource());
+                // 延迟转换头导致的没有发送死亡事件
+                if (!truthDie && aliveCount == 0) {
+                    super.die(getLastDamageSource() == null ? damageSources().magic() : getLastDamageSource());
+                }
+//            }
+            // 头未传递，所有的都应该消失
+            if(ifBaseHead){
+                for (var n : baseSegments) {
+                    if (n == null || !n.isAlive() || n != this) continue;
+                    n.discard();
+                }
             }
         }
         super.onRemovedFromLevel();
     }
 
     public void transformHead(EaterOfWorlds newHead){
-        newHead.setXRot(xRotO);
-        newHead.setYRot(yRotO);
-        newHead.setPos(position());
-        newHead.genSegments = false;
+//        newHead.setXRot(xRotO);
+//        newHead.setYRot(yRotO);
+//        newHead.setPos(position());
+//        newHead.genSegments = false;
         if(ifBaseHead) {
             newHead.ifBaseHead = true;
             newHead.truthDie = truthDie;
 //            newHead.bossEvent = this.bossEvent;
             newHead.baseSegments = new CopyOnWriteArrayList<>(baseSegments);
             newHead.baseSegmentsHealth = new CopyOnWriteArrayList<>(baseSegmentsHealth);
+            this.ifBaseHead = false;
         }
     }
 
