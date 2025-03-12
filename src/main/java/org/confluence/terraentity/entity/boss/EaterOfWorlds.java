@@ -435,7 +435,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         if(!level().isClientSide && ifBaseHead){
 
             // 区块卸载时防止读写冲突
-            var entityies = ((ServerLevel)level()).getPlayers(e->true,200);
+            var entityies = ((ServerLevel)level()).getPlayers(e->distanceToSqr(e) < 200*200,200);
             if(entityies.isEmpty()){
                 super.onRemovedFromLevel();
                 return;
@@ -475,8 +475,8 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
             newHead.ifBaseHead = true;
             newHead.truthDie = truthDie;
 //            newHead.bossEvent = this.bossEvent;
-            newHead.baseSegments = new CopyOnWriteArrayList<>(baseSegments);
-            newHead.baseSegmentsHealth = new CopyOnWriteArrayList<>(baseSegmentsHealth);
+            newHead.baseSegments = baseSegments;
+            newHead.baseSegmentsHealth = baseSegmentsHealth;
             this.ifBaseHead = false;
         }
     }

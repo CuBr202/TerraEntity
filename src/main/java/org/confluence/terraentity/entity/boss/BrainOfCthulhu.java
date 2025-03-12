@@ -39,7 +39,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
     private final List<Vec3> homePoses = new ArrayList<>(); // 随从初始位置
 
     public int stage = 1; //阶段
-    private Vec3 inertia;
+    private Vec3 inertia = Vec3.ZERO;
     private Curve curve;
 
     public BrainOfCthulhu(EntityType<? extends BrainOfCthulhu> entityType, Level level) {
