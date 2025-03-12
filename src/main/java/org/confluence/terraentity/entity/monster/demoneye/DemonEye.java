@@ -206,28 +206,6 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
     }
 
     @Override
-    protected void tickDeath() {
-        if (!dead) {
-            // 我怕频繁set会影响性能，虽然会检查是否不同再真的set，但是它会从map里面get，
-            // 每次get都有锁的操作，我怕锁太慢了，但是其实所有生物每刻都要检查一次生命值来决定是否要
-            // 调这个方法，所以我也不确定会不会慢
-            setNoGravity(false);
-            dead = true;
-        }
-        super.tickDeath();
-    }
-
-    // 貌似不用：1.原版的setXRot并不吃性能 2.详见tick()部分的朝向更新
-//    @Override
-//    public void setXRot(float pXRot){
-////        if(pXRot == 0 || pXRot == getXRot()){
-////            return;
-////        }
-//        xRotO = getXRot();
-//        super.setXRot(pXRot);
-//    }
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, state -> state.setAndContinue(RawAnimation.begin().thenLoop("fly"))));
     }

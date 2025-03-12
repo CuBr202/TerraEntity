@@ -4,18 +4,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
-import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class GeoBossRenderer<T extends AbstractTerraBossBase, M extends GeoBossModel<T>> extends GeoEntityRenderer<T> {
+public class GeoBossRenderer<T extends LivingEntity & GeoAnimatable, M extends GeoBossModel<T>> extends GeoEntityRenderer<T> {
     float scale;
     float yOffset;
     boolean rotX;

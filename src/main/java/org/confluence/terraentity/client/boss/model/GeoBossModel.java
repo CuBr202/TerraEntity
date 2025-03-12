@@ -2,15 +2,16 @@ package org.confluence.terraentity.client.boss.model;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.GeoModel;
 
 import java.util.function.Supplier;
 
 @SuppressWarnings("removal")
-public class GeoBossModel<T extends AbstractTerraBossBase> extends GeoModel<T> {
+public class GeoBossModel<T extends Entity & GeoAnimatable> extends GeoModel<T> {
     private final ResourceLocation MODEL ;
     protected ResourceLocation TEXTURES ;
     private final ResourceLocation ANIMATION ;
