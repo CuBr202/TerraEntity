@@ -546,7 +546,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                 }
                 aliveCount++;
             }
-            if (aliveCount == 0) {
+            if (aliveCount == 0 && !truthDie) {
                 //生成掉落物
                 this.bossEvent.removeAllPlayers();
                 truthDie = true;
