@@ -3,6 +3,7 @@ package org.confluence.terraentity.entity.monster.slime;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -115,7 +116,6 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
             if (isInWater()) {
                 this.hurt(this.level().damageSources().freeze(), 0.8F);
             }
-            this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 500, 4, false, true));
         }
         super.tick();
     }
@@ -207,4 +207,8 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         return vehicle == null ? super.isInWall() : vehicle.isInWall();
     }
 
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        return super.isInvulnerableTo(source) || (source.is(DamageTypeTags.IS_FIRE) && getType() == TEEntities.LAVA_SLIME.get());
+    }
 }
