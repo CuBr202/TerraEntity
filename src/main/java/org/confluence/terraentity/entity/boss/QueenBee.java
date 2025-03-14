@@ -43,7 +43,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
 
         collisionProperties.detectInternal = 1;
         this.noPhysics = true;
-        this.setAttactDamage(1);
+        this.setAttactDamage(14);
         this.xpReward = 1000;
 
         this.dashComponent = new DashComponent(this);
