@@ -141,7 +141,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         dashDir = dashPos.subtract(position());
                         return;
                     }
-                    if(dashPos != null || dashDir != null){
+                    if(dashPos != null && dashDir != null){
                         this.lookControl.setLookAt(dashPos);
                         // 冲刺增加伤害
                         //getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(
@@ -236,7 +236,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashPos.normalize().scale(-1));
                         return;
                     }
-                    if(dashPos != null || dashDir != null) {
+                    if(dashPos != null && dashDir != null) {
                         this.lookControl.setLookAt(dashPos);
                         // 冲刺增加伤害
                         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE * dashFactor);
