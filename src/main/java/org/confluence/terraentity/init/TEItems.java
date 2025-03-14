@@ -2,6 +2,8 @@ package org.confluence.terraentity.init;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CreativeModeTab;
@@ -99,6 +101,8 @@ public class TEItems {
                         if(ServerConfig.DISPLAY_SUMMON_ITEMS.get())
                             SUMMON_ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                     })
+                    .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath("terra_moment", "mechanical")))
+                    .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath("confluence", "summoners")))
                     .build());
 
 
