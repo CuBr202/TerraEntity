@@ -141,13 +141,16 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         dashDir = dashPos.subtract(position());
                         return;
                     }
-                    this.lookControl.setLookAt(dashPos);
-                    // 冲刺增加伤害
-                    //getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(
-                    //new AttributeModifier(DASH_UUID.toString(),2, AttributeModifier.Operation.ADDITION));
-                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE * dashFactor);
+                    if(dashPos != null || dashDir != null){
+                        this.lookControl.setLookAt(dashPos);
+                        // 冲刺增加伤害
+                        //getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(
+                        //new AttributeModifier(DASH_UUID.toString(),2, AttributeModifier.Operation.ADDITION));
+                        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE * dashFactor);
 
-                    if (dashDir != null) this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor));
+                        if (dashDir != null) this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor));
+                    }
+
                 },
                 terraBossBase -> {
                     // 结束冲刺移除加成
@@ -233,10 +236,12 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashPos.normalize().scale(-1));
                         return;
                     }
-                    this.lookControl.setLookAt(dashPos);
-                    // 冲刺增加伤害
-                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE * dashFactor);
-                    if (dashDir != null) this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor * stage2SpeedFactor));
+                    if(dashPos != null || dashDir != null) {
+                        this.lookControl.setLookAt(dashPos);
+                        // 冲刺增加伤害
+                        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE * dashFactor);
+                        this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor * stage2SpeedFactor));
+                    }
                 },
                 terraBossBase -> {
                     // 结束冲刺移除加成
