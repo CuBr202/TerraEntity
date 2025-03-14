@@ -28,9 +28,9 @@ public class RandomWanderGoal extends Goal {
             pos = pos.below();
             delta++;
         }
-        float f0 = delta + warm.getRandom().nextIntBetweenInclusive(-3, 5);
+        float f0 = (float) (randomTarget.y - delta + warm.getRandom().nextIntBetweenInclusive(-3, 5));
         float f1 = f0 < -65 ? -130 - f0 : f0;
-        randomTarget = randomTarget.subtract(0, f1, 0);
+        randomTarget = new Vec3(randomTarget.x, f1, randomTarget.y);
 
         randomDirection = !randomDirection;
         return randomTarget;
