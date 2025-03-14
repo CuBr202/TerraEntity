@@ -148,7 +148,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         //new AttributeModifier(DASH_UUID.toString(),2, AttributeModifier.Operation.ADDITION));
                         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE * dashFactor);
 
-                        if (dashDir != null) this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor));
+                        this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor));
                     }
 
                 },
