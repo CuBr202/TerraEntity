@@ -101,7 +101,7 @@ public class TEItems {
                         if(ServerConfig.DISPLAY_SUMMON_ITEMS.get())
                             SUMMON_ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                     })
-                    .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath("terra_moment", "mechanical")))
+                    .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath("terra_moment", "tab")))
                     .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath("confluence", "summoners")))
                     .build());
 
