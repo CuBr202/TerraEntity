@@ -2,10 +2,12 @@ package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -43,8 +45,12 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     public AbstractMonster(EntityType<? extends Monster> type, Level level,Builder builder) {
         super(type, level);
         this.builder = builder;
-        if (!level.isClientSide)
+        if (!level.isClientSide) {
+            // 防止重复注册ai
+            this.goalSelector.removeAllGoals(g->true);
+            this.targetSelector.removeAllGoals(t->true);
             this.registerGoals();
+        }
         this.navigation = createNavigation(level);
         this.setDiscardFriction(builder.noFriction);
 
@@ -262,6 +268,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         if(builder == null)return true;
         return builder.noGravity;
     }
+
     public void tick(){
         super.tick();
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);

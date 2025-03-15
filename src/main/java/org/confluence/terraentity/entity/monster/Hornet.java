@@ -91,7 +91,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         public boolean canUse() {
-            return Hornet.this.getTarget() != null &&  Hornet.this.navigation.isDone() && Hornet.this.random.nextInt(10) == 0;
+            return Hornet.this.getTarget() == null &&  Hornet.this.navigation.isDone() && Hornet.this.random.nextInt(10) == 0;
         }
 
         public boolean canContinueToUse() {
@@ -144,7 +144,8 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
             if (vec3 != null) {
                 bee.swing(InteractionHand.MAIN_HAND);
                 timeToRepath = FIND_PATH_TIME;
-                bee.navigation.moveTo(bee.navigation.createPath(BlockPos.containing(vec3), 1), 2.0);
+                bee.navigation.moveTo(bee.navigation.createPath(BlockPos.containing(vec3), 1), 1.5f);
+                System.out.println("moving");
             }
         }
 
@@ -187,7 +188,10 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         public boolean canContinueToUse() {
-            return canUse();
+            boolean hasTarget = bee.getTarget() != null && bee.getTarget().isAlive();
+            if(!hasTarget) return false;
+            boolean can = canShoot(bee.getTarget());
+            return !can;
         }
 
         public boolean requiresUpdateEveryTick() {
@@ -195,6 +199,9 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         public void start() {
+            timeToShoot = SHOOT_TIME;
+            bee.getNavigation().stop();
+
         }
 
         public int refreshPrepareTime() {
@@ -202,8 +209,16 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         public void tick() {
-            bee.lookControl.setLookAt(bee.getTarget());
-            if (canShoot(bee.getTarget())) {
+            if(bee.getTarget() != null && bee.getTarget().isAlive()) {
+
+                bee.lookAt(bee.getTarget(), 10,89);
+                bee.lookControl.setLookAt(bee.getTarget());
+            }
+        }
+
+        @Override
+        public void stop() {
+            if(bee.getTarget() != null){
                 bee.swing(InteractionHand.MAIN_HAND);
                 LineProj proj = createProj();
                 if (proj != null) {
@@ -216,13 +231,12 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
                     proj.shoot(x,y,z, 1, inaccuracy);
                     level().addFreshEntity(proj);
                 }
-                timeToShoot = SHOOT_TIME;
-                prepareTime = refreshPrepareTime();
             }
         }
+
         protected boolean canShoot(Entity target) {
             if(TEUtils.angleBetween(bee.getForward(), target.getEyePosition().subtract(bee.getEyePosition())) < 0.1f){
-                return --prepareTime <= 0;
+                return true;
             }
             return false;
         }

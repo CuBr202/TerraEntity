@@ -131,7 +131,10 @@ public class DashGoal extends Goal {
         else if(state == States.idle) {
             // 转向玩家
             lookAtTarget(target);
+            if(mob.hurtTime > 0)
+                return;
             downSpeed();
+
             if(mob.getDeltaMovement().length() <= 0.1f){
                 mob.setDeltaMovement(mob.getForward().normalize().scale(0.1F));
             }
