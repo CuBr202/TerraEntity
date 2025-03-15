@@ -1,6 +1,9 @@
 package org.confluence.terraentity.entity.boss;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -26,12 +29,13 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEntity, Boss, ICollisionAttackEntity<Skeletron> {
     private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
-    private int phase = 0;
+    public int phase = 0;
     private boolean enraged = false;
     private double acceleration = 0.2;
     private double maxSpeed = 2;
     private boolean expert = false;
     private final CollisionProperties COLLISION_PROP = new CollisionProperties(0, 0, 0);
+    public static final EntityDataAccessor<Boolean> DATA_SPINNING = SynchedEntityData.defineId(Skeletron.class, EntityDataSerializers.BOOLEAN);
 
     public Skeletron(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level, 10, 1);
@@ -85,17 +89,33 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
     }
 
     @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_SPINNING, false);
+    }
+
+    @Override
     public void tick() {
+        boolean server = false;
         if(level() instanceof ServerLevel) {
             if (level().isDay()) {
                 enraged = true;
             }
+            server = true;
         }
         super.tick();
         lookAt(90);
-        phase++;
-        if (phase > 400) {
-            phase = 0;
+        if (server) {
+            phase++;
+            if (phase > 400) {
+                phase = 0;
+            }
+        }else {
+            if(getEntityData().get(DATA_SPINNING)) {
+                phase++;
+            }else {
+                phase = 0;
+            }
         }
     }
 
@@ -123,7 +143,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
 
         @Override
         public boolean canUse() {
-//            return true;
+//            return false;
             return !enraged && phase < 267 && level().isNight() && getTarget() != null;
         }
 
@@ -157,7 +177,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
 
         @Override
         public boolean canUse() {
-//            return false;
+//            return getTarget() != null;
             return (enraged || phase >= 267 || level().isDay()) && getTarget() != null;
         }
 
@@ -175,6 +195,12 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
         @Override
         public void start() {
             playSound(TESounds.ROAR.get());
+            getEntityData().set(DATA_SPINNING, true);
+        }
+
+        @Override
+        public void stop() {
+            getEntityData().set(DATA_SPINNING, false);
         }
     }
 }
