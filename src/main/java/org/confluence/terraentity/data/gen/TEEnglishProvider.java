@@ -68,5 +68,6 @@ public class TEEnglishProvider extends LanguageProvider {
         // attribute
         add("attribute.name.player.summon_damage", "Summon Damage");
 
+        add("entity.terra_entity.skeletron", "Skeletron");
     }
 }

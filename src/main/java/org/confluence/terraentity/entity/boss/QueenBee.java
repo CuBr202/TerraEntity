@@ -29,8 +29,6 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
-import java.util.Random;
-
 public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, IAngryMob {
     private static final int health = 1237;
     private static final int armor = 2;
@@ -89,14 +87,14 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
         ;
         idle = new MobSkill<QueenBee>(idle_animation, 25, 0)
                 .onTick(e->{
-                    LookAt(10);
+                    lookAt(10);
                     dashComponent.hangOn(getTarget(), 5, 1.5f, getMoveSpeed());
                 })
         ;
 
         summon_bee = new MobSkill<QueenBee>(summon_animation, 60, 10)
                 .onTick(e->{
-                    LookAt(10);
+                    lookAt(10);
                     dashComponent.hangOn(getTarget(), 5, 4, getMoveSpeed());
                     if(skills.tick % 10 == 0) {
                         LittleHornet bee = TEEntities.LITTLE_HORNET.get().create(level());
@@ -113,7 +111,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                 .onTick(e->{
                     LivingEntity target = e.getTarget();
                     if(target!=null){
-                        LookAt(10);
+                        lookAt(10);
                         if(position().y < target.position().y + 2) addDeltaMovement(new Vec3(0,0.02f,0));
                         if( skills.tick % 10 ==0) {
                             LineProj proj = TEEntities.BEE_STICK_PROJ.get().create(level());
@@ -150,7 +148,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                     }
 
                     dashComponent.hangOn(getTarget(), 5, 0, getMoveSpeed() * 1.2f);
-                    LookAt(10);
+                    lookAt(10);
                 })
         ;
         pre_dash = new MobSkill<QueenBee>(pre_dash_animation, 15, 0)

@@ -101,7 +101,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 terraBossBase -> {},
                 terraBossBase -> {
                     if (getTarget() == null) return;
-                    LookAt(10);
+                    lookAt(10);
                     // 生成粒子
                     for (int i = 0; i < 10; i++) {
                         BlockPos pos = BlockPos.containing(position());
@@ -133,7 +133,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         return;
                     if (!skills.canContinue()) {
                         // 调整方向
-                        LookAt(360);
+                        lookAt(360);
 
                         this.addDeltaMovement(new Vec3(0, 0.02, 0));
                         // 不精准度
@@ -187,7 +187,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                     if (getTarget() == null) return;
                     if(difficult && getTarget().distanceTo(this) > 8)
                         skills.tick -= 1;
-                    LookAt(10);
+                    lookAt(10);
 
                     // 向玩家正上方移动
                     dashComponent.hangOn(getTarget(), 3, 0, MOVE_SPEED * stage2SpeedFactor);
@@ -223,7 +223,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 terraBossBase -> {
                     // 延迟冲刺
                     if (getTarget() == null) return;
-                    LookAt(360);
+                    lookAt(360);
                     if (!skills.canContinue()) {
                         // 调整方向
 

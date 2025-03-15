@@ -36,6 +36,7 @@ public final class TESounds {
     // 脸怪
     public static final DeferredHolder<SoundEvent,SoundEvent> FACE_HOOT = register("face_hoot");
     public static final DeferredHolder<SoundEvent,SoundEvent> TR_ZOMBIE_DEATH = register("tr_zombie_death");
+    public static final DeferredHolder<SoundEvent,SoundEvent> TR_SKELETON_HURT = register("tr_skeleton_hurt");
 
 
     private static DeferredHolder<SoundEvent,SoundEvent> register(String id) {

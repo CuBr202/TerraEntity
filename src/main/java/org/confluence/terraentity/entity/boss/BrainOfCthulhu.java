@@ -5,7 +5,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.Boss;
@@ -126,7 +125,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                             skills.forceEnd();
                         }}
                     }
-                    LookAt(10);
+                    lookAt(10);
 
                     // 向玩家斜上方移动
                     Vec3 dir = position().subtract(target.position()).normalize().multiply(1,0,1);
@@ -154,7 +153,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 })
                 .onTick(e->{
                     if(getTarget() == null) return;
-                    LookAt(10);
+                    lookAt(10);
                     // 向玩家正上方移动
                     Vec3 tar = getTarget().position().add(0,1,0);
                     if (distanceToSqr(tar) > 2)
@@ -167,7 +166,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
 
         switch_1_to_2 = new MobSkill<BrainOfCthulhu>(switching, 15, 0)
                 .onTick(e->{
-                    LookAt(10);
+                    lookAt(10);
                 })
                 .onOver(e->{
                     _moveSpeed = 0.5f;
@@ -195,7 +194,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 .onTick(e->{
                     if(target == null || curve == null) return;
                     setPos(curve.cal(skills.tick / 40f));
-                    LookAt(10);
+                    lookAt(10);
                 })
         ;
 
@@ -216,7 +215,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                     }
                     if(skills.canContinue() && curve != null) {
                         setPos(curve.cal((skills.tick - 10 ) / 20f));
-                        LookAt(10);
+                        lookAt(10);
                     }
                 })
                 .onOver(e->{
@@ -251,7 +250,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 })
                 .onTick(e->{
                     if(getTarget() == null) return;
-                    LookAt(10);
+                    lookAt(10);
 
                     // 向玩家正上方移动
                     Vec3 tar = getTarget().position().add(0,1,0);

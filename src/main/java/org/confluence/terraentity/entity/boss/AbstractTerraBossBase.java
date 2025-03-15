@@ -2,13 +2,14 @@ package org.confluence.terraentity.entity.boss;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerBossEvent;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -49,7 +50,11 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
@@ -204,13 +209,11 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                 skills.tick();
             //没有目标禁止行为
 
-            if(target==null){
-                var entity = ((ServerLevel)level()).getNearestPlayer(this, getAttributeValue(Attributes.FOLLOW_RANGE));
-                if(entity!= null){
-                    if(entity.canBeSeenAsEnemy()){
-                        setTarget(entity);
-                        return;
-                    }
+            if (target == null || !target.isAlive() || !target.canBeSeenAsEnemy()) {
+                var entity = findTarget();
+                setTarget(entity);
+                if (entity != null) {
+                    return;
                 }
 
                 discardTick++;
@@ -229,7 +232,38 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
         }
 
-        this.setDeltaMovement(getDeltaMovement().scale(0.95));//空气阻力
+        if (!shouldDiscardFriction()) {
+            this.setDeltaMovement(getDeltaMovement().scale(0.95));//空气阻力
+        }
+    }
+
+    // 找索敌范围内仇恨最大的，如果多个一样的从中随机选一个
+    protected LivingEntity findTarget() {
+        double range = getAttributeValue(Attributes.FOLLOW_RANGE);
+        List<Player> players = getNearbyPlayers(range);
+        Holder.Reference<Attribute> aggroAttr = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse("terra_curio:player.aggro")).orElse(null);
+        if (aggroAttr == null) {
+            return level().getNearestPlayer(getX(), getY(), getZ(), range, true);
+        }
+        List<Player> maxAggroPlayers = players.stream()
+            .collect(Collectors.groupingBy(player -> player.getAttribute(aggroAttr).getValue(), Collectors.toList()))
+            .entrySet().stream().max(Map.Entry.comparingByKey())
+            .map(Map.Entry::getValue)
+            .orElse(List.of());
+        if(!maxAggroPlayers.isEmpty()) {
+            return maxAggroPlayers.get(level().random.nextInt(maxAggroPlayers.size()));
+        }
+        return null;
+    }
+
+    protected List<Player> getNearbyPlayers(double range) {
+        List<Player> players = new ArrayList<>();
+        for (Player player : level().players()) {
+            if (player.canBeSeenAsEnemy() && this.distanceToSqr(player) < range * range) {
+                players.add(player);
+            }
+        }
+        return players;
     }
 
     @Override
@@ -264,7 +298,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         return pAngle + f;
     }
 
-    public void LookAt(float maxAngleY) {
+    public void lookAt(float maxAngleY) {
         var pEntity = getTarget();
         if (pEntity != null) {
             lookAt(getTarget(), maxAngleY, 85);

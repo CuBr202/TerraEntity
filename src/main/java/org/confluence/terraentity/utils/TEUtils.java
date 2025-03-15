@@ -6,6 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -389,6 +390,10 @@ public final class TEUtils {
         return pos;
     }
 
+    public static boolean isFTWWorld(ServerLevel level) {
+        return false;
+    }
+
 /*
     public static boolean hasBoss(double radius, Level level,
                                   AABB box){
@@ -413,6 +418,4 @@ public final class TEUtils {
                     ModConfigs.DEFAULT_RESPAWN_TIME_MAX.getPrefab());
         }
     }*/
-
-
 }

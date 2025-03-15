@@ -111,5 +111,15 @@
         "sounds": [
             "terra_entity:mob/giant_shelly_hurt"
         ]
+    },
+    "tr_zombie_death": {
+        "sounds": [
+            "terra_entity:mob/tr_zombie_death"
+        ]
+    },
+    "tr_skeleton_hurt": {
+        "sounds": [
+            "terra_entity:mob/tr_skeleton_hurt"
+        ]
     }
 }

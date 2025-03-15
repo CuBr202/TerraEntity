@@ -64,6 +64,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.visual_neuron", "视神经元");
         add("entity.terra_entity.queen_bee", "蜂王");
         add("entity.terra_entity.little_hornet", "小黄蜂");
+        add("entity.terra_entity.skeletron", "骷髅王");
 
         add("effect.terra_entity.demonic_thoughts", "邪念");
 

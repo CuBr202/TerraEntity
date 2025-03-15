@@ -105,7 +105,7 @@ public class BrainFake extends BrainOfCthulhu {
             }
             if(!level().isClientSide()){
                 setTarget(owner.target);
-                LookAt(10);
+                lookAt(10);
                 double y = owner.getY();
                 double x;
                 double z;
