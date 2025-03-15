@@ -33,11 +33,17 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     @Override
     protected void registerGoals() {
 //        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 2, true));
-        this.goalSelector.addGoal(1, new BeeShootGoal(this, 0, 7){
+        this.goalSelector.addGoal(1, new BeeShootGoal(this, 0, 25){
             @Override
             protected boolean canShoot(Entity target) {
-                return true;
+                return super.canShoot(target);
             }
+
+            @Override
+            public int refreshPrepareTime() {
+                return 3;
+            }
+
         });
         this.goalSelector.addGoal(2, new BeeKeepOnTargetGoal(this));
         this.goalSelector.addGoal(9, new FloatGoal(this));

@@ -12,6 +12,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.level.Level;
@@ -20,6 +21,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -93,8 +95,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
         if(!entities.isEmpty() && penetration > 0){
             for (var e:entities) {
                 int id = e.getId();
-                if(canHitEntity(e) && !hitList.contains(id)) {
-                    hitList.add(id);
+                if(canHitEntity(e)) {
                     if(e instanceof LivingEntity living) {
                         doHurt(living);
                         doKnockBack(living);
@@ -156,8 +157,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         Entity hurter = pResult.getEntity();
-        if(!hitList.contains(hurter.getId()) && hurter instanceof LivingEntity living && canHitEntity(living))
+        if(hurter instanceof LivingEntity living && canHitEntity(living)) {
+
             doHurt(living);
+        }
         super.onHitEntity(pResult);
     }
 
@@ -169,6 +172,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
 
     protected void doHurt(LivingEntity hurter){
         Entity entity = this.getOwner();
+        hitList.add(hurter.getId());
         for (MobEffectInstance effect : effects) {
             hurter.addEffect(effect);
         }
@@ -201,7 +205,16 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
 
     @Override
     protected boolean canHitEntity(@NotNull Entity target) {
-        if(getOwner()!=null && getOwner() instanceof LivingEntity living && target instanceof LivingEntity living1) return target.canBeHitByProjectile() &&
+        if(hitList.contains(target.getId()))
+            return false;
+        if(target instanceof TamableAnimal animal &&
+                // 召唤物不能攻击主人的仆从
+                (getOwner() instanceof ISummonMob summonMob && summonMob.summon_getOwner() == animal.getOwner())
+        ){
+            return false;
+        }
+        if(getOwner()!=null && getOwner() instanceof LivingEntity living && target instanceof LivingEntity living1)
+            return target.canBeHitByProjectile() &&
                 target != living && living.canAttack(living1);
         return target.canBeHitByProjectile() &&
                 target != getOwner();
