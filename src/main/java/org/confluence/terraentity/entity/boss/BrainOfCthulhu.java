@@ -144,7 +144,8 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         stage1_fade_out = new MobSkill<BrainOfCthulhu>(close, 40, 0)
                 .onInit(e->{
                     if(getTarget() != null) {
-                        float r = random.nextFloat() + 5;
+                        float r = random.nextFloat() + (difficult ? 6 : 8);
+
                         float theta = random.nextFloat() * 2 * (float) Math.PI;
                         float beta = random.nextFloat() * (float) Math.PI;
                         Vec3 pos = TEUtils.sphere(r, theta, beta);
@@ -267,7 +268,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
 
         addSkill(stage1_stare);//1
         addSkill(stage1_fade_in);//2
-        addSkill(stage1_fade_out);
+        addSkill(stage1_fade_out);//3
 
         addSkill(switch_1_to_2);//4
 
@@ -299,7 +300,11 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
     }
 
     public boolean canAttack(LivingEntity target) {
-        return super.canAttack(target) && !(target instanceof VisualNeuron);
+        return super.canAttack(target) && !(target instanceof VisualNeuron) && (
+                //大师始终可以攻击，非大师瞬移后短时间不攻击
+                difficult || !(skills.index == 3 && skills.tick < 25))
+                ;
+
     }
 
     public void tick() {

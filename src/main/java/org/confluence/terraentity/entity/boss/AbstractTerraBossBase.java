@@ -176,7 +176,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
 /* Collision */
 
-    CollisionProperties collisionProperties = new CollisionProperties(5, 10, 0);
+    CollisionProperties collisionProperties = new CollisionProperties(5, 20, 0);
 
     @Override
     public CollisionProperties getCollisionProperties() {
@@ -285,7 +285,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     }
 
     public boolean canAttack(LivingEntity entity) {
-        return super.canAttack(entity)&&
+        return super.canAttack(entity)&&entity.isPickable() &&
                 (
                         entity instanceof Player ||
                                         entity != this

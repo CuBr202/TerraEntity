@@ -35,9 +35,10 @@ public interface ICollisionAttackEntity<T extends Entity>{
                 for (var e : entities) {
                     if ( e instanceof LivingEntity living && filter.test(living) ){
                         attackCallback.accept(e);
+                        getCollisionProperties().rewind();
                     }
                 }
-                getCollisionProperties().rewind();
+
             }else{
                 getCollisionProperties().reDetect();
             }

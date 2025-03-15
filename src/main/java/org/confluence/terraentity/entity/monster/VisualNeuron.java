@@ -32,7 +32,7 @@ public class VisualNeuron extends AbstractMonster{
         super(type, level, new AbstractPrefab(44,2,9,0,0,0.1f)
                 .getPrefab().setNoGravity());
         this.noPhysics = true;
-        this.collisionProperties = new CollisionProperties(1,20,0);
+        this.collisionProperties = new CollisionProperties(1,20,0.2F);
     }
 
     public void setOwner(BrainOfCthulhu owner) {
