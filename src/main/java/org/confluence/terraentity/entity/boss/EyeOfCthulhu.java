@@ -165,7 +165,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 }
         );
         // 转换阶段
-        this.switch_1_to_2 = new MobSkill(switching, 32, 0,
+        this.switch_1_to_2 = new MobSkill(switching, 23, 0,
                 terraBossBase -> {
 
                     summonCD = 0;

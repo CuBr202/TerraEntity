@@ -39,7 +39,7 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
     }
 
     default AnimationController<IFSMGeoMob<T>> fsmAnimationController() {
-        return new AnimationController<>(this, 10, state -> {
+        return new AnimationController<>(this, 0, state -> {
             Entity entity =  state.getData(DataTickets.ENTITY);
             if (!entity.isAlive()) return PlayState.STOP;
             if (getSkills().count() == 0) return PlayState.STOP;

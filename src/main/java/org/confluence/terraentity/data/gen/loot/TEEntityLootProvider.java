@@ -54,6 +54,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                 TEEntities.BLACK_SLIME).forEach(e->{
             this.add(e.get(), LootTable.lootTable()
                     .withPool(LOOT_POOL.apply(TEItems.KING_SLIME_SPAWN_EGG, 0.01F))
+                    .withPool(LOOT_POOL.apply(Items.SLIME_BALL, 0.2F))
                     .withPool(LOOT_POOL.apply(TEItems.SLIME_STAFF, 0.001F))
             );
         });

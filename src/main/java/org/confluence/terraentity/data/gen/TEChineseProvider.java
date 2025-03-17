@@ -159,5 +159,9 @@ public class TEChineseProvider extends LanguageProvider {
         // attribute
         add("attribute.name.player.summon_damage", "召唤伤害");
 
+        // track
+        add("terra_entity.track_type.simple", "简单");
+        add("terra_entity.track_type.basis", "基平面");
+
     }
 }

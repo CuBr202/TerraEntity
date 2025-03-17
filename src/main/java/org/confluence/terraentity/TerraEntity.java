@@ -12,6 +12,8 @@ import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.data.gen.biome.TEBiomes;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.registries.EffectStrategies;
+import org.confluence.terraentity.registries.GenerationProviders;
+import org.confluence.terraentity.registries.TrackTypeProviders;
 import org.slf4j.Logger;
 
 @Mod(TerraEntity.MODID)
@@ -19,6 +21,9 @@ public class TerraEntity {
     public static final String MODID = "terra_entity";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static ResourceLocation space(String path) {return ResourceLocation.fromNamespaceAndPath(MODID, path);}
+    public static ResourceLocation parse(String path){return ResourceLocation.parse(path);}
+    public static ResourceLocation fromSpaceAndPath(String space, String path){return ResourceLocation.fromNamespaceAndPath(space, path);}
+    public static String toLang(ResourceLocation location){return location.toLanguageKey().replace("/",".");}
 
 
     public TerraEntity (IEventBus modEventBus, ModContainer modContainer) {
@@ -39,6 +44,8 @@ public class TerraEntity {
 
     public static void newRegistry(NewRegistryEvent event) {
         event.register(EffectStrategies.EFFECT_STRATEGY_REGISTRY);
+        event.register(TrackTypeProviders.TRACK_TYPE_PROVIDER_REGISTRY);
+        event.register(GenerationProviders.GENERATION_PROVIDER_REGISTRY);
 
     }
 

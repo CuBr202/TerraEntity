@@ -92,6 +92,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     e.level().addParticle(ParticleTypes.LAVA, e.getX() - (double)f3, e.getY() + (double)f5, e.getZ() - (double)f4, 0.0, 0.0, 0.0);
                 }
             });
+    public static Supplier<AbstractMonster.Builder> SPORE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(15).setAttackDamage(7);
     public static Supplier<AbstractMonster.Builder> ICE_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(15).setAttackDamage(7)
             .setTicker(e->{
                 e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));

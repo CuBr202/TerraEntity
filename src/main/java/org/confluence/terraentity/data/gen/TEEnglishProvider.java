@@ -67,5 +67,10 @@ public class TEEnglishProvider extends LanguageProvider {
 
         // attribute
         add("attribute.name.player.summon_damage", "Summon Damage");
+
+        // track
+        add("terra_entity.track_type.simple", "Simple Track");
+        add("terra_entity.track_type.basis", "Basis Track");
+
     }
 }
