@@ -77,6 +77,16 @@
             "terra_entity:mob/drippler_hurt"
         ]
     },
+    "metal_death": {
+        "sounds": [
+            "terra_entity:mob/metal_death"
+        ]
+    },
+    "metal_hurt": {
+        "sounds": [
+            "terra_entity:mob/metal_hurt"
+        ]
+    },
     "visual_neuron_death": {
         "sounds": [
             "terra_entity:mob/visual_neuron_death"
