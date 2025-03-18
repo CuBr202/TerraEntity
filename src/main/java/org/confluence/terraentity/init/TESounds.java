@@ -17,7 +17,7 @@ public final class TESounds {
     public static final DeferredHolder<SoundEvent,SoundEvent> DRIPPLER_HURT = register("drippler_hurt"); // 滴滴怪受伤音效
     public static final DeferredHolder<SoundEvent,SoundEvent> DRIPPLER_DEATH = register("drippler_death"); // 滴滴怪死亡音效
     public static final DeferredHolder<SoundEvent,SoundEvent> METAL_HURT = register("metal_hurt"); // 金属受伤音效
-    public static final DeferredHolder<SoundEvent,SoundEvent> METAL_EXPLODE = register("metal_explode"); // 金属死亡（爆炸）音效
+    public static final DeferredHolder<SoundEvent,SoundEvent> METAL_DEATH = register("metal_death"); // 金属死亡（爆炸）音效
     public static final DeferredHolder<SoundEvent,SoundEvent> REGULAR_STAFF_SHOOT_2 = register("regular_staff_shoot_2"); // 射弹2
     public static final DeferredHolder<SoundEvent,SoundEvent> ROAR = register("roar"); // boss吼叫
     public static final DeferredHolder<SoundEvent,SoundEvent> HURRIED_ROARING = register("hurried_roaring"); //疯狗冲刺
