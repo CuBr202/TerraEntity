@@ -21,6 +21,7 @@ public class SkeletronRenderer extends GeoBossRenderer<Skeletron,GeoBossModel<Sk
     @Override
     public void preRender(PoseStack poseStack, Skeletron entity, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         model.getBone("bone3").ifPresent(bone -> bone.setHidden(true));
+        model.getBone("bone2").ifPresent(geoBone -> geoBone.setHidden(false));
 //        poseStack.scale(0.3f, 0.3f, 0.3f);
         super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
         if (entity.getEntityData().get(Skeletron.DATA_SPINNING)) {

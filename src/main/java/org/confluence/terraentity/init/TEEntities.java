@@ -23,6 +23,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
+import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
 import org.confluence.terraentity.client.boss.renderer.*;
 import org.confluence.terraentity.client.entity.model.GiantShellyModel;
 import org.confluence.terraentity.client.entity.renderer.*;
@@ -141,6 +142,7 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<BrainFake>> BRAIN_FAKE = registerEntity("brain_fake", BrainFake::new, 4F, 4F);
     public static final DeferredHolder<EntityType<?>, EntityType<QueenBee>> QUEEN_BEE = registerEntity("queen_bee", QueenBee::new, 2.5F, 2.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<Skeletron>> SKELETRON = registerEntity("skeletron", Skeletron::new, 2.3F, 2.3F);
+    public static final DeferredHolder<EntityType<?>, EntityType<SkeletronHand>> SKELETRON_HAND = registerEntity("skeletron_hand", SkeletronHand::new, 2F, 1F);
 
 
     public static <T extends Mob> DeferredHolder<EntityType<?>,EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> entityFactory, float width, float height){
@@ -237,6 +239,7 @@ public final class TEEntities {
         event.registerEntityRenderer(BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
         event.registerEntityRenderer(QUEEN_BEE.get(), c->new QueenBeeRenderer(c,new GeoBossModel<>(QUEEN_BEE)));
         event.registerEntityRenderer(SKELETRON.get(), c->new SkeletronRenderer(c,new GeoBossModel<>(SKELETRON)));
+        event.registerEntityRenderer(SKELETRON_HAND.get(), c->new SkeletronHandRenderer(c,new SkeletronHandModel()));
 
         // sommon
         event.registerEntityRenderer(SUMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c, SUMMON_SLIME.getId().withPrefix("summon/"),false));
@@ -321,6 +324,7 @@ public final class TEEntities {
         event.put(BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(QUEEN_BEE.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(SKELETRON.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(SKELETRON_HAND.get(), AbstractTerraBossBase.createAttributes().build());
 
         // sommon
         event.put(SUMMON_SLIME.get(), AbstractTerraBossBase.createAttributes().build());

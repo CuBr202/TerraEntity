@@ -217,7 +217,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                 }
 
                 discardTick++;
-                if(!level().isClientSide && discardTick > DISCARD_TICK && ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get()){
+                if(!level().isClientSide && discardTick > DISCARD_TICK && ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get() && shouldEscape()){
                     this.bossEvent.getPlayers().forEach(p->p.sendSystemMessage(this.getDisplayName().copy().append(Component.translatable("message.terraentity.boss_discard"))));
                     this.discard();
                 }
@@ -259,7 +259,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     protected List<Player> getNearbyPlayers(double range) {
         List<Player> players = new ArrayList<>();
         for (Player player : level().players()) {
-            if (player.canBeSeenAsEnemy() && this.distanceToSqr(player) < range * range) {
+            if (/*player.canBeSeenAsEnemy() && */this.distanceToSqr(player) < range * range) {
                 players.add(player);
             }
         }
@@ -269,6 +269,11 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     @Override
     public boolean doHurtTarget(Entity entity) {
         return entity.hurt(TETags.DamageTypes.of(level(), DamageTypes.GENERIC, this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+    }
+
+    // 可以给巨鹿用
+    public boolean shouldEscape() {
+        return true;
     }
 
     /* func */

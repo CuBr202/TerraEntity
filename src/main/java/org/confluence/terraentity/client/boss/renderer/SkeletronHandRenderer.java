@@ -1,0 +1,60 @@
+package org.confluence.terraentity.client.boss.renderer;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
+import org.confluence.terraentity.entity.boss.SkeletronHand;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+
+public class SkeletronHandRenderer extends GeoBossRenderer<SkeletronHand, SkeletronHandModel> {
+
+    public SkeletronHandRenderer(EntityRendererProvider.Context renderManager, SkeletronHandModel model) {
+        super(renderManager, model);
+    }
+
+    @Override
+    public void preRender(PoseStack poseStack, SkeletronHand animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+        model.getBone("bone2").ifPresent(bone -> bone.setHidden(true));
+        model.getBone("bone3").ifPresent(geoBone -> geoBone.setHidden(false));
+        model.getBone("hand").ifPresent(hand -> {
+            hand.setScaleZ(animatable.handSide == SkeletronHand.HandSide.LEFT ? -1 : 1);
+        });
+
+        model.getBone("arm2").ifPresent(wholeArm->{
+            if (animatable.owner == null) {
+                wholeArm.setHidden(true);
+                return;
+            }
+            wholeArm.setHidden(false);
+            float yRot = Mth.lerp(partialTick, animatable.owner.yHeadRotO, animatable.owner.yHeadRot) * Mth.DEG_TO_RAD;
+            Vec3 selfPos = animatable.position();
+            Vec3 rootPos = animatable.getRootPos();
+            double a = Math.min(rootPos.distanceTo(selfPos), 6.2);
+            double b = 3.125; // 设一节手臂50格长 /16
+            double c = 3.125;
+            double radC = Math.acos((a * a + b * b - c * c) / (2 * a * b)); // 余弦定理
+            wholeArm.setRotZ((float) (selfPos.y < rootPos.y ? radC : -radC));
+            double radA = Math.PI - Math.acos((b * b + c * c - a * a) / (2 * b * c));
+            wholeArm.getChildBones().getFirst().setRotZ((float) (selfPos.y < rootPos.y ? -radA : radA));
+        });
+//        poseStack.translate(-11.4f, -0.6f, 0);
+//        poseStack.translate(0, 0.5f, 0);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        poseStack.mulPose(Axis.YP.rotationDegrees(90));
+
+    }
+
+    @Override
+    protected void applyRotations(SkeletronHand animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
+//        poseStack.translate(-11.4f, -0.6f, 0);
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
+//        poseStack.translate(11.4f, -1.1f, 0);
+
+    }
+}

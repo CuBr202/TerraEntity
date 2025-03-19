@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -19,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
+import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -27,14 +29,20 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEntity, Boss, ICollisionAttackEntity<Skeletron> {
     private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
     public int phase = 0;
-    private boolean enraged = false;
-    private double acceleration = 0.2;
-    private double maxSpeed = 2;
-    private boolean expert = false;
-    private final CollisionProperties COLLISION_PROP = new CollisionProperties(0, 0, 0);
+    public boolean enraged = false;
+    protected double acceleration;
+    protected double maxSpeed;
+    protected boolean expert = false;
+    private boolean ftw;
+    public final List<SkeletronHand> hands = new ArrayList<>();
+
+    public static final CollisionProperties COLLISION_PROP = new CollisionProperties(0, 0, 0);
     public static final EntityDataAccessor<Boolean> DATA_SPINNING = SynchedEntityData.defineId(Skeletron.class, EntityDataSerializers.BOOLEAN);
 
     public Skeletron(EntityType<? extends Monster> entityType, Level level) {
@@ -54,7 +62,21 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
             acceleration = 0.16;
             maxSpeed = 2;
             expert = true;
+            ftw = true;
         }
+    }
+
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
+
+    @Override
+    protected void doPush(@NotNull Entity entity) {
+    }
+
+    @Override
+    protected void pushEntities() {
     }
 
     @Override
@@ -101,10 +123,10 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
             if (level().isDay()) {
                 enraged = true;
             }
+            hands.removeIf(hand -> !hand.isAlive());
             server = true;
         }
         super.tick();
-        lookAt(90);
         if (server) {
             phase++;
             if (phase > 400) {
@@ -119,6 +141,11 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
         }
     }
 
+    @Override
+    public boolean canAttack(LivingEntity entity) {
+        if (!super.canAttack(entity)) return false;
+        return !(entity instanceof Skeletron);
+    }
 
     @Override
     protected void checkFallDamage(double y, boolean onGround, @NotNull BlockState state, @NotNull BlockPos pos) {
@@ -139,20 +166,27 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
         return true;
     }
 
-    private class FloatGoal extends Goal {
-
+    public class FloatGoal extends Goal {
         @Override
         public boolean canUse() {
 //            return false;
             return !enraged && phase < 267 && level().isNight() && getTarget() != null;
         }
 
+        public double getDamping(){
+            return 10;
+        }
+
+        public Vec3 getTargetPosition() {
+            return getTarget().position().add(0, 5, 0);
+        }
+
         @Override
         public void tick() {
-            LivingEntity target = getTarget();
-            Vec3 velocity = getDeltaMovement().scale(10);
-            double distance = target.position().subtract(position()).length();
-            Vec3 acc = target.position().add(0, 5, 0)
+            Vec3 targetPos = getTargetPosition();
+            Vec3 velocity = getDeltaMovement().scale(getDamping());
+            double distance = targetPos.add(0, -5, 0).subtract(position()).length();
+            Vec3 acc = targetPos
                 .subtract(position())
                 .subtract(velocity)
                 .normalize().scale(Math.max(acceleration * (0.07 * distance - 0.29), 0.01));
@@ -162,6 +196,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
                 resultVelocity = resultVelocity.scale(maxSpeed / resultSpeed);
             }
             setDeltaMovement(resultVelocity);
+            lookAt(90);
         }
 
         @Override
@@ -171,6 +206,24 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
                 setTarget(findTarget());
             }
         }
+    }
+
+    @Override
+    public void firstSpawn() {
+        if (isMainBody() && !level().isClientSide) {
+            SkeletronHand hand1 = new SkeletronHand(TEEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.LEFT);
+            SkeletronHand hand2 = new SkeletronHand(TEEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.RIGHT);
+            hand1.setPos(position());
+            hand2.setPos(position());
+            level().addFreshEntity(hand1);
+            level().addFreshEntity(hand2);
+            hands.add(hand1);
+            hands.add(hand2);
+        }
+    }
+
+    public void attachHand(SkeletronHand hand) {
+        hands.add(hand);
     }
 
     private class SpinGoal extends Goal {
@@ -186,10 +239,15 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
             Vec3 vec = getTarget().position().subtract(position());
             if (expert) {
                 double distance = vec.length();
-                setDeltaMovement(vec.normalize().scale(Mth.clamp(0.01 * distance + 0.16, 0.2, 0.45)));
+                double speed = Mth.clamp(0.01 * distance + 0.16, 0.2, 0.45);
+                if (ftw) {
+                    speed *= 1.3;
+                }
+                setDeltaMovement(vec.normalize().scale(speed));
             }else{
                 setDeltaMovement(vec.normalize().scale(0.2));
             }
+            lookAt(90);
         }
 
         @Override
