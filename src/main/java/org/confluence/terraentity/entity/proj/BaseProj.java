@@ -21,6 +21,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.proj.generation.IGeneration;
+import org.confluence.terraentity.entity.proj.track.ITrackType;
 import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +32,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 
-public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingProjectile{
+public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingProjectile {
     private final long starttime = System.currentTimeMillis();
     public float damage = 1;
     private List<Integer> hitList = new ArrayList<>();
@@ -39,6 +41,8 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     public ResourceLocation texture = TerraEntity.space("textures/entity/projectile/default.png");
     protected DeferredHolder<SoundEvent,SoundEvent> hitSound;
     public Consumer<BaseProj> clientTickCallback;
+    public ITrackType trackType;
+    public IGeneration generation;
 
     public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
         super(pEntityType, pLevel);
@@ -205,19 +209,23 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
 
     @Override
     protected boolean canHitEntity(@NotNull Entity target) {
+        // 不能攻击自己和不能被弹幕攻击的实体
+        if(target == getOwner() || !target.canBeHitByProjectile()){
+            return false;
+        }
+        // 不能攻击已经被弹幕攻击过的实体
         if(hitList.contains(target.getId()))
             return false;
+        // 召唤物不能攻击主人的仆从
         if(target instanceof TamableAnimal animal &&
-                // 召唤物不能攻击主人的仆从
                 (getOwner() instanceof ISummonMob summonMob && summonMob.summon_getOwner() == animal.getOwner())
         ){
             return false;
         }
-        if(getOwner()!=null && getOwner() instanceof LivingEntity living && target instanceof LivingEntity living1)
-            return target.canBeHitByProjectile() &&
-                target != living && living.canAttack(living1);
-        return target.canBeHitByProjectile() &&
-                target != getOwner();
+        // 有主人的弹幕只能攻击主人可以攻击的目标
+        if(getOwner()!=null && getOwner() instanceof LivingEntity living && target instanceof LivingEntity tar)
+            return living.canAttack(tar);
+        return true;
     }
 
     @Override//流体阻力

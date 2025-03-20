@@ -7,7 +7,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.registries.GenerationProviders;
 import org.confluence.terraentity.registries.TrackTypeProviders;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -18,7 +20,8 @@ public interface IGeneration {
     /**
      * 生成弹道实体
      */
-    void genProjectile(LivingEntity owner, ItemStack weapon, float velocity, Supplier<? extends Projectile> proj);
+    void genProjectile(@NotNull LivingEntity owner, @Nullable ItemStack weapon, float velocity, @NotNull Supplier<? extends Projectile> proj);
+
     /**
      * 获取编解码器
      * @return 编解码器

@@ -122,7 +122,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                 .add(Attributes.ATTACK_DAMAGE, 1)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.2)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
-                .add(Attributes.FOLLOW_RANGE, 300.0);
+                .add(Attributes.FOLLOW_RANGE, 300.0)
+                .add(Attributes.FLYING_SPEED)
+                ;
 
     }
 

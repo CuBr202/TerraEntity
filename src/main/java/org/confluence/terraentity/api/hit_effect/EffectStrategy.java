@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.proj.hit_effect;
+package org.confluence.terraentity.api.hit_effect;
 
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;

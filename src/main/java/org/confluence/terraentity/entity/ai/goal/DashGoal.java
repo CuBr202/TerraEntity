@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.ai.goal;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
@@ -118,7 +119,6 @@ public class DashGoal extends Goal {
                 state = States.idle;
             }
         }
-        System.out.println(mob.swingTime);
 
         if(state == States.dashing_back){
             --dashTime;

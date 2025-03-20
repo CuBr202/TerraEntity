@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
 import org.confluence.terraentity.utils.TEUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -35,7 +36,7 @@ public record AboveFallenGeneration(float maxAngle, float range, float predict, 
 
 
     @Override
-    public void genProjectile(LivingEntity owner, ItemStack weapon, float velocity, Supplier<? extends Projectile> proj) {
+    public void genProjectile(@NotNull LivingEntity owner, ItemStack weapon, float velocity, @NotNull Supplier<? extends Projectile> proj) {
 
         Vec3 eye = owner.getEyePosition();
         LivingEntity target = TEUtils.getAABBAngleTarget(eye, eye.add(owner.getForward().normalize().scale(range)), owner.level(), owner, range, maxAngle);

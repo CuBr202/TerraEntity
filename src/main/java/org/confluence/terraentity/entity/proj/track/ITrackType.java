@@ -1,7 +1,6 @@
 package org.confluence.terraentity.entity.proj.track;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.registries.TrackTypeProviders;
 

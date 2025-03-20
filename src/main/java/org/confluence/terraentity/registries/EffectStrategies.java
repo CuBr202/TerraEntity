@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.proj.hit_effect.EffectStrategy;
+import org.confluence.terraentity.api.hit_effect.EffectStrategy;
 
 import static net.minecraft.resources.ResourceKey.createRegistryKey;
 

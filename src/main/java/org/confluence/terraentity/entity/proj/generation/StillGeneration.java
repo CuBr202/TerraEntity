@@ -1,28 +1,24 @@
 package org.confluence.terraentity.entity.proj.generation;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-/**
- * <h1>直线弹幕</h1>
- */
-public record ForwardGeneration(float offsetY, float inaccuracy) implements IGeneration {
+public record StillGeneration(Vec3 offset) implements IGeneration {
 
-    public static MapCodec<ForwardGeneration> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            Codec.FLOAT.fieldOf("offsetY").forGetter(ForwardGeneration::offsetY),
-            Codec.FLOAT.fieldOf("inaccuracy").forGetter(ForwardGeneration::inaccuracy)
-    ).apply(instance, ForwardGeneration::new));
+    public static MapCodec<StillGeneration> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+            Vec3.CODEC.fieldOf("offset").forGetter(StillGeneration::offset)
+    ).apply(instance, StillGeneration::new));
 
-    public static ForwardGeneration of(float offsetY, float inaccuracy) {
-        return new ForwardGeneration(offsetY, inaccuracy);
+    public static StillGeneration of(Vec3 offset) {
+        return new StillGeneration(offset);
     }
 
     @Override
@@ -30,8 +26,7 @@ public record ForwardGeneration(float offsetY, float inaccuracy) implements IGen
         Projectile projectile = proj.get();
         projectile.setOwner(owner);
         // todo 计算yaw
-        projectile.setPos(owner.getX(), owner.getY() + owner.getEyeHeight() + offsetY, owner.getZ());
-        projectile.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), 0.0F, velocity, inaccuracy);
+        projectile.setPos(owner.position().add(offset));
         owner.level().addFreshEntity(projectile);
     }
 
