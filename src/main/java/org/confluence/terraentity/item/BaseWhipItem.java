@@ -54,7 +54,7 @@ public class BaseWhipItem extends Item {
                 whipEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0, 1.0F);
                 var data = stack.get(TEDataComponentTypes.EFFECT_STRATEGY);
                 if (data != null)
-                    whipEntity.hiteffect = data.effect();
+                    whipEntity.hiteffect = data;
                 whipEntity.hitCooldown = hitCooldown;
                 level.addFreshEntity(whipEntity);
                 player.getCooldowns().addCooldown(this, 20);

@@ -12,7 +12,7 @@ import org.confluence.terraentity.registries.hit_effect.variant.TimePossibilityA
  * 注册追踪编解码器的类型
  */
 public class EffectStrategyProviderTypes {
-    public static final TERegistries.EffectStrategyProviders EFFECT_STRATEGY_PROVIDERS = TERegistries.EffectStrategyProviders.create(TerraEntity.MODID);
+    public static final TERegistries.EffectStrategyProviders TYPES = TERegistries.EffectStrategyProviders.create(TerraEntity.MODID);
 
     public static final DeferredHolder<EffectStrategyProvider,EffectStrategyProvider> TIME_POSSIBILITY_AMPLIFIER_EFFECT_PROVIDER = register("time_possibility_amplifier_effect", TimePossibilityAmplifierEffect.CODEC);
 
@@ -21,6 +21,6 @@ public class EffectStrategyProviderTypes {
 
 
     private static DeferredHolder<EffectStrategyProvider,EffectStrategyProvider> register(String name, MapCodec<? extends IEffectStrategy> codec) {
-        return EFFECT_STRATEGY_PROVIDERS.register(name, ()->new EffectStrategyProvider(codec));
+        return TYPES.register(name, ()->new EffectStrategyProvider(codec));
     }
 }

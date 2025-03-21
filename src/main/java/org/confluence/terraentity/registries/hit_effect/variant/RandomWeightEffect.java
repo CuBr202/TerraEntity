@@ -24,15 +24,18 @@ import java.util.function.Supplier;
 public class RandomWeightEffect implements IEffectStrategy {
     Supplier<Map<EffectStrategy, Float>> effectMap;
     Map<EffectStrategy, Float> cache;
+    String name;
     public Map<EffectStrategy, Float> getEffectMap(){
         return effectMap.get();
     }
     public static MapCodec<RandomWeightEffect> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            Codec.unboundedMap(EffectStrategy.CODEC.xmap(i->i,i->i), Codec.FLOAT).fieldOf("effectMap").forGetter(RandomWeightEffect::getEffectMap)
-    ).apply(instance, map->new RandomWeightEffect((() -> map))));
+            Codec.unboundedMap(EffectStrategy.CODEC.xmap(i->i,i->i), Codec.FLOAT).fieldOf("effectMap").forGetter(RandomWeightEffect::getEffectMap),
+            Codec.STRING.fieldOf("name").forGetter(RandomWeightEffect::getName)
+    ).apply(instance, (map,name)->new RandomWeightEffect(name, () -> map)));
 
-    public RandomWeightEffect(Supplier<Map<EffectStrategy, Float>> effectMap){
+    public RandomWeightEffect(String name, Supplier<Map<EffectStrategy, Float>> effectMap){
         this.effectMap = effectMap;
+        this.name = name;
     }
 
     @Override
@@ -41,6 +44,11 @@ public class RandomWeightEffect implements IEffectStrategy {
             cache = effectMap.get();
         }
         return TEUtils.getRandomByWeight(cache).getEffect();
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override

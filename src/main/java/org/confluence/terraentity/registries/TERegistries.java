@@ -2,14 +2,18 @@ package org.confluence.terraentity.registries;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
+import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
 import org.confluence.terraentity.registries.track.TrackTypeProvider;
+import org.confluence.terraentity.registries.track.TrackTypeProviderTypes;
 
 import static net.minecraft.resources.ResourceKey.createRegistryKey;
 
@@ -21,6 +25,13 @@ public class TERegistries {
         event.register(TrackTypeProviders.REGISTRY);
         event.register(GenerationProviders.REGISTRY);
         event.register(EffectStrategies.REGISTRY);
+    }
+
+    public static void register(IEventBus bus) {
+        EffectStrategyProviderTypes.TYPES.register(bus);
+        GenerationProviderTypes.TYPES.register(bus);
+        TrackTypeProviderTypes.TYPES.register(bus);
+
     }
 
     /**

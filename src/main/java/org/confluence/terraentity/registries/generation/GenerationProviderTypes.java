@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * 注册追踪编解码器的类型
  */
 public class GenerationProviderTypes {
-    public static final TERegistries.GenerationProviders GENERATION_PROVIDERS = TERegistries.GenerationProviders.create(TerraEntity.MODID);
+    public static final TERegistries.GenerationProviders TYPES = TERegistries.GenerationProviders.create(TerraEntity.MODID);
 
     public static final Supplier<GenerationProvider> FORWARD_GENERATION = register("forward", ForwardGeneration.CODEC);
     public static final Supplier<GenerationProvider> ABOVE_FALLEN = register("above_fallen", AboveFallenGeneration.CODEC);
@@ -21,6 +21,6 @@ public class GenerationProviderTypes {
 
 
     private static Supplier<GenerationProvider> register(String name, MapCodec<? extends IGeneration> codec) {
-        return GENERATION_PROVIDERS.register(name, ()->new GenerationProvider(codec));
+        return TYPES.register(name, ()->new GenerationProvider(codec));
     }
 }

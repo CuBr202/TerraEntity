@@ -37,7 +37,7 @@ public class TerraEntity {
 //        TEBiomes.register(modEventBus);
 
         modEventBus.addListener(TERegistries::newRegistry);
-
+        TERegistries.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 

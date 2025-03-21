@@ -17,7 +17,6 @@ import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
 import org.confluence.terraentity.utils.TEUtils;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -25,12 +24,12 @@ import java.util.function.Function;
 
 /**
  * <h1>攻击时给敌人施加的效果或回调</h1>
- * <p> 用于复杂效果，难以数据生成IEffectStrategy </p>
+ * <p> 只用于 <b>PrefabEffect</b> 复杂效果，难以数据生成IEffectStrategy </p>
  * @author coffee
  */
 public class EffectStrategy {
-    String name;
-//    BiConsumer<LivingEntity, LivingEntity> effect;
+
+    BiConsumer<LivingEntity, LivingEntity> complexEffect;
     IEffectStrategy effect;
 
     public IEffectStrategy getProvider() {
@@ -42,91 +41,32 @@ public class EffectStrategy {
             TERegistries.EffectStrategies.REGISTRY::getKey
     );
 
-
-
     /**
-     * 注册不方便数据生成的效果
+     * 注册不方便数据生成的效果 PrebasEffect
      * @param name id
      * @param effect 效果
      */
     public EffectStrategy(String name, BiConsumer<LivingEntity, LivingEntity> effect) {
-        this.name = name;
-        this.effect = new PrefabEffect(this, effect);
+        this.effect = new PrefabEffect(name, ()->this);
+        this.complexEffect = effect;
     }
-
     /**
-     * 注册预定义类型数据生成的效果
-     * @param name id
+     * 用于预制的各种类型效果
      * @param effect 效果
      */
-    public EffectStrategy(String name, IEffectStrategy effect) {
-        this.name = name;
+    public EffectStrategy(IEffectStrategy effect) {
         this.effect = effect;
-    }
-    public BiConsumer<LivingEntity, LivingEntity> getEffect() {
-        return effect.getEffect();
-    }
-    public String getName() {
-        return name;
-    }
-
-    public String getTranslationKey() {
-        return "effect.strategy." + TERegistries.EffectStrategies.REGISTRY.getKey(this);
-    }
-    public MutableComponent getDescription() {
-        return Component.translatable(getTranslationKey());
-    }
-
-    /**
-     * 效果描述
-     */
-    public static void appendDescription(List<Component> tooltipComponents, List<? extends EffectStrategy> effectStrategy, Component title) {
-        int size = effectStrategy.size();
-        if(size == 0) return;
-        tooltipComponents.add(title);
-        for(int i = 0; i < size; i++) {
-            EffectStrategy effect = effectStrategy.get(i);
-            tooltipComponents.add(Component.literal(" - ").append(effect.getDescription()).withColor(0xFF00FF));
+        if(effect instanceof PrefabEffect effect1){
+            this.complexEffect = effect.getEffect();
         }
     }
 
-    // 只用于data gen
-    String description_en_us;
-    String description_zh_cn;
-
     /**
-     * 注册不方便数据生成的效果
-     * <p>用于自动datagen</p>
-     * @param name id
-     * @param description_en_us EN
-     * @param description_zh_cn CN
-     * @param effect 效果
+     * 复杂效果优先，防止出现无限递归
      */
-    public EffectStrategy(String name, String description_en_us, String description_zh_cn, BiConsumer<LivingEntity, LivingEntity> effect) {
-        this.name = name;
-        this.description_en_us = description_en_us;
-        this.description_zh_cn = description_zh_cn;
-        this.effect = new PrefabEffect(this,effect);
-    }
-    /**
-     * 注册预定义类型数据生成的效果
-     * <p>用于自动datagen</p>
-     * @param name id
-     * @param description_en_us EN
-     * @param description_zh_cn CN
-     * @param effect 效果
-     */
-    public EffectStrategy(String name, String description_en_us, String description_zh_cn, IEffectStrategy effect) {
-        this.name = name;
-        this.description_en_us = description_en_us;
-        this.description_zh_cn = description_zh_cn;
-        this.effect = effect;
-    }
-    public String getDescription_en_us() {
-        return description_en_us == null? name : description_en_us;
-    }
-    public String getDescription_zh_cn() {
-        return description_zh_cn == null? name : description_zh_cn;
+    public BiConsumer<LivingEntity, LivingEntity> getEffect() {
+        if(complexEffect != null) return complexEffect;
+        return effect.getEffect();
     }
 
 

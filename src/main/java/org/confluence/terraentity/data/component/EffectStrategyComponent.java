@@ -6,30 +6,41 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
+import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * 命中效果的数据生成器组件
- * @param effect 命中效果
+ * @param effects 命中效果
  */
-public record EffectStrategyComponent(IEffectStrategy effect) implements DataComponentType<EffectStrategyComponent> {
-    public static final Codec<EffectStrategyComponent> CODEC = IEffectStrategy.TYPED_CODEC.xmap(EffectStrategyComponent::new, EffectStrategyComponent::effect);
+public record EffectStrategyComponent(List<IEffectStrategy> effects) implements DataComponentType<EffectStrategyComponent> {
+    public static final Codec<EffectStrategyComponent> CODEC = IEffectStrategy.TYPED_CODEC.listOf().xmap(EffectStrategyComponent::new, EffectStrategyComponent::effects);
     public static final StreamCodec<ByteBuf, EffectStrategyComponent> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
-    public EffectStrategyComponent(EffectStrategy effect) {
-        this(effect.getProvider());
-    }
 
+    public void applyAll(LivingEntity owner, LivingEntity target){
+        for (IEffectStrategy effect : effects) {
+            effect.getEffect().accept(owner, target);
+        }
+    }
     public static EffectStrategyComponent of(IEffectStrategy effect) {
-        return new EffectStrategyComponent(effect);
+        return new EffectStrategyComponent(List.of(effect));
     }
 
-    public static EffectStrategyComponent of(EffectStrategy effect) {
-        return new EffectStrategyComponent(effect.getProvider());
+    public static EffectStrategyComponent ofPrefab(String name, DeferredHolder<EffectStrategy, EffectStrategy> effect) {
+        return of(PrefabEffect.of(name, effect));
     }
+
+//    public static EffectStrategyComponent of(EffectStrategy effect) {
+//        return new EffectStrategyComponent(List.of(effect.getProvider()));
+//    }
 
 
     @Override
@@ -44,6 +55,6 @@ public record EffectStrategyComponent(IEffectStrategy effect) implements DataCom
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof EffectStrategyComponent(IEffectStrategy effect1) && effect1 == effect;
+        return obj instanceof EffectStrategyComponent(IEffectStrategy effect1) && effect1 == effects;
     }
 }

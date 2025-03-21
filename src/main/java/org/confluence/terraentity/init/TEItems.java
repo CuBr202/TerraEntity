@@ -95,7 +95,7 @@ public class TEItems {
     // Whip Items
     public static final DeferredItem<BaseWhipItem> TEST_WHIP = WHIP_ITEMS.register("test_whip", ()-> new BaseWhipItem(new Item.Properties()
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
-                    new TimePossibilityAmplifierEffect(MobEffects.POISON, 10,1,1,1)
+                    new TimePossibilityAmplifierEffect("poison",MobEffects.POISON, 10,1,1,1)
             )),
             5, 5));
 

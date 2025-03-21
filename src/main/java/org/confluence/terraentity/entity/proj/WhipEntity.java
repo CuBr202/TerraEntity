@@ -14,6 +14,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.animation.LashAnimation;
+import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.dynamic_curve.SplineKeyframeDynamicCurve;
 import org.confluence.terraentity.init.TEAttributes;
@@ -35,7 +36,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
 
     int existTick = 20;
     public int hitCooldown = 5;
-    public IEffectStrategy hiteffect;
+    public EffectStrategyComponent hiteffect;
 
 
     // 初始位置
@@ -122,7 +123,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
                                         hitEntities.put(entity, hitCooldown);
                                         double damage = living.getAttributeValue(TEAttributes.SUMMON_DAMAGE);
                                         if(hiteffect!= null){
-                                            hiteffect.getEffect().accept(living, hurter);
+                                            hiteffect.applyAll(living, hurter);
                                         }
                                         hurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMONER, living), (float) damage);
                                     }else{
