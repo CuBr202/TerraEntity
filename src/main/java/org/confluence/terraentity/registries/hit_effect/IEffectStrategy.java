@@ -50,6 +50,9 @@ public interface IEffectStrategy {
         }
     }
 
+    /**
+     * 多组件复合效果描述
+     */
     static void appendDescriptions(List<Component> tooltipComponents, List<EffectStrategyComponent> components, Component title) {
         List<IEffectStrategy> effectStrategy = components.stream().flatMap(e->e.effects().stream()).toList();
         int size = effectStrategy.size();
