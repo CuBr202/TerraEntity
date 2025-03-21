@@ -33,7 +33,7 @@ public final class TEParticles {
 //    private static <T extends ParticleOptions> Supplier<ParticleType<T>> registerEgg(String pKey, boolean pOverrideLimiter, ParticleOptions.Deserializer<T> pDeserializer, final Function<ParticleType<T>, Codec<T>> pCodecFactory) {
 //        return PARTICLES.registerEgg(pKey, () -> new ParticleType<T>(pOverrideLimiter, pDeserializer) {
 //            public @NotNull Codec<T> codec() {
-//                return pCodecFactory.apply(this);
+//                return pCodecFactory.getEffect(this);
 //            }
 //        });
 //    }

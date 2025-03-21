@@ -1,8 +1,11 @@
-package org.confluence.terraentity.entity.proj.generation;
+package org.confluence.terraentity.registries.generation;
 
 import com.mojang.serialization.MapCodec;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.registries.GenerationProviders;
+import org.confluence.terraentity.registries.TERegistries;
+import org.confluence.terraentity.registries.generation.variant.AboveFallenGeneration;
+import org.confluence.terraentity.registries.generation.variant.ForwardGeneration;
+import org.confluence.terraentity.registries.generation.variant.StillGeneration;
 
 import java.util.function.Supplier;
 
@@ -10,7 +13,7 @@ import java.util.function.Supplier;
  * 注册追踪编解码器的类型
  */
 public class GenerationProviderTypes {
-    public static final GenerationProviders GENERATION_PROVIDERS = GenerationProviders.create(TerraEntity.MODID);
+    public static final TERegistries.GenerationProviders GENERATION_PROVIDERS = TERegistries.GenerationProviders.create(TerraEntity.MODID);
 
     public static final Supplier<GenerationProvider> FORWARD_GENERATION = register("forward", ForwardGeneration.CODEC);
     public static final Supplier<GenerationProvider> ABOVE_FALLEN = register("above_fallen", AboveFallenGeneration.CODEC);

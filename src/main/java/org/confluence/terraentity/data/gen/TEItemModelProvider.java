@@ -53,7 +53,8 @@ public class TEItemModelProvider extends ItemModelProvider {
 
         // summon items
         genModels(List.of(
-                createDir(TEItems.SUMMON_ITEMS,"")
+                createDir(TEItems.SUMMON_ITEMS,""),
+                createDir(TEItems.WHIP_ITEMS,"")
         ),"item/handheld", (parent, resourcePath, path) -> {
             try {
                 withExistingParent(path, parent).texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));

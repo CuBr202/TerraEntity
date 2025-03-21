@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.proj.generation;
+package org.confluence.terraentity.registries.generation;
 
 import com.mojang.serialization.MapCodec;
 

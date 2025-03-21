@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.proj.track;
+package org.confluence.terraentity.registries.track;
 
 import com.mojang.serialization.MapCodec;
 

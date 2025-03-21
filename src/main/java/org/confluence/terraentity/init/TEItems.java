@@ -4,6 +4,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CreativeModeTab;
@@ -14,7 +15,10 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.config.ServerConfig;
+import org.confluence.terraentity.data.component.EffectStrategyComponent;
+import org.confluence.terraentity.item.BaseWhipItem;
 import org.confluence.terraentity.item.SummonItem;
+import org.confluence.terraentity.registries.hit_effect.variant.TimePossibilityAmplifierEffect;
 
 import java.util.function.Supplier;
 
@@ -23,6 +27,7 @@ import static org.confluence.terraentity.TerraEntity.MODID;
 public class TEItems {
     public static final DeferredRegister.Items SPAWN_EGGS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items SUMMON_ITEMS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Items WHIP_ITEMS = DeferredRegister.createItems(MODID);
 
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
@@ -87,10 +92,16 @@ public class TEItems {
     public static final DeferredItem<Item> IRON_GOLEM_STAFF = SUMMON_ITEMS.register("iron_golem_staff", () -> new SummonItem<>(new Item.Properties(), TEEntities.SUMMON_IRON_GOLEM, 1, 8));
     public static final DeferredItem<Item> HORNET_STAFF = SUMMON_ITEMS.register("hornet_staff", () -> new SummonItem<>(new Item.Properties(), TEEntities.SUMMON_HORNET, 1, 8));
 
+    // Whip Items
+    public static final DeferredItem<BaseWhipItem> TEST_WHIP = WHIP_ITEMS.register("test_whip", ()-> new BaseWhipItem(new Item.Properties()
+            .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
+                    new TimePossibilityAmplifierEffect(MobEffects.POISON, 10,1,1,1)
+            )),
+            5, 5));
+
+
 
 //    public static final DeferredItem<Item> DEBUG_ITEM = SUMMON_ITEMS.register("debug_item", () -> new DebugItem(new Item.Properties().stacksTo(1)));
-
-
 
     public static final DeferredHolder<CreativeModeTab,CreativeModeTab> NEO_TERRA =
             TABS.register(MODID + "_tab", ()-> CreativeModeTab.builder()
@@ -110,5 +121,6 @@ public class TEItems {
         SPAWN_EGGS.register(bus);
         SUMMON_ITEMS.register(bus);
         TABS.register(bus);
+        WHIP_ITEMS.register(bus);
     }
 }

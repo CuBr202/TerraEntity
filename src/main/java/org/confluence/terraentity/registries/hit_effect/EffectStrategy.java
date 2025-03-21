@@ -1,8 +1,10 @@
-package org.confluence.terraentity.api.hit_effect;
+package org.confluence.terraentity.registries.hit_effect;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -11,7 +13,8 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.apache.commons.lang3.function.TriFunction;
-import org.confluence.terraentity.registries.EffectStrategies;
+import org.confluence.terraentity.registries.TERegistries;
+import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
 import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.List;
@@ -22,25 +25,53 @@ import java.util.function.Function;
 
 /**
  * <h1>攻击时给敌人施加的效果或回调</h1>
- * <p> 适用于剑、弹射物、生物命中特效等 </p>
+ * <p> 用于复杂效果，难以数据生成IEffectStrategy </p>
  * @author coffee
  */
 public class EffectStrategy {
     String name;
-    BiConsumer<LivingEntity, LivingEntity> effect;
+//    BiConsumer<LivingEntity, LivingEntity> effect;
+    IEffectStrategy effect;
+
+    public IEffectStrategy getProvider() {
+        return effect;
+    }
+
+    public static Codec<EffectStrategy> CODEC = ResourceLocation.CODEC.xmap(
+            TERegistries.EffectStrategies.REGISTRY::get,
+            TERegistries.EffectStrategies.REGISTRY::getKey
+    );
+
+
+
+    /**
+     * 注册不方便数据生成的效果
+     * @param name id
+     * @param effect 效果
+     */
     public EffectStrategy(String name, BiConsumer<LivingEntity, LivingEntity> effect) {
+        this.name = name;
+        this.effect = new PrefabEffect(this, effect);
+    }
+
+    /**
+     * 注册预定义类型数据生成的效果
+     * @param name id
+     * @param effect 效果
+     */
+    public EffectStrategy(String name, IEffectStrategy effect) {
         this.name = name;
         this.effect = effect;
     }
     public BiConsumer<LivingEntity, LivingEntity> getEffect() {
-        return effect;
+        return effect.getEffect();
     }
     public String getName() {
         return name;
     }
 
     public String getTranslationKey() {
-        return "effect.strategy." + EffectStrategies.EFFECT_STRATEGY_REGISTRY.getKey(this);
+        return "effect.strategy." + TERegistries.EffectStrategies.KEY.registry().getPath();
     }
     public MutableComponent getDescription() {
         return Component.translatable(getTranslationKey());
@@ -62,7 +93,30 @@ public class EffectStrategy {
     // 只用于data gen
     String description_en_us;
     String description_zh_cn;
+
+    /**
+     * 注册不方便数据生成的效果
+     * <p>用于自动datagen</p>
+     * @param name id
+     * @param description_en_us EN
+     * @param description_zh_cn CN
+     * @param effect 效果
+     */
     public EffectStrategy(String name, String description_en_us, String description_zh_cn, BiConsumer<LivingEntity, LivingEntity> effect) {
+        this.name = name;
+        this.description_en_us = description_en_us;
+        this.description_zh_cn = description_zh_cn;
+        this.effect = new PrefabEffect(this,effect);
+    }
+    /**
+     * 注册预定义类型数据生成的效果
+     * <p>用于自动datagen</p>
+     * @param name id
+     * @param description_en_us EN
+     * @param description_zh_cn CN
+     * @param effect 效果
+     */
+    public EffectStrategy(String name, String description_en_us, String description_zh_cn, IEffectStrategy effect) {
         this.name = name;
         this.description_en_us = description_en_us;
         this.description_zh_cn = description_zh_cn;
@@ -110,7 +164,6 @@ public class EffectStrategy {
     /**概率附加随机效果*/
     public static final Function<Map<DeferredHolder<EffectStrategy,EffectStrategy>, Float>, DeferredHolder<EffectStrategy,EffectStrategy>> RANDOM_POSSIBILITY_EFFECT = (consumer_map)->
             TEUtils.getRandomByWeight(consumer_map);
-
 
     /* *****************************************************************************************************************************************/
 

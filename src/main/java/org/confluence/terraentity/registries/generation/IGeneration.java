@@ -1,12 +1,10 @@
-package org.confluence.terraentity.entity.proj.generation;
+package org.confluence.terraentity.registries.generation;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.registries.GenerationProviders;
-import org.confluence.terraentity.registries.TrackTypeProviders;
+import org.confluence.terraentity.registries.TERegistries;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -28,7 +26,7 @@ public interface IGeneration {
      */
     GenerationProvider getCodec();
 
-    Codec<IGeneration> TYPED_CODEC = GenerationProviders.GENERATION_PROVIDER_REGISTRY
+    Codec<IGeneration> TYPED_CODEC = TERegistries.GenerationProviders.REGISTRY
             .byNameCodec()
             .dispatch(IGeneration::getCodec, GenerationProvider::codec);
 }

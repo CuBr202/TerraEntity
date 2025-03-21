@@ -11,6 +11,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -38,10 +39,7 @@ import org.confluence.terraentity.entity.monster.prefab.LandMonsterPrefab;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
-import org.confluence.terraentity.entity.proj.BaseProj;
-import org.confluence.terraentity.entity.proj.LineProj;
-import org.confluence.terraentity.entity.proj.SummonBeeStick;
-import org.confluence.terraentity.entity.proj.ThrowableProj;
+import org.confluence.terraentity.entity.proj.*;
 import org.confluence.terraentity.entity.summon.SummonHornet;
 import org.confluence.terraentity.entity.summon.SummonIronGolem;
 import org.confluence.terraentity.entity.summon.SummonSlime;
@@ -165,12 +163,15 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> SUMMON_BEE_STICK_PROJ = registerProj("summon_bee_stick_proj",(e, l)->
             new SummonBeeStick(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
 
+    // 鞭子
+    public static final DeferredHolder<EntityType<?>,EntityType<WhipEntity>> WHIP_PROJECTILE = registerProj("whip_projectile", (e, l)->
+            new WhipEntity(e,l),0.5F,0.5F);
 
 
-    public static <T extends BaseProj<T>> DeferredHolder<EntityType<?>, EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory,float w,float h) {
+    public static <T extends Projectile> DeferredHolder<EntityType<?>, EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory, float w, float h) {
         return ENTITIES.register(name, () -> EntityType.Builder.of(entityFactory , MobCategory.MISC).clientTrackingRange(10).sized(w,h).build(Key(name)));
     }
-    public static <T extends BaseProj<T>> DeferredHolder<EntityType<?>, EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory) {
+    public static <T extends Projectile> DeferredHolder<EntityType<?>, EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory) {
         return registerProj(name,entityFactory,1,1);
     }
 
@@ -246,7 +247,8 @@ public final class TEEntities {
         event.registerEntityRenderer(SUMMON_IRON_GOLEM.get(), IronGolemRenderer::new);
         event.registerEntityRenderer(SUMMON_HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 0.6f, 0.5f));
 
-
+        // 鞭子
+        event.registerEntityRenderer(WHIP_PROJECTILE.get(), WhipEntityRenderer::new);
     }
 
     // tip 属性
