@@ -71,7 +71,7 @@ public class EffectStrategy {
     }
 
     public String getTranslationKey() {
-        return "effect.strategy." + TERegistries.EffectStrategies.KEY.registry().getPath();
+        return "effect.strategy." + TERegistries.EffectStrategies.REGISTRY.getKey(this);
     }
     public MutableComponent getDescription() {
         return Component.translatable(getTranslationKey());
