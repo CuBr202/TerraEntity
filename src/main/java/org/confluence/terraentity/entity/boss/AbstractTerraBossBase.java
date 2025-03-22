@@ -260,7 +260,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     protected List<Player> getNearbyPlayers(double range) {
         List<Player> players = new ArrayList<>();
         for (Player player : level().players()) {
-            if (/*player.canBeSeenAsEnemy() && */this.distanceToSqr(player) < range * range) {
+            if (player.canBeSeenAsEnemy() && this.distanceToSqr(player) < range * range) {
                 players.add(player);
             }
         }

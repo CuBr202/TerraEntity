@@ -5,15 +5,15 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
 import org.confluence.terraentity.entity.boss.SkeletronHand;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 
 public class SkeletronHandRenderer extends GeoBossRenderer<SkeletronHand, SkeletronHandModel> {
-
+    private GeoBone hand;
     public SkeletronHandRenderer(EntityRendererProvider.Context renderManager, SkeletronHandModel model) {
         super(renderManager, model);
     }
@@ -23,6 +23,7 @@ public class SkeletronHandRenderer extends GeoBossRenderer<SkeletronHand, Skelet
         model.getBone("bone2").ifPresent(bone -> bone.setHidden(true));
         model.getBone("bone3").ifPresent(geoBone -> geoBone.setHidden(false));
         model.getBone("hand").ifPresent(hand -> {
+            this.hand = hand;
             hand.setScaleZ(animatable.handSide == SkeletronHand.HandSide.LEFT ? -1 : 1);
         });
 
@@ -32,16 +33,18 @@ public class SkeletronHandRenderer extends GeoBossRenderer<SkeletronHand, Skelet
                 return;
             }
             wholeArm.setHidden(false);
-            float yRot = Mth.lerp(partialTick, animatable.owner.yHeadRotO, animatable.owner.yHeadRot) * Mth.DEG_TO_RAD;
+//            float yRot = Mth.lerp(partialTick, animatable.owner.yHeadRotO, animatable.owner.yHeadRot) * Mth.DEG_TO_RAD;
             Vec3 selfPos = animatable.position();
             Vec3 rootPos = animatable.getRootPos();
-            double a = Math.min(rootPos.distanceTo(selfPos), 6.2);
-            double b = 3.125; // 设一节手臂50格长 /16
-            double c = 3.125;
+            double a = Math.min(rootPos.distanceTo(selfPos), 10.4 * scale);
+            double b = 5.2 * scale;
+            double c = 5.2 * scale;
             double radC = Math.acos((a * a + b * b - c * c) / (2 * a * b)); // 余弦定理
-            wholeArm.setRotZ((float) (selfPos.y < rootPos.y ? radC : -radC));
+            double armRot = selfPos.y < rootPos.y - 2 ? radC : -radC;
+            wholeArm.setRotZ((float) armRot);
+            hand.setRotZ((float) armRot);
             double radA = Math.PI - Math.acos((b * b + c * c - a * a) / (2 * b * c));
-            wholeArm.getChildBones().getFirst().setRotZ((float) (selfPos.y < rootPos.y ? -radA : radA));
+            wholeArm.getChildBones().getFirst().setRotZ((float) (selfPos.y < rootPos.y - 1 ? -radA : radA));
         });
 //        poseStack.translate(-11.4f, -0.6f, 0);
 //        poseStack.translate(0, 0.5f, 0);

@@ -226,7 +226,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
         hands.add(hand);
     }
 
-    private class SpinGoal extends Goal {
+    public class SpinGoal extends Goal {
 
         @Override
         public boolean canUse() {
