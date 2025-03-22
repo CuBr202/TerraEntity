@@ -19,7 +19,6 @@ import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnima
 import org.confluence.terraentity.entity.ai.keyframe.dynamic_curve.SplineKeyframeDynamicCurve;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TETags;
-import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
