@@ -85,7 +85,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         if(level.getDifficulty().equals(level.getDifficulty().EASY)
                 || level.getDifficulty().equals(level.getDifficulty().NORMAL)
         ){
-            difficult = true;
+            difficult = false;
         }
     }
 
@@ -109,7 +109,6 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             if(dirty)
                 firstSpawn();
         }
-
         super.onAddedToLevel();
         this.addSkills();
         if(skills.count() > 0)

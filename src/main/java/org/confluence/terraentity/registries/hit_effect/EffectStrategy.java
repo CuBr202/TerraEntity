@@ -119,6 +119,16 @@ public class EffectStrategy {
         owner.level().addFreshEntity(projectile);
     };
 
+    /**命中时残留多次弹幕*/
+    public static final BiFunction<Function<Level, Projectile>, Integer, BiConsumer<LivingEntity, LivingEntity>>  ON_HIT_PROJECTILE_COUNT = (supplier, count)-> (owner, entity)->{
+        for(int i=0;i<count;i++) {
+            Projectile projectile = supplier.apply(owner.level());
+            projectile.setOwner(owner);
+            projectile.setPos(entity.position().add(entity.getRandom().nextFloat() * 0.2f, entity.getEyeHeight() * 0.5f, entity.getRandom().nextFloat() * 0.2f));
+            owner.level().addFreshEntity(projectile);
+        }
+    };
+
     /*其他回调用法********************************************************************************************************************************/
     /**着火*/
     public static final BiFunction<Integer,Float,BiConsumer<LivingEntity,LivingEntity>> SET_FIRE = (ticks,possibility) ->
