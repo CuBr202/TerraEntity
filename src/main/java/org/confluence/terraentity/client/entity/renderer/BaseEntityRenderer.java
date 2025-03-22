@@ -40,8 +40,10 @@ public abstract class BaseEntityRenderer<T extends Entity, S extends Entity, M e
 
         preRender(entity, entityYaw, partialTick, poseStack, packedLight);
 
-        VertexConsumer buffer1 = buffer.getBuffer(getRenderType(entity, partialTick));
-        this.model.renderToBuffer(poseStack, buffer1,packedLight, OverlayTexture.NO_OVERLAY);
+        if(this.model!= null) {
+            VertexConsumer buffer1 = buffer.getBuffer(getRenderType(entity, partialTick));
+            this.model.renderToBuffer(poseStack, buffer1, packedLight, OverlayTexture.NO_OVERLAY);
+        }
         poseStack.popPose();
     }
 

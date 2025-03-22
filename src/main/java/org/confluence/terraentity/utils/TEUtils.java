@@ -11,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -612,6 +613,17 @@ public final class TEUtils {
             }
         }
         return null;
+    }
+
+    public static Vec3 getPlayerHandPos(Player player) {
+        int i = player.getMainArm() == HumanoidArm.RIGHT ? 1 : -1;
+        float f =  player.yBodyRot* 0.017453292F + 1f;
+        double d0 = Mth.sin(f);
+        double d1 = Mth.cos(f);
+        float f1 = player.getScale();
+        double d2 = (double)i * 0.25 * (double)f1;
+        double d3 = 0.8 * (double)f1;
+        return new Vec3(-d1 * d2 - d0 * d3, 0, -d0 * d2 + d1 * d3);
     }
 /*
     public static boolean hasBoss(double radius, Level level,

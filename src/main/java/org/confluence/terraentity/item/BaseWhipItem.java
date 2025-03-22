@@ -1,23 +1,21 @@
 package org.confluence.terraentity.item;
 
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.utils.TEUtils;
 
 public class BaseWhipItem extends Item {
 
@@ -50,7 +48,7 @@ public class BaseWhipItem extends Item {
             if(stack.getItem() instanceof  BaseWhipItem self) {
                 WhipEntity whipEntity = TEEntities.WHIP_PROJECTILE.get().create(level);
                 whipEntity.setOwner(player);
-                whipEntity.setPos(player.position().add(0, 1, 0).add(getPlayerHandPos(player)));
+                whipEntity.setPos(player.position().add(0, 1, 0).add(TEUtils.getPlayerHandPos(player)));
                 whipEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0, 1.0F);
                 var data = stack.get(TEDataComponentTypes.EFFECT_STRATEGY);
                 if (data != null)
@@ -64,14 +62,5 @@ public class BaseWhipItem extends Item {
         return super.use(level, player, usedHand);
     }
 
-    private Vec3 getPlayerHandPos(Player player) {
-        int i = player.getMainArm() == HumanoidArm.RIGHT ? 1 : -1;
-        float f =  player.yBodyRot* 0.017453292F + 1f;
-        double d0 = Mth.sin(f);
-        double d1 = Mth.cos(f);
-        float f1 = player.getScale();
-        double d2 = (double)i * 0.35 * (double)f1;
-        double d3 = 0.8 * (double)f1;
-        return new Vec3(-d1 * d2 - d0 * d3, 0, -d0 * d2 + d1 * d3);
-    }
+
 }
