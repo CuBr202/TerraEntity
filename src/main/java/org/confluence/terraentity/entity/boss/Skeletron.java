@@ -18,23 +18,24 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.proj.SkullProjectile;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss {
-    private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
+
+    private float projDamageFactor = 1.0f; // 弹幕伤害倍率，相对于攻击力
     public int phase = 0;
     public boolean enraged = false;
     protected double acceleration;
@@ -42,7 +43,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     protected boolean expert = false;
     private boolean ftw;
     public final List<SkeletronHand> hands = new ArrayList<>();
-
+    public final List<SkeletronHand> _hands = new ArrayList<>(); // 用于计算boss总血量
     public static final EntityDataAccessor<Boolean> DATA_SPINNING = SynchedEntityData.defineId(Skeletron.class, EntityDataSerializers.BOOLEAN);
 
     public Skeletron(EntityType<? extends Monster> entityType, Level level) {
@@ -143,6 +144,20 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     }
 
     @Override
+    public float[] getBossEventProgress(){
+        float value = getHealth();
+        float getMax = getMaxHealth();
+        for (SkeletronHand hand : _hands) {
+            value += hand.getHealth();
+            getMax += hand.getMaxHealth();
+        }
+        PacketDistributor.sendToAllPlayers(new SyncBossEventHealthPacket(bossEvent.getId(), value, getMax));
+        return new float[]{value , getMax};
+    }
+
+
+
+    @Override
     public boolean canAttack(LivingEntity entity) {
         if (!super.canAttack(entity)) return false;
         return !(entity instanceof Skeletron);
@@ -176,11 +191,14 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
             level().addFreshEntity(hand2);
             hands.add(hand1);
             hands.add(hand2);
+            _hands.add(hand1);
+            _hands.add(hand2);
         }
     }
 
     public void attachHand(SkeletronHand hand) {
         hands.add(hand);
+        _hands.add(hand);
     }
 
     public class FloatGoal extends Goal {
@@ -281,6 +299,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
             }
             if (tickCount % interval == 0) {
                 SkullProjectile skull = new SkullProjectile(TEEntities.SKULL.get(), level(), getTarget());
+                skull.addDamage((float) getAttribute(Attributes.ATTACK_DAMAGE).getValue() * projDamageFactor);
                 skull.setPos(position());
                 skull.setOwner(Skeletron.this);
                 skull.setDeltaMovement(getTarget().position().subtract(position()).normalize().scale(0.001));

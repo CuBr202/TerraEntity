@@ -8,6 +8,9 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class ClientConfig {
 
     public static ModConfigSpec.ConfigValue<Integer> BossBarStyle;
+    public static ModConfigSpec.ConfigValue<Integer> BossBarNumberOffsetX;
+    public static ModConfigSpec.ConfigValue<Integer> BossBarNumberOffsetY;
+
     public static ModConfigSpec.BooleanValue ENABLE_NON_SPIDER_MODEL;
     public static ModConfigSpec SPEC;
     public static int bossBarStyle;
@@ -22,6 +25,12 @@ public class ClientConfig {
                 .comment("Boss Bar Style.")
                 .comment("0: Default, 1: Still Style, 2: Dynamic Style")
                 .defineInRange("boss_bar_style", 1, 0, 2);
+        BossBarNumberOffsetX = BUILDER
+                .comment("Boss Bar Number Offset X.")
+                .defineInRange("boss_bar_number_offset_x", 0, -150, 300);
+        BossBarNumberOffsetY = BUILDER
+                .comment("Boss Bar Number Offset Y.")
+                .defineInRange("boss_bar_number_offset_y", 0, -30, 200);
         ENABLE_NON_SPIDER_MODEL = BUILDER.define("enableNonSpiderModel", false);
         SPEC = BUILDER.build();
         return SPEC;

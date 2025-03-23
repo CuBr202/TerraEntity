@@ -153,7 +153,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
                 discard();
                 return;
             }
-            this.damage = defaultDamage();
+            this.damage += defaultDamage();
         }
     }
     @Override
@@ -165,9 +165,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     }
 
     public float defaultDamage(){
-        if(getOwner() != null)
-            return (int) ((LivingEntity)getOwner()).getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-        return 1;
+//        if(getOwner() != null)
+//            return (int) ((LivingEntity)getOwner()).getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+        return 0;
     }
 
     protected void doHurt(LivingEntity hurter){

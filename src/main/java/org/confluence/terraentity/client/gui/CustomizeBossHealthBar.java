@@ -10,12 +10,14 @@ import net.neoforged.neoforge.client.event.CustomizeGuiOverlayEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.ModRenderTypes;
 import org.confluence.terraentity.client.util.ShaderUtil;
+import org.confluence.terraentity.config.ClientConfig;
+import org.confluence.terraentity.mixinauxiliary.IBossEvent;
 import org.confluence.terraentity.mixinauxiliary.IShaderInstance;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.confluence.terraentity.config.ClientConfig.bossBarStyle;
+import static org.confluence.terraentity.config.ClientConfig.*;
 
 
 public class CustomizeBossHealthBar {
@@ -59,6 +61,18 @@ public class CustomizeBossHealthBar {
                     pos, (int) (h * (1 - segment)),
                     w, h
             );
+
+            float hp = ((IBossEvent)event.getBossEvent()).terra_enity$getBossHealth();
+            float maxHealth = ((IBossEvent)event.getBossEvent()).terra_enity$getBossMaxHealth();
+            String str = String.format("%.0f/%.0f", hp, maxHealth);
+            int len = Minecraft.getInstance().font.width(str);
+            g.pose().pushPose();
+            float scale = 1.2f;
+            g.pose().scale(scale,scale,scale);
+            g.drawString(Minecraft.getInstance().font, String.format("%.0f / %.0f", hp, maxHealth), (int) ((x - len / 2 + 60 + BossBarNumberOffsetX.get())/scale), (int) ((y + BossBarNumberOffsetY.get())/scale), 0xbfa268);
+//            g.drawString(Minecraft.getInstance().font, String.format("%.0f / %.0f", hp, maxHealth), (int) ((x - len / 2 - 20)/scale), (int) ((y + 15)/scale), 0xbfa268);
+
+            g.pose().popPose();
         }
 
         event.setIncrement(40);

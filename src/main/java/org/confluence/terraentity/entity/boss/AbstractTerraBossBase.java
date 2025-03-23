@@ -43,6 +43,9 @@ import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.ai.IFSMGeoMob;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.mixinauxiliary.IBossEvent;
+import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
+import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,7 +71,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public float explosionResistance = 0.5f;
     protected boolean difficult = true;
     protected boolean dirty = true;
-    protected ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
+    protected ServerBossEvent bossEvent;
     protected float baseHealth;
     protected int baseArmor;
 
@@ -78,7 +81,6 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         setNoGravity(true);
         this.baseHealth = health;
         this.baseArmor = armor;
-        var a = bossEvent.getOverlay();
         if(level().isClientSide){
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
         }
@@ -87,6 +89,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         ){
             difficult = false;
         }
+
+        bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
     }
 
     public float getAttributeMultiplier(Holder<Attribute> attribute){
@@ -108,6 +112,10 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             TEUtils.multiplePlayerEnhance(this,dirty);
             if(dirty)
                 firstSpawn();
+            if(bossEvent!= null){
+                bossEvent.getPlayers().forEach(p->syncBossHealthBar(p));
+
+            }
         }
         super.onAddedToLevel();
         this.addSkills();
@@ -355,7 +363,16 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         super.startSeenByPlayer(player);
         if (shouldShowBossBar()){
             this.bossEvent.addPlayer(player);
+            if(tickCount != 0)
+                syncBossHealthBar(player);
         }
+    }
+
+    public void syncBossHealthBar(ServerPlayer player){
+        float[] datas = getBossEventProgress();
+        ((IBossEvent)this.bossEvent).terra_enity$setBossHealth(datas[0]);
+        ((IBossEvent)this.bossEvent).terra_enity$setBossMaxHealth(datas[1]);
+        AdapterUtils.sendToPlayer(player, new SyncBossEventHealthPacket(bossEvent.getId(), datas[0], datas[1]));
     }
 
     @Override // boss条消失
@@ -365,15 +382,23 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             this.bossEvent.removePlayer(player);
     }
 
-    public float getBossEventProgress(){
-        return this.getHealth() / this.getMaxHealth();
+    /**
+     * 获取boss血量和最大血量
+     * @return [血量, 最大血量]
+     */
+    public float[] getBossEventProgress(){
+        return new float[]{this.getHealth(), this.getMaxHealth()};
     }
 
     @Override // boss条更新
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (shouldShowBossBar())
-            this.bossEvent.setProgress(getBossEventProgress());
+        if (shouldShowBossBar()) {
+            float[] datas = getBossEventProgress();
+            ((IBossEvent)this.bossEvent).terra_enity$setBossHealth(datas[0]);
+            ((IBossEvent)this.bossEvent).terra_enity$setBossMaxHealth(datas[1]);
+            this.bossEvent.setProgress(datas[0] / datas[1]);
+        }
     }
 
     @Override // 取消墙体窒息伤害

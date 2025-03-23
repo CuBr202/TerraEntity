@@ -337,14 +337,14 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
     }
 
     @Override
-    public float getBossEventProgress(){
+    public float[] getBossEventProgress(){
         float hp = getHealth();
         float maxHp = getMaxHealth();
         for(VisualNeuron m : minions){
             hp += m.getHealth();
             maxHp += m.getMaxHealth();
         }
-        return hp / maxHp;
+        return new float[]{ hp , maxHp};
     }
 
 

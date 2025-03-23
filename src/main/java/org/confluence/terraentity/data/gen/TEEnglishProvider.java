@@ -55,6 +55,10 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.monster_attributes_multiplier_damage", "Monster Attributes Multiplier-Damage");
 
         add("terra_entity.configuration.boss_bar_style", "Boss Health Bar Style");
+        add("terra_entity.configuration.boss_bar_number_offset_x", "Boss Health Bar Number Offset-X");
+        add("terra_entity.configuration.boss_bar_number_offset_y", "Boss Health Bar Number Offset-Y");
+
+
 
         add("terra_entity.configuration.enableNonSpiderModel", "Spider Harmonization");
         add("terra_entity.configuration.enableNonSpiderModel.tooltip", "Enable this option if you dislike spiders or want to beautify them.");
