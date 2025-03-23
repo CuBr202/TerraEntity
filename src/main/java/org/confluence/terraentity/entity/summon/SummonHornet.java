@@ -9,6 +9,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.monster.Monster;
@@ -27,7 +28,7 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     public SummonHornet(EntityType<? extends Monster> type, Level level) {
         super(type, level, FlyMonsterPrefab.BEE_BUILDER.get().setMovementSpeed(1));
         this.collisionProperties.detectInternal = 999999999;
-        this.attackInternal = 5;
+        this.attackInternal = 20;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     }
 
     protected LineProj createProj(){
-        return TEEntities.SUMMON_BEE_STICK_PROJ.get().create(level());
+        return TEEntities.SUMMON_BEE_STICK_PROJ.get().create(level()).setDamage((float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
     }
 
     public void summon_registerMoveGoal(){
