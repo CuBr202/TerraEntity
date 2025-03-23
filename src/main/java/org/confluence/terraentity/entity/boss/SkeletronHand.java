@@ -1,6 +1,5 @@
 package org.confluence.terraentity.entity.boss;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -165,7 +164,7 @@ public class SkeletronHand extends Skeletron {
         @Override
         public void tick() {
             slapTick++;
-            System.out.print(slapTick+"\r");
+//            System.out.print(slapTick+"\r");
             targetPos = getTargetPosition();
 //            ((ServerLevel) level()).sendParticles(handSide==HandSide.RIGHT?ParticleTypes.FLAME: ParticleTypes.SOUL_FIRE_FLAME, targetPos.x, targetPos.y, targetPos.z, 10, 0.1, 0.1, 0.1, 0);
             super.tick();

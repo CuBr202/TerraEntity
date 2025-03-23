@@ -11,7 +11,7 @@ public class LineProj extends BaseProj<LineProj> {
     private int existTick;
 
     @Override
-    public int getExistTicks() {
+    public int getLifetime() {
         return existTick;
     }
 

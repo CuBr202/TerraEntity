@@ -162,6 +162,7 @@ public final class TEEntities {
             new LineProj(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> SUMMON_BEE_STICK_PROJ = registerProj("summon_bee_stick_proj",(e, l)->
             new SummonBeeStick(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<SkullProjectile>> SKULL = registerProj("skull", SkullProjectile::new,0.5F,0.5F);
 
     // 鞭子
     public static final DeferredHolder<EntityType<?>,EntityType<WhipEntity>> WHIP_PROJECTILE = registerProj("whip_projectile", (e, l)->
@@ -241,6 +242,7 @@ public final class TEEntities {
         event.registerEntityRenderer(QUEEN_BEE.get(), c->new QueenBeeRenderer(c,new GeoBossModel<>(QUEEN_BEE)));
         event.registerEntityRenderer(SKELETRON.get(), c->new SkeletronRenderer(c,new GeoBossModel<>(SKELETRON)));
         event.registerEntityRenderer(SKELETRON_HAND.get(), c->new SkeletronHandRenderer(c,new SkeletronHandModel()));
+        event.registerEntityRenderer(SKULL.get(), SkullProjectileRenderer::new);
 
         // sommon
         event.registerEntityRenderer(SUMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c, SUMMON_SLIME.getId().withPrefix("summon/"),false));

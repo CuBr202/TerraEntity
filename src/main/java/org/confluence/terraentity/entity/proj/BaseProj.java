@@ -88,7 +88,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     }
 
     public ResourceLocation getTexture(){return texture;}
-    public abstract int getExistTicks();
+    public abstract int getLifetime();
     public boolean shouldBeSaved(){
         return false;
     }
@@ -126,7 +126,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     public void tick() {
         super.tick();
         if(!level().isClientSide){
-            if(tickCount > getExistTicks()) {
+            if (tickCount > getLifetime()) {
                 discard();
                 return;
             }
