@@ -145,7 +145,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
                 bee.swing(InteractionHand.MAIN_HAND);
                 timeToRepath = FIND_PATH_TIME;
                 bee.navigation.moveTo(bee.navigation.createPath(BlockPos.containing(vec3), 1), 1.5f);
-                System.out.println("moving");
+//                System.out.println("moving");
             }
         }
 
