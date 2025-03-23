@@ -33,7 +33,6 @@ import java.util.function.Consumer;
 
 
 public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingProjectile {
-    private final long starttime = System.currentTimeMillis();
     public float damage = 1;
     private List<Integer> hitList = new ArrayList<>();
     public int penetration =1;
@@ -89,7 +88,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     }
 
     public ResourceLocation getTexture(){return texture;}
-    public abstract int waveDur();
+    public abstract int getExistTicks();
     public boolean shouldBeSaved(){
         return false;
     }
@@ -127,12 +126,11 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     public void tick() {
         super.tick();
         if(!level().isClientSide){
-            if(System.currentTimeMillis()-starttime > waveDur() * 50L) {
+            if(tickCount > getExistTicks()) {
                 discard();
                 return;
             }
-            doAABBHurt();
-
+//            doAABBHurt();
         }else if(clientTickCallback!= null){
             clientTickCallback.accept(this);
         }
@@ -162,10 +160,8 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         Entity hurter = pResult.getEntity();
         if(hurter instanceof LivingEntity living && canHitEntity(living)) {
-
             doHurt(living);
         }
-        super.onHitEntity(pResult);
     }
 
     public float defaultDamage(){
