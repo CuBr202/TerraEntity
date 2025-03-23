@@ -109,8 +109,10 @@ public class TEItems {
                     .icon(()-> TEItems.KING_SLIME_SPAWN_EGG.asItem().getDefaultInstance())
                     .displayItems((itemDisplayParameters, output) -> {
                         SPAWN_EGGS.getEntries().forEach(item -> output.accept(item.get()));
-                        if(ServerConfig.DISPLAY_SUMMON_ITEMS.get())
+                        if(ServerConfig.DISPLAY_SUMMON_ITEMS.get()) {
                             SUMMON_ITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                            WHIP_ITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        }
                     })
                     .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath("terra_moment", "tab")))
                     .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath("confluence", "summoners")))

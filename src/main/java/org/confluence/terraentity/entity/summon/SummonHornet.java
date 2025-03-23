@@ -38,11 +38,6 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
                 return true;
             }
 
-            @Override
-            public int refreshPrepareTime() {
-                return 3;
-            }
-
         });
         this.goalSelector.addGoal(2, new BeeKeepOnTargetGoal(this));
         this.goalSelector.addGoal(9, new FloatGoal(this));

@@ -165,8 +165,9 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<SkullProjectile>> SKULL = registerProj("skull", SkullProjectile::new,0.5F,0.5F);
 
     // 鞭子
-    public static final DeferredHolder<EntityType<?>,EntityType<WhipEntity>> WHIP_PROJECTILE = registerProj("whip_projectile", (e, l)->
-            new WhipEntity(e,l),0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>,EntityType<WhipEntity>> WHIP_PROJECTILE = ENTITIES.register("whip_projectile",() -> EntityType.Builder.<WhipEntity>of((e, l)->
+            new WhipEntity(e,l) , MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F,0.5F).build(Key("whip_projectile")));
+
 
 
     public static <T extends Projectile> DeferredHolder<EntityType<?>, EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory, float w, float h) {

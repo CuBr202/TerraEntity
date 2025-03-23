@@ -55,13 +55,13 @@ public class WhipEntity extends AbstractHurtingProjectile {
     public static final EntityDataAccessor<Vector3f> DATA_INITIAL_POSITION = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.VECTOR3);
     public static final EntityDataAccessor<Vector3f> DATA_INITIAL_DIRECTION = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.VECTOR3);
 
-    public WhipEntity(EntityType<? extends AbstractHurtingProjectile> entityType, Level level) {
+    public WhipEntity(EntityType<? extends WhipEntity> entityType, Level level) {
         super(entityType, level);
 
         tail = Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone1").getFirst());
         parts = List.of(
                 tail,
-                Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone2").getFirst())
+                Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone4").getFirst())
 
         );
         keyPositions = new ArrayList<>();

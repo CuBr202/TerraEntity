@@ -199,13 +199,8 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         public void start() {
-
             bee.getNavigation().stop();
 
-        }
-
-        public int refreshPrepareTime() {
-            return 10 + bee.random.nextInt(10);
         }
 
         public void tick() {

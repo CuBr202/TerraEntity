@@ -64,7 +64,7 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
             toInterpoloate.add(vec3.subtract(new Vec3(lerpx, lerpy, lerpz)).scale(2));
 
             // Catmull-Rom样条插值
-            List<Vec3> positions = FrameUtil.getInterpolatedPoints(toInterpoloate, 30);
+            List<Vec3> positions = FrameUtil.getInterpolatedPoints(toInterpoloate, 15);
 
 //            VertexConsumer vertexconsumer1 = bufferSource.getBuffer(RenderType.lineStrip());
 //            Vec3 vec31 = getPlayerHandPos(player, f1, partialTick).subtract(player.position());
@@ -94,7 +94,7 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
                     float pitch = (float) (-Math.atan2(fy,
                             Math.sqrt(fx * fx + fz * fz)));
                     poseStack.mulPose(Axis.YP.rotation(yaw));
-                    poseStack.mulPose(Axis.ZP.rotation((float) (pitch + Math.PI / 3 )));
+                    poseStack.mulPose(Axis.ZP.rotation((float) (pitch + Math.PI / 2 )));
     //                stringVertex(-f2, -f3, -f4, vertexconsumer1, posestack$pose1);
     //                poseStack.translate(-vec31.x, -vec31.y, -vec31.z);
 
