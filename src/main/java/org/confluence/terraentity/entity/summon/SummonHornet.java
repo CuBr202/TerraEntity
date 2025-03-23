@@ -27,13 +27,11 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
 
     public SummonHornet(EntityType<? extends Monster> type, Level level) {
         super(type, level, FlyMonsterPrefab.BEE_BUILDER.get().setMovementSpeed(1));
-        this.collisionProperties.detectInternal = 999999999;
         this.attackInternal = 20;
     }
 
     @Override
     protected void registerGoals() {
-//        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 2, true));
         this.goalSelector.addGoal(1, new BeeShootGoal(this, 0, 10){
             @Override
             protected boolean canShoot(Entity target) {
@@ -68,7 +66,6 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     public boolean ignoreAttributeModify(){
         return true;
     }
-
 
     protected boolean shouldDespawnInPeaceful() {
         return false;
@@ -148,6 +145,11 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
 
     @Override
     public boolean isPickable() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldDoCollision() {
         return false;
     }
 }

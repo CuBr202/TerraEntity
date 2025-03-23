@@ -199,7 +199,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         public void start() {
-            timeToShoot = SHOOT_TIME;
+
             bee.getNavigation().stop();
 
         }
@@ -231,6 +231,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
                     proj.shoot(x,y,z, 1, inaccuracy);
                     level().addFreshEntity(proj);
                 }
+                timeToShoot = SHOOT_TIME;
             }
         }
 
