@@ -118,7 +118,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     @Override
     public void tick() {
         boolean server = false;
-        if(level() instanceof ServerLevel) {
+        if(level() instanceof ServerLevel && !(this instanceof SkeletronHand)) {
             enraged = level().isDay();
             hands.removeIf(hand -> !hand.isAlive());
             if(hands.isEmpty()){

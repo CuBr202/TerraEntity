@@ -69,8 +69,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     protected boolean difficult = true;
     protected boolean dirty = true;
     protected ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
-    private final float baseHealth;
-    private final int baseArmor;
+    protected float baseHealth;
+    protected int baseArmor;
 
     public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level, float health, int armor) {
         super(type, level);

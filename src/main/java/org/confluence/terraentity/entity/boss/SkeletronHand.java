@@ -23,6 +23,7 @@ public class SkeletronHand extends Skeletron {
     protected final double slapSpeed;
     protected int slapTick;
 
+
     public static final EntityDataAccessor<Optional<UUID>> DATA_OWNER = SynchedEntityData.defineId(SkeletronHand.class, EntityDataSerializers.OPTIONAL_UUID);
     public static final EntityDataAccessor<Boolean> DATA_HAND_SIDE = SynchedEntityData.defineId(SkeletronHand.class, EntityDataSerializers.BOOLEAN);
     public SkeletronHand(EntityType<? extends Monster> entityType, Level level) {
@@ -30,6 +31,10 @@ public class SkeletronHand extends Skeletron {
     }
     public SkeletronHand(EntityType<? extends Monster> entityType, Level level, Skeletron owner, HandSide handSide) {
         super(entityType, level);
+        // 重新设置属性
+        this.baseHealth = 2;
+        this.baseArmor = 2;
+
         this.handSide = handSide;
         this.owner = owner;
         acceleration=10;
@@ -47,6 +52,7 @@ public class SkeletronHand extends Skeletron {
         this.noPhysics = true;
         // 防止超出包围盒不渲染
         this.noCulling = true;
+
     }
 
     @Override
