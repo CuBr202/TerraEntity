@@ -289,8 +289,8 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 }
             };
             eye.minion_setOwner(this);
-            eye.setHealth(8);
-            eye.getAttribute(Attributes.MAX_HEALTH).setBaseValue(8);
+            eye.setHealth(3);
+            eye.getAttribute(Attributes.MAX_HEALTH).setBaseValue(3);
             eye.setPos(position().add(getForward().normalize().scale(-1)));
             eye.setTarget(target);
             serverLevel.addFreshEntity(eye);
