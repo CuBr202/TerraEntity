@@ -191,7 +191,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     @Override
     public boolean shouldDoCollision(){
-        return getTarget() != null;
+        return getTarget() != null && this.isAlive();
     }
 
 /* discard */
@@ -238,7 +238,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         }
     }
 
-    // 找索敌范围内仇恨最大的，如果多个一样的从中随机选一个
+    /**
+     * 找索敌范围内仇恨最大的，如果多个一样的从中随机选一个
+     */
     protected LivingEntity findTarget() {
         double range = getAttributeValue(Attributes.FOLLOW_RANGE);
         List<Player> players = getNearbyPlayers(range);

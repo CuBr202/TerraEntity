@@ -12,6 +12,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
@@ -19,14 +20,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.Boss;
-import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.proj.SkullProjectile;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -34,7 +33,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEntity, Boss, ICollisionAttackEntity<Skeletron> {
+public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss {
     private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
     public int phase = 0;
     public boolean enraged = false;
@@ -44,7 +43,6 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
     private boolean ftw;
     public final List<SkeletronHand> hands = new ArrayList<>();
 
-    public static final CollisionProperties COLLISION_PROP = new CollisionProperties(0, 0, 0);
     public static final EntityDataAccessor<Boolean> DATA_SPINNING = SynchedEntityData.defineId(Skeletron.class, EntityDataSerializers.BOOLEAN);
 
     public Skeletron(EntityType<? extends Monster> entityType, Level level) {
@@ -68,6 +66,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
             expert = true;
             ftw = true;
         }
+        collisionProperties = new CollisionProperties(1,1,0.5f);
     }
 
     @Override
@@ -90,11 +89,6 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return CACHE;
     }
 
     @Override
@@ -125,10 +119,12 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
     public void tick() {
         boolean server = false;
         if(level() instanceof ServerLevel) {
-            if (level().isDay()) {
-                enraged = true;
-            }
+            enraged = level().isDay();
             hands.removeIf(hand -> !hand.isAlive());
+            if(hands.isEmpty()){
+                // 失去手时防御归零
+                this.getAttribute(Attributes.ARMOR).setBaseValue(0);
+            }
             server = true;
         }
         super.tick();
@@ -162,13 +158,8 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements GeoEn
     }
 
     @Override
-    public CollisionProperties getCollisionProperties() {
-        return COLLISION_PROP;
-    }
-
-    @Override
     public boolean shouldDoCollision() {
-        return true;
+        return super.shouldDoCollision();
     }
 
 

@@ -42,6 +42,11 @@ public class SkeletronHand extends Skeletron {
         slapInterval = (expert ? 37 : 57)+level.random.nextInt(6);
         slapSpeed = expert ? 0.8 : 0.6;
         slapTick = slapInterval;
+
+        // 防止手卡位置导致动不了
+        this.noPhysics = true;
+        // 防止超出包围盒不渲染
+        this.noCulling = true;
     }
 
     @Override
