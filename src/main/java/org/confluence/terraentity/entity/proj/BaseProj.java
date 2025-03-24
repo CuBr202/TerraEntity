@@ -24,6 +24,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.registries.track.ITrackType;
 import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -213,8 +214,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
         if(hitList.contains(target.getId()))
             return false;
         // 召唤物不能攻击主人的仆从
-        if(target instanceof TamableAnimal animal &&
-                (getOwner() instanceof ISummonMob summonMob && summonMob.summon_getOwner() == animal.getOwner())
+        if(!TEUtils.attackTamableTest.test(getOwner(), target)
         ){
             return false;
         }

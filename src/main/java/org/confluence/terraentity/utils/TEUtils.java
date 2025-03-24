@@ -632,6 +632,22 @@ public final class TEUtils {
     }
 
     /**
+     * 测试攻击驯养动物
+     */
+    public static BiPredicate<Entity, Entity> attackTamableTest = (owner, target) -> {
+        if(
+                owner != null && (
+                        target instanceof TamableAnimal animal &&
+                                owner instanceof LivingEntity living &&
+                                animal.isOwnedBy(living)
+                )
+        ){
+            return false;
+        }
+        return true;
+    };
+
+    /**
      * <h1>统一弹幕索敌</h1>
      */
     public static BiPredicate<Projectile, Entity> projectileCanHitEntityTest = (projectile, target)-> {
@@ -640,13 +656,7 @@ public final class TEUtils {
         }
         Entity entity = projectile.getOwner();
         // 防止击中仆从
-        if(
-                entity != null && (
-                        target instanceof TamableAnimal animal &&
-                                entity instanceof LivingEntity living &&
-                                animal.isOwnedBy(living)
-                )
-        ){
+        if(!attackTamableTest.test(entity, target)){
             return false;
         }
 
@@ -655,6 +665,8 @@ public final class TEUtils {
         }
         return target != entity;
     };
+
+
 /*
     public static boolean hasBoss(double radius, Level level,
                                   AABB box){

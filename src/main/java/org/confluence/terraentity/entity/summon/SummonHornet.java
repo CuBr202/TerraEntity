@@ -19,6 +19,7 @@ import org.confluence.terraentity.entity.monster.Hornet;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -120,7 +121,7 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     @Override
     public boolean canAttack(LivingEntity target) {
         if(target == summon_getOwner()) return false;
-        return target.canBeSeenAsEnemy() && target.isPickable();
+        return target.canBeSeenAsEnemy() && target.isPickable() && TEUtils.attackTamableTest.test(summon_getOwner(), target);
     }
 
     @Override

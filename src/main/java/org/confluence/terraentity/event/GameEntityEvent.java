@@ -106,7 +106,7 @@ public class GameEntityEvent {
         LivingEntity hurter = event.getEntity();
         Entity attacker = event.getSource().getEntity();
 
-        if (damageSource.is(TETags.DamageTypes.SUMMONER)) {
+        if (damageSource.is(TETags.DamageTypes.SUMMONER) || attacker instanceof ISummonMob<?> summoner) {
             // 召唤物集火伤害加成
             if (hurter.hasEffect(TEEffects.SUMMON_FOCUS)) {
                 amount = amount + 2;
@@ -121,6 +121,12 @@ public class GameEntityEvent {
                         double damage = att.getValue();
                         amount += (float) damage;
                     }
+                }
+            } else if (attacker instanceof LivingEntity owner) {
+                var att = owner.getAttribute(TEAttributes.MARK_DAMAGE);
+                if(att!= null){
+                    double damage = att.getValue();
+                    amount += (float) damage;
                 }
             }
         }

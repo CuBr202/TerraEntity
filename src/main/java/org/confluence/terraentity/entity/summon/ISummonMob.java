@@ -182,12 +182,13 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     /**简单攻击*/
     default boolean summon_doHurtTarget(Entity entity) {
         float f = (float)te$getSelf().getAttributeValue(Attributes.ATTACK_DAMAGE);
-        DamageSource damagesource = te$getSelf().damageSources().source(TETags.DamageTypes.SUMMON, summon_getOwner());
+        DamageSource damagesource = te$getSelf().damageSources().source(TETags.DamageTypes.SUMMONER, summon_getOwner());
         Level var5 = te$getSelf().level();
         if (var5 instanceof ServerLevel serverlevel) {
             f = EnchantmentHelper.modifyDamage(serverlevel, te$getSelf().getWeaponItem(), entity, damagesource, f);
         }
-        f *= (float) summon_getOwner().getAttributeValue(TEAttributes.SUMMON_DAMAGE);
+        // 事件统一处理
+//        f += (float) summon_getOwner().getAttributeValue(TEAttributes.MARK_DAMAGE);
         boolean flag = entity.hurt(damagesource, f);
         if (flag) {
             float f1 = summon_getKnockback(entity, damagesource);
