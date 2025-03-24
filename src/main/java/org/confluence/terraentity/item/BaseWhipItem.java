@@ -78,6 +78,7 @@ public class BaseWhipItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        if(usedHand == InteractionHand.OFF_HAND) return super.use(level, player, usedHand);
         if(!level.isClientSide){
             ItemStack stack = player.getItemInHand(usedHand);
             if(stack.getItem() instanceof  BaseWhipItem self) {

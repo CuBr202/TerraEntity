@@ -5,14 +5,15 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "confluence.refmap.json",
   "mixins": [
+    "BossEventMixin",
     "ServerBossEventMixin",
     "accessor.EntityAccessor",
-    "accessor.SlimeAccessor",
-    "BossEventMixin"
+    "accessor.SlimeAccessor"
   ],
   "client": [
     "BossHealthOverlayMixin",
     "GameRendererMixin",
+    "ItemRendererMixin",
     "ShaderInstanceMixin",
     "accessor.GameRendererAccessor"
   ],

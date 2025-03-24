@@ -87,7 +87,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
         }
 
 //        this.move(MoverType.SELF, this.getDeltaMovement());
-        if (getOwner() != null) {
+        if (getOwner() instanceof LivingEntity owner) {
             if (initialPosition != null && initDirection != null) {
                 // 计算关键点位置
                 float yaw = (float) (Math.PI - Math.atan2(initDirection.z, initDirection.x));
@@ -136,21 +136,22 @@ public class WhipEntity extends AbstractHurtingProjectile {
                                 pos.x + range, pos.y + range, pos.z + range);
                         for (var entity : level().getEntities(this, aabb, e -> e != getOwner())) {
                             if (entity instanceof LivingEntity hurter) {
-                                if(getOwner() instanceof LivingEntity living){
-                                    if(!hitEntities.containsKey(entity)){
+                                if(!hitEntities.containsKey(entity)){
+                                    if(owner.canAttack(hurter) && hurter.canBeSeenAsEnemy()) {
                                         hitEntities.put(entity, hitCooldown);
-                                        double damage = living.getAttributeValue(TEAttributes.SUMMON_DAMAGE);
-                                        if(hiteffect!= null){
-                                            hiteffect.applyAll(living, hurter);
+                                        double damage = owner.getAttributeValue(TEAttributes.SUMMON_DAMAGE);
+
+                                        if (hiteffect != null) {
+                                            hiteffect.applyAll( owner, hurter);
                                         }
-                                        hurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON, living), (float) damage);
-                                    }else{
-                                        hitEntities.put(entity, hitEntities.get(entity) - 1);
-                                         if(hitEntities.get(entity) <= 0){
-                                             hitEntities.remove(entity);
-                                         }
-                                         return;
+                                        hurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON,  owner), (float) damage);
                                     }
+                                }else{
+                                    hitEntities.put(entity, hitEntities.get(entity) - 1);
+                                     if(hitEntities.get(entity) <= 0){
+                                         hitEntities.remove(entity);
+                                     }
+                                     return;
                                 }
                             }
                         }
