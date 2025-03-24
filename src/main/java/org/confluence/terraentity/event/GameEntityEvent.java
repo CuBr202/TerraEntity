@@ -3,6 +3,7 @@ package org.confluence.terraentity.event;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,10 +35,7 @@ import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.summon.ISummonMob;
-import org.confluence.terraentity.init.TEAttachments;
-import org.confluence.terraentity.init.TEEffects;
-import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -99,6 +97,35 @@ public class GameEntityEvent {
                 e1.removeEffect(TEEffects.DEMONIC_THOUGHTS);
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void livingDamage$Pre(LivingDamageEvent.Pre event) {
+        DamageSource damageSource = event.getSource();
+        float amount = event.getNewDamage();
+        LivingEntity hurter = event.getEntity();
+        Entity attacker = event.getSource().getEntity();
+
+        if (damageSource.is(TETags.DamageTypes.SUMMONER)) {
+            // 召唤物集火伤害加成
+            if (hurter.hasEffect(TEEffects.SUMMON_FOCUS)) {
+                amount = amount + 2;
+
+            }
+            // 召唤物标记伤害增加
+            if(attacker instanceof ISummonMob<?> summoner){
+                LivingEntity owner = summoner.summon_getOwner();
+                if(owner != null){
+                    var att = owner.getAttribute(TEAttributes.MARK_DAMAGE);
+                    if(att!= null){
+                        double damage = att.getValue();
+                        amount += (float) damage;
+                    }
+                }
+            }
+        }
+
+        event.setNewDamage(amount);
     }
 
     @SubscribeEvent

@@ -3,7 +3,6 @@ package org.confluence.terraentity.init;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
@@ -12,7 +11,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import org.confluence.terraentity.TerraEntity;
 
 public class TETags {
@@ -35,8 +33,10 @@ public class TETags {
     }
 
     public static class DamageTypes {
+        // 玩家召唤伤害 如鞭子
+        public static final ResourceKey<DamageType> SUMMON = registerDamageType("summon");
+        // 召唤物召唤伤害 用于标记伤害增伤
         public static final ResourceKey<DamageType> SUMMONER = registerDamageType("summoner");
-
 
 
 
@@ -53,6 +53,7 @@ public class TETags {
         }
 
         public static void createDamageTypes(BootstrapContext<DamageType> context) {
+            context.register(SUMMON, new DamageType("summon_damage_type", 0.1F));
             context.register(SUMMONER, new DamageType("summoner_damage_type", 0.1F));
 
         }

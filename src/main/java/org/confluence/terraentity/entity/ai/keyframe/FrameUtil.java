@@ -49,9 +49,8 @@ public class FrameUtil {
         List<Vec3> interpolatedPoints = new ArrayList<>();
 
         for (int i = 0; i < points.size() - 1; i++) {
-            for (int j = 0; j <= numSegments; j++) {
+            for (int j = 0; j < numSegments; j++) {
                 double t = (double) j / numSegments;
-                AnimationDefinition a;
                 interpolatedPoints.add(interpolate(points, t, i));
             }
         }

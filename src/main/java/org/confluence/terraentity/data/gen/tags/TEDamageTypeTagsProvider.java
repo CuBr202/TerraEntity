@@ -21,11 +21,13 @@ public class TEDamageTypeTagsProvider extends DamageTypeTagsProvider {
     protected void addTags(HolderLookup.Provider holderLookup) {
 
         tag(DamageTypeTags.IS_PLAYER_ATTACK)
-                .add(TETags.DamageTypes.SUMMONER)
+                .add(TETags.DamageTypes.SUMMON)
+
                 ;
 
         tag(DamageTypeTags.NO_KNOCKBACK)
-                .add(TETags.DamageTypes.SUMMONER)
+                .add(TETags.DamageTypes.SUMMON,
+                        TETags.DamageTypes.SUMMONER)
                 ;
 
     }

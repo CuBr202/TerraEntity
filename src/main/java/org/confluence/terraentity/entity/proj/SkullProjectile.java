@@ -49,7 +49,7 @@ public class SkullProjectile extends BaseProj<SkullProjectile> {
                 this.level(), this, position(), position().add(motion), this.getBoundingBox().expandTowards(motion).inflate(1), this::canHitEntity
             );
             if (entityHitResult != null) {
-                entityHitResult.getEntity().hurt(level().damageSources().mobProjectile(this, (LivingEntity) getOwner()), 10);
+                entityHitResult.getEntity().hurt(level().damageSources().mobProjectile(this, (LivingEntity) getOwner()), damage);
             }
         }
 

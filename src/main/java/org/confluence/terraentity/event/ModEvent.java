@@ -38,7 +38,7 @@ public class ModEvent {
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeModificationEvent event) {
         // 召唤师属性
-        List.of(TEAttributes.MINION_CAPACITY, TEAttributes.SENTRY_CAPACITY, TEAttributes.SUMMON_DAMAGE, TEAttributes.SUMMON_KNOCKBACK, TEAttributes.WHIP_RANGE)
+        List.of(TEAttributes.MINION_CAPACITY, TEAttributes.SENTRY_CAPACITY, TEAttributes.SUMMON_DAMAGE, TEAttributes.SUMMON_KNOCKBACK, TEAttributes.WHIP_RANGE, TEAttributes.MARK_DAMAGE)
                 .forEach(att-> event.add(EntityType.PLAYER, att));
 
     }

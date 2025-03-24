@@ -97,7 +97,7 @@ public class TEItems {
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
                     new TimePossibilityAmplifierEffect("poison",MobEffects.POISON, 10,1,1,1)
             )),
-            5, 5));
+            5, 5, 1f, 20));
 
 
 

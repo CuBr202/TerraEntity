@@ -104,9 +104,9 @@ public class WhipEntity extends AbstractHurtingProjectile {
                     List<Vec3> attackPoints = keyPositions.stream().map(Vec3::new).toList();
                     if(tickCount > 10){
                         // 过渡到player位置
-                        double lerpx = Mth.lerp((tickCount - 10) / 10.0f, getX(), getOwner().getX());
-                        double lerpy = Mth.lerp((tickCount - 10) / 10.0f, getY(), getOwner().getY());
-                        double lerpz = Mth.lerp((tickCount - 10) / 10.0f, getZ(), getOwner().getZ());
+                        double lerpx = Mth.lerp((tickCount - 10) / 10.0f, getX(), getOwner().getEyePosition().x);
+                        double lerpy = Mth.lerp((tickCount - 10) / 10.0f, getY(), getOwner().position().y + getOwner().getEyeHeight() * 0.5f);
+                        double lerpz = Mth.lerp((tickCount - 10) / 10.0f, getZ(), getOwner().getEyePosition().z);
                         setPos(lerpx, lerpy, lerpz);
                     }
                     // 攻击
@@ -124,7 +124,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
                                         if(hiteffect!= null){
                                             hiteffect.applyAll(living, hurter);
                                         }
-                                        hurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMONER, living), (float) damage);
+                                        hurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON, living), (float) damage);
                                     }else{
                                         hitEntities.put(entity, hitEntities.get(entity) - 1);
                                          if(hitEntities.get(entity) <= 0){

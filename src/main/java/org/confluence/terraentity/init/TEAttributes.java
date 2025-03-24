@@ -31,6 +31,10 @@ public final class TEAttributes {
      * 鞭范围
      */
     public static final Holder<Attribute> WHIP_RANGE = ATTRIBUTES.register("player.whip_range", () -> new RangedAttribute("attribute.name.player.whip_range", 3.0, 0.0, 64.0).setSyncable(true));
+    /**
+     * 仆从标记伤害
+     */
+    public static final Holder<Attribute> MARK_DAMAGE = ATTRIBUTES.register("player.mark_damage", () -> new RangedAttribute("attribute.name.player.mark_damage", 0.0, 0.0, 1024).setSyncable(true));
 
 
 }
