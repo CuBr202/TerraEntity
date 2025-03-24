@@ -1,6 +1,5 @@
 package org.confluence.terraentity.item;
 
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;

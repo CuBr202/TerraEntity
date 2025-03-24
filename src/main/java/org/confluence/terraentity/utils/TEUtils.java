@@ -13,12 +13,15 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -38,6 +41,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.function.ToDoubleFunction;
 
 import static net.minecraft.world.item.Item.getPlayerPOVHitResult;
@@ -561,7 +566,7 @@ public final class TEUtils {
      * @param maxAngle 最大角度
      * @return 若直接命中，返回命中的目标；否则返回最近有效的目标
      */
-    public static LivingEntity getAABBAngleTarget(Vec3 ori, Vec3 end, Level level, @Nullable Entity owner, double range, double maxAngle){
+    public static LivingEntity getAABBAngleTarget(Vec3 ori, Vec3 end, Level level, @Nullable Entity owner, double range, double maxAngle, Predicate<Entity> filter){
         //扩大包围盒
         AABB aabb;
         if(owner!=null){
@@ -572,7 +577,7 @@ public final class TEUtils {
         }
         List<HitResult> hits = new ArrayList<>();
         List<HitResult> subHits = new ArrayList<>();
-        List<? extends Entity> entities = level.getEntities(owner,aabb, entity1 -> entity1.isPickable() && entity1.isAlive());
+        List<? extends Entity> entities = level.getEntities(owner,aabb, entity1 -> entity1.isPickable() && entity1.isAlive() && filter.test(entity1));
         for(var e : entities){
             //获取视线交点
             Vec3 vec3 = e.getBoundingBox().clip(ori,end).orElse(null);
@@ -625,6 +630,31 @@ public final class TEUtils {
         double d3 = 0.8 * (double)f1;
         return new Vec3(-d1 * d2 - d0 * d3, 0, -d0 * d2 + d1 * d3);
     }
+
+    /**
+     * <h1>统一弹幕索敌</h1>
+     */
+    public static BiPredicate<Projectile, Entity> projectileCanHitEntityTest = (projectile, target)-> {
+        if (!target.canBeHitByProjectile() || target instanceof Villager) {
+            return false;
+        }
+        Entity entity = projectile.getOwner();
+        // 防止击中仆从
+        if(
+                entity != null && (
+                        target instanceof TamableAnimal animal &&
+                                entity instanceof LivingEntity living &&
+                                animal.isOwnedBy(living)
+                )
+        ){
+            return false;
+        }
+
+        if(entity == null || !entity.isPassengerOfSameVehicle(target)) {
+            return true;
+        }
+        return target != entity;
+    };
 /*
     public static boolean hasBoss(double radius, Level level,
                                   AABB box){

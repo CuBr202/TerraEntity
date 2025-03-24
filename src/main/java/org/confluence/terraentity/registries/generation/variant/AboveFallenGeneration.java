@@ -40,9 +40,9 @@ public record AboveFallenGeneration(float maxAngle, float range, float predict, 
 
     @Override
     public void genProjectile(@NotNull LivingEntity owner, ItemStack weapon, float velocity, @NotNull Supplier<? extends Projectile> proj) {
-
+        var projectile = proj.get();
         Vec3 eye = owner.getEyePosition();
-        LivingEntity target = TEUtils.getAABBAngleTarget(eye, eye.add(owner.getForward().normalize().scale(range)), owner.level(), owner, range, maxAngle);
+        LivingEntity target = TEUtils.getAABBAngleTarget(eye, eye.add(owner.getForward().normalize().scale(range)), owner.level(), owner, range, maxAngle, e->TEUtils.projectileCanHitEntityTest.test(projectile,e));
         Vec3 waveTarget;
         float angle;
         float actualInaccuracy;
@@ -61,7 +61,7 @@ public record AboveFallenGeneration(float maxAngle, float range, float predict, 
             //取中值
             actualInaccuracy = inAccuracy / 2;
         }
-        var projectile = proj.get();
+
         projectile.setOwner(owner);
         projectile.setPos(waveTarget.add(Math.random() * offsetH - offsetH, offsetV ,Math.random() * offsetH - offsetH));
         projectile.shoot(waveTarget.x - projectile.getX(),waveTarget.y- projectile.getY(),waveTarget.z - projectile.getZ(), velocity, actualInaccuracy);
