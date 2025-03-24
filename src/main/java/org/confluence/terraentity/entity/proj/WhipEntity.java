@@ -8,6 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -99,16 +100,17 @@ public class WhipEntity extends AbstractHurtingProjectile {
                     keyPositionsO.set(i, keyPositions.get(i));
                     keyPositions.set(i, lp);
                 }
+                if(tickCount > 10){
+                    // 过渡到player位置
+                    double lerpx = Mth.lerp((tickCount - 10) / 10.0f, getX(), getOwner().getEyePosition().x);
+                    double lerpy = Mth.lerp((tickCount - 10) / 10.0f, getY(), getOwner().position().y + getOwner().getEyeHeight() * 0.5f);
+                    double lerpz = Mth.lerp((tickCount - 10) / 10.0f, getZ(), getOwner().getEyePosition().z);
+                    setPos(lerpx, lerpy, lerpz);
 
+                }
                 if(!level().isClientSide){
                     List<Vec3> attackPoints = keyPositions.stream().map(Vec3::new).toList();
-                    if(tickCount > 10){
-                        // 过渡到player位置
-                        double lerpx = Mth.lerp((tickCount - 10) / 10.0f, getX(), getOwner().getEyePosition().x);
-                        double lerpy = Mth.lerp((tickCount - 10) / 10.0f, getY(), getOwner().position().y + getOwner().getEyeHeight() * 0.5f);
-                        double lerpz = Mth.lerp((tickCount - 10) / 10.0f, getZ(), getOwner().getEyePosition().z);
-                        setPos(lerpx, lerpy, lerpz);
-                    }
+
                     // 攻击
                     float range = 2f;
                     for (Vec3 attackPoint : attackPoints) {

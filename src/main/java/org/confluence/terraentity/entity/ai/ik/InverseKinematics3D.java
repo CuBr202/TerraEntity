@@ -6,7 +6,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public class InverseKinematics3D {
     // 关节类定义
-    static class Joint {
+    public static class Joint {
         Vector3D axis;      // 旋转轴（单位向量）
         double length;      // 骨长
         double angle;       // 当前角度（弧度）
