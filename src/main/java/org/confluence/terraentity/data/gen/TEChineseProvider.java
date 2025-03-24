@@ -125,6 +125,10 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
         add(TEItems.HORNET_STAFF.get(), "黄蜂法杖");
 
+        // 鞭子
+        add(TEItems.SWAMP_WHIP.get(), "沼泽藤蔓");
+
+
 
         add("message.terraentity.boss_spawn", "%s已苏醒！");
         add("message.terraentity.boss_leave", "%s已被打败！");

@@ -7,10 +7,10 @@
   "mixins": [
     "ServerBossEventMixin",
     "accessor.EntityAccessor",
-    "accessor.SlimeAccessor"
+    "accessor.SlimeAccessor",
+    "BossEventMixin"
   ],
   "client": [
-    "BossEventMixin",
     "BossHealthOverlayMixin",
     "GameRendererMixin",
     "ShaderInstanceMixin",

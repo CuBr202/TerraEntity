@@ -166,7 +166,7 @@ public final class TEEntities {
 
     // 鞭子
     public static final DeferredHolder<EntityType<?>,EntityType<WhipEntity>> WHIP_PROJECTILE = ENTITIES.register("whip_projectile",() -> EntityType.Builder.<WhipEntity>of((e, l)->
-            new WhipEntity(e,l) , MobCategory.MISC).clientTrackingRange(1).sized(0.5F,0.5F).build(Key("whip_projectile")));
+            new WhipEntity(e,l) , MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F,0.5F).build(Key("whip_projectile")));
 
 
 

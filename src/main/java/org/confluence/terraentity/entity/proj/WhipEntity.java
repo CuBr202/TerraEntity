@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.proj;
 
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -23,6 +24,7 @@ import org.confluence.terraentity.init.TETags;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +36,8 @@ public class WhipEntity extends AbstractHurtingProjectile {
     // todo 更换贴图和模型
     public ResourceLocation texture = TerraEntity.asResource("textures/entity/whip.png");
 
-    int existTick = 20;
+    int existTick = 22;
+    int drawBackTick = 10;
     public int hitCooldown = 5;
     public EffectStrategyComponent hiteffect;
 
@@ -82,6 +85,8 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 return;
             }
         }
+
+//        this.move(MoverType.SELF, this.getDeltaMovement());
         if (getOwner() != null) {
             if (initialPosition != null && initDirection != null) {
                 // 计算关键点位置
@@ -102,10 +107,22 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 }
                 if(tickCount > 10){
                     // 过渡到player位置
-                    double lerpx = Mth.lerp((tickCount - 10) / 10.0f, getX(), getOwner().getEyePosition().x);
-                    double lerpy = Mth.lerp((tickCount - 10) / 10.0f, getY(), getOwner().position().y + getOwner().getEyeHeight() * 0.5f);
-                    double lerpz = Mth.lerp((tickCount - 10) / 10.0f, getZ(), getOwner().getEyePosition().z);
-                    setPos(lerpx, lerpy, lerpz);
+
+                    double delta = (double) (tickCount - drawBackTick) / (existTick - drawBackTick);
+                    double lerpx = Mth.lerp(delta, getX(), getOwner().getEyePosition().x);
+                    double lerpy = Mth.lerp(delta, getY(), getOwner().position().y + getOwner().getEyeHeight() * 0.5f);
+                    double lerpz = Mth.lerp(delta, getZ(), getOwner().getEyePosition().z);
+//                    setDeltaMovement(0,0,0);
+//                    setPos(lerpx, lerpy, lerpz);
+
+                    Vec3 dir = new Vec3(lerpx - getX(), lerpy - getY(), lerpz - getZ());
+                    setDeltaMovement(0,0,0);
+                    move(MoverType.SELF, dir.scale(0.5f));
+
+
+//                    Vec3 dir = getOwner().position().add(0, getOwner().getEyeHeight() * 0.5f, 0).subtract(position()).scale(0.3f);
+//                    setDeltaMovement(0,0,0);
+//                    move(MoverType.SELF, dir);
 
                 }
                 if(!level().isClientSide){
@@ -141,8 +158,18 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 }
             }
         }
+        super.tick();
     }
 
+    @Override
+    public boolean isOnFire() {
+        return false;
+    }
+
+    @Nullable
+    protected ParticleOptions getTrailParticle() {
+        return null;
+    }
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_INITIAL_POSITION, new Vector3f(0, 0, 0));
@@ -166,7 +193,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
         float f1 = -Mth.sin((x + z) * 0.017453292F);
         float f2 = Mth.cos(y * 0.017453292F) * Mth.cos(x * 0.017453292F);
         this.shoot(f, f1, f2, velocity, inaccuracy);
-        this.setDeltaMovement(0,0,0);
+//        this.setDeltaMovement(0,0,0);
         this.initialPosition = position();
         this.initDirection = new Vec3(f, f1, f2);
         this.entityData.set(DATA_INITIAL_POSITION, initialPosition.toVector3f());

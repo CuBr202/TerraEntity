@@ -31,6 +31,7 @@ public class TEEnglishProvider extends LanguageProvider {
         Consumer<DeferredHolder<Item, ? extends Item>> itemAction = item -> add(item.get(), toTitleCase(item.getId().getPath()));
         TEItems.SPAWN_EGGS.getEntries().forEach(itemAction);
         TEItems.SUMMON_ITEMS.getEntries().forEach(itemAction);
+        TEItems.WHIP_ITEMS.getEntries().forEach(itemAction);
         TEEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
         TEEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get(), toTitleCase(effect.getId().getPath())));
 

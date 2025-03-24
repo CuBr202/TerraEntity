@@ -84,7 +84,7 @@ public class BaseWhipItem extends Item {
                 WhipEntity whipEntity = TEEntities.WHIP_PROJECTILE.get().create(level);
                 whipEntity.setOwner(player);
                 whipEntity.setPos(player.position().add(0, 1, 0).add(TEUtils.getPlayerHandPos(player)));
-                whipEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0, 1.0F);
+                whipEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.05f, 1.0F);
                 var data = stack.get(TEDataComponentTypes.EFFECT_STRATEGY);
                 if (data != null)
                     whipEntity.hiteffect = data;

@@ -64,7 +64,7 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
             toInterpoloate.add(vec3.subtract(new Vec3(lerpx, lerpy, lerpz)).scale(2));
 
             // Catmull-Rom样条插值
-            List<Vec3> positions = FrameUtil.getInterpolatedPoints(toInterpoloate, 15);
+            List<Vec3> positions = FrameUtil.getInterpolatedPoints(toInterpoloate, 20);
 
 //            VertexConsumer vertexconsumer1 = bufferSource.getBuffer(RenderType.lineStrip());
 //            Vec3 vec31 = getPlayerHandPos(player, f1, partialTick).subtract(player.position());
@@ -122,18 +122,19 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
                     .scale(d4)
                     .yRot(angle * 0.5F - 1F)
                     .xRot(-angle * 0.7F);
-            return player.getEyePosition(partialTick).add(vec3);
+            return player.getPosition(partialTick).add(vec3).add(0,player.getEyeHeight()*0.8f,0);
         } else {
-            float f = Mth.lerp(partialTick, player.yBodyRotO, player.yBodyRot) * 0.017453292F + 1f;
+            float f = Mth.lerp(partialTick, player.yBodyRotO, player.yBodyRot) * 0.017453292F;
             double d0 = Mth.sin(f);
             double d1 = Mth.cos(f);
             float f1 = player.getScale();
-            double d2 = (double)i * 0.35 * (double)f1;
-            double d3 = 0.8 * (double)f1;
+            double d2 = (double)i * 0.5 * (double)f1;
+            double d3 = 0* (double)f1;
             float f2 = player.isCrouching() ? -0.1875F : 0.0F;
-            return player.getEyePosition(partialTick).add(-d1 * d2 - d0 * d3, (double)f2 - 0.45 * (double)f1, -d0 * d2 + d1 * d3);
+            return player.getEyePosition(partialTick).add(-d1 * d2 - d0 * d3, (double)f2 - 1 * (double)f1, -d0 * d2 + d1 * d3);
         }
     }
+
     private static float fraction(int numerator, int denominator) {
         return (float)numerator / (float)denominator;
     }

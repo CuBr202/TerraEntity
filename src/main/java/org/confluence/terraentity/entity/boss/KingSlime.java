@@ -31,6 +31,9 @@ import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
+import org.confluence.terraentity.mixinauxiliary.IBossEvent;
+import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
+import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.FloatRGB;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -286,6 +289,16 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         super.registerGoals();
     }
 
+    public float[] getBossEventProgress(){
+        return new float[]{this.getHealth(), this.getMaxHealth()};
+    }
+
+    public void syncBossHealthBar(ServerPlayer player){
+        float[] datas = getBossEventProgress();
+        ((IBossEvent)this.bossEvent).terra_enity$setBossHealth(datas[0]);
+        ((IBossEvent)this.bossEvent).terra_enity$setBossMaxHealth(datas[1]);
+        AdapterUtils.sendToPlayer(player, new SyncBossEventHealthPacket(bossEvent.getId(), datas[0], datas[1]));
+    }
 
     @Override
     public void tick() {
@@ -293,7 +306,13 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         super.tick();
 
         // 更新boss血条
-        bossEvent.setProgress(getHealth() / getMaxHealth());
+        if(!level().isClientSide()) {
+            float[] datas = getBossEventProgress();
+            ((IBossEvent)this.bossEvent).terra_enity$setBossHealth(datas[0]);
+            ((IBossEvent)this.bossEvent).terra_enity$setBossMaxHealth(datas[1]);
+            bossEvent.setProgress(datas[0] / datas[1]);
+        }
+
         bossEvent.setName(getDisplayName());
         // 不会受到摔落伤害
         resetFallDistance();
@@ -319,6 +338,8 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     public void startSeenByPlayer(@NotNull ServerPlayer pServerPlayer) {
         super.startSeenByPlayer(pServerPlayer);
         bossEvent.addPlayer(pServerPlayer);
+        if(tickCount != 0)
+            syncBossHealthBar(pServerPlayer);
     }
 
     @Override
@@ -367,6 +388,15 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         }
 
         return result;
+    }
+
+    public void onAddedToLevel(){
+        super.onAddedToLevel();
+        if(!level().isClientSide){
+            if(bossEvent!= null){
+                bossEvent.getPlayers().forEach(p->syncBossHealthBar(p));
+            }
+        }
     }
 
     // 不要被推来推去

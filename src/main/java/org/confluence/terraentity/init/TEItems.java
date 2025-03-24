@@ -93,11 +93,11 @@ public class TEItems {
     public static final DeferredItem<Item> HORNET_STAFF = SUMMON_ITEMS.register("hornet_staff", () -> new SummonItem<>(new Item.Properties(), TEEntities.SUMMON_HORNET, 1, 8));
 
     // Whip Items
-    public static final DeferredItem<BaseWhipItem> TEST_WHIP = WHIP_ITEMS.register("test_whip", ()-> new BaseWhipItem(new Item.Properties()
+    public static final DeferredItem<BaseWhipItem> SWAMP_WHIP = WHIP_ITEMS.register("swamp_whip", ()-> new BaseWhipItem(new Item.Properties()
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
-                    new TimePossibilityAmplifierEffect("poison",MobEffects.POISON, 10,1,1,1)
+                    new TimePossibilityAmplifierEffect("poison", MobEffects.MOVEMENT_SLOWDOWN, 40,0,0,1)
             )),
-            5, 5, 1f, 20));
+            4, 5, 1f, 20));
 
 
 
