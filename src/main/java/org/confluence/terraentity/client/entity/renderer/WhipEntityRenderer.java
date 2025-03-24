@@ -99,7 +99,7 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
     //                poseStack.translate(-vec31.x, -vec31.y, -vec31.z);
 
                     Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
-                            Blocks.ACACIA_FENCE.defaultBlockState(), poseStack, bufferSource, packedLight, OverlayTexture.pack(0, 10));
+                            Blocks.BAMBOO.defaultBlockState(), poseStack, bufferSource, packedLight, OverlayTexture.pack(0, 10));
 
                     poseStack.popPose();
                 }

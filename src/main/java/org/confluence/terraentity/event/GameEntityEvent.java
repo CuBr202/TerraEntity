@@ -46,9 +46,6 @@ public class GameEntityEvent {
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
         // 生成信息
         Boss.sendBossSpawnMessage(event.getEntity());
-        if(event.getEntity() instanceof  Player player){
-            player.getInventory().add(TEItems.KING_SLIME_SPAWN_EGG.toStack());
-        }
     }
 
     @SubscribeEvent
