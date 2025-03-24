@@ -5,7 +5,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.mixinauxiliary.IBossHealthOverlay;
@@ -43,10 +42,14 @@ public class SyncBossEventHealthPacket implements CustomPacketPayload {
 
     public static void handle(SyncBossEventHealthPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
+            try {
+                IBossEvent bossEvent = (IBossEvent) ((IBossHealthOverlay) Minecraft.getInstance().gui.getBossOverlay()).terra_entity$getEvents().get(packet.uuid);
+                bossEvent.terra_enity$setBossHealth(packet.health);
+                bossEvent.terra_enity$setBossMaxHealth(packet.maxHealth);
+            } catch (Exception ignored) {
 
-            IBossEvent bossEvent = (IBossEvent) ((IBossHealthOverlay) Minecraft.getInstance().gui.getBossOverlay()).terra_entity$getEvents().get(packet.uuid);
-            bossEvent.terra_enity$setBossHealth(packet.health);
-            bossEvent.terra_enity$setBossMaxHealth(packet.maxHealth);
+            }
+
         });
     }
 
