@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.ai.ik;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
 import org.apache.commons.math3.linear.*;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -9,7 +10,7 @@ public class InverseKinematics3D {
     public static class Joint {
         Vector3D axis;      // 旋转轴（单位向量）
         double length;      // 骨长
-        double angle;       // 当前角度（弧度）
+        public double angle;       // 当前角度（弧度）
         double minAngle;    // 最小角度限制
         double maxAngle;    // 最大角度限制
 
@@ -36,7 +37,7 @@ public class InverseKinematics3D {
         
         for (Joint joint : joints) {
             // 应用当前关节旋转
-            Rotation jointRot = new Rotation(joint.axis, joint.angle);
+            Rotation jointRot = new Rotation(joint.axis, joint.angle, RotationConvention.VECTOR_OPERATOR);
             rotation = rotation.applyTo(jointRot);
             
             // 沿当前方向移动骨长

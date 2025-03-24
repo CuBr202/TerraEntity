@@ -43,12 +43,10 @@ public class SyncBossEventHealthPacket implements CustomPacketPayload {
 
     public static void handle(SyncBossEventHealthPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            Player player = Minecraft.getInstance().player;
-            if(player != null){
-                IBossEvent bossEvent =(IBossEvent) ( (IBossHealthOverlay)Minecraft.getInstance().gui.getBossOverlay()).terra_entity$getEvents().get(packet.uuid);
-                bossEvent.terra_enity$setBossHealth(packet.health);
-                bossEvent.terra_enity$setBossMaxHealth(packet.maxHealth);
-            }
+
+            IBossEvent bossEvent = (IBossEvent) ((IBossHealthOverlay) Minecraft.getInstance().gui.getBossOverlay()).terra_entity$getEvents().get(packet.uuid);
+            bossEvent.terra_enity$setBossHealth(packet.health);
+            bossEvent.terra_enity$setBossMaxHealth(packet.maxHealth);
         });
     }
 
