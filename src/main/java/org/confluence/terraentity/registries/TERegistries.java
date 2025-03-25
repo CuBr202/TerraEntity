@@ -3,7 +3,6 @@ package org.confluence.terraentity.registries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
@@ -37,56 +36,32 @@ public class TERegistries {
     /**
      * 跟踪类型编解码器注册表
      */
-    public static class GenerationProviders extends DeferredRegister<GenerationProvider> {
+    public static class GenerationProviders{
         public static final ResourceKey<Registry<GenerationProvider>> KEY = createRegistryKey(TerraEntity.space("generation_provider"));
         public static final Registry<GenerationProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-        public static GenerationProviders create(String mod_id) {
-            return new GenerationProviders(mod_id);
-        }
-        protected GenerationProviders(String namespace) {
-            super(KEY, namespace);
-        }
     }
 
     /**
      * 命中效果注册类型表
      */
-    public static class EffectStrategyProviders extends DeferredRegister<EffectStrategyProvider> {
+    public static class EffectStrategyProviders{
         public static final ResourceKey<Registry<EffectStrategyProvider>> KEY = createRegistryKey(TerraEntity.asResource("effect_strategy_type"));
         public static final Registry<EffectStrategyProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-        public static EffectStrategyProviders create(String mod_id) {
-            return new EffectStrategyProviders(mod_id);
-        }
-        protected EffectStrategyProviders(String namespace) {
-            super(KEY, namespace);
-        }
     }
 
     /**
      * 命中效果注册表
      */
-    public static class EffectStrategies extends DeferredRegister<EffectStrategy> {
+    public static class EffectStrategies{
         public static final ResourceKey<Registry<EffectStrategy>> KEY = createRegistryKey(TerraEntity.asResource("effect_strategy"));
         public static final Registry<EffectStrategy> REGISTRY = new RegistryBuilder<>(KEY).create();
-        public static EffectStrategies create(String mod_id) {
-            return new EffectStrategies(mod_id);
-        }
-        protected EffectStrategies(String namespace) {
-            super(KEY, namespace);
-        }
     }
 
     /**
      * 跟踪类型编解码器注册表
      */
-    public static class TrackTypeProviders extends DeferredRegister<TrackTypeProvider> {
+    public static class TrackTypeProviders{
         public static final ResourceKey<Registry<TrackTypeProvider>> KEY = createRegistryKey(TerraEntity.space("track_type_provider"));
         public static final Registry<TrackTypeProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-        public static TrackTypeProviders create(String mod_id) {
-            return new TrackTypeProviders(mod_id);
-        }
-        protected TrackTypeProviders(String namespace) {
-            super(KEY, namespace);
-        }
     }
 }

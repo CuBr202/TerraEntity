@@ -2,6 +2,7 @@ package org.confluence.terraentity.registries.hit_effect;
 
 import com.mojang.serialization.MapCodec;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
@@ -12,7 +13,7 @@ import org.confluence.terraentity.registries.hit_effect.variant.TimePossibilityA
  * 注册追踪编解码器的类型
  */
 public class EffectStrategyProviderTypes {
-    public static final TERegistries.EffectStrategyProviders TYPES = TERegistries.EffectStrategyProviders.create(TerraEntity.MODID);
+    public static final DeferredRegister<EffectStrategyProvider> TYPES = DeferredRegister.create(TERegistries.EffectStrategyProviders.REGISTRY, TerraEntity.MODID);
 
     public static final DeferredHolder<EffectStrategyProvider,EffectStrategyProvider> TIME_POSSIBILITY_AMPLIFIER_EFFECT_PROVIDER = register("time_possibility_amplifier_effect", TimePossibilityAmplifierEffect.CODEC);
 

@@ -20,7 +20,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonMeleeAttackGoal;
-import org.confluence.terraentity.init.TETags;
 
 import java.util.Optional;
 import java.util.UUID;
