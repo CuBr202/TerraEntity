@@ -20,7 +20,9 @@ import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
 import org.confluence.terraentity.client.entity.model.Stinger;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
+import org.confluence.terraentity.client.entity.renderer.ReplacedSpiderRenderer;
 import org.confluence.terraentity.client.gui.config_container.ConfigContainerRegister;
+import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.init.TEEntities;
 
@@ -85,6 +87,12 @@ public final class ModClient {
         registerProj(event,BEE_STICK_PROJ.get(),c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         registerProj(event,SUMMON_BEE_STICK_PROJ.get(),c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
 
+        // replaced
+//        if (ClientConfig.ENABLE_NON_SPIDER_MODEL.get()) {
+//            event.registerEntityRenderer(EntityType.SPIDER, c -> new ReplacedSpiderRenderer<>(c, "spider", EntityType.SPIDER));
+//            event.registerEntityRenderer(EntityType.CAVE_SPIDER, c -> new ReplacedSpiderRenderer<>(c, "cave_spider", EntityType.CAVE_SPIDER));
+//            event.registerEntityRenderer(BLOOD_CRAWLER.get(), c -> new ReplacedSpiderRenderer<>(c, "blood_crawler", BLOOD_CRAWLER.get()));
+//        }
 
         TEEntities.registerRenderers(event);
     }

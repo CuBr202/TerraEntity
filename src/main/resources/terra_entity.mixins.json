@@ -5,11 +5,16 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "terra_entity.refmap.json",
   "mixins": [
+    "BossEventMixin",
+    "ItemStackMixin",
+    "ServerBossEventMixin",
     "accessor.EntityAccessor",
     "accessor.SlimeAccessor"
   ],
   "client": [
+    "BossHealthOverlayMixin",
     "GameRendererMixin",
+    "ItemRendererMixin",
     "ShaderInstanceMixin",
     "accessor.GameRendererAccessor"
   ],

@@ -44,7 +44,7 @@ public class ThrowableProj extends BaseProj<ThrowableProj> {
     }
 
     @Override
-    public int waveDur() {return 100;}
+    public int getLifetime() {return 100;}
 
     public static final EntityDataAccessor<Vector3f> DATA_HEIGHT = SynchedEntityData.defineId(ThrowableProj.class, EntityDataSerializers.VECTOR3);
     public static final EntityDataAccessor<Vector3f> DATA_TARGET = SynchedEntityData.defineId(ThrowableProj.class, EntityDataSerializers.VECTOR3);
@@ -94,8 +94,4 @@ public class ThrowableProj extends BaseProj<ThrowableProj> {
         this.setPos(getNexPos());
     }
 
-    public static class TextureLib{
-
-
-    }
 }

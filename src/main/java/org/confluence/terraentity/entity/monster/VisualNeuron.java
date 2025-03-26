@@ -30,7 +30,7 @@ public class VisualNeuron extends AbstractMonster{
         super(type, level, new AbstractPrefab(44,2,9,0,0,0.1f)
                 .getPrefab().setNoGravity());
         this.noPhysics = true;
-        this.collisionProperties = new CollisionProperties(1,20,0);
+        this.collisionProperties = new CollisionProperties(1,20,0.2F);
     }
 
     public void setOwner(BrainOfCthulhu owner) {
@@ -57,6 +57,7 @@ public class VisualNeuron extends AbstractMonster{
             if(state == 0){
                 ready = false;
                 if(target != null && target.isAlive()) {
+                    setTarget(target);
                     this.addDeltaMovement(target.getEyePosition().subtract(position()).normalize().scale(MOVE_SPEED/ 5));
                     if(TEUtils.angleBetween(getDeltaMovement(), target.getEyePosition().subtract(position())) > Math.PI / 4 ) {
                         state = 1;

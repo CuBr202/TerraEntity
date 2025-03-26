@@ -24,7 +24,7 @@ public class ServerConfig {
 
         BOSS_CLEAR_WHEN_NO_TARGET = BUILDER
                 .comment("When a boss has no target, should it be cleared?")
-                .define("boss_clear_when_no_target", false);
+                .define("boss_clear_when_no_target", true);
         BOSS_ATTRIBUTES_MULTIPLIER_HEALTH = BUILDER
                 .comment("Multiplier for boss attributes health.")
                 .defineInRange("boss_attributes_multiplier_health", 0.5F, 0.0625f, 10f);

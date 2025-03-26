@@ -3,6 +3,7 @@ package org.confluence.terraentity.entity.monster.slime;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
+import org.confluence.terraentity.entity.boss.KingSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
@@ -56,7 +58,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
     protected void registerGoals() {
         super.registerGoals();
         this.targetSelector.removeAllGoals(gt->true);
-
+        this.targetSelector.addGoal(1,new KingSlime.HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, (liv) -> {
             return Math.abs(liv.getY() - this.getY()) <= 4.0 && (!colorTest.test(this.color) || this.level().isNight());
         }));
@@ -112,7 +114,6 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
             if (isInWater()) {
                 this.hurt(this.level().damageSources().freeze(), 0.8F);
             }
-            this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 500, 4, false, true));
         }
         super.tick();
     }
@@ -201,4 +202,8 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         return vehicle == null ? super.isInWall() : vehicle.isInWall();
     }
 
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        return super.isInvulnerableTo(source) || (source.is(DamageTypeTags.IS_FIRE) && getType() == TEEntities.LAVA_SLIME.get());
+    }
 }

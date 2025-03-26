@@ -2,14 +2,13 @@ package org.confluence.terraentity.client.gui.config_container;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.config.ServerConfig;
 
-@SuppressWarnings("all")
+//@SuppressWarnings("all")
 public class ConfigContainerRegister {
 
     public static ConfigScreenBuilder init(ConfigScreen screen){
@@ -42,6 +41,7 @@ public class ConfigContainerRegister {
         return builder;
     }
 
+    @SuppressWarnings("removal")
     public static void registerModsPage(final InterModEnqueueEvent event) {
         event.enqueueWork(() -> {
             if (FMLEnvironment.dist == Dist.CLIENT) {

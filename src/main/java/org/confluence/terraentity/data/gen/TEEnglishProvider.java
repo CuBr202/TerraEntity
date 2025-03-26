@@ -1,12 +1,15 @@
 package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.LanguageProvider;
+import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEItems;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -25,7 +28,10 @@ public class TEEnglishProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
 
-        TEItems.SPAWN_EGGS.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
+        Consumer<RegistryObject<Item>> itemAction = item -> add(item.get(), toTitleCase(item.getId().getPath()));
+        TEItems.SPAWN_EGGS.getEntries().forEach(itemAction);
+        TEItems.SUMMON_ITEMS.getEntries().forEach(itemAction);
+        TEItems.WHIP_ITEMS.getEntries().forEach(itemAction);
         TEEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
         TEEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get(), toTitleCase(effect.getId().getPath())));
 
@@ -35,6 +41,11 @@ public class TEEnglishProvider extends LanguageProvider {
         add("message.terraentity.boss_spawn", "%s Has Awoken!");
         add("message.terraentity.boss_leave", "%s Have Been Defeated!");
         add("message.terraentity.boss_discard", "Has Been Discarded！");
+
+
+        add("terra_entity.options.title", "Terra Entity Options");
+        add("terra_entity.configuration.server", "Server Configuration");
+        add("terra_entity.configuration.client", "Client Configuration");
 
         // Config
         add("terra_entity.configuration.server.boss_clear_when_no_target", "Clear Boss When No Target");
@@ -50,10 +61,13 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster Attributes Multiplier-Damage");
 
         add("terra_entity.configuration.client.boss_bar_style", "Boss Health Bar Style");
+        add("terra_entity.configuration.client.boss_bar_number_offset_x", "Boss Health Bar Number Offset-X");
+        add("terra_entity.configuration.client.boss_bar_number_offset_y", "Boss Health Bar Number Offset-Y");
 
-        add("terra_entity.options.title", "Terra Entity Options");
-        add("terra_entity.configuration.server", "Server Configuration");
-        add("terra_entity.configuration.client", "Client Configuration");
+
+
+        add("terra_entity.configuration.client.enableNonSpiderModel", "Spider Harmonization");
+        add("terra_entity.configuration.client.enableNonSpiderModel.tooltip", "Enable this option if you dislike spiders or want to beautify them.");
 
 
         // Tooltip
@@ -63,6 +77,15 @@ public class TEEnglishProvider extends LanguageProvider {
 
         // attribute
         add("attribute.name.player.summon_damage", "Summon Damage");
+        add("attribute.name.player.mark_damage", "Mark Damage");
+        add("attribute.name.player.whip_range", "Whip Range");
+        add("attribute.name.player.summon_knockback", "Summon Knockback");
+        add("attribute.name.player.minion_capacity", "Minion Capacity");
+        add("attribute.name.player.sentry_capacity", "Sentry Capacity");
+
+        // track
+        add("terra_entity.track_type.simple", "Simple Track");
+        add("terra_entity.track_type.basis", "Basis Track");
 
     }
 }

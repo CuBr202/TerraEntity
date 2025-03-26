@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
@@ -23,7 +24,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     private static final float MAX_HEALTHS = 50f;
     private static final float DAMAGE = 4f;//接触伤害
 
-    public float segmentInternal = 2f;
+    public float segmentInternal = 2.8f;
     public EaterOfWorlds head;
     public AbstractTerraBossBase lastSegment;
 
@@ -60,6 +61,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     public EaterOfWorldsSegment(EaterOfWorlds head, Level level) {
         this(TEEntities.EATER_OF_WORLD_SEGMENT.get(), level);
         this.head = head;
+        this._discardTimer = random.nextInt(25) + 100;
     }
 
     public Vec3 getNextPos(){
@@ -87,6 +89,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     }
 
     int discardTimer = 0;
+    int _discardTimer;
     @Override
     public void tick(){
         super.tick();
@@ -96,7 +99,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
                 this.setPos(getNextPos());
             if(head == null || !head.isAlive() ){
                 discardTimer++;
-                if(discardTimer > 100) {
+                if(discardTimer > _discardTimer) {
                     discard();
                 }
                 return;
@@ -104,6 +107,8 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
             discardTimer = 0;
         }
     }
+
+
 
     @Override
     public boolean canAttack(LivingEntity entity) {
@@ -131,8 +136,13 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
                 this.getCombatTracker().recheckStatus();
                 Level var5 = this.level();
                 if (var5 instanceof ServerLevel) {
+
                     this.gameEvent(GameEvent.ENTITY_DIE);
-                    this.dropAllDeathLoot( damageSource);
+                    this.lastHurtByPlayerTime = 10;
+                    if(damageSource.getEntity() instanceof Player player){
+                        this.lastHurtByPlayer = player;
+                    }
+                    this.dropAllDeathLoot(damageSource);
                     this.createWitherRose(livingentity);
                     this.level().broadcastEntityEvent(this, (byte)3);
                 }

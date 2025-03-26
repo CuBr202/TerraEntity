@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.Blocks;
 import org.confluence.terraentity.entity.ai.IMinion;
 import org.confluence.terraentity.entity.boss.QueenBee;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
-import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -31,8 +30,9 @@ public class LittleHornet extends Hornet implements IMinion<LittleHornet> {
     QueenBee owner;
 
     public LittleHornet(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(20,1,3,20,0,0.2f)
+        super(type, level, new AbstractPrefab(3,1,3,20,0,0.2f)
                 .getPrefab()
+                .setNoAttachAttack()
                 .setNoGravity()
         );
     }
@@ -107,7 +107,6 @@ public class LittleHornet extends Hornet implements IMinion<LittleHornet> {
             return PlayState.CONTINUE;
         }));
     }
-
 }
 
 

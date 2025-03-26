@@ -3,6 +3,7 @@ package org.confluence.terraentity.event;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +21,6 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -35,10 +35,7 @@ import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.summon.ISummonMob;
-import org.confluence.terraentity.init.TEAttachments;
-import org.confluence.terraentity.init.TEEffects;
-import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -47,8 +44,8 @@ import static org.confluence.terraentity.TerraEntity.MODID;
 public class GameEntityEvent {
     @SubscribeEvent
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
-
-
+        // 生成信息
+        Boss.sendBossSpawnMessage(event.getEntity());
         Level level = event.getLevel();
         if (event.loadedFromDisk() || !(level instanceof ServerLevel serverLevel)) return;
         if (event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < 0.05F) {
@@ -64,8 +61,7 @@ public class GameEntityEvent {
             TEUtils.monsterEnhance(living);
         else if(event.getEntity() instanceof Slime slime)
             TEUtils.monsterEnhance(slime);
-        // 生成信息
-        Boss.sendBossSpawnMessage(event.getEntity());
+
     }
 
     @SubscribeEvent
@@ -74,7 +70,6 @@ public class GameEntityEvent {
             // 清除召唤物
             player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data->data.clear(player));
         }
-
     }
 
     @SubscribeEvent
@@ -83,18 +78,6 @@ public class GameEntityEvent {
             // 同步召唤栏信息
             player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data->data.sync(player));
         }
-    }
-
-    @SubscribeEvent
-    public static void FinalizeSpawnRegister(MobSpawnEvent event) {
-        if(event.getEntity() instanceof BlackSlime entity){
-//            entity.finalizeSpawn(entity.getRandom(),new DifficultyInstance(event.getLevel().getDifficulty(),1,1,1) );
-        }
-
-    }
-    @SubscribeEvent
-    public static void FinalizeSpawnRegister(LivingEvent.LivingJumpEvent event) {
-
     }
 
     @SubscribeEvent
@@ -130,6 +113,41 @@ public class GameEntityEvent {
                 e1.removeEffect(TEEffects.DEMONIC_THOUGHTS.get());
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void livingDamage$Pre(LivingDamageEvent event) {
+        DamageSource damageSource = event.getSource();
+        float amount = event.getAmount();
+        LivingEntity hurter = event.getEntity();
+        Entity attacker = event.getSource().getEntity();
+
+        if (damageSource.is(TETags.DamageTypes.SUMMONER) || attacker instanceof ISummonMob<?> summoner) {
+            // 召唤物集火伤害加成
+            if (hurter.hasEffect(TEEffects.SUMMON_FOCUS.get())) {
+                amount = amount + 2;
+
+            }
+            // 召唤物标记伤害增加
+            if(attacker instanceof ISummonMob<?> summoner){
+                LivingEntity owner = summoner.summon_getOwner();
+                if(owner != null){
+                    var att = owner.getAttribute(TEAttributes.MARK_DAMAGE.get());
+                    if(att!= null){
+                        double damage = att.getValue();
+                        amount += (float) damage;
+                    }
+                }
+            } else if (attacker instanceof LivingEntity owner) {
+                var att = owner.getAttribute(TEAttributes.MARK_DAMAGE.get());
+                if(att!= null){
+                    double damage = att.getValue();
+                    amount += (float) damage;
+                }
+            }
+        }
+
+        event.setAmount(amount);
     }
 
     @SubscribeEvent
@@ -191,5 +209,4 @@ public class GameEntityEvent {
             blackSlime.finalizeSpawn(randomSource, event.getDifficulty());
         }
     }
-
 }

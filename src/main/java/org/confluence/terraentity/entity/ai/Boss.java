@@ -1,6 +1,5 @@
 package org.confluence.terraentity.entity.ai;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.Entity;

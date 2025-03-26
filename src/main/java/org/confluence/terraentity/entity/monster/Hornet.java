@@ -26,7 +26,6 @@ import net.minecraft.world.entity.ai.util.HoverRandomPos;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -41,7 +40,7 @@ import java.util.EnumSet;
 
 public class Hornet extends AbstractMonster implements FlyingAnimal{
 
-    protected  int attackInternal = 40;
+    protected  int attackInternal = 20;
     public Hornet(EntityType<? extends Monster> type, Level level, Builder builder) {
         super(type, level, builder);
         this.moveControl = new FlyingMoveControl(this, 20, true);
@@ -91,7 +90,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         public boolean canUse() {
-            return Hornet.this.getTarget() != null &&  Hornet.this.navigation.isDone() && Hornet.this.random.nextInt(10) == 0;
+            return Hornet.this.getTarget() == null &&  Hornet.this.navigation.isDone() && Hornet.this.random.nextInt(10) == 0;
         }
 
         public boolean canContinueToUse() {
@@ -119,6 +118,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         private final int FIND_PATH_TIME = 200;
         int timeToRepath;
         Hornet bee;
+//        Vec3 targetPos;
 
         public BeeKeepOnTargetGoal(Hornet bee) {
             this.setFlags(EnumSet.of(Flag.MOVE));
@@ -127,11 +127,11 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
 
         public boolean canUse() {
 
-            return bee.getTarget() != null && bee.getTarget().isAlive() && (--timeToRepath <= 0 || bee.getTarget()!=null && timeToRepath < FIND_PATH_TIME - attackInternal);
+            return bee.getTarget() != null && bee.getTarget().isAlive() && (--timeToRepath <= 0 || timeToRepath < FIND_PATH_TIME - attackInternal);
         }
 
         public boolean canContinueToUse() {
-            return canUse();
+            return bee.getTarget() != null && bee.getTarget().isAlive() && bee.getNavigation().getPath() != null && bee.getNavigation().getPath().getDistToTarget() > 1.0F;
         }
 
         public boolean requiresUpdateEveryTick() {
@@ -143,7 +143,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
             if (vec3 != null) {
                 bee.swing(InteractionHand.MAIN_HAND);
                 timeToRepath = FIND_PATH_TIME;
-                bee.navigation.moveTo(bee.navigation.createPath(BlockPos.containing(vec3), 1), 2.0);
+                bee.navigation.moveTo(bee.navigation.createPath(BlockPos.containing(vec3), 1), 1.5f);
             }
         }
 
@@ -159,22 +159,20 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
             bee.lookControl.setLookAt(bee.getTarget());
             bee.lookAt(bee.getTarget(), 360, 360);
             if(bee.distanceTo(bee.getTarget()) < 10){
-//                System.out.println("Bee Keep on Target");
+
             }
-
-
         }
     }
 
     protected class BeeShootGoal extends Goal {
         protected int SHOOT_TIME;
         int timeToShoot;
-        int prepareTime = 20;
-        Hornet bee;
+        protected int prepareTime = 5;
+        protected Hornet bee;
         float inaccuracy;
 
         public BeeShootGoal(Hornet bee) {
-            this(bee, 5.0F, 50);
+            this(bee, 5.0F, 25);
         }
 
         public BeeShootGoal(Hornet bee, float inaccuracy, int shootTime) {
@@ -188,38 +186,57 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         public boolean canContinueToUse() {
-            return canUse();
+            boolean hasTarget = bee.getTarget() != null && bee.getTarget().isAlive();
+            if(!hasTarget) return false;
+            boolean can = canShoot(bee.getTarget());
+            return !can;
+        }
+
+        public boolean requiresUpdateEveryTick() {
+            return true;
         }
 
         public void start() {
+            bee.getNavigation().stop();
+
         }
 
-
         public void tick() {
-            bee.lookControl.setLookAt(bee.getTarget());
-            if (canShoot(bee.getTarget())) {
+            if(bee.getTarget() != null && bee.getTarget().isAlive()) {
+
+                bee.lookAt(bee.getTarget(), 10,89);
+                bee.lookControl.setLookAt(bee.getTarget());
+            }
+        }
+
+        @Override
+        public void stop() {
+            if(bee.getTarget() != null){
                 bee.swing(InteractionHand.MAIN_HAND);
                 LineProj proj = createProj();
                 if (proj != null) {
                     proj.setOwner(bee);
                     proj.setPos(bee.position());
                     proj.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
-                    Vec3 dir = bee.getTarget().getEyePosition().subtract(bee.position());
-                    proj.shoot(dir.x, dir.y, dir.z, 1, inaccuracy);
+                    double x = bee.getTarget().getX() - bee.getX();
+                    double y = bee.getTarget().getY() + bee.getTarget().getEyeHeight() * 0.5f - bee.getY();
+                    double z = bee.getTarget().getZ() - bee.getZ();
+                    proj.shoot(x,y,z, 1, inaccuracy);
                     level().addFreshEntity(proj);
                 }
                 timeToShoot = SHOOT_TIME;
-                prepareTime = 10 + bee.random.nextInt(10);
             }
         }
+
         protected boolean canShoot(Entity target) {
-            if(TEUtils.angleBetween(bee.getLookAngle(), target.position().subtract(bee.position())) < 0.2f){
-                return --prepareTime <= 0;
+            if(TEUtils.angleBetween(bee.getForward(), target.getEyePosition().subtract(bee.getEyePosition())) < 0.1f){
+                return true;
             }
             return false;
         }
 
     }
+
 
     protected LineProj createProj(){
         return TEEntities.BEE_STICK_PROJ.get().create(level());

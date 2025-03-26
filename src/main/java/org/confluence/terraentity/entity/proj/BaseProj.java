@@ -11,6 +11,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.level.Level;
@@ -19,16 +20,18 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.registries.generation.IGeneration;
+import org.confluence.terraentity.registries.track.ITrackType;
+import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 
-public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingProjectile{
-    private final long starttime = System.currentTimeMillis();
+public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingProjectile {
     public float damage = 1;
     private List<Integer> hitList = new ArrayList<>();
     public int penetration =1;
@@ -36,6 +39,8 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     public ResourceLocation texture = TerraEntity.space("textures/entity/projectile/default.png");
     protected RegistryObject<SoundEvent> hitSound;
     public Consumer<BaseProj> clientTickCallback;
+    public ITrackType trackType;
+    public IGeneration generation;
 
     public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
         super(pEntityType, pLevel);
@@ -82,7 +87,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     }
 
     public ResourceLocation getTexture(){return texture;}
-    public abstract int waveDur();
+    public abstract int getLifetime();
     public boolean shouldBeSaved(){
         return false;
     }
@@ -92,8 +97,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
         if(!entities.isEmpty() && penetration > 0){
             for (var e:entities) {
                 int id = e.getId();
-                if(canHitEntity(e) && !hitList.contains(id)) {
-                    hitList.add(id);
+                if(canHitEntity(e)) {
                     if(e instanceof LivingEntity living) {
                         doHurt(living);
                         doKnockBack(living);
@@ -121,12 +125,11 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     public void tick() {
         super.tick();
         if(!level().isClientSide){
-            if(System.currentTimeMillis()-starttime > waveDur() * 50L) {
+            if (tickCount > getLifetime()) {
                 discard();
                 return;
             }
-            doAABBHurt();
-
+//            doAABBHurt();
         }else if(clientTickCallback!= null){
             clientTickCallback.accept(this);
         }
@@ -149,25 +152,26 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
                 discard();
                 return;
             }
-            this.damage = defaultDamage();
+            this.damage += defaultDamage();
         }
     }
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         Entity hurter = pResult.getEntity();
-        if(!hitList.contains(hurter.getId()) && hurter instanceof LivingEntity living && canHitEntity(living))
+        if(hurter instanceof LivingEntity living && canHitEntity(living)) {
             doHurt(living);
-        super.onHitEntity(pResult);
+        }
     }
 
     public float defaultDamage(){
-        if(getOwner() != null)
-            return (int) ((LivingEntity)getOwner()).getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-        return 1;
+//        if(getOwner() != null)
+//            return (int) ((LivingEntity)getOwner()).getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+        return 0;
     }
 
     protected void doHurt(LivingEntity hurter){
         Entity entity = this.getOwner();
+        hitList.add(hurter.getId());
         for (MobEffectInstance effect : effects) {
             hurter.addEffect(effect);
         }
@@ -191,6 +195,8 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
         return this.damageSources().generic();
     }
 
+
+
     @Override//设置粒子效果
     protected ParticleOptions getTrailParticle() {
         return super.getTrailParticle();
@@ -198,10 +204,22 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
 
     @Override
     protected boolean canHitEntity(@NotNull Entity target) {
-        if(getOwner()!=null && getOwner() instanceof LivingEntity living && target instanceof LivingEntity living1) return target.canBeHitByProjectile() &&
-                target != living && living.canAttack(living1);
-        return target.canBeHitByProjectile() &&
-                target != getOwner();
+        // 不能攻击自己和不能被弹幕攻击的实体
+        if(target == getOwner() || !target.canBeHitByProjectile()){
+            return false;
+        }
+        // 不能攻击已经被弹幕攻击过的实体
+        if(hitList.contains(target.getId()))
+            return false;
+        // 召唤物不能攻击主人的仆从
+        if(!TEUtils.attackTamableTest.test(getOwner(), target)
+        ){
+            return false;
+        }
+        // 有主人的弹幕只能攻击主人可以攻击的目标
+        if(getOwner()!=null && getOwner() instanceof LivingEntity living && target instanceof LivingEntity tar)
+            return living.canAttack(tar);
+        return true;
     }
 
 //    @Override//流体阻力

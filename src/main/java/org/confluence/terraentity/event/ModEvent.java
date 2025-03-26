@@ -7,9 +7,15 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.NewRegistryEvent;
+import net.minecraftforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.init.TEAttributes;
+import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.network.NetworkHandler;
+import org.confluence.terraentity.registries.TERegistries;
 
 import java.util.List;
 @SuppressWarnings("all")
@@ -47,5 +53,4 @@ public class ModEvent {
             runnable.run();
         }
     }
-
 }

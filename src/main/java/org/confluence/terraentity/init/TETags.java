@@ -11,7 +11,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import org.confluence.terraentity.TerraEntity;
 
 public class TETags {
@@ -34,8 +33,10 @@ public class TETags {
     }
 
     public static class DamageTypes {
+        // 玩家召唤伤害 如鞭子
+        public static final ResourceKey<DamageType> SUMMON = registerDamageType("summon");
+        // 召唤物召唤伤害 用于标记伤害增伤
         public static final ResourceKey<DamageType> SUMMONER = registerDamageType("summoner");
-
 
 
 
@@ -52,17 +53,11 @@ public class TETags {
         }
 
         public static void createDamageTypes(BootstapContext<DamageType> context) {
+            context.register(SUMMON, new DamageType("summon_damage_type", 0.1F));
             context.register(SUMMONER, new DamageType("summoner_damage_type", 0.1F));
 
         }
     }
-
-    public static class Biomes{
-//        public static final TagKey<Biome> UNDERGROUND = registerBiome("underground");
-
-
-    }
-
 
     private static TagKey<Item> registerItem(String id) {
         return ItemTags.create(TerraEntity.asResource(id));
@@ -72,8 +67,5 @@ public class TETags {
     }
     private static ResourceKey<DamageType> registerDamageType(String id) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, TerraEntity.space(id));
-    }
-    private static TagKey<Biome> registerBiome(String id) {
-        return TagKey.create(Registries.BIOME, TerraEntity.asResource(id));
     }
 }

@@ -10,7 +10,6 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
-import org.confluence.terraentity.entity.ai.ICollisionAttackMob;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -26,10 +25,15 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
 
 /* Collision Attack API */
 
-    ICollisionAttackEntity.CollisionProperties collisionProperties = new CollisionProperties(5,5,0.75f);
+    CollisionProperties collisionProperties = new CollisionProperties(5,5,0.75f);
 
-    public ICollisionAttackEntity.CollisionProperties getCollisionProperties() {
+    public CollisionProperties getCollisionProperties() {
         return collisionProperties;
+    }
+
+    @Override
+    public boolean shouldDoCollision(){
+        return getTarget() != null;
     }
 
     @Override
@@ -107,6 +111,11 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
     @Override
     public boolean doHurtTarget(Entity entity) {
         return summon_doHurtTarget(this, entity);
+    }
+
+    @Override
+    public boolean isPickable() {
+        return false;
     }
 
 /* Geo API */

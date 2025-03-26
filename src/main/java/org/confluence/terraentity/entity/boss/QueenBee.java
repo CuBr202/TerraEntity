@@ -44,7 +44,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
 
         collisionProperties.detectInternal = 1;
         this.noPhysics = true;
-        this.setAttactDamage(1);
+        this.setAttactDamage(14);
         this.xpReward = 1000;
 
         this.dashComponent = new DashComponent(this);
@@ -90,14 +90,14 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
         ;
         idle = new MobSkill<QueenBee>(idle_animation, 25, 0)
                 .onTick(e->{
-                    LookAt(10);
+                    lookAt(10);
                     dashComponent.hangOn(getTarget(), 5, 1.5f, getMoveSpeed());
                 })
         ;
 
         summon_bee = new MobSkill<QueenBee>(summon_animation, 60, 10)
                 .onTick(e->{
-                    LookAt(10);
+                    lookAt(10);
                     dashComponent.hangOn(getTarget(), 5, 4, getMoveSpeed());
                     if(skills.tick % 10 == 0) {
                         LittleHornet bee = TEEntities.LITTLE_HORNET.get().create(level());
@@ -114,7 +114,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                 .onTick(e->{
                     LivingEntity target = e.getTarget();
                     if(target!=null){
-                        LookAt(10);
+                        lookAt(10);
                         if(position().y < target.position().y + 2) addDeltaMovement(new Vec3(0,0.02f,0));
                         if( skills.tick % 10 ==0) {
                             LineProj proj = TEEntities.BEE_STICK_PROJ.get().create(level());
@@ -143,11 +143,15 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                             distanceToSqr(target) > 10 * 10 ||
                             Math.abs(target.getY() - e.getY()) > 2 ||
                             Math.abs(this.getXRot()) > 10
-                    )
-                        skills.tick = 15;
+                    ){
+
+                    }else{
+                        if(difficult || random.nextBoolean())
+                            skills.tick--;
+                    }
 
                     dashComponent.hangOn(getTarget(), 5, 0, getMoveSpeed() * 1.2f);
-                    LookAt(10);
+                    lookAt(10);
                 })
         ;
         pre_dash = new MobSkill<QueenBee>(pre_dash_animation, 15, 0)
@@ -170,7 +174,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
 
                 .onTick(e->{
                     if(getTarget() == null) return;
-                    dashComponent.uniformMove(getMoveSpeed() * 2f * (isAngry()? 1.5f:1f));
+                    dashComponent.uniformMove(getMoveSpeed() * 2f * (isAngry() && difficult? 1.5f : 1f));
                     if(distanceToSqr(target) > 15 * 15) skills.forceEnd();
 
                 })

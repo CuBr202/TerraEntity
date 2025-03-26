@@ -25,12 +25,11 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
-import org.confluence.terraentity.client.boss.renderer.BrainOfCthulhuRenderer;
-import org.confluence.terraentity.client.boss.renderer.GeoBossRenderer;
-import org.confluence.terraentity.client.boss.renderer.EaterOfWorldSegmentRenderer;
-import org.confluence.terraentity.client.boss.renderer.QueenBeeRenderer;
+import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
+import org.confluence.terraentity.client.boss.renderer.*;
 import org.confluence.terraentity.client.entity.model.GiantShellyModel;
 import org.confluence.terraentity.client.entity.renderer.*;
+import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.boss.*;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.*;
@@ -41,10 +40,7 @@ import org.confluence.terraentity.entity.monster.prefab.LandMonsterPrefab;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
-import org.confluence.terraentity.entity.proj.BaseProj;
-import org.confluence.terraentity.entity.proj.LineProj;
-import org.confluence.terraentity.entity.proj.SummonBeeStick;
-import org.confluence.terraentity.entity.proj.ThrowableProj;
+import org.confluence.terraentity.entity.proj.*;
 import org.confluence.terraentity.entity.summon.SummonHornet;
 import org.confluence.terraentity.entity.summon.SummonIronGolem;
 import org.confluence.terraentity.entity.summon.SummonSlime;
@@ -92,18 +88,18 @@ public final class TEEntities {
     public static final RegistryObject<EntityType<VisualNeuron>> VISUAL_NEURON = registerEntity("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
     // 蜜蜂
     public static final RegistryObject<EntityType<Hornet>> HORNET = registerEntity("hornet", (e,l)->new Hornet(e,l, FlyMonsterPrefab.BEE_BUILDER.get().setHealth(32)), 0.8f, 1.2f);
-    public static final RegistryObject<EntityType<LittleHornet>> LITTLE_HORNET = registerEntity("little_hornet", LittleHornet::new, 0.8f, 1.2f);
+    public static final RegistryObject<EntityType<LittleHornet>> LITTLE_HORNET = registerEntity("little_hornet", LittleHornet::new,MobCategory.CREATURE, 0.8f, 1.2f);
     // 蝙蝠
     public static final RegistryObject<EntityType<AbstractMonster>> CAVE_BAT = registerSimpleMonster("cave_bat", FlyMonsterPrefab.CAVE_BAT_BUILDER,1.6f,1.6f);
     public static final RegistryObject<EntityType<AbstractMonster>> JUNGLE_BAT = registerSimpleMonster("jungle_bat", FlyMonsterPrefab.JUNGLE_BAT_BUILDER,1.6f,1.6f);
     public static final RegistryObject<EntityType<AbstractMonster>> HELL_BAT = registerSimpleMonster("hell_bat", FlyMonsterPrefab.HELL_BAT_BUILDER,1.6f,1.6f);
     public static final RegistryObject<EntityType<AbstractMonster>> ICE_BAT = registerSimpleMonster("ice_bat", FlyMonsterPrefab.ICE_BAT_BUILDER,1.6f,1.6f);
-    public static final RegistryObject<EntityType<AbstractMonster>> SPORE_BAT = registerSimpleMonster("spore_bat", FlyMonsterPrefab.CAVE_BAT_BUILDER,1.6f,1.6f);
+    public static final RegistryObject<EntityType<AbstractMonster>> SPORE_BAT = registerSimpleMonster("spore_bat", FlyMonsterPrefab.SPORE_BAT_BUILDER,1.6f,1.6f);
 
     // tip 陆生怪
-    public static final RegistryObject<EntityType<Decayeder>> DECAYEDER = ENTITIES.register("decayeder", () -> EntityType.Builder.of(Decayeder::new, MobCategory.MONSTER).build(Key("decayeder")));
-    public static final RegistryObject<EntityType<BloodySpore>> BLOODY_SPORE = ENTITIES.register("bloody_spore", () -> EntityType.Builder.of(BloodySpore::new, MobCategory.MONSTER).build(Key("bloody_spore")));
-    public static final RegistryObject<EntityType<BloodCrawler>> BLOOD_CRAWLER = ENTITIES.register("blood_crawler", () -> EntityType.Builder.of(BloodCrawler::new, MobCategory.MONSTER).sized(1.8F, 1.2F).clientTrackingRange(10).build(Key("blood_crawler")));
+    public static final RegistryObject<EntityType<Decayeder>> DECAYEDER = registerEntity("decayeder", Decayeder::new,1,1.8f);
+    public static final RegistryObject<EntityType<BloodySpore>> BLOODY_SPORE = registerEntity("bloody_spore", BloodySpore::new, 1,1.5f);
+    public static final RegistryObject<EntityType<BloodCrawler>> BLOOD_CRAWLER = registerEntity("blood_crawler", BloodCrawler::new, 1.8F, 1.2F);
     public static final RegistryObject<EntityType<AbstractMonster>> FACE_MONSTER = registerSimpleMonster("face_monster", LandMonsterPrefab.FACE_MONSTER_BUILDER,0.75F,1.95F);
     public static final RegistryObject<EntityType<AbstractMonster>> BLOOD_TUMORS = registerSimpleMonster("blood_tumors", LandMonsterPrefab.BLOOD_TUMORS,0.5F,0.5F);
     public static final RegistryObject<EntityType<AbstractMonster>> BLOOD_ZOMBIE = registerSimpleMonster("blood_zombie", LandMonsterPrefab.BLOOD_ZOMBIE_BUILDER,0.75F,1.95F);
@@ -144,11 +140,12 @@ public final class TEEntities {
     public static final RegistryObject<EntityType<BrainOfCthulhu>> BRAIN_OF_CTHULHU = registerEntity("brain_of_cthulhu", BrainOfCthulhu::new, 4F, 4F);
     public static final RegistryObject<EntityType<BrainFake>> BRAIN_FAKE = registerEntity("brain_fake", BrainFake::new, 4F, 4F);
     public static final RegistryObject<EntityType<QueenBee>> QUEEN_BEE = registerEntity("queen_bee", QueenBee::new, 2.5F, 2.5F);
-
+    public static final RegistryObject<EntityType<Skeletron>> SKELETRON = registerEntity("skeletron", Skeletron::new, 2.3F, 2.3F);
+    public static final RegistryObject<EntityType<SkeletronHand>> SKELETRON_HAND = registerEntity("skeletron_hand", SkeletronHand::new, 2F, 1F);
 
 
     public static <T extends Mob> RegistryObject<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> entityFactory, float width, float height){
-        return ENTITIES.register(name, () -> EntityType.Builder.of(entityFactory, MobCategory.MONSTER).sized(width, height).clientTrackingRange(10).build(Key(name)));
+        return registerEntity(name, entityFactory, MobCategory.MONSTER, width, height);
     }
 
     public static <T extends Mob> RegistryObject<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> entityFactory, MobCategory category, float width, float height){
@@ -166,11 +163,16 @@ public final class TEEntities {
             new LineProj(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
     public static final RegistryObject<EntityType<LineProj>> SUMMON_BEE_STICK_PROJ = registerProj("summon_bee_stick_proj",(e, l)->
             new SummonBeeStick(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
+    public static final RegistryObject<EntityType<SkullProjectile>> SKULL = registerProj("skull", SkullProjectile::new,0.5F,0.5F);
+
+    // 鞭子
+    public static final RegistryObject<EntityType<WhipEntity>> WHIP_PROJECTILE = ENTITIES.register("whip_projectile",() -> EntityType.Builder.<WhipEntity>of((e, l)->
+            new WhipEntity(e,l) , MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F,0.5F).build(Key("whip_projectile")));
 
 
 
     public static <T extends BaseProj<T>> RegistryObject<EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory,float w,float h) {
-        return ENTITIES.register(name, () -> EntityType.Builder.of(entityFactory , MobCategory.MISC).clientTrackingRange(10).sized(w,h).build("rhyme:entity.proj."+name));
+        return ENTITIES.register(name, () -> EntityType.Builder.of(entityFactory , MobCategory.MISC).clientTrackingRange(10).sized(w,h).build(Key(name)));
     }
     public static <T extends BaseProj<T>> RegistryObject<EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory) {
         return registerProj(name,entityFactory,1,1);
@@ -205,7 +207,9 @@ public final class TEEntities {
 
 
         event.registerEntityRenderer(DEMON_EYE.get(), DemonEyeRenderer::new);
-        event.registerEntityRenderer(BLOOD_CRAWLER.get(), c-> new GeoNormalRenderer<>(c,BLOOD_CRAWLER.getId()));
+//        if (!ClientConfig.ENABLE_NON_SPIDER_MODEL.get()) {
+            event.registerEntityRenderer(BLOOD_CRAWLER.get(), c -> new GeoNormalRenderer<>(c, BLOOD_CRAWLER.getId()));
+//        }
         event.registerEntityRenderer(BLOODY_SPORE.get(), BloodySporeRenderer::new);
         event.registerEntityRenderer(DECAYEDER.get(), SkeletonRenderer::new);  //todo
 
@@ -238,13 +242,17 @@ public final class TEEntities {
         event.registerEntityRenderer(VISUAL_NEURON.get(), c->new GeoNormalRenderer<>(c, VISUAL_NEURON.getId(),true));
         event.registerEntityRenderer(BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(BRAIN_OF_CTHULHU)));
         event.registerEntityRenderer(QUEEN_BEE.get(), c->new QueenBeeRenderer(c,new GeoBossModel<>(QUEEN_BEE)));
+        event.registerEntityRenderer(SKELETRON.get(), c->new SkeletronRenderer(c,new GeoBossModel<>(SKELETRON)));
+        event.registerEntityRenderer(SKELETRON_HAND.get(), c->new SkeletronHandRenderer(c,new SkeletronHandModel()));
+        event.registerEntityRenderer(SKULL.get(), SkullProjectileRenderer::new);
 
         // sommon
         event.registerEntityRenderer(SUMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c, SUMMON_SLIME.getId().withPrefix("summon/"),false));
         event.registerEntityRenderer(SUMMON_IRON_GOLEM.get(), IronGolemRenderer::new);
         event.registerEntityRenderer(SUMMON_HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 0.6f, 0.5f));
 
-
+        // 鞭子
+        event.registerEntityRenderer(WHIP_PROJECTILE.get(), WhipEntityRenderer::new);
     }
 
     // tip 属性
@@ -321,6 +329,8 @@ public final class TEEntities {
         event.put(VISUAL_NEURON.get(), AbstractMonster.createAttributes().build());
         event.put(BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(QUEEN_BEE.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(SKELETRON.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(SKELETRON_HAND.get(), AbstractTerraBossBase.createAttributes().build());
 
         // sommon
         event.put(SUMMON_SLIME.get(), AbstractTerraBossBase.createAttributes().build());

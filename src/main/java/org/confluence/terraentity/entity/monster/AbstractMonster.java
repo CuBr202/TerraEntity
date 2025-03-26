@@ -43,8 +43,12 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     public AbstractMonster(EntityType<? extends Monster> type, Level level,Builder builder) {
         super(type, level);
         this.builder = builder;
-        if (!level.isClientSide)
+        if (!level.isClientSide) {
+            // 防止重复注册ai
+            this.goalSelector.removeAllGoals(g->true);
+            this.targetSelector.removeAllGoals(t->true);
             this.registerGoals();
+        }
         this.navigation = createNavigation(level);
         this.setDiscardFriction(builder.noFriction);
 
@@ -93,6 +97,15 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     protected void registerGoals() {
         if(builder!= null) builder.goals.forEach(g->g.accept(goalSelector,this));
         if(builder!= null) builder.targets.forEach(t->t.accept(targetSelector,this));
+        registerTargetGoal(targetSelector);
+    }
+
+    protected void registerTargetGoal(GoalSelector targetSelector){
+
+    }
+
+    public boolean ignoreAttributeModify(){
+        return false;
     }
 
     public void firstSpawn(){};
@@ -100,7 +113,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     @Override
     public void onAddedToWorld(){
         super.onAddedToWorld();
-        if(!level().isClientSide){
+        if(!level().isClientSide && !ignoreAttributeModify()){
             if(dirty){
                 this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.MAX_HEALTH);
                 this.setHealth(getMaxHealth());
@@ -153,8 +166,8 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         }
 
         int y = pPos.getY();
-        if (y >= 260) {
-            return false; // 不能生成在 y = 260 或更高的位置
+        if (y < 60 || y >= 260) {
+            return false; // 只能生成在 y = 60 到 y = 260 之间
         }
 
         return true;
@@ -276,8 +289,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         super.tick();
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
         if(!level().isClientSide && builder.attachAttack && isAlive()){
-            doCollisionAttack(
-                    e->canAttack(e) && e.getType() != this.getType(),
+            doCollisionAttack(e->canAttack(e) && e.getType() != this.getType(),
                     this::doHurtTarget
             );
         }
@@ -292,6 +304,11 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     @Override
     public CollisionProperties getCollisionProperties() {
         return collisionProperties;
+    }
+
+    @Override
+    public boolean shouldDoCollision() {
+        return getTarget() != null;
     }
 
     public static class Builder {
@@ -421,7 +438,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
             this.SAFE_FALL = value;
             return this;
         }
-        public Builder setNoAttackAttack() {
+        public Builder setNoAttachAttack() {
             this.attachAttack = false;
             return this;
         }

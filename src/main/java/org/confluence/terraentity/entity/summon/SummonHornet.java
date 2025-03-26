@@ -9,6 +9,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.monster.Monster;
@@ -18,6 +19,7 @@ import org.confluence.terraentity.entity.monster.Hornet;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -26,18 +28,17 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
 
     public SummonHornet(EntityType<? extends Monster> type, Level level) {
         super(type, level, FlyMonsterPrefab.BEE_BUILDER.get().setMovementSpeed(1));
-        this.collisionProperties.detectInternal = 999999999;
-        this.attackInternal = 5;
+        this.attackInternal = 20;
     }
 
     @Override
     protected void registerGoals() {
-//        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 2, true));
-        this.goalSelector.addGoal(1, new BeeShootGoal(this, 0, 7){
+        this.goalSelector.addGoal(1, new BeeShootGoal(this, 0, 10){
             @Override
             protected boolean canShoot(Entity target) {
                 return true;
             }
+
         });
         this.goalSelector.addGoal(2, new BeeKeepOnTargetGoal(this));
         this.goalSelector.addGoal(9, new FloatGoal(this));
@@ -50,7 +51,7 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     }
 
     protected LineProj createProj(){
-        return TEEntities.SUMMON_BEE_STICK_PROJ.get().create(level());
+        return TEEntities.SUMMON_BEE_STICK_PROJ.get().create(level()).setDamage((float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
     }
 
     public void summon_registerMoveGoal(){
@@ -61,7 +62,6 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     public boolean ignoreAttributeModify(){
         return true;
     }
-
 
     protected boolean shouldDespawnInPeaceful() {
         return false;
@@ -121,7 +121,7 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     @Override
     public boolean canAttack(LivingEntity target) {
         if(target == summon_getOwner()) return false;
-        return target.canBeSeenAsEnemy();
+        return target.canBeSeenAsEnemy() && target.isPickable() && TEUtils.attackTamableTest.test(summon_getOwner(), target);
     }
 
     @Override
@@ -137,6 +137,16 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     @Override
     public boolean summon_canFlyToOwner(){
         return true;
+    }
+
+    @Override
+    public boolean isPickable() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldDoCollision() {
+        return false;
     }
 }
 

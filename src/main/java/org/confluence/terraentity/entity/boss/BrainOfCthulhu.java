@@ -38,7 +38,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
     private final List<Vec3> homePoses = new ArrayList<>(); // 随从初始位置
 
     public int stage = 1; //阶段
-    private Vec3 inertia;
+    private Vec3 inertia = Vec3.ZERO;
     private Curve curve;
 
     public BrainOfCthulhu(EntityType<? extends BrainOfCthulhu> entityType, Level level) {
@@ -51,6 +51,9 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         this.noPhysics = true;
 
         this.xpReward = 2000;
+        if(difficult){
+            minionsSummonInternal = 6;
+        }
     }
 
     public BrainOfCthulhu(Level level) {
@@ -122,7 +125,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                             skills.forceEnd();
                         }}
                     }
-                    LookAt(10);
+                    lookAt(10);
 
                     // 向玩家斜上方移动
                     Vec3 dir = position().subtract(target.position()).normalize().multiply(1,0,1);
@@ -140,7 +143,8 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         stage1_fade_out = new MobSkill<BrainOfCthulhu>(close, 40, 0)
                 .onInit(e->{
                     if(getTarget() != null) {
-                        float r = random.nextFloat() + 5;
+                        float r = random.nextFloat() + (difficult ? 6 : 8);
+
                         float theta = random.nextFloat() * 2 * (float) Math.PI;
                         float beta = random.nextFloat() * (float) Math.PI;
                         Vec3 pos = TEUtils.sphere(r, theta, beta);
@@ -149,7 +153,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 })
                 .onTick(e->{
                     if(getTarget() == null) return;
-                    LookAt(10);
+                    lookAt(10);
                     // 向玩家正上方移动
                     Vec3 tar = getTarget().position().add(0,1,0);
                     if (distanceToSqr(tar) > 2)
@@ -162,7 +166,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
 
         switch_1_to_2 = new MobSkill<BrainOfCthulhu>(switching, 15, 0)
                 .onTick(e->{
-                    LookAt(10);
+                    lookAt(10);
                 })
                 .onOver(e->{
                     _moveSpeed = 0.5f;
@@ -190,7 +194,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 .onTick(e->{
                     if(target == null || curve == null) return;
                     setPos(curve.cal(skills.tick / 40f));
-                    LookAt(10);
+                    lookAt(10);
                 })
         ;
 
@@ -211,7 +215,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                     }
                     if(skills.canContinue() && curve != null) {
                         setPos(curve.cal((skills.tick - 10 ) / 20f));
-                        LookAt(10);
+                        lookAt(10);
                     }
                 })
                 .onOver(e->{
@@ -246,7 +250,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 })
                 .onTick(e->{
                     if(getTarget() == null) return;
-                    LookAt(10);
+                    lookAt(10);
 
                     // 向玩家正上方移动
                     Vec3 tar = getTarget().position().add(0,1,0);
@@ -263,7 +267,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
 
         addSkill(stage1_stare);//1
         addSkill(stage1_fade_in);//2
-        addSkill(stage1_fade_out);
+        addSkill(stage1_fade_out);//3
 
         addSkill(switch_1_to_2);//4
 
@@ -295,7 +299,11 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
     }
 
     public boolean canAttack(LivingEntity target) {
-        return super.canAttack(target) && !(target instanceof VisualNeuron);
+        return super.canAttack(target) && !(target instanceof VisualNeuron) && (
+                //大师始终可以攻击，非大师瞬移后短时间不攻击
+                difficult || !(skills.index == 3 && skills.tick < 25))
+                ;
+
     }
 
     public void tick() {
@@ -329,14 +337,14 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
     }
 
     @Override
-    public float getBossEventProgress(){
+    public float[] getBossEventProgress(){
         float hp = getHealth();
         float maxHp = getMaxHealth();
         for(VisualNeuron m : minions){
             hp += m.getHealth();
             maxHp += m.getMaxHealth();
         }
-        return hp / maxHp;
+        return new float[]{ hp , maxHp};
     }
 
 

@@ -93,10 +93,14 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, Level context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        float additionAttackDamage = (float) Minecraft.getInstance().player.getAttributeValue(TEAttributes.SUMMON_DAMAGE.get()) - 1;
-        tooltipComponents.add(Component.translatable("attribute.name.player.summon_damage").append(": " +
-                        (baseAttackDamage + (additionAttackDamage > 0 ? "  +%d%%".formatted((int)(additionAttackDamage * 100)): "")))
-                        .withStyle(Style.EMPTY.withColor(0x00AB00)));
+        float additionAttackDamage = 0;
+        if (Minecraft.getInstance().player != null) {
+            additionAttackDamage = (float) Minecraft.getInstance().player.getAttributeValue(TEAttributes.SUMMON_DAMAGE.get()) - 1;
+            tooltipComponents.add(Component.translatable("attribute.name.player.summon_damage").append(": " +
+                            (baseAttackDamage + (additionAttackDamage > 0 ? "  +%d%%".formatted((int)(additionAttackDamage * 100)): "")))
+                    .withStyle(Style.EMPTY.withColor(0x00AB00)));
+        }
+
 
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_item_cost", consume).withStyle(Style.EMPTY.withColor(0xABAC00)));
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_item_entity", entityType.get().getDescription()).withStyle(Style.EMPTY.withColor(0x1E90FF)));
@@ -127,13 +131,11 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
                     summon(player, stack);
                     return;
                 }
-
                 player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data -> {
                     if (data.canSummon(consume)) {
                         summon(player, stack);
                     }
                 });
-
             }
         }
     }

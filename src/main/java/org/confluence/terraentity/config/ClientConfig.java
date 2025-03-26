@@ -1,12 +1,14 @@
 package org.confluence.terraentity.config;
 
-
 import net.minecraftforge.common.ForgeConfigSpec;
-
 
 public class ClientConfig {
 
     public static ForgeConfigSpec.ConfigValue<Integer> BossBarStyle;
+    public static ForgeConfigSpec.ConfigValue<Integer> BossBarNumberOffsetX;
+    public static ForgeConfigSpec.ConfigValue<Integer> BossBarNumberOffsetY;
+
+    public static ForgeConfigSpec.BooleanValue ENABLE_NON_SPIDER_MODEL;
     public static ForgeConfigSpec SPEC;
 
     public static ForgeConfigSpec.Builder init(ForgeConfigSpec.Builder BUILDER){
@@ -15,9 +17,15 @@ public class ClientConfig {
         BossBarStyle  = BUILDER
                 .comment("Boss Bar Style.")
                 .comment("0: Default, 1: Still Style, 2: Dynamic Style")
-                .defineInRange("boss_bar_style", 0, 0, 2);
+                .defineInRange("boss_bar_style", 1, 0, 2);
+        BossBarNumberOffsetX = BUILDER
+                .comment("Boss Bar Number Offset X.")
+                .defineInRange("boss_bar_number_offset_x", 0, -150, 300);
+        BossBarNumberOffsetY = BUILDER
+                .comment("Boss Bar Number Offset Y.")
+                .defineInRange("boss_bar_number_offset_y", 0, -30, 200);
+//        ENABLE_NON_SPIDER_MODEL = BUILDER.define("enableNonSpiderModel", false);
         SPEC = BUILDER.build();
-
         BUILDER.pop();
         return BUILDER;
     }

@@ -1,6 +1,5 @@
 package org.confluence.terraentity.api.event;
 
-
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.event.IModBusEvent;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;

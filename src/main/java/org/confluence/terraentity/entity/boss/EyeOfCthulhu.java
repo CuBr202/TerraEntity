@@ -56,6 +56,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
     DashComponent dashComponent;
 
 
+
     public EyeOfCthulhu(EntityType<EyeOfCthulhu> entityType, Level level) {
         super(entityType, level,MAX_HEALTHS,2);
         //初始属性
@@ -70,6 +71,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
         this.xpReward = 1000;
         dashComponent = new DashComponent(this);
+
     }
 
     public EyeOfCthulhu(Level level) {
@@ -99,7 +101,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 terraBossBase -> {},
                 terraBossBase -> {
                     if (getTarget() == null) return;
-                    LookAt(10);
+                    lookAt(10);
                     // 生成粒子
                     for (int i = 0; i < 10; i++) {
                         BlockPos pos = BlockPos.containing(position());
@@ -115,7 +117,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                     // 生成仆从
                     spawnMinions(getTarget());
                     // 向玩家正上方移动
-                    dashComponent.hangOn(getTarget(), 3, 3, MOVE_SPEED);
+                    dashComponent.hangOn(getTarget(), 3, 1, MOVE_SPEED);
 //                    Vec3 tar = getTarget().position().add(new Vec3(0, distanceAbove, 0));
 //                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED / 10));
 
@@ -131,7 +133,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         return;
                     if (!skills.canContinue()) {
                         // 调整方向
-                        LookAt(360);
+                        lookAt(360);
 
                         this.addDeltaMovement(new Vec3(0, 0.02, 0));
                         // 不精准度
@@ -139,13 +141,16 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         dashDir = dashPos.subtract(position());
                         return;
                     }
-                    this.lookControl.setLookAt(dashPos);
-                    // 冲刺增加伤害
-                    //getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(
-                    //new AttributeModifier(DASH_UUID.toString(),2, AttributeModifier.Operation.ADDITION));
-                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE * dashFactor);
+                    if(dashPos != null && dashDir != null){
+                        this.lookControl.setLookAt(dashPos);
+                        // 冲刺增加伤害
+                        //getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(
+                        //new AttributeModifier(DASH_UUID.toString(),2, AttributeModifier.Operation.ADDITION));
+                        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE * dashFactor);
 
-                    if (dashDir != null) this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor));
+                        this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor));
+                    }
+
                 },
                 terraBossBase -> {
                     // 结束冲刺移除加成
@@ -160,7 +165,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 }
         );
         // 转换阶段
-        this.switch_1_to_2 = new MobSkill(switching, 32, 0,
+        this.switch_1_to_2 = new MobSkill(switching, 23, 0,
                 terraBossBase -> {
 
                     summonCD = 0;
@@ -180,10 +185,12 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 },
                 terraBossBase -> {
                     if (getTarget() == null) return;
-                    LookAt(10);
+                    if(difficult && getTarget().distanceTo(this) > 8)
+                        skills.tick -= 1;
+                    lookAt(10);
 
                     // 向玩家正上方移动
-                    dashComponent.hangOn(getTarget(), 3, 3, MOVE_SPEED * stage2SpeedFactor);
+                    dashComponent.hangOn(getTarget(), 3, 0, MOVE_SPEED * stage2SpeedFactor);
 //                    Vec3 tar = getTarget().position().add(new Vec3(0, distanceAbove, 0));
 //                    if (distanceToSqr(tar) > followMinDistance) addDeltaMovement(tar.subtract(position()).normalize().scale(MOVE_SPEED * stage2SpeedFactor / 10));
                 },
@@ -209,11 +216,14 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         this.playSound(TESounds.ROAR.get());
                     }
 
+                    if(difficult && distanceTo(getTarget()) < 8){
+                        skills.tick -= 1;
+                    }
                 },
                 terraBossBase -> {
                     // 延迟冲刺
                     if (getTarget() == null) return;
-                    LookAt(360);
+                    lookAt(360);
                     if (!skills.canContinue()) {
                         // 调整方向
 
@@ -226,10 +236,12 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashPos.normalize().scale(-1));
                         return;
                     }
-                    this.lookControl.setLookAt(dashPos);
-                    // 冲刺增加伤害
-                    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE * dashFactor);
-                    if (dashDir != null) this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor * stage2SpeedFactor));
+                    if(dashPos != null && dashDir != null) {
+                        this.lookControl.setLookAt(dashPos);
+                        // 冲刺增加伤害
+                        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE * dashFactor);
+                        this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor * stage2SpeedFactor));
+                    }
                 },
                 terraBossBase -> {
                     // 结束冲刺移除加成
@@ -277,8 +289,8 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 }
             };
             eye.minion_setOwner(this);
-            eye.setHealth(8);
-            eye.getAttribute(Attributes.MAX_HEALTH).setBaseValue(8);
+            eye.setHealth(3);
+            eye.getAttribute(Attributes.MAX_HEALTH).setBaseValue(3);
             eye.setPos(position().add(getForward().normalize().scale(-1)));
             eye.setTarget(target);
             serverLevel.addFreshEntity(eye);

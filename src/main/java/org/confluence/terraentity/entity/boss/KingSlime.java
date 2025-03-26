@@ -30,6 +30,9 @@ import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
+import org.confluence.terraentity.mixinauxiliary.IBossEvent;
+import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
+import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.FloatRGB;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +47,7 @@ import static org.confluence.terraentity.utils.TEUtils.switchByDifficulty;
 
 
 @SuppressWarnings("all")
-public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss, ICollisionAttackEntity<KingSlime> {
+public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss{
     private static final int COLOR_INT = 0x73bcf4;
     // 缩小/膨胀时长，单位：刻
     private static final int SHRINK_ENLARGE_DURATION = 20;
@@ -178,7 +181,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     };
 
     // 变量
-    private final ServerBossEvent bossEvent = new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.NOTCHED_12);
+    private final ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.NOTCHED_12).setPlayBossMusic(true);
     private int indexAI;
     private final int difficultyIdx;
     private boolean shouldDisappear;
@@ -285,6 +288,16 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         super.registerGoals();
     }
 
+    public float[] getBossEventProgress(){
+        return new float[]{this.getHealth(), this.getMaxHealth()};
+    }
+
+    public void syncBossHealthBar(ServerPlayer player){
+        float[] datas = getBossEventProgress();
+        ((IBossEvent)this.bossEvent).terra_enity$setBossHealth(datas[0]);
+        ((IBossEvent)this.bossEvent).terra_enity$setBossMaxHealth(datas[1]);
+        AdapterUtils.sendToPlayer(player, new SyncBossEventHealthPacket(bossEvent.getId(), datas[0], datas[1]));
+    }
 
     @Override
     public void tick() {
@@ -292,7 +305,13 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         super.tick();
 
         // 更新boss血条
-        bossEvent.setProgress(getHealth() / getMaxHealth());
+        if(!level().isClientSide()) {
+            float[] datas = getBossEventProgress();
+            ((IBossEvent)this.bossEvent).terra_enity$setBossHealth(datas[0]);
+            ((IBossEvent)this.bossEvent).terra_enity$setBossMaxHealth(datas[1]);
+            bossEvent.setProgress(datas[0] / datas[1]);
+        }
+
         bossEvent.setName(getDisplayName());
         // 不会受到摔落伤害
         resetFallDistance();
@@ -311,10 +330,6 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         // 额外的AI行为
         if (! isNoAi()) {
             AI();
-            doCollisionAttack(
-                    living -> canAttack(living),
-                    e->doHurtTarget(e)
-            );
         }
     }
 
@@ -322,6 +337,8 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     public void startSeenByPlayer(@NotNull ServerPlayer pServerPlayer) {
         super.startSeenByPlayer(pServerPlayer);
         bossEvent.addPlayer(pServerPlayer);
+        if(tickCount != 0)
+            syncBossHealthBar(pServerPlayer);
     }
 
     @Override
@@ -372,6 +389,16 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         return result;
     }
 
+    @Override
+    public void onAddedToWorld(){
+        super.onAddedToWorld();
+        if(!level().isClientSide){
+            if(bossEvent!= null){
+                bossEvent.getPlayers().forEach(p->syncBossHealthBar(p));
+            }
+        }
+    }
+
     // 不要被推来推去
     @Override
     public boolean isPushable(){
@@ -411,16 +438,13 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
 //        invalidateCaps();
     }
 
+    protected int calculateFallDamage(float pFallDistance, float pDamageMultiplier) {
+        return 0;
+    }
 
     @Override
     public float[] getBloodColor() {
         return BLOOD_COLOR;
-    }
-
-    CollisionProperties collisionProperties = new CollisionProperties(5,5,1);
-    @Override
-    public CollisionProperties getCollisionProperties() {
-        return collisionProperties;
     }
 
     @Override
@@ -429,7 +453,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     }
 
 
-    static class HurtByTargetGoal extends TargetGoal {
+    public static class HurtByTargetGoal extends TargetGoal {
         private static final TargetingConditions HURT_BY_TARGETING = TargetingConditions.forCombat().ignoreLineOfSight().ignoreInvisibilityTesting();
         private static final int ALERT_RANGE_Y = 10;
         private boolean alertSameType;

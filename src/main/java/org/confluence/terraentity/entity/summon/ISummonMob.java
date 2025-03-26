@@ -188,7 +188,12 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     default boolean summon_doHurtTarget(LivingEntity me , Entity entity) {
         float f = (float)te$getSelf().getAttributeValue(Attributes.ATTACK_DAMAGE);
         DamageSource damagesource = TETags.DamageTypes.of(entity.level(), TETags.DamageTypes.SUMMONER, summon_getOwner());
-        f *= (float) summon_getOwner().getAttributeValue(TEAttributes.SUMMON_DAMAGE.get());
+
+
+
+
+
+//        f *= (float) summon_getOwner().getAttributeValue(TEAttributes.SUMMON_DAMAGE.get());
         boolean flag = entity.hurt(damagesource, f);
         if (flag) {
             float f1 = summon_getKnockback(entity, damagesource);

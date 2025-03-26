@@ -1,5 +1,7 @@
 package org.confluence.terraentity.entity.boss;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -27,23 +29,31 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.ModLoader;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.api.event.BossDeathEvent;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.entity.ai.*;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.mixinauxiliary.IBossEvent;
+import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
+import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
@@ -55,11 +65,11 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     public float ironGlomResistance = 0.4f;
     public float explosionResistance = 0.5f;
-
+    protected boolean difficult = true;
     protected boolean dirty = true;
-    protected ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true);
-    private final float baseHealth;
-    private final int baseArmor;
+    protected ServerBossEvent bossEvent;
+    protected float baseHealth;
+    protected int baseArmor;
 
     public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level, float health, int armor) {
         super(type, level);
@@ -67,10 +77,16 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         setNoGravity(true);
         this.baseHealth = health;
         this.baseArmor = armor;
-        var a = bossEvent.getOverlay();
         if(level().isClientSide){
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
         }
+        if(level.getDifficulty().equals(level.getDifficulty().EASY)
+                || level.getDifficulty().equals(level.getDifficulty().NORMAL)
+        ){
+            difficult = false;
+        }
+
+        bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
     }
 
     public float getAttributeMultiplier(Attribute attribute){
@@ -78,6 +94,10 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     }
 
     public void firstSpawn(){};
+
+    @Override
+    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
+    }
 
     @Override
     public void onAddedToWorld(){
@@ -88,8 +108,11 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             TEUtils.multiplePlayerEnhance(this,dirty);
             if(dirty)
                 firstSpawn();
-        }
+            if(bossEvent!= null){
+                bossEvent.getPlayers().forEach(p->syncBossHealthBar(p));
 
+            }
+        }
         super.onAddedToWorld();
         this.addSkills();
         if(skills.count() > 0)
@@ -103,6 +126,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                 .add(Attributes.ATTACK_KNOCKBACK, 2.2)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
                 .add(Attributes.JUMP_STRENGTH, 0.7)
+                .add(Attributes.FLYING_SPEED, 0.4f)
                 .add(Attributes.FOLLOW_RANGE, 100.0);
 
     }
@@ -162,11 +186,16 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
 /* Collision */
 
-    CollisionProperties collisionProperties = new CollisionProperties(5, 10, 0);
+    CollisionProperties collisionProperties = new CollisionProperties(5, 20, 0);
 
     @Override
     public CollisionProperties getCollisionProperties() {
         return collisionProperties;
+    }
+
+    @Override
+    public boolean shouldDoCollision(){
+        return getTarget() != null && this.isAlive();
     }
 
 /* discard */
@@ -185,9 +214,15 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                 skills.tick();
             //没有目标禁止行为
 
-            if(target==null){
+            if (target == null || !target.isAlive() || !target.canBeSeenAsEnemy()) {
+                var entity = findTarget();
+                setTarget(entity);
+                if (entity != null) {
+                    return;
+                }
+
                 discardTick++;
-                if(!level().isClientSide && discardTick>DISCARD_TICK && ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get()){
+                if(!level().isClientSide && discardTick > DISCARD_TICK && ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get() && shouldEscape()){
                     this.bossEvent.getPlayers().forEach(p->p.sendSystemMessage(this.getDisplayName().copy().append(Component.translatable("message.terraentity.boss_discard"))));
                     this.discard();
                 }
@@ -196,18 +231,56 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             discardTick = 0;
 
             doCollisionAttack(
-                    this::canAttack,
+                    e->canAttack(e) && e!= this && e.canBeSeenAsEnemy(),
                     this::doHurtTarget
             );
 
         }
 
-        this.setDeltaMovement(getDeltaMovement().scale(0.95));//空气阻力
+        if (!shouldDiscardFriction()) {
+            this.setDeltaMovement(getDeltaMovement().scale(0.95));//空气阻力
+        }
+    }
+
+    /**
+     * 找索敌范围内仇恨最大的，如果多个一样的从中随机选一个
+     */
+    protected LivingEntity findTarget() {
+        double range = getAttributeValue(Attributes.FOLLOW_RANGE);
+        List<Player> players = getNearbyPlayers(range);
+        Attribute aggroAttr = BuiltInRegistries.ATTRIBUTE.getOptional(TerraEntity.parse("terra_curio:player.aggro")).orElse(null);
+        if (aggroAttr == null) {
+            return level().getNearestPlayer(getX(), getY(), getZ(), range, true);
+        }
+        List<Player> maxAggroPlayers = players.stream()
+            .collect(Collectors.groupingBy(player -> player.getAttribute(aggroAttr).getValue(), Collectors.toList()))
+            .entrySet().stream().max(Map.Entry.comparingByKey())
+            .map(Map.Entry::getValue)
+            .orElse(List.of());
+        if(!maxAggroPlayers.isEmpty()) {
+            return maxAggroPlayers.get(level().random.nextInt(maxAggroPlayers.size()));
+        }
+        return null;
+    }
+
+    protected List<Player> getNearbyPlayers(double range) {
+        List<Player> players = new ArrayList<>();
+        for (Player player : level().players()) {
+            if (player.canBeSeenAsEnemy() && this.distanceToSqr(player) < range * range) {
+                players.add(player);
+            }
+        }
+        return players;
     }
 
     @Override
     public boolean doHurtTarget(Entity entity) {
         return entity.hurt(TETags.DamageTypes.of(level(), DamageTypes.GENERIC, this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+    }
+
+    // 可以给巨鹿用
+    public boolean shouldEscape() {
+        return true;
     }
 
     /* func */
@@ -237,7 +310,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         return pAngle + f;
     }
 
-    public void LookAt(float maxAngleY) {
+    public void lookAt(float maxAngleY) {
         var pEntity = getTarget();
         if (pEntity != null) {
             lookAt(getTarget(), maxAngleY, 85);
@@ -258,7 +331,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     }
 
     public boolean canAttack(LivingEntity entity) {
-        return super.canAttack(entity)&&
+        return super.canAttack(entity)&&entity.isPickable() &&
                 (
                         entity instanceof Player ||
                                         entity != this
@@ -286,7 +359,16 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         super.startSeenByPlayer(player);
         if (shouldShowBossBar()){
             this.bossEvent.addPlayer(player);
+            if(tickCount != 0)
+                syncBossHealthBar(player);
         }
+    }
+
+    public void syncBossHealthBar(ServerPlayer player){
+        float[] datas = getBossEventProgress();
+        ((IBossEvent)this.bossEvent).terra_enity$setBossHealth(datas[0]);
+        ((IBossEvent)this.bossEvent).terra_enity$setBossMaxHealth(datas[1]);
+        AdapterUtils.sendToPlayer(player, new SyncBossEventHealthPacket(bossEvent.getId(), datas[0], datas[1]));
     }
 
     @Override // boss条消失
@@ -296,15 +378,23 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             this.bossEvent.removePlayer(player);
     }
 
-    public float getBossEventProgress(){
-        return this.getHealth() / this.getMaxHealth();
+    /**
+     * 获取boss血量和最大血量
+     * @return [血量, 最大血量]
+     */
+    public float[] getBossEventProgress(){
+        return new float[]{this.getHealth(), this.getMaxHealth()};
     }
 
     @Override // boss条更新
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (shouldShowBossBar())
-            this.bossEvent.setProgress(getBossEventProgress());
+        if (shouldShowBossBar()) {
+            float[] datas = getBossEventProgress();
+            ((IBossEvent)this.bossEvent).terra_enity$setBossHealth(datas[0]);
+            ((IBossEvent)this.bossEvent).terra_enity$setBossMaxHealth(datas[1]);
+            this.bossEvent.setProgress(datas[0] / datas[1]);
+        }
     }
 
     @Override // 取消墙体窒息伤害

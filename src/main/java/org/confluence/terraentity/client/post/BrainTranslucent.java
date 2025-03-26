@@ -33,8 +33,6 @@ public class BrainTranslucent {
         if(entityMap.isEmpty()) return;
 
         Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
-
-
         List<BrainOfCthulhu> shouldBeRemoved = new ArrayList<>();
         if(temp == null || temp.width != Minecraft.getInstance().getMainRenderTarget().width || temp.height != Minecraft.getInstance().getMainRenderTarget().height) {
             temp = new TextureTarget(Minecraft.getInstance().getMainRenderTarget().width, Minecraft.getInstance().getMainRenderTarget().height, false, true);
@@ -96,6 +94,7 @@ public class BrainTranslucent {
         }
 
         Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
+
         if(out != null) {
             out.blitToScreen(Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
         }

@@ -64,6 +64,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.visual_neuron", "视神经元");
         add("entity.terra_entity.queen_bee", "蜂王");
         add("entity.terra_entity.little_hornet", "小黄蜂");
+        add("entity.terra_entity.skeletron", "骷髅王");
 
         add("effect.terra_entity.demonic_thoughts", "邪念");
 
@@ -124,11 +125,19 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
         add(TEItems.HORNET_STAFF.get(), "黄蜂法杖");
 
+        // 鞭子
+        add(TEItems.SWAMP_WHIP.get(), "沼泽藤蔓");
+
+
 
         add("message.terraentity.boss_spawn", "%s已苏醒！");
         add("message.terraentity.boss_leave", "%s已被打败！");
         add("message.terraentity.boss_discard", "已离开！");
 
+
+        add("terra_entity.options.title", "Terra Entity 配置");
+        add("terra_entity.configuration.server", "服务端配置");
+        add("terra_entity.configuration.client", "客户端配置");
 
         // config
         add("terra_entity.configuration.server.boss_clear_when_no_target", "丢失目标时清除BOSS");
@@ -144,10 +153,10 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster属性倍率-伤害");
 
         add("terra_entity.configuration.client.boss_bar_style", "BOSS血条样式");
-
-        add("terra_entity.options.title", "Terra Entity 配置");
-        add("terra_entity.configuration.server", "服务端配置");
-        add("terra_entity.configuration.client", "客户端配置");
+        add("terra_entity.configuration.client.boss_bar_number_offset_x", "BOSS血条数字偏移-X");
+        add("terra_entity.configuration.client.boss_bar_number_offset_y", "BOSS血条数字偏移-Y");
+        add("terra_entity.configuration.client.enableNonSpiderModel", "蜘蛛和谐");
+        add("terra_entity.configuration.client.enableNonSpiderModel.tooltip", "如果你对蜘蛛反感或想美化他们，请开启这个选项");
 
 
         // Tooltip
@@ -158,6 +167,14 @@ public class TEChineseProvider extends LanguageProvider {
 
         // attribute
         add("attribute.name.player.summon_damage", "召唤伤害");
+        add("attribute.name.player.mark_damage", "标记伤害");
+        add("attribute.name.player.whip_range", "鞭范围");
+        add("attribute.name.player.summon_knockback", "召唤物击退");
+        add("attribute.name.player.minion_capacity", "仆从容量");
+        add("attribute.name.player.sentry_capacity", "哨兵容量");
+        // track
+        add("terra_entity.track_type.simple", "简单");
+        add("terra_entity.track_type.basis", "基平面");
 
     }
 }
