@@ -1,19 +1,22 @@
 package org.confluence.terraentity.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.CustomizeGuiOverlayEvent;
-import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
-import net.neoforged.neoforge.client.event.RenderHandEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.*;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.client.post.BrainTranslucent;
-import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.BaseWhipItem;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 import static org.confluence.terraentity.config.ClientConfig.bossBarStyle;
@@ -58,4 +61,7 @@ public class RenderEvent {
             }
         }
     }
+
+
+
 }

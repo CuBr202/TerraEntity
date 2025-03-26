@@ -80,8 +80,13 @@ public class BaseWhipItem extends Item {
         if(usedHand == InteractionHand.OFF_HAND) return super.use(level, player, usedHand);
         if(!level.isClientSide){
             ItemStack stack = player.getItemInHand(usedHand);
-            if(stack.getItem() instanceof  BaseWhipItem self) {
+            if(stack.getItem() instanceof BaseWhipItem self) {
+                int cooldown = (int) (20 * getCdReduction(player));
+                player.getCooldowns().addCooldown(this, cooldown);
+
                 WhipEntity whipEntity = TEEntities.WHIP_PROJECTILE.get().create(level);
+                whipEntity.setWeapon(stack);
+                whipEntity.setExistTick(cooldown);
                 whipEntity.setOwner(player);
                 whipEntity.setPos(player.position().add(0, 1, 0).add(TEUtils.getPlayerHandPos(player)));
                 whipEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.05f, 1.0F);
@@ -90,7 +95,7 @@ public class BaseWhipItem extends Item {
                     whipEntity.hiteffect = data;
                 whipEntity.hitCooldown = hitCooldown;
                 level.addFreshEntity(whipEntity);
-                player.getCooldowns().addCooldown(this, (int) (20 * getCdReduction(player)));
+
             }
         }
         player.swing(usedHand);

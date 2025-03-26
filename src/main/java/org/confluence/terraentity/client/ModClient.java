@@ -1,10 +1,14 @@
 package org.confluence.terraentity.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -12,19 +16,24 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.model.CabbageProjModel;
 import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
 import org.confluence.terraentity.client.entity.model.Stinger;
+import org.confluence.terraentity.client.entity.model.WhipModelRegister;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
 import org.confluence.terraentity.client.entity.renderer.ReplacedSpiderRenderer;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TEItems;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -100,7 +109,18 @@ public final class ModClient {
 
     }
 
-
+    @SubscribeEvent
+    public static void registerAdditionalModel(ModelEvent.RegisterAdditional event) {
+        ResourceManager provider = Minecraft.getInstance().getResourceManager();
+        provider.listResources("models/whip", s -> s.getPath().endsWith(".json")).forEach((location, resource) -> {
+            var f = WhipModelRegister.getInstance().process(location);
+            if(f!= null){
+                event.register(f);
+            }else{
+                TerraEntity.LOGGER.warn("Failed to load whip model: {}", location);
+            }
+        });
+    }
 
 
 

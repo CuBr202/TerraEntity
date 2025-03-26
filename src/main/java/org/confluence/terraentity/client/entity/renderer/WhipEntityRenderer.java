@@ -5,20 +5,26 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.client.entity.model.WhipModelRegister;
 import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.entity.ai.keyframe.FrameUtil;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
@@ -29,7 +35,7 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(WhipEntity whipEntity) {
-        return whipEntity.texture;
+        return null;
     }
 
     public boolean shouldRender(WhipEntity livingEntity, Frustum camera, double camX, double camY, double camZ) {
@@ -39,6 +45,8 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
     public void render(WhipEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
 
         if(entity.keyPositions == null) return;
+        ItemStack stack = entity.getWeapon();
+        if(stack.isEmpty()) return;
 
         if(entity.getOwner() instanceof Player player) {
             poseStack.pushPose();
@@ -65,9 +73,6 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
 
             // Catmull-Rom样条插值
             List<Vec3> positions = FrameUtil.getInterpolatedPoints(toInterpoloate, 20);
-
-//            VertexConsumer vertexconsumer1 = bufferSource.getBuffer(RenderType.lineStrip());
-//            Vec3 vec31 = getPlayerHandPos(player, f1, partialTick).subtract(player.position());
 
             float f5 = 0.0F;
             float f6 = 0.0F;
@@ -98,9 +103,19 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
     //                stringVertex(-f2, -f3, -f4, vertexconsumer1, posestack$pose1);
     //                poseStack.translate(-vec31.x, -vec31.y, -vec31.z);
 
-                    Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
-                            Blocks.BAMBOO.defaultBlockState(), poseStack, bufferSource, packedLight, OverlayTexture.pack(0, 10));
+                    ModelResourceLocation modelResourceLocation = WhipModelRegister.getInstance().getModelResourceLocation(stack.getItem());
+                    BakedModel model = Minecraft.getInstance().getModelManager().getModel(modelResourceLocation);
 
+                    ItemStack itemstack = player.getMainHandItem();
+                    VertexConsumer vertexconsumer;
+                    for(Iterator<RenderType> iterator = model.getRenderTypes(itemstack, false).iterator();
+                        iterator.hasNext();
+                        Minecraft.getInstance().getItemRenderer().renderModelLists(
+                                model, itemstack, packedLight, OverlayTexture.NO_OVERLAY,
+                                poseStack, vertexconsumer)) {
+                        RenderType rendertype = iterator.next();
+                        vertexconsumer = ItemRenderer.getFoilBuffer(bufferSource, rendertype, true, stack.isEnchanted());
+                    }
                     poseStack.popPose();
                 }
                 f5 = f2;
