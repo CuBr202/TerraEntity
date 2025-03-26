@@ -21,18 +21,38 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
      * 当前仆从栏容量
      */
     int currentCapacity = 1;
-
+    SummonerType type;
     /**
      *  召唤物实体ID列表
      *  <p>只用于服务端，实体进入Level双向绑定</p>
      */
     List<Integer> ids = new CopyOnWriteArrayList<>();
 
-    public SummonerAttachment() {}
-
-    public void sync(ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player, new SyncSummonPacket(currentCapacity));
+    public SummonerAttachment(SummonerType type) {
+        this.type = type;
     }
+
+    public enum SummonerType {
+        MINION,
+        SENTRY
+    }
+
+    /**
+     * 默认同步仆从栏数据
+     * @param player 玩家
+     */
+    public void sync(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, new SyncSummonPacket(currentCapacity, (byte) type.ordinal()));
+    }
+
+//    /**
+//     * 同步哨兵栏数据
+//     * @param player 玩家
+//     * @param type 哨兵类型 type = SENTRY
+//     */
+//    public void sync(ServerPlayer player, SummonerType type) {
+//        PacketDistributor.sendToPlayer(player, new SyncSummonPacket(currentCapacity, (byte) type.ordinal()));
+//    }
 
     /**
      * 移除死亡的实体，刷新仆从栏错误数据

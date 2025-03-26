@@ -13,7 +13,8 @@ import java.util.function.Supplier;
 public final class TEAttachments {
     public static final DeferredRegister<AttachmentType<?>> TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, TerraEntity.MODID);
 
-    public static final Supplier<AttachmentType<SummonerAttachment>> SUMMONER_STORAGE = TYPES.register("summoner_storage", () -> AttachmentType.serializable(SummonerAttachment::new).copyOnDeath().build());
+    public static final Supplier<AttachmentType<SummonerAttachment>> SUMMONER_STORAGE = TYPES.register("summoner_storage", () -> AttachmentType.serializable(ins->new SummonerAttachment(SummonerAttachment.SummonerType.MINION)).copyOnDeath().build());
+    public static final Supplier<AttachmentType<SummonerAttachment>> SENTRY_STORAGE = TYPES.register("sentry_storage", () -> AttachmentType.serializable(ins->new SummonerAttachment(SummonerAttachment.SummonerType.SENTRY)).copyOnDeath().build());
 
 
 }

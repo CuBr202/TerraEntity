@@ -30,7 +30,6 @@ public class BaseWhipItem extends Item {
     public final float markDamage;
     public final float attackSpeed;
 
-
     /**
      * <h1>鞭子
      * @param damage - 召唤伤害
@@ -42,7 +41,8 @@ public class BaseWhipItem extends Item {
                         float damage,
                         float markDamage,
                         float attackSpeed,
-                        int hitCooldown) {
+                        int hitCooldown,
+                        float rangeFactor) {
         super(properties.stacksTo(1)
                 .component(DataComponents.UNBREAKABLE, new Unbreakable(true))
                 .attributes(
@@ -60,6 +60,11 @@ public class BaseWhipItem extends Item {
                         .add(
                                 TEAttributes.MARK_DAMAGE.getDelegate(),
                                 new AttributeModifier(TerraEntity.asResource("whip_mark_damage_modifier"), markDamage, AttributeModifier.Operation.ADD_VALUE),
+                                EquipmentSlotGroup.MAINHAND
+                        )
+                        .add(
+                                TEAttributes.WHIP_RANGE.getDelegate(),
+                                new AttributeModifier(TerraEntity.asResource("whip_range_modifier"), rangeFactor, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                                 EquipmentSlotGroup.MAINHAND
                         )
                         .build()
@@ -103,7 +108,6 @@ public class BaseWhipItem extends Item {
     }
 
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-
 
     }
 

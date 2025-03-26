@@ -1,5 +1,6 @@
 package org.confluence.terraentity.init;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -17,6 +18,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.item.BaseWhipItem;
+import org.confluence.terraentity.item.SentryItem;
 import org.confluence.terraentity.item.SummonItem;
 import org.confluence.terraentity.registries.hit_effect.variant.TimePossibilityAmplifierEffect;
 
@@ -27,13 +29,14 @@ import static org.confluence.terraentity.TerraEntity.MODID;
 public class TEItems {
     public static final DeferredRegister.Items SPAWN_EGGS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items SUMMON_ITEMS = DeferredRegister.createItems(MODID);
+//    public static final DeferredRegister.Items SENTRY_ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items WHIP_ITEMS = DeferredRegister.createItems(MODID);
 
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
 
 
-
+    // 刷怪蛋
     public static final DeferredItem<Item> BLUE_SLIME_SPAWN_EGG = registerEgg("blue_slime_spawn_egg", TEEntities.BLUE_SLIME, 0x73bcf4, 0x466CBE);
     public static final DeferredItem<Item> PURPLE_SLIME_SPAWN_EGG = registerEgg("purple_slime_spawn_egg", TEEntities.PURPLE_SLIME, 0xf334f8, 0xA246BE);
     public static final DeferredItem<Item> GREEN_SLIME_SPAWN_EGG = registerEgg("green_slime_spawn_egg", TEEntities.GREEN_SLIME, 0xa2f89f, 0x3de838);
@@ -92,12 +95,16 @@ public class TEItems {
     public static final DeferredItem<Item> IRON_GOLEM_STAFF = SUMMON_ITEMS.register("iron_golem_staff", () -> new SummonItem<>(new Item.Properties(), TEEntities.SUMMON_IRON_GOLEM, 1, 8));
     public static final DeferredItem<Item> HORNET_STAFF = SUMMON_ITEMS.register("hornet_staff", () -> new SummonItem<>(new Item.Properties(), TEEntities.SUMMON_HORNET, 1, 8));
 
+    // Sentry Items
+//    public static final DeferredItem<Item> SENTRY_STAFF = SENTRY_ITEMS.register("sentry_staff", () -> new SentryItem<>(new Item.Properties(), TEEntities.SUMMON_HORNET, 1, 5));
+
+
     // Whip Items
     public static final DeferredItem<BaseWhipItem> SWAMP_WHIP = WHIP_ITEMS.register("swamp_whip", ()-> new BaseWhipItem(new Item.Properties()
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
                     new TimePossibilityAmplifierEffect("poison", MobEffects.MOVEMENT_SLOWDOWN, 40,0,0,1)
             )),
-            4, 5, 0.5f, 25));
+            4, 5, 0.5f, 25,1.2f));
 
 
 
@@ -122,6 +129,7 @@ public class TEItems {
     public static void register(IEventBus bus) {
         SPAWN_EGGS.register(bus);
         SUMMON_ITEMS.register(bus);
+//        SENTRY_ITEMS.register(bus);
         TABS.register(bus);
         WHIP_ITEMS.register(bus);
     }

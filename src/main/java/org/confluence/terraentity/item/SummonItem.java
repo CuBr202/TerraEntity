@@ -20,6 +20,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.ModLoader;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.attachment.SummonerAttachment;
@@ -29,18 +30,24 @@ import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
     public final DeferredHolder<EntityType<?>, EntityType<T>> entityType;
     public final int consume;
 
     public final float baseAttackDamage;
-
+    Supplier<AttachmentType<SummonerAttachment>> summonType; // 召唤物类型
     public SummonItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume, float baseAttackDamage) {
+        this(properties, entityType, consume, baseAttackDamage, TEAttachments.SUMMONER_STORAGE);
+    }
+
+    public SummonItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume, float baseAttackDamage, Supplier<AttachmentType<SummonerAttachment>> summonType) {
         super(properties.stacksTo(1));
         this.entityType = entityType;
         this.consume = consume;
         this.baseAttackDamage = baseAttackDamage;
+        this.summonType = summonType;
     }
 
     @Override
@@ -49,7 +56,7 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
 
         if (!level.isClientSide) {
 
-            var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
+            var data = player.getData(summonType.get());
             data.refresh((ServerPlayer) player);
 
             EntityHitResult hit = TEUtils.getEyeTraceHitResult(player, player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE));
@@ -84,7 +91,7 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
             entity.setCost(consume);
             level.addFreshEntity(entity);
         }
-        var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
+        var data = player.getData(summonType.get());
         data.summon(consume, entity.getId());
         if (player instanceof ServerPlayer serverPlayer)
             data.sync(serverPlayer);
@@ -104,7 +111,7 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_item_cost", consume).withColor(0xABAC00));
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_item_entity", entityType.get().getDescription()).withColor(0x1E90FF));
 
-        var data = localPlayer.getData(TEAttachments.SUMMONER_STORAGE.get());
+        var data = localPlayer.getData(summonType.get());
         int a = data.getCurrentCapacity();
         int b = SummonerAttachment.getMaxCapacity(localPlayer);
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_info", b - a, b).withColor(a <= 0 ? 0xAB0000 : 0x00ABAC));
@@ -122,7 +129,7 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
         if (count > getUseDuration(stack, livingEntity) - 20) {
             livingEntity.swing(livingEntity.getUsedItemHand());
             if (livingEntity instanceof ServerPlayer player) {
-                var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
+                var data = player.getData(summonType.get());
                     // 创造
                 if (!player.canBeSeenAsEnemy()) {
                     summon(player, stack);
@@ -141,7 +148,7 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
         // 收回所有召唤物
         if (getUseDuration(stack, livingEntity) - remainingUseDuration == 20) {
             if (livingEntity instanceof ServerPlayer player) {
-                var data = player.getData(TEAttachments.SUMMONER_STORAGE.get());
+                var data = player.getData(summonType.get());
                 data.clear(player);
                 data.sync(player);
             }
