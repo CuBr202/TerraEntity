@@ -19,6 +19,10 @@ public class ConfigContainerRegister {
 
         builder.addIntSliderEditBox(ClientConfig.BossBarStyle,0 , 2)
                 .comment("0: Default, 1: Still Style, 2: Dynamic Style");
+        builder.addIntSliderEditBox(ClientConfig.BossBarNumberOffsetX,-150 , 300)
+                .comment("Boss Bar Number Offset X.");
+        builder.addIntSliderEditBox(ClientConfig.BossBarNumberOffsetY,-100 , 200)
+                .comment("Boss Bar Number Offset Y.");
 
         builder.addTab("server",98);
 

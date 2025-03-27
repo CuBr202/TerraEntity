@@ -62,6 +62,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
         this.add(TEEntities.KING_SLIME.get(), LootTable.lootTable()
                 .withPool(LOOT_POOL.apply(TEItems.SLIME_STAFF.get(), 0.5F))
+                .withPool(LOOT_POOL.apply(TEItems.SWAMP_WHIP.get(), 0.5F))
         );
 
 
@@ -107,7 +108,6 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         this.add(TEEntities.EATER_OF_WORLDS.get(), LootTable.lootTable()
                 .withPool(LOOT_POOL.apply(TEItems.IRON_GOLEM_STAFF.get(), 1F))
         );
-
 
         // 蜂王
         this.add(TEEntities.HORNET.get(), LootTable.lootTable()
@@ -186,7 +186,6 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
                 // 蜂王
                 TEEntities.HORNET,
-
                 TEEntities.QUEEN_BEE
 
 

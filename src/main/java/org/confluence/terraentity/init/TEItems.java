@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -18,7 +19,6 @@ import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.item.BaseWhipItem;
 import org.confluence.terraentity.item.SummonItem;
-import org.confluence.terraentity.item.TEItemProperties;
 import org.confluence.terraentity.registries.hit_effect.variant.TimePossibilityAmplifierEffect;
 
 import java.util.function.Supplier;
@@ -28,6 +28,7 @@ import static org.confluence.terraentity.TerraEntity.MODID;
 public class TEItems {
     public static final DeferredRegister<Item> SPAWN_EGGS = DeferredRegister.create(ForgeRegistries.ITEMS,MODID);
     public static final DeferredRegister<Item> SUMMON_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,MODID);
+
     public static final DeferredRegister<Item> WHIP_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,MODID);
 
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
@@ -94,11 +95,18 @@ public class TEItems {
     public static final RegistryObject<Item> HORNET_STAFF = SUMMON_ITEMS.register("hornet_staff", () -> new SummonItem<>(new Item.Properties(), TEEntities.SUMMON_HORNET, 1, 8));
 
     // Whip Items
-    public static final RegistryObject<BaseWhipItem> SWAMP_WHIP = WHIP_ITEMS.register("swamp_whip", ()-> new BaseWhipItem(new TEItemProperties()
+    public static final RegistryObject<BaseWhipItem> LEATHER_WHIP = WHIP_ITEMS.register("leather_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties()
+            .setBlock(Blocks.BAMBOO::defaultBlockState),
+            2f, 2, 0.2F, 20,0));
+    public static final RegistryObject<BaseWhipItem> BAMBOO_WHIP = WHIP_ITEMS.register("bamboo_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties()
+            .setBlock(Blocks.BAMBOO::defaultBlockState),
+            2.5f, 3, 0, 20,0.1F));
+    public static final RegistryObject<BaseWhipItem> SWAMP_WHIP = WHIP_ITEMS.register("swamp_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties()
+            .setParticle(TEParticles.LEAVES, 0.01f)
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
-                    new TimePossibilityAmplifierEffect("poison", MobEffects.MOVEMENT_SLOWDOWN, 40,0,0,1)
-            ))
-            , 4, 5, 0.5f, 25));
+                    new TimePossibilityAmplifierEffect("mud", MobEffects.MOVEMENT_SLOWDOWN, 40,0,0,1)
+            )),
+            4, 5, 0.5f, 25,0.2f));
 
 
 
@@ -123,6 +131,7 @@ public class TEItems {
     public static void register(IEventBus bus) {
         SPAWN_EGGS.register(bus);
         SUMMON_ITEMS.register(bus);
+//        SENTRY_ITEMS.register(bus);
         TABS.register(bus);
         WHIP_ITEMS.register(bus);
     }

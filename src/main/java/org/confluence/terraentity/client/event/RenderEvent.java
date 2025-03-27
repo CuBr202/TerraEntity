@@ -1,4 +1,4 @@
-package org.confluence.terraentity.client;
+package org.confluence.terraentity.client.event;
 
 
 
@@ -33,7 +33,6 @@ public class RenderEvent {
 
         }
     }
-
 
     @SubscribeEvent
     public static void renderLevelStage(RenderLevelStageEvent event) {

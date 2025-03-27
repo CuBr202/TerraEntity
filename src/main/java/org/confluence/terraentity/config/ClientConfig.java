@@ -8,6 +8,8 @@ public class ClientConfig {
     public static ForgeConfigSpec.ConfigValue<Integer> BossBarNumberOffsetX;
     public static ForgeConfigSpec.ConfigValue<Integer> BossBarNumberOffsetY;
 
+    public static ForgeConfigSpec.BooleanValue GENERATE_WHIP_PARTICLE;
+
     public static ForgeConfigSpec.BooleanValue ENABLE_NON_SPIDER_MODEL;
     public static ForgeConfigSpec SPEC;
 
@@ -23,8 +25,11 @@ public class ClientConfig {
                 .defineInRange("boss_bar_number_offset_x", 0, -150, 300);
         BossBarNumberOffsetY = BUILDER
                 .comment("Boss Bar Number Offset Y.")
-                .defineInRange("boss_bar_number_offset_y", 0, -30, 200);
-//        ENABLE_NON_SPIDER_MODEL = BUILDER.define("enableNonSpiderModel", false);
+                .defineInRange("boss_bar_number_offset_y", 0, -100, 200);
+        GENERATE_WHIP_PARTICLE = BUILDER
+                .comment("Generate Whip Particle.")
+                .define("generate_whip_particle", true);
+        ENABLE_NON_SPIDER_MODEL = BUILDER.define("enableNonSpiderModel", false);
         SPEC = BUILDER.build();
         BUILDER.pop();
         return BUILDER;

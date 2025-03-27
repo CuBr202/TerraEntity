@@ -1,14 +1,17 @@
-package org.confluence.terraentity.client;
+package org.confluence.terraentity.client.event;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.EntityType;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,13 +21,14 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.model.CabbageProjModel;
 import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
 import org.confluence.terraentity.client.entity.model.Stinger;
+import org.confluence.terraentity.client.entity.model.WhipModelRegister;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
-import org.confluence.terraentity.client.entity.renderer.ReplacedSpiderRenderer;
 import org.confluence.terraentity.client.gui.config_container.ConfigContainerRegister;
-import org.confluence.terraentity.config.ClientConfig;
+import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TEParticles;
 
 import java.lang.reflect.Field;
 import java.util.function.Function;
@@ -54,19 +58,17 @@ public final class ModClient {
     }
 */
 
-    @SubscribeEvent
-    public static void onEnqueue(final InterModEnqueueEvent event) {
-        ConfigContainerRegister.registerModsPage(event);
-    }
-
-
-    @SubscribeEvent
-    public static void onClientSetup(final FMLClientSetupEvent evt) {
+@SubscribeEvent
+public static void onClientSetup(final FMLClientSetupEvent evt) {
 //        ModList.get().getModContainerById(MODID).ifPresent(container -> {
 //            container.registerExtensionPoint(
 //                    ConfigScreenHandler.ConfigScreenFactory.class,
 //                    () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> new ConfigScreen(screen)));
 //        });
+}
+    @SubscribeEvent
+    public static void onEnqueue(final InterModEnqueueEvent event) {
+        ConfigContainerRegister.registerModsPage(event);
     }
 
     @SubscribeEvent
@@ -99,10 +101,22 @@ public final class ModClient {
 
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(TEParticles.LEAVES.get(), BiomeColorParticle.Provider::new);
 
     }
 
-
+    @SubscribeEvent
+    public static void registerAdditionalModel(ModelEvent.RegisterAdditional event) {
+        ResourceManager provider = Minecraft.getInstance().getResourceManager();
+        provider.listResources("models/item/whip", s -> s.getPath().endsWith(".json")).forEach((location, resource) -> {
+            var f = WhipModelRegister.getInstance().process(location);
+            if(f!= null){
+                event.register(f);
+            }else{
+                TerraEntity.LOGGER.warn("Failed to load whip model: {}", location);
+            }
+        });
+    }
 
 
 

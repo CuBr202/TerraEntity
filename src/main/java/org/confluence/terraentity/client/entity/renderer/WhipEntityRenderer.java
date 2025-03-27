@@ -5,18 +5,27 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.client.entity.model.WhipModelRegister;
+import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.entity.ai.keyframe.FrameUtil;
+import org.confluence.terraentity.item.BaseWhipItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +38,7 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(WhipEntity whipEntity) {
-        return whipEntity.texture;
+        return null;
     }
 
     public boolean shouldRender(WhipEntity livingEntity, Frustum camera, double camX, double camY, double camZ) {
@@ -39,6 +48,10 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
     public void render(WhipEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
 
         if(entity.keyPositions == null) return;
+        ItemStack stack = entity.getWeapon();
+        if(stack.isEmpty()) return;
+        Item item1 = stack.getItem();
+        if(!(item1 instanceof BaseWhipItem whipItem)) return;
 
         if(entity.getOwner() instanceof Player player) {
             poseStack.pushPose();
@@ -64,10 +77,8 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
             toInterpoloate.add(vec3.subtract(new Vec3(lerpx, lerpy, lerpz)).scale(2));
 
             // Catmull-Rom样条插值
-            List<Vec3> positions = FrameUtil.getInterpolatedPoints(toInterpoloate, 20);
-
-//            VertexConsumer vertexconsumer1 = bufferSource.getBuffer(RenderType.lineStrip());
-//            Vec3 vec31 = getPlayerHandPos(player, f1, partialTick).subtract(player.position());
+            int count = (int)entity.getRange(player) * 20;
+            List<Vec3> positions = FrameUtil.getInterpolatedPoints(toInterpoloate, count);
 
             float f5 = 0.0F;
             float f6 = 0.0F;
@@ -78,6 +89,14 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
                 float f2 = (float) (vec3.x - vec.x - lerpx);
                 float f3 = (float) (vec3.y - vec.y - lerpy);
                 float f4 = (float) (vec3.z - vec.z - lerpz);
+                // 生成粒子
+                if(ClientConfig.GENERATE_WHIP_PARTICLE.get() && whipItem.particleOptions != null) {
+                    if (player.getRandom().nextFloat() < whipItem.chance) {
+                        entity.level().addParticle(whipItem.particleOptions.get(),
+                                entity.getX() - f2, entity.getY() - f3, entity.getZ() - f4,
+                                0, 0, 0);
+                    }
+                }
                 // 排除第一个点
                 if(i > 0) {
                     poseStack.pushPose();
@@ -98,9 +117,40 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
     //                stringVertex(-f2, -f3, -f4, vertexconsumer1, posestack$pose1);
     //                poseStack.translate(-vec31.x, -vec31.y, -vec31.z);
 
-                    Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
-                            Blocks.BAMBOO.defaultBlockState(), poseStack, bufferSource, packedLight, OverlayTexture.pack(0, 10));
-
+                    ModelResourceLocation modelResourceLocation = WhipModelRegister.getInstance().getModelResourceLocation(stack.getItem());
+                    BakedModel model;
+                    VertexConsumer vertexconsumer;
+                    if(modelResourceLocation != null){
+                        // 当是模型的时候
+                        ResourceLocation location = new ModelResourceLocation(modelResourceLocation.getNamespace(), modelResourceLocation.getPath(), "inventory");
+                        model = Minecraft.getInstance().getModelManager().getModel(modelResourceLocation);
+                        for (RenderType rendertype : model.getRenderTypes(stack, false)) {
+                            vertexconsumer = ItemRenderer.getFoilBuffer(bufferSource, rendertype, false, stack.isEnchanted());
+                            Minecraft.getInstance().getItemRenderer().renderModelLists(
+                                    model, stack, packedLight, OverlayTexture.NO_OVERLAY,
+                                    poseStack, vertexconsumer);
+                        }
+                    }else if (whipItem.blockStateSupplier != null) {
+                        // 否则是方块
+                        BlockState blockState = whipItem.blockStateSupplier.get();
+                        model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(blockState);
+                        for (RenderType rendertype : model.getRenderTypes(stack, false)) {
+                            vertexconsumer = bufferSource.getBuffer(rendertype);
+                            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(poseStack.last(), vertexconsumer,
+                                    blockState, model, 1.0F, 1.0F, 1.0F, packedLight,
+                                    OverlayTexture.NO_OVERLAY
+                            );
+                        }
+                    }else{
+                        // 否则是缺材质
+                        model = Minecraft.getInstance().getModelManager().getMissingModel();
+                        for (RenderType rendertype : model.getRenderTypes(stack, false)) {
+                            vertexconsumer = ItemRenderer.getFoilBuffer(bufferSource, rendertype, false, stack.isEnchanted());
+                            Minecraft.getInstance().getItemRenderer().renderModelLists(
+                                    model, stack, packedLight, OverlayTexture.NO_OVERLAY,
+                                    poseStack, vertexconsumer);
+                        }
+                    }
                     poseStack.popPose();
                 }
                 f5 = f2;

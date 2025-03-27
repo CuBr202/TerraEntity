@@ -2,6 +2,7 @@ package org.confluence.terraentity.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 import net.minecraft.world.level.Level;
 
+import net.minecraft.world.level.block.state.BlockState;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.init.TEAttributes;
@@ -25,13 +27,22 @@ import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 public class BaseWhipItem extends Item implements IItemExtension {
 
     public final int hitCooldown;
+
+    public final Supplier<? extends ParticleOptions> particleOptions;
+    public final float chance;
+
     public final float markDamage;
     public final float attackSpeed;
     public final float damage;
+    public final float rangeFactor;
+
+    public Supplier<BlockState> blockStateSupplier;
 
     TEItemProperties properties;
     /**
@@ -45,13 +56,24 @@ public class BaseWhipItem extends Item implements IItemExtension {
                         float damage,
                         float markDamage,
                         float attackSpeed,
-                        int hitCooldown) {
+                        int hitCooldown,
+                        float rangeFactor) {
         super(properties.stacksTo(1).setNoRepair());
         this.hitCooldown = hitCooldown;
         this.markDamage = markDamage;
         this.attackSpeed = attackSpeed;
+        this.rangeFactor = rangeFactor;
         this.damage = damage;
         this.properties = properties;
+        if(properties instanceof WhipProperties whipProperties) {
+            this.particleOptions = whipProperties.particleOptions;
+            this.chance = whipProperties.chance;
+            this.blockStateSupplier = whipProperties.blockStateSupplier;
+        }
+        else {
+            this.particleOptions = null;
+            this.chance = 0f;
+        }
     }
 
     private double getCdReduction(Player player) {
@@ -64,8 +86,15 @@ public class BaseWhipItem extends Item implements IItemExtension {
         if(usedHand == InteractionHand.OFF_HAND) return super.use(level, player, usedHand);
         if(!level.isClientSide){
             ItemStack stack = player.getItemInHand(usedHand);
-            if(stack.getItem() instanceof  BaseWhipItem self) {
+            if(stack.getItem() instanceof BaseWhipItem self) {
+                int cooldown = (int) (20 * getCdReduction(player));
+                player.getCooldowns().addCooldown(this, cooldown);
+                if(player.getOffhandItem().getItem() instanceof BaseWhipItem other){
+                    player.getCooldowns().addCooldown(other, cooldown);
+                }
                 WhipEntity whipEntity = TEEntities.WHIP_PROJECTILE.get().create(level);
+                whipEntity.setWeapon(stack);
+                whipEntity.setExistTick(cooldown);
                 whipEntity.setOwner(player);
                 whipEntity.setPos(player.position().add(0, 1, 0).add(TEUtils.getPlayerHandPos(player)));
                 whipEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.05f, 1.0F);
@@ -74,7 +103,7 @@ public class BaseWhipItem extends Item implements IItemExtension {
                     whipEntity.hiteffect = data;
                 whipEntity.hitCooldown = hitCooldown;
                 level.addFreshEntity(whipEntity);
-                player.getCooldowns().addCooldown(this, (int) (20 * getCdReduction(player)));
+
             }
         }
         player.swing(usedHand);
@@ -83,8 +112,33 @@ public class BaseWhipItem extends Item implements IItemExtension {
 
     public void appendHoverText(ItemStack stack, Level context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         var data = IDataComponentType.getData(stack, TEDataComponentTypes.EFFECT_STRATEGY.get());
-        if(data!=null){
-            IEffectStrategy.appendDescription(tooltipComponents, data.effects(),Component.translatable("tooltip.terraentity.whip.effect_strategy"));
+        if (data != null) {
+            IEffectStrategy.appendDescription(tooltipComponents, data.effects(), Component.translatable("tooltip.terra_entity.whip.hit_effect").withStyle(style -> style.withColor(0xB4C363)));
+        }
+    }
+
+    public static class WhipProperties extends TEItemProperties {
+        Supplier<? extends ParticleOptions> particleOptions;
+        float chance;
+        Supplier<BlockState> blockStateSupplier;
+
+        /**
+         * 当没有注册模型时，使用方块状态代替模型渲染
+         */
+        public WhipProperties setBlock(Supplier<BlockState> blockStateSupplier) {
+            this.blockStateSupplier = blockStateSupplier;
+            return this;
+        }
+
+        /**
+         * 设置粒子效果
+         * @param particleOptions 粒子效果
+         * @param chance 粒子效果出现的几率
+         */
+        public WhipProperties setParticle(Supplier<? extends ParticleOptions> particleOptions, float chance) {
+            this.particleOptions = particleOptions;
+            this.chance = chance;
+            return this;
         }
 
     }
@@ -96,13 +150,20 @@ public class BaseWhipItem extends Item implements IItemExtension {
         });
     }
 
+    static UUID uuid1 = UUID.fromString("bb3e0d35-6fff-4448-a899-2c82d4558b44");
+    static UUID uuid2 = UUID.fromString("ed5ea748-2b5c-4763-9d7b-4ed7071fa31c");
+    static UUID uuid3 = UUID.fromString("8d0c9872-0e74-4ff1-a03b-ad8f998527e5");
+    static UUID uuid4 = UUID.fromString("9eee1c9e-ca46-443b-8e22-70d0410eeec3");
+
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         if(slot == EquipmentSlot.MAINHAND)
             return ImmutableMultimap.of(
-                    TEAttributes.SUMMON_DAMAGE.get(), new AttributeModifier("whip_damage_modifier", damage, AttributeModifier.Operation.ADDITION),
-                    TEAttributes.MARK_DAMAGE.get(), new AttributeModifier("whip_mark_damage_modifier", markDamage, AttributeModifier.Operation.ADDITION),
-                    Attributes.ATTACK_SPEED, new AttributeModifier("whip_attack_speed_modifier", attackSpeed, AttributeModifier.Operation.MULTIPLY_BASE)
+                    TEAttributes.SUMMON_DAMAGE.get(), new AttributeModifier(uuid1,"whip_damage_modifier", damage, AttributeModifier.Operation.ADDITION),
+                    TEAttributes.MARK_DAMAGE.get(), new AttributeModifier(uuid2,"whip_mark_damage_modifier", markDamage, AttributeModifier.Operation.ADDITION),
+                    Attributes.ATTACK_SPEED, new AttributeModifier(uuid3,"whip_attack_speed_modifier", attackSpeed, AttributeModifier.Operation.MULTIPLY_BASE),
+                    TEAttributes.WHIP_RANGE.get(), new AttributeModifier(uuid4,"whip_range_modifier", rangeFactor, AttributeModifier.Operation.MULTIPLY_BASE)
+
             );
         return super.getAttributeModifiers(slot, stack);
     }

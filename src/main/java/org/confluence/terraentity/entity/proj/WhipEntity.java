@@ -10,7 +10,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -33,13 +35,13 @@ import java.util.Map;
 public class WhipEntity extends AbstractHurtingProjectile {
 
     Map<Entity, Integer> hitEntities = new HashMap<>();
-    // todo 更换贴图和模型
-    public ResourceLocation texture = TerraEntity.asResource("textures/entity/whip.png");
 
     int existTick = 22;
-    int drawBackTick = 10;
-    public int hitCooldown = 5;
-    public EffectStrategyComponent hiteffect;
+    int _existTick = 22; // 基础存在时间
+    int drawBackTick = 10; // 返回到player的过渡时间
+    protected float _rangeFactor = 0.5f; // 基础鞭范围
+    public int hitCooldown = 5; // 击中冷却时间
+    public EffectStrategyComponent hiteffect; // 击中特效
 
 
     // 初始位置
@@ -55,9 +57,13 @@ public class WhipEntity extends AbstractHurtingProjectile {
     // 关键点插值器
     public SplineKeyframeDynamicCurve<Vec3KeyframeAnimation> interpolator;
     Vec3KeyframeAnimation tail;
+    // 攻速
+    public double speed = 1;
 
-    public static final EntityDataAccessor<Vector3f> DATA_INITIAL_POSITION = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.VECTOR3);
-    public static final EntityDataAccessor<Vector3f> DATA_INITIAL_DIRECTION = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.VECTOR3);
+    protected static final EntityDataAccessor<Vector3f> DATA_INITIAL_POSITION = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.VECTOR3);
+    protected static final EntityDataAccessor<Vector3f> DATA_INITIAL_DIRECTION = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.VECTOR3);
+    protected static final EntityDataAccessor<Integer> DATA_INITIAL_EXISTING_TIME = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<ItemStack> DATA_WEAPON = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.ITEM_STACK);
 
     public WhipEntity(EntityType<? extends WhipEntity> entityType, Level level) {
         super(entityType, level);
@@ -75,7 +81,41 @@ public class WhipEntity extends AbstractHurtingProjectile {
             keyPositionsO.add(new Vector3f());
         }
         interpolator = new SplineKeyframeDynamicCurve<>(parts);
+        this.noPhysics = true;
+        this.noCulling = true;
     }
+
+    /**
+     * 设置鞭的武器
+     */
+    public void setWeapon(ItemStack weapon) {
+        this.entityData.set(DATA_WEAPON, weapon);
+    }
+
+    /**
+     * 获取鞭的武器
+     */
+    public ItemStack getWeapon() {
+        return this.entityData.get(DATA_WEAPON);
+    }
+
+    /**
+     * 设置鞭存在时间
+     */
+    public void setExistTick(int existTick) {
+        this.entityData.set(DATA_INITIAL_EXISTING_TIME, existTick);
+        this.speed = (double) this.existTick / existTick;
+        this.existTick = existTick;
+        this.drawBackTick = (int) (existTick * 0.5F);
+    }
+
+    /**
+     * 获取鞭范围
+     */
+    public double getRange(Player player) {
+        return _rangeFactor * player.getAttribute(TEAttributes.WHIP_RANGE.get()).getValue();
+    }
+
 
     @Override
     public void tick() {
@@ -85,9 +125,9 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 return;
             }
         }
-
+        this.speed = (double) _existTick / this.existTick;
 //        this.move(MoverType.SELF, this.getDeltaMovement());
-        if (getOwner() instanceof LivingEntity owner) {
+        if (getOwner() instanceof Player owner) {
             if (initialPosition != null && initDirection != null) {
                 // 计算关键点位置
                 float yaw = (float) (Math.PI - Math.atan2(initDirection.z, initDirection.x));
@@ -99,13 +139,14 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 for (int i = 0; i < parts.size(); i++) {
                     // 世界坐标变换
                     Vec3KeyframeAnimation p = parts.get(i);
-                    Vec3 pos = p.cal(tickCount).multiply(1, -1, 1);
+                    Vec3 pos = p.cal(tickCount * speed).multiply(getRange(owner), -1, 1);
                     Vector3f lp = pos.toVector3f();
                     q.transform(lp);
                     keyPositionsO.set(i, keyPositions.get(i));
                     keyPositions.set(i, lp);
                 }
-                if(tickCount > 10){
+
+                if(tickCount > drawBackTick){
                     // 过渡到player位置
 
                     double delta = (double) (tickCount - drawBackTick) / (existTick - drawBackTick);
@@ -129,7 +170,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
                     List<Vec3> attackPoints = keyPositions.stream().map(Vec3::new).toList();
 
                     // 攻击
-                    float range = 2f;
+                    float range = 1.5f;
                     for (Vec3 attackPoint : attackPoints) {
                         Vec3 pos = attackPoint.add(initialPosition);
                         AABB aabb = new AABB(pos.x - range, pos.y - range, pos.z - range,
@@ -171,11 +212,12 @@ public class WhipEntity extends AbstractHurtingProjectile {
     protected ParticleOptions getTrailParticle() {
         return super.getTrailParticle();
     }
-
     @Override
     protected void defineSynchedData() {
         this.entityData.define(DATA_INITIAL_POSITION, new Vector3f(0, 0, 0));
         this.entityData.define(DATA_INITIAL_DIRECTION, new Vector3f(0, 0, 0));
+        this.entityData.define(DATA_WEAPON, ItemStack.EMPTY);
+        this.entityData.define(DATA_INITIAL_EXISTING_TIME, 22);
     }
 
     @Override
@@ -185,6 +227,9 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 initialPosition = new Vec3(this.entityData.get(DATA_INITIAL_POSITION));
             } else if (var1 == DATA_INITIAL_DIRECTION) {
                 initDirection = new Vec3(this.entityData.get(DATA_INITIAL_DIRECTION));
+            }else if (var1 == DATA_INITIAL_EXISTING_TIME) {
+                existTick = this.entityData.get(DATA_INITIAL_EXISTING_TIME);
+                this.drawBackTick = (int) (existTick * 0.5F);
             }
         }
     }
