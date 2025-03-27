@@ -19,6 +19,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.entity.model.WhipModelRegister;
 import org.confluence.terraentity.config.ClientConfig;
@@ -27,7 +28,6 @@ import org.confluence.terraentity.entity.ai.keyframe.FrameUtil;
 import org.confluence.terraentity.item.BaseWhipItem;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
@@ -118,17 +118,37 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
     //                poseStack.translate(-vec31.x, -vec31.y, -vec31.z);
 
                     ModelResourceLocation modelResourceLocation = WhipModelRegister.getInstance().getModelResourceLocation(stack.getItem());
-                    BakedModel model = Minecraft.getInstance().getModelManager().getModel(modelResourceLocation);
-
-                    ItemStack itemstack = player.getMainHandItem();
+                    BakedModel model;
                     VertexConsumer vertexconsumer;
-                    for(Iterator<RenderType> iterator = model.getRenderTypes(itemstack, false).iterator();
-                        iterator.hasNext();
-                        Minecraft.getInstance().getItemRenderer().renderModelLists(
-                                model, itemstack, packedLight, OverlayTexture.NO_OVERLAY,
-                                poseStack, vertexconsumer)) {
-                        RenderType rendertype = iterator.next();
-                        vertexconsumer = ItemRenderer.getFoilBuffer(bufferSource, rendertype, true, stack.isEnchanted());
+                    if(modelResourceLocation != null){
+                        // 当是模型的时候
+                        model = Minecraft.getInstance().getModelManager().getModel(modelResourceLocation);
+                        for (RenderType rendertype : model.getRenderTypes(stack, false)) {
+                            vertexconsumer = ItemRenderer.getFoilBuffer(bufferSource, rendertype, false, stack.isEnchanted());
+                            Minecraft.getInstance().getItemRenderer().renderModelLists(
+                                    model, stack, packedLight, OverlayTexture.NO_OVERLAY,
+                                    poseStack, vertexconsumer);
+                        }
+                    }else if (whipItem.blockStateSupplier != null) {
+                        // 否则是方块
+                        BlockState blockState = whipItem.blockStateSupplier.get();
+                        model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(blockState);
+                        for (RenderType rendertype : model.getRenderTypes(stack, false)) {
+                            vertexconsumer = bufferSource.getBuffer(rendertype);
+                            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(poseStack.last(), vertexconsumer,
+                                    blockState, model, 1.0F, 1.0F, 1.0F, packedLight,
+                                    OverlayTexture.NO_OVERLAY
+                            );
+                        }
+                    }else{
+                        // 否则是缺材质
+                        model = Minecraft.getInstance().getModelManager().getMissingModel();
+                        for (RenderType rendertype : model.getRenderTypes(stack, false)) {
+                            vertexconsumer = ItemRenderer.getFoilBuffer(bufferSource, rendertype, false, stack.isEnchanted());
+                            Minecraft.getInstance().getItemRenderer().renderModelLists(
+                                    model, stack, packedLight, OverlayTexture.NO_OVERLAY,
+                                    poseStack, vertexconsumer);
+                        }
                     }
                     poseStack.popPose();
                 }

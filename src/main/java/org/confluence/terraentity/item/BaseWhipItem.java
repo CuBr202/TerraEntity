@@ -16,6 +16,7 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.level.Level;
 
+import net.minecraft.world.level.block.state.BlockState;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.entity.proj.WhipEntity;
@@ -34,6 +35,8 @@ public class BaseWhipItem extends Item {
     public final float attackSpeed;
     public final Supplier<? extends ParticleOptions> particleOptions;
     public final float chance;
+
+    public Supplier<BlockState> blockStateSupplier;
 
     /**
      * <h1>鞭子
@@ -81,6 +84,7 @@ public class BaseWhipItem extends Item {
         if(properties instanceof WhipProperties whipProperties) {
             this.particleOptions = whipProperties.particleOptions;
             this.chance = whipProperties.chance;
+            this.blockStateSupplier = whipProperties.blockStateSupplier;
         }
         else {
             this.particleOptions = null;
@@ -130,7 +134,22 @@ public class BaseWhipItem extends Item {
     public static class WhipProperties extends Properties {
         Supplier<? extends ParticleOptions> particleOptions;
         float chance;
-        public WhipProperties addParticle(Supplier<? extends ParticleOptions> particleOptions, float chance) {
+        Supplier<BlockState> blockStateSupplier;
+
+        /**
+         * 当没有注册模型时，使用方块状态代替模型渲染
+         */
+        public WhipProperties setBlock(Supplier<BlockState> blockStateSupplier) {
+            this.blockStateSupplier = blockStateSupplier;
+            return this;
+        }
+
+        /**
+         * 设置粒子效果
+         * @param particleOptions 粒子效果
+         * @param chance 粒子效果出现的几率
+         */
+        public WhipProperties setParticle(Supplier<? extends ParticleOptions> particleOptions, float chance) {
             this.particleOptions = particleOptions;
             this.chance = chance;
             return this;

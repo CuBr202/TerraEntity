@@ -126,6 +126,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEItems.HORNET_STAFF.get(), "黄蜂法杖");
 
         // 鞭子
+        add(TEItems.LEATHER_WHIP.get(), "皮鞭");
+        add(TEItems.BAMBOO_WHIP.get(), "竹鞭");
         add(TEItems.SWAMP_WHIP.get(), "沼泽藤蔓");
 
 

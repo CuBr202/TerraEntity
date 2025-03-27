@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -98,8 +99,14 @@ public class TEItems {
 
 
     // Whip Items
+    public static final DeferredItem<BaseWhipItem> LEATHER_WHIP = WHIP_ITEMS.register("leather_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties()
+            .setBlock(Blocks.BAMBOO::defaultBlockState),
+            2f, 2, 0.2F, 20,0));
+    public static final DeferredItem<BaseWhipItem> BAMBOO_WHIP = WHIP_ITEMS.register("bamboo_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties()
+            .setBlock(Blocks.BAMBOO::defaultBlockState),
+            2.5f, 3, 0, 20,0.1F));
     public static final DeferredItem<BaseWhipItem> SWAMP_WHIP = WHIP_ITEMS.register("swamp_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties()
-                    .addParticle(TEParticles.LEAVES, 0.01f)
+                    .setParticle(TEParticles.LEAVES, 0.01f)
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
                     new TimePossibilityAmplifierEffect("mud", MobEffects.MOVEMENT_SLOWDOWN, 40,0,0,1)
             )),

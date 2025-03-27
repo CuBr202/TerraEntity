@@ -21,7 +21,7 @@ public class TERecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, TEItems.HORNET_STAFF.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.HORNET_STAFF.get())
                 .pattern("BAB")
                 .pattern(" C ")
                 .pattern(" C ")
@@ -29,6 +29,22 @@ public class TERecipeProvider extends RecipeProvider {
                 .define('B', Items.HONEY_BLOCK)
                 .define('C', ItemTags.FLOWERS)
                 .unlockedBy("has_bee_spawn_egg",has(Items.BEE_SPAWN_EGG))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.LEATHER_WHIP.get())
+                .pattern("  A")
+                .pattern("AAA")
+                .pattern("A  ")
+                .define('A', Items.LEATHER)
+                .unlockedBy("has_leather",has(Items.LEATHER))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.BAMBOO_WHIP.get())
+                .pattern("  A")
+                .pattern("AAA")
+                .pattern("A  ")
+                .define('A', Items.BAMBOO)
+                .unlockedBy("has_bamboo",has(Items.BAMBOO))
                 .save(recipeOutput);
     }
 }
