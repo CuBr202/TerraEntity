@@ -31,8 +31,8 @@ import java.util.function.Supplier;
 public class BaseWhipItem extends Item {
 
     public final int hitCooldown;
-    public final float markDamage;
-    public final float attackSpeed;
+//    public final float markDamage;
+//    public final float attackSpeed;
     public final Supplier<? extends ParticleOptions> particleOptions;
     public final float chance;
 
@@ -56,22 +56,22 @@ public class BaseWhipItem extends Item {
                 .attributes(
                 ItemAttributeModifiers.builder()
                         .add(
-                                TEAttributes.SUMMON_DAMAGE.getDelegate(),
+                                TEAttributes.SUMMON_DAMAGE,
                                 new AttributeModifier(TerraEntity.asResource("whip_damage_modifier"), damage, AttributeModifier.Operation.ADD_VALUE),
                                 EquipmentSlotGroup.MAINHAND
                         )
                         .add(
-                                Attributes.ATTACK_SPEED.getDelegate(),
+                                Attributes.ATTACK_SPEED,
                                 new AttributeModifier(TerraEntity.asResource("whip_attack_speed_modifier"), attackSpeed, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                                 EquipmentSlotGroup.MAINHAND
                         )
                         .add(
-                                TEAttributes.MARK_DAMAGE.getDelegate(),
+                                TEAttributes.MARK_DAMAGE,
                                 new AttributeModifier(TerraEntity.asResource("whip_mark_damage_modifier"), markDamage, AttributeModifier.Operation.ADD_VALUE),
                                 EquipmentSlotGroup.MAINHAND
                         )
                         .add(
-                                TEAttributes.WHIP_RANGE.getDelegate(),
+                                TEAttributes.WHIP_RANGE,
                                 new AttributeModifier(TerraEntity.asResource("whip_range_modifier"), rangeFactor, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                                 EquipmentSlotGroup.MAINHAND
                         )
@@ -79,8 +79,8 @@ public class BaseWhipItem extends Item {
                 )
         );
         this.hitCooldown = hitCooldown;
-        this.markDamage = markDamage;
-        this.attackSpeed = markDamage;
+//        this.markDamage = markDamage;
+//        this.attackSpeed = attackSpeed;
         if(properties instanceof WhipProperties whipProperties) {
             this.particleOptions = whipProperties.particleOptions;
             this.chance = whipProperties.chance;
@@ -105,7 +105,9 @@ public class BaseWhipItem extends Item {
             if(stack.getItem() instanceof BaseWhipItem self) {
                 int cooldown = (int) (20 * getCdReduction(player));
                 player.getCooldowns().addCooldown(this, cooldown);
-
+                if(player.getOffhandItem().getItem() instanceof BaseWhipItem other){
+                    player.getCooldowns().addCooldown(other, cooldown);
+                }
                 WhipEntity whipEntity = TEEntities.WHIP_PROJECTILE.get().create(level);
                 whipEntity.setWeapon(stack);
                 whipEntity.setExistTick(cooldown);
@@ -124,6 +126,7 @@ public class BaseWhipItem extends Item {
         return super.use(level, player, usedHand);
     }
 
+    @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         var data = stack.get(TEDataComponentTypes.EFFECT_STRATEGY);
         if (data != null) {

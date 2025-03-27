@@ -99,8 +99,7 @@ public class TEItems {
 
 
     // Whip Items
-    public static final DeferredItem<BaseWhipItem> LEATHER_WHIP = WHIP_ITEMS.register("leather_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties()
-            .setBlock(Blocks.BAMBOO::defaultBlockState),
+    public static final DeferredItem<BaseWhipItem> LEATHER_WHIP = WHIP_ITEMS.register("leather_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties(),
             2f, 2, 0.2F, 20,0));
     public static final DeferredItem<BaseWhipItem> BAMBOO_WHIP = WHIP_ITEMS.register("bamboo_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties()
             .setBlock(Blocks.BAMBOO::defaultBlockState),

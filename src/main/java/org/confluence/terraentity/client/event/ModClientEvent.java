@@ -1,4 +1,4 @@
-package org.confluence.terraentity.client;
+package org.confluence.terraentity.client.event;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -6,8 +6,6 @@ import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.api.distmarker.Dist;
@@ -18,7 +16,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.model.CabbageProjModel;
 import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
@@ -31,11 +28,9 @@ import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.TEParticles;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -43,7 +38,7 @@ import static org.confluence.terraentity.init.TEEntities.*;
 
 
 @EventBusSubscriber(modid = TerraEntity.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public final class ModClient {
+public final class ModClientEvent {
 /*
     public static final BlockColor HALLOW_LEAVES_COLOR = (blockState, getter, pos, tint) -> {
         if (pos == null) return -1;
@@ -115,7 +110,7 @@ public final class ModClient {
     @SubscribeEvent
     public static void registerAdditionalModel(ModelEvent.RegisterAdditional event) {
         ResourceManager provider = Minecraft.getInstance().getResourceManager();
-        provider.listResources("models/whip", s -> s.getPath().endsWith(".json")).forEach((location, resource) -> {
+        provider.listResources("models/item/whip", s -> s.getPath().endsWith(".json")).forEach((location, resource) -> {
             var f = WhipModelRegister.getInstance().process(location);
             if(f!= null){
                 event.register(f);
