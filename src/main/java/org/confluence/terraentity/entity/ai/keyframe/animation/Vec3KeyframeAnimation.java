@@ -67,6 +67,15 @@ public class Vec3KeyframeAnimation implements IKeyframeAnimation<Vec3> {
             z.add(new Keyframe(time, value.z));
             return this;
         }
+        /**
+         * 添加block bench反y方向关键帧
+         */
+        public Builder addKeyframeTimeStamp(double time, Vec3 value) {
+            x.add(new Keyframe(time * 20, value.x));
+            y.add(new Keyframe(time * 20, -value.y));
+            z.add(new Keyframe(time * 20, value.z));
+            return this;
+        }
 
         /**
          * 添加关键帧

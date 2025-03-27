@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.client.animation.LashAnimation;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.dynamic_curve.SplineKeyframeDynamicCurve;
@@ -66,12 +66,36 @@ public class WhipEntity extends AbstractHurtingProjectile {
     public WhipEntity(EntityType<? extends WhipEntity> entityType, Level level) {
         super(entityType, level);
 
-        tail = Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone1").getFirst());
-        parts = List.of(
-                tail,
-                Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone4").getFirst())
+        try {
 
-        );
+
+            // 这里只能单人测试用，发布版本要改用服务端builder!
+//        tail = Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone1").getFirst());
+//        parts = List.of(
+//                tail,
+//                Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone4").getFirst())
+//        );
+            parts = List.of(
+                    Vec3KeyframeAnimation.Builder()
+                            .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
+                            .addKeyframeTimeStamp(0.25, new Vec3(-4, 3, 0))
+                            .addKeyframeTimeStamp(0.5, new Vec3(-14, 3, 0))
+                            .addKeyframeTimeStamp(0.75, new Vec3(-16, -4, 0))
+                            .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
+                            .build(),
+                    Vec3KeyframeAnimation.Builder()
+                            .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
+                            .addKeyframeTimeStamp(0.25, new Vec3(-1, 0, 0))
+                            .addKeyframeTimeStamp(0.5, new Vec3(-4, 0, 0))
+                            .addKeyframeTimeStamp(0.75, new Vec3(-5, 0, 0))
+                            .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
+                            .build()
+
+            );
+        }catch (NoClassDefFoundError e){
+            TerraEntity.LOGGER.warn("You Forget To Change Debug Code To Release Version!\n", e);
+        }
+
         keyPositions = new ArrayList<>();
         keyPositionsO = new ArrayList<>();
         for (int i = 0; i < parts.size(); i++) {
@@ -123,6 +147,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 return;
             }
         }
+        if(parts.isEmpty()) return;
         this.speed = (double) _existTick / this.existTick;
 //        this.move(MoverType.SELF, this.getDeltaMovement());
         if (getOwner() instanceof Player owner) {
