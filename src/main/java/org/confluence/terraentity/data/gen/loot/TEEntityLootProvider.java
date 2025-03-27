@@ -61,6 +61,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
         this.add(TEEntities.KING_SLIME.get(), LootTable.lootTable()
                 .withPool(LOOT_POOL.apply(TEItems.SLIME_STAFF, 0.5F))
+                .withPool(LOOT_POOL.apply(TEItems.SWAMP_WHIP, 0.5F))
         );
 
 

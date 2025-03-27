@@ -17,11 +17,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.entity.model.WhipModelRegister;
+import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.entity.ai.keyframe.FrameUtil;
+import org.confluence.terraentity.item.BaseWhipItem;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -47,6 +50,8 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
         if(entity.keyPositions == null) return;
         ItemStack stack = entity.getWeapon();
         if(stack.isEmpty()) return;
+        Item item1 = stack.getItem();
+        if(!(item1 instanceof BaseWhipItem whipItem)) return;
 
         if(entity.getOwner() instanceof Player player) {
             poseStack.pushPose();
@@ -84,6 +89,14 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
                 float f2 = (float) (vec3.x - vec.x - lerpx);
                 float f3 = (float) (vec3.y - vec.y - lerpy);
                 float f4 = (float) (vec3.z - vec.z - lerpz);
+                // 生成粒子
+                if(ClientConfig.GENERATE_WHIP_PARTICLE.get() && whipItem.particleOptions != null) {
+                    if (entity.getRandom().nextFloat() < whipItem.chance) {
+                        entity.level().addParticle(whipItem.particleOptions.get(),
+                                entity.getX() - f2, entity.getY() - f3, entity.getZ() - f4,
+                                0, 0, 0);
+                    }
+                }
                 // 排除第一个点
                 if(i > 0) {
                     poseStack.pushPose();

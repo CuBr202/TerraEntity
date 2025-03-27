@@ -27,10 +27,12 @@ import org.confluence.terraentity.client.entity.model.WhipModelRegister;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
 import org.confluence.terraentity.client.entity.renderer.ReplacedSpiderRenderer;
+import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEItems;
+import org.confluence.terraentity.init.TEParticles;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -106,6 +108,7 @@ public final class ModClient {
 
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(TEParticles.LEAVES.get(), BiomeColorParticle.Provider::new);
 
     }
 

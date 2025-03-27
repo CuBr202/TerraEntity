@@ -11,6 +11,8 @@ public class ClientConfig {
     public static ModConfigSpec.ConfigValue<Integer> BossBarNumberOffsetX;
     public static ModConfigSpec.ConfigValue<Integer> BossBarNumberOffsetY;
 
+    public static ModConfigSpec.BooleanValue GENERATE_WHIP_PARTICLE;
+
     public static ModConfigSpec.BooleanValue ENABLE_NON_SPIDER_MODEL;
     public static ModConfigSpec SPEC;
     public static int bossBarStyle;
@@ -31,6 +33,9 @@ public class ClientConfig {
         BossBarNumberOffsetY = BUILDER
                 .comment("Boss Bar Number Offset Y.")
                 .defineInRange("boss_bar_number_offset_y", 0, -30, 200);
+        GENERATE_WHIP_PARTICLE = BUILDER
+                .comment("Generate Whip Particle.")
+                .define("generate_whip_particle", true);
         ENABLE_NON_SPIDER_MODEL = BUILDER.define("enableNonSpiderModel", false);
         SPEC = BUILDER.build();
         return SPEC;

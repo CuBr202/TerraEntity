@@ -1,6 +1,7 @@
 package org.confluence.terraentity.item;
 
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -20,15 +21,19 @@ import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class BaseWhipItem extends Item {
 
     public final int hitCooldown;
     public final float markDamage;
     public final float attackSpeed;
+    public final Supplier<? extends ParticleOptions> particleOptions;
+    public final float chance;
 
     /**
      * <h1>鞭子
@@ -73,6 +78,14 @@ public class BaseWhipItem extends Item {
         this.hitCooldown = hitCooldown;
         this.markDamage = markDamage;
         this.attackSpeed = markDamage;
+        if(properties instanceof WhipProperties whipProperties) {
+            this.particleOptions = whipProperties.particleOptions;
+            this.chance = whipProperties.chance;
+        }
+        else {
+            this.particleOptions = null;
+            this.chance = 0f;
+        }
     }
 
     private double getCdReduction(Player player) {
@@ -108,6 +121,20 @@ public class BaseWhipItem extends Item {
     }
 
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        var data = stack.get(TEDataComponentTypes.EFFECT_STRATEGY);
+        if (data != null) {
+            IEffectStrategy.appendDescription(tooltipComponents, data.effects(), Component.translatable("tooltip.terra_entity.whip.hit_effect").withStyle(style -> style.withColor(0xB4C363)));
+        }
+    }
+
+    public static class WhipProperties extends Properties {
+        Supplier<? extends ParticleOptions> particleOptions;
+        float chance;
+        public WhipProperties addParticle(Supplier<? extends ParticleOptions> particleOptions, float chance) {
+            this.particleOptions = particleOptions;
+            this.chance = chance;
+            return this;
+        }
 
     }
 

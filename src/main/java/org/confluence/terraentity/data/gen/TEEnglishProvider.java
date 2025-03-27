@@ -58,6 +58,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.boss_bar_style", "Boss Health Bar Style");
         add("terra_entity.configuration.boss_bar_number_offset_x", "Boss Health Bar Number Offset-X");
         add("terra_entity.configuration.boss_bar_number_offset_y", "Boss Health Bar Number Offset-Y");
+        add("terra_entity.configuration.generate_whip_particle", "Generate Whip Particle");
 
 
 
@@ -69,6 +70,8 @@ public class TEEnglishProvider extends LanguageProvider {
         add("tooltip.terra_entity.summon_item_cost", "Summon Cost: %d");
         add("tooltip.terra_entity.summon_item_entity", "Summon Entity: %s");
         add("tooltip.terra_entity.summon_info", "Summon Info: %d / %d");
+        add("tooltip.terra_entity.whip.hit_effect", "Hit Effect:");
+
 
         // attribute
         add("attribute.name.player.summon_damage", "Summon Damage");
@@ -81,6 +84,9 @@ public class TEEnglishProvider extends LanguageProvider {
         // track
         add("terra_entity.track_type.simple", "Simple Track");
         add("terra_entity.track_type.basis", "Basis Track");
+
+        // hit effect
+        add("terra_entity.effect.strategy.mud", "Mud");
 
     }
 }

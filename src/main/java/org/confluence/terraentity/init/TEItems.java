@@ -1,10 +1,8 @@
 package org.confluence.terraentity.init;
 
-import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -15,10 +13,10 @@ import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.item.BaseWhipItem;
-import org.confluence.terraentity.item.SentryItem;
 import org.confluence.terraentity.item.SummonItem;
 import org.confluence.terraentity.registries.hit_effect.variant.TimePossibilityAmplifierEffect;
 
@@ -100,11 +98,12 @@ public class TEItems {
 
 
     // Whip Items
-    public static final DeferredItem<BaseWhipItem> SWAMP_WHIP = WHIP_ITEMS.register("swamp_whip", ()-> new BaseWhipItem(new Item.Properties()
+    public static final DeferredItem<BaseWhipItem> SWAMP_WHIP = WHIP_ITEMS.register("swamp_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties()
+                    .addParticle(TEParticles.LEAVES, 0.01f)
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
-                    new TimePossibilityAmplifierEffect("poison", MobEffects.MOVEMENT_SLOWDOWN, 40,0,0,1)
+                    new TimePossibilityAmplifierEffect("mud", MobEffects.MOVEMENT_SLOWDOWN, 40,0,0,1)
             )),
-            4, 5, 0.5f, 25,1.2f));
+            4, 5, 0.5f, 25,0.2f));
 
 
 
@@ -121,8 +120,8 @@ public class TEItems {
                             WHIP_ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         }
                     })
-                    .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath("terra_moment", "tab")))
-                    .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath("confluence", "summoners")))
+                    .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.asResource("terra_moment", "tab")))
+                    .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.asResource("confluence", "summoners")))
                     .build());
 
 

@@ -154,11 +154,14 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.enableNonSpiderModel", "蜘蛛和谐");
         add("terra_entity.configuration.enableNonSpiderModel.tooltip", "如果你对蜘蛛反感或想美化他们，请开启这个选项");
 
+        add("terra_entity.configuration.generate_whip_particle", "生成鞭子粒子");
 
         // Tooltip
         add("tooltip.terra_entity.summon_item_cost", "仆从占用: %s");
         add("tooltip.terra_entity.summon_item_entity", "仆从类型: %s");
         add("tooltip.terra_entity.summon_info", "仆从栏位: %d / %d");
+
+        add("tooltip.terra_entity.whip.hit_effect", "命中效果: ");
 
 
         // attribute
@@ -168,9 +171,13 @@ public class TEChineseProvider extends LanguageProvider {
         add("attribute.name.player.summon_knockback", "召唤物击退");
         add("attribute.name.player.minion_capacity", "仆从容量");
         add("attribute.name.player.sentry_capacity", "哨兵容量");
+
         // track
         add("terra_entity.track_type.simple", "简单");
         add("terra_entity.track_type.basis", "基平面");
+
+        // hit effect
+        add("terra_entity.effect.strategy.mud", "泥潭");
 
     }
 }
