@@ -128,6 +128,13 @@ public class TEChineseProvider extends LanguageProvider {
         // 鞭子
         add(TEItems.LEATHER_WHIP.get(), "皮鞭");
         add(TEItems.BAMBOO_WHIP.get(), "竹鞭");
+        add(TEItems.RUBY_WHIP.get(), "红玉鞭");
+        add(TEItems.AMBER_WHIP.get(), "琥珀鞭");
+        add(TEItems.TOPAZ_WHIP.get(), "黄玉鞭");
+        add(TEItems.EMERALD_WHIP.get(), "翡翠鞭");
+        add(TEItems.DIAMOND_WHIP.get(), "钻石鞭");
+        add(TEItems.SAPPHIRE_WHIP.get(), "蓝玉鞭");
+        add(TEItems.AMETHYST_WHIP.get(), "紫晶鞭");
         add(TEItems.SWAMP_WHIP.get(), "沼泽藤蔓");
 
 

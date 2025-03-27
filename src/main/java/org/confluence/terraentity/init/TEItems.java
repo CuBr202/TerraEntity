@@ -103,13 +103,29 @@ public class TEItems {
             2f, 2, 0.2F, 20,0));
     public static final DeferredItem<BaseWhipItem> BAMBOO_WHIP = WHIP_ITEMS.register("bamboo_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties()
             .setBlock(Blocks.BAMBOO::defaultBlockState),
-            2.5f, 3, 0, 20,0.1F));
+            2.3f, 3, 0, 20,0.1F));
+    public static final DeferredItem<BaseWhipItem> RUBY_WHIP = WHIP_ITEMS.register("ruby_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties(),
+            2.8f, 2, 0.1f, 20,0));
+    public static final DeferredItem<BaseWhipItem> AMBER_WHIP = WHIP_ITEMS.register("amber_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties(),
+            2.7f, 2, 0.1f, 20,0));
+    public static final DeferredItem<BaseWhipItem> TOPAZ_WHIP = WHIP_ITEMS.register("topaz_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties(),
+            2.5f, 2, 0.1f, 20,0));
+    public static final DeferredItem<BaseWhipItem> EMERALD_WHIP = WHIP_ITEMS.register("emerald_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties(),
+            2.6f, 2, 0.1f, 20,0));
+    public static final DeferredItem<BaseWhipItem> DIAMOND_WHIP = WHIP_ITEMS.register("diamond_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties(),
+            2.7f, 2, 0.1f, 20,0));
+    public static final DeferredItem<BaseWhipItem> SAPPHIRE_WHIP = WHIP_ITEMS.register("sapphire_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties(),
+            2.6f, 2, 0.1f, 20,0));
+    public static final DeferredItem<BaseWhipItem> AMETHYST_WHIP = WHIP_ITEMS.register("amethyst_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties(),
+            2.5f, 2, 0.1f, 20,0));
+
     public static final DeferredItem<BaseWhipItem> SWAMP_WHIP = WHIP_ITEMS.register("swamp_whip", ()-> new BaseWhipItem(new BaseWhipItem.WhipProperties()
                     .setParticle(TEParticles.LEAVES, 0.01f)
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
                     new TimePossibilityAmplifierEffect("mud", MobEffects.MOVEMENT_SLOWDOWN, 40,0,0,1)
             )),
             4, 5, 0.5f, 25,0.2f));
+
 
 
 
