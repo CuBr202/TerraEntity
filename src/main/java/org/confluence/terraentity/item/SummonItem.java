@@ -103,9 +103,9 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         LocalPlayer localPlayer = Minecraft.getInstance().player;
         if (localPlayer==null)return;
-        float additionAttackDamage = (float) localPlayer.getAttributeValue(TEAttributes.SUMMON_DAMAGE) - 1;
+        float additionAttackDamage = (float) localPlayer.getAttributeValue(TEAttributes.MARK_DAMAGE);
         tooltipComponents.add(Component.translatable("attribute.name.player.summon_damage").append(": " +
-                        (baseAttackDamage + (additionAttackDamage > 0 ? "  +%d%%".formatted((int)(additionAttackDamage * 100)): "")))
+                        (baseAttackDamage + (additionAttackDamage > 0 ? "  +%.1f".formatted((additionAttackDamage)): "")))
                 .withColor(0x00AB00));
 
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_item_cost", consume).withColor(0xABAC00));

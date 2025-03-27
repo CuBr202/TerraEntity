@@ -46,5 +46,55 @@ public class TERecipeProvider extends RecipeProvider {
                 .define('A', Items.BAMBOO)
                 .unlockedBy("has_bamboo",has(Items.BAMBOO))
                 .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.AMBER_WHIP.get())
+                .pattern("  A")
+                .pattern("AAA")
+                .pattern("A  ")
+                .define('A', Items.HONEY_BLOCK)
+                .unlockedBy("has_honey_block",has(Items.HONEY_BLOCK))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.AMETHYST_WHIP.get())
+                .pattern("  A")
+                .pattern("AAA")
+                .pattern("A  ")
+                .define('A', Items.AMETHYST_CLUSTER)
+                .unlockedBy("has_amethyst_cluster",has(Items.AMETHYST_CLUSTER))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.DIAMOND_WHIP.get())
+                .pattern("  A")
+                .pattern("AAA")
+                .pattern("A  ")
+                .define('A', Items.DIAMOND)
+                .unlockedBy("has_diamond",has(Items.DIAMOND))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.EMERALD_WHIP.get())
+                .pattern("  A")
+                .pattern("AAA")
+                .pattern("A  ")
+                .define('A', Items.EMERALD)
+                .unlockedBy("has_emerald",has(Items.EMERALD))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.RUBY_WHIP.get())
+                .pattern("  A")
+                .pattern("AAA")
+                .pattern("A  ")
+                .define('A', Items.REDSTONE_BLOCK)
+                .unlockedBy("has_redstone_block",has(Items.REDSTONE_BLOCK))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.SAPPHIRE_WHIP.get())
+                .pattern("  A")
+                .pattern("AAA")
+                .pattern("A  ")
+                .define('A', Items.LAPIS_BLOCK)
+                .unlockedBy("has_lapis_block",has(Items.LAPIS_BLOCK))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.TOPAZ_WHIP.get())
+                .pattern("  A")
+                .pattern("AAA")
+                .pattern("A  ")
+                .define('A', Items.GOLD_INGOT)
+                .unlockedBy("has_gold_ingot",has(Items.GOLD_INGOT))
+                .save(recipeOutput);
     }
 }

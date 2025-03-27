@@ -114,6 +114,11 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
                             Math.sqrt(fx * fx + fz * fz)));
                     poseStack.mulPose(Axis.YP.rotation(yaw));
                     poseStack.mulPose(Axis.ZP.rotation((float) (pitch + Math.PI / 2 )));
+                    float ff = 0.5f;
+                    poseStack.translate(ff,ff,ff);
+                    poseStack.mulPose(Axis.YP.rotationDegrees(i * 10));
+                    poseStack.translate(-ff,-ff,-ff);
+
     //                stringVertex(-f2, -f3, -f4, vertexconsumer1, posestack$pose1);
     //                poseStack.translate(-vec31.x, -vec31.y, -vec31.z);
 
