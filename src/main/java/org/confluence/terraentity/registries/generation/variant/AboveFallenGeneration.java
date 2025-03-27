@@ -43,28 +43,29 @@ public record AboveFallenGeneration(float maxAngle, float range, float predict, 
         var projectile = proj.get();
         Vec3 eye = owner.getEyePosition();
         LivingEntity target = TEUtils.getAABBAngleTarget(eye, eye.add(owner.getForward().normalize().scale(range)), owner.level(), owner, range, maxAngle, e->TEUtils.projectileCanHitEntityTest.test(projectile,e));
-        Vec3 waveTarget;
+        Vec3 targetPos;
         float angle;
         float actualInaccuracy;
         if(target!=null){
             //周围有目标 预判
-            waveTarget = target.getEyePosition().add(target.getDeltaMovement().scale(predict));
+            Vec3 predictVec = owner.getDeltaMovement().scale(predict);
+            targetPos = target.getEyePosition().add(predictVec);
             //根据夹角减少不精准度
             angle = (float) TEUtils.angleBetween(target.getEyePosition().subtract(owner.getEyePosition()),owner.getForward());
-            actualInaccuracy = inAccuracy * Mth.lerp(angle/maxAngle,0,inAccuracy * 500) * 5;
+            actualInaccuracy = inAccuracy * Mth.lerp(angle * 57.3F /maxAngle,0, inAccuracy);
         }else{
             //周围无目标 获取视线指向点
             Vec3 ori = owner.getEyePosition().add(0,1,0);
             Vec3 end = ori.add(owner.getForward().normalize().scale(range));
             BlockHitResult blockHitResult = owner.level().clip(new ClipContext(ori,end, ClipContext.Block.OUTLINE,ClipContext.Fluid.NONE, owner));
-            waveTarget = blockHitResult.getLocation();
+            targetPos = blockHitResult.getLocation();
             //取中值
             actualInaccuracy = inAccuracy / 2;
         }
 
         projectile.setOwner(owner);
-        projectile.setPos(waveTarget.add(Math.random() * offsetH - offsetH, offsetV ,Math.random() * offsetH - offsetH));
-        projectile.shoot(waveTarget.x - projectile.getX(),waveTarget.y- projectile.getY(),waveTarget.z - projectile.getZ(), velocity, actualInaccuracy);
+        projectile.setPos(targetPos.add(Math.random() * offsetH - offsetH, offsetV ,Math.random() * offsetH - offsetH));
+        projectile.shoot(targetPos.x - projectile.getX(),targetPos.y- projectile.getY(),targetPos.z - projectile.getZ(), velocity, actualInaccuracy);
         owner.level().addFreshEntity(projectile);
     }
 

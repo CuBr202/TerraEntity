@@ -575,6 +575,7 @@ public final class TEUtils {
         else{
             aabb = new AABB(ori,end).inflate(range);
         }
+        Vec3 direction = end.subtract(ori);
         List<HitResult> hits = new ArrayList<>();
         List<HitResult> subHits = new ArrayList<>();
         List<? extends Entity> entities = level.getEntities(owner,aabb, entity1 -> entity1.isPickable() && entity1.isAlive() && filter.test(entity1));
@@ -608,9 +609,8 @@ public final class TEUtils {
                 }
             }
         }else if(!subHits.isEmpty()){
-            //未命中的目标 按距离排序
-            subHits.sort((o1,o2)->o1.getLocation().distanceToSqr(ori) < o2.getLocation().distanceToSqr(ori)?-1:1);
-
+            //未命中的目标 按角度排序
+            subHits.sort((o1,o2)-> TEUtils.angleBetween(o1.getLocation().subtract(ori),direction) < TEUtils.angleBetween(o2.getLocation().subtract(ori),direction)?-1:1);
             HitResult hitResult = subHits.get(0);
             if(hitResult instanceof  EntityHitResult entityHitResult &&
                     entityHitResult.getEntity() instanceof LivingEntity livingEntity){

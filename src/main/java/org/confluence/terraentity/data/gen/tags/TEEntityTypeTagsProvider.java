@@ -4,7 +4,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -59,7 +58,7 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
                 TEEntities.SKELETRON_HAND.get()
         };
         tag(Tags.EntityTypes.BOSSES).add(bosses);
-        tag(TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("ars_nouveau", "jar_blacklist"))).add(bosses);
+        tag(TagKey.create(Registries.ENTITY_TYPE, TerraEntity.fromSpaceAndPath("ars_nouveau", "jar_blacklist"))).add(bosses);
     }
 
 }
