@@ -2,6 +2,7 @@ package org.confluence.terraentity.init.item;
 
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
@@ -21,10 +22,10 @@ public class TEWhipItems {
     public static final DeferredItem<BaseWhipItem> LEATHER_WHIP = registerWhip("leather_whip", 2f, 2, 0.2F, 20,0, p->p
             .setDurability(100)
     );
-    //    public static final DeferredItem<BaseWhipItem> BAMBOO_WHIP = registerWhip("bamboo_whip", 2.3f, 3, 0, 20,0.1F, p->p
-//            .setDurability(150)
-//            .setBlock(Blocks.BAMBOO::defaultBlockState)
-//    );
+        public static final DeferredItem<BaseWhipItem> BAMBOO_WHIP = registerWhip("bamboo_whip", 2.3f, 3, 0, 20,0.1F, p->p
+            .setDurability(150)
+            .setBlock(Blocks.BAMBOO::defaultBlockState)
+    );
     public static final DeferredItem<BaseWhipItem> RUBY_WHIP = registerWhip("ruby_whip", 2.8f, 2, 0.1f, 20,0, p->p
             .setDurability(380)
     );
