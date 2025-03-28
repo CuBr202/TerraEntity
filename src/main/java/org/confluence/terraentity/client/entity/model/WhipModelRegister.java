@@ -4,7 +4,7 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.init.TEItems;
+import org.confluence.terraentity.init.item.TEWhipItems;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public class WhipModelRegister {
         String[] splits = location.getPath().split("[./]");
         int len = splits.length;
         String name = splits[len - 2];
-        for( var item : TEItems.WHIP_ITEMS.getEntries()){
+        for( var item : TEWhipItems.ITEMS.getEntries()){
             String itemName = item.getId().toString();
             if(itemName.equals(location.getNamespace()+ ":" + name)){
                 ResourceLocation modelLocation = TerraEntity.fromSpaceAndPath(location.getNamespace(), location.getPath().substring(7).replace(".json", ""));

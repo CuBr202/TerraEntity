@@ -8,8 +8,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
-import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 import org.confluence.terraentity.data.gen.tags.TEDamageTypeTagsProvider;
 import org.confluence.terraentity.data.gen.tags.TEBlockTagsProvider;
 import org.confluence.terraentity.data.gen.tags.TEEntityTypeTagsProvider;
@@ -22,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
-public class DataGenerator {
+public class TEDataGenerator {
     public static Map<String, DataProvider> PROVIDERS = null;
 
     @SubscribeEvent
@@ -35,7 +33,7 @@ public class DataGenerator {
         boolean server = event.includeServer();
 
 
-        DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookup, RegisterDataPack.DATA_BUILDER, Set.of(MODID));
+        DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookup, TERegisterDataPack.DATA_BUILDER, Set.of(MODID));
         lookup = provider.getRegistryProvider();
 
 

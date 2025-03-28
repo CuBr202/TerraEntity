@@ -155,6 +155,10 @@ public final class TEEntities {
 /* *********************************************************************** */
 
     // tip 弹幕
+    // 回旋镖
+    public static final DeferredHolder<EntityType<?>, EntityType<BoomerangProjectile>> BOOMERANG_PROJECTILE = ENTITIES.register("boomerang_projectile", () -> EntityType.Builder.<BoomerangProjectile>of(BoomerangProjectile::new, MobCategory.MISC).sized(0.5F, 0.5F).build(Key("boomerang_projectile")));
+
+
     public static final DeferredHolder<EntityType<?>, EntityType<ThrowableProj>> CABBAGE_PROJ = registerProj("cabbage_proj",(e,l)->
             new ThrowableProj(e,l),0.5F,0.5F);
 

@@ -151,6 +151,10 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
     jarJar(group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1')
     additionalRuntimeClasspath "org.apache.commons:commons-math3:3.6.1"
+
+    // 女仆
+    compileOnly "curse.maven:touhou-little-maid-355044:6266244"
+    runtimeOnly "curse.maven:touhou-little-maid-355044:6266244"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

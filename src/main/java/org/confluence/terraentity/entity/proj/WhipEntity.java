@@ -21,6 +21,7 @@ import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnima
 import org.confluence.terraentity.entity.ai.keyframe.dynamic_curve.SplineKeyframeDynamicCurve;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -201,7 +202,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
                         for (var entity : level().getEntities(this, aabb, e -> e != getOwner())) {
                             if (entity instanceof LivingEntity hurter) {
                                 if(!hitEntities.containsKey(entity)){
-                                    if(owner.canAttack(hurter) && hurter.canBeSeenAsEnemy()) {
+                                    if(owner.canAttack(hurter) && hurter.canBeSeenAsEnemy() && TEUtils.attackTamableTest.test(owner, hurter)) {
                                         hitEntities.put(entity, hitCooldown);
                                         double damage = owner.getAttributeValue(TEAttributes.SUMMON_DAMAGE);
 

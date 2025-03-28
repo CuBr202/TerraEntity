@@ -19,7 +19,9 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.apache.commons.lang3.function.TriFunction;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.TEItems;
+import org.confluence.terraentity.init.item.TESpawnEggItems;
+import org.confluence.terraentity.init.item.TESummonItems;
+import org.confluence.terraentity.init.item.TEWhipItems;
 
 
 import java.util.function.BiFunction;
@@ -53,64 +55,64 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                 TEEntities.HONEY_SLIME,
                 TEEntities.BLACK_SLIME).forEach(e->{
             this.add(e.get(), LootTable.lootTable()
-                    .withPool(LOOT_POOL.apply(TEItems.KING_SLIME_SPAWN_EGG, 0.01F))
+                    .withPool(LOOT_POOL.apply(TESpawnEggItems.KING_SLIME_SPAWN_EGG, 0.01F))
                     .withPool(LOOT_POOL.apply(Items.SLIME_BALL, 0.2F))
-                    .withPool(LOOT_POOL.apply(TEItems.SLIME_STAFF, 0.001F))
+                    .withPool(LOOT_POOL.apply(TESummonItems.SLIME_STAFF, 0.001F))
             );
         });
 
         this.add(TEEntities.KING_SLIME.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.SLIME_STAFF, 0.5F))
-                .withPool(LOOT_POOL.apply(TEItems.SWAMP_WHIP, 0.5F))
+                .withPool(LOOT_POOL.apply(TESummonItems.SLIME_STAFF, 0.5F))
+                .withPool(LOOT_POOL.apply(TEWhipItems.SWAMP_WHIP, 0.5F))
         );
 
 
 
         // 克眼
         this.add(TEEntities.DEMON_EYE.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.EYE_OF_CTHULHU_SPAWN_EGG, 0.05F))
+                .withPool(LOOT_POOL.apply(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG, 0.05F))
         );
 
         this.add(TEEntities.EYE_OF_CTHULHU.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.5F))
-                .withPool(LOOT_POOL.apply(TEItems.EATER_OF_WORLD_SPAWN_EGG, 0.5F))
-                .withPool(LOOT_POOL.apply(TEItems.SLIME_STAFF, 1F))
+                .withPool(LOOT_POOL.apply(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.5F))
+                .withPool(LOOT_POOL.apply(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG, 0.5F))
+                .withPool(LOOT_POOL.apply(TESummonItems.SLIME_STAFF, 1F))
         );
 
 
         // 克脑
         this.add(TEEntities.BLOODY_SPORE.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.2F))
+                .withPool(LOOT_POOL.apply(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.2F))
         );
         this.add(TEEntities.BLOOD_CRAWLER.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.05F))
+                .withPool(LOOT_POOL.apply(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.05F))
         );
         this.add(TEEntities.DRIPPLER.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.05F))
+                .withPool(LOOT_POOL.apply(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.05F))
         );
         this.add(TEEntities.BLOOD_ZOMBIE.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.05F))
+                .withPool(LOOT_POOL.apply(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.05F))
         );
 
         this.add(TEEntities.BRAIN_OF_CTHULHU.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.IRON_GOLEM_STAFF, 1F))
+                .withPool(LOOT_POOL.apply(TESummonItems.IRON_GOLEM_STAFF, 1F))
         );
 
         // 世吞
         this.add(TEEntities.EATER_OF_SOULS.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.EATER_OF_WORLD_SPAWN_EGG, 0.05F))
+                .withPool(LOOT_POOL.apply(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG, 0.05F))
         );
         this.add(TEEntities.DEVOURER.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.DEVOURER_SPAWN_EGG, 0.1F))
+                .withPool(LOOT_POOL.apply(TESpawnEggItems.DEVOURER_SPAWN_EGG, 0.1F))
         );
 
         this.add(TEEntities.EATER_OF_WORLDS.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.IRON_GOLEM_STAFF, 1F))
+                .withPool(LOOT_POOL.apply(TESummonItems.IRON_GOLEM_STAFF, 1F))
         );
 
         // 蜂王
         this.add(TEEntities.HORNET.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TEItems.QUEEN_BEE_SPAWN_EGG, 0.05F))
+                .withPool(LOOT_POOL.apply(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG, 0.05F))
         );
 
         this.add(TEEntities.QUEEN_BEE.get(), LootTable.lootTable()
@@ -133,8 +135,8 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
             LOOT_POOL.apply(item, chance).when(LootItemRandomChanceCondition.randomChance(condition));
 
     private final Function<LootTable.Builder, LootTable.Builder> COMMON_LOOT_TABLE = (loot)-> loot
-            .withPool(LOOT_POOL.apply(TEItems.BLACK_SLIME_SPAWN_EGG, 0.75F))
-            .withPool(LOOT_POOL_CONDITIONAL.apply(TEItems.EYE_OF_CTHULHU_SPAWN_EGG, 0.5F, 0.5F))
+            .withPool(LOOT_POOL.apply(TESpawnEggItems.BLACK_SLIME_SPAWN_EGG, 0.75F))
+            .withPool(LOOT_POOL_CONDITIONAL.apply(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG, 0.5F, 0.5F))
 
             ;
 

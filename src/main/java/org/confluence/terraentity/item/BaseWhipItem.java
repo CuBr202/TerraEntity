@@ -101,9 +101,10 @@ public class BaseWhipItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if(usedHand == InteractionHand.OFF_HAND) return super.use(level, player, usedHand);
+        ItemStack stack = player.getItemInHand(usedHand);
+        if(usedHand == InteractionHand.OFF_HAND) return InteractionResultHolder.success(stack);
         if(!level.isClientSide){
-            ItemStack stack = player.getItemInHand(usedHand);
+
             if(stack.getItem() instanceof BaseWhipItem self) {
                 int cooldown = (int) (20 * getCdReduction(player));
                 player.getCooldowns().addCooldown(this, cooldown);
@@ -126,7 +127,7 @@ public class BaseWhipItem extends Item {
             }
         }
         player.swing(usedHand);
-        return super.use(level, player, usedHand);
+        return InteractionResultHolder.success(stack);
     }
 
     @Override
@@ -142,7 +143,7 @@ public class BaseWhipItem extends Item {
         float chance;
         Supplier<BlockState> blockStateSupplier;
 
-        List<Function<Properties, Properties>> modifiers = new ArrayList<>();
+        List<Function<WhipProperties, Properties>> modifiers = new ArrayList<>();
         boolean hasDamage = false;
 
         /**
@@ -164,7 +165,7 @@ public class BaseWhipItem extends Item {
             return this;
         }
 
-        public WhipProperties addModifier(Function<Properties, Properties> modifier) {
+        public WhipProperties addModifier(Function<WhipProperties, Properties> modifier) {
             modifiers.add(modifier);
             return this;
         }
@@ -183,9 +184,9 @@ public class BaseWhipItem extends Item {
          * 生成Properties
          */
         public Properties buildProperties() {
-            Properties properties = new Properties();
-            if(!hasDamage) properties.component(DataComponents.UNBREAKABLE, new Unbreakable(true));
-            return modifiers.stream().reduce(properties, (p, m)->m.apply(p), (p1, p2)->p1);
+
+            if(!hasDamage) this.component(DataComponents.UNBREAKABLE, new Unbreakable(true));
+            return modifiers.stream().reduce(this, (p, m)-> (WhipProperties) m.apply(p), (p1, p2)->p1);
         }
     }
 

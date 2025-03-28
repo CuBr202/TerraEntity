@@ -5,6 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
+import org.confluence.terraentity.data.component.SingleBooleanComponent;
 
 import java.util.function.Supplier;
 
@@ -19,4 +20,7 @@ public final class TEDataComponentTypes {
             "bow_full_charge_effect_strategy", builder -> builder.persistent(EffectStrategyComponent.CODEC).networkSynchronized(EffectStrategyComponent.STREAM_CODEC)
     );
 
+    public static final Supplier<DataComponentType<SingleBooleanComponent>> BOOMERANG_READY = TYPES.registerComponentType(
+            "boomerang_ready", builder -> builder.persistent(SingleBooleanComponent.CODEC).networkSynchronized(SingleBooleanComponent.STREAM_CODEC)
+    );
 }

@@ -20,15 +20,15 @@ public class TEDamageTypeTagsProvider extends DamageTypeTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider holderLookup) {
 
-        tag(DamageTypeTags.IS_PLAYER_ATTACK)
-                .add(TETags.DamageTypes.SUMMON)
+        tag(DamageTypeTags.IS_PLAYER_ATTACK).add(
+                TETags.DamageTypes.SUMMON
+        );
 
-                ;
-
-        tag(DamageTypeTags.NO_KNOCKBACK)
-                .add(TETags.DamageTypes.SUMMON,
-                        TETags.DamageTypes.SUMMONER)
-                ;
+        tag(DamageTypeTags.NO_KNOCKBACK).add(
+                TETags.DamageTypes.SUMMON,
+                TETags.DamageTypes.SUMMONER,
+                TETags.DamageTypes.FROST_BURN
+        );
 
     }
 

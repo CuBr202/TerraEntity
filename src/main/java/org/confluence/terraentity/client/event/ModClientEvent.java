@@ -21,6 +21,7 @@ import org.confluence.terraentity.client.entity.model.CabbageProjModel;
 import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
 import org.confluence.terraentity.client.entity.model.Stinger;
 import org.confluence.terraentity.client.entity.model.WhipModelRegister;
+import org.confluence.terraentity.client.entity.renderer.BoomerangProjRenderer;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
 import org.confluence.terraentity.client.entity.renderer.ReplacedSpiderRenderer;
@@ -90,6 +91,7 @@ public final class ModClientEvent {
         registerProj(event,CABBAGE_PROJ.get(),c->new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION)));
         registerProj(event,BEE_STICK_PROJ.get(),c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         registerProj(event,SUMMON_BEE_STICK_PROJ.get(),c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
+        event.registerEntityRenderer(BOOMERANG_PROJECTILE.get(), BoomerangProjRenderer::new);
 
         // replaced
         if (ClientConfig.ENABLE_NON_SPIDER_MODEL.get()) {

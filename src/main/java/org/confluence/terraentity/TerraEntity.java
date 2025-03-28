@@ -2,15 +2,14 @@ package org.confluence.terraentity;
 
 
 import com.mojang.logging.LogUtils;
-import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.data.gen.biome.TEBiomes;
 import org.confluence.terraentity.init.*;
+import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.registries.TERegistries;
 import org.slf4j.Logger;
 
@@ -33,6 +32,7 @@ public class TerraEntity {
         TEAttachments.TYPES.register(modEventBus);
         TEAttributes.ATTRIBUTES.register(modEventBus);
         TEDataComponentTypes.TYPES.register(modEventBus);
+        TEEffectStrategies.EFFECT_STRATEGY.register(modEventBus);
 
 
 //        TEBiomes.register(modEventBus);

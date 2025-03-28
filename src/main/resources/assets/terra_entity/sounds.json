@@ -131,5 +131,10 @@
         "sounds": [
             "terra_entity:mob/tr_skeleton_hurt"
         ]
+    },
+    "waving": {
+        "sounds": [
+            "confluence:waving"
+        ]
     }
 }

@@ -2,17 +2,17 @@ package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.apache.commons.lang3.function.TriConsumer;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.init.TEItems;
+import org.confluence.terraentity.init.item.TEBoomerangItems;
+import org.confluence.terraentity.init.item.TESpawnEggItems;
+import org.confluence.terraentity.init.item.TESummonItems;
+import org.confluence.terraentity.init.item.TEWhipItems;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -42,7 +42,7 @@ public class TEItemModelProvider extends ItemModelProvider {
 
         // spawn eggs
         genModels(List.of(
-                createDir(TEItems.SPAWN_EGGS,"egg/")
+                createDir(TESpawnEggItems.ITEMS,"egg/")
         ),"item/generated", (parent, resourcePath, path) -> {
             try {
                 withExistingParent(path, parent).texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
@@ -53,8 +53,9 @@ public class TEItemModelProvider extends ItemModelProvider {
 
         // handed items
         genModels(List.of(
-                createDir(TEItems.SUMMON_ITEMS,"summon/"),
-                createDir(TEItems.WHIP_ITEMS,"whip/")
+                createDir(TESummonItems.ITEMS,"summon/"),
+                createDir(TEWhipItems.ITEMS,"whip/"),
+                createDir(TEBoomerangItems.ITEMS,"boomerang/")
         ),"item/handheld", (parent, resourcePath, path) -> {
             try {
                 withExistingParent(path, parent).texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));

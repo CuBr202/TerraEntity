@@ -2,8 +2,12 @@ package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.TEItems;
+import org.confluence.terraentity.init.item.TEBoomerangItems;
+import org.confluence.terraentity.init.item.TESpawnEggItems;
+import org.confluence.terraentity.init.item.TESummonItems;
+import org.confluence.terraentity.init.item.TEWhipItems;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -66,7 +70,6 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.little_hornet", "小黄蜂");
         add("entity.terra_entity.skeletron", "骷髅王");
 
-        add("effect.terra_entity.demonic_thoughts", "邪念");
 
         add(TEEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
         add(TEEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
@@ -74,70 +77,84 @@ public class TEChineseProvider extends LanguageProvider {
 
 
         // 刷怪蛋
-        add(TEItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
-        add(TEItems.RED_SLIME_SPAWN_EGG.get(), "红色史莱姆刷怪蛋");
-        add(TEItems.YELLOW_SLIME_SPAWN_EGG.get(), "黄色史莱姆刷怪蛋");
-        add(TEItems.HONEY_SLIME_SPAWN_EGG.get(), "蜂蜜史莱姆刷怪蛋");
-        add(TEItems.PURPLE_SLIME_SPAWN_EGG.get(), "紫色史莱姆刷怪蛋");
-        add(TEItems.DESERT_SLIME_SPAWN_EGG.get(), "沙漠史莱姆刷怪蛋");
-        add(TEItems.JUNGLE_SLIME_SPAWN_EGG.get(), "丛林史莱姆刷怪蛋");
-        add(TEItems.PINK_SLIME_SPAWN_EGG.get(), "粉色史莱姆刷怪蛋");
-        add(TEItems.ICE_SLIME_SPAWN_EGG.get(), "冰冻史莱姆刷怪蛋");
-        add(TEItems.GREEN_SLIME_SPAWN_EGG.get(), "绿色史莱姆刷怪蛋");
-        add(TEItems.BLACK_SLIME_SPAWN_EGG.get(), "史莱姆之母刷怪蛋");
-        add(TEItems.CRIMSON_SLIME_SPAWN_EGG.get(), "猩红史莱姆刷怪蛋");
-        add(TEItems.TROPIC_SLIME_SPAWN_EGG.get(), "热带史莱姆刷怪蛋");
-        add(TEItems.LUMINOUS_SLIME_SPAWN_EGG.get(), "夜明史莱姆刷怪蛋");
-        add(TEItems.LAVA_SLIME_SPAWN_EGG.get(), "熔岩史莱姆刷怪蛋");
+        add(TESpawnEggItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
+        add(TESpawnEggItems.RED_SLIME_SPAWN_EGG.get(), "红色史莱姆刷怪蛋");
+        add(TESpawnEggItems.YELLOW_SLIME_SPAWN_EGG.get(), "黄色史莱姆刷怪蛋");
+        add(TESpawnEggItems.HONEY_SLIME_SPAWN_EGG.get(), "蜂蜜史莱姆刷怪蛋");
+        add(TESpawnEggItems.PURPLE_SLIME_SPAWN_EGG.get(), "紫色史莱姆刷怪蛋");
+        add(TESpawnEggItems.DESERT_SLIME_SPAWN_EGG.get(), "沙漠史莱姆刷怪蛋");
+        add(TESpawnEggItems.JUNGLE_SLIME_SPAWN_EGG.get(), "丛林史莱姆刷怪蛋");
+        add(TESpawnEggItems.PINK_SLIME_SPAWN_EGG.get(), "粉色史莱姆刷怪蛋");
+        add(TESpawnEggItems.ICE_SLIME_SPAWN_EGG.get(), "冰冻史莱姆刷怪蛋");
+        add(TESpawnEggItems.GREEN_SLIME_SPAWN_EGG.get(), "绿色史莱姆刷怪蛋");
+        add(TESpawnEggItems.BLACK_SLIME_SPAWN_EGG.get(), "史莱姆之母刷怪蛋");
+        add(TESpawnEggItems.CRIMSON_SLIME_SPAWN_EGG.get(), "猩红史莱姆刷怪蛋");
+        add(TESpawnEggItems.TROPIC_SLIME_SPAWN_EGG.get(), "热带史莱姆刷怪蛋");
+        add(TESpawnEggItems.LUMINOUS_SLIME_SPAWN_EGG.get(), "夜明史莱姆刷怪蛋");
+        add(TESpawnEggItems.LAVA_SLIME_SPAWN_EGG.get(), "熔岩史莱姆刷怪蛋");
 
-        add(TEItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
-        add(TEItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
-        add(TEItems.GIANT_SHELLY_SPAWN_EGG.get(), "巨型卷壳怪刷怪蛋");
-        add(TEItems.GIANT_WORM_SPAWN_EGG.get(), "巨型蠕虫刷怪蛋");
-        add(TEItems.TOMB_CRAWLER_SPAWN_EGG.get(), "墓穴爬虫刷怪蛋");
-        add(TEItems.CAVE_BAT_SPAWN_EGG.get(), "洞穴蝙蝠刷怪蛋");
-        add(TEItems.ICE_BAT_SPAWN_EGG.get(), "冰雪蝙蝠刷怪蛋");
-        add(TEItems.JUNGLE_BAT_SPAWN_EGG.get(), "丛林蝙蝠刷怪蛋");
-        add(TEItems.HORNET_SPAWN_EGG.get(), "黄蜂刷怪蛋");
-        add(TEItems.HELL_BAT_SPAWN_EGG.get(), "地狱蝙蝠刷怪蛋");
-        add(TEItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");
-        add(TEItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
-        add(TEItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
+        add(TESpawnEggItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
+        add(TESpawnEggItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
+        add(TESpawnEggItems.GIANT_SHELLY_SPAWN_EGG.get(), "巨型卷壳怪刷怪蛋");
+        add(TESpawnEggItems.GIANT_WORM_SPAWN_EGG.get(), "巨型蠕虫刷怪蛋");
+        add(TESpawnEggItems.TOMB_CRAWLER_SPAWN_EGG.get(), "墓穴爬虫刷怪蛋");
+        add(TESpawnEggItems.CAVE_BAT_SPAWN_EGG.get(), "洞穴蝙蝠刷怪蛋");
+        add(TESpawnEggItems.ICE_BAT_SPAWN_EGG.get(), "冰雪蝙蝠刷怪蛋");
+        add(TESpawnEggItems.JUNGLE_BAT_SPAWN_EGG.get(), "丛林蝙蝠刷怪蛋");
+        add(TESpawnEggItems.HORNET_SPAWN_EGG.get(), "黄蜂刷怪蛋");
+        add(TESpawnEggItems.HELL_BAT_SPAWN_EGG.get(), "地狱蝙蝠刷怪蛋");
+        add(TESpawnEggItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");
+        add(TESpawnEggItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
+        add(TESpawnEggItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
 
-        add(TEItems.BLOOD_CRAWLER_SPAWN_EGG.get(), "血爬虫刷怪蛋");
-        add(TEItems.BLOODY_SPORE_SPAWN_EGG.get(), "血腥芽孢刷怪蛋");
-        add(TEItems.CRIMSON_KEMERA_EGG.get(), "猩红喀迈拉刷怪蛋");
-        add(TEItems.FACE_MONSTER_EGG.get(), "脸怪刷怪蛋");
+        add(TESpawnEggItems.BLOOD_CRAWLER_SPAWN_EGG.get(), "血爬虫刷怪蛋");
+        add(TESpawnEggItems.BLOODY_SPORE_SPAWN_EGG.get(), "血腥芽孢刷怪蛋");
+        add(TESpawnEggItems.CRIMSON_KEMERA_EGG.get(), "猩红喀迈拉刷怪蛋");
+        add(TESpawnEggItems.FACE_MONSTER_EGG.get(), "脸怪刷怪蛋");
 
-        add(TEItems.EATER_OF_SOULS_SPAWN_EGG.get(), "噬魂怪刷怪蛋");
-        add(TEItems.DECAYEDER_SPAWN_EGG.get(), "腐骴刷怪蛋");
-        add(TEItems.DEVOURER_SPAWN_EGG.get(), "吞噬怪刷怪蛋");
+        add(TESpawnEggItems.EATER_OF_SOULS_SPAWN_EGG.get(), "噬魂怪刷怪蛋");
+        add(TESpawnEggItems.DECAYEDER_SPAWN_EGG.get(), "腐骴刷怪蛋");
+        add(TESpawnEggItems.DEVOURER_SPAWN_EGG.get(), "吞噬怪刷怪蛋");
 
-        add(TEItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
-        add(TEItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
-        add(TEItems.EATER_OF_WORLD_SPAWN_EGG.get(), "世界吞噬怪刷怪蛋");
-        add(TEItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
-        add(TEItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
+        add(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
+        add(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
+        add(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG.get(), "世界吞噬怪刷怪蛋");
+        add(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
+        add(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
 
 
         // 召唤杖
-        add(TEItems.SLIME_STAFF.get(), "史莱姆法杖");
-        add(TEItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
-        add(TEItems.HORNET_STAFF.get(), "黄蜂法杖");
+        add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
+        add(TESummonItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
+        add(TESummonItems.HORNET_STAFF.get(), "黄蜂法杖");
 
         // 鞭子
-        add(TEItems.LEATHER_WHIP.get(), "皮鞭");
+        add(TEWhipItems.LEATHER_WHIP.get(), "皮鞭");
 //        add(TEItems.BAMBOO_WHIP.get(), "竹鞭");
-        add(TEItems.RUBY_WHIP.get(), "红玉鞭");
-        add(TEItems.AMBER_WHIP.get(), "琥珀鞭");
-        add(TEItems.TOPAZ_WHIP.get(), "黄玉鞭");
-        add(TEItems.EMERALD_WHIP.get(), "翡翠鞭");
-        add(TEItems.DIAMOND_WHIP.get(), "钻石鞭");
-        add(TEItems.SAPPHIRE_WHIP.get(), "蓝玉鞭");
-        add(TEItems.AMETHYST_WHIP.get(), "紫晶鞭");
-        add(TEItems.SWAMP_WHIP.get(), "沼泽藤蔓");
+        add(TEWhipItems.RUBY_WHIP.get(), "红玉鞭");
+        add(TEWhipItems.AMBER_WHIP.get(), "琥珀鞭");
+        add(TEWhipItems.TOPAZ_WHIP.get(), "黄玉鞭");
+        add(TEWhipItems.EMERALD_WHIP.get(), "翡翠鞭");
+        add(TEWhipItems.DIAMOND_WHIP.get(), "钻石鞭");
+        add(TEWhipItems.SAPPHIRE_WHIP.get(), "蓝玉鞭");
+        add(TEWhipItems.AMETHYST_WHIP.get(), "紫晶鞭");
+        add(TEWhipItems.SWAMP_WHIP.get(), "沼泽藤蔓");
 
+        // 回旋镖
+        add(TEBoomerangItems.WOOD_BOOMERANG.get(), "木回旋镖");
+        add(TEBoomerangItems.ENCHANTED_BOOMERANG.get(), "附魔回旋镖");
+        add(TEBoomerangItems.SHROOMERANG.get(), "蘑菇回旋镖");
+        add(TEBoomerangItems.ICE_BOOMERANG.get(), "冰雪回旋镖");
+        add(TEBoomerangItems.TRIMARANG.get(), "三尖回旋镖");
+        add(TEBoomerangItems.FLAMARANG.get(), "烈焰回旋镖");
+        add(TEBoomerangItems.DEVELOPER_BOOMERANG.get(), "开发者回旋镖");
+        add(TEBoomerangItems.BeiDou_BOOMERANG.get(), "北斗飞镖");
 
+        // mob_effect
+        add(TEEffects.DEMONIC_THOUGHTS.get(), "邪念");
+        add(TEEffects.SUMMON_FOCUS.get(), "狩猎");
+        add(TEEffects.HELLFIRE.get(), "狱炎");
+        add(TEEffects.FROST_BURN.get(), "霜冻");
 
         add("message.terraentity.boss_spawn", "%s已苏醒！");
         add("message.terraentity.boss_leave", "%s已被打败！");
@@ -172,6 +189,11 @@ public class TEChineseProvider extends LanguageProvider {
 
         add("tooltip.terra_entity.whip.hit_effect", "命中效果: ");
 
+            // boomerang
+        add("tooltip.terra_entity.boomerang.penetration", "穿透数量");
+        add("tooltip.terra_entity.boomerang.on_hit_effects", "命中效果");
+        add("tooltip.terra_entity.boomerang.max_count", "分身数量");
+        add("tooltip.terra_entity.boomerang.fly_speed", "飞行速度");
 
         // attribute
         add("attribute.name.player.summon_damage", "召唤伤害");
@@ -187,6 +209,24 @@ public class TEChineseProvider extends LanguageProvider {
 
         // hit effect
         add("terra_entity.effect.strategy.mud", "泥潭");
+
+        add("terra_entity.effect.strategy.bat", "吸血 +1 hp");
+        add("terra_entity.effect.strategy.lights_bane", "召唤魔光剑");
+        add("terra_entity.effect.strategy.bee_keeper", "召唤蜜蜂");
+
+        add("terra_entity.effect.strategy.frozen_burn_3_sec_50_chance", "50%几率 霜冻 3秒");
+        add("terra_entity.effect.strategy.tentacle_spikes", "触手钉锤");
+        add("terra_entity.effect.strategy.hunting_4_sec", "狩猎 4秒");
+        add("terra_entity.effect.strategy.hell_fire_5_sec", "烈火焚身 5秒");
+        add("terra_entity.effect.strategy.set_fire_5_sec", "着火啦 5秒");
+        add("terra_entity.effect.strategy.blood_butchered", "血腥屠宰");
+        add("terra_entity.effect.strategy.bei_dou", "随机5种效果:\n     霜冻 Ⅳ 10秒\n     烈火焚身 Ⅳ 10秒\n     凋零 Ⅳ 10秒\n     中毒 Ⅳ 10秒\n     瞬间伤害 Ⅷ");
+
+        // 车万女仆
+        add("task.terra_entity.boomerang_attack", "回旋镖攻击");
+        add("task.terra_entity.boomerang_attack.desc", "女仆会主动用回旋镖攻击周围的敌对生物");
+        add("task.terra_entity.boomerang_attack.condition.has_boomerang", "主手持有回旋镖");
+
 
     }
 }
