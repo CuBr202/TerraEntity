@@ -39,13 +39,13 @@ public class TERecipeProvider extends RecipeProvider {
                 .unlockedBy("has_leather",has(Items.LEATHER))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.BAMBOO_WHIP.get())
-                .pattern("  A")
-                .pattern("AAA")
-                .pattern("A  ")
-                .define('A', Items.BAMBOO)
-                .unlockedBy("has_bamboo",has(Items.BAMBOO))
-                .save(recipeOutput);
+//        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.BAMBOO_WHIP.get())
+//                .pattern("  A")
+//                .pattern("AAA")
+//                .pattern("A  ")
+//                .define('A', Items.BAMBOO)
+//                .unlockedBy("has_bamboo",has(Items.BAMBOO))
+//                .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.AMBER_WHIP.get())
                 .pattern("  A")

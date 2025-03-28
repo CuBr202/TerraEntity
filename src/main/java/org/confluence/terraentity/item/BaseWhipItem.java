@@ -5,6 +5,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -25,7 +26,9 @@ import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.TEUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class BaseWhipItem extends Item {
@@ -52,7 +55,6 @@ public class BaseWhipItem extends Item {
                         int hitCooldown,
                         float rangeFactor) {
         super(properties.stacksTo(1)
-                .component(DataComponents.UNBREAKABLE, new Unbreakable(true))
                 .attributes(
                 ItemAttributeModifiers.builder()
                         .add(
@@ -118,8 +120,9 @@ public class BaseWhipItem extends Item {
                 if (data != null)
                     whipEntity.hiteffect = data;
                 whipEntity.hitCooldown = hitCooldown;
+                stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
                 level.addFreshEntity(whipEntity);
-
+//                stack.hurtAndBreak(1, player, (Consumer<LivingEntity>) (e -> e.playSound(SoundEvents.)));
             }
         }
         player.swing(usedHand);
@@ -138,6 +141,9 @@ public class BaseWhipItem extends Item {
         Supplier<? extends ParticleOptions> particleOptions;
         float chance;
         Supplier<BlockState> blockStateSupplier;
+
+        List<Function<Properties, Properties>> modifiers = new ArrayList<>();
+        boolean hasDamage = false;
 
         /**
          * 当没有注册模型时，使用方块状态代替模型渲染
@@ -158,6 +164,29 @@ public class BaseWhipItem extends Item {
             return this;
         }
 
+        public WhipProperties addModifier(Function<Properties, Properties> modifier) {
+            modifiers.add(modifier);
+            return this;
+        }
+
+        /**
+         * 设置耐久度，默认为无限耐久
+         * @param durability 耐久度
+         */
+        public WhipProperties setDurability(int durability) {
+            modifiers.add(p-> p.durability(durability));
+            hasDamage = true;
+            return this;
+        }
+
+        /**
+         * 生成Properties
+         */
+        public Properties buildProperties() {
+            Properties properties = new Properties();
+            if(!hasDamage) properties.component(DataComponents.UNBREAKABLE, new Unbreakable(true));
+            return modifiers.stream().reduce(properties, (p, m)->m.apply(p), (p1, p2)->p1);
+        }
     }
 
 }
