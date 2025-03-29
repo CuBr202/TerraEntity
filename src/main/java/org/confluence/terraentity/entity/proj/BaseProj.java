@@ -12,18 +12,17 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.registries.track.ITrackType;
-import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -160,7 +159,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         Entity hurter = pResult.getEntity();
-        if(hurter instanceof LivingEntity living && canHitEntity(living)) {
+        if(hurter instanceof LivingEntity living && canHitEntity(living)
+        ) {
+            doHurt(living);
+        }else if(hurter instanceof PartEntity part && part.getParent() instanceof LivingEntity living && canHitEntity(living)){
             doHurt(living);
         }
     }
@@ -207,7 +209,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     @Override
     protected boolean canHitEntity(@NotNull Entity target) {
         // 不能攻击自己和不能被弹幕攻击的实体
-        if(target == getOwner() || !target.canBeHitByProjectile()){
+        if(target == getOwner() || !target.isAttackable()){
             return false;
         }
         // 不能攻击已经被弹幕攻击过的实体
@@ -221,7 +223,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
         // 有主人的弹幕只能攻击主人可以攻击的目标
         if(getOwner()!=null && getOwner() instanceof LivingEntity living && target instanceof LivingEntity tar)
             return living.canAttack(tar);
-        return true;
+        return false;
     }
 
     @Override//流体阻力

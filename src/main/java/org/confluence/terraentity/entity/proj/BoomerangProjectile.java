@@ -117,9 +117,10 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
 
     @Override
     protected boolean canHitEntity(Entity target) {
-        if (!target.canBeHitByProjectile()) {
+        if (!target.isAttackable()) {
             return false;
         }
+        if(!(target instanceof LivingEntity)) return false;
         Entity entity = this.getOwner();
         if(entity == null || !entity.isPassengerOfSameVehicle(target))
             return true;

@@ -121,7 +121,7 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     @Override
     public boolean canAttack(LivingEntity target) {
         if(target == summon_getOwner()) return false;
-        return target.canBeSeenAsEnemy() && target.isPickable() && TEUtils.attackTamableTest.test(summon_getOwner(), target);
+        return target.canBeSeenAsEnemy() && TEUtils.attackTamableTest.test(summon_getOwner(), target);
     }
 
     @Override
