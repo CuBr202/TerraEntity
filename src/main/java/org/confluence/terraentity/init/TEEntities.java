@@ -214,7 +214,7 @@ public final class TEEntities {
             event.registerEntityRenderer(BLOOD_CRAWLER.get(), c -> new GeoNormalRenderer<>(c, BLOOD_CRAWLER.getId()));
         }
         event.registerEntityRenderer(BLOODY_SPORE.get(), BloodySporeRenderer::new);
-        event.registerEntityRenderer(DECAYEDER.get(), SkeletonRenderer::new);  //todo
+        event.registerEntityRenderer(DECAYEDER.get(), DecayederRenderer::new);
 
 
         event.registerEntityRenderer(FACE_MONSTER.get(), c-> new GeoNormalRenderer<>(c,FACE_MONSTER.getId(),false));

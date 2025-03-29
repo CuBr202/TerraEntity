@@ -38,6 +38,11 @@ public class WhipEntity extends AbstractHurtingProjectile {
     int existTick = 22;
     int _existTick = 22; // 基础存在时间
     int drawBackTick = 10; // 返回到player的过渡时间
+
+    protected float _damageDeclineStep = 0.1f; // 基础伤害衰减系数
+    protected float _damageDeclineMax = 0.5f; // 最大伤害衰减系数
+    protected float damageDecline = 1f; // 伤害衰减
+
     protected float _rangeFactor = 0.5f; // 基础鞭范围
     public int hitCooldown = 5; // 击中冷却时间
     public EffectStrategyComponent hiteffect; // 击中特效
@@ -216,6 +221,8 @@ public class WhipEntity extends AbstractHurtingProjectile {
 
                                         if(TEUtils.attackTamableTest.test(owner, hurter)){
                                             trigger = true;
+                                            damage *= damageDecline;
+                                            damageDecline = Math.max(_damageDeclineMax, damageDecline - _damageDeclineStep);
                                             if (hiteffect != null) {
                                                 hiteffect.applyAll( owner, hurter);
                                             }
@@ -250,7 +257,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
                     }
                     if(trigger){
                         // 命中敌人造成伤害才消耗耐久
-                        getWeapon().hurtAndBreak(5, owner, EquipmentSlot.MAINHAND);
+                        getWeapon().hurtAndBreak(1, owner, EquipmentSlot.MAINHAND);
                     }
                 }
             }
