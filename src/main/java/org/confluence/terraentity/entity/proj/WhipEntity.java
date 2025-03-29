@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.entity.PartEntity;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnimation;
@@ -202,7 +203,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
 //                    move(MoverType.SELF, dir);
 
                 }
-                if(!level().isClientSide){
+//                if(!level().isClientSide){
                     boolean trigger = false;
                     List<Vec3> attackPoints = keyPositions.stream().map(Vec3::new).toList();
 
@@ -213,45 +214,34 @@ public class WhipEntity extends AbstractHurtingProjectile {
                         AABB aabb = new AABB(pos.x - range, pos.y - range, pos.z - range,
                                 pos.x + range, pos.y + range, pos.z + range);
                         for (var entity : level().getEntities(this, aabb, e -> e != getOwner())) {
-                            if (entity instanceof LivingEntity hurter) {
-                                if(!hitEntities.containsKey(entity)){
+                            if(!hitEntities.containsKey(entity)){
+                                if (entity instanceof LivingEntity hurter) {
+                                    // 命中无多体节敌人
                                     if(owner.canAttack(hurter) && hurter.canBeSeenAsEnemy()) {
                                         hitEntities.put(entity, hitCooldown);
-                                        double damage = owner.getAttributeValue(TEAttributes.SUMMON_DAMAGE);
-
-                                        if(TEUtils.attackTamableTest.test(owner, hurter)){
-                                            trigger = true;
-                                            damage *= damageDecline;
-                                            damageDecline = Math.max(_damageDeclineMax, damageDecline - _damageDeclineStep);
-                                            if (hiteffect != null) {
-                                                hiteffect.applyAll( owner, hurter);
-                                            }
-                                        }else{
-                                            // 当命中宠物时
-                                            if(getWeapon().getItem() == TEWhipItems.LEATHER_WHIP.get()){
-                                                if(hiteffect_beneficial != null){
-                                                    hiteffect_beneficial.applyAll( owner, hurter);
-                                                }
-                                                // 如果是皮鞭
-                                                damage *= 0.2F;
-                                            }else{
-                                                return;
-                                            }
-                                        }
-                                        hurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON,  owner), (float) damage);
+                                        trigger = doHurt(owner, hurter, hurter);
                                     }
                                     if(hurter instanceof ISummonMob<?>){
                                         if(hiteffect_beneficial != null){
                                             hiteffect_beneficial.applyAll( owner, hurter);
                                         }
                                     }
-                                }else{
-                                    hitEntities.put(entity, hitEntities.get(entity) - 1);
-                                     if(hitEntities.get(entity) <= 0){
-                                         hitEntities.remove(entity);
-                                     }
-                                     return;
+
+                                }else if(entity instanceof PartEntity<?> partEntity){
+                                    // 名字多体节敌人
+                                    if(partEntity.getParent() instanceof LivingEntity hurter){
+                                        if(owner.canAttack(hurter) && hurter.canBeSeenAsEnemy()) {
+                                            hitEntities.put(entity, hitCooldown);
+                                            trigger = doHurt(owner, hurter, partEntity);
+                                        }
+                                    }
                                 }
+                            }else{
+                                hitEntities.put(entity, hitEntities.get(entity) - 1);
+                                if(hitEntities.get(entity) <= 0){
+                                    hitEntities.remove(entity);
+                                }
+                                return;
                             }
                         }
                     }
@@ -259,10 +249,36 @@ public class WhipEntity extends AbstractHurtingProjectile {
                         // 命中敌人造成伤害才消耗耐久
                         getWeapon().hurtAndBreak(1, owner, EquipmentSlot.MAINHAND);
                     }
-                }
+//                }
             }
         }
         super.tick();
+    }
+
+    protected boolean doHurt(LivingEntity owner, LivingEntity hurter, Entity actualHurter){
+        double damage = owner.getAttributeValue(TEAttributes.SUMMON_DAMAGE);
+        boolean trigger = false;
+        if(TEUtils.attackTamableTest.test(owner, hurter)){
+            trigger = true;
+            damage *= damageDecline;
+            damageDecline = Math.max(_damageDeclineMax, damageDecline - _damageDeclineStep);
+            if (hiteffect != null) {
+                hiteffect.applyAll( owner, hurter);
+            }
+        }else{
+            // 当命中宠物时
+            if(getWeapon().getItem() == TEWhipItems.LEATHER_WHIP.get()){
+                if(hiteffect_beneficial != null){
+                    hiteffect_beneficial.applyAll( owner, hurter);
+                }
+                // 如果是皮鞭
+                damage *= 0.2F;
+            }else{
+                return false;
+            }
+        }
+        actualHurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON,  owner), (float) damage);
+        return trigger;
     }
 
     @Override

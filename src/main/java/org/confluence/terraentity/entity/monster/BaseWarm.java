@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
 import org.confluence.terraentity.entity.ai.goal.ComeAndBackDashAttackGoal;
 import org.confluence.terraentity.entity.ai.goal.RandomWanderGoal;
@@ -52,6 +53,11 @@ public class BaseWarm extends AbstractMonster {
     @Override
     public void tick() {
         super.tick();
+        if(!isAlive()) {
+            this.noPhysics = false;
+            addDeltaMovement(new Vec3(0,-0.05f,0));
+//            return;
+        }
         for (int i = 0; i < this.bodySegments.length; i++) {
 
             Entity leader = i == 0 ? this : this.bodySegments[i - 1];
@@ -68,14 +74,21 @@ public class BaseWarm extends AbstractMonster {
             diff = diff.normalize().scale(segInternal);
 
             // 弹簧恢复力
-//            float angle = (((leader.getYRot() + 180) * Mth.PI) / 180.0F);
-//            double straightenForce = 0.05D + (1.0D / (i + 1)) * 0.5D;
-//            if (this.isDeadOrDying()) straightenForce = 0.0D; //Dead snakes don't move
-//            double idealX = -Mth.sin(angle) * straightenForce;
-//            double idealZ = Mth.cos(angle) * straightenForce;
-//            double groundY = cur.isInWall() ? followY + 2.0F : followY;
-//            double idealY = (groundY - followY) * straightenForce;
-//            diff = diff.add(idealX, idealY, idealZ).normalize();
+//            if(!this.isAlive()) {
+//                float angle = (((leader.getYRot() + 180) * Mth.PI) / 180.0F);
+//                double straightenForce = 0.05D + (1.0D / (i + 1)) * 0.5D;
+//                if (this.isDeadOrDying()) straightenForce = 0.0D; //Dead snakes don't move
+//                double idealX = -Mth.sin(angle) * straightenForce;
+//                double idealZ = Mth.cos(angle) * straightenForce;
+//                double groundY = cur.isInWall() ? followY + 2.0F : followY;
+//                double idealY = (groundY - followY) * straightenForce;
+//                diff = diff.add(idealX, idealY, idealZ).normalize();
+//            }
+            if(!this.isAlive()){
+                float dy = (float) (this.getY() - followY);
+                if(dy < 0)
+                    diff = diff.add(new Vec3(0,dy * this.deathTime / 100,0 ));
+            }
 
             double f = 1.0D;
 
@@ -93,7 +106,7 @@ public class BaseWarm extends AbstractMonster {
             cur.setXRot(pitch);
 
             cur.setDeltaMovement(destX - cur.getX(), destY - cur.getY(), destZ - cur.getZ());
-            cur.moveTo(destX, destY, destZ,yaw,pitch);
+            cur.moveTo(destX, destY, destZ, yaw, pitch);
 
             cur.doCollisionAttack(e->canAttack(e),
                     e->doHurtTarget(e)
@@ -101,7 +114,12 @@ public class BaseWarm extends AbstractMonster {
 
         }
     }
-
+    @Override
+    protected void tickDeath() {
+        if(this.onGround()) {
+            super.tickDeath();
+        }
+    }
     @Override
     public boolean isMultipartEntity() {
         return true;
@@ -109,6 +127,7 @@ public class BaseWarm extends AbstractMonster {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        if(this.getHealth() <= 0) return false;
         return super.hurt(source, amount);
     }
 

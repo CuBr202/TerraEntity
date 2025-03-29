@@ -19,6 +19,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
+import net.neoforged.neoforge.entity.PartEntity;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.SingleBooleanComponent;
 import org.confluence.terraentity.init.TEAttachments;
@@ -86,34 +87,38 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        if(!level().isClientSide){
-            if(result.getEntity() instanceof LivingEntity living && living.isAlive()
-                    && this.getOwner() instanceof LivingEntity owner && !this.getOwner().is(living)
-            ){
-                penetrationCount--;
-                ResourceLocation temp = TerraEntity.asResource("temp_boomerang");
-                owner.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(temp, modifier.damage - 1, AttributeModifier.Operation.ADD_VALUE));
-                float damage = (float) owner.getAttributeValue(Attributes.ATTACK_DAMAGE);
-                owner.getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(temp);
-                var data = weapon.get(TEDataComponentTypes.EFFECT_STRATEGY);
-                if(data != null) {
-                    data.applyAll((LivingEntity) this.getOwner(), living);
-                }
-                living.hurt(this.damageSources().mobProjectile(this,owner), damage);
-                //击退
-                doKnockback(living);
+//        if(!level().isClientSide){
+            Entity hurter = result.getEntity();
+            Entity actualHurter = hurter;
+            if(hurter instanceof PartEntity<?> part){
+                hurter = part.getParent();
             }
-            if(!modifier.canPenetrate && penetrationCount <= 0) {
-                if(!isBacking) {
-                    backTime = this.tickCount;
-                    this.entityData.set(DATA_BACKING_TIME, backTime);
-                    this.entityData.set(DATA_BACKING, true);
-                    backSpeed = (float) this.getDeltaMovement().length();
+            if(this.getOwner() instanceof LivingEntity owner && this.getOwner() != actualHurter) {
+                if (hurter instanceof LivingEntity living && actualHurter.isAlive()) {
+                    penetrationCount--;
+                    ResourceLocation temp = TerraEntity.asResource("temp_boomerang");
+                    owner.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(temp, modifier.damage - 1, AttributeModifier.Operation.ADD_VALUE));
+                    float damage = (float) owner.getAttributeValue(Attributes.ATTACK_DAMAGE);
+                    owner.getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(temp);
+                    var data = weapon.get(TEDataComponentTypes.EFFECT_STRATEGY);
+                    if (data != null) {
+                        data.applyAll((LivingEntity) this.getOwner(), living);
+                    }
+                    actualHurter.hurt(this.damageSources().mobProjectile(this, owner), damage);
+                    //击退
+                    doKnockback(living);
                 }
-                isBacking = true;
-
+                if (!modifier.canPenetrate && penetrationCount <= 0) {
+                    if (!isBacking) {
+                        backTime = this.tickCount;
+                        this.entityData.set(DATA_BACKING_TIME, backTime);
+                        this.entityData.set(DATA_BACKING, true);
+                        backSpeed = (float) this.getDeltaMovement().length();
+                    }
+                    isBacking = true;
+                }
             }
-        }
+//        }
     }
 
     @Override
@@ -124,7 +129,12 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
         if (!target.isAttackable()) {
             return false;
         }
-        if(!(target instanceof LivingEntity)) return false;
+        if(!(target instanceof LivingEntity)){
+            if(target instanceof PartEntity<?> part && part.getParent() instanceof LivingEntity){
+                return true;
+            }
+            return false;
+        }
         if(!TEUtils.attackTamableTest.test(entity, target)) return false;
 
         if(entity != null && !entity.isPassengerOfSameVehicle(target))

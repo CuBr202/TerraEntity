@@ -57,7 +57,9 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICo
             this.getParent().playSound(hurtSound);
         }
         if(this.getParent().getHealth() <= 0) {
-            this.getParent().die(source);
+            return false;
+//            this.getParent().die(source);
+
         }
 
         this.hurtTime = 10;
