@@ -26,6 +26,7 @@ import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.item.Boomerang;
 import org.confluence.terraentity.item.Boomerang.BoomerangModifier;
+import org.confluence.terraentity.utils.TEUtils;
 
 public class BoomerangProjectile extends AbstractHurtingProjectile {
 
@@ -117,14 +118,19 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
 
     @Override
     protected boolean canHitEntity(Entity target) {
+        Entity entity = this.getOwner();
+        if(entity == target) return false;
+
         if (!target.isAttackable()) {
             return false;
         }
         if(!(target instanceof LivingEntity)) return false;
-        Entity entity = this.getOwner();
-        if(entity == null || !entity.isPassengerOfSameVehicle(target))
+        if(!TEUtils.attackTamableTest.test(entity, target)) return false;
+
+        if(entity != null && !entity.isPassengerOfSameVehicle(target))
             return true;
-        return target != entity;
+
+        return false;
     }
 
     protected void doKnockback(LivingEntity entity) {

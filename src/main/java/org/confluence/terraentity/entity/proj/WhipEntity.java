@@ -5,10 +5,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.item.ItemStack;
@@ -19,8 +16,11 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.dynamic_curve.SplineKeyframeDynamicCurve;
+import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.TEAttributes;
+import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.init.item.TEWhipItems;
 import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -41,6 +41,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
     protected float _rangeFactor = 0.5f; // 基础鞭范围
     public int hitCooldown = 5; // 击中冷却时间
     public EffectStrategyComponent hiteffect; // 击中特效
+    public EffectStrategyComponent hiteffect_beneficial; // 农场主增益
 
 
     // 初始位置
@@ -113,6 +114,12 @@ public class WhipEntity extends AbstractHurtingProjectile {
      */
     public void setWeapon(ItemStack weapon) {
         this.entityData.set(DATA_WEAPON, weapon);
+        var data = weapon.get(TEDataComponentTypes.EFFECT_STRATEGY);
+        if (data != null)
+            hiteffect = data;
+        var data1 = weapon.get(TEDataComponentTypes.EFFECT_STRATEGY_BENEFICIAL);
+        if (data1 != null)
+            hiteffect_beneficial = data1;
     }
 
     /**
@@ -191,6 +198,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
 
                 }
                 if(!level().isClientSide){
+                    boolean trigger = false;
                     List<Vec3> attackPoints = keyPositions.stream().map(Vec3::new).toList();
 
                     // 攻击
@@ -202,14 +210,33 @@ public class WhipEntity extends AbstractHurtingProjectile {
                         for (var entity : level().getEntities(this, aabb, e -> e != getOwner())) {
                             if (entity instanceof LivingEntity hurter) {
                                 if(!hitEntities.containsKey(entity)){
-                                    if(owner.canAttack(hurter) && hurter.canBeSeenAsEnemy() && TEUtils.attackTamableTest.test(owner, hurter)) {
+                                    if(owner.canAttack(hurter) && hurter.canBeSeenAsEnemy()) {
                                         hitEntities.put(entity, hitCooldown);
                                         double damage = owner.getAttributeValue(TEAttributes.SUMMON_DAMAGE);
 
-                                        if (hiteffect != null) {
-                                            hiteffect.applyAll( owner, hurter);
+                                        if(TEUtils.attackTamableTest.test(owner, hurter)){
+                                            trigger = true;
+                                            if (hiteffect != null) {
+                                                hiteffect.applyAll( owner, hurter);
+                                            }
+                                        }else{
+                                            // 当命中宠物时
+                                            if(getWeapon().getItem() == TEWhipItems.LEATHER_WHIP.get()){
+                                                if(hiteffect_beneficial != null){
+                                                    hiteffect_beneficial.applyAll( owner, hurter);
+                                                }
+                                                // 如果是皮鞭
+                                                damage *= 0.2F;
+                                            }else{
+                                                return;
+                                            }
                                         }
                                         hurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON,  owner), (float) damage);
+                                    }
+                                    if(hurter instanceof ISummonMob<?>){
+                                        if(hiteffect_beneficial != null){
+                                            hiteffect_beneficial.applyAll( owner, hurter);
+                                        }
                                     }
                                 }else{
                                     hitEntities.put(entity, hitEntities.get(entity) - 1);
@@ -221,10 +248,19 @@ public class WhipEntity extends AbstractHurtingProjectile {
                             }
                         }
                     }
+                    if(trigger){
+                        // 命中敌人造成伤害才消耗耐久
+                        getWeapon().hurtAndBreak(5, owner, EquipmentSlot.MAINHAND);
+                    }
                 }
             }
         }
         super.tick();
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return false;
     }
 
     @Override

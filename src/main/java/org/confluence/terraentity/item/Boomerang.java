@@ -1,6 +1,7 @@
 package org.confluence.terraentity.item;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.level.Level;
 
 import org.confluence.terraentity.TerraEntity;
@@ -138,6 +140,7 @@ public class Boomerang extends Item {
         public boolean shouldApplyCd = false;       //是否应用冷却
         public boolean fire = false;                //是否渲染火焰
 
+        int durability = 0;
 //调参后这是木回旋镖的数值
 
         public ItemAttributeModifiers.Builder attributeModifiersBuilder = ItemAttributeModifiers.builder();
@@ -236,8 +239,16 @@ public class Boomerang extends Item {
             this.maxPenetration = maxPenetration;
             return this;
         }
-
+        public BoomerangModifier setDurability(int durability) {
+            this.durability = durability;
+            return this;
+        }
         public Properties buildProperties(Properties properties) {
+            if(durability > 0){
+                properties.durability(durability);
+            }else{
+                properties.component(DataComponents.UNBREAKABLE, new Unbreakable(true));
+            }
             return modifierFunctions.stream().reduce(properties, (p, f) -> f.apply(p), (p1, p2) -> p1);
         }
 

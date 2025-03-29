@@ -21,8 +21,10 @@ public class TEWhipItems {
     // Whip Items
     public static final DeferredItem<BaseWhipItem> LEATHER_WHIP = registerWhip("leather_whip", 2f, 2, 0.2F, 20,0, p->p
             .setDurability(100)
-    );
-        public static final DeferredItem<BaseWhipItem> SLUB_WHIP = registerWhip("slub_whip", 2.3f, 3, 0, 20,0.1F, p->p
+            .component(TEDataComponentTypes.EFFECT_STRATEGY_BENEFICIAL, EffectStrategyComponent.of(
+                    TimePossibilityAmplifierEffect.of("strength", MobEffects.DAMAGE_BOOST, 100)
+            )));
+    public static final DeferredItem<BaseWhipItem> SLUB_WHIP = registerWhip("slub_whip", 2.3f, 3, 0, 20,0.1F, p->p
             .setDurability(150)
             .setBlock(Blocks.BAMBOO::defaultBlockState)
     );

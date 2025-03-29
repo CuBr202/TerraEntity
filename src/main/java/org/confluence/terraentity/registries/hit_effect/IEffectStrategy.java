@@ -49,6 +49,18 @@ public interface IEffectStrategy {
             tooltipComponents.add(Component.literal(" - ").append(effect.getDescription()).withColor(0xFF00FF));
         }
     }
+    /**
+     * 效果描述
+     */
+    static void appendDescription(List<Component> tooltipComponents, List<? extends IEffectStrategy> effectStrategy, Component title, int textColor) {
+        int size = effectStrategy.size();
+        if(size == 0) return;
+        tooltipComponents.add(title);
+        for(int i = 0; i < size; i++) {
+            IEffectStrategy effect = effectStrategy.get(i);
+            tooltipComponents.add(Component.literal(" - ").append(effect.getDescription()).withColor(textColor));
+        }
+    }
 
     /**
      * 多组件复合效果描述

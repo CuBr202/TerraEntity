@@ -8,6 +8,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
+import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 import org.confluence.terraentity.data.gen.tags.TEDamageTypeTagsProvider;
 import org.confluence.terraentity.data.gen.tags.TEBlockTagsProvider;
 import org.confluence.terraentity.data.gen.tags.TEEntityTypeTagsProvider;

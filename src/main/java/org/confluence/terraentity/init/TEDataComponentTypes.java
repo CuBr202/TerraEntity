@@ -16,6 +16,10 @@ public final class TEDataComponentTypes {
             "effect_strategy", builder -> builder.persistent(EffectStrategyComponent.CODEC).networkSynchronized(EffectStrategyComponent.STREAM_CODEC)
     );
 
+    public static final Supplier<DataComponentType<EffectStrategyComponent>> EFFECT_STRATEGY_BENEFICIAL = TYPES.registerComponentType(
+            "effect_strategy_beneficial", builder -> builder.persistent(EffectStrategyComponent.CODEC).networkSynchronized(EffectStrategyComponent.STREAM_CODEC)
+    );
+
     public static final Supplier<DataComponentType<EffectStrategyComponent>> BOW_FULL_CHARGE_EFFECT_STRATEGY = TYPES.registerComponentType(
             "bow_full_charge_effect_strategy", builder -> builder.persistent(EffectStrategyComponent.CODEC).networkSynchronized(EffectStrategyComponent.STREAM_CODEC)
     );

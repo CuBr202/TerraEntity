@@ -188,6 +188,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("tooltip.terra_entity.summon_info", "仆从栏位: %d / %d");
 
         add("tooltip.terra_entity.whip.hit_effect", "命中效果: ");
+        add("tooltip.terra_entity.whip.hit_effect_beneficial", "农场主的训斥");
 
             // boomerang
         add("tooltip.terra_entity.boomerang.penetration", "穿透数量");
@@ -221,6 +222,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.effect.strategy.set_fire_5_sec", "着火啦 5秒");
         add("terra_entity.effect.strategy.blood_butchered", "血腥屠宰");
         add("terra_entity.effect.strategy.bei_dou", "随机5种效果:\n     霜冻 Ⅳ 10秒\n     烈火焚身 Ⅳ 10秒\n     凋零 Ⅳ 10秒\n     中毒 Ⅳ 10秒\n     瞬间伤害 Ⅷ");
+
+        add("terra_entity.effect.strategy.strength", "愤怒");
 
         // 车万女仆
         add("task.terra_entity.boomerang_attack", "回旋镖攻击");

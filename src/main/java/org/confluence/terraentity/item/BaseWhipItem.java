@@ -5,7 +5,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -117,11 +116,8 @@ public class BaseWhipItem extends Item {
                 whipEntity.setOwner(player);
                 whipEntity.setPos(player.position().add(0, 1, 0).add(TEUtils.getPlayerHandPos(player)));
                 whipEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.05f, 1.0F);
-                var data = stack.get(TEDataComponentTypes.EFFECT_STRATEGY);
-                if (data != null)
-                    whipEntity.hiteffect = data;
                 whipEntity.hitCooldown = hitCooldown;
-                stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
+//                stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
                 level.addFreshEntity(whipEntity);
 //                stack.hurtAndBreak(1, player, (Consumer<LivingEntity>) (e -> e.playSound(SoundEvents.)));
             }
@@ -136,6 +132,11 @@ public class BaseWhipItem extends Item {
         if (data != null) {
             IEffectStrategy.appendDescription(tooltipComponents, data.effects(), Component.translatable("tooltip.terra_entity.whip.hit_effect").withStyle(style -> style.withColor(0xB4C363)));
         }
+        // 农场主增益
+//        var data1 = stack.get(TEDataComponentTypes.EFFECT_STRATEGY_BENEFICIAL);
+//        if (data1 != null) {
+//            IEffectStrategy.appendDescription(tooltipComponents, data1.effects(), Component.translatable("tooltip.terra_entity.whip.hit_effect_beneficial").withStyle(style -> style.withColor(0x84C363)), 0x678563);
+//        }
     }
 
     public static class WhipProperties extends Properties {

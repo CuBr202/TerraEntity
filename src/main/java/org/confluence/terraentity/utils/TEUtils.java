@@ -656,6 +656,8 @@ public final class TEUtils {
         ){
             return false;
         }
+        if(target instanceof ISummonMob<?>)
+            return false;
         return true;
     };
 

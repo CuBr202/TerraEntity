@@ -75,6 +75,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("tooltip.terra_entity.summon_item_entity", "Summon Entity: %s");
         add("tooltip.terra_entity.summon_info", "Summon Info: %d / %d");
         add("tooltip.terra_entity.whip.hit_effect", "Hit Effect:");
+        add("tooltip.terra_entity.whip.hit_effect_beneficial", "Farmer's Flogging");
 
             // boomerang
         add("tooltip.terra_entity.boomerang.penetration", "Penetrates Count");
@@ -108,6 +109,9 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.effect.strategy.set_fire_5_sec", "Set fire 5 seconds");
         add("terra_entity.effect.strategy.blood_butchered", "Blood Butchered");
         add("terra_entity.effect.strategy.bei_dou", "Random 5 effects:\\nfrozen burn ⅳ 10 seconds\\nhell fire ⅳ 10 seconds\\nwither ⅳ 10 seconds\\npoison ⅳ 10 seconds\\ninstant harm ⅷ");
+
+        add("terra_entity.effect.strategy.strength", "Anger");
+
 
         // TouhouLittleMaid
         add("task.terra_entity.boomerang_attack.condition.has_boomerang", "Mainhand holds a boomerang");

@@ -26,28 +26,28 @@ public class TEBoomerangItems {
 
 
     public static final DeferredItem<Boomerang> WOOD_BOOMERANG = register("wood_boomerang",3,
-            new Boomerang.BoomerangModifier()
+            new Boomerang.BoomerangModifier().setDurability(100)
     );
     public static final DeferredItem<Boomerang> ENCHANTED_BOOMERANG = register("enchanted_boomerang",4.4f,
-            NORMAL_BOOMERANG_MODIFIER.apply(15,1.55f,1.55f)
+            NORMAL_BOOMERANG_MODIFIER.apply(15,1.55f,1.55f).setDurability(300)
 
     );
     public static final DeferredItem<Boomerang> SHROOMERANG = register("shroomerang",4.4f,
-            NORMAL_BOOMERANG_MODIFIER.apply(15,1.55f,1.55f)
+            NORMAL_BOOMERANG_MODIFIER.apply(15,1.55f,1.55f).setDurability(500)
     );
     public static final DeferredItem<Boomerang> ICE_BOOMERANG = register("ice_boomerang",5.5f,
             NORMAL_BOOMERANG_MODIFIER.apply(16,1.6f,1.6f)
-                    .setOnHitEffect(TEEffectStrategies.Components.FROST_BURN_BOOMERANG_EFFECT.get())
+                    .setOnHitEffect(TEEffectStrategies.Components.FROST_BURN_BOOMERANG_EFFECT.get()).setDurability(500)
     );   //50% 的几率造成 3 秒的霜冻。
 
     public static final DeferredItem<Boomerang> TRIMARANG = register("trimarang",5.5f,
             MULTI_BOOMERANG_MODIFIER.apply(10,3,
-                    NORMAL_BOOMERANG_MODIFIER.apply(17,1.85f,1.85f))
+                    NORMAL_BOOMERANG_MODIFIER.apply(17,1.85f,1.85f)).setDurability(1000)
     );   // 使用三次
 
     public static final DeferredItem<Boomerang> FLAMARANG = register("flamarang",12.5f,
             NORMAL_BOOMERANG_MODIFIER.apply(18,1.85f,1.85f)
-                    .setOnHitEffect(TEEffectStrategies.Components.HELL_FIRE_EFFECT.get())
+                    .setOnHitEffect(TEEffectStrategies.Components.HELL_FIRE_EFFECT.get()).setDurability(1500)
     );   //狱炎效果。
 
 
@@ -70,7 +70,7 @@ public class TEBoomerangItems {
     private static DeferredItem<Boomerang> register(String name, float damage, Boomerang.BoomerangModifier boomerangModifier) {
         return ITEMS.register(name, () -> new Boomerang(damage,boomerangModifier,new Item.Properties().stacksTo(1)
                 .component(TEDataComponentTypes.BOOMERANG_READY, SingleBooleanComponent.TRUE)
-                .component(DataComponents.UNBREAKABLE, new Unbreakable(true))
+//                .component(DataComponents.UNBREAKABLE, new Unbreakable(true))
                 .component(DataComponents.ATTRIBUTE_MODIFIERS, boomerangModifier.attributeModifiersBuilder.build())));
     }
 
