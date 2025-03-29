@@ -22,7 +22,7 @@ public class TEWhipItems {
     public static final DeferredItem<BaseWhipItem> LEATHER_WHIP = registerWhip("leather_whip", 2f, 2, 0.2F, 20,0, p->p
             .setDurability(100)
     );
-        public static final DeferredItem<BaseWhipItem> BAMBOO_WHIP = registerWhip("bamboo_whip", 2.3f, 3, 0, 20,0.1F, p->p
+        public static final DeferredItem<BaseWhipItem> SLUB_WHIP = registerWhip("slub_whip", 2.3f, 3, 0, 20,0.1F, p->p
             .setDurability(150)
             .setBlock(Blocks.BAMBOO::defaultBlockState)
     );

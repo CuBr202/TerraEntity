@@ -130,7 +130,7 @@ public class TEChineseProvider extends LanguageProvider {
 
         // 鞭子
         add(TEWhipItems.LEATHER_WHIP.get(), "皮鞭");
-        add(TEWhipItems.BAMBOO_WHIP.get(), "竹鞭");
+        add(TEWhipItems.SLUB_WHIP.get(), "竹节鞭");
         add(TEWhipItems.RUBY_WHIP.get(), "红玉鞭");
         add(TEWhipItems.AMBER_WHIP.get(), "琥珀鞭");
         add(TEWhipItems.TOPAZ_WHIP.get(), "黄玉鞭");
