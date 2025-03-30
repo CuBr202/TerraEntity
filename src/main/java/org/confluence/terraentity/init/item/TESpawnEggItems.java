@@ -47,6 +47,7 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> FLYING_FISH_SPAWN_EGG = registerEgg("flying_fish_spawn_egg", TEEntities.FLYING_FISH, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> DRIPPLER_SPAWN_EGG = registerEgg("drippler_spawn_egg", TEEntities.DRIPPLER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> BLOOD_ZOMBIE_SPAWN_EGG = registerEgg("blood_zombie_spawn_egg", TEEntities.BLOOD_ZOMBIE, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> WANDERING_EYE_FISH_SPAWN_EGG = registerEgg("wandering_eye_fish_spawn_egg", TEEntities.WANDERING_EYE_FISH, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> CRIMSON_KEMERA_EGG = registerEgg("crimson_kemera_egg", TEEntities.CRIMSON_KEMERA, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> EATER_OF_SOULS_SPAWN_EGG = registerEgg("eater_of_souls_spawn_egg", TEEntities.EATER_OF_SOULS, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> FACE_MONSTER_EGG = registerEgg("face_monster_egg", TEEntities.FACE_MONSTER, 0xffffff, 0xffffff);

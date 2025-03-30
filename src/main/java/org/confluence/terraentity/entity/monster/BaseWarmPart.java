@@ -118,4 +118,8 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICo
     public boolean shouldDoCollision() {
         return getParent().shouldDoCollision();
     }
+    @Override
+    public boolean isSprinting() {
+        return getParent().isSprinting();
+    }
 }

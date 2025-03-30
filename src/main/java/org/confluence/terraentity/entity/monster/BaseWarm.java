@@ -1,16 +1,20 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
@@ -127,6 +131,7 @@ public class BaseWarm extends AbstractMonster {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+
         if(this.getHealth() <= 0) return false;
         return super.hurt(source, amount);
     }
@@ -158,7 +163,16 @@ public class BaseWarm extends AbstractMonster {
 
     @Override
     public boolean isInWall() {
-        return false;
+        float f = this.getDefaultDimensions(Pose.STANDING).width() * 0.8F;
+        AABB aabb = AABB.ofSize(this.getEyePosition(), (double)f, 1.0E-6, (double)f);
+        return BlockPos.betweenClosedStream(aabb).anyMatch((p_201942_) -> {
+            BlockState blockstate = this.level().getBlockState(p_201942_);
+
+            return !blockstate.isAir() && blockstate.isSuffocating(this.level(), p_201942_) && Shapes.joinIsNotEmpty(blockstate.getCollisionShape(this.level(), p_201942_).move((double)p_201942_.getX(), (double)p_201942_.getY(), (double)p_201942_.getZ()), Shapes.create(aabb), BooleanOp.AND);
+        });
+    }
+    public boolean isInvulnerableTo(DamageSource source) {
+        return super.isInvulnerableTo(source) || source.is(DamageTypes.IN_WALL);
     }
 
 }

@@ -27,6 +27,7 @@ import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
 import org.confluence.terraentity.client.boss.renderer.*;
 import org.confluence.terraentity.client.entity.model.GiantShellyModel;
+import org.confluence.terraentity.client.entity.model.NymphModel;
 import org.confluence.terraentity.client.entity.renderer.*;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.boss.*;
@@ -87,6 +88,7 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMSON_KEMERA = registerSimpleMonster("crimson_kemera", FlyMonsterPrefab.CRIMSON_KEMERA_BUILDER,1.2f,1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> EATER_OF_SOULS = registerSimpleMonster("eater_of_souls", FlyMonsterPrefab.EATER_OF_SOULS_BUILDER,1.2f,1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER,1.6f,1.6f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> WANDERING_EYE_FISH = registerSimpleMonster("wandering_eye_fish", FlyMonsterPrefab.WANDERING_EYE_FISH_BUILDER,1.4f,1.4f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.9F,0.9F);
     public static final DeferredHolder<EntityType<?>, EntityType<VisualNeuron>> VISUAL_NEURON = registerEntity("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
         // 蜜蜂
@@ -112,7 +114,8 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> GIANT_WORM = registerEntity("giant_worm", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(31).setAttackDamage(9).setArmor(3)),2F,2F);
 
     public static final DeferredHolder<EntityType<?>, EntityType<GiantShelly>> GIANT_SHELLY = registerEntity("giant_shelly", GiantShelly::new,0.8F,0.8F);
-
+    // 芙宁
+    public static final DeferredHolder<EntityType<?>, EntityType<Nymph>> NYMPH = registerEntity("nymph", Nymph::new,0.8F,1.95F);
 
 
 
@@ -210,6 +213,7 @@ public final class TEEntities {
         event.registerEntityRenderer(CRIMSON_KEMERA.get(), c-> new GeoNormalRenderer<>(c,CRIMSON_KEMERA.getId(),true));
         event.registerEntityRenderer(EATER_OF_SOULS.get(), c-> new GeoNormalRenderer<>(c,EATER_OF_SOULS.getId(),true));
         event.registerEntityRenderer(DRIPPLER.get(), c-> new GeoNormalRenderer<>(c,DRIPPLER.getId(),false,2f,0));
+        event.registerEntityRenderer(WANDERING_EYE_FISH.get(), c-> new GeoNormalRenderer<>(c,WANDERING_EYE_FISH.getId(),false,1.5f,0));
         event.registerEntityRenderer(FLYING_FISH.get(), c-> new GeoNormalRenderer<>(c,FLYING_FISH.getId(),true,0.75f,0));
 
 
@@ -238,6 +242,8 @@ public final class TEEntities {
         // bee
         event.registerEntityRenderer(LITTLE_HORNET.get(), c->new GeoNormalRenderer<>(c, LITTLE_HORNET.getId(),true, 1, 0.5f));
         event.registerEntityRenderer(HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 1, 0.5f));
+
+        event.registerEntityRenderer(NYMPH.get(), c->new GeoNormalRenderer<>(c, new NymphModel<>(NYMPH.getId()),false,1,0f));
 
 
         // boss
@@ -308,6 +314,7 @@ public final class TEEntities {
         event.put(FLYING_FISH.get(), AbstractMonster.createAttributes().build());
         event.put(CRIMSON_KEMERA.get(), AbstractMonster.createAttributes().build());
         event.put(DRIPPLER.get(), AbstractMonster.createAttributes().build());
+        event.put(WANDERING_EYE_FISH.get(), AbstractMonster.createAttributes().build());
         event.put(EATER_OF_SOULS.get(), AbstractMonster.createAttributes().build());
 
 
@@ -326,6 +333,7 @@ public final class TEEntities {
         event.put(HORNET.get(), AbstractMonster.createAttributes().build());
         event.put(LITTLE_HORNET.get(), AbstractMonster.createAttributes().build());
 
+        event.put(NYMPH.get(), AbstractMonster.createAttributes().build());
 
         // boss
         event.put(KING_SLIME.get(), KingSlime.createSlimeAttributes().build());
@@ -394,6 +402,7 @@ public final class TEEntities {
         event.register(ICE_BAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(SPORE_BAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
+        event.register(NYMPH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
 
 
