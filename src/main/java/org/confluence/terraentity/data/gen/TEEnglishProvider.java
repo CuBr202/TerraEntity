@@ -41,6 +41,8 @@ public class TEEnglishProvider extends LanguageProvider {
 
         add("itemGroup.terraentity.title", "Terra Entity");
 
+        add("entity.terra_entity.mother_slime", "Mother Slime");
+        add("entity.terra_entity.baby_slime", "Baby Slime");
 
         add("message.terraentity.boss_spawn", "%s Has Awoken!");
         add("message.terraentity.boss_leave", "%s Have Been Defeated!");

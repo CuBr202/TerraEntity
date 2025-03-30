@@ -36,6 +36,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.tropic_slime", "热带史莱姆");
         add("entity.terra_entity.green_slime", "绿色史莱姆");
         add("entity.terra_entity.black_slime", "黑色史莱姆");
+        add("entity.terra_entity.mother_slime", "史莱姆之母");
+        add("entity.terra_entity.baby_slime", "史莱姆宝宝");
         add("entity.terra_entity.lava_slime", "熔岩史莱姆");
         add("entity.terra_entity.demon_eye", "恶魔眼");
         add("entity.terra_entity.flying_fish", "飞鱼");
