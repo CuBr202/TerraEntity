@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.monster.slime;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -128,6 +129,19 @@ public class BlackSlime extends Slime implements DeathAnimOptions {
             }
         }
     }
+    @Override
+    public @NotNull Component getName() {
+        if (!hasCustomName()){
+            switch (getSize()) {
+                case 4 -> {
+                    return Component.translatable("entity.terra_entity.mother_slime");
+                }
+                case 1 -> {
+                    return Component.translatable("entity.terra_entity.baby_slime");
+                }
+            }
 
-
+        }
+        return super.getName();
+    }
 }

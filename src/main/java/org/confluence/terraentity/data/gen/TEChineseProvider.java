@@ -35,7 +35,9 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.desert_slime", "沙漠史莱姆");
         add("entity.terra_entity.tropic_slime", "热带史莱姆");
         add("entity.terra_entity.green_slime", "绿色史莱姆");
-        add("entity.terra_entity.black_slime", "史莱姆之母");
+        add("entity.terra_entity.black_slime", "黑色史莱姆");
+        add("entity.terra_entity.mother_slime", "史莱姆之母");
+        add("entity.terra_entity.baby_slime", "史莱姆宝宝");
         add("entity.terra_entity.lava_slime", "熔岩史莱姆");
         add("entity.terra_entity.demon_eye", "恶魔眼");
         add("entity.terra_entity.flying_fish", "飞鱼");
@@ -88,7 +90,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.PINK_SLIME_SPAWN_EGG.get(), "粉色史莱姆刷怪蛋");
         add(TESpawnEggItems.ICE_SLIME_SPAWN_EGG.get(), "冰冻史莱姆刷怪蛋");
         add(TESpawnEggItems.GREEN_SLIME_SPAWN_EGG.get(), "绿色史莱姆刷怪蛋");
-        add(TESpawnEggItems.BLACK_SLIME_SPAWN_EGG.get(), "史莱姆之母刷怪蛋");
+        add(TESpawnEggItems.BLACK_SLIME_SPAWN_EGG.get(), "黑色史莱姆刷怪蛋");
         add(TESpawnEggItems.CRIMSON_SLIME_SPAWN_EGG.get(), "猩红史莱姆刷怪蛋");
         add(TESpawnEggItems.TROPIC_SLIME_SPAWN_EGG.get(), "热带史莱姆刷怪蛋");
         add(TESpawnEggItems.LUMINOUS_SLIME_SPAWN_EGG.get(), "夜明史莱姆刷怪蛋");
