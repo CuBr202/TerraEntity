@@ -22,34 +22,34 @@
 				},
 				"RightArm": {
 					"rotation": {
-						"vector": [31.52504, 9.57658, -11.59948]
+						"vector": [-27.93552, -50.01347, -4.33089]
 					},
 					"position": {
-						"vector": [0, -10.5, -2]
+						"vector": [0.25, -10.75, -1.5]
 					}
 				},
 				"LeftArm": {
 					"rotation": {
-						"vector": [0.82777, 19.84302, 29.39942]
+						"vector": [1.14903, 47.33919, 29.96344]
 					},
 					"position": {
-						"vector": [-0.5, -12, -4.25]
+						"vector": [-0.5, -12, -3.5]
 					}
 				},
 				"RightLeg": {
 					"rotation": {
-						"vector": [60, 0, 90]
+						"vector": [52.5, 0, 90]
 					},
 					"position": {
-						"vector": [-1.25, -10, -7.25]
+						"vector": [-1, -10, -7]
 					}
 				},
 				"LeftLeg": {
 					"rotation": {
-						"vector": [60, 0, -90]
+						"vector": [55, 0, -90]
 					},
 					"position": {
-						"vector": [1.25, -10, -5.75]
+						"vector": [1.25, -10, -6]
 					}
 				}
 			}

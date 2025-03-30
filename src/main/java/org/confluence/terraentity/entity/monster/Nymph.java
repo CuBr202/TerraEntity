@@ -21,7 +21,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 public class Nymph extends AbstractMonster{
 
     public Nymph(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(10,1,1,5,1,1).getPrefab());
+        super(type, level, new AbstractPrefab(156,3,15,5,1,1).getPrefab());
 
     }
 

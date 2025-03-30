@@ -42,6 +42,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.demon_eye", "恶魔眼");
         add("entity.terra_entity.flying_fish", "飞鱼");
         add("entity.terra_entity.giant_shelly", "巨型卷壳怪");
+        add("entity.terra_entity.nymph", "宁芙");
         add("entity.terra_entity.drippler", "滴滴怪");
         add("entity.terra_entity.blood_zombie", "血腥僵尸");
         add("entity.terra_entity.wandering_eye_fish", "游荡眼球怪鱼");
@@ -100,6 +101,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
         add(TESpawnEggItems.GIANT_SHELLY_SPAWN_EGG.get(), "巨型卷壳怪刷怪蛋");
         add(TESpawnEggItems.GIANT_WORM_SPAWN_EGG.get(), "巨型蠕虫刷怪蛋");
+        add(TESpawnEggItems.NYMPH_SPAWN_EGG.get(), "宁芙刷怪蛋");
         add(TESpawnEggItems.TOMB_CRAWLER_SPAWN_EGG.get(), "墓穴爬虫刷怪蛋");
         add(TESpawnEggItems.CAVE_BAT_SPAWN_EGG.get(), "洞穴蝙蝠刷怪蛋");
         add(TESpawnEggItems.ICE_BAT_SPAWN_EGG.get(), "冰雪蝙蝠刷怪蛋");
