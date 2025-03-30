@@ -13,6 +13,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.monster.BaseWarm;
 import org.confluence.terraentity.entity.monster.BaseWarmPart;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 
 public class GeoWormRenderer<T extends BaseWarm> extends GeoNormalRenderer<T> {
@@ -54,14 +55,13 @@ public class GeoWormRenderer<T extends BaseWarm> extends GeoNormalRenderer<T> {
     public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
 
         BaseWarmPart part1 = entity.bodySegments[0];
+        poseStack.pushPose();
         Vec3 dir = entity.position().subtract(part1.position());
-        float yaw = (float) (- Math.atan2(dir.z, dir.x));
+        float yRot = Mth.lerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
+        double rad = yRot*Math.PI/180;
         float pitch = (float) (Math.atan2(dir.y,
                 Math.sqrt(dir.x * dir.x + dir.z * dir.z)));
-        poseStack.pushPose();
-//        poseStack.mulPose(Axis.YN.rotation(yaw));
-//        poseStack.mulPose(Axis.XN.rotation(pitch));
-                poseStack.mulPose(Axis.XN.rotation(-pitch));
+        poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotation(-pitch));
 
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
         poseStack.popPose();
@@ -69,8 +69,6 @@ public class GeoWormRenderer<T extends BaseWarm> extends GeoNormalRenderer<T> {
         lerpx = Mth.lerp(partialTick, entity.xOld, entity.getX());
         lerpy = Mth.lerp(partialTick, entity.yOld, entity.getY());
         lerpz = Mth.lerp(partialTick, entity.zOld, entity.getZ());
-
-
 
         for(BaseWarmPart part : entity.bodySegments){
             poseStack.pushPose();

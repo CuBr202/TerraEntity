@@ -42,6 +42,18 @@ public class RandomWanderGoal extends Goal {
 
     @Override
     public boolean canUse() {
+//        if(warm.getTarget() == null) {
+//            // 当目标为空时，且飞的过高
+//            BlockPos pos = warm.blockPosition();
+//            int delta = 0;
+//            while (warm.level().getBlockState(pos).isAir() && pos.getY() > -65) {
+//                pos = pos.below();
+//                delta++;
+//            }
+//            if (delta > 10) {
+//                return true;
+//            }
+//        }
         if (--tickToChangeTarget <= 0) {
             tickToChangeTarget = _tickToChangeTarget + warm.getRandom().nextIntBetweenInclusive(0, 20);
             findWanderTarget();
