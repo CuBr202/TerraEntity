@@ -208,7 +208,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
             }
         }
         if(level().isClientSide){
-            if(ClientConfig.GENERATE_WHIP_PARTICLE.get() && modifier.particle != null) {
+            if(ClientConfig.GENERATE_PROJECTILE_PARTICLE.get() && modifier.particle != null) {
                 ParticleOptions particle = modifier.particle.get();
                 for (int i = 0; i < modifier.particleCount; i++) {
                     level().addParticle(particle, this.getX() + random.nextFloat() - 0.5f, this.getY() + random.nextFloat() - 0.5f, this.getZ() + random.nextFloat() - 0.5f, 0, 0, 0);

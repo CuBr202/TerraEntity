@@ -64,7 +64,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.boss_bar_style", "Boss Health Bar Style");
         add("terra_entity.configuration.boss_bar_number_offset_x", "Boss Health Bar Number Offset-X");
         add("terra_entity.configuration.boss_bar_number_offset_y", "Boss Health Bar Number Offset-Y");
-        add("terra_entity.configuration.generate_whip_particle", "Generate Whip Particle");
+        add("terra_entity.configuration.generate_projectile_particle", "Generate Projectile Particle");
 
 
 

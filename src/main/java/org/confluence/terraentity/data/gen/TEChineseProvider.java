@@ -186,7 +186,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.enableNonSpiderModel", "蜘蛛和谐");
         add("terra_entity.configuration.enableNonSpiderModel.tooltip", "如果你对蜘蛛反感或想美化他们，请开启这个选项");
 
-        add("terra_entity.configuration.generate_whip_particle", "生成鞭子粒子");
+        add("terra_entity.configuration.generate_projectile_particle", "生成弹幕粒子");
 
         // Tooltip
         add("tooltip.terra_entity.summon_item_cost", "仆从占用: %s");
