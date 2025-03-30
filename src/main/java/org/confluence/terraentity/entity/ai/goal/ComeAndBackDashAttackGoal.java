@@ -49,7 +49,8 @@ public class ComeAndBackDashAttackGoal extends Goal {
 
                 soundInternal = (int) (Math.pow( distance, 0.3f) * 0.5f);
                 if(++soundTick >= soundInternal){
-                    warm.playSound(TESounds.DIG_SOUND.get(), 2f, 1f);
+                    if(warm.isInWall())
+                        warm.playSound(TESounds.DIG_SOUND.get(), 2f, 1f);
                     soundTick = 0;
                 }
             }

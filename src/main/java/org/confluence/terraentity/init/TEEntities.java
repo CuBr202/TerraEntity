@@ -27,6 +27,7 @@ import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
 import org.confluence.terraentity.client.boss.renderer.*;
 import org.confluence.terraentity.client.entity.model.GiantShellyModel;
+import org.confluence.terraentity.client.entity.model.NymphModel;
 import org.confluence.terraentity.client.entity.renderer.*;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.boss.*;
@@ -108,7 +109,8 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> GIANT_WORM = registerEntity("giant_worm", (e,l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(31).setAttackDamage(9).setArmor(3)),2F,2F);
 
     public static final DeferredHolder<EntityType<?>, EntityType<GiantShelly>> GIANT_SHELLY = registerEntity("giant_shelly", GiantShelly::new,0.8F,0.8F);
-
+    // 芙宁
+    public static final DeferredHolder<EntityType<?>, EntityType<Nymph>> NYMPH = registerEntity("nymph", Nymph::new,0.8F,1.95F);
 
 
 
@@ -235,6 +237,8 @@ public final class TEEntities {
         event.registerEntityRenderer(LITTLE_HORNET.get(), c->new GeoNormalRenderer<>(c, LITTLE_HORNET.getId(),true, 1, 0.5f));
         event.registerEntityRenderer(HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 1, 0.5f));
 
+        event.registerEntityRenderer(NYMPH.get(), c->new GeoNormalRenderer<>(c, new NymphModel<>(NYMPH.getId()),false,1,0f));
+
 
         // boss
         event.registerEntityRenderer(KING_SLIME.get(), KingSlimeRenderer::new);
@@ -322,6 +326,7 @@ public final class TEEntities {
         event.put(HORNET.get(), AbstractMonster.createAttributes().build());
         event.put(LITTLE_HORNET.get(), AbstractMonster.createAttributes().build());
 
+        event.put(NYMPH.get(), AbstractMonster.createAttributes().build());
 
         // boss
         event.put(KING_SLIME.get(), KingSlime.createSlimeAttributes().build());
@@ -390,6 +395,7 @@ public final class TEEntities {
         event.register(ICE_BAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(SPORE_BAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
+        event.register(NYMPH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
 
 
