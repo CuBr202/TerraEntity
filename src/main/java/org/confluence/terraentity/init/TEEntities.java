@@ -73,7 +73,11 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>,EntityType<HoneySlime>> HONEY_SLIME = ENTITIES.register("honey_slime", () -> EntityType.Builder.<HoneySlime>of((entityType, level) -> new HoneySlime(entityType, level, 0xf8e234), MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(Key("honey_slime")));
     public static final DeferredHolder<EntityType<?>,EntityType<BlackSlime>> BLACK_SLIME = ENTITIES.register("black_slime", () -> EntityType.Builder.of(BlackSlime::new, MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(Key("black_slime")));
     private static DeferredHolder<EntityType<?>, EntityType<BaseSlime>> registerSlime(String prefix, int color, int size) {
-        return ENTITIES.register(prefix + "_slime", () -> EntityType.Builder.<BaseSlime>of((entityType, level) -> new BaseSlime(entityType, level, color, size), MobCategory.MONSTER).sized(0.6f, 0.6f).clientTrackingRange(10).build(Key("" + prefix + "_slime")));
+        return ENTITIES.register(
+                prefix + "_slime",
+                () -> EntityType.Builder.<BaseSlime>of((entityType, level) -> new BaseSlime(entityType, level, color, size), MobCategory.MONSTER)
+                        .sized(0.6f, 0.6f).clientTrackingRange(10)
+                        .build(Key("" + prefix + "_slime")));
     }
 
 
