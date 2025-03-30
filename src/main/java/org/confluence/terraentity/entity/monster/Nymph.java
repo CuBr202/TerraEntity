@@ -20,6 +20,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 
 public class Nymph extends AbstractMonster{
 
+    int delayTime = 0;
     public Nymph(EntityType<? extends Monster> type, Level level) {
         super(type, level, new AbstractPrefab(156,3,15,5,1,1).getPrefab());
 
@@ -36,14 +37,14 @@ public class Nymph extends AbstractMonster{
         this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 0.6D, true){
             @Override
             public boolean canUse() {
-                return super.canUse() && isTrigger();
+                return super.canUse() && delayTime > 10;
             }
         });
 
         this.targetSelector.addGoal(1,new AccelerateOnSeeingGoal(this,0.25f){
             @Override
             public boolean canUse() {
-                return super.canUse() && isTrigger();
+                return super.canUse() && delayTime > 10;
             }
         });
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class,false, LivingEntity::canBeSeenAsEnemy){
@@ -67,6 +68,8 @@ public class Nymph extends AbstractMonster{
         if(getTarget() != null && tickCount > 50){
             if(!isTrigger()){
                 this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32);
+            }else{
+                delayTime++;
             }
             setTrigger(true);
         }

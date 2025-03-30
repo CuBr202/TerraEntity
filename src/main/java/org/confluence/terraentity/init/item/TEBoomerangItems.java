@@ -1,9 +1,9 @@
 package org.confluence.terraentity.init.item;
 
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.component.Unbreakable;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.apache.commons.lang3.function.TriFunction;
@@ -37,7 +37,9 @@ public class TEBoomerangItems {
     );
     public static final DeferredItem<Boomerang> ICE_BOOMERANG = register("ice_boomerang",5.5f,
             NORMAL_BOOMERANG_MODIFIER.apply(16,1.6f,1.6f)
-                    .setOnHitEffect(TEEffectStrategies.Components.FROST_BURN_BOOMERANG_EFFECT.get()).setDurability(500)
+                    .setOnHitEffect(TEEffectStrategies.Components.FROST_BURN_BOOMERANG_EFFECT.get())
+                    .setDurability(500)
+                    .setParticle(()->ParticleTypes.SNOWFLAKE)
     );   //50% 的几率造成 3 秒的霜冻。
 
     public static final DeferredItem<Boomerang> TRIMARANG = register("trimarang",5.5f,
@@ -47,7 +49,9 @@ public class TEBoomerangItems {
 
     public static final DeferredItem<Boomerang> FLAMARANG = register("flamarang",12.5f,
             NORMAL_BOOMERANG_MODIFIER.apply(18,1.85f,1.85f)
-                    .setOnHitEffect(TEEffectStrategies.Components.HELL_FIRE_EFFECT.get()).setDurability(1500)
+                    .setOnHitEffect(TEEffectStrategies.Components.HELL_FIRE_EFFECT.get())
+                    .setDurability(1500)
+                    .setParticle(()->ParticleTypes.LAVA)
     );   //狱炎效果。
 
 

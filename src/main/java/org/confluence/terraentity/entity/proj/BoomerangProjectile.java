@@ -1,6 +1,9 @@
 package org.confluence.terraentity.entity.proj;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,12 +18,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.entity.PartEntity;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.data.component.SingleBooleanComponent;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEDataComponentTypes;
@@ -108,7 +113,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
                     //击退
                     doKnockback(living);
                 }
-                if (!modifier.canPenetrate && penetrationCount <= 0) {
+                if (!modifier.canPenetrate && penetrationCount <= 0 && modifier.forwardTick - tickCount > 10) {
                     if (!isBacking) {
                         backTime = this.tickCount;
                         this.entityData.set(DATA_BACKING_TIME, backTime);
@@ -158,6 +163,14 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
         this.noPhysics = true;
         entityData.set(DATA_BACKING, true);
         super.onHitBlock(result);
+        if(level().isClientSide) {
+            BlockPos blockpos = result.getBlockPos();
+            BlockState blockstate = this.level().getBlockState(blockpos);
+            Vec3 dir = this.getDeltaMovement().normalize().scale(2);
+            Vec3 mid = new Vec3(blockpos.getX()+0.5f , blockpos.getY()+0.5f, blockpos.getZ()+0.5f).add(Vec3.atLowerCornerOf(result.getDirection().getNormal()));
+            this.level().addParticle((new BlockParticleOption(ParticleTypes.BLOCK, blockstate)).setPos(blockpos), mid.x, mid.y, mid.z, -dir.x, -dir.y, -dir.z);
+            this.level().addParticle((new BlockParticleOption(ParticleTypes.BLOCK, blockstate)).setPos(blockpos), mid.x, mid.y, mid.z, -dir.x, -dir.y, -dir.z);
+        }
     }
     @Override
     public void tick(){
@@ -166,7 +179,10 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
         if(this.getOwner()!= null && this.getOwner() instanceof LivingEntity living){
             if(!isBacking){
                 int delta = 10;
-                double actualSpeed = Math.min(Mth.lerp((float) (modifier.forwardTick - tickCount) / delta,0.01F,modifier.flySpeed),modifier.flySpeed) ;
+                double actualSpeed = Math.min(
+                        Mth.lerp((float) (modifier.forwardTick - tickCount) / delta,0.01F,modifier.flySpeed),
+                        modifier.flySpeed
+                );
 //                this.setDeltaMovement(getDeltaMovement().normalize().scale(actualSpeed));
                 Vec3 dir = getDeltaMovement().normalize();
                 Vec3 motion = dir.scale(actualSpeed );
@@ -188,6 +204,14 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
 //                this.move(MoverType.SELF, this.getDeltaMovement());
                 if(this.distanceToSqr(distinct) <  modifier.backSpeed * 0.8F){
                     discard();
+                }
+            }
+        }
+        if(level().isClientSide){
+            if(ClientConfig.GENERATE_WHIP_PARTICLE.get() && modifier.particle != null) {
+                ParticleOptions particle = modifier.particle.get();
+                for (int i = 0; i < modifier.particleCount; i++) {
+                    level().addParticle(particle, this.getX() + random.nextFloat() - 0.5f, this.getY() + random.nextFloat() - 0.5f, this.getZ() + random.nextFloat() - 0.5f, 0, 0, 0);
                 }
             }
         }
@@ -233,4 +257,5 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
     public boolean shouldRender(double x, double y, double z) {
         return true;
     }
+
 }

@@ -2,6 +2,7 @@ package org.confluence.terraentity.item;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -32,6 +33,7 @@ import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Boomerang extends Item {
 
@@ -146,7 +148,8 @@ public class Boomerang extends Item {
         public ItemAttributeModifiers.Builder attributeModifiersBuilder = ItemAttributeModifiers.builder();
         private int modifyCount = 0;
         List<Function<Properties, Properties>> modifierFunctions = new ArrayList<>();
-
+        public Supplier<ParticleOptions> particle;
+        public int particleCount = 1;
         /**
          * 添加击中效果
          *
@@ -239,10 +242,32 @@ public class Boomerang extends Item {
             this.maxPenetration = maxPenetration;
             return this;
         }
+
         public BoomerangModifier setDurability(int durability) {
             this.durability = durability;
             return this;
         }
+
+        /**
+         * 设置粒子效果
+         * @param particle
+         * @return
+         */
+        public BoomerangModifier setParticle(Supplier<ParticleOptions> particle) {
+            return setParticle(particle, 1);
+        }
+        /**
+         * 设置粒子效果
+         * @param particle
+         * @param particleCount
+         * @return
+         */
+        public BoomerangModifier setParticle(Supplier<ParticleOptions> particle, int particleCount) {
+            this.particle = particle;
+            this.particleCount = particleCount;
+            return this;
+        }
+
         public Properties buildProperties(Properties properties) {
             if(durability > 0){
                 properties.durability(durability);
