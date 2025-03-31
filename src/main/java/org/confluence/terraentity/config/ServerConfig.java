@@ -8,6 +8,7 @@ public class ServerConfig {
     public static ModConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE ;
     public static ModConfigSpec.ConfigValue<Boolean> BOSS_NO_PHYSICS;
     public static ModConfigSpec.ConfigValue<Boolean> BOSS_LEAVE_ON_DAY;
+//    public static ModConfigSpec.ConfigValue<Boolean> RESPAWN_PROTECT;
 
 
 
@@ -38,6 +39,10 @@ public class ServerConfig {
         BOSS_LEAVE_ON_DAY = BUILDER
                 .comment("Should the boss leave on day? Only for some bosses.")
                 .define("boss_leave_on_day", false);
+
+//        RESPAWN_PROTECT = BUILDER
+//                .comment("Should players be protected from respawning?.If true, nearby bosses will be discard")
+//                .define("respawn_protect", true);
 
         DISPLAY_SUMMON_ITEMS = BUILDER
                 .comment("Should summon items be displayed in this mod?")

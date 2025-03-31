@@ -64,6 +64,13 @@ public class GameEntityEvent {
         if (event.getEntity() instanceof ServerPlayer player) {
             // 同步召唤栏信息
             player.getData(TEAttachments.SUMMONER_STORAGE.get()).sync(player);
+
+            if(player.level().getEntities(player, player.getBoundingBox().inflate(32), e-> e instanceof Player && e!= player).isEmpty()){
+                player.level().getEntities(player, player.getBoundingBox().inflate(32), e->e instanceof Boss).forEach(e->{
+                    e.discard();
+                });
+            }
+            
         }
     }
 
