@@ -246,7 +246,7 @@ public final class TEEntities {
         event.registerEntityRenderer(HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 1, 0.5f));
 
         event.registerEntityRenderer(NYMPH.get(), c->new GeoNormalRenderer<>(c, new NymphModel<>(NYMPH.getId()),false,1,0f));
-        event.registerEntityRenderer(SNATCHER.get(), c->new SnatcherRenderer<>(c, NYMPH.getId()));
+        event.registerEntityRenderer(SNATCHER.get(), c->new SnatcherRenderer<>(c, SNATCHER.getId()));
 
 
         // boss

@@ -17,10 +17,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.client.entity.model.CabbageProjModel;
-import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
-import org.confluence.terraentity.client.entity.model.Stinger;
-import org.confluence.terraentity.client.entity.model.WhipModelRegister;
+import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.entity.renderer.BoomerangProjRenderer;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
@@ -111,17 +108,9 @@ public final class ModClientEvent {
 
     @SubscribeEvent
     public static void registerAdditionalModel(ModelEvent.RegisterAdditional event) {
-        ResourceManager provider = Minecraft.getInstance().getResourceManager();
-        provider.listResources("models/item/whip", s -> s.getPath().endsWith(".json")).forEach((location, resource) -> {
-            var f = WhipModelRegister.getInstance().process(location);
-            if(f!= null){
-                event.register(f);
-            }else{
-                TerraEntity.LOGGER.warn("Failed to load whip model: {}", location);
-            }
-        });
+        WhipModelRegister.register(event);
+        EntityBlockModelRegister.register(event);
     }
-
 
 
 
