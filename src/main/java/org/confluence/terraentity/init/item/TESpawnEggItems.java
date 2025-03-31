@@ -26,6 +26,8 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> DESERT_SLIME_SPAWN_EGG = registerEgg("desert_slime_spawn_egg", TEEntities.DESERT_SLIME, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> JUNGLE_SLIME_SPAWN_EGG = registerEgg("jungle_slime_spawn_egg", TEEntities.JUNGLE_SLIME, 0x9ae920, 0xC7AB5E);
     public static final DeferredItem<Item> JUNGLE_BAT_SPAWN_EGG = registerEgg("jungle_bat_spawn_egg", TEEntities.JUNGLE_BAT, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> SNATCHER_SPAWN_EGG = registerEgg("snatcher_spawn_egg", TEEntities.SNATCHER, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> MAN_EATER_SPAWN_EGG = registerEgg("man_eater_spawn_egg", TEEntities.MAN_EATER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> HORNET_SPAWN_EGG = registerEgg("hornet_spawn_egg", TEEntities.HORNET, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> ICE_SLIME_SPAWN_EGG = registerEgg("ice_slime_spawn_egg", TEEntities.ICE_SLIME, 0xB3F0EA, 0x7FDEDF);
     public static final DeferredItem<Item> ICE_BAT_SPAWN_EGG = registerEgg("ice_bat_spawn_egg", TEEntities.ICE_BAT, 0xffffff, 0xffffff);

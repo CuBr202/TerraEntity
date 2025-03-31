@@ -57,6 +57,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.tomb_crawler", "墓穴爬虫");
         add("entity.terra_entity.cave_bat", "洞穴蝙蝠");
         add("entity.terra_entity.jungle_bat", "丛林蝙蝠");
+        add("entity.terra_entity.snatcher", "抓人草");
+        add("entity.terra_entity.man_eater", "食人怪");
         add("entity.terra_entity.hornet", "黄蜂");
         add("entity.terra_entity.hell_bat", "地狱蝙蝠");
         add("entity.terra_entity.ice_bat", "冰雪蝙蝠");
@@ -106,6 +108,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.CAVE_BAT_SPAWN_EGG.get(), "洞穴蝙蝠刷怪蛋");
         add(TESpawnEggItems.ICE_BAT_SPAWN_EGG.get(), "冰雪蝙蝠刷怪蛋");
         add(TESpawnEggItems.JUNGLE_BAT_SPAWN_EGG.get(), "丛林蝙蝠刷怪蛋");
+        add(TESpawnEggItems.SNATCHER_SPAWN_EGG.get(), "抓人草刷怪蛋");
+        add(TESpawnEggItems.MAN_EATER_SPAWN_EGG.get(), "食人怪刷怪蛋");
         add(TESpawnEggItems.HORNET_SPAWN_EGG.get(), "黄蜂刷怪蛋");
         add(TESpawnEggItems.HELL_BAT_SPAWN_EGG.get(), "地狱蝙蝠刷怪蛋");
         add(TESpawnEggItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");

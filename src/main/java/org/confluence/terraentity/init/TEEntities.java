@@ -117,7 +117,8 @@ public final class TEEntities {
     // 宁芙
     public static final DeferredHolder<EntityType<?>, EntityType<Nymph>> NYMPH = registerEntity("nymph", Nymph::new,0.8F,1.95F);
     // 抓人草
-    public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> SNATCHER = registerEntity("snatcher", (e,l)->new Snatcher(e,l, new AbstractPrefab(1,1,1,20,1,1).getPrefab()),1F,1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> SNATCHER = registerEntity("snatcher", (e,l)->new Snatcher(e,l, new AbstractPrefab(31,2,13,20,1,1).getPrefab()),1F,1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> MAN_EATER = registerEntity("man_eater", (e,l)->new Snatcher(e,l, new AbstractPrefab(57,2,15,20,1,1).getPrefab()),1F,1F);
 
 
 
@@ -247,6 +248,7 @@ public final class TEEntities {
 
         event.registerEntityRenderer(NYMPH.get(), c->new GeoNormalRenderer<>(c, new NymphModel<>(NYMPH.getId()),false,1,0f));
         event.registerEntityRenderer(SNATCHER.get(), c->new SnatcherRenderer<>(c, SNATCHER.getId()));
+        event.registerEntityRenderer(MAN_EATER.get(), c->new SnatcherRenderer<>(c, MAN_EATER.getId()));
 
 
         // boss
@@ -313,6 +315,7 @@ public final class TEEntities {
         event.put(GIANT_SHELLY.get(), AbstractMonster.createAttributes().build());
         event.put(NYMPH.get(), AbstractMonster.createAttributes().build());
         event.put(SNATCHER.get(), AbstractMonster.createAttributes().build());
+        event.put(MAN_EATER.get(), AbstractMonster.createAttributes().build());
 
         // fly
         event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());
@@ -386,8 +389,8 @@ public final class TEEntities {
         event.register(DECAYEDER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(GIANT_SHELLY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(NYMPH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(SNATCHER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-
+        event.register(SNATCHER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkGroundSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(MAN_EATER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         // fly
         event.register(DEMON_EYE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DemonEye::checkDemonEyeSpawn,  RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(FLYING_FISH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkFlyingFishSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
