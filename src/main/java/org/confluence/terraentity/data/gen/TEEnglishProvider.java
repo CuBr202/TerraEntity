@@ -116,7 +116,11 @@ public class TEEnglishProvider extends LanguageProvider {
 
 
         // TouhouLittleMaid
+        add("task.terra_entity.boomerang_attack", "Boomerang Attack");
+        add("task.terra_entity.boomerang_attack.desc", "Maid attacks enemies with a boomerang.");
         add("task.terra_entity.boomerang_attack.condition.has_boomerang", "Mainhand holds a boomerang");
 
+        // 附魔
+        add("enchantment.terra_entity.multi_boomerang", "Multi Shoot Boomerang");
     }
 }

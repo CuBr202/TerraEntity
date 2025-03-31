@@ -240,6 +240,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("task.terra_entity.boomerang_attack.desc", "女仆会主动用回旋镖攻击周围的敌对生物");
         add("task.terra_entity.boomerang_attack.condition.has_boomerang", "主手持有回旋镖");
 
-
+        // 附魔
+        add("enchantment.terra_entity.multi_boomerang", "影分身");
     }
 }

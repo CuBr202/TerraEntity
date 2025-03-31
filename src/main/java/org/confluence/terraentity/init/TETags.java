@@ -25,6 +25,9 @@ public class TETags {
         public static final TagKey<Item> HONEY_TRANSLATION = registerItem("honey_translation");
         public static final TagKey<Item> HONEY_TRANSLATION_NOT_CONSUMED = registerItem("honey_translation_not_consumed");
 
+        public static final TagKey<Item> WHIP_ENCHANTABLE = registerItem("whip_enchantable");
+        public static final TagKey<Item> BOOMERANG_ENCHANTABLE = registerItem("boomerang_enchantable");
+
     }
 
     public static class EntityTypes {

@@ -6,17 +6,18 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.init.TETags;
 
 // 自定义附魔类，用于定义和注册新的附魔
 public class TEEnchantments {
     // 自定义附魔资源键
-    public static final ResourceKey<Enchantment> ONE_STEP_TEN_LINE = key("z_one_step_ten_line");
+    public static final ResourceKey<Enchantment> WHIP_SWEEP = key("whip_sweep");
+    public static final ResourceKey<Enchantment> MULTI_BOOMERANG = key("multi_boomerang");
 
 
 
@@ -32,21 +33,24 @@ public class TEEnchantments {
         HolderGetter<Block> holdergetter3 = context.lookup(Registries.BLOCK);
 
         // 注册自定义附魔
-        register(
-                context,
-                ONE_STEP_TEN_LINE,
-                Enchantment.enchantment(
-                        Enchantment.definition(
-                                holdergetter2.getOrThrow(ItemTags.FOOT_ARMOR_ENCHANTABLE),
-                                2,
-                                1,
-                                Enchantment.constantCost(25),
-                                Enchantment.constantCost(50),
-                                8,
-                                EquipmentSlotGroup.FEET
-                        )
-                )
-        );
+//        register(context, WHIP_SWEEP, Enchantment.enchantment(Enchantment.definition(holdergetter2.getOrThrow(
+//                TETags.Items.WHIP_ENCHANTABLE),
+//                2,
+//                3,
+//                Enchantment.constantCost(25),
+//                Enchantment.constantCost(50),
+//                8,
+//                EquipmentSlotGroup.MAINHAND
+//        )));
+        register(context, MULTI_BOOMERANG, Enchantment.enchantment(Enchantment.definition(holdergetter2.getOrThrow(
+                TETags.Items.BOOMERANG_ENCHANTABLE),
+                2,
+                1,
+                Enchantment.constantCost(25),
+                Enchantment.constantCost(50),
+                8,
+                EquipmentSlotGroup.MAINHAND
+        )));
 
     }
 

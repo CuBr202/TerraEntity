@@ -21,6 +21,8 @@ import net.minecraft.world.level.Level;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.data.component.SingleBooleanComponent;
+import org.confluence.terraentity.data.enchantment.TEEnchantmentHelper;
+import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.entity.proj.BoomerangProjectile;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEDataComponentTypes;
@@ -86,9 +88,13 @@ public class Boomerang extends Item {
         player.playSound(TESounds.WAVING.get());
         this.shoot(player, stack);
 
-        if(boomerangModifier.shouldApplyCd ) {
+        int addition = TEEnchantmentHelper.getEnchantmentLevel(TEEnchantments.MULTI_BOOMERANG, stack);
+        if(boomerangModifier.shouldApplyCd || addition > 0) {
+
             int count = player.getData(TEAttachments.WEAPON_STORAGE).tryIncrease(this);
-            if(count < boomerangModifier.maxCount) player.getCooldowns().addCooldown(this, boomerangModifier.cd);
+            if(count < boomerangModifier.maxCount + addition) {
+                player.getCooldowns().addCooldown(this, boomerangModifier.cd);
+            }
             else player.getCooldowns().addCooldown(this, 100); //最大等待时间
         }
         else player.getCooldowns().addCooldown(this, 100); //最大等待时间
