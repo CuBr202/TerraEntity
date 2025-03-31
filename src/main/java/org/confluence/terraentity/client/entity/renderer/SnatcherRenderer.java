@@ -23,10 +23,8 @@ import org.joml.Vector3fc;
 
 public class SnatcherRenderer<T extends Snatcher> extends GeoNormalRenderer<T> {
 
-    BakedModel model;
     public SnatcherRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
-        super(renderManager, path, true, 1, 0.2f);
-        model = Minecraft.getInstance().getModelManager().getModel(EntityBlockModelRegister.SNATCHER_LEAF);
+        super(renderManager, path, true, 1, 0);
 
     }
 
@@ -39,6 +37,7 @@ public class SnatcherRenderer<T extends Snatcher> extends GeoNormalRenderer<T> {
 
         poseStack.pushPose();
         if (Minecraft.getInstance().player != null) {
+            // 错位渲染，防止正对的时候看到的是片面
             Vec3 p = Minecraft.getInstance().player.position().subtract(init);
             double a = p.cross(new Vec3(0, 1, 0)).dot(Minecraft.getInstance().player.position().subtract(entity.position()));
             poseStack.mulPose(Axis.YN.rotation(a>0?0.5f:-0.5f));
@@ -58,26 +57,28 @@ public class SnatcherRenderer<T extends Snatcher> extends GeoNormalRenderer<T> {
         Vec3 diffNorm = _diff.normalize();
 
         // 让叶子紧贴实体
-        Vec3 offset = diffNorm.scale(-1.5F);
+        Vec3 offset = diffNorm.scale(-1);
         Vec3 diff = _diff.subtract(offset);
         int count = 10;
         double dx = diff.x / count;
         double dy = diff.y / count;
         double dz = diff.z / count;
-        Quaternionf rotate = rotateFromV1ToV2(new Vector3f(0,0,1),new Vector3f((float) dx, (float) dy, (float) dz));
-
-        for (int i = 0; i <= count; i++) {
-            Vec3 pos = new Vec3(-i * dx, -i * dy, -i * dz);
+        Quaternionf rotate = rotateFromV1ToV2(new Vector3f(0,1,0),new Vector3f((float) dx, (float) dy, (float) dz));
+        BakedModel model = Minecraft.getInstance().getModelManager().getModel(EntityBlockModelRegister.getInstance().getModelResourceLocation(entity.getType()));;
+        for (int i = 0; i < count; i++) {
+            Vec3 pos = new Vec3(-i * dx + offset.x, -i * dy + offset.y, -i * dz + offset.z);
             poseStack.pushPose();
-
+            poseStack.translate(-0.5f,0.5f,-0.5f);
             poseStack.translate(pos.x, pos.y, pos.z);
-            poseStack.translate(offset.x, offset.y, offset.z);
+//            poseStack.translate(offset.x, offset.y, offset.z);
+            poseStack.translate(0.5,0,0.5);
+
 
             poseStack.mulPose(rotate);
+            poseStack.mulPose(Axis.YN.rotation(i * 0.5f));
+            poseStack.translate(-0.5,0,-0.5);
 
-//            poseStack.mulPose(Axis.ZN.rotation(i * 0.5f));
-            poseStack.translate(-0.5,0,0);
-
+//            poseStack.translate(-0.5,0,0);
 
             ItemStack stack = TEBoomerangItems.WOOD_BOOMERANG.toStack();
             for (RenderType rendertype : model.getRenderTypes(stack, false)) {

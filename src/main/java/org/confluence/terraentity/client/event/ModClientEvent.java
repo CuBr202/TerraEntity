@@ -108,8 +108,8 @@ public final class ModClientEvent {
 
     @SubscribeEvent
     public static void registerAdditionalModel(ModelEvent.RegisterAdditional event) {
-        WhipModelRegister.register(event);
-        EntityBlockModelRegister.register(event);
+        WhipModelRegister.getInstance().register(event);
+        EntityBlockModelRegister.getInstance().register(event);
     }
 
 
