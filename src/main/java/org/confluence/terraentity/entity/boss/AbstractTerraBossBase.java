@@ -468,4 +468,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         if(this instanceof Boss boss && boss.isMainBody())
             ModLoader.postEvent(new BossDeathEvent(this));
     }
+
+    @Override
+    public boolean hasLineOfSight(Entity entity) {
+        return distanceToSqr(entity) < 100 * 100;
+    }
 }

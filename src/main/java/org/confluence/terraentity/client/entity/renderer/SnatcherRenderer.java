@@ -17,9 +17,9 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.entity.model.EntityBlockModelRegister;
 import org.confluence.terraentity.entity.monster.Snatcher;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
+import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.joml.Vector3fc;
 
 public class SnatcherRenderer<T extends Snatcher> extends GeoNormalRenderer<T> {
 
@@ -63,7 +63,7 @@ public class SnatcherRenderer<T extends Snatcher> extends GeoNormalRenderer<T> {
         double dx = diff.x / count;
         double dy = diff.y / count;
         double dz = diff.z / count;
-        Quaternionf rotate = rotateFromV1ToV2(new Vector3f(0,1,0),new Vector3f((float) dx, (float) dy, (float) dz));
+        Quaternionf rotate = TEUtils.rotateFromV1ToV2(new Vector3f(0,1,0),new Vector3f((float) dx, (float) dy, (float) dz));
         BakedModel model = Minecraft.getInstance().getModelManager().getModel(EntityBlockModelRegister.getInstance().getModelResourceLocation(entity.getType()));;
         for (int i = 0; i < count; i++) {
             Vec3 pos = new Vec3(-i * dx + offset.x, -i * dy + offset.y, -i * dz + offset.z);
@@ -91,29 +91,5 @@ public class SnatcherRenderer<T extends Snatcher> extends GeoNormalRenderer<T> {
             poseStack.popPose();
         }
 
-    }
-    public static Quaternionf rotateFromV1ToV2(Vector3fc v1, Vector3fc v2) {
-        // 1. 归一化向量
-        Vector3f v1Norm = new Vector3f(v1).normalize();
-        Vector3f v2Norm = new Vector3f(v2).normalize();
-
-        // 2. 计算点积和叉乘
-        float dot = v1Norm.dot(v2Norm);
-        Vector3f cross = new Vector3f();
-        v1Norm.cross(v2Norm, cross);
-
-        // 3. 处理特殊情况
-        if (Math.abs(dot) >= 1.0f - 1e-6f) { // 平行或反平行
-            return dot > 0 ? new Quaternionf() : // 同向返回单位四元数
-                    new Quaternionf().fromAxisAngleRad(new Vector3f(1, 0, 0), (float) Math.PI); // 反向旋转180度
-        }
-
-        // 4. 计算旋转轴和角度
-        float sinTheta = cross.length();
-        float theta = (float) Math.atan2(sinTheta, dot);
-        cross.normalize(); // 归一化旋转轴
-
-        // 5. 构造四元数
-        return new Quaternionf().fromAxisAngleRad(cross, theta);
     }
 }

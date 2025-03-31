@@ -34,6 +34,9 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -342,11 +345,6 @@ public final class TEUtils {
      */
     public static double angleBetween(Vec3 v1,Vec3 v2){
         return Math.acos(v1.dot(v2)/v1.length()/v2.length());
-    }
-
-    public static List<? extends Entity> getNearbyEntities(double radius, Level level,
-                                                           Class<? extends Entity> entity, AABB box) {
-        return level.getEntitiesOfClass(entity, box.inflate(radius));
     }
 
     public static Vec3 sphere(float r, float theta, float beta){
@@ -679,6 +677,34 @@ public final class TEUtils {
         }
         return target != entity;
     };
+
+    /**
+     * 获取向量从v1指向v2的旋转四元数
+     */
+    public static Quaternionf rotateFromV1ToV2(Vector3fc v1, Vector3fc v2) {
+        // 1. 归一化向量
+        Vector3f v1Norm = new Vector3f(v1).normalize();
+        Vector3f v2Norm = new Vector3f(v2).normalize();
+
+        // 2. 计算点积和叉乘
+        float dot = v1Norm.dot(v2Norm);
+        Vector3f cross = new Vector3f();
+        v1Norm.cross(v2Norm, cross);
+
+        // 3. 处理特殊情况
+        if (Math.abs(dot) >= 1.0f - 1e-6f) { // 平行或反平行
+            return dot > 0 ? new Quaternionf() : // 同向返回单位四元数
+                    new Quaternionf().fromAxisAngleRad(new Vector3f(1, 0, 0), (float) Math.PI); // 反向旋转180度
+        }
+
+        // 4. 计算旋转轴和角度
+        float sinTheta = cross.length();
+        float theta = (float) Math.atan2(sinTheta, dot);
+        cross.normalize(); // 归一化旋转轴
+
+        // 5. 构造四元数
+        return new Quaternionf().fromAxisAngleRad(cross, theta);
+    }
 
 
 /*
