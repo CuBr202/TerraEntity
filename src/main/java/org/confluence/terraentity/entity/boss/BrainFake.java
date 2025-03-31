@@ -12,7 +12,9 @@ import net.minecraft.world.phys.AABB;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import software.bernie.geckolib.animation.RawAnimation;
 
-
+/**
+ * 克脑残影
+ */
 public class BrainFake extends BrainOfCthulhu {
 
     public int tag;

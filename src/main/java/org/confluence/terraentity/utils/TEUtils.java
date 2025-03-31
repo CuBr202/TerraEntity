@@ -387,15 +387,15 @@ public final class TEUtils {
 
     /**
      * 获取玩家视角下距离指定距离的实体
-     * @param player
+     * @param entity
      * @param distance
      * @return
      */
-    public static EntityHitResult getEyeTraceHitResult(Player player, double distance){
-        AABB aabb = player.getBoundingBox().inflate(distance);
-        Vec3 from = player.getEyePosition();
-        Vec3 to = player.getEyePosition().add(player.getLookAngle().scale(distance));
-        return ProjectileUtil.getEntityHitResult(player.level(), player, from, to, aabb, e-> true, 0.1F);
+    public static EntityHitResult getEyeTraceHitResult(Entity entity, double distance){
+        AABB aabb = entity.getBoundingBox().inflate(distance);
+        Vec3 from = entity.getEyePosition();
+        Vec3 to = entity.getEyePosition().add(entity.getLookAngle().scale(distance));
+        return ProjectileUtil.getEntityHitResult(entity.level(), entity, from, to, aabb, e-> true, 0.1F);
     }
 
     /**

@@ -61,7 +61,10 @@ import java.util.stream.Collectors;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
-
+/**
+ * BOSS基类
+ * @param <T> Boss类型
+ */
 @SuppressWarnings("all")
 public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackEntity<T> {
 

@@ -14,6 +14,9 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+/**
+ * 蠕虫体节
+ */
 public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICollisionAttackEntity<BaseWarmPart> {
 
     private final EntityDimensions size;

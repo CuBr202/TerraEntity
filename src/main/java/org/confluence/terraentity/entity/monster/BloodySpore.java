@@ -23,6 +23,9 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+/**
+ * 血腥芽孢
+ */
 public class BloodySpore extends Creeper implements GeoEntity {
     private int oldSwell;
     private int swell;

@@ -17,6 +17,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
+/**
+ * 克脑召唤的飞眼怪
+ */
 public class VisualNeuron extends AbstractMonster{
 
     private BrainOfCthulhu owner;

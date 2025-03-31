@@ -18,6 +18,9 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
 
+/**
+ * 芙宁
+ */
 public class Nymph extends AbstractMonster{
 
     int delayTime = 0;

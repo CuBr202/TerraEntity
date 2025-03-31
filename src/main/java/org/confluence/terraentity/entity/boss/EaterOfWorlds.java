@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-
+/**
+ * 世吞
+ */
 public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implements Boss {
     private static final float MAX_HEALTHS = 54f;
     private static final float DAMAGE = 5f;//接触伤害

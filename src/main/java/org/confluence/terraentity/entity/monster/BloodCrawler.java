@@ -26,6 +26,9 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Random;
 
+/**
+ * 血爬虫
+ */
 public class BloodCrawler extends Spider implements GeoEntity {
 
     private static final int ATTACK_DAMAGE = 15;

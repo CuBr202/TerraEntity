@@ -46,7 +46,9 @@ import java.util.List;
 import static org.confluence.terraentity.utils.TEUtils.isAtLeastExpert;
 import static org.confluence.terraentity.utils.TEUtils.switchByDifficulty;
 
-
+/**
+ * 史王
+ */
 @SuppressWarnings("all")
 public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss{
     private static final int COLOR_INT = 0x73bcf4;

@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-
+/**
+ * 克脑
+ */
 public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implements GeoEntity, Boss {
     private static final float MAX_HEALTHS = 552f;
     private static final float DAMAGE = 14f;//接触伤害

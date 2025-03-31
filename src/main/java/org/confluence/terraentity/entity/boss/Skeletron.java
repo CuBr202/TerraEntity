@@ -33,6 +33,9 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 骷髅王
+ */
 public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss {
 
     private float projDamageFactor = 1.0f; // 弹幕伤害倍率，相对于攻击力

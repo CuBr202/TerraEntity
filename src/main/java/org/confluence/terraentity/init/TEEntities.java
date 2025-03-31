@@ -116,6 +116,8 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<GiantShelly>> GIANT_SHELLY = registerEntity("giant_shelly", GiantShelly::new,0.8F,0.8F);
     // 宁芙
     public static final DeferredHolder<EntityType<?>, EntityType<Nymph>> NYMPH = registerEntity("nymph", Nymph::new,0.8F,1.95F);
+    // 抓人草
+    public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> SNATCHER = registerEntity("snatcher", (e,l)->new Snatcher(e,l, new AbstractPrefab(1,1,1,20,1,1).getPrefab()),1F,1F);
 
 
 
@@ -232,7 +234,7 @@ public final class TEEntities {
         event.registerEntityRenderer(GIANT_WORM.get(), c-> new GeoWormRenderer<>(c, GIANT_WORM.getId(),2.0f, 0.0f));
         event.registerEntityRenderer(TOMB_CRAWLER.get(), c-> new GeoWormRenderer<>(c, TOMB_CRAWLER.getId(),2.0f, 0.0f));
         event.registerEntityRenderer(GIANT_SHELLY.get(), c-> new GeoNormalRenderer<>(c, new GiantShellyModel<>(GIANT_SHELLY.getId()),false,2,0));
-        // 蝙蝠
+        // bat
         event.registerEntityRenderer(CAVE_BAT.get(), c-> new GeoNormalRenderer<>(c,CAVE_BAT.getId(),false));
         event.registerEntityRenderer(JUNGLE_BAT.get(), c-> new GeoNormalRenderer<>(c, JUNGLE_BAT.getId(),false));
         event.registerEntityRenderer(HELL_BAT.get(), c-> new GeoNormalRenderer<>(c,HELL_BAT.getId(),false));
@@ -244,6 +246,7 @@ public final class TEEntities {
         event.registerEntityRenderer(HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 1, 0.5f));
 
         event.registerEntityRenderer(NYMPH.get(), c->new GeoNormalRenderer<>(c, new NymphModel<>(NYMPH.getId()),false,1,0f));
+        event.registerEntityRenderer(SNATCHER.get(), c->new SnatcherRenderer<>(c, NYMPH.getId()));
 
 
         // boss
@@ -308,6 +311,8 @@ public final class TEEntities {
         event.put(BLOOD_TUMORS.get(), AbstractMonster.createAttributes().build());
         event.put(BLOOD_ZOMBIE.get(), AbstractMonster.createAttributes().build());
         event.put(GIANT_SHELLY.get(), AbstractMonster.createAttributes().build());
+        event.put(NYMPH.get(), AbstractMonster.createAttributes().build());
+        event.put(SNATCHER.get(), AbstractMonster.createAttributes().build());
 
         // fly
         event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());
@@ -333,7 +338,7 @@ public final class TEEntities {
         event.put(HORNET.get(), AbstractMonster.createAttributes().build());
         event.put(LITTLE_HORNET.get(), AbstractMonster.createAttributes().build());
 
-        event.put(NYMPH.get(), AbstractMonster.createAttributes().build());
+
 
         // boss
         event.put(KING_SLIME.get(), KingSlime.createSlimeAttributes().build());
@@ -381,6 +386,7 @@ public final class TEEntities {
         event.register(DECAYEDER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(GIANT_SHELLY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(NYMPH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(SNATCHER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
         // fly
         event.register(DEMON_EYE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DemonEye::checkDemonEyeSpawn,  RegisterSpawnPlacementsEvent.Operation.REPLACE);
@@ -402,8 +408,6 @@ public final class TEEntities {
         event.register(HELL_BAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkNetherMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ICE_BAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(SPORE_BAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-
-        event.register(NYMPH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
 
 

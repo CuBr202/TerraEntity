@@ -22,7 +22,9 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animation.RawAnimation;
 
-
+/**
+ * 克眼
+ */
 @SuppressWarnings("all")
 public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements GeoEntity, Boss, IAutoLeaveMob {
     private static final float MAX_HEALTHS = 728f;

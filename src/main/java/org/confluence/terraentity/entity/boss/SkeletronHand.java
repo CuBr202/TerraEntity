@@ -16,6 +16,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * 骷髅王之手
+ */
 public class SkeletronHand extends Skeletron {
     public Skeletron owner;
     public HandSide handSide;

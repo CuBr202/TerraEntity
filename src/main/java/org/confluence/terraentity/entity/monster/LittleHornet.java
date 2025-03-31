@@ -26,6 +26,9 @@ import software.bernie.geckolib.animation.RawAnimation;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * 蜂后召唤的蜜蜂
+ */
 public class LittleHornet extends Hornet implements IMinion<LittleHornet> {
     QueenBee owner;
 
