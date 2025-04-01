@@ -130,6 +130,11 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     }
 
     @Override
+    public boolean canBeSeenByAnyone() {
+        return false;
+    }
+
+    @Override
     public boolean hurt(DamageSource source, float amount) {
         return source.is(DamageTypes.GENERIC_KILL) && super.hurt(source, amount);
     }

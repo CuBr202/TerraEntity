@@ -41,6 +41,7 @@ import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.proj.*;
+import org.confluence.terraentity.entity.rideable.RiddenSlime;
 import org.confluence.terraentity.entity.summon.SummonHornet;
 import org.confluence.terraentity.entity.summon.SummonIronGolem;
 import org.confluence.terraentity.entity.summon.SummonSlime;
@@ -138,6 +139,8 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<SummonHornet>> SUMMON_HORNET = registerEntity("hornet_baby", SummonHornet::new,0.5F,0.8F);
 
 
+    // 坐骑
+    public static final DeferredHolder<EntityType<?>, EntityType<RiddenSlime>> RIDDEN_SLIME = registerEntity("ridden_slime", RiddenSlime::new,0.5F,0.5F);
 
     // tip Boss
     public static final DeferredHolder<EntityType<?>, EntityType<KingSlime>> KING_SLIME = ENTITIES.register("king_slime", () -> EntityType.Builder.<KingSlime>of(KingSlime::new, MobCategory.MONSTER).sized(0.6f, 0.6f).clientTrackingRange(10).build(Key("king_slime")));

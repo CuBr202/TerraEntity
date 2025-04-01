@@ -19,6 +19,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
+import software.bernie.geckolib.constant.DefaultAnimations;
 
 /**
  * 抓人草
@@ -41,7 +42,9 @@ public class Snatcher extends AbstractMonster{
 
 
     public Snatcher(EntityType<? extends Monster> type, Level level, Builder builder) {
-        super(type, level, builder);
+        super(type, level, builder.setController((state,e)->{
+            state.add(DefaultAnimations.genericIdleController(e));
+        }));
         this.noPhysics = true;
         this.collisionProperties = new CollisionProperties(5,20,0.3f);
     }
