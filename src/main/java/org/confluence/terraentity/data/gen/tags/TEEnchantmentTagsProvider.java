@@ -19,10 +19,10 @@ public class TEEnchantmentTagsProvider extends EnchantmentTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
 
-        this.tag(EnchantmentTags.TREASURE).add(
-                TEEnchantments.MULTI_BOOMERANG
+        this.tag(EnchantmentTags.NON_TREASURE).add(
+                TEEnchantments.MULTI_BOOMERANG,
+                TEEnchantments.WHIP_SWEEP
         );
-
 
     }
 }

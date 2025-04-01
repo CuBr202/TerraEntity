@@ -73,7 +73,7 @@ public class Vec3KeyframeAnimation implements IKeyframeAnimation<Vec3> {
         public Builder addKeyframeTimeStamp(double time, Vec3 value) {
             x.add(new Keyframe(time * 20, value.x));
             y.add(new Keyframe(time * 20, -value.y));
-            z.add(new Keyframe(time * 20, value.z));
+            z.add(new Keyframe(time * 20, -value.z));
             return this;
         }
 

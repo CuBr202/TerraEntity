@@ -242,5 +242,7 @@ public class TEChineseProvider extends LanguageProvider {
 
         // 附魔
         add("enchantment.terra_entity.multi_boomerang", "影分身");
+        add("enchantment.terra_entity.whip_sweep", "横扫之鞭");
+
     }
 }

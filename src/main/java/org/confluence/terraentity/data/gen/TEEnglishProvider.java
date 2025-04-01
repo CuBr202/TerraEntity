@@ -122,5 +122,7 @@ public class TEEnglishProvider extends LanguageProvider {
 
         // 附魔
         add("enchantment.terra_entity.multi_boomerang", "Multi Shoot Boomerang");
+        add("enchantment.terra_entity.whip_sweep", "Whip Sweep");
+
     }
 }

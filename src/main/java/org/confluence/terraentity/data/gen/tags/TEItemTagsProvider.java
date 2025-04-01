@@ -29,7 +29,7 @@ public class TEItemTagsProvider extends ItemTagsProvider {
         });
         TEWhipItems.ITEMS.getEntries().forEach(item -> {
             tag(ItemTags.DURABILITY_ENCHANTABLE).add(item.get());
-//            tag(TETags.Items.WHIP_ENCHANTABLE).add(item.get());
+            tag(TETags.Items.WHIP_ENCHANTABLE).add(item.get());
         });
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.level.block.Block;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TETags;
@@ -33,19 +33,19 @@ public class TEEnchantments {
         HolderGetter<Block> holdergetter3 = context.lookup(Registries.BLOCK);
 
         // 注册自定义附魔
-//        register(context, WHIP_SWEEP, Enchantment.enchantment(Enchantment.definition(holdergetter2.getOrThrow(
-//                TETags.Items.WHIP_ENCHANTABLE),
-//                2,
-//                3,
-//                Enchantment.constantCost(25),
-//                Enchantment.constantCost(50),
-//                8,
-//                EquipmentSlotGroup.MAINHAND
-//        )));
+        register(context, WHIP_SWEEP, Enchantment.enchantment(Enchantment.definition(holdergetter2.getOrThrow(
+                TETags.Items.WHIP_ENCHANTABLE),
+                2,
+                1,
+                Enchantment.constantCost(25),
+                Enchantment.constantCost(50),
+                8,
+                EquipmentSlotGroup.MAINHAND
+        )));
         register(context, MULTI_BOOMERANG, Enchantment.enchantment(Enchantment.definition(holdergetter2.getOrThrow(
                 TETags.Items.BOOMERANG_ENCHANTABLE),
                 2,
-                1,
+                3,
                 Enchantment.constantCost(25),
                 Enchantment.constantCost(50),
                 8,

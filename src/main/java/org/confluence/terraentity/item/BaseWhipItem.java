@@ -1,5 +1,6 @@
 package org.confluence.terraentity.item;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
@@ -14,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Unbreakable;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
 import net.minecraft.world.level.block.state.BlockState;
@@ -124,6 +127,11 @@ public class BaseWhipItem extends Item {
         }
         player.swing(usedHand);
         return InteractionResultHolder.success(stack);
+    }
+
+    @Override
+    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+        return enchantment.is(Enchantments.LOOTING) || super.supportsEnchantment(stack, enchantment);
     }
 
     @Override
