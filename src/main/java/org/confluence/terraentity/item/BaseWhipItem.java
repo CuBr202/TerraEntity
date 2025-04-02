@@ -141,10 +141,11 @@ public class BaseWhipItem extends Item {
             IEffectStrategy.appendDescription(tooltipComponents, data.effects(), Component.translatable("tooltip.terra_entity.whip.hit_effect").withStyle(style -> style.withColor(0xB4C363)));
         }
         // 农场主增益
-//        var data1 = stack.get(TEDataComponentTypes.EFFECT_STRATEGY_BENEFICIAL);
-//        if (data1 != null) {
+        var data1 = stack.get(TEDataComponentTypes.EFFECT_STRATEGY_BENEFICIAL);
+        if (data1 != null) {
+            tooltipComponents.add(Component.literal(" ? ? ?").withStyle(style -> style.withColor(0x666666).withObfuscated(true)));
 //            IEffectStrategy.appendDescription(tooltipComponents, data1.effects(), Component.translatable("tooltip.terra_entity.whip.hit_effect_beneficial").withStyle(style -> style.withColor(0x84C363)), 0x678563);
-//        }
+        }
     }
 
     public static class WhipProperties extends Properties {

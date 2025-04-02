@@ -19,7 +19,7 @@ public class TEWhipItems {
     //    public static final DeferredRegister.Items SENTRY_ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     // Whip Items
-    public static final DeferredItem<BaseWhipItem> LEATHER_WHIP = registerWhip("leather_whip", 9f, 2, 0.2F, 20,0, p->p
+    public static final DeferredItem<BaseWhipItem> LEATHER_WHIP = registerWhip("leather_whip", 6f, 2, 0.2F, 20,0, p->p
             .setDurability(200)
             .component(TEDataComponentTypes.EFFECT_STRATEGY_BENEFICIAL, EffectStrategyComponent.of(
                     TimePossibilityAmplifierEffect.of("strength", MobEffects.DAMAGE_BOOST, 100)
