@@ -23,8 +23,8 @@ public class HellFireEffect extends MobEffect implements IMobEffectExtension {
 
     @Override
     public void applyEffectTick(LivingEntity living, int amplifier) {
-        if(living.tickCount % 20 == 0)
-            living.hurt(TETags.DamageTypes.of(living.level(), DamageTypes.LAVA), 2.0F * (amplifier + 1));
+
+        living.hurt(TETags.DamageTypes.of(living.level(), DamageTypes.LAVA), 2.0F * (amplifier + 1));
 
     }
 
@@ -48,5 +48,9 @@ public class HellFireEffect extends MobEffect implements IMobEffectExtension {
                 livingEntity.getX(), livingEntity.getY(0.0625),livingEntity.getZ(),
                 1, true, Level.ExplosionInteraction.MOB);
 
+    }
+
+    public boolean isDurationEffectTick(int duration, int pAmplifier) {
+        return duration % 20 == 0;
     }
 }

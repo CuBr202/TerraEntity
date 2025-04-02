@@ -5,7 +5,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[6.0,6.2)', changing: true
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'org.parchmentmc:librarian:1.+'
+        classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
     }
 }
 
@@ -13,13 +16,13 @@ buildscript {
 plugins {
     id 'eclipse'
     id 'idea'
+    id 'java'
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id 'org.spongepowered.mixin' version '0.7.+'
-
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
-apply plugin: 'org.spongepowered.mixin'
 
 group = mod_group_id
 version = mod_version

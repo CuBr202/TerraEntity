@@ -238,18 +238,22 @@ public final class TEUtils {
             float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
             if (dirty) {
                 int size = Math.min(entity.level().players().size(), 8);
-                if (!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(difficultyHealthModifier.apply(multiplier)))
-                    entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(difficultyHealthModifier.apply(multiplier));
-                if (!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(boss_damageModifier.get()))
-                    entity.getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(boss_damageModifier.get());
-
-                if (!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(boss_healthModifier.get()))
-                    entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(boss_healthModifier.get());
-                entity.setHealth(entity.getMaxHealth());
+                var healthAttribute = entity.getAttribute(Attributes.MAX_HEALTH);
+                if (healthAttribute != null) {
+                    if (!healthAttribute.hasModifier(difficultyHealthModifier.apply(multiplier * size)))
+                        healthAttribute.addPermanentModifier(difficultyHealthModifier.apply(multiplier * size));
+                    if (!healthAttribute.hasModifier(boss_healthModifier.get()))
+                        healthAttribute.addPermanentModifier(boss_healthModifier.get());
+                    entity.setHealth(entity.getMaxHealth());
+                }
             }
-            if (!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(difficultyDamageModifier.apply(multiplier)))
-                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(difficultyDamageModifier.apply(multiplier));
-
+            var damageAttribute = entity.getAttribute(Attributes.ATTACK_DAMAGE);
+            if (damageAttribute != null) {
+                if (!damageAttribute.hasModifier(difficultyDamageModifier.apply(multiplier)))
+                    damageAttribute.addTransientModifier(difficultyDamageModifier.apply(multiplier));
+                if (!damageAttribute.hasModifier(boss_damageModifier.get()))
+                    damageAttribute.addPermanentModifier(boss_damageModifier.get());
+            }
         }
     }
 
@@ -261,14 +265,20 @@ public final class TEUtils {
         if(!ServerConfig.ENHANCE_ALL_MONSTER.get() && !BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getNamespace().equals(TerraEntity.MODID)) return;
         if(!entity.level().isClientSide) {
             float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
-            if(!entity.getAttribute(Attributes.MAX_HEALTH).hasModifier(monster_healthModifier.get())){
-                entity.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(monster_healthModifier.get());
-                entity.setHealth(entity.getMaxHealth());
+            var healthAttribute = entity.getAttribute(Attributes.MAX_HEALTH);
+            if (healthAttribute != null) {
+                if (!healthAttribute.hasModifier(monster_healthModifier.get())) {
+                    healthAttribute.addPermanentModifier(monster_healthModifier.get());
+                    entity.setHealth(entity.getMaxHealth());
+                }
             }
-            if(!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(monster_damageModifier.get()))
-                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(monster_damageModifier.get());
-            if(!entity.getAttribute(Attributes.ATTACK_DAMAGE).hasModifier(difficultyDamageModifier.apply(multiplier)))
-                entity.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(difficultyDamageModifier.apply(multiplier));
+            var damageAttribute = entity.getAttribute(Attributes.ATTACK_DAMAGE);
+            if (damageAttribute != null) {
+            if(!damageAttribute.hasModifier(monster_damageModifier.get()))
+                damageAttribute.addTransientModifier(monster_damageModifier.get());
+            if(!damageAttribute.hasModifier(difficultyDamageModifier.apply(multiplier)))
+                damageAttribute.addTransientModifier(difficultyDamageModifier.apply(multiplier));
+            }
         }
     }
 
@@ -337,11 +347,6 @@ public final class TEUtils {
      */
     public static double angleBetween(Vec3 v1,Vec3 v2){
         return Math.acos(v1.dot(v2)/v1.length()/v2.length());
-    }
-
-    public static List<? extends Entity> getNearbyEntities(double radius, Level level,
-                                                           Class<? extends Entity> entity, AABB box) {
-        return level.getEntitiesOfClass(entity, box.inflate(radius));
     }
 
     public static Vec3 sphere(float r, float theta, float beta){
@@ -584,6 +589,7 @@ public final class TEUtils {
         else{
             aabb = new AABB(ori,end).inflate(range);
         }
+        Vec3 direction = end.subtract(ori);
         List<HitResult> hits = new ArrayList<>();
         List<HitResult> subHits = new ArrayList<>();
         List<? extends Entity> entities = level.getEntities(owner,aabb, entity1 -> entity1.isPickable() && entity1.isAlive() && filter.test(entity1));
@@ -617,9 +623,8 @@ public final class TEUtils {
                 }
             }
         }else if(!subHits.isEmpty()){
-            //未命中的目标 按距离排序
-            subHits.sort((o1,o2)->o1.getLocation().distanceToSqr(ori) < o2.getLocation().distanceToSqr(ori)?-1:1);
-
+            //未命中的目标 按角度排序
+            subHits.sort((o1,o2)-> TEUtils.angleBetween(o1.getLocation().subtract(ori),direction) < TEUtils.angleBetween(o2.getLocation().subtract(ori),direction)?-1:1);
             HitResult hitResult = subHits.get(0);
             if(hitResult instanceof  EntityHitResult entityHitResult &&
                     entityHitResult.getEntity() instanceof LivingEntity livingEntity){
@@ -653,6 +658,8 @@ public final class TEUtils {
         ){
             return false;
         }
+        if(target instanceof ISummonMob<?>)
+            return false;
         return true;
     };
 
@@ -660,7 +667,7 @@ public final class TEUtils {
      * <h1>统一弹幕索敌</h1>
      */
     public static BiPredicate<Projectile, Entity> projectileCanHitEntityTest = (projectile, target)-> {
-        if (!target.canBeHitByProjectile() || target instanceof Villager) {
+        if (!target.isAttackable() || target instanceof Villager) {
             return false;
         }
         Entity entity = projectile.getOwner();
@@ -728,6 +735,4 @@ public final class TEUtils {
                     ModConfigs.DEFAULT_RESPAWN_TIME_MAX.getPrefab());
         }
     }*/
-
-
 }

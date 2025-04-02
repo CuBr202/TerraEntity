@@ -93,9 +93,9 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, Level context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        float additionAttackDamage = 0;
+
         if (Minecraft.getInstance().player != null) {
-            additionAttackDamage = (float) Minecraft.getInstance().player.getAttributeValue(TEAttributes.SUMMON_DAMAGE.get()) - 1;
+            float additionAttackDamage = (float) Minecraft.getInstance().player.getAttributeValue(TEAttributes.SUMMON_DAMAGE.get()) - 1;
             tooltipComponents.add(Component.translatable("attribute.name.player.summon_damage").append(": " +
                             (baseAttackDamage + (additionAttackDamage > 0 ? "  +%d%%".formatted((int)(additionAttackDamage * 100)): "")))
                     .withStyle(Style.EMPTY.withColor(0x00AB00)));

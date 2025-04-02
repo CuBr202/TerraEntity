@@ -32,13 +32,10 @@ public class FrostburnEffect extends MobEffect { //霜冻：缓慢损失生命 �
 
     @Override
     public void applyEffectTick(LivingEntity living, int amplifier) {
-        if(shouldApplyEffectTickThisTick(living.tickCount, amplifier)) {
-            living.hurt(TETags.DamageTypes.of(living.level(), TETags.DamageTypes.FROST_BURN), 2.0F * (amplifier + 1));
-
-        }
+        living.hurt(TETags.DamageTypes.of(living.level(), TETags.DamageTypes.FROST_BURN), 2.0F * (amplifier + 1));
     }
 
-    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(int duration, int pAmplifier) {
         return duration % 20 == 0;
     }
 }

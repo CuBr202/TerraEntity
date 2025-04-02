@@ -25,7 +25,6 @@ import java.util.function.Supplier;
 public record TimePossibilityAmplifierEffect(String name, Supplier<? extends MobEffect> effect, int duration, int amplifierMin,int amplifierMax, float possibility) implements IEffectStrategy {
     public static MapCodec<TimePossibilityAmplifierEffect> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(TimePossibilityAmplifierEffect::name),
-
             ForgeRegistries.MOB_EFFECTS.getCodec().fieldOf("effect").forGetter(e->e.effect.get()),
             Codec.INT.fieldOf("duration").forGetter(TimePossibilityAmplifierEffect::duration),
             Codec.INT.fieldOf("amplifier_min").forGetter(TimePossibilityAmplifierEffect::amplifierMin),

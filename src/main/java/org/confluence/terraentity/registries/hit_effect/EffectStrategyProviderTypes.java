@@ -1,7 +1,6 @@
 package org.confluence.terraentity.registries.hit_effect;
 
 import com.mojang.serialization.MapCodec;
-
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -11,7 +10,6 @@ import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
 import org.confluence.terraentity.registries.hit_effect.variant.RandomWeightEffect;
 import org.confluence.terraentity.registries.hit_effect.variant.TimePossibilityAmplifierEffect;
-
 import java.util.function.Supplier;
 
 /**

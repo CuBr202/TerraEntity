@@ -38,7 +38,6 @@ public class TerraEntity {
         TEEffects.EFFECTS.register(modEventBus);
         TEAttributes.ATTRIBUTES.register(modEventBus);
         TEBiomes.register(modEventBus);
-        TEEffectStrategies.EFFECT_STRATEGY.register(modEventBus);
         TEEnchantments.ENCHANTMENTS.register(modEventBus);
 
 
