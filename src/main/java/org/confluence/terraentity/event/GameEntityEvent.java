@@ -209,7 +209,7 @@ public class GameEntityEvent {
                 slime.moveTo(zombie.getX(), zombie.getY(), zombie.getZ(), zombie.getYRot(), 0.0F);
                 slime.finalizeSpawn(level, event.getDifficulty(), MobSpawnType.JOCKEY, null);
                 slime.startRiding(zombie);
-                level.addFreshEntity(slime);
+//                level.addFreshEntity(slime);
             }
         }
         if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
