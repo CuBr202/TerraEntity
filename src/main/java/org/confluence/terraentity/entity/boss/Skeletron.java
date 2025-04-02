@@ -28,12 +28,14 @@ import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
-
 import software.bernie.geckolib.core.animation.AnimatableManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 骷髅王
+ */
 public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss {
 
     private float projDamageFactor = 1.0f; // 弹幕伤害倍率，相对于攻击力

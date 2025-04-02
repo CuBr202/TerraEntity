@@ -1,8 +1,9 @@
 package org.confluence.terraentity.registries.generation;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.generation.variant.AboveFallenGeneration;
@@ -15,6 +16,8 @@ import java.util.function.Supplier;
  * 注册追踪编解码器的类型
  */
 public class GenerationProviderTypes {
+    public static final DeferredRegister<GenerationProvider> TYPES =  DeferredRegister.create(TERegistries.GenerationProviders.KEY, TerraEntity.MODID);
+    public static final Supplier<IForgeRegistry<GenerationProvider>> REGISTRY = TYPES.makeRegistry(RegistryBuilder::new);
 
     public static final Supplier<GenerationProvider> FORWARD_GENERATION = register("forward", ForwardGeneration.CODEC);
     public static final Supplier<GenerationProvider> ABOVE_FALLEN = register("above_fallen", AboveFallenGeneration.CODEC);
@@ -22,6 +25,6 @@ public class GenerationProviderTypes {
 
 
     private static Supplier<GenerationProvider> register(String name, MapCodec<? extends IGeneration> codec) {
-        return TERegistries.GenerationProviders.TYPES.register(name, ()->new GenerationProvider(codec));
+        return TYPES.register(name, ()->new GenerationProvider(codec));
     }
 }

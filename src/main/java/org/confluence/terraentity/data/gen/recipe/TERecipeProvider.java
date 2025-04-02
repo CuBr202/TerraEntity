@@ -4,8 +4,15 @@ package org.confluence.terraentity.data.gen.recipe;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import org.confluence.terraentity.init.TEItems;
+import org.confluence.terraentity.init.item.TEBoomerangItems;
+import org.confluence.terraentity.init.item.TESummonItems;
+import org.confluence.terraentity.init.item.TEWhipItems;
 
 import java.util.function.Consumer;
 
@@ -19,7 +26,7 @@ public class TERecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> recipeOutput) {
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.HORNET_STAFF.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TESummonItems.HORNET_STAFF.get())
                 .pattern("BAB")
                 .pattern(" C ")
                 .pattern(" C ")
@@ -29,20 +36,94 @@ public class TERecipeProvider extends RecipeProvider {
                 .unlockedBy("has_bee_spawn_egg",has(Items.BEE_SPAWN_EGG))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.LEATHER_WHIP.get())
-                .pattern("  A")
-                .pattern("AAA")
-                .pattern("A  ")
-                .define('A', Items.LEATHER)
-                .unlockedBy("has_leather",has(Items.LEATHER))
+        // 鞭子
+        registerWhip(recipeOutput, TEWhipItems.LEATHER_WHIP.get(), Items.LEATHER, "has_leather");
+        registerWhip(recipeOutput, TEWhipItems.SLUB_WHIP.get(), Items.BAMBOO, "has_bamboo");
+        registerWhip(recipeOutput, TEWhipItems.AMBER_WHIP.get(), Items.HONEY_BLOCK, "has_honey_block");
+        registerWhip(recipeOutput, TEWhipItems.AMETHYST_WHIP.get(), Items.AMETHYST_CLUSTER, "has_amethyst_cluster");
+        registerWhip(recipeOutput, TEWhipItems.DIAMOND_WHIP.get(), Items.DIAMOND, "has_diamond");
+        registerWhip(recipeOutput, TEWhipItems.EMERALD_WHIP.get(), Items.EMERALD, "has_emerald");
+        registerWhip(recipeOutput, TEWhipItems.RUBY_WHIP.get(), Items.REDSTONE_BLOCK, "has_redstone_block");
+        registerWhip(recipeOutput, TEWhipItems.SAPPHIRE_WHIP.get(), Items.LAPIS_BLOCK, "has_lapis_block");
+        registerWhip(recipeOutput, TEWhipItems.TOPAZ_WHIP.get(), Items.GOLD_INGOT, "has_gold_ingot");
+
+        // 回旋镖
+        registerBoomerang(recipeOutput, TEBoomerangItems.WOOD_BOOMERANG.get(), ItemTags.PLANKS, "has_wood_planks");
+        registerBoomerangEnchanted(recipeOutput, TEBoomerangItems.ENCHANTED_BOOMERANG.get(),TEBoomerangItems.WOOD_BOOMERANG.get(), Items.IRON_INGOT, "has_iron_ingot");
+        registerBoomerangEnchanted(recipeOutput, TEBoomerangItems.ICE_BOOMERANG.get(),TEBoomerangItems.ENCHANTED_BOOMERANG.get(), Items.BLUE_ICE,  "has_blue_ice");
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, TEBoomerangItems.SHROOMERANG.get())
+                .requires(TEBoomerangItems.ENCHANTED_BOOMERANG.get())
+                .requires(Items.BROWN_MUSHROOM)
+                .requires(Items.RED_MUSHROOM)
+                .requires(Items.WARPED_FUNGUS)
+                .unlockedBy("has_ice_boomerang", has(TEBoomerangItems.ICE_BOOMERANG.get()))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, TEBoomerangItems.TRIMARANG.get())
+                .requires(TEBoomerangItems.ENCHANTED_BOOMERANG.get())
+                .requires(TEBoomerangItems.ICE_BOOMERANG.get())
+                .requires(TEBoomerangItems.SHROOMERANG.get())
+                .unlockedBy("has_shroomerang", has(TEBoomerangItems.SHROOMERANG.get()))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TEItems.BAMBOO_WHIP.get())
+        netheriteSmithing(recipeOutput, TEBoomerangItems.TRIMARANG.get(), RecipeCategory.COMBAT, TEBoomerangItems.FLAMARANG.get());
+
+
+    }
+
+    protected static void netheriteSmithing(Consumer<FinishedRecipe> recipeOutput, Item ingredientItem, RecipeCategory category, Item resultItem) {
+        SmithingTransformRecipeBuilder.smithing(
+                        Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE), Ingredient.of(ingredientItem), Ingredient.of(Items.NETHERITE_INGOT), category, resultItem
+                )
+                .unlocks("has_netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(recipeOutput, getItemName(resultItem) + "_smithing");
+    }
+
+    public void registerWhip(Consumer<FinishedRecipe> recipeOutput, Item whip, ItemLike material, String name){
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, whip)
                 .pattern("  A")
                 .pattern("AAA")
                 .pattern("A  ")
-                .define('A', Items.BAMBOO)
-                .unlockedBy("has_bamboo",has(Items.BAMBOO))
+                .define('A', material)
+                .unlockedBy(name, has(material))
+                .save(recipeOutput);
+    }
+
+    public void registerBoomerang(Consumer<FinishedRecipe> recipeOutput, Item boomerang, ItemLike material, String name){
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, boomerang)
+                .pattern(" AA")
+                .pattern("A  ")
+                .pattern("A  ")
+                .define('A', material)
+                .unlockedBy(name, has(material))
+                .save(recipeOutput);
+    }
+    public void registerBoomerangEnchanted(Consumer<FinishedRecipe> recipeOutput, Item boomerang,Item template, ItemLike material, String name){
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, boomerang)
+                .pattern("BAA")
+                .pattern("A  ")
+                .pattern("A  ")
+                .define('A', material)
+                .define('B', template)
+                .unlockedBy(name, has(material))
+                .save(recipeOutput);
+    }
+    public void registerBoomerang(Consumer<FinishedRecipe> recipeOutput, Item boomerang, TagKey<Item> material, String name){
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, boomerang)
+                .pattern(" AA")
+                .pattern("A  ")
+                .pattern("A  ")
+                .define('A', material)
+                .unlockedBy(name, has(material))
+                .save(recipeOutput);
+    }
+    public void registerBoomerangEnchanted(Consumer<FinishedRecipe> recipeOutput, Item boomerang, Item template, TagKey<Item> material, String name){
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, boomerang)
+                .pattern("BAA")
+                .pattern("A  ")
+                .pattern("A  ")
+                .define('A', material)
+                .define('B', template)
+                .unlockedBy(name, has(material))
                 .save(recipeOutput);
     }
 }

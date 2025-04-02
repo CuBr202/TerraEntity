@@ -38,6 +38,9 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
+/**
+ * 丛林黄蜂
+ */
 public class Hornet extends AbstractMonster implements FlyingAnimal{
 
     protected  int attackInternal = 20;

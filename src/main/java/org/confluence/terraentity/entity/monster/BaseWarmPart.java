@@ -9,11 +9,13 @@ import net.minecraft.world.entity.Pose;
 import net.minecraftforge.entity.PartEntity;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
-
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+/**
+ * 蠕虫体节
+ */
 public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICollisionAttackEntity<BaseWarmPart> {
 
     private final EntityDimensions size;
@@ -57,7 +59,9 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICo
             this.getParent().playSound(hurtSound);
         }
         if(this.getParent().getHealth() <= 0) {
-            this.getParent().die(source);
+            return false;
+//            this.getParent().die(source);
+
         }
 
         this.hurtTime = 10;
@@ -115,5 +119,9 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICo
     @Override
     public boolean shouldDoCollision() {
         return getParent().shouldDoCollision();
+    }
+    @Override
+    public boolean isSprinting() {
+        return getParent().isSprinting();
     }
 }

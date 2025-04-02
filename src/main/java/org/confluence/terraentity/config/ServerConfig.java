@@ -40,6 +40,10 @@ public class ServerConfig {
                 .comment("Should the boss leave on day? Only for some bosses.")
                 .define("boss_leave_on_day", false);
 
+//        RESPAWN_PROTECT = BUILDER
+//                .comment("Should players be protected from respawning?.If true, nearby bosses will be discard")
+//                .define("respawn_protect", true);
+
         DISPLAY_SUMMON_ITEMS = BUILDER
                 .comment("Should summon items be displayed in this mod?")
                 .define("display_summon_items", true);

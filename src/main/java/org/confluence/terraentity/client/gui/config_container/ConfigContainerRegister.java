@@ -23,6 +23,8 @@ public class ConfigContainerRegister {
                 .comment("Boss Bar Number Offset X.");
         builder.addIntSliderEditBox(ClientConfig.BossBarNumberOffsetY,-100 , 200)
                 .comment("Boss Bar Number Offset Y.");
+        builder.addCheckBox(ClientConfig.GENERATE_PROJECTILE_PARTICLE)
+                .comment("Generate Whip Particle.");
 
         builder.addTab("server",98);
 

@@ -19,7 +19,9 @@ import net.minecraftforge.common.ForgeHooks;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
 
-
+/**
+ * 世吞体节
+ */
 public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSegment> {
     private static final float MAX_HEALTHS = 50f;
     private static final float DAMAGE = 4f;//接触伤害

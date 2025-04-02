@@ -1,9 +1,12 @@
 package org.confluence.terraentity.data.gen.tags;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.TerraEntity;
@@ -42,13 +45,18 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
 //                EntityType.SLIME)
 //            );
 
-        tag(Tags.EntityTypes.BOSSES)
-                .add(TEEntities.EYE_OF_CTHULHU.get())
-                .add(TEEntities.KING_SLIME.get())
-                .add(TEEntities.EATER_OF_WORLDS.get())
-                .add(TEEntities.EATER_OF_WORLD_SEGMENT.get())
-                .add(TEEntities.BRAIN_OF_CTHULHU.get());
-
+        EntityType<?>[] bosses = {
+                TEEntities.EYE_OF_CTHULHU.get(),
+                TEEntities.KING_SLIME.get(),
+                TEEntities.EATER_OF_WORLDS.get(),
+                TEEntities.EATER_OF_WORLD_SEGMENT.get(),
+                TEEntities.BRAIN_OF_CTHULHU.get(),
+                TEEntities.QUEEN_BEE.get(),
+                TEEntities.SKELETRON.get(),
+                TEEntities.SKELETRON_HAND.get()
+        };
+        tag(Tags.EntityTypes.BOSSES).add(bosses);
+        tag(TagKey.create(Registries.ENTITY_TYPE, TerraEntity.fromSpaceAndPath("ars_nouveau", "jar_blacklist"))).add(bosses);
     }
 
 }

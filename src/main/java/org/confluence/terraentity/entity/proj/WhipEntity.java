@@ -6,23 +6,28 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.entity.PartEntity;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.animation.LashAnimation;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
+import org.confluence.terraentity.data.enchantment.TEEnchantmentHelper;
+import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.dynamic_curve.SplineKeyframeDynamicCurve;
+import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.TEAttributes;
+import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.init.item.TEWhipItems;
+import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
+import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -39,9 +44,15 @@ public class WhipEntity extends AbstractHurtingProjectile {
     int existTick = 22;
     int _existTick = 22; // 基础存在时间
     int drawBackTick = 10; // 返回到player的过渡时间
+
+    protected float _damageDeclineStep = 0.1f; // 基础伤害衰减系数
+    protected float _damageDeclineMax = 0.5f; // 最大伤害衰减系数
+    protected float damageDecline = 1f; // 伤害衰减
+
     protected float _rangeFactor = 0.5f; // 基础鞭范围
     public int hitCooldown = 5; // 击中冷却时间
     public EffectStrategyComponent hiteffect; // 击中特效
+    public EffectStrategyComponent hiteffect_beneficial; // 农场主增益
 
 
     // 初始位置
@@ -59,28 +70,31 @@ public class WhipEntity extends AbstractHurtingProjectile {
     Vec3KeyframeAnimation tail;
     // 攻速
     public double speed = 1;
+    float weepDamage = 1;
+    ItemStack weapon;
+    float serverRandom = -1;
 
     protected static final EntityDataAccessor<Vector3f> DATA_INITIAL_POSITION = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.VECTOR3);
     protected static final EntityDataAccessor<Vector3f> DATA_INITIAL_DIRECTION = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.VECTOR3);
     protected static final EntityDataAccessor<Integer> DATA_INITIAL_EXISTING_TIME = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<ItemStack> DATA_WEAPON = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<Float> DATA_SERVER_RANDOM = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.FLOAT);
 
     public WhipEntity(EntityType<? extends WhipEntity> entityType, Level level) {
         super(entityType, level);
 
-        tail = Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone1").get(0));
-        parts = List.of(
-                tail,
-                Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone4").get(0))
+//        try {
+            // 这里只能单人测试用，发布版本要改用服务端builder!
+//        tail = Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone1").getFirst());
+//        parts = List.of(
+//                tail,
+//                Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone4").getFirst())
+//        );
 
-        );
-        keyPositions = new ArrayList<>();
-        keyPositionsO = new ArrayList<>();
-        for (int i = 0; i < parts.size(); i++) {
-            keyPositions.add(new Vector3f());
-            keyPositionsO.add(new Vector3f());
-        }
-        interpolator = new SplineKeyframeDynamicCurve<>(parts);
+//        }catch (NoClassDefFoundError e){
+//            TerraEntity.LOGGER.warn("You Forget To Change Debug Code To Release Version!\n", e);
+//        }
+
         this.noPhysics = true;
         this.noCulling = true;
     }
@@ -90,8 +104,71 @@ public class WhipEntity extends AbstractHurtingProjectile {
      */
     public void setWeapon(ItemStack weapon) {
         this.entityData.set(DATA_WEAPON, weapon);
+        var data = IDataComponentType.getData(weapon, TEDataComponentTypes.EFFECT_STRATEGY);
+        if (data != null)
+            hiteffect = data;
+        var data1 = IDataComponentType.getData(weapon, TEDataComponentTypes.EFFECT_STRATEGY_BENEFICIAL);
+        if (data1 != null)
+            hiteffect_beneficial = data1;
+        boolean triggerSweep = random.nextFloat() < 0.2f;
+        serverRandom =  triggerSweep? 1: 0;
+        this.entityData.set(DATA_SERVER_RANDOM, serverRandom);
+        updateWeapon(weapon, triggerSweep);
     }
 
+    private void updateWeapon(ItemStack weapon, boolean sweep){
+
+        if(sweep) {
+            int sweepLevel = TEEnchantmentHelper.getEnchantmentLevel(TEEnchantments.WHIP_SWEEP.get(), weapon);
+            // 横扫之鞭
+            parts = List.of(
+                    Vec3KeyframeAnimation.Builder()
+                            .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
+                            .addKeyframeTimeStamp(0.1667, new Vec3(-3, 1, 4))
+                            .addKeyframeTimeStamp(0.375, new Vec3(-9, 2, 4))
+                            .addKeyframeTimeStamp(0.5417, new Vec3(-15, 1, 0))
+                            .addKeyframeTimeStamp(0.7083, new Vec3(-9, 0, -4))
+                            .addKeyframeTimeStamp(0.875, new Vec3(-3, 0, -4))
+                            .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
+                            .build(),
+                    Vec3KeyframeAnimation.Builder()
+                            .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
+                            .addKeyframeTimeStamp(0.1667, new Vec3(-1, 0, 2))
+                            .addKeyframeTimeStamp(0.375, new Vec3(-2, 1, 3))
+                            .addKeyframeTimeStamp(0.5417, new Vec3(-5, 1, 1))
+                            .addKeyframeTimeStamp(0.7083, new Vec3(-3, -1, -3))
+                            .addKeyframeTimeStamp(0.875, new Vec3(-1, 0, -1))
+                            .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
+                            .build()
+            );
+            this.weepDamage += sweepLevel * 0.2f;
+        }else {
+            parts = List.of(
+                    Vec3KeyframeAnimation.Builder()
+                            .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
+                            .addKeyframeTimeStamp(0.25, new Vec3(-4, 3, 0))
+                            .addKeyframeTimeStamp(0.5, new Vec3(-14, 3, 0))
+                            .addKeyframeTimeStamp(0.75, new Vec3(-16, -4, 0))
+                            .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
+                            .build(),
+                    Vec3KeyframeAnimation.Builder()
+                            .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
+                            .addKeyframeTimeStamp(0.25, new Vec3(-1, 0, 0))
+                            .addKeyframeTimeStamp(0.5, new Vec3(-4, 0, 0))
+                            .addKeyframeTimeStamp(0.75, new Vec3(-5, 0, 0))
+                            .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
+                            .build()
+
+            );
+        }
+        keyPositions = new ArrayList<>();
+        keyPositionsO = new ArrayList<>();
+        for (int i = 0; i < parts.size(); i++) {
+            keyPositions.add(new Vector3f());
+            keyPositionsO.add(new Vector3f());
+        }
+        interpolator = new SplineKeyframeDynamicCurve<>(parts);
+    }
     /**
      * 获取鞭的武器
      */
@@ -125,6 +202,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 return;
             }
         }
+        if(parts == null || parts.isEmpty()) return;
         this.speed = (double) _existTick / this.existTick;
 //        this.move(MoverType.SELF, this.getDeltaMovement());
         if (getOwner() instanceof Player owner) {
@@ -166,41 +244,89 @@ public class WhipEntity extends AbstractHurtingProjectile {
 //                    move(MoverType.SELF, dir);
 
                 }
-                if(!level().isClientSide){
+//                if(!level().isClientSide){
+                    boolean trigger = false;
+                // 可以插值让攻击更准确
                     List<Vec3> attackPoints = keyPositions.stream().map(Vec3::new).toList();
 
+                    float additionalRange = serverRandom == 1? 0.5f: 0;
                     // 攻击
-                    float range = 1.5f;
+                    float range = 1.5f + additionalRange;
                     for (Vec3 attackPoint : attackPoints) {
                         Vec3 pos = attackPoint.add(initialPosition);
                         AABB aabb = new AABB(pos.x - range, pos.y - range, pos.z - range,
                                 pos.x + range, pos.y + range, pos.z + range);
                         for (var entity : level().getEntities(this, aabb, e -> e != getOwner())) {
-                            if (entity instanceof LivingEntity hurter) {
-                                if(!hitEntities.containsKey(entity)){
+                            if(!hitEntities.containsKey(entity)){
+                                if (entity instanceof LivingEntity hurter) {
+                                    // 命中无多体节敌人
                                     if(owner.canAttack(hurter) && hurter.canBeSeenAsEnemy()) {
                                         hitEntities.put(entity, hitCooldown);
-                                        double damage = owner.getAttributeValue(TEAttributes.SUMMON_DAMAGE.get());
-
-                                        if (hiteffect != null) {
-                                            hiteffect.applyAll( owner, hurter);
-                                        }
-                                        hurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON,  owner), (float) damage);
+                                        trigger = doHurt(owner, hurter, hurter);
                                     }
-                                }else{
-                                    hitEntities.put(entity, hitEntities.get(entity) - 1);
-                                     if(hitEntities.get(entity) <= 0){
-                                         hitEntities.remove(entity);
-                                     }
-                                     return;
+                                    if(hurter instanceof ISummonMob<?>){
+                                        if(hiteffect_beneficial != null){
+                                            hiteffect_beneficial.applyAll( owner, hurter);
+                                        }
+                                    }
+
+                                }else if(entity instanceof PartEntity<?> partEntity){
+                                    // 名字多体节敌人
+                                    if(partEntity.getParent() instanceof LivingEntity hurter){
+                                        if(owner.canAttack(hurter) && hurter.canBeSeenAsEnemy()) {
+                                            hitEntities.put(entity, hitCooldown);
+                                            trigger = doHurt(owner, hurter, partEntity);
+                                        }
+                                    }
                                 }
+                            }else{
+                                hitEntities.put(entity, hitEntities.get(entity) - 1);
+                                if(hitEntities.get(entity) <= 0){
+                                    hitEntities.remove(entity);
+                                }
+                                return;
                             }
                         }
                     }
-                }
+                    if(trigger){
+                        // 命中敌人造成伤害才消耗耐久
+                        getWeapon().hurtAndBreak(1, owner, it->{});
+                    }
+//                }
             }
         }
         super.tick();
+    }
+
+    protected boolean doHurt(LivingEntity owner, LivingEntity hurter, Entity actualHurter){
+        double damage = owner.getAttributeValue(TEAttributes.SUMMON_DAMAGE.get());
+        boolean trigger = false;
+        if(TEUtils.attackTamableTest.test(owner, hurter)){
+            trigger = true;
+            damage *= damageDecline;
+            damageDecline = Math.max(_damageDeclineMax, damageDecline - _damageDeclineStep);
+            if (hiteffect != null) {
+                hiteffect.applyAll( owner, hurter);
+            }
+        }else{
+            // 当命中宠物时
+            if(getWeapon().getItem() == TEWhipItems.LEATHER_WHIP.get()){
+                if(hiteffect_beneficial != null){
+                    hiteffect_beneficial.applyAll( owner, hurter);
+                }
+                // 如果是皮鞭
+                damage *= 0.2F;
+            }else{
+                return false;
+            }
+        }
+        actualHurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON,  owner), (float) damage * weepDamage);
+        return trigger;
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return false;
     }
 
     @Override
@@ -210,7 +336,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
 
 
     protected ParticleOptions getTrailParticle() {
-        return super.getTrailParticle();
+        return null;
     }
     @Override
     protected void defineSynchedData() {
@@ -218,11 +344,13 @@ public class WhipEntity extends AbstractHurtingProjectile {
         this.entityData.define(DATA_INITIAL_DIRECTION, new Vector3f(0, 0, 0));
         this.entityData.define(DATA_WEAPON, ItemStack.EMPTY);
         this.entityData.define(DATA_INITIAL_EXISTING_TIME, 22);
+        this.entityData.define(DATA_SERVER_RANDOM, -1f);
     }
 
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> var1){
         if(level().isClientSide){
+
             if (var1 == DATA_INITIAL_POSITION) {
                 initialPosition = new Vec3(this.entityData.get(DATA_INITIAL_POSITION));
             } else if (var1 == DATA_INITIAL_DIRECTION) {
@@ -230,6 +358,16 @@ public class WhipEntity extends AbstractHurtingProjectile {
             }else if (var1 == DATA_INITIAL_EXISTING_TIME) {
                 existTick = this.entityData.get(DATA_INITIAL_EXISTING_TIME);
                 this.drawBackTick = (int) (existTick * 0.5F);
+            }else if(var1 == DATA_WEAPON){
+                weapon = this.entityData.get(DATA_WEAPON);
+            }else if(var1 == DATA_SERVER_RANDOM){
+                this.serverRandom = this.entityData.get(DATA_SERVER_RANDOM);
+            }
+            boolean keyframeRelated = var1 == DATA_WEAPON || var1 == DATA_SERVER_RANDOM;
+            if(keyframeRelated){
+                if(weapon != null && serverRandom != -1){
+                    updateWeapon(this.entityData.get(DATA_WEAPON), serverRandom == 1);
+                }
             }
         }
     }

@@ -1,0 +1,312 @@
+package org.confluence.terraentity.item;
+
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+
+import org.confluence.terraentity.data.component.EffectStrategyComponent;
+import org.confluence.terraentity.data.component.SingleBooleanComponent;
+import org.confluence.terraentity.data.component.Unbreakable;
+import org.confluence.terraentity.data.enchantment.TEEnchantmentHelper;
+import org.confluence.terraentity.data.enchantment.TEEnchantments;
+import org.confluence.terraentity.entity.proj.BoomerangProjectile;
+import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.init.TEDataComponentTypes;
+import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
+import org.confluence.terraentity.registries.generation.IGeneration;
+import org.confluence.terraentity.registries.generation.variant.ForwardGeneration;
+import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
+import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+public class Boomerang extends Item implements IItemExtension{
+
+    public final BoomerangModifier boomerangModifier;
+    private final IGeneration generation = new ForwardGeneration(0,1.0f);
+
+    public Boomerang(float damage, BoomerangModifier boomerangModifier, TEItemProperties properties) {
+        super(boomerangModifier.buildProperties(properties));
+        this.boomerangModifier = boomerangModifier;
+        this.boomerangModifier.damage = damage;
+    }
+
+    /**
+     * 是否已经准备好射击
+     */
+    public static boolean isBacked(ItemStack stack){
+        var data = IDataComponentType.getData(stack, TEDataComponentTypes.BOOMERANG_READY);
+        if(stack == null || data == null) return true;
+        return data.value();
+    }
+
+    /**
+     * 设置射击准备状态
+     */
+    public static void setBacked(ItemStack stack, SingleBooleanComponent value){
+        var data = IDataComponentType.getData(stack, TEDataComponentTypes.BOOMERANG_READY);
+        if(stack!= null && data!=null)
+            data.writeToNBT(TEDataComponentTypes.BOOMERANG_READY, stack.getOrCreateTag());
+    }
+
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        if(usedHand == InteractionHand.OFF_HAND) return InteractionResultHolder.fail(player.getItemInHand(usedHand));
+        ItemStack stack = player.getItemInHand(usedHand);
+        // 等待返回且未到达最大等待时间
+        if(boomerangModifier.shouldWaitForBack && !isBacked(stack)
+                 && player.getCooldowns().isOnCooldown(this)
+        ) {
+            return InteractionResultHolder.fail(stack);
+        }
+        // 冷却
+        if(boomerangModifier.shouldApplyCd && player.getCooldowns().isOnCooldown(this))
+            return InteractionResultHolder.fail(stack);
+        // 动作
+        if(level.isClientSide) {
+            player.swing(InteractionHand.MAIN_HAND);
+            return super.use(level, player, usedHand);
+        }
+        // 射击
+        setBacked(stack,SingleBooleanComponent.FALSE);
+        player.playSound(TESounds.WAVING.get());
+        this.shoot(player, stack);
+
+        int addition = TEEnchantmentHelper.getEnchantmentLevel(TEEnchantments.MULTI_BOOMERANG.get(), stack);
+        if(boomerangModifier.shouldApplyCd || addition > 0) {
+            AtomicInteger count = new AtomicInteger();
+            player.getCapability(TEAttachments.WEAPON_STORAGE).ifPresent(c->{
+                count.set(c.tryIncrease(this));
+            });
+            if(count.get() < boomerangModifier.maxCount + addition) {
+                player.getCooldowns().addCooldown(this, boomerangModifier.cd);
+            }
+            else player.getCooldowns().addCooldown(this, 100); //最大等待时间
+        }
+        else player.getCooldowns().addCooldown(this, 100); //最大等待时间
+        return super.use(level, player, usedHand);
+    }
+
+    private void shoot(LivingEntity owner, ItemStack stack){
+//        owner.level().playSound(owner, owner.blockPosition(), ModSoundEvents.WAVING.get(), SoundSource.AMBIENT, 1.0F, 1.0F);
+        generation.genProjectile(owner, stack, 2f, ()->{
+            BoomerangProjectile projectile = new BoomerangProjectile(owner, boomerangModifier, stack);
+            return projectile;
+        });
+
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return super.canApplyAtEnchantingTable(stack,enchantment) || enchantment == Enchantments.MOB_LOOTING;
+    }
+
+    @Override
+    public boolean canContinueUsing(ItemStack oldStack, ItemStack newStack) {return false;}
+
+    @Override
+    public void appendHoverText(ItemStack stack, Level context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.translatable("attribute.name.generic.attack_damage").append(": ").append(String.format("%.1f", boomerangModifier.damage)).withStyle(s->s.withColor(0x00FF00)));
+        tooltipComponents.add(Component.translatable("tooltip.terra_entity.boomerang.fly_speed").append(": ").append(String.format("%.2f", boomerangModifier.flySpeed)).withStyle(s->s.withColor(0xCCCC00)));
+
+        if(this.boomerangModifier.maxCount > 1){
+            tooltipComponents.add(Component.translatable("tooltip.terra_entity.boomerang.max_count").append(": ").append(String.valueOf(this.boomerangModifier.maxCount)).withStyle(s->s.withColor(0xAA8800)));
+        }
+        if(this.boomerangModifier.canPenetrate || this.boomerangModifier.maxPenetration > 1){
+            tooltipComponents.add(Component.translatable("tooltip.terra_entity.boomerang.penetration").append(": ").append(String.valueOf(this.boomerangModifier.maxPenetration)).withStyle(s->s.withColor(0x00FFFF)));
+        }
+        var data = IDataComponentType.getData(stack, TEDataComponentTypes.EFFECT_STRATEGY);
+        if(data != null){
+            IEffectStrategy.appendDescription(tooltipComponents,
+                    data.effects(),
+                    Component.translatable("tooltip.terra_entity.boomerang.on_hit_effects").append(": ").withStyle(s->s.withColor(0x969811)));
+        }
+    }
+
+    @Override
+    public void onStackInit(ItemStack stack) {
+        if(this.boomerangModifier.properties != null)
+            this.boomerangModifier.properties.init(stack);
+
+    }
+
+//    @Override
+//    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+//        return enchantment.is(Enchantments.LOOTING) || super.supportsEnchantment(stack, enchantment);
+//    }
+
+    public static class BoomerangModifier {
+
+        public float damage;
+        public float flySpeed = 1.52f;              //向前飞行速度
+        public float backSpeed = 1.52f;             //向后飞行速度//返回速度
+        public float knockback = 0.2f;              //基础击退力度
+        public int cd = 10;                         //冷却时间
+        public int forwardTick = 15;                //前进时间
+        public int maxCount = 1;                    //最大射击次数
+        public int maxPenetration = 1;              //最大穿透次数
+        public boolean canPenetrate = false;        //是否可穿透，否则命中生物返回
+        public boolean shouldWaitForBack = true;    //是否等待返回
+        public boolean shouldApplyCd = false;       //是否应用冷却
+        public boolean fire = false;                //是否渲染火焰
+
+        int durability = 0;
+//调参后这是木回旋镖的数值
+
+//        public ItemAttributeModifiers.Builder attributeModifiersBuilder = ItemAttributeModifiers.builder();
+        private int modifyCount = 0;
+        List<Function<TEItemProperties, TEItemProperties>> modifierFunctions = new ArrayList<>();
+        public Supplier<ParticleOptions> particle;
+        public int particleCount = 1;
+        TEItemProperties properties;
+        /**
+         * 添加击中效果
+         *
+         * @see EffectStrategy
+         */
+        public BoomerangModifier setOnHitEffect(EffectStrategyComponent onHit) {
+            modifierFunctions.add(properties -> properties.component(TEDataComponentTypes.EFFECT_STRATEGY, onHit));
+            return this;
+        }
+
+        /**
+         * 添加属性修改器
+         */
+//        public BoomerangModifier addAttributeModifier(Holder<Attribute> attribute, float amount, AttributeModifier.Operation operation) {
+//            this.attributeModifiersBuilder.add(attribute, new AttributeModifier(TerraEntity.asResource("boomerang.modifier." + modifyCount++), amount, operation), EquipmentSlotGroup.MAINHAND);
+//            return this;
+//        }
+
+        /**
+         * 设置可穿透
+         */
+        public BoomerangModifier setCanPenetrate() {
+            this.canPenetrate = true;
+            return this;
+        }
+
+        /**
+         * 设置前进时间
+         */
+        public BoomerangModifier setForwardTick(int forwardTick) {
+            this.forwardTick = forwardTick;
+            return this;
+        }
+        /**
+         * 设置渲染火焰
+         */
+        public BoomerangModifier setFire() {
+            this.fire = true;
+            return this;
+        }
+
+        /**
+         * 设置冷却时间
+         */
+        public BoomerangModifier setCd(int cd) {
+            this.cd = cd;
+            this.shouldApplyCd = true;
+            return this;
+        }
+
+        /**
+         * 设置不等待返回
+         */
+        public BoomerangModifier setNotWaitForBack() {
+            this.shouldWaitForBack = false;
+            return this;
+        }
+        /**
+         * 设置击退力度倍率
+         */
+        public BoomerangModifier setKnockbackFactor(float knockback) {
+            this.knockback *= knockback;
+            return this;
+        }
+        /**
+         * 设置最大射击次数
+         */
+        public BoomerangModifier setMaxCount(int maxCount) {
+            this.maxCount = maxCount;
+            return this;
+        }
+        /**
+         * 设置向前飞行速度倍率
+         */
+        public BoomerangModifier setFlySpeedFactor(float flySpeed) {
+            this.flySpeed = flySpeed;
+            return this;
+        }
+        /**
+         * 设置向后飞行速度倍率
+         */
+        public BoomerangModifier setBackSpeedFactor(float backSpeed) {
+            this.backSpeed = backSpeed;
+            return this;
+        }
+        /**
+         * 设置最大穿透次数
+         */
+        public BoomerangModifier setMaxPenetration(int maxPenetration) {
+            this.maxPenetration = maxPenetration;
+            return this;
+        }
+
+        public BoomerangModifier setDurability(int durability) {
+            this.durability = durability;
+            return this;
+        }
+
+        /**
+         * 设置粒子效果
+         * @param particle
+         * @return
+         */
+        public BoomerangModifier setParticle(Supplier<ParticleOptions> particle) {
+            return setParticle(particle, 1);
+        }
+        /**
+         * 设置粒子效果
+         * @param particle
+         * @param particleCount
+         * @return
+         */
+        public BoomerangModifier setParticle(Supplier<ParticleOptions> particle, int particleCount) {
+            this.particle = particle;
+            this.particleCount = particleCount;
+            return this;
+        }
+
+        public TEItemProperties buildProperties(TEItemProperties properties) {
+            if(durability > 0){
+                properties.durability(durability);
+            }else{
+                properties.component(TEDataComponentTypes.UNBREAKABLE, new Unbreakable(true));
+            }
+            this.properties = modifierFunctions.stream().reduce(properties, (p, f) -> f.apply(p), (p1, p2) -> p1);
+            return this.properties;
+        }
+
+    }
+
+
+
+
+}
+

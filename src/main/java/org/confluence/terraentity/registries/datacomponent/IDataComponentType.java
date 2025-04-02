@@ -1,15 +1,13 @@
 package org.confluence.terraentity.registries.datacomponent;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terraentity.init.TEDataComponentTypes;
-import org.confluence.terraentity.registries.TERegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -20,31 +18,19 @@ import java.util.function.Supplier;
  */
 public interface IDataComponentType<T extends IDataComponentType<T>> {
 
-    /**
-     * NBT 名称id
-     */
-    default String name(){
-        return getCodec().get().name();
-    }
 
-    /**
-     * NBT 编解码器
-     */
-    default Codec<T> codec(){
-        return getCodec().get().codec().get();
-    }
 
     /**
      * 写入NBT
-     * @param tag 待写入的NBT
+     * @param tag 待写入的NBT,由框架自动调用
      */
-    default void writeToNBT(CompoundTag tag){
-        JsonElement obj = codec().encodeStart(JsonOps.INSTANCE, (T) this).result().get();
-        tag.putString(name(), obj.toString());
+    default void writeToNBT(Supplier<DataComponentProvider<T>> provider, CompoundTag tag){
+        JsonElement obj = provider.get().codec().get().encodeStart(JsonOps.INSTANCE, (T) this).result().get();
+        tag.putString(provider.get().name(), obj.toString());
     }
 
 
-    Supplier<DataComponentProvider<T>> getCodec();
+    Codec<T> codec();
 
 //    MapCodec<? extends IDataComponentType<?>> TYPED_CODEC = TERegistries.DataComponentProviders.REGISTRY.get()
 //            .getCodec()
@@ -92,7 +78,11 @@ public interface IDataComponentType<T extends IDataComponentType<T>> {
         if(tag1.isEmpty()){
             return null;
         }
-        return component.codec().get().decode(JsonOps.INSTANCE, GsonHelper.parseArray(tag1)).result().get().getFirst();
+
+        return component.codec().get().decode(JsonOps.INSTANCE, JsonParser.parseString(tag1)).result().get().getFirst();
     }
 
+    static <B extends IDataComponentType<B>> @Nullable B getData(ItemStack stack, Supplier<DataComponentProvider<B>> component){
+        return getData(stack, component.get());
+    }
 }

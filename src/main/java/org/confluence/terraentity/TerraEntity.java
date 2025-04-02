@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.confluence.terraentity.config.ConfigRegistry;
+import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.data.gen.biome.TEBiomes;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.registries.TERegistries;
@@ -37,13 +38,15 @@ public class TerraEntity {
         TEEffects.EFFECTS.register(modEventBus);
         TEAttributes.ATTRIBUTES.register(modEventBus);
         TEBiomes.register(modEventBus);
+        TEEffectStrategies.EFFECT_STRATEGY.register(modEventBus);
+        TEEnchantments.ENCHANTMENTS.register(modEventBus);
+
+
+//        TEBiomes.register(modEventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigRegistry.register());
 //        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SPEC);
     }
-
-
-
 
     public static ResourceLocation asResource(String path) {
         return new ResourceLocation(MODID, path);

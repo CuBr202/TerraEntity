@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class DataGenerator {
+public class TEDataGenerator {
     public static Map<String, DataProvider> PROVIDERS = null;
 
     @SubscribeEvent
@@ -34,7 +34,7 @@ public class DataGenerator {
         boolean server = event.includeServer();
 
 
-        DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookup, RegisterDataPack.DATA_BUILDER, Set.of(MODID));
+        DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookup, TERegisterDataPack.DATA_BUILDER, Set.of(MODID));
         lookup = provider.getRegistryProvider();
 
 

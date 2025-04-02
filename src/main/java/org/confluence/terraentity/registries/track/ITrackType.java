@@ -1,9 +1,7 @@
 package org.confluence.terraentity.registries.track;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.registries.TERegistries;
 
 /**
  * <h1>跟踪方式</h1>
@@ -26,7 +24,7 @@ public interface ITrackType {
      */
     TrackTypeProvider getCodec();
 
-    MapCodec<ITrackType> TYPED_CODEC = TERegistries.TrackTypeProviders.REGISTRY.get()
+    MapCodec<ITrackType> TYPED_CODEC = TrackTypeProviderTypes.REGISTRY.get()
             .getCodec()
             .dispatchMap(ITrackType::getCodec, c->c.codec().codec());
 

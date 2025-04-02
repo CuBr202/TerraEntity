@@ -90,7 +90,7 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
                 float f3 = (float) (vec3.y - vec.y - lerpy);
                 float f4 = (float) (vec3.z - vec.z - lerpz);
                 // 生成粒子
-                if(ClientConfig.GENERATE_WHIP_PARTICLE.get() && whipItem.particleOptions != null) {
+                if(ClientConfig.GENERATE_PROJECTILE_PARTICLE.get() && whipItem.particleOptions != null) {
                     if (player.getRandom().nextFloat() < whipItem.chance) {
                         entity.level().addParticle(whipItem.particleOptions.get(),
                                 entity.getX() - f2, entity.getY() - f3, entity.getZ() - f4,

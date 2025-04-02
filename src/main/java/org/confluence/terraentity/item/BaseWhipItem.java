@@ -15,9 +15,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
 import net.minecraft.world.level.block.state.BlockState;
+import org.confluence.terraentity.data.component.Unbreakable;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.init.TEAttributes;
@@ -26,8 +29,10 @@ import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.TEUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class BaseWhipItem extends Item implements IItemExtension {
@@ -58,7 +63,7 @@ public class BaseWhipItem extends Item implements IItemExtension {
                         float attackSpeed,
                         int hitCooldown,
                         float rangeFactor) {
-        super(properties.stacksTo(1).setNoRepair());
+        super(properties);
         this.hitCooldown = hitCooldown;
         this.markDamage = markDamage;
         this.attackSpeed = attackSpeed;
@@ -102,14 +107,16 @@ public class BaseWhipItem extends Item implements IItemExtension {
                 if (data != null)
                     whipEntity.hiteffect = data;
                 whipEntity.hitCooldown = hitCooldown;
+                stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 level.addFreshEntity(whipEntity);
-
+//                stack.hurtAndBreak(1, player, (Consumer<LivingEntity>) (e -> e.playSound(SoundEvents.)));
             }
         }
         player.swing(usedHand);
         return super.use(level, player, usedHand);
     }
 
+    @Override
     public void appendHoverText(ItemStack stack, Level context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         var data = IDataComponentType.getData(stack, TEDataComponentTypes.EFFECT_STRATEGY.get());
         if (data != null) {
@@ -121,6 +128,9 @@ public class BaseWhipItem extends Item implements IItemExtension {
         Supplier<? extends ParticleOptions> particleOptions;
         float chance;
         Supplier<BlockState> blockStateSupplier;
+
+        List<Function<TEItemProperties, TEItemProperties>> modifiers = new ArrayList<>();
+        boolean hasDamage = false;
 
         /**
          * 当没有注册模型时，使用方块状态代替模型渲染
@@ -141,13 +151,38 @@ public class BaseWhipItem extends Item implements IItemExtension {
             return this;
         }
 
+        public WhipProperties addModifier(Function<TEItemProperties, TEItemProperties> modifier) {
+            modifiers.add(modifier);
+            return this;
+        }
+
+        /**
+         * 设置耐久度，默认为无限耐久
+         * @param durability 耐久度
+         */
+        public WhipProperties setDurability(int durability) {
+            modifiers.add(p-> (TEItemProperties)p.durability(durability));
+            hasDamage = true;
+            return this;
+        }
+
+        /**
+         * 生成Properties
+         */
+        public TEItemProperties buildProperties() {
+
+            if(!hasDamage) this.component(TEDataComponentTypes.UNBREAKABLE, new Unbreakable(true)).stacksTo(1);
+            return modifiers.stream().reduce(this, (p, m)-> (WhipProperties) m.apply(p), (p1, p2)->p1);
+        }
+    }
+    @Override
+    public void onStackInit(ItemStack stack) {
+        this.properties.init(stack);
     }
 
     @Override
-    public void onStackInit(ItemStack stack) {
-        this.properties.dataComponentTypeMap.forEach((v)->{
-            v.writeToNBT(stack.getOrCreateTag());
-        });
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return super.canApplyAtEnchantingTable(stack,enchantment) || enchantment == Enchantments.MOB_LOOTING;
     }
 
     static UUID uuid1 = UUID.fromString("bb3e0d35-6fff-4448-a899-2c82d4558b44");

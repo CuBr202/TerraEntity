@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 
 import net.minecraft.world.entity.LivingEntity;
 import org.confluence.terraentity.init.TEDataComponentTypes;
-import org.confluence.terraentity.registries.datacomponent.DataComponentProvider;
 import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
@@ -36,8 +35,8 @@ public record EffectStrategyComponent(List<IEffectStrategy> effects) implements 
     }
 
     @Override
-    public Supplier<DataComponentProvider<EffectStrategyComponent>> getCodec() {
-        return TEDataComponentTypes.EFFECT_STRATEGY;
+    public Codec<EffectStrategyComponent> codec() {
+        return CODEC.get();
     }
 
 

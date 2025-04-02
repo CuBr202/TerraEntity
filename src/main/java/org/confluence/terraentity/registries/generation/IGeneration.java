@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terraentity.registries.TERegistries;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -26,7 +25,7 @@ public interface IGeneration {
      */
     GenerationProvider getCodec();
 
-    MapCodec<IGeneration> TYPED_CODEC = TERegistries.GenerationProviders.REGISTRY.get()
+    MapCodec<IGeneration> TYPED_CODEC = GenerationProviderTypes.REGISTRY.get()
             .getCodec()
             .dispatchMap(IGeneration::getCodec, c->c.codec().codec());
 }

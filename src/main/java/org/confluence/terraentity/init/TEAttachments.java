@@ -13,10 +13,15 @@ import net.minecraftforge.fml.common.Mod;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.attachment.SummonerAttachment;
 import org.confluence.terraentity.attachment.SummonerProvider;
+import org.confluence.terraentity.attachment.WeaponStorage;
+import org.confluence.terraentity.attachment.WeaponStorageProvider;
 
 public final class TEAttachments {
 
+
+
     public static final Capability<SummonerAttachment> SUMMONER_STORAGE = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<WeaponStorage> WEAPON_STORAGE = CapabilityManager.get(new CapabilityToken<>() {});
 
 
     @Mod.EventBusSubscriber(modid = TerraEntity.MODID,bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -24,6 +29,7 @@ public final class TEAttachments {
         @SubscribeEvent
         public static void registerCapabilities(RegisterCapabilitiesEvent event) {
             event.register(SummonerAttachment.class);
+            event.register(WeaponStorage.class);
         }
     }
 
@@ -33,6 +39,7 @@ public final class TEAttachments {
         public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
             if(event.getObject() instanceof Player){
                 event.addCapability(TerraEntity.space("summoner_record"), new SummonerProvider());
+                event.addCapability(TerraEntity.space("weapon_storage"), new WeaponStorageProvider());
             }
         }
     }

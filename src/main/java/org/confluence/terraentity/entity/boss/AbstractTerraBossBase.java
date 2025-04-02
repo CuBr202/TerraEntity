@@ -57,7 +57,10 @@ import java.util.stream.Collectors;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
-
+/**
+ * BOSS基类
+ * @param <T> Boss类型
+ */
 @SuppressWarnings("all")
 public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackEntity<T> {
 
@@ -460,5 +463,10 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     protected void postDeath(){
         if(this instanceof Boss boss && boss.isMainBody())
             ModLoader.get().postEvent(new BossDeathEvent(this));
+    }
+
+    @Override
+    public boolean hasLineOfSight(Entity entity) {
+        return distanceToSqr(entity) < 100 * 100;
     }
 }

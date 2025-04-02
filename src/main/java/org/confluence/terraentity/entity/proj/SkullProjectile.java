@@ -25,6 +25,7 @@ public class SkullProjectile extends BaseProj<SkullProjectile> {
     public SkullProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, Entity target) {
         super(pEntityType, pLevel, (MobEffectInstance) null);
         this.target = target;
+
     }
 
     @Override

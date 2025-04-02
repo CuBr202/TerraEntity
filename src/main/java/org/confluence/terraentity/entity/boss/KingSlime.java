@@ -23,7 +23,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.IBossFSM;
-import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
@@ -45,7 +44,9 @@ import java.util.List;
 import static org.confluence.terraentity.utils.TEUtils.isAtLeastExpert;
 import static org.confluence.terraentity.utils.TEUtils.switchByDifficulty;
 
-
+/**
+ * 史王
+ */
 @SuppressWarnings("all")
 public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss{
     private static final int COLOR_INT = 0x73bcf4;

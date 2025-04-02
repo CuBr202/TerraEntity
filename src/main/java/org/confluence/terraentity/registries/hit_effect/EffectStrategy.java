@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.function.TriFunction;
+import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
 import org.confluence.terraentity.utils.TEUtils;
@@ -36,16 +37,16 @@ public class EffectStrategy {
 
     public static Codec<EffectStrategy> CODEC = ResourceLocation.CODEC.xmap(
             i->{
-                if(TERegistries.EffectStrategies.REGISTRY.get() == null){
+                if(TEEffectStrategies.REGISTRY.get() == null){
                     return null;
                 }
-                return TERegistries.EffectStrategies.REGISTRY.get().getValue(i);
+                return TEEffectStrategies.REGISTRY.get().getValue(i);
             },
             i->{
-                if(TERegistries.EffectStrategies.REGISTRY.get() == null){
+                if(TEEffectStrategies.REGISTRY.get() == null){
                     return null;
                 }
-                return TERegistries.EffectStrategies.REGISTRY.get().getKey(i);
+                return TEEffectStrategies.REGISTRY.get().getKey(i);
             }
     );
 

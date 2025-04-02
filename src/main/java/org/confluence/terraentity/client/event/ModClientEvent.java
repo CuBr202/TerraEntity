@@ -1,12 +1,10 @@
 package org.confluence.terraentity.client.event;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.EntityType;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,10 +16,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.client.entity.model.CabbageProjModel;
-import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
-import org.confluence.terraentity.client.entity.model.Stinger;
-import org.confluence.terraentity.client.entity.model.WhipModelRegister;
+import org.confluence.terraentity.client.entity.model.*;
+import org.confluence.terraentity.client.entity.renderer.BoomerangProjRenderer;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
 import org.confluence.terraentity.client.gui.config_container.ConfigContainerRegister;
@@ -38,7 +34,7 @@ import static org.confluence.terraentity.init.TEEntities.*;
 
 
 @Mod.EventBusSubscriber(modid = TerraEntity.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public final class ModClient {
+public final class ModClientEvent {
 /*
     public static final BlockColor HALLOW_LEAVES_COLOR = (blockState, getter, pos, tint) -> {
         if (pos == null) return -1;
@@ -88,6 +84,7 @@ public static void onClientSetup(final FMLClientSetupEvent evt) {
         registerProj(event,CABBAGE_PROJ.get(),c->new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION)));
         registerProj(event,BEE_STICK_PROJ.get(),c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         registerProj(event,SUMMON_BEE_STICK_PROJ.get(),c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
+        event.registerEntityRenderer(BOOMERANG_PROJECTILE.get(), BoomerangProjRenderer::new);
 
         // replaced
 //        if (ClientConfig.ENABLE_NON_SPIDER_MODEL.get()) {
@@ -107,17 +104,9 @@ public static void onClientSetup(final FMLClientSetupEvent evt) {
 
     @SubscribeEvent
     public static void registerAdditionalModel(ModelEvent.RegisterAdditional event) {
-        ResourceManager provider = Minecraft.getInstance().getResourceManager();
-        provider.listResources("models/item/whip", s -> s.getPath().endsWith(".json")).forEach((location, resource) -> {
-            var f = WhipModelRegister.getInstance().process(location);
-            if(f!= null){
-                event.register(f);
-            }else{
-                TerraEntity.LOGGER.warn("Failed to load whip model: {}", location);
-            }
-        });
+        WhipModelRegister.getInstance().register(event);
+        EntityBlockModelRegister.getInstance().register(event);
     }
-
 
 
 

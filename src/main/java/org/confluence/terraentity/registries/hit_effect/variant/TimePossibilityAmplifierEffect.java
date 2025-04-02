@@ -22,36 +22,37 @@ import java.util.function.Supplier;
  * @param amplifierMax 最大增幅
  * @param possibility 几率
  */
-public record TimePossibilityAmplifierEffect(String name, MobEffect effect, int duration, int amplifierMin,int amplifierMax, float possibility) implements IEffectStrategy {
+public record TimePossibilityAmplifierEffect(String name, Supplier<? extends MobEffect> effect, int duration, int amplifierMin,int amplifierMax, float possibility) implements IEffectStrategy {
     public static MapCodec<TimePossibilityAmplifierEffect> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(TimePossibilityAmplifierEffect::name),
 
-            ForgeRegistries.MOB_EFFECTS.getCodec().fieldOf("effect").forGetter(TimePossibilityAmplifierEffect::effect),
+            ForgeRegistries.MOB_EFFECTS.getCodec().fieldOf("effect").forGetter(e->e.effect.get()),
             Codec.INT.fieldOf("duration").forGetter(TimePossibilityAmplifierEffect::duration),
             Codec.INT.fieldOf("amplifier_min").forGetter(TimePossibilityAmplifierEffect::amplifierMin),
             Codec.INT.fieldOf("amplifier_max").forGetter(TimePossibilityAmplifierEffect::amplifierMax),
             Codec.FLOAT.fieldOf("possibility").forGetter(TimePossibilityAmplifierEffect::possibility)
-    ).apply(instance, TimePossibilityAmplifierEffect::new));
+    ).apply(instance, (name, effect, duration, amplifierMin, amplifierMax, possibility)->
+            new TimePossibilityAmplifierEffect(name, ()->effect, duration, amplifierMin, amplifierMax, possibility)));
 
-    public static TimePossibilityAmplifierEffect of(String name, MobEffect effect, int duration, int amplifierMin, int amplifierMax, float possibility){
+    public static TimePossibilityAmplifierEffect of(String name, Supplier<? extends MobEffect> effect, int duration, int amplifierMin, int amplifierMax, float possibility){
         return new TimePossibilityAmplifierEffect(name, effect, duration, amplifierMin, amplifierMax, possibility);
     }
 
-    public static TimePossibilityAmplifierEffect of(String name, MobEffect effect, int duration, int amplifier, float possibility){
+    public static TimePossibilityAmplifierEffect of(String name, Supplier<? extends MobEffect> effect, int duration, int amplifier, float possibility){
         return of(name, effect, duration, amplifier, amplifier, possibility);
     }
 
-    public static TimePossibilityAmplifierEffect of(String name, MobEffect effect, int duration, int amplifier){
+    public static TimePossibilityAmplifierEffect of(String name, Supplier<? extends MobEffect> effect, int duration, int amplifier){
         return of(name, effect, duration, amplifier, 1.0f);
     }
 
-    public static TimePossibilityAmplifierEffect of(String name, MobEffect effect, int duration){
+    public static TimePossibilityAmplifierEffect of(String name, Supplier<? extends MobEffect> effect, int duration){
         return of(name, effect, duration, 0);
     }
 
     @Override
     public BiConsumer<LivingEntity, LivingEntity> getEffect() {
-        return EffectStrategy.TIME_POSSIBILITY_AMPLIFIER_EFFECT.apply(effect, duration, amplifierMin, amplifierMax, possibility);
+        return EffectStrategy.TIME_POSSIBILITY_AMPLIFIER_EFFECT.apply(effect.get(), duration, amplifierMin, amplifierMax, possibility);
     }
 
     @Override

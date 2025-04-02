@@ -24,6 +24,9 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * 巨大卷壳虫
+ */
 public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVariant<Integer> {
 
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(GiantShelly.class, EntityDataSerializers.INT);

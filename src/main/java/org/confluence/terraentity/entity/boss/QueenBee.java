@@ -30,8 +30,9 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 
-import java.util.Random;
-
+/**
+ * 蜂后
+ */
 public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, IAngryMob {
     private static final int health = 1237;
     private static final int armor = 2;

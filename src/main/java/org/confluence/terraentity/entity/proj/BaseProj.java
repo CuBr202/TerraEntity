@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.summon.ISummonMob;
@@ -158,7 +159,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     @Override
     protected void onHitEntity(@NotNull EntityHitResult pResult) {
         Entity hurter = pResult.getEntity();
-        if(hurter instanceof LivingEntity living && canHitEntity(living)) {
+        if(hurter instanceof LivingEntity living && canHitEntity(living)
+        ) {
+            doHurt(living);
+        }else if(hurter instanceof PartEntity part && part.getParent() instanceof LivingEntity living && canHitEntity(living)){
             doHurt(living);
         }
     }

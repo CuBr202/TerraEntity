@@ -77,6 +77,13 @@ public class GameEntityEvent {
         if(event.getEntity() instanceof ServerPlayer player) {
             // 同步召唤栏信息
             player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data->data.sync(player));
+
+            if(player.level().getEntities(player, player.getBoundingBox().inflate(32), e-> e instanceof Player && e!= player).isEmpty()){
+                player.level().getEntities(player, player.getBoundingBox().inflate(32), e->e instanceof Boss).forEach(e->{
+                    e.discard();
+                });
+            }
+
         }
     }
 
@@ -156,7 +163,7 @@ public class GameEntityEvent {
         if(!(event.getTarget() instanceof LivingEntity entity)) return;
         Player player = event.getEntity();
         Level level = event.getLevel();
-        if (    entity.getType().equals(TEEntities.BLUE_SLIME.get()) ||
+        if (entity.getType().equals(TEEntities.BLUE_SLIME.get()) ||
                 entity.getType().equals(TEEntities.GREEN_SLIME.get()) ||
                 entity.getType().equals(TEEntities.PURPLE_SLIME.get())){
             if (item.is(TETags.Items.HONEY_TRANSLATION_BUCKET)){

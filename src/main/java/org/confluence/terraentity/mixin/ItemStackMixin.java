@@ -8,12 +8,15 @@ import org.confluence.terraentity.item.IItemExtension;
 import org.confluence.terraentity.mixinauxiliary.SelfGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements SelfGetter<ItemStack> {

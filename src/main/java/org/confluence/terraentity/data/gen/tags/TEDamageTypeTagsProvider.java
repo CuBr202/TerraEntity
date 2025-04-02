@@ -5,6 +5,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.DamageTypeTagsProvider;
 import net.minecraft.tags.DamageTypeTags;
 
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.init.TETags;
 import org.jetbrains.annotations.Nullable;
@@ -23,10 +24,21 @@ public class TEDamageTypeTagsProvider extends DamageTypeTagsProvider {
 
         tag(DamageTypeTags.BYPASSES_COOLDOWN)
                 .add(TETags.DamageTypes.SUMMONER)
-                ;
+        ;
+
+//        tag(DamageTypeTags.NO_KNOCKBACK).add(
+//                TETags.DamageTypes.SUMMON,
+//                TETags.DamageTypes.SUMMONER,
+//                TETags.DamageTypes.FROST_BURN
+//        );
+
+        // 九头蛇可以收到的伤害类型
+        tag(DamageTypeTags.BYPASSES_INVULNERABILITY).add(
+                TETags.DamageTypes.SUMMON,
+                TETags.DamageTypes.SUMMONER,
+                DamageTypes.MOB_PROJECTILE
+        );
 
     }
-
-
 
 }

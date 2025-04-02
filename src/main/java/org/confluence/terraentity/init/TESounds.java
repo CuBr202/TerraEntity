@@ -40,6 +40,9 @@ public final class TESounds {
     public static final RegistryObject<SoundEvent> TR_ZOMBIE_DEATH = register("tr_zombie_death");
     public static final RegistryObject<SoundEvent> TR_SKELETON_HURT = register("tr_skeleton_hurt");
 
+        // 泰拉挥动
+    public static final RegistryObject<SoundEvent> WAVING = register("waving");
+
 
     private static RegistryObject<SoundEvent> register(String id) {
         return SOUNDS.register(id, () -> SoundEvent.createVariableRangeEvent(TerraEntity.space(id)));

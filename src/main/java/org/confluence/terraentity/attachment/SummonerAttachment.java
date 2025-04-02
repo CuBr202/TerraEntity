@@ -4,7 +4,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.network.NetworkDirection;
 import org.confluence.terraentity.init.TEAttributes;
