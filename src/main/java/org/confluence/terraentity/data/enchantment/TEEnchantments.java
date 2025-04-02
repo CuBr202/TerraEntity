@@ -32,10 +32,10 @@ public class TEEnchantments {
 
     public static final RegistryObject<Enchantment> WHIP_SWEEP = register("whip_sweep", () -> new Enchantment(Enchantment.Rarity.COMMON, WHIP, new EquipmentSlot[]{EquipmentSlot.MAINHAND}) {
         public int getMinCost(int pLevel) {
-            return 25 + pLevel * 10;
+            return 25 ;
         }
         public int getMaxCost(int pLevel) {
-            return this.getMinCost(pLevel) + 25;
+            return 50 ;
         }
         public Rarity getRarity() {
             return Rarity.RARE;
@@ -43,10 +43,10 @@ public class TEEnchantments {
     });
     public static final RegistryObject<Enchantment> MULTI_BOOMERANG = register("multi_boomerang", () -> new Enchantment(Enchantment.Rarity.COMMON, BOOMERANG, new EquipmentSlot[]{EquipmentSlot.MAINHAND}) {
         public int getMinCost(int pLevel) {
-            return 25 + pLevel * 10;
+            return 25;
         }
         public int getMaxCost(int pLevel) {
-            return this.getMinCost(pLevel) + 25;
+            return 50;
         }
         public Rarity getRarity() {
             return Rarity.RARE;

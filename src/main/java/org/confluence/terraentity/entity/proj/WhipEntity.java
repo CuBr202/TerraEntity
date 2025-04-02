@@ -114,9 +114,9 @@ public class WhipEntity extends AbstractHurtingProjectile {
     }
 
     private void updateWeapon(ItemStack weapon, boolean sweep){
+        int sweepLevel = TEEnchantmentHelper.getEnchantmentLevel(TEEnchantments.WHIP_SWEEP.get(), weapon);
 
-        if(sweep) {
-            int sweepLevel = TEEnchantmentHelper.getEnchantmentLevel(TEEnchantments.WHIP_SWEEP.get(), weapon);
+        if(sweepLevel > 0 &&sweep) {
             // 横扫之鞭
             parts = List.of(
                     Vec3KeyframeAnimation.Builder()

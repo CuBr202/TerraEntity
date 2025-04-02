@@ -41,6 +41,10 @@ public final class TEAttachments {
                 event.addCapability(TerraEntity.space("summoner_record"), new SummonerProvider());
                 event.addCapability(TerraEntity.space("weapon_storage"), new WeaponStorageProvider());
             }
+            if(event.getObject().getClass().getName().equals("com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid")){
+                // 车万女仆
+                event.addCapability(TerraEntity.space("weapon_storage"), new WeaponStorageProvider());
+            }
         }
     }
 }

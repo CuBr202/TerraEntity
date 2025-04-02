@@ -232,7 +232,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         protected boolean canShoot(Entity target) {
-            if(TEUtils.angleBetween(bee.getForward(), target.getEyePosition().subtract(bee.getEyePosition())) < 0.1f){
+            if(TEUtils.angleBetween(bee.getLookAngle(), target.getEyePosition().subtract(bee.getEyePosition())) < 0.1f){
                 return true;
             }
             return false;

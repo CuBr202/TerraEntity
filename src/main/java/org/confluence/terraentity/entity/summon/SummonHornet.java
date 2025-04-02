@@ -95,7 +95,7 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);this.registerGoals();
+        super.addAdditionalSaveData(compound);
         this.summon_addData(compound);
     }
 
@@ -126,6 +126,11 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
 
     @Override
     public boolean canBeSeenAsEnemy() {
+        return false;
+    }
+
+    @Override
+    public boolean canBeSeenByAnyone() {
         return false;
     }
 

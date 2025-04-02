@@ -99,6 +99,9 @@ repositories {
         url = "https://maven.terraformersmc.com/"
     }
 
+    maven {
+        url = "https://www.cursemaven.com"
+    }
 
 // This is the repositories block in your build.gradle. NOT the one in publishing, or in buildscript. If it does not exist already, create it.
     maven {
@@ -133,6 +136,15 @@ dependencies {
     jarJar(implementation("org.apache.commons:commons-math3:3.6.1")){
         jarJar.ranged(it, "[3.6.1,)")
     }
+
+    // 车万女仆
+    compileOnly fg.deobf("curse.maven:touhou-little-maid-355044:6302618")
+    runtimeOnly fg.deobf("curse.maven:touhou-little-maid-355044:6302618")
+
+    // jade
+    compileOnly fg.deobf("curse.maven:jade-324717:6271651")
+    runtimeOnly fg.deobf("curse.maven:jade-324717:6271651")
+
     //jarJar(implementation(fg.deobf("ignored:defaultresources-forge:1.19.2-0.3.0"))) {
     //    jarJar.ranged(it, "[0.3.0,)")
     //}
