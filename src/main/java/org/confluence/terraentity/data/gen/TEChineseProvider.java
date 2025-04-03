@@ -4,10 +4,7 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.item.TEBoomerangItems;
-import org.confluence.terraentity.init.item.TESpawnEggItems;
-import org.confluence.terraentity.init.item.TESummonItems;
-import org.confluence.terraentity.init.item.TEWhipItems;
+import org.confluence.terraentity.init.item.*;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -81,6 +78,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
         add(TEEntities.SUMMON_HORNET.get(), "仆役黄蜂");
 
+        add(TEEntities.RIDEABLE_SLIME.get(), "史莱姆坐骑");
+        add(TEEntities.RIDEABLE_BEE.get(), "蜜蜂坐骑");
 
         // 刷怪蛋
         add(TESpawnEggItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
@@ -159,6 +158,10 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBoomerangItems.FLAMARANG.get(), "烈焰回旋镖");
         add(TEBoomerangItems.DEVELOPER_BOOMERANG.get(), "开发者回旋镖");
         add(TEBoomerangItems.BeiDou_BOOMERANG.get(), "北斗飞镖");
+
+        // 骑乘
+        add(TERiddenItems.SLIMY_SADDLE.get(), "粘鞍");
+        add(TERiddenItems.HONEYED_GOGGLES.get(), "凃蜜护目镜");
 
         // mob_effect
         add(TEEffects.DEMONIC_THOUGHTS.get(), "邪念");

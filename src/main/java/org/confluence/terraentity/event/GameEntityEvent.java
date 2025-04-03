@@ -47,7 +47,7 @@ public class GameEntityEvent {
         // 生成信息
         Boss.sendBossSpawnMessage(event.getEntity());
 //        if(event.getEntity() instanceof ServerPlayer player){
-//            player.addItem(new ItemStack(TEItems.SWAMP_WHIP.get()));
+//            player.addItem(new ItemStack(TERiddenItems.HONEYED_GOGGLES.get()));
 //        }
     }
 

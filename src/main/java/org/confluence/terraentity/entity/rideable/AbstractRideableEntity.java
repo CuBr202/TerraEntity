@@ -30,28 +30,32 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class AbstractRideableEntity extends Animal implements OwnableEntity, PlayerRideableJumping, GeoEntity {
+public class AbstractRideableEntity extends Mob implements OwnableEntity, PlayerRideableJumping, GeoEntity {
 
     private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(AbstractRideableEntity.class, EntityDataSerializers.BYTE);;
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;
 
-    protected int gallopSoundCounter;
+
     @Nullable
     private UUID owner;
 
-    public AbstractRideableEntity(EntityType<? extends Animal> entityType, Level level) {
+    public AbstractRideableEntity(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
 
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.5f);
-        this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(2.0f);
     }
 
-
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_ID_FLAGS, (byte)0);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+
     }
 
     protected boolean getFlag(int flagId) {
@@ -82,30 +86,32 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
     }
 
     public boolean isJumping() {
-        return this.getFlag(1);
-//        return this.isJumping;
+//        return this.getFlag(1);
+        return this.isJumping;
     }
 
     public void setIsJumping(boolean jumping) {
-        this.setFlag(1, jumping);
+//        this.setFlag(1, jumping);
         this.isJumping = jumping;
     }
 
+    @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
 
         this.doPlayerRide(player);
-         return InteractionResult.sidedSuccess(this.level().isClientSide);
+        return InteractionResult.sidedSuccess(this.level().isClientSide);
     }
 
-
+    @Override
     public boolean isPushable() {
-        return !this.isVehicle();
+        return false;
     }
 
+    @Override
     protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
     }
 
-
+    @Override
     public boolean hurt(DamageSource source, float amount) {
         if(getOwner() != null){
             getOwner().hurt(source, amount);
@@ -122,13 +128,9 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
                 .add(Attributes.FALL_DAMAGE_MULTIPLIER, 0.5);
     }
 
+    @Override
     protected float getSoundVolume() {
         return 0.8F;
-    }
-
-    @Override
-    public boolean isFood(ItemStack itemStack) {
-        return false;
     }
 
     public void doPlayerRide(Player player) {
@@ -141,6 +143,7 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
 
     }
 
+    @Override
     public boolean isImmobile() {
         return true;
     }
@@ -156,12 +159,7 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
         return super.getControllingPassenger();
     }
 
-    public void aiStep() {
-
-        super.aiStep();
-
-    }
-
+    @Override
     public void tick() {
         super.tick();
         if(!level().isClientSide){
@@ -171,16 +169,13 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
         }
     }
 
+    @Override
     protected void tickRidden(Player player, Vec3 travelVector) {
         super.tickRidden(player, travelVector);
-        player.setJumping(isJumping);
         Vec2 vec2 = this.getRiddenRotation(player);
         this.setRot(vec2.y, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
         if (this.isControlledByLocalInstance()) {
-            if (travelVector.z <= 0.0) {
-                this.gallopSoundCounter = 0;
-            }
 
             if (this.onGround()) {
                 this.setIsJumping(false);
@@ -199,10 +194,8 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
 
     /**
      * 处理运动
-     * @param player
-     * @param travelVector
-     * @return
      */
+    @Override
     protected Vec3 getRiddenInput(Player player, Vec3 travelVector) {
         float f = player.xxa * 0.5F;
         float f1 = player.zza;
@@ -214,6 +207,7 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
         }
     }
 
+    @Override
     protected float getRiddenSpeed(Player player) {
         return (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
@@ -233,10 +227,7 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
 
     }
 
-    protected void playJumpSound() {
-        this.playSound(SoundEvents.HORSE_JUMP, 0.4F, 1.0F);
-    }
-
+    @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (this.getOwnerUUID() != null) {
@@ -245,6 +236,7 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
 
     }
 
+    @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         UUID uuid;
@@ -258,20 +250,9 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
         if (uuid != null) {
             this.setOwnerUUID(uuid);
         }
-
-
-//        this.syncSaddleToClients();
     }
 
-    public boolean canMate(Animal otherAnimal) {
-        return false;
-    }
-
-    @Nullable
-    public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
-        return null;
-    }
-
+    @Override
     public void onPlayerJump(int jumpPower) {
 
         if (jumpPower < 0) {
@@ -286,25 +267,25 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
 
     }
 
+    @Override
     public boolean canJump() {
         return true;
     }
 
+    @Override
     public void handleStartJump(int jumpPower) {
         this.playJumpSound();
     }
 
+    @Override
     public void handleStopJump() {
     }
-    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
-        super.onSyncedDataUpdated(key);
-        if(key == DATA_ID_FLAGS){
-            if(!level().isClientSide)
-                setFlag(1, getFlag(1));
 
-        }
+    protected void playJumpSound() {
+        this.playSound(SoundEvents.HORSE_JUMP, 0.4F, 1.0F);
     }
 
+    @Override
     protected void positionRider(Entity passenger, Entity.MoveFunction callback) {
         super.positionRider(passenger, callback);
         if (passenger instanceof LivingEntity) {
@@ -313,11 +294,12 @@ public class AbstractRideableEntity extends Animal implements OwnableEntity, Pla
 
     }
 
+    @Override
     public boolean onClimbable() {
         return false;
     }
 
-
+    @Override
     protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
         return super.getPassengerAttachmentPoint(entity, dimensions, partialTick).add(0,0.2F,0);
     }

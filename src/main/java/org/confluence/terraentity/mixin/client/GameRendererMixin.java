@@ -1,4 +1,4 @@
-package org.confluence.terraentity.mixin;
+package org.confluence.terraentity.mixin.client;
 
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import net.minecraft.client.DeltaTracker;
