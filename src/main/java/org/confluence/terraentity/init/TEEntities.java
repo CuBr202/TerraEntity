@@ -40,6 +40,7 @@ import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.proj.*;
+import org.confluence.terraentity.entity.rideable.RideableSlime;
 import org.confluence.terraentity.entity.summon.SummonHornet;
 import org.confluence.terraentity.entity.summon.SummonIronGolem;
 import org.confluence.terraentity.entity.summon.SummonSlime;
@@ -138,7 +139,7 @@ public final class TEEntities {
 
 
     // 坐骑
-    //public static final DeferredHolder<EntityType<?>, EntityType<RiddenSlime>> RIDDEN_SLIME = registerEntity("ridden_slime", RiddenSlime::new,0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<RideableSlime>> RIDEABLE_SLIME = registerEntity("rideable_slime", RideableSlime::new,0.5F,0.5F);
 
     // tip Boss
     public static final DeferredHolder<EntityType<?>, EntityType<KingSlime>> KING_SLIME = ENTITIES.register("king_slime", () -> EntityType.Builder.<KingSlime>of(KingSlime::new, MobCategory.MONSTER).sized(0.6f, 0.6f).clientTrackingRange(10).build(Key("king_slime")));
@@ -270,6 +271,10 @@ public final class TEEntities {
         event.registerEntityRenderer(SUMMON_IRON_GOLEM.get(), IronGolemRenderer::new);
         event.registerEntityRenderer(SUMMON_HORNET.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),true, 0.6f, 0.5f));
 
+        // ridable
+        event.registerEntityRenderer(RIDEABLE_SLIME.get(), c->new GeoNormalRenderer<>(c, SUMMON_SLIME.getId().withPrefix("summon/"),false, 1.6f,0));
+
+
         // 鞭子
         event.registerEntityRenderer(WHIP_PROJECTILE.get(), WhipEntityRenderer::new);
     }
@@ -360,6 +365,10 @@ public final class TEEntities {
         event.put(SUMMON_SLIME.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(SUMMON_IRON_GOLEM.get(), IronGolem.createAttributes().build());
         event.put(SUMMON_HORNET.get(), AbstractMonster.createAttributes().build());
+
+        // ridable
+        event.put(RIDEABLE_SLIME.get(), AbstractMonster.createAttributes().build());
+
 
     }
 
