@@ -29,6 +29,7 @@ public class TEItems {
                     .icon(()-> TESpawnEggItems.KING_SLIME_SPAWN_EGG.asItem().getDefaultInstance())
                     .displayItems((itemDisplayParameters, output) -> {
                         TESpawnEggItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        TERiddenItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         if(ServerConfig.DISPLAY_SUMMON_ITEMS.get()) {
                             TESummonItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                             TEWhipItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
