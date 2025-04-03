@@ -33,6 +33,7 @@ public class BloodySpore extends Creeper implements GeoEntity {
 
     public BloodySpore(EntityType<? extends Creeper> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        this.xpReward = 20;
     }
 
     public static AttributeSupplier.@NotNull Builder createAttributes() {

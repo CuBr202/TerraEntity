@@ -26,6 +26,7 @@ public class Nymph extends AbstractMonster{
     int delayTime = 0;
     public Nymph(EntityType<? extends Monster> type, Level level) {
         super(type, level, new AbstractPrefab(156,3,15,5,1,1).getPrefab());
+        this.xpReward = 20;
 
     }
 

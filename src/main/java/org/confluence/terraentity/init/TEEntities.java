@@ -275,7 +275,7 @@ public final class TEEntities {
 
         // ridable
         event.registerEntityRenderer(RIDEABLE_SLIME.get(), c->new GeoNormalRenderer<>(c, RIDEABLE_SLIME.getId().withPrefix("rideable/"),false, 1.6f,0));
-        event.registerEntityRenderer(RIDEABLE_BEE.get(), c->new GeoNormalRenderer<>(c, HORNET.getId(),false));
+        event.registerEntityRenderer(RIDEABLE_BEE.get(), c->new GeoNormalRenderer<>(c, RIDEABLE_BEE.getId().withPrefix("rideable/"),false));
 
 
         // 鞭子

@@ -10,15 +10,16 @@ import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.rideable.AbstractRideableEntity;
 
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
-public class RideableItem extends Item {
-    EntityType<? extends AbstractRideableEntity> entityType;
+public class RideableItem<T extends AbstractRideableEntity> extends Item {
+    Supplier<EntityType<T>> entityType;
     Predicate<Player> canUse;
-    public RideableItem(Properties properties, EntityType<? extends AbstractRideableEntity> entityType) {
+    public RideableItem(Properties properties,  Supplier<EntityType<T>> entityType) {
         this(properties, entityType, player -> true);
     }
 
-    public RideableItem(Properties properties, EntityType<? extends AbstractRideableEntity> entityType, Predicate<Player> canUse) {
+    public RideableItem(Properties properties,  Supplier<EntityType<T>> entityType, Predicate<Player> canUse) {
         super(properties);
         this.entityType = entityType;
         this.canUse = canUse;
@@ -35,7 +36,7 @@ public class RideableItem extends Item {
         if(!level.isClientSide){
             if(player.getVehicle() == null){
                 if(canUse.test(player)) {
-                    AbstractRideableEntity slime = entityType.create(level);
+                    AbstractRideableEntity slime = entityType.get().create(level);
                     if (slime != null) {
                         slime.setOwnerUUID(player.getUUID());
                         slime.setXRot(player.getXRot());

@@ -1,6 +1,9 @@
 package org.confluence.terraentity.entity.rideable;
 
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -9,12 +12,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.IFlyRideableMob;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.constant.DefaultAnimations;
 
 public class RideableBee extends AbstractRideableEntity implements IFlyRideableMob {
 
     int _flyTick = 100;
     int flyTick = 100;
+    protected boolean moving;
+    int movingCounter = 0;
+    int stopCounter = 0;
 
     public RideableBee(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
@@ -48,7 +59,16 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
         float f = player.xxa * 0.5F;
         float f1 = Math.max(player.zza, -0.1f);
         if(level().isClientSide) {
-            this.isJumping = ((LocalPlayer)player).input.jumping;
+            LocalPlayer lp = (LocalPlayer) player;
+            this.isJumping = lp.input.jumping;
+            moving = lp.input.left || lp.input.right || lp.input.up || lp.input.down;
+            if(moving && !isJumping){
+                movingCounter++;
+                stopCounter = 0;
+            }else{
+                movingCounter = 0;
+                stopCounter++;
+            }
         }
 
         if (this.onGround()) {
@@ -56,6 +76,14 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
         } else {
             return new Vec3(f*0.5f, 0.0, f1);
         }
+    }
+
+    protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
+
+        float offsetY = this.moving && !isJumping?
+                Mth.lerp(Math.min((movingCounter + partialTick) / 10f, 1f), 0.4f, 0.1f)
+                : Mth.lerp(Math.min((stopCounter + partialTick) / 10f, 1f), 0.1f, 0.4f);
+        return super.getPassengerAttachmentPoint(entity, dimensions, partialTick).add(0,offsetY,0);
     }
 
     @Override
@@ -67,8 +95,25 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
         return (float) (flyTick) / _flyTick;
     }
 
+    RawAnimation wing = RawAnimation.begin().thenLoop("wing");
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-//        controllers.add(DefaultAnimations.genericIdleController(this));
+        controllers.add(new AnimationController<GeoAnimatable>(this, "Wing", 10, state -> {
+                if (isJumping) {
+                    return state.setAndContinue(wing);
+                }
+                state.resetCurrentAnimation();
+                return PlayState.STOP;
+            }),
+            new AnimationController<>(this, "Fly/Idle/Move", 10, state -> {
+                if (moving) {
+                    if (isJumping) {
+                        return state.setAndContinue(DefaultAnimations.FLY);
+                    }
+                    return state.setAndContinue(DefaultAnimations.WALK);
+                }
+                return state.setAndContinue(DefaultAnimations.IDLE);
+            })
+        );
     }
 }

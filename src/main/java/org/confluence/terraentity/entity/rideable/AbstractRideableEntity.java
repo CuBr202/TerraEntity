@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -185,6 +186,10 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, Player
 
     }
 
+    protected void playStepSound(BlockPos pos, BlockState state) {
+
+    }
+
     protected Vec2 getRiddenRotation(LivingEntity entity) {
         return new Vec2(entity.getXRot() * 0.5F, entity.getYRot());
     }
@@ -279,7 +284,8 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, Player
     }
 
     protected void playJumpSound() {
-        this.playSound(SoundEvents.HORSE_JUMP, 0.4F, 1.0F);
+//        this.playSound(SoundEvents.HORSE_JUMP, 0.4F, 1.0F);
+
     }
 
     @Override

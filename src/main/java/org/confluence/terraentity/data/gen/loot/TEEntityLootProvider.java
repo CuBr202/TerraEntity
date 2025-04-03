@@ -19,6 +19,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.apache.commons.lang3.function.TriFunction;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.item.TERiddenItems;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
 import org.confluence.terraentity.init.item.TESummonItems;
 import org.confluence.terraentity.init.item.TEWhipItems;
@@ -62,8 +63,9 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         });
 
         this.add(TEEntities.KING_SLIME.get(), LootTable.lootTable()
-                .withPool(LOOT_POOL.apply(TESummonItems.SLIME_STAFF, 0.5F))
-                .withPool(LOOT_POOL.apply(TEWhipItems.SWAMP_WHIP, 0.5F))
+                .withPool(LOOT_POOL.apply(TESummonItems.SLIME_STAFF, 0.33F))
+                .withPool(LOOT_POOL.apply(TEWhipItems.SWAMP_WHIP, 0.33F))
+                .withPool(LOOT_POOL.apply(TERiddenItems.SLIMY_SADDLE, 0.2F))
         );
 
 
@@ -117,6 +119,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
         this.add(TEEntities.QUEEN_BEE.get(), LootTable.lootTable()
                 .withPool(LOOT_POOL.apply(Items.BEE_SPAWN_EGG, 1f))
+                .withPool(LOOT_POOL.apply(TERiddenItems.HONEYED_GOGGLES, 0.2f))
         );
     }
 
