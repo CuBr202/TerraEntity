@@ -77,6 +77,8 @@ public final class TEEntities {
         event.put(TEMonsterEntities.TROPIC_SLIME.get(), BaseSlime.createSlimeAttributes(5.0F, 0, 13.0F).build());
         event.put(TEMonsterEntities.YELLOW_SLIME.get(), BaseSlime.createSlimeAttributes(6.0F, 2, 25.0F).build());
         event.put(TEMonsterEntities.HONEY_SLIME.get(), HoneySlime.createSlimeAttributes(0F, 0, 16.0F).build());
+        event.put(TEMonsterEntities.GREEN_DUMPLING_SLIME.get(), BaseSlime.createSlimeAttributes(5.0F, 1, 25.0F).build());
+        event.put(TEMonsterEntities.SWAMP_SLIME.get(), BaseSlime.createSlimeAttributes(5.0F, 1, 25.0F).build());
         event.put(TEMonsterEntities.BLACK_SLIME.get(), Monster.createMonsterAttributes().build()); // 由finalizeSpawn设置
         // land
         event.put(TEMonsterEntities.BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
@@ -157,6 +159,7 @@ public final class TEEntities {
         event.register(TEMonsterEntities.RED_SLIME.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(TEMonsterEntities.BLACK_SLIME.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(TEMonsterEntities.LAVA_SLIME.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(TEMonsterEntities.SWAMP_SLIME.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
 
         // land
