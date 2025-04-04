@@ -55,7 +55,9 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                 TEMonsterEntities.TROPIC_SLIME,
                 TEMonsterEntities.YELLOW_SLIME,
                 TEMonsterEntities.HONEY_SLIME,
-                TEMonsterEntities.BLACK_SLIME).forEach(e->{
+                TEMonsterEntities.BLACK_SLIME,
+                TEMonsterEntities.SWAMP_SLIME,
+                TEMonsterEntities.GREEN_DUMPLING_SLIME).forEach(e->{
             this.add(e.get(), LootTable.lootTable()
                     .withPool(LOOT_POOL.apply(TESpawnEggItems.KING_SLIME_SPAWN_EGG, 0.01F))
                     .withPool(LOOT_POOL.apply(Items.SLIME_BALL, 0.2F))
