@@ -20,8 +20,10 @@ import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.monster.LittleHornet;
 import org.confluence.terraentity.entity.proj.LineProj;
-import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.init.entity.TEBossEntities;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
+import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -51,7 +53,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
         this.dashComponent = new DashComponent(this);
     }
     public QueenBee(Level level) {
-        this(TEEntities.QUEEN_BEE.get(), level);
+        this(TEBossEntities.QUEEN_BEE.get(), level);
     }
     @Override
     protected void defineSynchedData() {
@@ -101,7 +103,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                     lookAt(10);
                     dashComponent.hangOn(getTarget(), 5, 4, getMoveSpeed());
                     if(skills.tick % 10 == 0) {
-                        LittleHornet bee = TEEntities.LITTLE_HORNET.get().create(level());
+                        LittleHornet bee = TEMonsterEntities.LITTLE_HORNET.get().create(level());
                         if (bee!=null) {
                             bee.minion_setOwner(e);
                             bee.setPos(e.position());
@@ -118,7 +120,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                         lookAt(10);
                         if(position().y < target.position().y + 2) addDeltaMovement(new Vec3(0,0.02f,0));
                         if( skills.tick % 10 ==0) {
-                            LineProj proj = TEEntities.BEE_STICK_PROJ.get().create(level());
+                            LineProj proj = TEProjectileEntities.BEE_STICK_PROJ.get().create(level());
                             if (proj!=null) {
                                 proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
                                 proj.setOwner(e);

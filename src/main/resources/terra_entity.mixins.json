@@ -14,12 +14,13 @@
     "accessor.SlimeAccessor"
   ],
   "client": [
-    "BossHealthOverlayMixin",
-    "ClientLevelMixin",
-    "GameRendererMixin",
-    "ItemRendererMixin",
-    "ShaderInstanceMixin",
-    "accessor.GameRendererAccessor"
+    "accessor.GameRendererAccessor",
+    "client.BossHealthOverlayMixin",
+    "client.ClientLevelMixin",
+    "client.GameRendererMixin",
+    "client.ItemRendererMixin",
+    "client.LocalPlayerMixin",
+    "client.ShaderInstanceMixin"
   ],
   "injectors": {
     "defaultRequire": 1

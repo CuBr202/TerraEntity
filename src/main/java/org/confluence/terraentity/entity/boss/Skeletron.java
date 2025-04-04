@@ -22,8 +22,9 @@ import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.proj.SkullProjectile;
-import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.init.entity.TEBossEntities;
+import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
@@ -186,8 +187,8 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     @Override
     public void firstSpawn() {
         if (isMainBody() && !level().isClientSide) {
-            SkeletronHand hand1 = new SkeletronHand(TEEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.LEFT);
-            SkeletronHand hand2 = new SkeletronHand(TEEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.RIGHT);
+            SkeletronHand hand1 = new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.LEFT);
+            SkeletronHand hand2 = new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.RIGHT);
             hand1.setPos(position());
             hand2.setPos(position());
             level().addFreshEntity(hand1);
@@ -301,7 +302,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
                 interval = (int) (interval * 0.8);
             }
             if (tickCount % interval == 0) {
-                SkullProjectile skull = new SkullProjectile(TEEntities.SKULL.get(), level(), getTarget());
+                SkullProjectile skull = new SkullProjectile(TEProjectileEntities.SKULL.get(), level(), getTarget());
                 skull.addDamage((float) getAttribute(Attributes.ATTACK_DAMAGE).getValue() * projDamageFactor);
                 skull.setPos(position());
                 skull.setOwner(Skeletron.this);

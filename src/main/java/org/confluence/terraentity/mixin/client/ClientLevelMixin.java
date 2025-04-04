@@ -1,4 +1,4 @@
-package org.confluence.terraentity.mixin;
+package org.confluence.terraentity.mixin.client;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleOptions;

@@ -24,7 +24,7 @@ import org.confluence.terraentity.data.component.Unbreakable;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.init.TEAttributes;
-import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.TEUtils;
@@ -68,7 +68,7 @@ public class BaseWhipItem extends Item implements IItemExtension {
         this.markDamage = markDamage;
         this.attackSpeed = attackSpeed;
         this.rangeFactor = rangeFactor;
-        this.damage = damage;
+        this.damage = damage * 0.5f; //对于原版的适配
         this.properties = properties;
         if(properties instanceof WhipProperties whipProperties) {
             this.particleOptions = whipProperties.particleOptions;
@@ -97,7 +97,7 @@ public class BaseWhipItem extends Item implements IItemExtension {
                 if(player.getOffhandItem().getItem() instanceof BaseWhipItem other){
                     player.getCooldowns().addCooldown(other, cooldown);
                 }
-                WhipEntity whipEntity = TEEntities.WHIP_PROJECTILE.get().create(level);
+                WhipEntity whipEntity = TEProjectileEntities.WHIP_PROJECTILE.get().create(level);
                 whipEntity.setWeapon(stack);
                 whipEntity.setExistTick(cooldown);
                 whipEntity.setOwner(player);
@@ -121,6 +121,12 @@ public class BaseWhipItem extends Item implements IItemExtension {
         var data = IDataComponentType.getData(stack, TEDataComponentTypes.EFFECT_STRATEGY.get());
         if (data != null) {
             IEffectStrategy.appendDescription(tooltipComponents, data.effects(), Component.translatable("tooltip.terra_entity.whip.hit_effect").withStyle(style -> style.withColor(0xB4C363)));
+        }
+        // 农场主增益
+        var data1 = IDataComponentType.getData(stack, TEDataComponentTypes.EFFECT_STRATEGY_BENEFICIAL);
+        if (data1 != null) {
+            tooltipComponents.add(Component.literal(" ? ? ?").withStyle(style -> style.withColor(0x666666).withObfuscated(true)));
+//            IEffectStrategy.appendDescription(tooltipComponents, data1.effects(), Component.translatable("tooltip.terra_entity.whip.hit_effect_beneficial").withStyle(style -> style.withColor(0x84C363)), 0x678563);
         }
     }
 

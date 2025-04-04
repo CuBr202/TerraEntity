@@ -1,4 +1,4 @@
-package org.confluence.terraentity.mixin;
+package org.confluence.terraentity.mixin.client;
 
 import net.minecraft.client.gui.components.BossHealthOverlay;
 import net.minecraft.client.gui.components.LerpingBossEvent;

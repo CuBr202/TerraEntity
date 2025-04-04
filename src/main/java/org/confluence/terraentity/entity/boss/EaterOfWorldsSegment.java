@@ -16,8 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
-import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.init.entity.TEBossEntities;
 
 /**
  * 世吞体节
@@ -61,7 +61,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     }
 
     public EaterOfWorldsSegment(EaterOfWorlds head, Level level) {
-        this(TEEntities.EATER_OF_WORLD_SEGMENT.get(), level);
+        this(TEBossEntities.EATER_OF_WORLD_SEGMENT.get(), level);
         this.head = head;
         this._discardTimer = random.nextInt(25) + 100;
     }

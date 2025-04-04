@@ -10,7 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -46,14 +46,14 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
 //            );
 
         EntityType<?>[] bosses = {
-                TEEntities.EYE_OF_CTHULHU.get(),
-                TEEntities.KING_SLIME.get(),
-                TEEntities.EATER_OF_WORLDS.get(),
-                TEEntities.EATER_OF_WORLD_SEGMENT.get(),
-                TEEntities.BRAIN_OF_CTHULHU.get(),
-                TEEntities.QUEEN_BEE.get(),
-                TEEntities.SKELETRON.get(),
-                TEEntities.SKELETRON_HAND.get()
+                TEBossEntities.EYE_OF_CTHULHU.get(),
+                TEBossEntities.KING_SLIME.get(),
+                TEBossEntities.EATER_OF_WORLDS.get(),
+                TEBossEntities.EATER_OF_WORLD_SEGMENT.get(),
+                TEBossEntities.BRAIN_OF_CTHULHU.get(),
+                TEBossEntities.QUEEN_BEE.get(),
+                TEBossEntities.SKELETRON.get(),
+                TEBossEntities.SKELETRON_HAND.get()
         };
         tag(Tags.EntityTypes.BOSSES).add(bosses);
         tag(TagKey.create(Registries.ENTITY_TYPE, TerraEntity.fromSpaceAndPath("ars_nouveau", "jar_blacklist"))).add(bosses);

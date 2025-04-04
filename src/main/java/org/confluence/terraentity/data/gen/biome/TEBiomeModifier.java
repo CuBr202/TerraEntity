@@ -10,7 +10,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 
 
 public class TEBiomeModifier {
@@ -29,9 +29,9 @@ public class TEBiomeModifier {
         context.register(DEVOURER_SPAWN, ExtendedAddSpawnsBiomeModifier.singleSpawn(
                 biomeLookup.getOrThrow(BiomeTags.IS_OVERWORLD),
                 biomeLookup.getOrThrow(BiomeTags.IS_END),
-                new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(TEEntities.DEVOURER.get(),
+                new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(TEMonsterEntities.DEVOURER.get(),
                         20, 1, 1,
-                        TEEntities.DEVOURER.get().getCategory())
+                        TEMonsterEntities.DEVOURER.get().getCategory())
                 )
         );
 

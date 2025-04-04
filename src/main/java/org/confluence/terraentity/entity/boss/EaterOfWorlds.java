@@ -16,8 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.MobSkill;
-import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.utils.CameraShakeData;
 import org.confluence.terraentity.utils.CameraShakeManager;
 import org.confluence.terraentity.utils.TEUtils;
@@ -72,7 +72,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     }
 
     public EaterOfWorlds(Level level, boolean genSegments) {
-        this(TEEntities.EATER_OF_WORLDS.get(),level);
+        this(TEBossEntities.EATER_OF_WORLDS.get(),level);
         this.genSegments = genSegments;
     }
 

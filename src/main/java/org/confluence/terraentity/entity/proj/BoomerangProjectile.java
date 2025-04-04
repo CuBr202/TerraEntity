@@ -27,7 +27,7 @@ import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.data.component.SingleBooleanComponent;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEDataComponentTypes;
-import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.item.Boomerang;
 import org.confluence.terraentity.item.Boomerang.BoomerangModifier;
 import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
@@ -53,7 +53,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
     }
 
     public BoomerangProjectile(LivingEntity owner, BoomerangModifier modifier, ItemStack weapon) {
-        this(TEEntities.BOOMERANG_PROJECTILE.get(), owner.level());
+        this(TEProjectileEntities.BOOMERANG_PROJECTILE.get(), owner.level());
         this.setOwner(owner);
         this.modifier = modifier;
         this.weapon = weapon;

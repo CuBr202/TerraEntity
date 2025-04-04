@@ -26,8 +26,9 @@ import org.confluence.terraentity.entity.ai.IBossFSM;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
-import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
+import org.confluence.terraentity.init.entity.TEBossEntities;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
 import org.confluence.terraentity.mixinauxiliary.IBossEvent;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
@@ -219,7 +220,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     }
 
     public KingSlime(Level level) {
-        this(TEEntities.KING_SLIME.get(), level);
+        this(TEBossEntities.KING_SLIME.get(), level);
     }
 
     @Override
@@ -354,7 +355,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
 
     private void spawnSlime(LivingEntity target) {
         if (level() instanceof ServerLevel serverLevel) {
-            BaseSlime slime = new BaseSlime(TEEntities.BLUE_SLIME.get(), serverLevel, COLOR_INT, 2);
+            BaseSlime slime = new BaseSlime(TEMonsterEntities.BLUE_SLIME.get(), serverLevel, COLOR_INT, 2);
             slime.setPos(getOnPos().getX(), getOnPos().getY() + 0.5, getOnPos().getZ());
             slime.setTarget(target);
             if (isAtLeastExpert(serverLevel)) {

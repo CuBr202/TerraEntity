@@ -7,8 +7,8 @@ import net.minecraft.world.entity.EntityType;
 
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -22,23 +22,23 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(TETags.EntityTypes.SLIME)
-                .add(TEEntities.BLUE_SLIME.get())
-                .add(TEEntities.GREEN_SLIME.get())
-                .add(TEEntities.PINK_SLIME.get())
-                .add(TEEntities.CORRUPTED_SLIME.get())
-                .add(TEEntities.DESERT_SLIME.get())
-                .add(TEEntities.JUNGLE_SLIME.get())
-                .add(TEEntities.EVIL_SLIME.get())
-                .add(TEEntities.ICE_SLIME.get())
-                .add(TEEntities.LAVA_SLIME.get())
-                .add(TEEntities.LUMINOUS_SLIME.get())
-                .add(TEEntities.CRIMSON_SLIME.get())
-                .add(TEEntities.PURPLE_SLIME.get())
-                .add(TEEntities.RED_SLIME.get())
-                .add(TEEntities.TROPIC_SLIME.get())
-                .add(TEEntities.YELLOW_SLIME.get())
-                .add(TEEntities.HONEY_SLIME.get())
-                .add(TEEntities.BLACK_SLIME.get())
+                .add(TEMonsterEntities.BLUE_SLIME.get())
+                .add(TEMonsterEntities.GREEN_SLIME.get())
+                .add(TEMonsterEntities.PINK_SLIME.get())
+                .add(TEMonsterEntities.CORRUPTED_SLIME.get())
+                .add(TEMonsterEntities.DESERT_SLIME.get())
+                .add(TEMonsterEntities.JUNGLE_SLIME.get())
+                .add(TEMonsterEntities.EVIL_SLIME.get())
+                .add(TEMonsterEntities.ICE_SLIME.get())
+                .add(TEMonsterEntities.LAVA_SLIME.get())
+                .add(TEMonsterEntities.LUMINOUS_SLIME.get())
+                .add(TEMonsterEntities.CRIMSON_SLIME.get())
+                .add(TEMonsterEntities.PURPLE_SLIME.get())
+                .add(TEMonsterEntities.RED_SLIME.get())
+                .add(TEMonsterEntities.TROPIC_SLIME.get())
+                .add(TEMonsterEntities.YELLOW_SLIME.get())
+                .add(TEMonsterEntities.HONEY_SLIME.get())
+                .add(TEMonsterEntities.BLACK_SLIME.get())
                 .add(EntityType.SLIME);
     }
 

@@ -12,8 +12,9 @@ import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
 import org.confluence.terraentity.entity.ai.motion.curve.Curve;
 import org.confluence.terraentity.entity.monster.VisualNeuron;
-import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.init.entity.TEBossEntities;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Quaternionf;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -59,7 +60,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
     }
 
     public BrainOfCthulhu(Level level) {
-        this(TEEntities.BRAIN_OF_CTHULHU.get(), level);
+        this(TEBossEntities.BRAIN_OF_CTHULHU.get(), level);
     }
 
     // 定义技能类型
@@ -87,7 +88,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                     int interval = 2;
                     int cur = skills.tick - 21;
                     if(skills.canContinue() && cur % interval == 0 && minions.size() < minionsCount ){
-                        VisualNeuron minion = TEEntities.VISUAL_NEURON.get().create(level());
+                        VisualNeuron minion = TEMonsterEntities.VISUAL_NEURON.get().create(level());
                         minions.add(minion);
 
                         float r = random.nextFloat() + 5;
@@ -174,7 +175,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                     _moveSpeed = 0.5f;
                     noPhysics = true;
                     for(int i=1;i<4;i++){
-                        BrainFake fake = TEEntities.BRAIN_FAKE.get().create(level());
+                        BrainFake fake = TEBossEntities.BRAIN_FAKE.get().create(level());
                         fake.setPos(position());
                         fake.setOwner(this);
                         fake.tag = i;

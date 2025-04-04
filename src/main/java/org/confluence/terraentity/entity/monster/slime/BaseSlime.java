@@ -27,8 +27,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import org.confluence.terraentity.entity.boss.KingSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
-import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
 import org.confluence.terraentity.utils.FloatRGB;
 import org.confluence.terraentity.utils.TEUtils;
@@ -79,16 +79,16 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         }
         if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
             return false;
-        } else if (type == TEEntities.BLUE_SLIME.get() || type == TEEntities.GREEN_SLIME.get() || type == TEEntities.PURPLE_SLIME.get()
-                || type == TEEntities.ICE_SLIME.get() || type == TEEntities.DESERT_SLIME.get() || type == TEEntities.JUNGLE_SLIME.get()
-                || type == TEEntities.PINK_SLIME.get()) {
+        } else if (type == TEMonsterEntities.BLUE_SLIME.get() || type == TEMonsterEntities.GREEN_SLIME.get() || type == TEMonsterEntities.PURPLE_SLIME.get()
+                || type == TEMonsterEntities.ICE_SLIME.get() || type == TEMonsterEntities.DESERT_SLIME.get() || type == TEMonsterEntities.JUNGLE_SLIME.get()
+                || type == TEMonsterEntities.PINK_SLIME.get()) {
             int y = pPos.getY();
             return y > 30 && y < 260 && level.isDay() && pLevel.canSeeSky(pPos);
-        } else if (type == TEEntities.YELLOW_SLIME.get() || type == TEEntities.RED_SLIME.get()) {
+        } else if (type == TEMonsterEntities.YELLOW_SLIME.get() || type == TEMonsterEntities.RED_SLIME.get()) {
             return pLevel.getBrightness(LightLayer.SKY, pPos) == 0 && pPos.getY() > 30;
-        } else if (type == TEEntities.BLACK_SLIME.get()) {
+        } else if (type == TEMonsterEntities.BLACK_SLIME.get()) {
             return pLevel.getBrightness(LightLayer.SKY, pPos) == 0 && pPos.getY() <= 30;
-        } else if (type == TEEntities.LAVA_SLIME.get()) {  // 新增岩浆史莱姆的限制条件
+        } else if (type == TEMonsterEntities.LAVA_SLIME.get()) {  // 新增岩浆史莱姆的限制条件
             int y = pPos.getY();
             return y >= 30 && y <= 100;
         }
@@ -110,7 +110,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
                 level().addParticle(TEParticles.ITEM_GEL.get(), getX() + (double) f2, getY(), getZ() + (double) f3, color.red(), color.green(), color.blue());
             }
         }
-        if (this.getType().equals(TEEntities.LAVA_SLIME.get())) {
+        if (this.getType().equals(TEMonsterEntities.LAVA_SLIME.get())) {
             if (isInWater()) {
                 this.hurt(this.level().damageSources().freeze(), 0.8F);
             }
@@ -149,7 +149,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if (getType() == TEEntities.TROPIC_SLIME.get() && pSource.is(DamageTypes.DROWN)) {
+        if (getType() == TEMonsterEntities.TROPIC_SLIME.get() && pSource.is(DamageTypes.DROWN)) {
             return false;
         }
         return super.hurt(pSource, pAmount);
@@ -157,7 +157,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
 
     @Override
     public boolean isInWater() {
-        if (getType() == TEEntities.TROPIC_SLIME.get()) {
+        if (getType() == TEMonsterEntities.TROPIC_SLIME.get()) {
             return false;
         }
         return super.isInWater();
@@ -172,11 +172,11 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
                 DamageSource damagesource = this.damageSources().mobAttack(this);
                 if (this.level() instanceof ServerLevel serverlevel)
                     doEnchantDamageEffects(this, pLivingEntity);
-                if (getType() == TEEntities.ICE_SLIME.get()) {
+                if (getType() == TEMonsterEntities.ICE_SLIME.get()) {
                     if (TEUtils.isMaster(level()) || (TEUtils.isAtLeastExpert(level()) && level().random.nextBoolean())) {
                         pLivingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 0), this);
                     }
-                } else if (getType() == TEEntities.LAVA_SLIME.get()) {
+                } else if (getType() == TEMonsterEntities.LAVA_SLIME.get()) {
                     pLivingEntity.setRemainingFireTicks(100);
                 }
             }
@@ -186,7 +186,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
     @Override
     protected void tickDeath() {
         super.tickDeath();
-        if (level() instanceof ServerLevel level && getType() == TEEntities.LAVA_SLIME.get() && TEUtils.isAtLeastExpert(level)) {
+        if (level() instanceof ServerLevel level && getType() == TEMonsterEntities.LAVA_SLIME.get() && TEUtils.isAtLeastExpert(level)) {
             BlockPos containing = BlockPos.containing(position());
             BlockState blockState = level.getBlockState(containing);
             if (blockState.isAir() || blockState.canBeReplaced(Fluids.LAVA)) {
@@ -204,6 +204,6 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        return super.isInvulnerableTo(source) || (source.is(DamageTypeTags.IS_FIRE) && getType() == TEEntities.LAVA_SLIME.get());
+        return super.isInvulnerableTo(source) || (source.is(DamageTypeTags.IS_FIRE) && getType() == TEMonsterEntities.LAVA_SLIME.get());
     }
 }

@@ -9,10 +9,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.init.item.TEBoomerangItems;
-import org.confluence.terraentity.init.item.TESpawnEggItems;
-import org.confluence.terraentity.init.item.TESummonItems;
-import org.confluence.terraentity.init.item.TEWhipItems;
+import org.confluence.terraentity.init.item.*;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -47,6 +44,7 @@ public class TEItems {
         TESummonItems.ITEMS.register(bus);
         TEWhipItems.ITEMS.register(bus);
         TEBoomerangItems.ITEMS.register(bus);
+        TERiddenItems.ITEMS.register(bus);
 //        SENTRY_ITEMS.register(bus);
         TABS.register(bus);
 

@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.constant.DefaultAnimations;
@@ -33,6 +33,7 @@ public class BloodySpore extends Creeper implements GeoEntity {
 
     public BloodySpore(EntityType<? extends Creeper> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+        this.xpReward = 20;
     }
 
     public static AttributeSupplier.@NotNull Builder createAttributes() {
@@ -81,7 +82,7 @@ public class BloodySpore extends Creeper implements GeoEntity {
             float f = this.random.nextFloat()*2;
             for (int i = 0; i < number; i++){
                 //summon
-                Entity summon = TEEntities.BLOOD_TUMORS.get().create(level());
+                Entity summon = TEMonsterEntities.BLOOD_TUMORS.get().create(level());
                 if (summon!=null) {
                     summon.setPos(this.getX(), this.getY(), this.getZ());
 

@@ -10,10 +10,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEItems;
-import org.confluence.terraentity.init.item.TEBoomerangItems;
-import org.confluence.terraentity.init.item.TESpawnEggItems;
-import org.confluence.terraentity.init.item.TESummonItems;
-import org.confluence.terraentity.init.item.TEWhipItems;
+import org.confluence.terraentity.init.item.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -70,6 +67,16 @@ public class TEItemModelProvider extends ItemModelProvider {
             }
         });
 
-
+        // general
+        genModels(List.of(
+                createDir(TERiddenItems.ITEMS,"rideable/")
+        ),"item/generated", (parent, resourcePath, path) -> {
+            try {
+                withExistingParent(path, parent).texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
+            } catch (Exception e) {
+                withExistingParent(path, MISSING_ITEM);
+                System.out.println("Failed to generate model for " + path + " in " + resourcePath);
+            }
+        });
     }
 }

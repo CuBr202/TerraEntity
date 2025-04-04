@@ -3,12 +3,9 @@ package org.confluence.terraentity.data.gen;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 import org.confluence.terraentity.init.TEEffects;
-import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.TEItems;
-import org.confluence.terraentity.init.item.TEBoomerangItems;
-import org.confluence.terraentity.init.item.TESpawnEggItems;
-import org.confluence.terraentity.init.item.TESummonItems;
-import org.confluence.terraentity.init.item.TEWhipItems;
+import org.confluence.terraentity.init.entity.TERideableEntities;
+import org.confluence.terraentity.init.entity.TESummonEntities;
+import org.confluence.terraentity.init.item.*;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -40,6 +37,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.mother_slime", "史莱姆之母");
         add("entity.terra_entity.baby_slime", "史莱姆宝宝");
         add("entity.terra_entity.lava_slime", "熔岩史莱姆");
+        add("entity.terra_entity.green_dumpling_slime", "青团史莱姆");
+        add("entity.terra_entity.swamp_slime", "沼泽史莱姆");
         add("entity.terra_entity.demon_eye", "恶魔眼");
         add("entity.terra_entity.flying_fish", "飞鱼");
         add("entity.terra_entity.giant_shelly", "巨型卷壳怪");
@@ -77,10 +76,13 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.little_hornet", "小黄蜂");
         add("entity.terra_entity.skeletron", "骷髅王");
 
-        add(TEEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
-        add(TEEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
-        add(TEEntities.SUMMON_HORNET.get(), "仆役黄蜂");
 
+        add(TESummonEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
+        add(TESummonEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
+        add(TESummonEntities.SUMMON_HORNET.get(), "仆役黄蜂");
+
+        add(TERideableEntities.RIDEABLE_SLIME.get(), "史莱姆坐骑");
+        add(TERideableEntities.RIDEABLE_BEE.get(), "蜜蜂坐骑");
 
         // 刷怪蛋
         add(TESpawnEggItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
@@ -160,6 +162,10 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBoomerangItems.DEVELOPER_BOOMERANG.get(), "开发者回旋镖");
         add(TEBoomerangItems.BeiDou_BOOMERANG.get(), "北斗飞镖");
 
+        // 骑乘
+        add(TERiddenItems.SLIMY_SADDLE.get(), "粘鞍");
+        add(TERiddenItems.HONEYED_GOGGLES.get(), "凃蜜护目镜");
+
         // mob_effect
         add(TEEffects.DEMONIC_THOUGHTS.get(), "邪念");
         add(TEEffects.SUMMON_FOCUS.get(), "狩猎");
@@ -194,7 +200,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.client.enableNonSpiderModel", "蜘蛛和谐");
         add("terra_entity.configuration.client.enableNonSpiderModel.tooltip", "如果你对蜘蛛反感或想美化他们，请开启这个选项");
 
-        add("terra_entity.configuration.client.generate_whip_particle", "生成鞭子粒子");
+        add("terra_entity.configuration.client.generate_projectile_particle", "生成弹幕粒子");
 
         // Tooltip
         add("tooltip.terra_entity.summon_item_cost", "仆从占用: %s");
