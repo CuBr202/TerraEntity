@@ -81,11 +81,6 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         }
         if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
             return false;
-        } else if (type == TEEntities.BLUE_SLIME.get() || type == TEEntities.GREEN_SLIME.get() || type == TEEntities.PURPLE_SLIME.get()
-                || type == TEEntities.ICE_SLIME.get() || type == TEEntities.DESERT_SLIME.get() || type == TEEntities.JUNGLE_SLIME.get()
-                || type == TEEntities.PINK_SLIME.get()|| type == TEEntities.GREEN_DUMPLING_SLIME.get()|| type == TEEntities.SWAMP_SLIME.get()) {
-            int y = pPos.getY();
-            return y > 30 && y < 260 && level.isDay() && pLevel.canSeeSky(pPos);
         } else if (type == TEEntities.YELLOW_SLIME.get() || type == TEEntities.RED_SLIME.get()) {
             return pLevel.getBrightness(LightLayer.SKY, pPos) == 0 && pPos.getY() > 30;
         } else if (type == TEEntities.BLACK_SLIME.get()) {
@@ -93,6 +88,11 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         } else if (type == TEEntities.LAVA_SLIME.get()) {  // 新增岩浆史莱姆的限制条件
             int y = pPos.getY();
             return y >= 30 && y <= 100;
+        } else if (type == TEEntities.BLUE_SLIME.get() || type == TEEntities.GREEN_SLIME.get() || type == TEEntities.PURPLE_SLIME.get()
+                || type == TEEntities.ICE_SLIME.get() || type == TEEntities.DESERT_SLIME.get() || type == TEEntities.JUNGLE_SLIME.get()
+                || type == TEEntities.PINK_SLIME.get() || type == TEEntities.SWAMP_SLIME.get()) {
+            int y = pPos.getY();
+            return y > 30 && y < 260 && level.isDay() && pLevel.canSeeSky(pPos);
         }
 
         // 剩下的条件用方块的isValidSpawn方法
