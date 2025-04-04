@@ -22,8 +22,6 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
     int _flyTick = 100;
     int flyTick = 100;
 
-
-
     public RideableBee(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
         this.getAttribute(Attributes.GRAVITY).setBaseValue(0.03f);
