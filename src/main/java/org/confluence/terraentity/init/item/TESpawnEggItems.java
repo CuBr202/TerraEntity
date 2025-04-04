@@ -24,6 +24,8 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> BLACK_SLIME_SPAWN_EGG = registerEgg("black_slime_spawn_egg", TEEntities.BLACK_SLIME, 0x7E7E7E, 0x373535);
     public static final DeferredItem<Item> PINK_SLIME_SPAWN_EGG = registerEgg("pink_slime_spawn_egg", TEEntities.PINK_SLIME, 0xFF87B3, 0xf89fe3);
     public static final DeferredItem<Item> DESERT_SLIME_SPAWN_EGG = registerEgg("desert_slime_spawn_egg", TEEntities.DESERT_SLIME, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> GREEN_DUMPLING_SLIME_SPAWN_EGG = registerEgg("green_dumpling_slime_spawn_egg", TEEntities.GREEN_DUMPLING_SLIME, 0xa2f89f, 0x3de838);
+    public static final DeferredItem<Item> SWAMP_SLIME_SPAWN_EGG = registerEgg("swamp_slime_spawn_egg", TEEntities.SWAMP_SLIME, 0xa2f89f, 0x3de838);
     public static final DeferredItem<Item> JUNGLE_SLIME_SPAWN_EGG = registerEgg("jungle_slime_spawn_egg", TEEntities.JUNGLE_SLIME, 0x9ae920, 0xC7AB5E);
     public static final DeferredItem<Item> JUNGLE_BAT_SPAWN_EGG = registerEgg("jungle_bat_spawn_egg", TEEntities.JUNGLE_BAT, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> SNATCHER_SPAWN_EGG = registerEgg("snatcher_spawn_egg", TEEntities.SNATCHER, 0xffffff, 0xffffff);
