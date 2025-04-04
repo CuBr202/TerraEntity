@@ -29,6 +29,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.boss.KingSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
+import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
@@ -83,7 +84,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
             return false;
         } else if (type == TEMonsterEntities.BLUE_SLIME.get() || type == TEMonsterEntities.GREEN_SLIME.get() || type == TEMonsterEntities.PURPLE_SLIME.get()
                 || type == TEMonsterEntities.ICE_SLIME.get() || type == TEMonsterEntities.DESERT_SLIME.get() || type == TEMonsterEntities.JUNGLE_SLIME.get()
-                || type == TEMonsterEntities.PINK_SLIME.get()) {
+                || type == TEMonsterEntities.PINK_SLIME.get()|| type == TEMonsterEntities.GREEN_DUMPLING_SLIME.get()|| type == TEMonsterEntities.SWAMP_SLIME.get()) {
             int y = pPos.getY();
             return y > 30 && y < 260 && level.isDay() && pLevel.canSeeSky(pPos);
         } else if (type == TEMonsterEntities.YELLOW_SLIME.get() || type == TEMonsterEntities.RED_SLIME.get()) {
