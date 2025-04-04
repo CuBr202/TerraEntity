@@ -6,7 +6,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.players.OldUsersConverter;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -15,11 +14,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.CommonHooks;
+import org.confluence.terraentity.entity.ai.IFlyRideableMob;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -28,13 +27,22 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class AbstractRideableEntity extends Mob implements OwnableEntity, PlayerRideableJumping, GeoEntity {
+public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRideableMob, GeoEntity {
 
     private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(AbstractRideableEntity.class, EntityDataSerializers.BYTE);;
 
-    protected boolean isJumping;
-    protected float playerJumpPendingScale;
+    protected boolean isMoving;
+    protected int movingCounter = 0;
+    protected int stopCounter = 0;
 
+    protected boolean isJumping;
+    protected int jumpCount = 0;
+
+    int jumpTick;
+
+    private boolean isInputtingJumping;
+
+    protected float playerJumpPendingScale;
 
     @Nullable
     private UUID owner;
@@ -83,15 +91,51 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, Player
         this.owner = uuid;
     }
 
-    public boolean isJumping() {
-//        return this.getFlag(1);
-        return this.isJumping;
+
+    @Override
+    public void onLocalStartInputJump() {
+        setIsInputtingJumping(true);
     }
 
-    public void setIsJumping(boolean jumping) {
-//        this.setFlag(1, jumping);
-        this.isJumping = jumping;
+
+    @Override
+    public void onLocalStopInputJump() {
+        setIsInputtingJumping(false);
     }
+
+
+    @Override
+    public float calJumpingScale(float jumpTick, float orientation) {
+        return orientation;
+    }
+
+    /**
+     * 用于服务端检测是否按下
+     */
+    public boolean isInputtingJumping() {
+        return this.getFlag(1);
+    }
+
+    /**
+     * 用于服务端设置按下跳跃
+     */
+    public void setIsInputtingJumping(boolean jumping) {
+        this.setFlag(1, jumping);
+    }
+
+    public boolean isMoving() {
+        return this.isMoving;
+    }
+
+    public boolean isJumping() {
+        return this.getFlag(2);
+    }
+
+    public void setJumping(boolean isJumping) {
+        super.setJumping(isJumping);
+        this.setFlag(2, isJumping);
+    }
+
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
@@ -164,6 +208,8 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, Player
             if(!this.hasControllingPassenger()){
                 discard();
             }
+
+
         }
     }
 
@@ -171,19 +217,64 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, Player
     protected void tickRidden(Player player, Vec3 travelVector) {
         super.tickRidden(player, travelVector);
         Vec2 vec2 = this.getRiddenRotation(player);
+
+        this.isMoving = player.xxa != 0 || player.zza != 0;
+
+        if (isMoving && !isInputtingJumping()) {
+            movingCounter++;
+            stopCounter = 0;
+        } else {
+            movingCounter = 0;
+            stopCounter++;
+        }
+
+        if (this.isJumping && !onGround()) {
+            jumpCount++;
+            setJumping(true);
+        } else {
+            jumpCount = 0;
+            setJumping(false);
+            isJumping = false;
+        }
+
+        if(onGround() ){
+            if(!isInputtingJumping())
+                this.setIsInputtingJumping(false);
+        }
+
         this.setRot(vec2.y, vec2.x);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
         if (this.isControlledByLocalInstance()) {
 
-            if (this.onGround()) {
-                this.setIsJumping(false);
-                if (this.playerJumpPendingScale > 0.0F && !this.isJumping()) {
-                    this.executeRidersJump(this.playerJumpPendingScale, travelVector);
-                }
-                this.playerJumpPendingScale = 0.0F;
-            }
+            tickRiddenLocal(player,travelVector);
         }
 
+    }
+
+    protected void tickRiddenLocal(Player player, Vec3 travelVector){
+        if (this.onGround()) {
+            this.setIsInputtingJumping(false);
+//            this.setJumping(false);
+            if (this.playerJumpPendingScale > 0.0F && !this.isJumping) {
+                isJumping = true;
+                this.executeRidersJump(this.playerJumpPendingScale, travelVector);
+            }
+            this.playerJumpPendingScale = 0.0F;
+        }
+    }
+
+    protected void executeRidersJump(float playerJumpPendingScale, Vec3 travelVector) {
+        double d0 = this.getJumpPower(playerJumpPendingScale);
+        Vec3 vec3 = this.getDeltaMovement();
+        this.setDeltaMovement(vec3.x, d0, vec3.z);
+        this.setIsInputtingJumping(true);
+        this.hasImpulse = true;
+        CommonHooks.onLivingJump(this);
+//        if (travelVector.z > 0.0) {
+//            float f = Mth.sin(this.getYRot() * 0.017453292F);
+//            float f1 = Mth.cos(this.getYRot() * 0.017453292F);
+//            this.setDeltaMovement(this.getDeltaMovement().add(-0.4F * f * playerJumpPendingScale, 0.0, (double)(0.4F * f1 * playerJumpPendingScale)));
+//        }
     }
 
     protected void playStepSound(BlockPos pos, BlockState state) {
@@ -214,20 +305,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, Player
         return (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
-    protected void executeRidersJump(float playerJumpPendingScale, Vec3 travelVector) {
-        double d0 = this.getJumpPower(playerJumpPendingScale);
-        Vec3 vec3 = this.getDeltaMovement();
-        this.setDeltaMovement(vec3.x, d0, vec3.z);
-        this.setIsJumping(true);
-        this.hasImpulse = true;
-        CommonHooks.onLivingJump(this);
-//        if (travelVector.z > 0.0) {
-//            float f = Mth.sin(this.getYRot() * 0.017453292F);
-//            float f1 = Mth.cos(this.getYRot() * 0.017453292F);
-//            this.setDeltaMovement(this.getDeltaMovement().add(-0.4F * f * playerJumpPendingScale, 0.0, (double)(0.4F * f1 * playerJumpPendingScale)));
-//        }
 
-    }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
@@ -277,10 +355,14 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, Player
     @Override
     public void handleStartJump(int jumpPower) {
         this.playJumpSound();
+        isJumping = true;
+        jumpTick = tickCount;
     }
 
     @Override
     public void handleStopJump() {
+        setJumping(false);
+        jumping = false;
     }
 
     protected void playJumpSound() {
@@ -317,6 +399,11 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, Player
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+
+    public void onInit(Player player){
+
     }
 
 }

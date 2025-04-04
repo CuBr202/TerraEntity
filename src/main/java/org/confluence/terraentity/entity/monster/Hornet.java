@@ -30,9 +30,8 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.entity.proj.LineProj;
-import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.utils.TEUtils;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.constant.DefaultAnimations;
@@ -245,7 +244,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
 
 
     protected LineProj createProj(){
-        return TEEntities.BEE_STICK_PROJ.get().create(level());
+        return TEProjectileEntities.BEE_STICK_PROJ.get().create(level());
     }
 
     @Override

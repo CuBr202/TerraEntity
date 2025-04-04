@@ -24,7 +24,7 @@ public class TerraEntity {
 
 
     public TerraEntity (IEventBus modEventBus, ModContainer modContainer) {
-        TEEntities.ENTITIES.register(modEventBus);
+        TEEntities.register(modEventBus);
         TESounds.SOUNDS.register(modEventBus);
         TEParticles.PARTICLES.register(modEventBus);
         TEItems.register(modEventBus);

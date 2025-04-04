@@ -3,7 +3,8 @@ package org.confluence.terraentity.data.gen;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.confluence.terraentity.init.TEEffects;
-import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.entity.TERideableEntities;
+import org.confluence.terraentity.init.entity.TESummonEntities;
 import org.confluence.terraentity.init.item.*;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -76,12 +77,12 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.skeletron", "骷髅王");
 
 
-        add(TEEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
-        add(TEEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
-        add(TEEntities.SUMMON_HORNET.get(), "仆役黄蜂");
+        add(TESummonEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
+        add(TESummonEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
+        add(TESummonEntities.SUMMON_HORNET.get(), "仆役黄蜂");
 
-        add(TEEntities.RIDEABLE_SLIME.get(), "史莱姆坐骑");
-        add(TEEntities.RIDEABLE_BEE.get(), "蜜蜂坐骑");
+        add(TERideableEntities.RIDEABLE_SLIME.get(), "史莱姆坐骑");
+        add(TERideableEntities.RIDEABLE_BEE.get(), "蜜蜂坐骑");
 
         // 刷怪蛋
         add(TESpawnEggItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");

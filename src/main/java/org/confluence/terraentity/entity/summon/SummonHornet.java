@@ -19,7 +19,7 @@ import org.confluence.terraentity.entity.ai.goal.summon.SummonFlyFlowOwnerGoal;
 import org.confluence.terraentity.entity.monster.Hornet;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.proj.LineProj;
-import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.Optional;
@@ -52,7 +52,7 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     }
 
     protected LineProj createProj(){
-        return TEEntities.SUMMON_BEE_STICK_PROJ.get().create(level()).setDamage((float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
+        return TEProjectileEntities.SUMMON_BEE_STICK_PROJ.get().create(level()).setDamage((float) this.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
     }
 
     public void summon_registerMoveGoal(){

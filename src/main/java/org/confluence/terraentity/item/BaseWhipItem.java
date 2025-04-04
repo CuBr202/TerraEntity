@@ -24,7 +24,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.init.TEAttributes;
-import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.TEUtils;
 
@@ -113,7 +113,7 @@ public class BaseWhipItem extends Item {
                 if(player.getOffhandItem().getItem() instanceof BaseWhipItem other){
                     player.getCooldowns().addCooldown(other, cooldown);
                 }
-                WhipEntity whipEntity = TEEntities.WHIP_PROJECTILE.get().create(level);
+                WhipEntity whipEntity = TEProjectileEntities.WHIP_PROJECTILE.get().create(level);
                 whipEntity.setWeapon(stack);
                 whipEntity.setExistTick(cooldown);
                 whipEntity.setOwner(player);

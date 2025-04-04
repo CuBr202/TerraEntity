@@ -16,8 +16,8 @@ import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
 import org.confluence.terraentity.entity.ai.goal.JumpAttack;
 import org.confluence.terraentity.entity.ai.goal.JumpOverBlockGoal;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
-import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.List;
@@ -50,7 +50,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     .setAttackDamage((int) (Math.random() * 60 + 100))
                     .setTicker(e->{
                         if(!e.level().isClientSide && e.isAlive() && e.tickCount == e.getAttributeValue(Attributes.ATTACK_DAMAGE)){
-                            List<EntityType<? extends Entity>> entities = List.of(TEEntities.BLOOD_CRAWLER.get(),TEEntities.FACE_MONSTER.get(),TEEntities.CRIMSON_KEMERA.get());
+                            List<EntityType<? extends Entity>> entities = List.of(TEMonsterEntities.BLOOD_CRAWLER.get(), TEMonsterEntities.FACE_MONSTER.get(), TEMonsterEntities.CRIMSON_KEMERA.get());
                             Entity summon = entities.get(e.getRandom().nextIntBetweenInclusive(0,entities.size()-1)).create(e.level());
                             if(summon!=null) {
                                 summon.setPos(e.getX(), e.getY(), e.getZ());
