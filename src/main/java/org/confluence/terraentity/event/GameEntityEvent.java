@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -66,12 +67,12 @@ public class GameEntityEvent {
             // 同步召唤栏信息
             player.getData(TEAttachments.SUMMONER_STORAGE.get()).sync(player);
 
-            if(player.level().getEntities(player, player.getBoundingBox().inflate(32), e-> e instanceof Player && e!= player).isEmpty()){
-                player.level().getEntities(player, player.getBoundingBox().inflate(32), e->e instanceof Boss).forEach(e->{
+            if (player.level().getEntities(player, player.getBoundingBox().inflate(32), e -> e instanceof Player && e != player).isEmpty()) {
+                player.level().getEntities(player, player.getBoundingBox().inflate(32), e -> e instanceof Boss).forEach(e -> {
                     e.discard();
                 });
             }
-            
+
         }
     }
 
@@ -124,18 +125,18 @@ public class GameEntityEvent {
 
             }
             // 召唤物标记伤害增加
-            if(attacker instanceof ISummonMob<?> summoner){
+            if (attacker instanceof ISummonMob<?> summoner) {
                 LivingEntity owner = summoner.summon_getOwner();
-                if(owner != null){
+                if (owner != null) {
                     var att = owner.getAttribute(TEAttributes.MARK_DAMAGE);
-                    if(att!= null){
+                    if (att != null) {
                         double damage = att.getValue();
                         amount += (float) damage;
                     }
                 }
             } else if (attacker instanceof LivingEntity owner) {
                 var att = owner.getAttribute(TEAttributes.MARK_DAMAGE);
-                if(att!= null){
+                if (att != null) {
                     double damage = att.getValue();
                     amount += (float) damage;
                 }
@@ -207,7 +208,8 @@ public class GameEntityEvent {
         if (event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < 0.05F) {
             BaseSlime slime = TEMonsterEntities.BLUE_SLIME.get().create(mob.level());
             if (slime != null) {
-                slime.moveTo(zombie.getX(), zombie.getY(), zombie.getZ(), zombie.getYRot(), 0.0F);
+                Vec3 position = zombie.getPassengerRidingPosition(slime);
+                slime.moveTo(position.x, position.y, position.z, zombie.getYRot(), 0.0F);
                 slime.finalizeSpawn(level, event.getDifficulty(), MobSpawnType.JOCKEY, null);
                 slime.startRiding(zombie);
 //                level.addFreshEntity(slime);
