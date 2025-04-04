@@ -74,8 +74,8 @@ public final class TEEntities {
     public static final DeferredHolder<EntityType<?>,EntityType<BaseSlime>> YELLOW_SLIME = registerSlime("yellow", 0xf8e234, 2);
     public static final DeferredHolder<EntityType<?>,EntityType<HoneySlime>> HONEY_SLIME = ENTITIES.register("honey_slime", () -> EntityType.Builder.<HoneySlime>of((entityType, level) -> new HoneySlime(entityType, level, 0xf8e234), MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(Key("honey_slime")));
     public static final DeferredHolder<EntityType<?>,EntityType<BlackSlime>> BLACK_SLIME = ENTITIES.register("black_slime", () -> EntityType.Builder.of(BlackSlime::new, MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(Key("black_slime")));
-    public static final DeferredHolder<EntityType<?>, EntityType<BaseSlime>> GREEN_DUMPLING_SLIME = registerSlime("green_dumpling_slime", 0x32CD32 , 2);
-    public static final DeferredHolder<EntityType<?>, EntityType<BaseSlime>> SWAMP_SLIME = registerSlime("swamp_slime", 0x556B2F, 2);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseSlime>> GREEN_DUMPLING_SLIME = registerSlime("green_dumpling", 0x32CD32 , 2);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseSlime>> SWAMP_SLIME = registerSlime("swamp", 0x556B2F, 2);
     private static DeferredHolder<EntityType<?>, EntityType<BaseSlime>> registerSlime(String prefix, int color, int size) {
         return ENTITIES.register(
                 prefix + "_slime",
@@ -217,6 +217,8 @@ public final class TEEntities {
         event.registerEntityRenderer(YELLOW_SLIME.get(), c -> new CustomSlimeRenderer(c, "yellow"));
         event.registerEntityRenderer(HONEY_SLIME.get(), c -> new CustomSlimeRenderer(c, "honey"));
         event.registerEntityRenderer(BLACK_SLIME.get(), c -> new CustomSlimeRenderer(c, "black"));
+        event.registerEntityRenderer(GREEN_DUMPLING_SLIME.get(), c -> new CustomSlimeRenderer(c, "green_dumpling"));
+        event.registerEntityRenderer(SWAMP_SLIME.get(), c -> new CustomSlimeRenderer(c, "swamp"));
 
 
         event.registerEntityRenderer(CRIMSON_KEMERA.get(), c-> new GeoNormalRenderer<>(c,CRIMSON_KEMERA.getId(),true));
@@ -315,6 +317,8 @@ public final class TEEntities {
         event.put(TROPIC_SLIME.get(), BaseSlime.createSlimeAttributes(5.0F, 0, 13.0F).build());
         event.put(YELLOW_SLIME.get(), BaseSlime.createSlimeAttributes(6.0F, 2, 25.0F).build());
         event.put(HONEY_SLIME.get(), HoneySlime.createSlimeAttributes(0F, 0, 16.0F).build());
+        event.put(GREEN_DUMPLING_SLIME.get(), BaseSlime.createSlimeAttributes(5.0F, 1, 25.0F).build());
+        event.put(SWAMP_SLIME.get(), BaseSlime.createSlimeAttributes(5.0F, 1, 25.0F).build());
         event.put(BLACK_SLIME.get(), Monster.createMonsterAttributes().build()); // 由finalizeSpawn设置
         // land
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
