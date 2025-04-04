@@ -2,22 +2,32 @@ package org.confluence.terraentity.data.gen.loot;
 
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.models.blockstates.PropertyDispatch;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
+import net.minecraft.world.level.storage.loot.functions.SetComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.apache.commons.lang3.function.TriFunction;
+import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.item.TERiddenItems;
@@ -37,6 +47,35 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
     @Override
     public void generate() {
+
+        var enchantbuilder = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+        enchantbuilder.set(this.registries.lookup(Registries.ENCHANTMENT).get().get(TEEnchantments.MULTI_BOOMERANG).get(),1);
+
+        //
+        this.add(TEMonsterEntities.NYMPH.get(), LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(BinomialDistributionGenerator.binomial(1, 0.5f))
+                .add(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
+                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1)))
+                        .apply(SetComponentsFunction.setComponent(DataComponents.ENCHANTMENTS,enchantbuilder.toImmutable()))
+                )));
+
+        var enchantbuilder1 = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+        enchantbuilder1.set(this.registries.lookup(Registries.ENCHANTMENT).get().get(TEEnchantments.WHIP_SWEEP).get(),1);
+
+        this.add(TEMonsterEntities.SNATCHER.get(), LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(BinomialDistributionGenerator.binomial(1, 0.1f))
+                .add(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
+                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1)))
+                        .apply(SetComponentsFunction.setComponent(DataComponents.ENCHANTMENTS,enchantbuilder1.toImmutable()))
+                )));
+
+        this.add(TEMonsterEntities.MAN_EATER.get(), LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(BinomialDistributionGenerator.binomial(1, 0.1f))
+                .add(LootItem.lootTableItem(Items.ENCHANTED_BOOK)
+                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1)))
+                        .apply(SetComponentsFunction.setComponent(DataComponents.ENCHANTMENTS,enchantbuilder1.toImmutable()))
+                )));
+
         // 史王
         Stream.of(
                 TEMonsterEntities.BLUE_SLIME,
@@ -150,6 +189,12 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
     @Override
     protected Stream<EntityType<?>> getKnownEntityTypes() {
         return Stream.of(
+                //
+                TEMonsterEntities.NYMPH,
+                TEMonsterEntities.SNATCHER,
+                TEMonsterEntities.MAN_EATER,
+
+
                 // 史王
                 TEMonsterEntities.BLUE_SLIME,
                 TEMonsterEntities.GREEN_SLIME,
@@ -168,6 +213,8 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                 TEMonsterEntities.YELLOW_SLIME,
                 TEMonsterEntities.HONEY_SLIME,
                 TEMonsterEntities.BLACK_SLIME,
+                TEMonsterEntities.SWAMP_SLIME,
+                TEMonsterEntities.GREEN_DUMPLING_SLIME,
 
                 TEBossEntities.KING_SLIME,
 

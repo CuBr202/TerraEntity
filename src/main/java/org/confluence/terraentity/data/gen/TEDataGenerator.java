@@ -8,6 +8,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
+import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 import org.confluence.terraentity.data.gen.tags.*;
 
 import java.util.Map;
@@ -41,8 +43,8 @@ public class TEDataGenerator {
         generator.addProvider(server, blockTagsProvider);
         generator.addProvider(server, new TEItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
         generator.addProvider(server, new TEEnchantmentTagsProvider(output, lookup, helper));
-//        generator.addProvider(server,new TERecipeProvider(output,lookup));
-//        generator.addProvider(server, TELootTableProvider.getProvider(output, lookup));
+        generator.addProvider(server,new TERecipeProvider(output,lookup));
+        generator.addProvider(server, TELootTableProvider.getProvider(output, lookup));
 
 
         boolean client = event.includeClient();

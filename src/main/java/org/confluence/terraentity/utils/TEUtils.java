@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -656,6 +657,7 @@ public final class TEUtils {
         }
         if(target instanceof ISummonMob<?>)
             return false;
+
         return true;
     };
 
@@ -663,8 +665,13 @@ public final class TEUtils {
      * <h1>统一弹幕索敌</h1>
      */
     public static BiPredicate<Projectile, Entity> projectileCanHitEntityTest = (projectile, target)-> {
-        if (!target.isAttackable() || target instanceof Villager) {
+        if (!target.isAttackable() ||  target instanceof Villager || target instanceof ArmorStand) {
             return false;
+        }
+        if(target instanceof  LivingEntity living){
+            if(!living.canBeSeenByAnyone() || !living.canBeSeenAsEnemy()){
+                return false;
+            }
         }
         Entity entity = projectile.getOwner();
         // 防止击中仆从

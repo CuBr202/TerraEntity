@@ -23,6 +23,10 @@ public class TEEnchantmentTagsProvider extends EnchantmentTagsProvider {
                 TEEnchantments.MULTI_BOOMERANG,
                 TEEnchantments.WHIP_SWEEP
         );
+//        this.tag(EnchantmentTags.ON_RANDOM_LOOT).add(
+//                TEEnchantments.MULTI_BOOMERANG,
+//                TEEnchantments.WHIP_SWEEP
+//        );
 
     }
 }

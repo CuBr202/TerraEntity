@@ -305,7 +305,13 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
         return (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
+    public boolean canBeSeenAsEnemy() {
+        return false;
+    }
 
+    public boolean canBeSeenByAnyone() {
+        return false;
+    }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {

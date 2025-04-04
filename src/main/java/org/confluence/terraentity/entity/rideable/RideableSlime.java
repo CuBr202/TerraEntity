@@ -12,6 +12,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -50,13 +51,16 @@ public class RideableSlime extends AbstractRideableEntity {
     protected void tickRidden(Player player, Vec3 travelVector) {
         if (this.isJumping && !onGround()) {
             boolean trigger = false;
-            for (int i = 0; i < 4; i++) {
-                float offsetX = (i == 1 || i == 2) ? 1 : 0;
-                float offsetZ = (i == 2 || i == 3) ? 1 : 0;
-                if (getHitResult(offsetX, offsetZ)) {
-                    trigger = true;
-                    break;
-                }
+//            for (int i = 0; i < 4; i++) {
+//                float offsetX = (i == 1 || i == 2) ? 1 : 0;
+//                float offsetZ = (i == 2 || i == 3) ? 1 : 0;
+//                if (getHitResult(offsetX, offsetZ)) {
+//                    trigger = true;
+//                    break;
+//                }
+//            }
+            if (getHitResult(0.5F, 0.5F)) {
+                trigger = true;
             }
             if (trigger) {
                 this.setDeltaMovement(getDeltaMovement().x, getJumpPower(), getDeltaMovement().z);
@@ -66,11 +70,13 @@ public class RideableSlime extends AbstractRideableEntity {
     }
 
     private boolean getHitResult(float offsetX, float offsetZ) {
-        HitResult hitResult = ProjectileUtil.getEntityHitResult(level(), this, position(), position().subtract(offsetX, 1f, offsetZ), getBoundingBox().inflate(2), e -> e.isAttackable());
-        if (hitResult != null && hitResult.getType() == HitResult.Type.ENTITY) {
-            return true;
-        }
-        return false;
+//        HitResult hitResult = ProjectileUtil.getEntityHitResult(level(), this, position(), position().subtract(offsetX, 1f, offsetZ), getBoundingBox().inflate(2), e -> e.isAttackable());
+//        if (hitResult != null && hitResult.getType() == HitResult.Type.ENTITY) {
+//            level().getEntities(this, )
+//            return true;
+//        }
+        var entities = TEUtils.getAABBAngleTarget(position(), position().add(offsetX, -1f, offsetZ), this.level(), this.getOwner(), 1, 40, e->e instanceof LivingEntity);
+        return entities != null;
     }
 
     @Override
