@@ -2,7 +2,6 @@ package org.confluence.terraentity.utils;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ViewportEvent;
@@ -27,7 +26,6 @@ public class CameraShakeManager {
     public static void serverTick(TickEvent.ServerTickEvent event) {
         if (cameraShakeData.isEmpty()) {
             return;
-
         }
         int ticks = event.getServer().getTickCount();
         if (ticks % tickDelay == 0) {

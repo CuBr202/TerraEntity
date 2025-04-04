@@ -22,11 +22,10 @@ import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRe
 import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
 import org.confluence.terraentity.client.gui.config_container.ConfigContainerRegister;
 import org.confluence.terraentity.client.particle.BiomeColorParticle;
+import org.confluence.terraentity.client.util.RegisterUtils;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.init.TEParticles;
-import org.confluence.terraentity.init.entity.TEBossEntities;
-import org.confluence.terraentity.init.entity.TEEntitiesRenderers;
-import org.confluence.terraentity.init.entity.TEProjectileEntities;
+import org.confluence.terraentity.init.entity.*;
 
 import java.lang.reflect.Field;
 import java.util.function.Function;
@@ -54,14 +53,14 @@ public final class ModClientEvent {
     }
 */
 
-@SubscribeEvent
-public static void onClientSetup(final FMLClientSetupEvent evt) {
+    @SubscribeEvent
+    public static void onClientSetup(final FMLClientSetupEvent evt) {
 //        ModList.get().getModContainerById(MODID).ifPresent(container -> {
 //            container.registerExtensionPoint(
 //                    ConfigScreenHandler.ConfigScreenFactory.class,
 //                    () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> new ConfigScreen(screen)));
 //        });
-}
+    }
     @SubscribeEvent
     public static void onEnqueue(final InterModEnqueueEvent event) {
         ConfigContainerRegister.registerModsPage(event);
@@ -70,21 +69,20 @@ public static void onClientSetup(final FMLClientSetupEvent evt) {
     @SubscribeEvent
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
 //        event.registerLayerDefinition(CrownOfKingSlimeModel.LAYER_LOCATION, CrownOfKingSlimeModel::createBodyLayer);
-        registerModel(event, CrownOfKingSlimeModel.class);
-        registerModel(event, CabbageProjModel.class);
-        registerModel(event, Stinger.class);
+        RegisterUtils.registerModel(event, CrownOfKingSlimeModel.class);
+        RegisterUtils.registerModel(event, CabbageProjModel.class);
+        RegisterUtils.registerModel(event, Stinger.class);
 
 
     }
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(TEBossEntities.CROWN_OF_KING_SLIME_MODEL.get(), CrownOfKingSlimeModelRenderer::new);
-
-        registerProj(event, TEProjectileEntities.CABBAGE_PROJ.get(), c->new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION)));
-        registerProj(event, TEProjectileEntities.BEE_STICK_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
-        registerProj(event, TEProjectileEntities.SUMMON_BEE_STICK_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
-        event.registerEntityRenderer(TEProjectileEntities.BOOMERANG_PROJECTILE.get(), BoomerangProjRenderer::new);
+        TEBossEntities.registerRenderers(event);
+        TEMonsterEntities.registerRenderers(event);
+        TEProjectileEntities.registerRenderers(event);
+        TERideableEntities.registerRenderers(event);
+        TESummonEntities.registerRenderers(event);
 
         // replaced
 //        if (ClientConfig.ENABLE_NON_SPIDER_MODEL.get()) {
@@ -93,7 +91,7 @@ public static void onClientSetup(final FMLClientSetupEvent evt) {
 //            event.registerEntityRenderer(BLOOD_CRAWLER.get(), c -> new ReplacedSpiderRenderer<>(c, "blood_crawler", BLOOD_CRAWLER.get()));
 //        }
 
-        TEEntitiesRenderers.registerRenderers(event);
+
     }
 
     @SubscribeEvent
@@ -127,36 +125,5 @@ public static void onClientSetup(final FMLClientSetupEvent evt) {
 //    }
 
 
-    public static ModelLayerLocation getModelDefine(Class<? extends Model> clz){
-        Field field2;
-        try{
-            field2  = clz.getDeclaredField("LAYER_LOCATION");
-        }catch (Exception e){ throw new RuntimeException();}
-        field2.setAccessible(true);
 
-        try{
-            return (ModelLayerLocation) field2.get(null);
-        }catch (Exception e){ throw new RuntimeException();}
-
-    }
-
-    public static Supplier<LayerDefinition> getLayerDefinition(Class<? extends Model> clz){
-        return  ()-> {
-            try {
-                return (LayerDefinition) clz.getMethod("createBodyLayer").invoke(null);
-            } catch (Exception e) {throw new RuntimeException(e);}
-        };
-    }
-
-    public static void registerModel(EntityRenderersEvent.RegisterLayerDefinitions evt, Class<? extends Model> clz){
-        evt.registerLayerDefinition(getModelDefine(clz), getLayerDefinition(clz));
-    }
-
-    public static <T extends BaseProj>void registerProj(EntityRenderersEvent.RegisterRenderers event, EntityType<T> entityType, Function<EntityRendererProvider.Context, EntityModel<T>> model){
-        event.registerEntityRenderer(entityType, (dispatcher)-> new ProjRenderer<>(dispatcher, model.apply(dispatcher),1,0));
-    }
-
-    public static <T extends BaseProj>void registerProj(EntityRenderersEvent.RegisterRenderers event, EntityType<T> entityType, Function<EntityRendererProvider.Context, EntityModel<T>> model, float size, float offsetY){
-        event.registerEntityRenderer(entityType, (dispatcher)-> new ProjRenderer<>(dispatcher, model.apply(dispatcher),size,offsetY));
-    }
 }

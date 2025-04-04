@@ -1,6 +1,7 @@
 package org.confluence.terraentity.data.gen.loot;
 
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.models.blockstates.PropertyDispatch;
 import net.minecraft.world.entity.EntityType;
@@ -11,13 +12,16 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.EnchantWithLevelsFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.functions.SetNbtFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.function.TriFunction;
+import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.item.TERiddenItems;
@@ -37,6 +41,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
     @Override
     public void generate() {
+
         // 史王
         Stream.of(
                 TEMonsterEntities.BLUE_SLIME,

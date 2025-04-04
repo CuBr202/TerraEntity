@@ -1,15 +1,12 @@
 package org.confluence.terraentity.entity.rideable;
 
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import org.confluence.terraentity.entity.ai.IFlyRideableMob;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -23,34 +20,32 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
 
     int _flyTick = 100;
     int flyTick = 100;
-    protected boolean moving;
-    int movingCounter = 0;
-    int stopCounter = 0;
 
     public RideableBee(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
+        this.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.03f);
+    }
+
+    public void tick(){
+        super.tick();
 
     }
 
     @Override
-    protected void tickRidden(Player player, Vec3 travelVector) {
-        Vec2 vec2 = this.getRiddenRotation(player);
-        this.setRot(vec2.y, vec2.x);
-        this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
-        if (this.isControlledByLocalInstance()) {
-            Vec3 speed = getDeltaMovement();
-            if(this.isJumping){
-                double vy;
-                if(--flyTick > 0){
-                    vy = Math.min(speed.y + 0.035f, 0.2f);
-                }else{
-                    vy = Math.min(speed.y + 0.02f, 0.2f);
-                }
-                this.setDeltaMovement(speed.x, vy, speed.z);
+    protected void tickRiddenLocal(Player player, Vec3 travelVector){
+        Vec3 speed = getDeltaMovement();
+
+        if(this.isInputtingJumping()){
+            double vy;
+            if(--flyTick > 0){
+                vy = Math.min(speed.y + 0.035f, 0.2f);
+            }else{
+                vy = Math.min(speed.y + 0.02f, 0.2f);
             }
-            if(onGround()){
-                flyTick = Math.min(_flyTick, flyTick + 5);
-            }
+            this.setDeltaMovement(speed.x, vy, speed.z);
+        }
+        if(onGround()){
+            flyTick = Math.min(_flyTick, flyTick + 5);
         }
     }
 
@@ -58,18 +53,6 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
     protected Vec3 getRiddenInput(Player player, Vec3 travelVector) {
         float f = player.xxa * 0.5F;
         float f1 = Math.max(player.zza, -0.1f);
-        if(level().isClientSide) {
-            LocalPlayer lp = (LocalPlayer) player;
-            this.isJumping = lp.input.jumping;
-            moving = lp.input.left || lp.input.right || lp.input.up || lp.input.down;
-            if(moving && !isJumping){
-                movingCounter++;
-                stopCounter = 0;
-            }else{
-                movingCounter = 0;
-                stopCounter++;
-            }
-        }
 
         if (this.onGround()) {
             return new Vec3(f*0.08f,0,f1*0.15f);
@@ -80,9 +63,9 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
 
     @Override
     public double getPassengersRidingOffset() {
-        float offsetY = this.moving && !isJumping?
-                Mth.lerp(Math.min((movingCounter) / 10f, 1f), 0.4f, 0.1f)
-                : Mth.lerp(Math.min((stopCounter) / 10f, 1f), 0.1f, 0.4f);
+        float offsetY = this.isMoving && !isInputtingJumping()?
+                Mth.lerp(Math.min((movingCounter) / 12f, 1f), 0.4f, 0.1f)
+                : Mth.lerp(Math.min((stopCounter) / 7f, 1f), 0.1f, 0.4f);
         return super.getPassengersRidingOffset() + offsetY;
     }
 
@@ -91,23 +74,44 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
     }
 
     @Override
-    public float calJumpingScale(float jumpTick) {
+    public float calJumpingScale(float jumpTick, float ori) {
         return (float) (flyTick) / _flyTick;
     }
+
+    @Override
+    public void handleStartJump(int jumpPower) {
+        super.handleStartJump(jumpPower);
+        this.onLocalStopInputJump();
+    }
+
+    /**
+     * 用于服务端检测
+     */
+    public boolean isJumping() {
+        return this.getFlag(1);
+    }
+    /**
+     * 用于服务端设置
+     */
+    public void setIsInputtingJumping(boolean jumping) {
+        super.setIsInputtingJumping(jumping);
+        this.setFlag(1, jumping);
+    }
+
 
     RawAnimation wing = RawAnimation.begin().thenLoop("wing");
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<GeoAnimatable>(this, "Wing", 10, state -> {
-                if (isJumping) {
+                if (isInputtingJumping()) {
                     return state.setAndContinue(wing);
                 }
                 state.resetCurrentAnimation();
                 return PlayState.STOP;
             }),
             new AnimationController<>(this, "Fly/Idle/Move", 10, state -> {
-                if (moving) {
-                    if (isJumping) {
+                if (isMoving) {
+                    if (isInputtingJumping()) {
                         return state.setAndContinue(DefaultAnimations.FLY);
                     }
                     return state.setAndContinue(DefaultAnimations.WALK);

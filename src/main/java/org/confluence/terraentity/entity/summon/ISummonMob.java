@@ -174,7 +174,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
         summon_setTame(true, true);
         if(stack.getItem() instanceof SummonItem<?> summonItem)
             te$getSelf().getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(summonItem.baseAttackDamage);
-        ModLoader.get().postEvent(new SummonEvent(player, stack, this));
+        ModLoader.get().postEvent(new SummonEvent<>(player, stack, this));
     }
 
     /* Attack API */

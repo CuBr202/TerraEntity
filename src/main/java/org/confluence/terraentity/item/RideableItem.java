@@ -26,8 +26,7 @@ public class RideableItem<T extends AbstractRideableEntity> extends Item {
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if(player.onGround())
-            summonRideableEntity(player);
+        summonRideableEntity(player);
         return super.use(level, player, usedHand);
     }
 
@@ -44,6 +43,7 @@ public class RideableItem<T extends AbstractRideableEntity> extends Item {
                         slime.setPos(player.getX(), player.getY(), player.getZ());
                         slime.doPlayerRide(player);
                         level.addFreshEntity(slime);
+                        slime.onInit(player);
                     }
                 }
             }

@@ -3,7 +3,6 @@ package org.confluence.terraentity;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
-
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -31,13 +30,12 @@ public class TerraEntity {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         TERegistries.register(modEventBus);
 
-        TEEntities.ENTITIES.register(modEventBus);
+        TEEntities.register(modEventBus);
         TESounds.SOUNDS.register(modEventBus);
         TEParticles.PARTICLES.register(modEventBus);
         TEItems.register(modEventBus);
         TEEffects.EFFECTS.register(modEventBus);
         TEAttributes.ATTRIBUTES.register(modEventBus);
-        TEBiomes.register(modEventBus);
         TEEnchantments.ENCHANTMENTS.register(modEventBus);
 
 
