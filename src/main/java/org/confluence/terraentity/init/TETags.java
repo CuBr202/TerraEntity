@@ -3,6 +3,7 @@ package org.confluence.terraentity.init;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
@@ -28,6 +29,7 @@ public class TETags {
         public static final TagKey<Item> WHIP_ENCHANTABLE = registerItem("whip_enchantable");
         public static final TagKey<Item> BOOMERANG_ENCHANTABLE = registerItem("boomerang_enchantable");
 
+        public static final TagKey<Item> WEAPONS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "weapons"));
     }
 
     public static class EntityTypes {

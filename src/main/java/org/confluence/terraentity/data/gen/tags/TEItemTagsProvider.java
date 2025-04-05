@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
+import org.confluence.terraentity.init.item.TESummonItems;
 import org.confluence.terraentity.init.item.TEWhipItems;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +31,9 @@ public class TEItemTagsProvider extends ItemTagsProvider {
         TEWhipItems.ITEMS.getEntries().forEach(item -> {
             tag(ItemTags.DURABILITY_ENCHANTABLE).add(item.get());
             tag(TETags.Items.WHIP_ENCHANTABLE).add(item.get());
+        });
+        TESummonItems.ITEMS.getEntries().forEach(item ->{
+            tag(TETags.Items.WEAPONS);
         });
     }
 }
