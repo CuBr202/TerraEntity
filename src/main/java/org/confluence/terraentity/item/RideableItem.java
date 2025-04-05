@@ -16,7 +16,7 @@ public class RideableItem<T extends AbstractRideableEntity> extends Item {
     Supplier<EntityType<T>> entityType;
     Predicate<Player> canUse;
     public RideableItem(Properties properties,  Supplier<EntityType<T>> entityType) {
-        this(properties, entityType, player -> true);
+        this(properties.stacksTo(1), entityType, player -> true);
     }
 
     public RideableItem(Properties properties,  Supplier<EntityType<T>> entityType, Predicate<Player> canUse) {
