@@ -43,8 +43,8 @@ public class TEDataGenerator {
         generator.addProvider(server, blockTagsProvider);
         generator.addProvider(server, new TEItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
         generator.addProvider(server, new TEEnchantmentTagsProvider(output, lookup, helper));
-        generator.addProvider(server,new TERecipeProvider(output,lookup));
-        generator.addProvider(server, TELootTableProvider.getProvider(output, lookup));
+//        generator.addProvider(server,new TERecipeProvider(output,lookup));
+//        generator.addProvider(server, TELootTableProvider.getProvider(output, lookup));
 
 
         boolean client = event.includeClient();

@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.rideable;
 
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -30,6 +31,15 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
     public void tick(){
         super.tick();
 
+        if(!level().isClientSide){
+            if(getOwner() != null && isInWater()) {
+                this.getOwner().stopRiding();
+                this.discard();
+            }
+            if(isInputtingJumping() && tickCount % 2 == 1){
+                playSound(SoundEvents.BEEHIVE_WORK, 0.5F, 2F);
+            }
+        }
     }
 
     @Override
@@ -120,5 +130,14 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
                 return state.setAndContinue(DefaultAnimations.IDLE);
             })
         );
+    }
+
+    protected void playEnterSound() {
+        this.playSound(SoundEvents.BEEHIVE_EXIT, 1.0F, 1.0F);
+
+    }
+
+    protected void playExitSound() {
+        this.playSound(SoundEvents.BEEHIVE_ENTER, 1.0F, 1.0F);
     }
 }

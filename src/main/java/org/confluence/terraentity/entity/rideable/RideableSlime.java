@@ -3,6 +3,7 @@ package org.confluence.terraentity.entity.rideable;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
@@ -81,7 +82,6 @@ public class RideableSlime extends AbstractRideableEntity {
 
     @Override
     public void tick() {
-
         super.tick();
 
         if(this.isInWater() && !level().isClientSide){
@@ -92,6 +92,7 @@ public class RideableSlime extends AbstractRideableEntity {
                 this.addDeltaMovement(new Vec3(0,power,0));
             }
         }
+
     }
 
     /**
@@ -165,6 +166,20 @@ public class RideableSlime extends AbstractRideableEntity {
     }
 
     public void onInit(Player player){
+        super.onInit(player);
         this.entityData.set(DATA_INIT_SPEED, new Vector3f(player.xxa, (float) player.getDeltaMovement().y, player.zza));
+    }
+    protected void playEnterSound() {
+        this.playSound(SoundEvents.SLIME_BLOCK_FALL, 0.5F, 1.0F);
+    }
+    @Override
+    public void handleStartJump(int jumpHeight) {
+        super.handleStartJump(jumpHeight);
+//        this.playSound(SoundEvents.SLIME_JUMP_SMALL, 0.5F, 1.0F);
+
+    }
+
+    protected void playLocalJumpSound() {
+        this.level().playLocalSound(this, SoundEvents.SLIME_JUMP_SMALL, getSoundSource(), 0.5f,0.9f);
     }
 }

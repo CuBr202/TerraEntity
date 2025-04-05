@@ -662,7 +662,7 @@ public final class TEUtils {
     };
 
     /**
-     * <h1>统一弹幕索敌</h1>
+     * <h1>统一弹幕目标和索敌过滤</h1>
      */
     public static BiPredicate<Projectile, Entity> projectileCanHitEntityTest = (projectile, target)-> {
         if (!target.isAttackable() ||  target instanceof Villager || target instanceof ArmorStand) {
