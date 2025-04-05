@@ -7,6 +7,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -427,5 +428,9 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
     }
     protected void playLocalJumpSound() {
 
+    }
+
+    public SoundSource getSoundSource() {
+        return SoundSource.PLAYERS;
     }
 }

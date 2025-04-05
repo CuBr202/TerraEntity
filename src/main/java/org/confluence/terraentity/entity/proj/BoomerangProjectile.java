@@ -99,7 +99,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
                 hurter = part.getParent();
             }
             if(this.getOwner() instanceof LivingEntity owner && this.getOwner() != actualHurter) {
-                if (hurter instanceof LivingEntity living && actualHurter.isAlive() && TEUtils.projectileCanHitEntityTest.test(this, living)) {
+                if (hurter instanceof LivingEntity living && actualHurter.isAlive() && TEUtils.projectileCanHurtEntityTest.test(this, living)) {
                     penetrationCount--;
                     ResourceLocation temp = TerraEntity.asResource("temp_boomerang");
                     owner.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(temp, modifier.damage - 1, AttributeModifier.Operation.ADD_VALUE));
@@ -128,24 +128,8 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
 
     @Override
     protected boolean canHitEntity(Entity target) {
-        Entity entity = this.getOwner();
-        if(entity == target) return false;
 
-        if (!target.isAttackable()) {
-            return false;
-        }
-        if(!(target instanceof LivingEntity)){
-            if(target instanceof PartEntity<?> part && part.getParent() instanceof LivingEntity){
-                return true;
-            }
-            return false;
-        }
-        if(!TEUtils.attackTamableTest.test(entity, target)) return false;
-
-        if(entity != null && !entity.isPassengerOfSameVehicle(target))
-            return true;
-
-        return false;
+        return TEUtils.projectileCanHitEntityTest.test(this, target) && super.canHitEntity(target);
     }
 
     protected void doKnockback(LivingEntity entity) {

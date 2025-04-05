@@ -42,7 +42,7 @@ public record AboveFallenGeneration(float maxAngle, float range, float predict, 
     public void genProjectile(@NotNull LivingEntity owner, ItemStack weapon, float velocity, @NotNull Supplier<? extends Projectile> proj) {
         var projectile = proj.get();
         Vec3 eye = owner.getEyePosition();
-        LivingEntity target = TEUtils.getAABBAngleTarget(eye, eye.add(owner.getForward().normalize().scale(range)), owner.level(), owner, range, maxAngle, e->TEUtils.projectileCanHitEntityTest.test(projectile,e));
+        LivingEntity target = TEUtils.getAABBAngleTarget(eye, eye.add(owner.getForward().normalize().scale(range)), owner.level(), owner, range, maxAngle, e->TEUtils.projectileCanHurtEntityTest.test(projectile,e));
         Vec3 targetPos;
         float angle;
         float actualInaccuracy;

@@ -238,7 +238,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             discardTick = 0;
 
             doCollisionAttack(
-                    e->canAttack(e) && e!= this && e.canBeSeenAsEnemy(),
+                    e-> e instanceof LivingEntity  living && canAttack(living) && e!= this && living.canBeSeenAsEnemy(),
                     this::doHurtTarget
             );
 

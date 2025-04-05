@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.*;
+import net.neoforged.neoforge.entity.PartEntity;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.Boss;
@@ -662,9 +663,9 @@ public final class TEUtils {
     };
 
     /**
-     * <h1>统一弹幕目标和索敌过滤</h1>
+     * <h1>统一弹幕目标伤害过滤</h1>
      */
-    public static BiPredicate<Projectile, Entity> projectileCanHitEntityTest = (projectile, target)-> {
+    public static BiPredicate<Projectile, Entity> projectileCanHurtEntityTest = (projectile, target)-> {
         if (!target.isAttackable() ||  target instanceof Villager || target instanceof ArmorStand) {
             return false;
         }
@@ -683,6 +684,34 @@ public final class TEUtils {
             return true;
         }
         return target != entity;
+    };
+
+    /**
+     * <h1>统一弹幕能否命中目标和索敌过滤</h1>
+     */
+    public static BiPredicate<Projectile, Entity> projectileCanHitEntityTest = (projectile, target)-> {
+        Entity entity = projectile.getOwner();
+        // 不能攻击主人
+        if(entity == target) return false;
+
+        if (!target.isAttackable()) {
+            // 不可攻击的实体
+            return false;
+        }
+
+        if(!(target instanceof LivingEntity)){
+            // 可以攻击多体节生物
+            if(target instanceof PartEntity<?> part && part.getParent() instanceof LivingEntity){
+                return true;
+            }
+            return false;
+        }
+
+        if(entity != null && entity.isPassengerOfSameVehicle(target))
+            // 不能攻击坐骑
+            return false;
+        return true;
+
     };
 
     /**

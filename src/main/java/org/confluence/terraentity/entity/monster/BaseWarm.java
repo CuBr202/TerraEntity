@@ -112,7 +112,7 @@ public class BaseWarm extends AbstractMonster {
             cur.setDeltaMovement(destX - cur.getX(), destY - cur.getY(), destZ - cur.getZ());
             cur.moveTo(destX, destY, destZ, yaw, pitch);
 
-            cur.doCollisionAttack(e->canAttack(e),
+            cur.doCollisionAttack(e->e instanceof LivingEntity living && canAttack(living),
                     e->doHurtTarget(e)
                     );
 

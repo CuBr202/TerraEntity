@@ -158,6 +158,11 @@ dependencies {
 
     // jer
     runtimeOnly "curse.maven:just-enough-resources-jer-240630:6174588"
+
+    // 暮色森林
+    runtimeOnly "curse.maven:the-twilight-forest-227639:6087105"
+    compileOnly "curse.maven:the-twilight-forest-227639:6087105"
+
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

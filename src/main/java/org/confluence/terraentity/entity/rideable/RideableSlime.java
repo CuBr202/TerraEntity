@@ -24,6 +24,7 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 public class RideableSlime extends AbstractRideableEntity {
 
     Vector3f initSpeed;
+    boolean wasOnGround;
     private static final EntityDataAccessor<Vector3f> DATA_INIT_SPEED = SynchedEntityData.defineId(RideableSlime.class, EntityDataSerializers.VECTOR3);;
 
     public RideableSlime(EntityType<? extends Mob> entityType, Level level) {
@@ -65,6 +66,8 @@ public class RideableSlime extends AbstractRideableEntity {
             }
             if (trigger) {
                 this.setDeltaMovement(getDeltaMovement().x, getJumpPower(), getDeltaMovement().z);
+                level().playLocalSound(this, SoundEvents.SLIME_BLOCK_PLACE, getSoundSource(), 0.5f, 2.0f);
+                playSound(SoundEvents.SLIME_BLOCK_PLACE);
             }
         }
         super.tickRidden(player, travelVector);
@@ -92,6 +95,20 @@ public class RideableSlime extends AbstractRideableEntity {
                 this.addDeltaMovement(new Vec3(0,power,0));
             }
         }
+
+        if(!level().isClientSide){
+            if(!wasOnGround && onGround()){
+                playSound(SoundEvents.SLIME_SQUISH_SMALL);
+            }
+            if(wasOnGround && !onGround()){
+                playSound(SoundEvents.SLIME_BLOCK_HIT);
+            }
+
+        }
+
+        this.wasOnGround = this.onGround();
+
+
 
     }
 
@@ -180,6 +197,6 @@ public class RideableSlime extends AbstractRideableEntity {
     }
 
     protected void playLocalJumpSound() {
-        this.level().playLocalSound(this, SoundEvents.SLIME_JUMP_SMALL, getSoundSource(), 0.5f,0.9f);
+//        this.level().playLocalSound(this, SoundEvents.SLIME_JUMP_SMALL, getSoundSource(), 0.5f,0.9f);
     }
 }

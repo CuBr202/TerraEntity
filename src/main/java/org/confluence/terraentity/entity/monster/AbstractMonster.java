@@ -289,7 +289,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         super.tick();
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
         if(!level().isClientSide && builder.attachAttack && isAlive()){
-            doCollisionAttack(e->canAttack(e) && e.getType() != this.getType(),
+            doCollisionAttack(e->e instanceof LivingEntity living && canAttack(living) && e.getType() != this.getType(),
                     this::doHurtTarget
             );
         }
