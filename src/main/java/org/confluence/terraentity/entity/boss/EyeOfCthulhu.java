@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -330,4 +331,8 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         dashComponent.setDirection(new Vec3(Math.cos(tickCount * 0.1) * 2,1,Math.sin(tickCount * 0.1) * 2));
         dashComponent.uniformMove(1);
     }
+
+    protected BossEvent.BossBarColor getBossBarColor(){
+        return BossEvent.BossBarColor.RED;
+    };
 }

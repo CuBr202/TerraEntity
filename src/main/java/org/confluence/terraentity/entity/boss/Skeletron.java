@@ -7,6 +7,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -311,4 +312,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
             }
         }
     }
+    protected BossEvent.BossBarColor getBossBarColor(){
+        return BossEvent.BossBarColor.WHITE;
+    };
 }

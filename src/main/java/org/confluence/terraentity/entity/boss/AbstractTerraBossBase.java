@@ -93,7 +93,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             difficult = false;
         }
 
-        bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
+        bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), getBossBarColor(), BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
     }
 
     public float getAttributeMultiplier(Holder<Attribute> attribute){
@@ -473,4 +473,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public boolean hasLineOfSight(Entity entity) {
         return distanceToSqr(entity) < 100 * 100;
     }
+
+    protected BossEvent.BossBarColor getBossBarColor(){
+        return BossEvent.BossBarColor.RED;
+    };
 }

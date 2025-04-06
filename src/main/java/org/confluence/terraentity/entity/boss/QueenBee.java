@@ -4,6 +4,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -260,4 +261,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
     @Override
     public boolean isNoGravity(){ return true; }
 
+    protected BossEvent.BossBarColor getBossBarColor(){
+        return BossEvent.BossBarColor.YELLOW;
+    };
 }

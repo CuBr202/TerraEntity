@@ -7,6 +7,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -579,4 +580,8 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     public boolean isMainBody(){
         return ifBaseHead;
     }
+
+    protected BossEvent.BossBarColor getBossBarColor(){
+        return BossEvent.BossBarColor.PURPLE;
+    };
 }

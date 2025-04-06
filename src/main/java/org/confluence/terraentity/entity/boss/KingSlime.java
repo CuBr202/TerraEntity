@@ -562,4 +562,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
             mob.setTarget(target);
         }
     }
+    protected BossEvent.BossBarColor getBossBarColor(){
+        return BossEvent.BossBarColor.BLUE;
+    };
 }
