@@ -1,24 +1,24 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "org.confluence.terraentity.mixin",
-  "compatibilityLevel": "JAVA_21",
-  "refmap": "confluence.refmap.json",
-  "mixins": [
-    "BossEventMixin",
-    "ServerBossEventMixin",
-    "accessor.EntityAccessor",
-    "accessor.SlimeAccessor"
-  ],
-  "client": [
-    "accessor.GameRendererAccessor",
-    "client.BossHealthOverlayMixin",
-    "client.GameRendererMixin",
-    "client.ItemRendererMixin",
-    "client.LocalPlayerMixin",
-    "client.ShaderInstanceMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "required": true,
+    "minVersion": "0.8",
+    "package": "org.confluence.terraentity.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "refmap": "confluence.refmap.json",
+    "mixins": [
+        "BossEventMixin",
+        "ServerBossEventMixin",
+        "accessor.EntityAccessor",
+        "accessor.SlimeAccessor"
+    ],
+    "client": [
+        "accessor.GameRendererAccessor",
+        "client.BossHealthOverlayMixin",
+        "client.GameRendererMixin",
+        "client.ItemRendererMixin",
+        "client.LocalPlayerMixin",
+        "client.ShaderInstanceMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
 }

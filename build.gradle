@@ -161,8 +161,8 @@ dependencies {
     additionalRuntimeClasspath "org.apache.commons:commons-math3:3.6.1"
 
     // 女仆
-    compileOnly "curse.maven:touhou-little-maid-355044:6266244"
-    runtimeOnly "curse.maven:touhou-little-maid-355044:6266244"
+    compileOnly "curse.maven:touhou-little-maid-355044:6302619"
+    runtimeOnly "curse.maven:touhou-little-maid-355044:6302619"
 
     // jer
     runtimeOnly "curse.maven:just-enough-resources-jer-240630:6174588"
