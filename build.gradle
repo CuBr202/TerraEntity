@@ -137,8 +137,16 @@ repositories {
 
 }
 
+var dev = true
+
 dependencies {
     implementation(jarJar("software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"))
+
+    if (dev) {
+        implementation project(":Confluence-Magic-Lib")
+    } else {
+        implementation jarJar(project(":Confluence-Magic-Lib"))
+    }
 
     compileOnly "curse.maven:jade-324717:6011258"
     runtimeOnly "curse.maven:jade-324717:6011258"

@@ -3,7 +3,7 @@ package org.confluence.terraentity.entity.ai;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import org.confluence.terraentity.mixinauxiliary.SelfGetter;
+import org.confluence.lib.mixed.SelfGetter;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -27,9 +27,9 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
     }
 
     default void syncSkills(EntityDataAccessor<?> key) {
-        if(te$getSelf().level().isClientSide() && getSkills()!= null && key == getSkills().skillIndexData){
-            getSkills().index = te$getSelf().getEntityData().get(getSkills().skillIndexData);
-            getAnimationMessage().lastSkillTick = te$getSelf().tickCount;
+        if(confluence$self().level().isClientSide() && getSkills()!= null && key == getSkills().skillIndexData){
+            getSkills().index = confluence$self().getEntityData().get(getSkills().skillIndexData);
+            getAnimationMessage().lastSkillTick = confluence$self().tickCount;
             getSkills().tick = 0;
         }
     }

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.pipeline.TextureTarget;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import org.confluence.terraentity.mixinauxiliary.HotSwap;
+import org.confluence.terraentity.mixed.HotSwap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

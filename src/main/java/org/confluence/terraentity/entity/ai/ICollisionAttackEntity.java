@@ -1,7 +1,6 @@
 package org.confluence.terraentity.entity.ai;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;

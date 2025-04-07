@@ -1,7 +1,7 @@
 package org.confluence.terraentity.mixin;
 
 import net.minecraft.world.BossEvent;
-import org.confluence.terraentity.mixinauxiliary.IBossEvent;
+import org.confluence.terraentity.mixed.IBossEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 

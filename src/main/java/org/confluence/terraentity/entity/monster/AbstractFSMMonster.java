@@ -1,6 +1,5 @@
 package org.confluence.terraentity.entity.monster;
 
-import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;

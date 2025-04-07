@@ -18,8 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-
-import org.confluence.terraentity.utils.FloatRGB;
+import org.confluence.lib.color.FloatRGB;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
 import org.jetbrains.annotations.NotNull;

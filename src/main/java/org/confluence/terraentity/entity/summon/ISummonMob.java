@@ -29,16 +29,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.neoforged.fml.ModLoader;
+import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonFollowOwnerGoal;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonOwnerHurtByTargetGoal;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonOwnerHurtTargetGoal;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonPriorAttackGoal;
 import org.confluence.terraentity.init.TEAttachments;
-import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.item.SummonItem;
-import org.confluence.terraentity.mixinauxiliary.SelfGetter;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -49,31 +48,31 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     int getCost();
 
     void setCost(int cost);
-    
+
     /*Tamed Animals**/
-    
+
     EntityDataAccessor<Optional<UUID>> get_DATA_OWNERUUID_ID();
 
     default LivingEntity summon_getOwner(){
         UUID uuid = this.summon_getOwnerUUID();
-        return uuid == null ? null : te$getSelf().level().getPlayerByUUID(uuid);
+        return uuid == null ? null : confluence$self().level().getPlayerByUUID(uuid);
     }
 
     default void summon_setOwnerUUID(@Nullable UUID uuid){
-        te$getSelf().getEntityData().set(get_DATA_OWNERUUID_ID(), Optional.ofNullable(uuid));
+        confluence$self().getEntityData().set(get_DATA_OWNERUUID_ID(), Optional.ofNullable(uuid));
     }
 
     default UUID summon_getOwnerUUID(){
-        return (UUID)((Optional) te$getSelf().getEntityData().get(get_DATA_OWNERUUID_ID())).orElse(null);
+        return (UUID)((Optional) confluence$self().getEntityData().get(get_DATA_OWNERUUID_ID())).orElse(null);
     }
-    
+
     default boolean summon_unableToMoveToOwner(){
         return this.summon_getOwner() != null && this.summon_getOwner().isSpectator();
     }
 
     default boolean summon_shouldTryTeleportToOwner(){
         LivingEntity livingentity = summon_getOwner();
-        return livingentity != null && te$getSelf().distanceToSqr(summon_getOwner()) >= summon_getDistanceToTeleportToOwner();
+        return livingentity != null && confluence$self().distanceToSqr(summon_getOwner()) >= summon_getDistanceToTeleportToOwner();
     }
 
     default void summon_tryToTeleportToOwner(){
@@ -109,7 +108,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
             uuid = compound.getUUID("Owner");
         } else {
             String s = compound.getString("Owner");
-            MinecraftServer server = te$getSelf().getServer();
+            MinecraftServer server = confluence$self().getServer();
             if(server!=null) {
                 uuid = OldUsersConverter.convertMobOwnerIfNecessary(server, s);
             }
@@ -128,10 +127,10 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
 
     default void summon_teleportToAroundBlockPos(BlockPos pos) {
         for(int i = 0; i < 10; ++i) {
-            int j = te$getSelf().getRandom().nextIntBetweenInclusive(-3, 3);
-            int k = te$getSelf().getRandom().nextIntBetweenInclusive(-3, 3);
+            int j = confluence$self().getRandom().nextIntBetweenInclusive(-3, 3);
+            int k = confluence$self().getRandom().nextIntBetweenInclusive(-3, 3);
             if (Math.abs(j) >= 2 || Math.abs(k) >= 2) {
-                int l = te$getSelf().getRandom().nextIntBetweenInclusive(-1, 1);
+                int l = confluence$self().getRandom().nextIntBetweenInclusive(-1, 1);
                 if (this.summon_maybeTeleportTo(pos.getX() + j, pos.getY() + l, pos.getZ() + k)) {
                     return;
                 }
@@ -143,23 +142,23 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
         if (!this.summon_canTeleportTo(new BlockPos(x, y, z))) {
             return false;
         } else {
-            te$getSelf().moveTo((double)x + 0.5, y, (double)z + 0.5, te$getSelf().getYRot(), te$getSelf().getXRot());
-            te$getSelf().getNavigation().stop();
+            confluence$self().moveTo((double)x + 0.5, y, (double)z + 0.5, confluence$self().getYRot(), confluence$self().getXRot());
+            confluence$self().getNavigation().stop();
             return true;
         }
     }
 
     default boolean summon_canTeleportTo(BlockPos pos) {
-        PathType pathtype = WalkNodeEvaluator.getPathTypeStatic(te$getSelf(), pos);
+        PathType pathtype = WalkNodeEvaluator.getPathTypeStatic(confluence$self(), pos);
         if (pathtype != PathType.WALKABLE && !summon_canFlyToOwner()) {
             return false;
         } else {
-            BlockState blockstate = te$getSelf().level().getBlockState(pos.below());
+            BlockState blockstate = confluence$self().level().getBlockState(pos.below());
             if (!this.summon_canFlyToOwner() && blockstate.getBlock() instanceof LeavesBlock) {
                 return false;
             } else {
-                BlockPos blockpos = pos.subtract(te$getSelf().blockPosition());
-                return te$getSelf().level().noCollision(te$getSelf(), te$getSelf().getBoundingBox().move(blockpos));
+                BlockPos blockpos = pos.subtract(confluence$self().blockPosition());
+                return confluence$self().level().noCollision(confluence$self(), confluence$self().getBoundingBox().move(blockpos));
             }
         }
     }
@@ -167,25 +166,25 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     default boolean summon_canFlyToOwner(){
         return false;
     }
-    
+
     /* Summoning API */
-    
+
     default void summon(Player player, ItemStack stack) {
         summon_setOwnerUUID(player.getUUID());
         summon_setTame(true, true);
         if(stack.getItem() instanceof SummonItem<?> summonItem)
-            te$getSelf().getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(summonItem.baseAttackDamage);
+            confluence$self().getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(summonItem.baseAttackDamage);
         ModLoader.postEvent(new SummonEvent<>(player, stack, this));
     }
 
     /* Attack API */
     /**简单攻击*/
     default boolean summon_doHurtTarget(Entity entity) {
-        float f = (float)te$getSelf().getAttributeValue(Attributes.ATTACK_DAMAGE);
-        DamageSource damagesource = te$getSelf().damageSources().source(TETags.DamageTypes.SUMMONER, summon_getOwner());
-        Level var5 = te$getSelf().level();
+        float f = (float)confluence$self().getAttributeValue(Attributes.ATTACK_DAMAGE);
+        DamageSource damagesource = confluence$self().damageSources().source(TETags.DamageTypes.SUMMONER, summon_getOwner());
+        Level var5 = confluence$self().level();
         if (var5 instanceof ServerLevel serverlevel) {
-            f = EnchantmentHelper.modifyDamage(serverlevel, te$getSelf().getWeaponItem(), entity, damagesource, f);
+            f = EnchantmentHelper.modifyDamage(serverlevel, confluence$self().getWeaponItem(), entity, damagesource, f);
         }
         // 事件统一处理
 //        f += (float) summon_getOwner().getAttributeValue(TEAttributes.MARK_DAMAGE);
@@ -194,29 +193,29 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
             float f1 = summon_getKnockback(entity, damagesource);
             if (f1 > 0.0F && entity instanceof LivingEntity) {
                 LivingEntity livingentity = (LivingEntity)entity;
-                livingentity.knockback(f1 * 0.5F, Mth.sin(te$getSelf().getYRot() * 0.017453292F), -Mth.cos(te$getSelf().getYRot() * 0.017453292F));
-                te$getSelf().setDeltaMovement(te$getSelf().getDeltaMovement().multiply(0.6, 1.0, 0.6));
+                livingentity.knockback(f1 * 0.5F, Mth.sin(confluence$self().getYRot() * 0.017453292F), -Mth.cos(confluence$self().getYRot() * 0.017453292F));
+                confluence$self().setDeltaMovement(confluence$self().getDeltaMovement().multiply(0.6, 1.0, 0.6));
             }
 
-            Level var7 = te$getSelf().level();
+            Level var7 = confluence$self().level();
             if (var7 instanceof ServerLevel) {
                 ServerLevel serverlevel1 = (ServerLevel)var7;
                 EnchantmentHelper.doPostAttackEffects(serverlevel1, entity, damagesource);
             }
 
-            te$getSelf().setLastHurtMob(entity);
-//            te$getSelf().playAttackSound();
+            confluence$self().setLastHurtMob(entity);
+//            confluence$self().playAttackSound();
         }
 
         return flag;
     }
 
     default float summon_getKnockback(Entity attacker, DamageSource damageSource) {
-        float f = (float)te$getSelf().getAttributeValue(Attributes.ATTACK_KNOCKBACK);
-        Level var5 = te$getSelf().level();
+        float f = (float)confluence$self().getAttributeValue(Attributes.ATTACK_KNOCKBACK);
+        Level var5 = confluence$self().level();
         float var10000;
         if (var5 instanceof ServerLevel serverlevel) {
-            var10000 = EnchantmentHelper.modifyKnockback(serverlevel, te$getSelf().getWeaponItem(), attacker, damageSource, f);
+            var10000 = EnchantmentHelper.modifyKnockback(serverlevel, confluence$self().getWeaponItem(), attacker, damageSource, f);
         } else {
             var10000 = f;
         }
@@ -226,33 +225,33 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
 
 
 
-    
+
     /* 以下方法需要被写入对应重写方法 */
-    
+
     default void summon_registerCommonGoals(){
         summon_registerMoveGoal();
-        te$getSelf().goalSelector.addGoal(10, new LookAtPlayerGoal(te$getSelf(), Player.class, 8.0F));
-        te$getSelf().goalSelector.addGoal(10, new RandomLookAroundGoal(te$getSelf()));
+        confluence$self().goalSelector.addGoal(10, new LookAtPlayerGoal(confluence$self(), Player.class, 8.0F));
+        confluence$self().goalSelector.addGoal(10, new RandomLookAroundGoal(confluence$self()));
 
-        te$getSelf().targetSelector.addGoal(1, new SummonPriorAttackGoal<>(te$getSelf(), false));
-        te$getSelf().targetSelector.addGoal(2, new SummonOwnerHurtByTargetGoal(te$getSelf()));
-        te$getSelf().targetSelector.addGoal(3, new SummonOwnerHurtTargetGoal(te$getSelf()));
-        te$getSelf().targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(te$getSelf(), Monster.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
-        te$getSelf().targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(te$getSelf(), Slime.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
+        confluence$self().targetSelector.addGoal(1, new SummonPriorAttackGoal<>(confluence$self(), false));
+        confluence$self().targetSelector.addGoal(2, new SummonOwnerHurtByTargetGoal(confluence$self()));
+        confluence$self().targetSelector.addGoal(3, new SummonOwnerHurtTargetGoal(confluence$self()));
+        confluence$self().targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(confluence$self(), Monster.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
+        confluence$self().targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(confluence$self(), Slime.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
     }
 
     default void summon_registerMoveGoal(){
-        te$getSelf().goalSelector.addGoal(6, new SummonFollowOwnerGoal(te$getSelf(), 1.0, 10.0F, 2.0F));
+        confluence$self().goalSelector.addGoal(6, new SummonFollowOwnerGoal(confluence$self(), 1.0, 10.0F, 2.0F));
     }
 
     default void summon_onAddedToLevel() {
-        if(!te$getSelf().level().isClientSide){
+        if(!confluence$self().level().isClientSide){
             if(summon_getOwner()== null) {
-                te$getSelf().discard();
+                confluence$self().discard();
                 return;
             }
             var data = summon_getOwner().getData(TEAttachments.SUMMONER_STORAGE.get());
-            data.getIds().add(te$getSelf().getId());
+            data.getIds().add(confluence$self().getId());
         }
     }
 
@@ -261,7 +260,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
         if(summon_getOwner() instanceof ServerPlayer owner){
             var data = summon_getOwner().getData(TEAttachments.SUMMONER_STORAGE.get());
             if(data.canRemove(getCost())){
-                data.remove(owner, getCost(), te$getSelf().getId());
+                data.remove(owner, getCost(), confluence$self().getId());
                 if(summon_getOwner() instanceof ServerPlayer serverPlayer)
                     data.sync(serverPlayer);
             }
@@ -269,11 +268,11 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     }
 
     default boolean summon_discardWhenOwnerDie(){
-        if(te$getSelf().level().isClientSide) return false;
+        if(confluence$self().level().isClientSide) return false;
         if(summon_getOwner() != null) {
-            Entity entity = te$getSelf().level().getEntity(summon_getOwner().getId());
+            Entity entity = confluence$self().level().getEntity(summon_getOwner().getId());
             if(entity == null || !entity.isAlive()) {
-                te$getSelf().discard();
+                confluence$self().discard();
                 return true;
             }
         }

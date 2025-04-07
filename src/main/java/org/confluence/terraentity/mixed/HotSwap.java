@@ -1,4 +1,4 @@
-package org.confluence.terraentity.mixinauxiliary;
+package org.confluence.terraentity.mixed;
 
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
