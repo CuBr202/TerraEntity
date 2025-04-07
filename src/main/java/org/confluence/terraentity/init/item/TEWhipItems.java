@@ -5,11 +5,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.confluence.terraentity.api.event.WhipRegisterModifyEvent;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.item.BaseWhipItem;
 import org.confluence.terraentity.registries.hit_effect.variant.TimePossibilityAmplifierEffect;
+import org.confluence.terraentity.utils.AdapterUtils;
 
 import java.util.function.Function;
 
@@ -57,6 +59,13 @@ public class TEWhipItems {
             )));
 
     public static DeferredItem<BaseWhipItem> registerWhip(String name,float damage,float markDamage, float attackSpeed,int cooldown,float range, Function<BaseWhipItem.WhipProperties, Item.Properties> whipFactory){
-        return ITEMS.register(name, ()->new BaseWhipItem(((BaseWhipItem.WhipProperties)whipFactory.apply(new BaseWhipItem.WhipProperties())).buildProperties(),damage, markDamage, attackSpeed, cooldown, range));
+
+        var event = new WhipRegisterModifyEvent(damage, markDamage, attackSpeed, cooldown, range, name);
+        AdapterUtils.postEvent(event);
+        if(event.isCanceled()){
+            return null;
+        }
+        return ITEMS.register(event.getName(), ()->new BaseWhipItem(((BaseWhipItem.WhipProperties)whipFactory.apply(new BaseWhipItem.WhipProperties())).buildProperties(),
+                event.getDamage() * WhipRegisterModifyEvent.damageFactor, event.getMarkDamage(), event.getAttackSpeed(), event.getCooldown(), event.getRange()));
     }
 }

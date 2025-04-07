@@ -11,6 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.boss.Skeletron;
+import org.jetbrains.annotations.NotNull;
 
 public class SkullProjectile extends BaseProj<SkullProjectile> {
     public Entity target;
@@ -65,5 +67,8 @@ public class SkullProjectile extends BaseProj<SkullProjectile> {
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         xHeadRot = Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 180.0F / (float) Math.PI)));
         yHeadRot = Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 180.0F / (float) Math.PI) - 90.0F);
+    }
+    protected boolean canHitEntity(@NotNull Entity target) {
+        return super.canHitEntity(target) && !(target instanceof Skeletron);
     }
 }

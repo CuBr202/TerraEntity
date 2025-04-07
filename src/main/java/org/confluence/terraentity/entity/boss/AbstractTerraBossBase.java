@@ -242,11 +242,22 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                     this::doHurtTarget
             );
 
+            if(shouldOverPlayer() && target!= null && position().y < target.getY()){
+                addDeltaMovement(new Vec3(0,0.02f,0));
+            }
         }
 
         if (!shouldDiscardFriction()) {
             this.setDeltaMovement(getDeltaMovement().scale(0.95));//空气阻力
         }
+    }
+
+    /**
+     * 如果为true，则y坐标低于玩家时向上加速
+     * @return
+     */
+    protected boolean shouldOverPlayer(){
+        return false;
     }
 
     /**

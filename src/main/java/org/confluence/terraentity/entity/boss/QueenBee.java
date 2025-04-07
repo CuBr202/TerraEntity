@@ -264,4 +264,8 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
     protected BossEvent.BossBarColor getBossBarColor(){
         return BossEvent.BossBarColor.YELLOW;
     };
+
+    protected boolean shouldOverPlayer(){
+        return true;
+    }
 }

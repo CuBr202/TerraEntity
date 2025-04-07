@@ -61,7 +61,7 @@ public class BaseWhipItem extends Item {
                 ItemAttributeModifiers.builder()
                         .add(
                                 TEAttributes.SUMMON_DAMAGE,
-                                new AttributeModifier(TerraEntity.asResource("whip_damage_modifier"), damage*0.5f, AttributeModifier.Operation.ADD_VALUE),
+                                new AttributeModifier(TerraEntity.asResource("whip_damage_modifier"), damage, AttributeModifier.Operation.ADD_VALUE),
                                 EquipmentSlotGroup.MAINHAND
                         )
                         .add(

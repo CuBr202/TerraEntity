@@ -335,4 +335,8 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
     protected BossEvent.BossBarColor getBossBarColor(){
         return BossEvent.BossBarColor.RED;
     };
+
+    protected boolean shouldOverPlayer(){
+        return true;
+    }
 }

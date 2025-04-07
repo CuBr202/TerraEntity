@@ -35,7 +35,7 @@ public class SkeletronHand extends Skeletron {
     public SkeletronHand(EntityType<? extends Monster> entityType, Level level, Skeletron owner, HandSide handSide) {
         super(entityType, level);
         // 重新设置属性
-        this.baseHealth = 2;
+        this.baseHealth = 200;
         this.baseArmor = 2;
 
         this.handSide = handSide;
@@ -47,8 +47,8 @@ public class SkeletronHand extends Skeletron {
                 getEntityData().set(DATA_OWNER, Optional.of(owner.getUUID()));
             }
         }
-        slapInterval = (expert ? 37 : 57)+level.random.nextInt(6);
-        slapSpeed = expert ? 0.8 : 0.6;
+        slapInterval = (expert ? 30 : 45)+level.random.nextInt(6);
+        slapSpeed = expert ? 1.2 : 1.0;
         slapTick = slapInterval;
 
         // 防止手卡位置导致动不了
@@ -188,6 +188,12 @@ public class SkeletronHand extends Skeletron {
 //            ((ServerLevel) level()).sendParticles(handSide==HandSide.RIGHT?ParticleTypes.FLAME: ParticleTypes.SOUL_FIRE_FLAME, rootPos.x, rootPos.y, rootPos.z, 10, 0.1, 0.1, 0.1, 0);
             targetPos = null;
         }
+
+        @Override
+        public void start() {
+            super.start();
+            crazy = false;
+        }
     }
 
     public class SlapGoal extends Goal{
@@ -220,7 +226,7 @@ public class SkeletronHand extends Skeletron {
         public void tick() {
             if (phase == 0) {
 //                ((ServerLevel) level()).sendParticles(ParticleTypes.FLAME, startPos.x, startPos.y, startPos.z, 10, 0.1, 0.1, 0.1, 0);
-                if (distanceToSqr(startPos) > 1) {
+                if (distanceToSqr(startPos) > 1.5) {
                     setDeltaMovement(startPos.subtract(position()).normalize().scale(slapSpeed));
                 }else{
                     endPos = owner.getTarget().position().subtract(position()).normalize().scale(4).add(owner.getTarget().position());
@@ -228,7 +234,7 @@ public class SkeletronHand extends Skeletron {
                 }
             } else if (phase == 1) {
 //                ((ServerLevel) level()).sendParticles(ParticleTypes.SOUL_FIRE_FLAME, endPos.x, endPos.y, endPos.z, 10, 0.1, 0.1, 0.1, 0);
-                if (distanceToSqr(endPos) > 1) {
+                if (distanceToSqr(endPos) > 1.5) {
                     setDeltaMovement(endPos.subtract(position()).normalize().scale(slapSpeed));
                 }else{
                     phase = 2;
