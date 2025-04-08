@@ -6,9 +6,14 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.monster.IVariant;
 import org.confluence.terraentity.entity.monster.Nymph;
 import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
-public class NymphModel<T extends Nymph> extends GeoModel<T> {
+public class NymphModel<T extends Nymph> extends GeoNormalModel<T> {
     private final ResourceLocation animation;
     private final ResourceLocation model;
     private final ResourceLocation tex;
@@ -17,6 +22,7 @@ public class NymphModel<T extends Nymph> extends GeoModel<T> {
 
 
     public NymphModel(ResourceLocation path) {
+        super(path, true); // 没用
         String path_name = path.getPath();
         animation = TerraEntity.space("animations/entity/" + path_name + ".animation.json");
         model = TerraEntity.space("geo/entity/" + path_name + ".geo.json");
@@ -45,4 +51,5 @@ public class NymphModel<T extends Nymph> extends GeoModel<T> {
     public ResourceLocation getAnimationResource(T entity) {
         return animation;
     }
+
 }
