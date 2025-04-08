@@ -4,17 +4,15 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import org.confluence.terraentity.init.block.TEFigureBlocks;
 
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TEBlockLootProvider extends BlockLootSubProvider {
-
-    public static final Set<Block> BLOCK = Set.of(
-//            ModBlock.YU_YAN_ORE.get(),
-//            ModBlock.BA_JIN_ORE.get()
-    );
 
     public TEBlockLootProvider(HolderLookup.Provider registries) {
         super(Collections.emptySet(), FeatureFlags.REGISTRY.allFlags(),registries);
@@ -28,7 +26,7 @@ public class TEBlockLootProvider extends BlockLootSubProvider {
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return BLOCK;
-//        return ModBlocks.BLOCKS.getEntries().stream().map(entry -> entry.get()).collect(Collectors.toList());
+//        return BLOCK;
+        return TEFigureBlocks.BLOCKS.getEntries().stream().map(DeferredHolder::get).collect(Collectors.toList());
     }
 }

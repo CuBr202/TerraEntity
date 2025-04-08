@@ -84,7 +84,7 @@ public final class ModClientEvent {
             event.registerEntityRenderer(TEMonsterEntities.BLOOD_CRAWLER.get(), c -> new ReplacedSpiderRenderer<>(c, "blood_crawler", TEMonsterEntities.BLOOD_CRAWLER.get()));
         }
 
-        event.registerBlockEntityRenderer(TEFigureBlocks.FIGURE_BLOCK_ENTITY.get(), c->new FigureBlockRenderer<>(c, TEMonsterEntities.NYMPH.get()));
+        event.registerBlockEntityRenderer(TEFigureBlocks.FIGURE_BLOCK_ENTITY.get(), FigureBlockRenderer::new);
     }
 
     @SubscribeEvent

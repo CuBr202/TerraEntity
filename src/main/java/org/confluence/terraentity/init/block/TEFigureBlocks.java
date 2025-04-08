@@ -27,8 +27,8 @@ public class TEFigureBlocks {
     public static final DeferredBlock<FigureBlock> FIGURE3= register("figure3", TEBossEntities.EYE_OF_CTHULHU.getId());
 
 
-    public static final Supplier<BlockEntityType<FigureBlock.FigureBlockEntity>> FIGURE_BLOCK_ENTITY = TEBlocks.BLOCK_ENTITIES.register("figure_block_entity",
-            () -> BlockEntityType.Builder.of(FigureBlock.FigureBlockEntity::new,
+    public static final Supplier<BlockEntityType<FigureBlock.FigureBlockEntity>> FIGURE_BLOCK_ENTITY =
+            TEBlocks.BLOCK_ENTITIES.register("figure_block_entity", () -> BlockEntityType.Builder.of(FigureBlock.FigureBlockEntity::new,
                     FIGURE.get(), FIGURE2.get(), FIGURE3.get()
             ).build(null));
 
