@@ -35,6 +35,7 @@ public class TEItems {
                             TEWhipItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                             TEBoomerangItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         }
+                        TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
                     })
                     .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.asResource("terra_moment", "tab")))
                     .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.asResource("confluence", "summoners")))

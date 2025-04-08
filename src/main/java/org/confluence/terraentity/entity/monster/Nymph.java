@@ -150,8 +150,7 @@ public class Nymph extends AbstractMonster {
     }
 
     public void setTrigger(boolean trigger) {
-        if(!isTamed)
-            this.entityData.set(DATA_TRIGGER, trigger);
+        this.entityData.set(DATA_TRIGGER, trigger);
     }
 
     @Override
@@ -166,7 +165,7 @@ public class Nymph extends AbstractMonster {
                 this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(5);
                 delayTime++;
             }
-            setTrigger(true);
+            setTrigger(!isTamed);
         }
 
         if(!level().isClientSide){

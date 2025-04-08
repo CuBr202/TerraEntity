@@ -9,11 +9,9 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import org.confluence.terraentity.api.event.WhipRegisterModifyEvent;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.event.ModEvent;
 import org.confluence.terraentity.init.*;
-import org.confluence.terraentity.init.item.TEBoomerangItems;
+import org.confluence.terraentity.init.TEBlocks;
 import org.confluence.terraentity.registries.TERegistries;
-import org.confluence.terraentity.utils.AdapterUtils;
 import org.slf4j.Logger;
 
 @Mod(TerraEntity.MODID)
@@ -38,7 +36,7 @@ public class TerraEntity {
         TEAttributes.ATTRIBUTES.register(modEventBus);
         TEDataComponentTypes.TYPES.register(modEventBus);
         TEEffectStrategies.EFFECT_STRATEGY.register(modEventBus);
-
+        TEBlocks.register(modEventBus);
 
 //        TEBiomes.register(modEventBus);
 

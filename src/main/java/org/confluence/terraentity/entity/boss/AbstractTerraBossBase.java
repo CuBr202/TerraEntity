@@ -92,7 +92,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         ){
             difficult = false;
         }
-
+        this.addSkills();
         bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), getBossBarColor(), BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
     }
 
@@ -121,7 +121,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             }
         }
         super.onAddedToLevel();
-        this.addSkills();
+
         if(skills.count() > 0)
             skills.forceStartIndex(0);
     }

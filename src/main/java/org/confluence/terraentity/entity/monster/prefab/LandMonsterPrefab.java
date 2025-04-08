@@ -83,7 +83,6 @@ public class LandMonsterPrefab extends AbstractPrefab {
                         c.add(genericWalkRunIdleController(e));
                         c.add(new AnimationController<>(e, "Attack", 0, state -> {
                             if (e.swinging) {
-                                state.setControllerSpeed(1f);
                                 return state.setAndContinue(DefaultAnimations.ATTACK_STRIKE);
                             }
 
