@@ -2,7 +2,6 @@ package org.confluence.terraentity.registries;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
@@ -50,7 +49,7 @@ public class TERegistries {
      * 命中效果注册类型表
      */
     public static class EffectStrategyProviders{
-        public static final ResourceKey<Registry<EffectStrategyProvider>> KEY = createRegistryKey(TerraEntity.asResource("effect_strategy_type"));
+        public static final ResourceKey<Registry<EffectStrategyProvider>> KEY = createRegistryKey(TerraEntity.space("effect_strategy_type"));
         public static final Registry<EffectStrategyProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
     }
 
@@ -58,7 +57,7 @@ public class TERegistries {
      * 命中效果注册表
      */
     public static class EffectStrategies{
-        public static final ResourceKey<Registry<EffectStrategy>> KEY = createRegistryKey(TerraEntity.asResource("effect_strategy"));
+        public static final ResourceKey<Registry<EffectStrategy>> KEY = createRegistryKey(TerraEntity.space("effect_strategy"));
         public static final Registry<EffectStrategy> REGISTRY = new RegistryBuilder<>(KEY).create();
     }
 

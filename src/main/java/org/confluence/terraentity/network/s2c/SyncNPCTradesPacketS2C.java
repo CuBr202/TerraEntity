@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public record SyncNPCTradesPacketS2C(Map<ResourceLocation, NPCTrades> tradesMap) implements CustomPacketPayload {
-    public static final Type<SyncNPCTradesPacketS2C> TYPE = new Type<>(TerraEntity.asResource("npc_trades_packet_s2c"));
+    public static final Type<SyncNPCTradesPacketS2C> TYPE = new Type<>(TerraEntity.space("npc_trades_packet_s2c"));
     public static final StreamCodec<ByteBuf, SyncNPCTradesPacketS2C> STREAM_CODEC = NPCTrades.MAP_STREAM_CODEC.map(SyncNPCTradesPacketS2C::new, SyncNPCTradesPacketS2C::tradesMap);
 
     @Override

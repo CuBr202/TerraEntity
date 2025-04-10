@@ -47,8 +47,8 @@ public class GeoWormRenderer<T extends BaseWarm> extends GeoNormalRenderer<T> {
         String segment = name + "_segment";
         String tail = name + "_tail";
         partRenderer = new GeoWormSegmentRenderer<>(renderManager,this,
-                TerraEntity.asResource(segment),
-                TerraEntity.asResource(tail),scale,offsetY);
+                TerraEntity.space(segment),
+                TerraEntity.space(tail),scale,offsetY);
     }
 
     @Override

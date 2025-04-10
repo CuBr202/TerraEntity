@@ -18,7 +18,7 @@ public class SyncBossEventHealthPacket implements CustomPacketPayload {
     float health;
     float maxHealth;
 
-    public static final Type<SyncBossEventHealthPacket> TYPE = new Type<>(TerraEntity.asResource(TerraEntity.MODID, "sync_boss_event_health_packet"));
+    public static final Type<SyncBossEventHealthPacket> TYPE = new Type<>(TerraEntity.fromSpaceAndPath(TerraEntity.MODID, "sync_boss_event_health_packet"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SyncBossEventHealthPacket> STREAM_CODEC = CustomPacketPayload.codec(SyncBossEventHealthPacket::write, SyncBossEventHealthPacket::new);
 
     public SyncBossEventHealthPacket(UUID uuid, float health , float maxHealth) {

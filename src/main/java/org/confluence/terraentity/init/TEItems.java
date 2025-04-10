@@ -45,8 +45,8 @@ public class TEItems {
                         TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                     })
-                    .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.asResource("terra_moment", "tab")))
-                    .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.asResource("confluence", "summoners")))
+                    .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("terra_moment", "tab")))
+                    .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("confluence", "summoners")))
                     .build());
 
     public static void register(IEventBus bus) {

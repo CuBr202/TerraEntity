@@ -15,7 +15,7 @@ import java.util.List;
  * @param list 包含范围
  * @param type 检测信息类型
  */
-public record HouseDetectInfo(BlockPos min, BlockPos max, List<BlockPos> list, DetectType type) {
+public record HouseDetectInfo(BlockPos min, BlockPos max, List<BlockPos> list, DetectType type) implements IHouseDetector {
     public static int DetectRange = 20;
 
     public static HouseDetectInfo error(DetectType type) {
@@ -69,6 +69,11 @@ public record HouseDetectInfo(BlockPos min, BlockPos max, List<BlockPos> list, D
 
     public boolean isError() {
         return type != DetectType.FOUND_HOUSE;
+    }
+
+    @Override
+    public String message() {
+        return type.translationKey;
     }
 
     public enum DetectType {

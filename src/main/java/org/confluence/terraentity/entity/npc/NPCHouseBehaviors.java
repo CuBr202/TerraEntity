@@ -48,21 +48,33 @@ public class NPCHouseBehaviors {
         ).apply(instance, (memoryAccessor) -> (serverLevel, entity, l) -> {
 
             boolean timeToRefresh = entity.tickCount % Detect_Interval == 0;
-            if(timeToRefresh){
+            if(timeToRefresh) {
+
+                // 如果已有房屋，检查房屋是否合理
+                House oldHouse = HouseManager.getInstance().getHouse(entity.getUUID());
+                if(oldHouse == null){
+                    entity.setHouse(House.EMPTY);
+                }
+
+
+                BlockPos blockpos;
+                if(oldHouse == null || oldHouse.isEmpty()){
+                    // 如果房屋为空，在当前位置检测
+                    blockpos = entity.blockPosition();
+                }else{
+                    // 如果房屋不为空，检查已有的房屋是否合理
+                    blockpos = oldHouse.center();
+                }
+
                 HouseManager.getInstance().removeHouse(entity.getUUID());
-            }
-            if(entity.house.isEmpty()) {
-
-                // 如果房屋为空，尝试添加房屋
-                BlockPos blockpos = entity.blockPosition();
-
-                HouseDetectInfo info = HouseDetectInfo.detect(blockpos, serverLevel);
+                IHouseDetector info = IHouseDetector.detect(blockpos, serverLevel);
                 if (info.isError()) {
                     // 检测失败
                     entity.setHouse(House.EMPTY);
                     return false;
                 }
 
+                // 成功检测到房屋
                 House house = new House(entity.getStringUUID(), info.min(), info.max(), blockpos);
 
                 if(HouseManager.getInstance().tryAddHouse(house)){
@@ -75,10 +87,7 @@ public class NPCHouseBehaviors {
                 entity.setHouse(House.EMPTY);
                 return false;
             }
-            // 已有房屋，检查房屋是否合理
-            if(HouseManager.getInstance().getHouse(entity.getUUID()) == null){
-                entity.setHouse(House.EMPTY);
-            }
+
 
             return true;
 

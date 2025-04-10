@@ -19,7 +19,7 @@ import static net.minecraft.client.renderer.entity.LivingEntityRenderer.getOverl
 public class BloodySporeRenderer extends GeoEntityRenderer<BloodySpore> {
 
     public BloodySporeRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new GeoNormalModel<>(TerraEntity.asResource("bloody_spore")));
+        super(renderManager, new GeoNormalModel<>(TerraEntity.space("bloody_spore")));
     }
 
     @Override

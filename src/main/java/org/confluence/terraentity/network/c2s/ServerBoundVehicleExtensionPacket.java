@@ -18,7 +18,7 @@ public class ServerBoundVehicleExtensionPacket implements CustomPacketPayload {
 
     }
     Action action;
-    public static final Type<ServerBoundVehicleExtensionPacket> TYPE = new Type<>(TerraEntity.asResource(TerraEntity.MODID, "server_bound_vehicle_extension_packet"));
+    public static final Type<ServerBoundVehicleExtensionPacket> TYPE = new Type<>(TerraEntity.fromSpaceAndPath(TerraEntity.MODID, "server_bound_vehicle_extension_packet"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerBoundVehicleExtensionPacket> STREAM_CODEC = CustomPacketPayload.codec(ServerBoundVehicleExtensionPacket::write, ServerBoundVehicleExtensionPacket::new);
 
     public ServerBoundVehicleExtensionPacket(Action action) {

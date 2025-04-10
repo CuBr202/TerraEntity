@@ -10,6 +10,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.event.HouseDetectEvent;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TEBossEntities;
@@ -61,5 +62,11 @@ public class ModEvent {
     @SubscribeEvent
     public static void modifyDefaultComponents(ModifyDefaultComponentsEvent event) {
         ItemComponentModify.modifyDefaultComponents(event);
+    }
+
+    @SubscribeEvent
+    public static void detectHouseEvent(HouseDetectEvent event) {
+//        System.out.println("HouseDetectEvent");
+
     }
 }

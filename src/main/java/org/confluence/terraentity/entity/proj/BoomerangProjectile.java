@@ -101,7 +101,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
             if(this.getOwner() instanceof LivingEntity owner && this.getOwner() != actualHurter) {
                 if (hurter instanceof LivingEntity living && actualHurter.isAlive() && TEUtils.projectileCanHurtEntityTest.test(this, living)) {
                     penetrationCount--;
-                    ResourceLocation temp = TerraEntity.asResource("temp_boomerang");
+                    ResourceLocation temp = TerraEntity.space("temp_boomerang");
                     owner.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(temp, modifier.damage - 1, AttributeModifier.Operation.ADD_VALUE));
                     float damage = (float) owner.getAttributeValue(Attributes.ATTACK_DAMAGE);
                     owner.getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(temp);

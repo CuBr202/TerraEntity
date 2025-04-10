@@ -11,7 +11,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
-import org.confluence.terraentity.entity.npc.HouseDetectInfo;
+import org.confluence.terraentity.entity.npc.IHouseDetector;
 
 import java.util.List;
 
@@ -27,8 +27,8 @@ public class HouseDetectItem extends Item {
             final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos().relative(result.getDirection()));
             final BlockPos pos = raytraceResult.getBlockPos();
 
-            HouseDetectInfo info = HouseDetectInfo.detect(pos, level);
-            player.sendSystemMessage(Component.translatable(info.type().translationKey));
+            IHouseDetector info = IHouseDetector.detect(pos, level);
+            player.sendSystemMessage(Component.translatable(info.message()));
             if(info.isError()){
                 return super.use(level, player, usedHand);
             }

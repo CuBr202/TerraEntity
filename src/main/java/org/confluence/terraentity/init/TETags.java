@@ -66,10 +66,10 @@ public class TETags {
     }
 
     private static TagKey<Item> registerItem(String id) {
-        return ItemTags.create(TerraEntity.asResource(id));
+        return ItemTags.create(TerraEntity.space(id));
     }
     private static TagKey<EntityType<?>> registerEntityType(String id) {
-        return TagKey.create(Registries.ENTITY_TYPE, TerraEntity.asResource(id));
+        return TagKey.create(Registries.ENTITY_TYPE, TerraEntity.space(id));
     }
     private static ResourceKey<DamageType> registerDamageType(String id) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, TerraEntity.space(id));

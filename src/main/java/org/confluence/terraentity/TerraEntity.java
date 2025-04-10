@@ -23,7 +23,6 @@ public class TerraEntity {
     public static ResourceLocation fromSpaceAndPath(String space, String path){return ResourceLocation.fromNamespaceAndPath(space, path);}
     public static String toLang(ResourceLocation location){return location.toLanguageKey().replace("/",".");}
 
-
     public TerraEntity (IEventBus modEventBus, ModContainer modContainer) {
         TEEntities.register(modEventBus);
         newListener(modEventBus);
@@ -51,13 +50,7 @@ public class TerraEntity {
 
     }
 
-    public static ResourceLocation asResource(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, path);
-    }
 
-    public static ResourceLocation asResource(String id, String path) {
-        return ResourceLocation.fromNamespaceAndPath(id, path);
-    }
 
     public void newListener(IEventBus bus){
         bus.addListener(WhipRegisterModifyEvent.class, event -> {});

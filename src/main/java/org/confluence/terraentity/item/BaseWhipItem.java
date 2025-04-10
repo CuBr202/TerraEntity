@@ -61,22 +61,22 @@ public class BaseWhipItem extends Item {
                 ItemAttributeModifiers.builder()
                         .add(
                                 TEAttributes.SUMMON_DAMAGE,
-                                new AttributeModifier(TerraEntity.asResource("whip_damage_modifier"), damage, AttributeModifier.Operation.ADD_VALUE),
+                                new AttributeModifier(TerraEntity.space("whip_damage_modifier"), damage, AttributeModifier.Operation.ADD_VALUE),
                                 EquipmentSlotGroup.MAINHAND
                         )
                         .add(
                                 Attributes.ATTACK_SPEED,
-                                new AttributeModifier(TerraEntity.asResource("whip_attack_speed_modifier"), attackSpeed, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                                new AttributeModifier(TerraEntity.space("whip_attack_speed_modifier"), attackSpeed, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                                 EquipmentSlotGroup.MAINHAND
                         )
                         .add(
                                 TEAttributes.MARK_DAMAGE,
-                                new AttributeModifier(TerraEntity.asResource("whip_mark_damage_modifier"), markDamage, AttributeModifier.Operation.ADD_VALUE),
+                                new AttributeModifier(TerraEntity.space("whip_mark_damage_modifier"), markDamage, AttributeModifier.Operation.ADD_VALUE),
                                 EquipmentSlotGroup.MAINHAND
                         )
                         .add(
                                 TEAttributes.WHIP_RANGE,
-                                new AttributeModifier(TerraEntity.asResource("whip_range_modifier"), rangeFactor, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                                new AttributeModifier(TerraEntity.space("whip_range_modifier"), rangeFactor, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
                                 EquipmentSlotGroup.MAINHAND
                         )
                         .build()

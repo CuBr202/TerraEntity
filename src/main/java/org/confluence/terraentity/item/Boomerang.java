@@ -176,7 +176,7 @@ public class Boomerang extends Item {
          * 添加属性修改器
          */
         public BoomerangModifier addAttributeModifier(Holder<Attribute> attribute, float amount, AttributeModifier.Operation operation) {
-            this.attributeModifiersBuilder.add(attribute, new AttributeModifier(TerraEntity.asResource("boomerang.modifier." + modifyCount++), amount, operation), EquipmentSlotGroup.MAINHAND);
+            this.attributeModifiersBuilder.add(attribute, new AttributeModifier(TerraEntity.space("boomerang.modifier." + modifyCount++), amount, operation), EquipmentSlotGroup.MAINHAND);
             return this;
         }
 

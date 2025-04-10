@@ -14,7 +14,7 @@ public class SyncSummonPacket implements CustomPacketPayload {
     byte type;
 
 //    List<Integer> indexList;
-    public static final CustomPacketPayload.Type<SyncSummonPacket> TYPE = new CustomPacketPayload.Type<>(TerraEntity.asResource(TerraEntity.MODID, "sync_summon_packet"));
+    public static final CustomPacketPayload.Type<SyncSummonPacket> TYPE = new CustomPacketPayload.Type<>(TerraEntity.fromSpaceAndPath(TerraEntity.MODID, "sync_summon_packet"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SyncSummonPacket> STREAM_CODEC = CustomPacketPayload.codec(SyncSummonPacket::write, SyncSummonPacket::new);
 
     public SyncSummonPacket(int currentCapability, byte type) {
