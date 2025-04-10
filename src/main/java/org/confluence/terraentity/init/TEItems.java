@@ -18,11 +18,11 @@ import java.util.function.Supplier;
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 public class TEItems {
-    public static DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+    public static DeferredRegister.Items TOOLS = DeferredRegister.createItems(MODID);
 
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    public static final Supplier<Item> HOUSE_DETECTOR = ITEMS.register("house_detector", () -> new HouseDetectItem(new Item.Properties().stacksTo(1)));
+    public static final Supplier<Item> HOUSE_DETECTOR = TOOLS.register("house_detector", () -> new HouseDetectItem(new Item.Properties().stacksTo(1)));
 
 
     // Sentry Items
@@ -43,7 +43,7 @@ public class TEItems {
                             TEBoomerangItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         }
                         TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                        TEItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        TEItems.TOOLS.getEntries().forEach(item -> output.accept(item.get()));
                     })
                     .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("terra_moment", "tab")))
                     .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("confluence", "summoners")))
@@ -55,7 +55,7 @@ public class TEItems {
         TEWhipItems.ITEMS.register(bus);
         TEBoomerangItems.ITEMS.register(bus);
         TERiddenItems.ITEMS.register(bus);
-        TEItems.ITEMS.register(bus);
+        TEItems.TOOLS.register(bus);
 //        SENTRY_ITEMS.register(bus);
         TABS.register(bus);
 

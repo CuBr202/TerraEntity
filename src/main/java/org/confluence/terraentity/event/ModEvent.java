@@ -13,10 +13,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.HouseDetectEvent;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
-import org.confluence.terraentity.init.entity.TERideableEntities;
-import org.confluence.terraentity.init.entity.TESummonEntities;
 import org.confluence.terraentity.integration.ItemComponentModify;
 import org.confluence.terraentity.network.NetworkHandler;
 

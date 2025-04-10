@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.ai.goal;
 
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
 import java.util.EnumSet;
@@ -44,5 +45,9 @@ public class NPCTradeGoal extends Goal {
         this.mob.tradingPlayer.closeContainer();
         this.mob.tradingPlayer = null;
 
+    }
+
+    public boolean canContinueToUse() {
+        return this.canUse() && !(this.mob.tradingPlayer.containerMenu instanceof InventoryMenu);
     }
 }

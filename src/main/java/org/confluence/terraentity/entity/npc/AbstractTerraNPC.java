@@ -9,6 +9,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -16,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -29,10 +31,15 @@ import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CrafterMenu;
 import net.minecraft.world.level.Level;
 
+import org.confluence.terraentity.api.event.InitNPCTradeEvent;
+import org.confluence.terraentity.api.event.InteractNPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
+import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
+import org.confluence.terraentity.utils.AdapterUtils;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -53,7 +60,6 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
             );
 
 
-    BlockPos initpos;
     public NPCTrades trades;
     public Player tradingPlayer;
     public House house = House.EMPTY;
@@ -68,8 +74,10 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         super(entityType, level);
 
         if(!level.isClientSide()){
-            trades = NPCTrades.getTrade(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
-            if (trades != null) {
+            InitNPCTradeEvent event = new InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
+            AdapterUtils.postEvent(event);
+            trades = NPCTrades.getTrade(event.getOrigin());
+             if (trades != null) {
                 entityData.set(DATA_DAVE_DATA, trades);
             }
         }
@@ -87,7 +95,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     @Override
     protected void registerGoals() {
 //        this.goalSelector.addGoal(0, new FloatGoal(this));
-//        this.goalSelector.addGoal(2,new NPCTradeGoal(this));
+        this.goalSelector.addGoal(2,new NPCTradeGoal(this));
 //
 //        this.goalSelector.addGoal(5, new AvoidEntityGoal<>(this, Monster.class, 20, 0.3f, 0.3f));
 //        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0));
@@ -156,7 +164,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
     }
 
-
+    @Override
     public void tick(){
         super.tick();
         if(!level().isClientSide()) {
@@ -200,6 +208,11 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        var event = new InteractNPCEvent(this, player);
+        AdapterUtils.postEvent(event);
+        event.execute((npc,player1)->{
+
+        });
 
 //        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new NPCTradesMenu(id,playerInventory, trades, forge), Component.translatable("confluence.menu.npc_shop")));
         tradingPlayer = player;

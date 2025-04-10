@@ -7,6 +7,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.apache.commons.lang3.function.TriConsumer;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.item.*;
 
 import java.util.*;
@@ -64,7 +65,8 @@ public class TEItemModelProvider extends ItemModelProvider {
 
         // general
         genModels(List.of(
-                createDir(TERiddenItems.ITEMS,"rideable/")
+                createDir(TERiddenItems.ITEMS,"rideable/"),
+                createDir(TEItems.TOOLS,"tools/")
         ),"item/generated", (parent, resourcePath, path) -> {
             try {
                 withExistingParent(path, parent).texture("layer0", TerraEntity.space("item/" + resourcePath + path));

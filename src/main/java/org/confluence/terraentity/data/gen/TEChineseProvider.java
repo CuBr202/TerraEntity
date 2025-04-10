@@ -140,6 +140,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
         add(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
 
+        add(TESpawnEggItems.GUILD_EGG.get(), "向导刷怪蛋");
+
 
         // 召唤杖
         add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
