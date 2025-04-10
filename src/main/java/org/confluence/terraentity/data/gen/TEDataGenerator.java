@@ -12,6 +12,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
+import org.confluence.terraentity.data.gen.recipe.TENPCShopProvider;
 import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 import org.confluence.terraentity.data.gen.tags.*;
 import org.confluence.terraentity.integration.ModChecker;
@@ -33,11 +34,11 @@ public class TEDataGenerator {
         ExistingFileHelper helper = event.getExistingFileHelper();
 
         CompletableFuture<HolderLookup.Provider> lookup = event.getLookupProvider();
-        boolean server = event.includeServer();
-
 
         DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookup, TERegisterDataPack.DATA_BUILDER, Set.of("minecraft", MODID));
         lookup = provider.getRegistryProvider();
+
+        boolean server = event.includeServer();
 
         generator.addProvider(server, provider);
         generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
@@ -48,6 +49,7 @@ public class TEDataGenerator {
         generator.addProvider(server, new TEEnchantmentTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TERecipeProvider(output, lookup));
         generator.addProvider(server, TELootTableProvider.getProvider(output, lookup));
+        generator.addProvider(server, new TENPCShopProvider(output));
 
         boolean client = event.includeClient();
         generator.addProvider(client, new TEChineseProvider(output));

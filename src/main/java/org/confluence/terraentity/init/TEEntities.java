@@ -4,7 +4,11 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
@@ -28,12 +32,34 @@ public final class TEEntities {
     }
 
 
+    @OnlyIn(Dist.CLIENT)
+    public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+
+        TEMonsterEntities.registerRenderers(event);
+        TEBossEntities.registerRenderers(event);
+        TEProjectileEntities.registerRenderers(event);
+        TESummonEntities.registerRenderers(event);
+        TERideableEntities.registerRenderers(event);
+        TENpcEntities.registerRenderers(event);
+
+    }
+
+    public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
+        TEBossEntities.registerEntityAttributes(event);
+        TEMonsterEntities.registerEntityAttributes(event);
+        TERideableEntities.registerEntityAttributes(event);
+        TESummonEntities.registerEntityAttributes(event);
+        TENpcEntities.registerEntityAttributes(event);
+
+    }
+
     public static void register(IEventBus bus){
         TEBossEntities.register();
         TESummonEntities.register();
         TERideableEntities.register();
         TEMonsterEntities.register();
         TEProjectileEntities.register();
+        TENpcEntities.register();
         ENTITIES.register(bus);
     }
 }

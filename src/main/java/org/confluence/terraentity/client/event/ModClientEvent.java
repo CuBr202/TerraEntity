@@ -15,6 +15,7 @@ import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.entity.renderer.ReplacedSpiderRenderer;
 import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.config.ClientConfig;
+import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.block.TEFigureBlocks;
 import org.confluence.terraentity.init.entity.*;
@@ -71,11 +72,7 @@ public final class ModClientEvent {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
 
-        TEMonsterEntities.registerRenderers(event);
-        TEBossEntities.registerRenderers(event);
-        TEProjectileEntities.registerRenderers(event);
-        TESummonEntities.registerRenderers(event);
-        TERideableEntities.registerRenderers(event);
+        TEEntities.registerEntityRenderers(event);
 
         // replaced
         if (ClientConfig.ENABLE_NON_SPIDER_MODEL.get()) {

@@ -16,17 +16,32 @@ public class FigureBlockRenderer <T extends FigureBlockEntity> implements BlockE
     }
     @Override
     public void render(T t, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int packedLight, int packedOverlay) {
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(Blocks.GLASS.defaultBlockState(), poseStack, multiBufferSource, packedLight, packedOverlay);
-        var entity = t.entity;
 
         poseStack.pushPose();
+
+        poseStack.pushPose();
+        poseStack.pushPose();
+        poseStack.scale(0.95f,0.5f,0.95f);
+
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(Blocks.STONE_SLAB.defaultBlockState(), poseStack, multiBufferSource, packedLight, packedOverlay);
+        poseStack.popPose();
+        poseStack.translate(0.075,0.25,0.075);
+        poseStack.scale(0.8f,0.3f,0.8f);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(Blocks.STONE_SLAB.defaultBlockState(), poseStack, multiBufferSource, packedLight, packedOverlay);
+
+        poseStack.popPose();
+
+        var entity = t.entity;
+
         float y = entity.tickCount + (t.turnOn?  partialTick : 0);
-        poseStack.translate(0.5, Math.sin(y * 0.05f) * 0.15 + 0.15f, 0.5);
+        double fy = Math.sin(y * 0.05f) * 0.15;
+        poseStack.translate(0.5,   0.4f, 0.5);
         poseStack.mulPose(Axis.YN.rotation(y * 0.01752f));
-        poseStack.scale(0.5f, 0.5f, 0.5f);
+        float scale = (float) (0.5 * t.scale);
+        poseStack.scale(scale, scale, scale);
 
         Minecraft.getInstance().getEntityRenderDispatcher().render(
-                entity, 0,0,0,0, 0,poseStack,multiBufferSource,packedLight);
+                entity, 0,0,0,0, 0, poseStack, multiBufferSource, packedLight);
 
 
 

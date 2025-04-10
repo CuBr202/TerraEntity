@@ -12,6 +12,8 @@ import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
+import org.confluence.terraentity.registries.npc_trade.TradeProvider;
+import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
 import org.confluence.terraentity.registries.track.TrackTypeProvider;
 import org.confluence.terraentity.registries.track.TrackTypeProviderTypes;
 
@@ -25,12 +27,14 @@ public class TERegistries {
         event.register(TrackTypeProviders.REGISTRY);
         event.register(GenerationProviders.REGISTRY);
         event.register(EffectStrategies.REGISTRY);
+        event.register(TradeProviders.REGISTRY);
     }
 
     public static void register(IEventBus bus) {
         EffectStrategyProviderTypes.TYPES.register(bus);
         GenerationProviderTypes.TYPES.register(bus);
         TrackTypeProviderTypes.TYPES.register(bus);
+        TradeProviderTypes.TYPES.register(bus);
 
     }
 
@@ -64,5 +68,10 @@ public class TERegistries {
     public static class TrackTypeProviders{
         public static final ResourceKey<Registry<TrackTypeProvider>> KEY = createRegistryKey(TerraEntity.space("track_type_provider"));
         public static final Registry<TrackTypeProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
+    }
+
+    public static class TradeProviders{
+        public static final ResourceKey<Registry<TradeProvider>> KEY = createRegistryKey(TerraEntity.space("trade_provider"));
+        public static final Registry<TradeProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
     }
 }

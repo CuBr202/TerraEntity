@@ -7,6 +7,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.client.post.BrainTranslucent;
 import org.confluence.terraentity.item.BaseWhipItem;
@@ -40,6 +41,7 @@ public class RenderEvent {
     public static void renderLevelStage(RenderLevelStageEvent event) {
         if(event.getStage()== RenderLevelStageEvent.Stage.AFTER_LEVEL){
             BrainTranslucent.render(event);
+            DebugBlocksHelper.Singleton().render(event);
         }
 
     }

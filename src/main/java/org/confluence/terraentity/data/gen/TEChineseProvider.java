@@ -3,6 +3,8 @@ package org.confluence.terraentity.data.gen;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.confluence.terraentity.init.TEEffects;
+import org.confluence.terraentity.init.TEItems;
+import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.init.entity.TERideableEntities;
 import org.confluence.terraentity.init.entity.TESummonEntities;
 import org.confluence.terraentity.init.item.*;
@@ -83,6 +85,8 @@ public class TEChineseProvider extends LanguageProvider {
 
         add(TERideableEntities.RIDEABLE_SLIME.get(), "史莱姆坐骑");
         add(TERideableEntities.RIDEABLE_BEE.get(), "蜜蜂坐骑");
+
+        add(TENpcEntities.GUIDE.get(), "向导");
 
         // 刷怪蛋
         add(TESpawnEggItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
@@ -173,6 +177,9 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEEffects.SUMMON_FOCUS.get(), "狩猎");
         add(TEEffects.HELLFIRE.get(), "狱炎");
         add(TEEffects.FROST_BURN.get(), "霜冻");
+
+        add(TEItems.HOUSE_DETECTOR.get(), "房屋探测器");
+
 
         add("message.terraentity.boss_spawn", "%s已苏醒！");
         add("message.terraentity.boss_leave", "%s已被打败！");

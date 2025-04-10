@@ -24,13 +24,19 @@ public class TEFigureBlocks {
 
     public static final DeferredBlock<FigureBlock> FIGURE2= register("figure2", TEMonsterEntities.BLOOD_ZOMBIE.getId());
 
-    public static final DeferredBlock<FigureBlock> FIGURE3= register("figure3", TEBossEntities.EYE_OF_CTHULHU.getId());
+    public static final DeferredBlock<FigureBlock> FIGURE3= register("figure3",  TEBossEntities.EYE_OF_CTHULHU.getId(),0.5f);
 
 
     public static final Supplier<BlockEntityType<FigureBlock.FigureBlockEntity>> FIGURE_BLOCK_ENTITY =
             TEBlocks.BLOCK_ENTITIES.register("figure_block_entity", () -> BlockEntityType.Builder.of(FigureBlock.FigureBlockEntity::new,
                     FIGURE.get(), FIGURE2.get(), FIGURE3.get()
             ).build(null));
+
+    private static DeferredBlock<FigureBlock> register(String id, ResourceLocation entityId, float scale) {
+        DeferredBlock<FigureBlock> object = BLOCKS.register(id, ()-> new FigureBlock(entityId, scale,  BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).noOcclusion().destroyTime(1.5F)));
+        TEBlocks.BLOCKITEMS.registerSimpleBlockItem(object);
+        return object;
+    }
 
     private static DeferredBlock<FigureBlock> register(String id, ResourceLocation entityId) {
         DeferredBlock<FigureBlock> object = BLOCKS.register(id, ()-> new FigureBlock(entityId, BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).noOcclusion().destroyTime(1.5F)));

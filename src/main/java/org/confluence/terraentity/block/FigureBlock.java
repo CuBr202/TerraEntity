@@ -1,5 +1,6 @@
 package org.confluence.terraentity.block;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -29,16 +30,23 @@ import org.jetbrains.annotations.Nullable;
 
 public class FigureBlock extends BaseEntityBlock {
     ResourceLocation entityType;
+    float scale;
 
     public FigureBlock(ResourceLocation entityType, Properties properties) {
+        this(entityType, 1, properties);
+    }
+
+    public FigureBlock(ResourceLocation entityType, float scale, Properties properties) {
         super(properties);
         this.entityType = entityType;
+        this.scale = scale;
     }
 
     @Override
     protected MapCodec<? extends FigureBlock> codec() {
         return RecordCodecBuilder.mapCodec((instance) -> instance.group(
-                ResourceLocation.CODEC.fieldOf("entity_type").forGetter(e->e.entityType),
+                ResourceLocation.CODEC.fieldOf("entity_type").forGetter(e -> e.entityType),
+                Codec.FLOAT.fieldOf("scale").forGetter(e -> e.scale),
                 propertiesCodec()
         ).apply(instance, FigureBlock::new));
     }
@@ -56,37 +64,40 @@ public class FigureBlock extends BaseEntityBlock {
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         FigureBlockEntity blockEntity = new FigureBlockEntity(blockPos, blockState);
-        blockEntity.entityType = entityType;
         return blockEntity;
     }
 
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker getTicker(@NotNull Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, TEFigureBlocks.FIGURE_BLOCK_ENTITY.get(), (level, pos, state, blockEntity)->{
-            if(blockEntity.entity!= null) {
-                if(blockEntity.turnOn)
+        return createTickerHelper(pBlockEntityType, TEFigureBlocks.FIGURE_BLOCK_ENTITY.get(), (level, pos, state, blockEntity) -> {
+            if (blockEntity.entity != null) {
+                if (blockEntity.turnOn)
                     ++blockEntity.ticks;
                 blockEntity.entity.tickCount = blockEntity.ticks;
-            }
-            else{
+            } else {
                 blockEntity.entity = BuiltInRegistries.ENTITY_TYPE.get(entityType).create(level);
             }
-            if(!level.isClientSide &&  blockEntity.ticks % 20 == 0){
+            if (!level.isClientSide && blockEntity.ticks % 20 == 0) {
 
 //                level.sendBlockUpdated(pos, state, state, 2);
                 blockEntity.setChanged();
             }
         });
     }
+
     public static class FigureBlockEntity extends BlockEntity {
         public Entity entity;
         public int ticks;
         public boolean turnOn = false;
         public ResourceLocation entityType;
+        public float scale = 1;
 
         public FigureBlockEntity(BlockPos pos, BlockState blockState) {
             super(TEFigureBlocks.FIGURE_BLOCK_ENTITY.get(), pos, blockState);
+            FigureBlock block = (FigureBlock)blockState.getBlock();
+            scale = block.scale;
+            this.entityType = block.entityType;
         }
 
         @Override

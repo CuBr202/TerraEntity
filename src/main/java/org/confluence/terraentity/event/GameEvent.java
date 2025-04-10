@@ -1,0 +1,27 @@
+package org.confluence.terraentity.event;
+
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.npc.NPCTrades;
+import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
+
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = TerraEntity.MODID)
+public class GameEvent {
+
+    @SubscribeEvent
+    public static void onDatapackSync(OnDatapackSyncEvent event) {
+        ServerPlayer serverPlayer = event.getPlayer();
+        if (serverPlayer != null) {
+            SyncNPCTradesPacketS2C.sync(serverPlayer);
+        }
+    }
+
+    @SubscribeEvent
+    public static void serverStarted(ServerStartedEvent event) {
+        NPCTrades.readTradesFromJson(event.getServer().getResourceManager());
+    }
+}

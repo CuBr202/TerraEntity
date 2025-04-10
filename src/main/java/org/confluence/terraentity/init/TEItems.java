@@ -4,18 +4,25 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.init.item.*;
+import org.confluence.terraentity.item.HouseDetectItem;
+
+import java.util.function.Supplier;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 public class TEItems {
+    public static DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
 
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+
+    public static final Supplier<Item> HOUSE_DETECTOR = ITEMS.register("house_detector", () -> new HouseDetectItem(new Item.Properties().stacksTo(1)));
 
 
     // Sentry Items
@@ -36,6 +43,7 @@ public class TEItems {
                             TEBoomerangItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         }
                         TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        TEItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                     })
                     .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.asResource("terra_moment", "tab")))
                     .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.asResource("confluence", "summoners")))
@@ -47,6 +55,7 @@ public class TEItems {
         TEWhipItems.ITEMS.register(bus);
         TEBoomerangItems.ITEMS.register(bus);
         TERiddenItems.ITEMS.register(bus);
+        TEItems.ITEMS.register(bus);
 //        SENTRY_ITEMS.register(bus);
         TABS.register(bus);
 
