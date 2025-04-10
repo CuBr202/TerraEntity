@@ -5,17 +5,12 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.event.LootTableLoadEvent;
-import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
-import org.confluence.terraentity.data.gen.recipe.TENPCShopProvider;
 import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 import org.confluence.terraentity.data.gen.tags.*;
-import org.confluence.terraentity.integration.ModChecker;
 
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +44,7 @@ public class TEDataGenerator {
         generator.addProvider(server, new TEEnchantmentTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TERecipeProvider(output, lookup));
         generator.addProvider(server, TELootTableProvider.getProvider(output, lookup));
-        generator.addProvider(server, new TENPCShopProvider(output));
+
 
         boolean client = event.includeClient();
         generator.addProvider(client, new TEChineseProvider(output));

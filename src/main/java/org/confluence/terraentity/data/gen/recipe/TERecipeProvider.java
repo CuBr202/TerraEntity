@@ -20,12 +20,17 @@ import java.util.concurrent.CompletableFuture;
 
 public class TERecipeProvider extends RecipeProvider {
 
+    TENPCShopProvider npcRecipe;
+    CompletableFuture<HolderLookup.Provider> registries;
     public TERecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries);
+        npcRecipe = new TENPCShopProvider(output, registries);
+       this.registries = registries;
     }
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    protected void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider holderLookup) {
+        npcRecipe.buildRecipes(recipeOutput, holderLookup);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TESummonItems.HORNET_STAFF.get())
                 .pattern("BAB")
