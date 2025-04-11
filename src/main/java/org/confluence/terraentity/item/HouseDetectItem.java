@@ -9,11 +9,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.IHouseDetector;
@@ -27,7 +27,7 @@ public class HouseDetectItem extends Item {
     // only in client
     public enum Mode{
         CHECK,
-        SET,
+        ADD,
         DELETE
     }
 
@@ -57,7 +57,7 @@ public class HouseDetectItem extends Item {
             if(mode == Mode.CHECK){
                 return check(level, player, usedHand);
             }
-            if(mode == Mode.SET){
+            if(mode == Mode.ADD){
                 return set(level, player, usedHand);
             }
             if(mode == Mode.DELETE){
@@ -82,6 +82,8 @@ public class HouseDetectItem extends Item {
         final List<BlockPos> list = info.list();
         lastInfo = info;
         DebugBlocksHelper.Singleton().addDebugBlock(List.of(min, max));
+        ServerBoundHousePacket.sendAction(ServerBoundHousePacket.Action.CHECK, lastInfo.getHouse(player.getStringUUID()));
+
         return super.use(level, player, usedHand);
     }
 
@@ -120,6 +122,14 @@ public class HouseDetectItem extends Item {
             }
         }
         return super.use(level, player, usedHand);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+
+        tooltipComponents.add(Component.translatable("tooltip.terra_entity.house_detect.info"));
+        tooltipComponents.add(Component.translatable("tooltip.terra_entity.house_detect.mode").append(" ")
+                .append(Component.translatable("tooltip.terra_entity.house_detect.mode."+ mode.name().toLowerCase())));
     }
 
 }

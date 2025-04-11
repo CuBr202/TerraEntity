@@ -24,7 +24,8 @@ public class ServerBoundHousePacket implements CustomPacketPayload {
 
     public enum Action {
         ADD,
-        DELETE
+        DELETE,
+        CHECK
     }
     Action action;
     House house;
@@ -65,19 +66,37 @@ public class ServerBoundHousePacket implements CustomPacketPayload {
             }else{
                 return;
             }
-            if(action == Action.ADD){
+            if(action == Action.CHECK){
+                var existHouse = HouseManager.getInstance().isInsideHouse(house.center());
+                if(existHouse != null){
+                    var entity = level.getEntity(UUID.fromString(existHouse.uuid()));
+                    if(entity !=null && entity.isAlive()) {
+                        Component name = entity.getDisplayName();
+                        if(name == null){
+                            name = entity.getName();
+                        }
+                        player.sendSystemMessage(Component.translatable("tooltip.terra_entity.house_detect.mode.check.owner")
+                                .append(": ").append(name)
+                        );
+                    }else{
+                        HouseManager.getInstance().removeHouse(id);
+                    }
+
+                }
+
+            } else if(action == Action.ADD){
                 Entity entity = level.getEntity(id);
                 if(entity instanceof AbstractTerraNPC npc){
                     if(HouseManager.getInstance().tryAddHouse(house)){
                         npc.setHouse(house);
-                        player.sendSystemMessage(Component.translatable("tooltip.terra_entity.house_detect.add.success"));
+                        player.sendSystemMessage(Component.translatable("tooltip.terra_entity.house_detect.mode.add.success"));
                     }else{
-                        player.sendSystemMessage(Component.translatable("tooltip.terra_entity.house_detect.add.failed"));
+                        player.sendSystemMessage(Component.translatable("tooltip.terra_entity.house_detect.mode.add.failed"));
                     }
                 }
             }else if(action == Action.DELETE){
                 HouseManager.getInstance().removeHouse(id);
-                player.sendSystemMessage(Component.translatable("tooltip.terra_entity.house_detect.delete.success"));
+                player.sendSystemMessage(Component.translatable("tooltip.terra_entity.house_detect.mode.delete.success"));
             }
         });
     }

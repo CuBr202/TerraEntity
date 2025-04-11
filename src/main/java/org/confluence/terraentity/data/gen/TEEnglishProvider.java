@@ -67,7 +67,6 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.generate_projectile_particle", "Generate Projectile Particle");
 
 
-
         add("terra_entity.configuration.enableNonSpiderModel", "Spider Harmonization");
         add("terra_entity.configuration.enableNonSpiderModel.tooltip", "Enable this option if you dislike spiders or want to beautify them.");
 
@@ -80,6 +79,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("tooltip.terra_entity.whip.hit_effect_beneficial", "Farmer's Flogging");
         add("tooltip.terra_entity.house_detect.mode", "House Detect Mode: ");
         add("tooltip.terra_entity.house_detect.mode.check", "Check");
+        add("tooltip.terra_entity.house_detect.mode.check.owner", "Owner");
         add("tooltip.terra_entity.house_detect.mode.add", "Add");
         add("tooltip.terra_entity.house_detect.mode.add.failed", "Add House failed. House exists.");
         add("tooltip.terra_entity.house_detect.mode.add.success", "Add House success.");
@@ -87,8 +87,11 @@ public class TEEnglishProvider extends LanguageProvider {
         add("tooltip.terra_entity.house_detect.mode.delete.success", "Delete House success.");
         add("tooltip.terra_entity.house_detect.not_npc", "You should point at an NPC.");
         add("tooltip.terra_entity.house_detect.no_detect", "You should check before that.");
-
-
+        add("tooltip.terra_entity.house_detect.message.too_large", "House Too Large");
+        add("tooltip.terra_entity.house_detect.message.too_small", "House Too Small");
+        add("tooltip.terra_entity.house_detect.message.no_dynamic_light", "House No Dynamic Light");
+        add("tooltip.terra_entity.house_detect.message.found_house", "Found House");
+        add("tooltip.terra_entity.house_detect.info", "Press shift and right click to switch mode.");
 
 
 

@@ -216,15 +216,22 @@ public class TEChineseProvider extends LanguageProvider {
 
         add("tooltip.terra_entity.whip.hit_effect", "命中效果: ");
         add("tooltip.terra_entity.whip.hit_effect_beneficial", "农场主的训斥");
-        add("tooltip.terra_entity.house_detect.mode", "房屋工具模式：");
+        add("tooltip.terra_entity.house_detect.mode", "房屋工具模式:");
         add("tooltip.terra_entity.house_detect.mode.check", "探测");
+        add("tooltip.terra_entity.house_detect.mode.check.owner", "所有者");
         add("tooltip.terra_entity.house_detect.mode.add", "添加");
-        add("tooltip.terra_entity.house_detect.mode.add.fail", "添加房屋失败，房屋已存在");
-        add("tooltip.terra_entity.house_detect.mode.add.success", "添加房屋成功");
+        add("tooltip.terra_entity.house_detect.mode.add.failed", "添加房屋失败，房屋已存在!");
+        add("tooltip.terra_entity.house_detect.mode.add.success", "添加房屋成功!");
         add("tooltip.terra_entity.house_detect.mode.delete", "删除");
-        add("tooltip.terra_entity.house_detect.mode.delete.success", "删除房屋成功");
+        add("tooltip.terra_entity.house_detect.mode.delete.success", "删除房屋成功!");
         add("tooltip.terra_entity.house_detect.not_npc", "这不是npc!");
         add("tooltip.terra_entity.house_detect.no_detect", "使用前先探测房屋!");
+        add("tooltip.terra_entity.house_detect.message.too_large", "这个房间太大了!");
+        add("tooltip.terra_entity.house_detect.message.too_small", "这个房间太小了!");
+        add("tooltip.terra_entity.house_detect.message.no_dynamic_light", "房间缺少光源!");
+        add("tooltip.terra_entity.house_detect.message.found_house", "这个房间很合适!");
+        add("tooltip.terra_entity.house_detect.info", "按下shift+右键切换模式");
+
 
             // boomerang
         add("tooltip.terra_entity.boomerang.penetration", "穿透数量");

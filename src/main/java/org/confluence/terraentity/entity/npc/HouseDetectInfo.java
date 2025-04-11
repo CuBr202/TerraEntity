@@ -78,10 +78,10 @@ public record HouseDetectInfo(BlockPos min, BlockPos max, BlockPos center, List<
 
     public enum DetectType {
 
-        TO_LARGE("message.house_detector.to_large"),
-        TO_SMALL("message.house_detector.to_small"),
-        NO_DYNAMIC_LIGHT("message.house_detector.no_dynamic_light"),
-        FOUND_HOUSE("message.house_detector.found_house");
+        TO_LARGE("tooltip.terra_entity.house_detect.message.too_large"),
+        TO_SMALL("tooltip.terra_entity.house_detect.message.too_small"),
+        NO_DYNAMIC_LIGHT("tooltip.terra_entity.house_detect.message.no_dynamic_light"),
+        FOUND_HOUSE("tooltip.terra_entity.house_detect.message.found_house");
 
         public final String translationKey;
         DetectType(String translationKey){
