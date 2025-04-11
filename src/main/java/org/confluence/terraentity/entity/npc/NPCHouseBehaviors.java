@@ -75,7 +75,7 @@ public class NPCHouseBehaviors {
                 }
 
                 // 成功检测到房屋
-                House house = new House(entity.getStringUUID(), info.min(), info.max(), blockpos);
+                House house = info.getHouse(entity.getStringUUID());
 
                 if(HouseManager.getInstance().tryAddHouse(house)){
                     // 成功添加房屋

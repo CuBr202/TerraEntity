@@ -8,7 +8,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 /**
- * 房子类
+ * 房子类,未来可能扩展不同的房子类型
  *
  * @param uuid   房子的uuid == 实体的uuid
  * @param min    左下角的坐标

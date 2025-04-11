@@ -2,6 +2,7 @@ package org.confluence.terraentity.network;
 
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import org.confluence.terraentity.network.c2s.ServerBoundHousePacket;
 import org.confluence.terraentity.network.c2s.ServerBoundVehicleExtensionPacket;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.network.s2c.SyncCameraShakePacket;
@@ -18,6 +19,7 @@ public final class NetworkHandler {
         registrar.playToClient(SyncNPCTradesPacketS2C.TYPE, SyncNPCTradesPacketS2C.STREAM_CODEC, SyncNPCTradesPacketS2C::handle);
 
         registrar.playToServer(ServerBoundVehicleExtensionPacket.TYPE, ServerBoundVehicleExtensionPacket.STREAM_CODEC, ServerBoundVehicleExtensionPacket::handle);
+        registrar.playToServer(ServerBoundHousePacket.TYPE, ServerBoundHousePacket.STREAM_CODEC, ServerBoundHousePacket::handle);
 
     }
 }

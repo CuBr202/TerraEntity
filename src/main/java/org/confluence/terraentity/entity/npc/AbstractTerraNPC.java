@@ -32,6 +32,7 @@ import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CrafterMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import org.confluence.terraentity.api.event.InitNPCTradeEvent;
@@ -39,6 +40,8 @@ import org.confluence.terraentity.api.event.InteractNPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
+import org.confluence.terraentity.init.TEItems;
+import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.utils.AdapterUtils;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -87,6 +90,11 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
     }
 
+    /**
+     * <p>设置npc的房屋
+     * <p>使用前需要使用HouseManager.getInstance().tryAddHouse检查房屋是否可以添加</p>
+     * @param house
+     */
     public void setHouse(House house){
         this.house = house;
         this.entityData.set(DATA_HOUSE_DATA, house);
@@ -208,12 +216,17 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if(hand == InteractionHand.OFF_HAND){
+            return super.mobInteract(player, hand);
+        }
         var event = new InteractNPCEvent(this, player);
         AdapterUtils.postEvent(event);
-        event.execute((npc,player1)->{
+        ItemStack stack = player.getItemInHand(hand);
+        if(!(stack.getItem() instanceof HouseDetectItem)) {
+            event.execute((npc, player1) -> {
 
-        });
-
+            });
+        }
 //        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new NPCTradesMenu(id,playerInventory, trades, forge), Component.translatable("confluence.menu.npc_shop")));
         tradingPlayer = player;
         return InteractionResult.PASS;

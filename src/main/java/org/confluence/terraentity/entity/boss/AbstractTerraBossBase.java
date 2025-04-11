@@ -293,7 +293,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     @Override
     public boolean doHurtTarget(Entity entity) {
-        return entity.hurt(TETags.DamageTypes.of(level(), DamageTypes.GENERIC, this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+        return super.doHurtTarget(entity);
     }
 
     // 可以给巨鹿用

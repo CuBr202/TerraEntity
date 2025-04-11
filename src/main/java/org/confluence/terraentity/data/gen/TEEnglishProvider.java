@@ -78,6 +78,20 @@ public class TEEnglishProvider extends LanguageProvider {
         add("tooltip.terra_entity.summon_info", "Summon Info: %d / %d");
         add("tooltip.terra_entity.whip.hit_effect", "Hit Effect:");
         add("tooltip.terra_entity.whip.hit_effect_beneficial", "Farmer's Flogging");
+        add("tooltip.terra_entity.house_detect.mode", "House Detect Mode: ");
+        add("tooltip.terra_entity.house_detect.mode.check", "Check");
+        add("tooltip.terra_entity.house_detect.mode.add", "Add");
+        add("tooltip.terra_entity.house_detect.mode.add.failed", "Add House failed. House exists.");
+        add("tooltip.terra_entity.house_detect.mode.add.success", "Add House success.");
+        add("tooltip.terra_entity.house_detect.mode.delete", "Delete");
+        add("tooltip.terra_entity.house_detect.mode.delete.success", "Delete House success.");
+        add("tooltip.terra_entity.house_detect.not_npc", "You should point at an NPC.");
+        add("tooltip.terra_entity.house_detect.no_detect", "You should check before that.");
+
+
+
+
+
 
             // boomerang
         add("tooltip.terra_entity.boomerang.penetration", "Penetrates Count");

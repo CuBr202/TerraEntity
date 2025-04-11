@@ -15,11 +15,11 @@ import java.util.List;
  * @param list 包含范围
  * @param type 检测信息类型
  */
-public record HouseDetectInfo(BlockPos min, BlockPos max, List<BlockPos> list, DetectType type) implements IHouseDetector {
+public record HouseDetectInfo(BlockPos min, BlockPos max, BlockPos center, List<BlockPos> list, DetectType type) implements IHouseDetector {
     public static int DetectRange = 20;
 
     public static HouseDetectInfo error(DetectType type) {
-        return new HouseDetectInfo(BlockPos.ZERO, BlockPos.ZERO, List.of(), type);
+        return new HouseDetectInfo(BlockPos.ZERO, BlockPos.ZERO, BlockPos.ZERO, List.of(), type);
     }
 
     public static HouseDetectInfo detect(BlockPos start, Level level){
@@ -64,7 +64,7 @@ public record HouseDetectInfo(BlockPos min, BlockPos max, List<BlockPos> list, D
         BlockPos min = new BlockPos(minx, miny, minz);
         BlockPos max = new BlockPos(maxx, maxy, maxz);
 
-        return new HouseDetectInfo(min, max, list, DetectType.FOUND_HOUSE);
+        return new HouseDetectInfo(min, max, start, list, DetectType.FOUND_HOUSE);
     }
 
     public boolean isError() {

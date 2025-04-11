@@ -216,6 +216,15 @@ public class TEChineseProvider extends LanguageProvider {
 
         add("tooltip.terra_entity.whip.hit_effect", "命中效果: ");
         add("tooltip.terra_entity.whip.hit_effect_beneficial", "农场主的训斥");
+        add("tooltip.terra_entity.house_detect.mode", "房屋工具模式：");
+        add("tooltip.terra_entity.house_detect.mode.check", "探测");
+        add("tooltip.terra_entity.house_detect.mode.add", "添加");
+        add("tooltip.terra_entity.house_detect.mode.add.fail", "添加房屋失败，房屋已存在");
+        add("tooltip.terra_entity.house_detect.mode.add.success", "添加房屋成功");
+        add("tooltip.terra_entity.house_detect.mode.delete", "删除");
+        add("tooltip.terra_entity.house_detect.mode.delete.success", "删除房屋成功");
+        add("tooltip.terra_entity.house_detect.not_npc", "这不是npc!");
+        add("tooltip.terra_entity.house_detect.no_detect", "使用前先探测房屋!");
 
             // boomerang
         add("tooltip.terra_entity.boomerang.penetration", "穿透数量");
