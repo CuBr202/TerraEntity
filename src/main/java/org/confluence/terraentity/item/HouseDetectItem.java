@@ -81,7 +81,10 @@ public class HouseDetectItem extends Item {
         final BlockPos max = info.max();
         final List<BlockPos> list = info.list();
         lastInfo = info;
-        DebugBlocksHelper.Singleton().addDebugBlock(List.of(min, max));
+//        DebugBlocksHelper.Singleton().addDebugBlock(List.of(min, max));
+        for(BlockPos blockPos : list){
+            DebugBlocksHelper.Singleton().addDebugBlock(blockPos, new DebugBlocksHelper.DebugInfo(255,255,30, player.getRandom().nextIntBetweenInclusive(20,100)));
+        }
         ServerBoundHousePacket.sendAction(ServerBoundHousePacket.Action.CHECK, lastInfo.getHouse(player.getStringUUID()));
 
         return super.use(level, player, usedHand);

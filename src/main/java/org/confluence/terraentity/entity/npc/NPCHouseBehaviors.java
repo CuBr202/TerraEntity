@@ -9,7 +9,7 @@ import net.minecraft.world.entity.ai.memory.WalkTarget;
 import org.apache.commons.lang3.mutable.MutableLong;
 
 /**
- * 自动设置房屋
+ * NPC房屋行为
  */
 public class NPCHouseBehaviors {
     public static int Detect_Interval = 100;

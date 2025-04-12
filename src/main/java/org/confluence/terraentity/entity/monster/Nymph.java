@@ -156,20 +156,16 @@ public class Nymph extends AbstractMonster {
     @Override
     public void tick(){
         super.tick();
-        if(getTarget() != null && tickCount > 50){
-            // 有目标时准备变异
-            if(!isTrigger()){
-                this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32);
-
-            }else{
-                this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(5);
-                delayTime++;
-            }
-            setTrigger(!isTamed);
-        }
 
         if(!level().isClientSide){
+            if(getTarget() != null && tickCount > 50){
+                // 有目标,且距离小于5,时准备变异
+                if(distanceToSqr(getTarget()) < 25)
+                    setTrigger(!isTamed);
+            }
             if(!this.isTrigger()) {
+                this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(5);
+
                 // 未变异时眼睛朝向
                 if (getLook() == null) {
                     this.getLookControl().setLookAt(getEyePosition().add(getForward().scale(5)).add(0, -0.1f, 0));
@@ -180,6 +176,9 @@ public class Nymph extends AbstractMonster {
                 }
                 setSprinting(false);
             }else{
+                this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32);
+                delayTime++;
+
                 // 变异后恢复计时
                 if(getTarget() == null){
                     recoverTime++;

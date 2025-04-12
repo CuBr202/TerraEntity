@@ -171,8 +171,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBoomerangItems.BeiDou_BOOMERANG.get(), "北斗飞镖");
 
         // 骑乘
-        add(TERiddenItems.SLIMY_SADDLE.get(), "粘鞍");
-        add(TERiddenItems.HONEYED_GOGGLES.get(), "凃蜜护目镜");
+        add(TERideableItems.SLIMY_SADDLE.get(), "粘鞍");
+        add(TERideableItems.HONEYED_GOGGLES.get(), "凃蜜护目镜");
 
         // mob_effect
         add(TEEffects.DEMONIC_THOUGHTS.get(), "邪念");

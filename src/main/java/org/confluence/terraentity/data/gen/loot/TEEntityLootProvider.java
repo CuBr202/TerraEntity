@@ -24,7 +24,7 @@ import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
-import org.confluence.terraentity.init.item.TERiddenItems;
+import org.confluence.terraentity.init.item.TERideableItems;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
 import org.confluence.terraentity.init.item.TESummonItems;
 import org.confluence.terraentity.init.item.TEWhipItems;
@@ -75,7 +75,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         this.add(TEBossEntities.KING_SLIME.get(), LootTable.lootTable()
                 .withPool(singleItemPool(TESummonItems.SLIME_STAFF, 0.33F))
                 .withPool(singleItemPool(TEWhipItems.SWAMP_WHIP, 0.33F))
-                .withPool(singleItemPool(TERiddenItems.SLIMY_SADDLE, 0.2F))
+                .withPool(singleItemPool(TERideableItems.SLIMY_SADDLE, 0.2F))
         );
 
 
@@ -129,7 +129,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
         this.add(TEBossEntities.QUEEN_BEE.get(), LootTable.lootTable()
                 .withPool(singleItemPool(Items.BEE_SPAWN_EGG, 1,1f))
-                .withPool(singleItemPool(TERiddenItems.HONEYED_GOGGLES,1, 0.2f))
+                .withPool(singleItemPool(TERideableItems.HONEYED_GOGGLES,1, 0.2f))
         );
     }
 

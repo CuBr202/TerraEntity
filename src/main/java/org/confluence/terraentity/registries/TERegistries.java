@@ -6,6 +6,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
@@ -34,6 +35,7 @@ public class TERegistries {
         GenerationProviderTypes.TYPES.register(bus);
         TrackTypeProviderTypes.TYPES.register(bus);
         TradeProviderTypes.TYPES.register(bus);
+        TEEffectStrategies.EFFECT_STRATEGY.register(bus);
 
     }
 

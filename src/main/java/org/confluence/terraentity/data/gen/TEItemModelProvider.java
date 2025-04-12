@@ -65,7 +65,7 @@ public class TEItemModelProvider extends ItemModelProvider {
 
         // general
         genModels(List.of(
-                createDir(TERiddenItems.ITEMS,"rideable/"),
+                createDir(TERideableItems.ITEMS,"rideable/"),
                 createDir(TEItems.TOOLS,"tools/")
         ),"item/generated", (parent, resourcePath, path) -> {
             try {

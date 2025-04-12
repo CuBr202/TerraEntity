@@ -12,28 +12,28 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(Player.class)
 public abstract class PlayerMixin implements IPlayer , SelfGetter<Player> {
     @Unique
-    private NPCTrades rhyme$NPCTrades;
+    private NPCTrades terra_entity$NPCTrades;
     @Unique
-    private Entity rhyme$interactingEntity;
+    private Entity terra_entity$interactingEntity;
 
     @Override
     public NPCTrades terra_entity$getDaveTrades() {
-        return rhyme$NPCTrades;
+        return terra_entity$NPCTrades;
     }
 
     @Override
     public void terra_entity$setDaveTrades(NPCTrades NPCTrades) {
-        rhyme$NPCTrades = NPCTrades;
+        terra_entity$NPCTrades = NPCTrades;
     }
 
     @Override
     public Entity terra_entity$getInteractingEntity() {
-        return rhyme$interactingEntity;
-    } // getRhyme$dave
+        return terra_entity$interactingEntity;
+    }
 
     @Override
     public void terra_entity$setInteractingEntity(Entity entity) {
-        this.rhyme$interactingEntity = entity;
+        this.terra_entity$interactingEntity = entity;
     } // setRhyme$dave
 
 

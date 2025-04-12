@@ -24,9 +24,13 @@ public class TerraEntity {
     public static String toLang(ResourceLocation location){return location.toLanguageKey().replace("/",".");}
 
     public TerraEntity (IEventBus modEventBus, ModContainer modContainer) {
-        TEEntities.register(modEventBus);
+
         newListener(modEventBus);
-//        modEventBus.register(WhipRegisterModifyEvent);
+        modEventBus.addListener(TERegistries::newRegistry);
+
+        TEEntities.register(modEventBus);
+        TERegistries.register(modEventBus);
+
         TESounds.SOUNDS.register(modEventBus);
         TEParticles.PARTICLES.register(modEventBus);
         TEItems.register(modEventBus);
@@ -34,7 +38,6 @@ public class TerraEntity {
         TEAttachments.TYPES.register(modEventBus);
         TEAttributes.ATTRIBUTES.register(modEventBus);
         TEDataComponentTypes.TYPES.register(modEventBus);
-        TEEffectStrategies.EFFECT_STRATEGY.register(modEventBus);
         TEEntityDataSerializers.SERIALIZERS.register(modEventBus);
         TEBlocks.register(modEventBus);
 //        TEActivities.ACTIVITIES.register(modEventBus);
@@ -43,11 +46,8 @@ public class TerraEntity {
 
 //        TEBiomes.register(modEventBus);
 
-        modEventBus.addListener(TERegistries::newRegistry);
-        TERegistries.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-
     }
 
 
