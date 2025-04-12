@@ -3,9 +3,11 @@ package org.confluence.terraentity.entity.npc;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -26,12 +28,12 @@ import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.CrafterMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -40,12 +42,14 @@ import org.confluence.terraentity.api.event.InteractNPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
-import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
+import org.confluence.terraentity.menu.TETradesMenu;
 import org.confluence.terraentity.utils.AdapterUtils;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -87,7 +91,9 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3f);
         this.getNavigation().setCanFloat(true);
-
+        this.setCustomNameVisible(true);
+        ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
+        ((GroundPathNavigation)this.getNavigation()).setCanPassDoors(true);
     }
 
     /**
@@ -191,7 +197,6 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 //            System.out.println("water: "+ getBrain().getMemory(MemoryModuleType.HOME));
 //            System.out.println("long: "+ getBrain().getMemory(MemoryModuleType.LONG_JUMP_MID_JUMP));
 
-
         }
     }
 
@@ -207,8 +212,8 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         }
 
         // 用于显示房间
-        if(!house.isEmpty()){
-            if(level().isClientSide && tickCount % 100 == 0){
+        if(level().isClientSide && tickCount % 100 == 0 && !house.isEmpty()){
+            if(Minecraft.getInstance().player.getMainHandItem().getItem() instanceof HouseDetectItem){
                 DebugBlocksHelper.Singleton().addDebugBlock(List.of(house.min(), house.max()));
             }
         }
@@ -224,6 +229,8 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         ItemStack stack = player.getItemInHand(hand);
         if(!(stack.getItem() instanceof HouseDetectItem)) {
             event.execute((npc, player1) -> {
+                player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
+                        new TETradesMenu(id,playerInventory, trades), Component.translatable("title.terra_entity.npc_trade")));
 
             });
         }
@@ -235,6 +242,10 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "Walk/Idle", 5, state ->
+                state.setAndContinue(state.isMoving() ? DefaultAnimations.WALK : DefaultAnimations.IDLE)
+        ));
+
 
     }
 
@@ -277,6 +288,8 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
         this.releaseAllPois();
         super.die(cause);
+        HouseManager.getInstance().removeHouse(uuid);
+
     }
 
     private void releaseAllPois() {

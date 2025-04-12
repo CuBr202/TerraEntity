@@ -42,7 +42,9 @@ public class NPCAi {
 
     protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(
             MemoryModuleType.LOOK_TARGET,
+            MemoryModuleType.DOORS_TO_CLOSE,
             MemoryModuleType.NEAREST_LIVING_ENTITIES,
+
             MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
             MemoryModuleType.WALK_TARGET,
             MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
@@ -83,6 +85,7 @@ public class NPCAi {
     private static void initCoreActivity(Brain<AbstractTerraNPC> brain) {
         brain.addActivity(Activity.CORE, 0,
                 ImmutableList.of(
+                        InteractWithDoor.create(),
                         new Swim(0.8F),
                         new LookAtTargetSink(45, 90),
                         new MoveToTargetSink(),

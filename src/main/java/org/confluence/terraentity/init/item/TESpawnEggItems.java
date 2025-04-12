@@ -65,6 +65,8 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> QUEEN_BEE_SPAWN_EGG = registerEgg("queen_bee_spawn_egg", TEBossEntities.QUEEN_BEE, 0xffffff, 0xffffff);
 
     public static final DeferredItem<Item> GUILD_EGG = registerEgg("guild_egg", TENpcEntities.GUIDE, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> DEMOLITIONIST_EGG = registerEgg("demolitionist_egg", TENpcEntities.DEMOLITIONIST, 0xffffff, 0xffffff);
+
 
     public static DeferredItem<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryColor, int secondaryColor){
         return ITEMS.register(name, () -> new DeferredSpawnEggItem(entityType, primaryColor, secondaryColor,new Item.Properties()));

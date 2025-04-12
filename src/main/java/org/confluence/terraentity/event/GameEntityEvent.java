@@ -36,10 +36,12 @@ import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
+import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -150,6 +152,12 @@ public class GameEntityEvent {
 
     @SubscribeEvent
     public static void entityInteract(PlayerInteractEvent.EntityInteract event) {
+        // 打开商店
+        if (event.getTarget() instanceof AbstractTerraNPC npc) {
+            ((IPlayer) event.getEntity()).terra_entity$setDaveTrades(npc.trades);
+            ((IPlayer) event.getEntity()).terra_entity$setInteractingEntity(npc);
+            return;
+        }
         ItemStack item = event.getItemStack();
         if (!(event.getTarget() instanceof LivingEntity entity)) return;
         Player player = event.getEntity();

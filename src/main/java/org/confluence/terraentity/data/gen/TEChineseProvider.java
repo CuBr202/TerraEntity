@@ -21,6 +21,9 @@ public class TEChineseProvider extends LanguageProvider {
     protected void addTranslations() {
         add("itemGroup.terraentity.title", "泰拉生物");
 
+        add("title.terra_entity.npc_trade", "泰拉商店");
+
+
 
         add("entity.terra_entity.ice_slime", "冰冻史莱姆");
         add("entity.terra_entity.blue_slime", "蓝色史莱姆");
@@ -87,6 +90,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TERideableEntities.RIDEABLE_BEE.get(), "蜜蜂坐骑");
 
         add(TENpcEntities.GUIDE.get(), "向导");
+        add(TENpcEntities.DEMOLITIONIST.get(), "爆破专家");
 
         // 刷怪蛋
         add(TESpawnEggItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
@@ -141,6 +145,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
 
         add(TESpawnEggItems.GUILD_EGG.get(), "向导刷怪蛋");
+        add(TESpawnEggItems.DEMOLITIONIST_EGG.get(), "爆破专家刷怪蛋");
 
 
         // 召唤杖
@@ -186,6 +191,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("message.terraentity.boss_spawn", "%s已苏醒！");
         add("message.terraentity.boss_leave", "%s已被打败！");
         add("message.terraentity.boss_discard", "已离开！");
+        add("message.terra_entity.trade.not_enough_items", "你没有足够的物品来交易");
 
 
         // config

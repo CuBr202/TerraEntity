@@ -2,6 +2,7 @@ package org.confluence.terraentity.network;
 
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import org.confluence.terraentity.network.c2s.NPCShopPacket;
 import org.confluence.terraentity.network.c2s.ServerBoundHousePacket;
 import org.confluence.terraentity.network.c2s.ServerBoundVehicleExtensionPacket;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
@@ -20,6 +21,7 @@ public final class NetworkHandler {
 
         registrar.playToServer(ServerBoundVehicleExtensionPacket.TYPE, ServerBoundVehicleExtensionPacket.STREAM_CODEC, ServerBoundVehicleExtensionPacket::handle);
         registrar.playToServer(ServerBoundHousePacket.TYPE, ServerBoundHousePacket.STREAM_CODEC, ServerBoundHousePacket::handle);
+        registrar.playToServer(NPCShopPacket.TYPE, NPCShopPacket.STREAM_CODEC, NPCShopPacket::handle);
 
     }
 }

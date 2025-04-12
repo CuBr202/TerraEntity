@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESummonItems;
 import org.confluence.terraentity.init.item.TEWhipItems;
@@ -18,19 +19,14 @@ import org.confluence.terraentity.init.item.TEWhipItems;
 import java.util.concurrent.CompletableFuture;
 
 
-public class TERecipeProvider extends RecipeProvider {
+public class TERecipeProvider extends AbstractRecipeProvider {
 
-    TENPCShopProvider npcRecipe;
-    CompletableFuture<HolderLookup.Provider> registries;
     public TERecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries);
-        npcRecipe = new TENPCShopProvider(output, registries);
-       this.registries = registries;
     }
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider holderLookup) {
-        npcRecipe.buildRecipes(recipeOutput, holderLookup);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TESummonItems.HORNET_STAFF.get())
                 .pattern("BAB")

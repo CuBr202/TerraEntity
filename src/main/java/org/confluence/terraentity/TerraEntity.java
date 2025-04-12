@@ -40,7 +40,6 @@ public class TerraEntity {
         TEDataComponentTypes.TYPES.register(modEventBus);
         TEEntityDataSerializers.SERIALIZERS.register(modEventBus);
         TEBlocks.register(modEventBus);
-//        TEActivities.ACTIVITIES.register(modEventBus);
         TEAi.register(modEventBus);
         TEMenus.TYPES.register(modEventBus);
 

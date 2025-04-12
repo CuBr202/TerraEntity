@@ -22,6 +22,7 @@ import java.util.concurrent.CompletableFuture;
  * @see org.confluence.terraentity.registries.npc_trade.ITrade
  */
 public class TENPCShopProvider extends AbstractRecipeProvider {
+
     private final PackOutput.PathProvider npcShopPathProvider;
 
     public TENPCShopProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
@@ -40,7 +41,9 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
                 .add(new ItemStack(TEWhipItems.LEATHER_WHIP.get(), 1),  Items.ARROW.getDefaultInstance())
                 .build());
 
-
+        add(TENpcEntities.DEMOLITIONIST.getId()).addRecipe(new Builder()
+                .add(new ItemStack(Blocks.TNT.asItem(), 1), Items.EGG.getDefaultInstance())
+                .build());
     }
 
     private Appender<NPCTrades> add(ResourceLocation id){

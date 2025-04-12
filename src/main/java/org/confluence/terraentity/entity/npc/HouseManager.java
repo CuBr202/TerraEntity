@@ -83,8 +83,18 @@ public record HouseManager(Map<UUID, House> houses) {
      * 删除房子
      * @param uuid 房子的uuid
      */
-    public void removeHouse(UUID uuid) {
-        houses.remove(uuid);
+    public boolean removeHouse(UUID uuid) {
+        return houses.remove(uuid) != null;
+    }
+
+    public boolean removeHouse(BlockPos pos) {
+        for (House house : houses.values()) {
+            if (house.contains(pos)) {
+                houses.remove(UUID.fromString(house.uuid()));
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

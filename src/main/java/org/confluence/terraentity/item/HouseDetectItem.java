@@ -121,8 +121,12 @@ public class HouseDetectItem extends Item {
                 ServerBoundHousePacket.sendAction(ServerBoundHousePacket.Action.DELETE, lastInfo.getHouse(entity.getStringUUID()));
             }else{
                 player.sendSystemMessage(Component.translatable("tooltip.terra_entity.house_detect.no_detect"));
-
             }
+            return super.use(level, player, usedHand);
+        }
+        // 未侦测到，则删除当前位置的房屋
+        if (lastInfo != null) {
+            ServerBoundHousePacket.sendAction(ServerBoundHousePacket.Action.DELETE, lastInfo.getHouse(player.getStringUUID()));
         }
         return super.use(level, player, usedHand);
     }

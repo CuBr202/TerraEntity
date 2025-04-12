@@ -8,14 +8,17 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.block.renderer.FigureBlockRenderer;
 import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.entity.renderer.ReplacedSpiderRenderer;
+import org.confluence.terraentity.client.gui.container.TETradeScreen;
 import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TEMenus;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.block.TEFigureBlocks;
 import org.confluence.terraentity.init.entity.*;
@@ -94,6 +97,12 @@ public final class ModClientEvent {
     public static void registerAdditionalModel(ModelEvent.RegisterAdditional event) {
         WhipModelRegister.getInstance().register(event);
         EntityBlockModelRegister.getInstance().register(event);
+    }
+
+    @SubscribeEvent
+    public static void registerMenuScreens(RegisterMenuScreensEvent event) {
+        event.register(TEMenus.NPC_TRADES_MENU.get(), TETradeScreen::new);
+
     }
 
 
