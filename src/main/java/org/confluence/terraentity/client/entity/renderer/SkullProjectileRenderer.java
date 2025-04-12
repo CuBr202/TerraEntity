@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.proj.SkullProjectile;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class SkullProjectileRenderer extends EntityRenderer<SkullProjectile> {
-    private static final ResourceLocation SKELETON_LOCATION = TerraEntity.asResource("textures/entity/skeleton/skeleton.png");
+    private static final ResourceLocation SKELETON_LOCATION = TerraEntity.space("textures/entity/skeleton/skeleton.png");
     private final ModelPart model;
 
     public SkullProjectileRenderer(EntityRendererProvider.Context context) {

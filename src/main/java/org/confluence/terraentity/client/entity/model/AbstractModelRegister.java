@@ -4,10 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.client.event.ModelEvent;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.init.item.TEWhipItems;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;

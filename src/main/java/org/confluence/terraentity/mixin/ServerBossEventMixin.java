@@ -3,7 +3,7 @@ package org.confluence.terraentity.mixin;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.BossEvent;
-import org.confluence.terraentity.mixinauxiliary.IBossEvent;
+import org.confluence.terraentity.mixed.IBossEvent;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.spongepowered.asm.mixin.Final;

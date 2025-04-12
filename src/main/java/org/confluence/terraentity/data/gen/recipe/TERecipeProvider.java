@@ -18,12 +18,15 @@ import java.util.function.Consumer;
 
 public class TERecipeProvider extends RecipeProvider {
 
+    TENPCShopProvider npcRecipe;
     public TERecipeProvider(PackOutput output) {
         super(output);
+        npcRecipe = new TENPCShopProvider(output);
     }
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> recipeOutput) {
+        npcRecipe.buildRecipes(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, TESummonItems.HORNET_STAFF.get())
                 .pattern("BAB")

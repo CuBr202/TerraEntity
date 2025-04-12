@@ -15,7 +15,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.ModRenderTypes;
 import org.confluence.terraentity.client.util.ShaderUtil;
 import org.confluence.terraentity.config.*;
-import org.confluence.terraentity.mixinauxiliary.IShaderInstance;
+import org.confluence.terraentity.mixed.IShaderInstance;
 
 @OnlyIn(Dist.CLIENT)
 public class ConfigScreen extends Screen {

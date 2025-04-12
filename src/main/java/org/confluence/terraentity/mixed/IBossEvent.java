@@ -1,4 +1,4 @@
-package org.confluence.terraentity.mixinauxiliary;
+package org.confluence.terraentity.mixed;
 
 public interface IBossEvent {
     float terra_enity$getBossHealth();

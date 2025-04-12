@@ -108,8 +108,8 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
+    public void onAddedToLevel(){
+        super.onAddedToLevel();
         summon_onAddedToLevel();
     }
 

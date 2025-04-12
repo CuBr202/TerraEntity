@@ -11,7 +11,7 @@ import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.confluence.terraentity.init.TETags;
-import org.confluence.terraentity.mixinauxiliary.IMobEffectExtension;
+import org.confluence.terraentity.mixed.IMobEffectExtension;
 
 /**
  * 狱炎: 缓慢损失生命 每秒损失15点生命 停止生命再生

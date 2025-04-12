@@ -3,25 +3,15 @@ package org.confluence.terraentity.init;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.confluence.terraentity.entity.boss.*;
-import org.confluence.terraentity.entity.monster.*;
-import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
-import org.confluence.terraentity.entity.monster.slime.BaseSlime;
-import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.init.entity.*;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -47,12 +37,34 @@ public final class TEEntities {
     }
 
 
+    @OnlyIn(Dist.CLIENT)
+    public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+
+        TEMonsterEntities.registerRenderers(event);
+        TEBossEntities.registerRenderers(event);
+        TEProjectileEntities.registerRenderers(event);
+        TESummonEntities.registerRenderers(event);
+        TERideableEntities.registerRenderers(event);
+        TENpcEntities.registerRenderers(event);
+
+    }
+
+    public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
+        TEBossEntities.registerEntityAttributes(event);
+        TEMonsterEntities.registerEntityAttributes(event);
+        TERideableEntities.registerEntityAttributes(event);
+        TESummonEntities.registerEntityAttributes(event);
+        TENpcEntities.registerEntityAttributes(event);
+
+    }
+
     public static void register(IEventBus bus){
         TEBossEntities.register(bus);
+        TESummonEntities.register(bus);
+        TERideableEntities.register(bus);
         TEMonsterEntities.register(bus);
         TEProjectileEntities.register(bus);
-        TERideableEntities.register(bus);
-        TESummonEntities.register(bus);
+        TENpcEntities.register();
         ENTITIES.register(bus);
     }
 }

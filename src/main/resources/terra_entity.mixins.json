@@ -9,6 +9,9 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "MobEffectMixin",
+    "MobMixin",
+    "PlayerMixin",
+    "RandomStrollGoalMixin",
     "ServerBossEventMixin",
     "accessor.EntityAccessor",
     "accessor.SlimeAccessor"

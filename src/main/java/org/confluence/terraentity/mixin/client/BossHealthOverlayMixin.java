@@ -2,7 +2,7 @@ package org.confluence.terraentity.mixin.client;
 
 import net.minecraft.client.gui.components.BossHealthOverlay;
 import net.minecraft.client.gui.components.LerpingBossEvent;
-import org.confluence.terraentity.mixinauxiliary.IBossHealthOverlay;
+import org.confluence.terraentity.mixed.IBossHealthOverlay;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

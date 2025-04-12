@@ -110,8 +110,8 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVar
 /* Variant */
 
     @Override
-    public void onAddedToWorld(){
-        super.onAddedToWorld();
+    public void onAddedToLevel(){
+        super.onAddedToLevel();
         this.setVariant(random.nextInt(2));
     }
 

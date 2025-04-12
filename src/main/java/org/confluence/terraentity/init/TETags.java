@@ -29,6 +29,10 @@ public class TETags {
 
     public static class EntityTypes {
         public static final TagKey<EntityType<?>> SLIME = registerEntityType("slime");
+        /**
+         * 拥有这个标签的mob不会控制其他mob的行动
+         */
+        public static final TagKey<EntityType<?>> NON_CONTROLLING_RIDER = registerEntityType("non_controlling_rider");
 
     }
 
@@ -61,10 +65,10 @@ public class TETags {
     }
 
     private static TagKey<Item> registerItem(String id) {
-        return ItemTags.create(TerraEntity.asResource(id));
+        return ItemTags.create(TerraEntity.space(id));
     }
     private static TagKey<EntityType<?>> registerEntityType(String id) {
-        return TagKey.create(Registries.ENTITY_TYPE, TerraEntity.asResource(id));
+        return TagKey.create(Registries.ENTITY_TYPE, TerraEntity.space(id));
     }
     private static ResourceKey<DamageType> registerDamageType(String id) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, TerraEntity.space(id));

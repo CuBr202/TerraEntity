@@ -1,6 +1,5 @@
 package org.confluence.terraentity.init.item;
 
-
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.world.item.Item;
@@ -8,13 +7,12 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.function.TriFunction;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.SingleBooleanComponent;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.item.Boomerang;
 import org.confluence.terraentity.item.TEItemProperties;
-
-import static org.confluence.terraentity.TerraEntity.MODID;
 
 
 public class TEBoomerangItems {
@@ -25,7 +23,7 @@ public class TEBoomerangItems {
             (cd, count, modifier) ->    modifier.setNotWaitForBack().setCd(cd).setMaxCount(count);
 
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS,MODID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, TerraEntity.MODID);
 
 
     public static final RegistryObject<Boomerang> WOOD_BOOMERANG = register("wood_boomerang",3,
@@ -78,9 +76,7 @@ public class TEBoomerangItems {
         return ITEMS.register(name, () -> new Boomerang(damage,boomerangModifier, (TEItemProperties) new TEItemProperties()
                 .component(TEDataComponentTypes.BOOMERANG_READY, SingleBooleanComponent.TRUE)
 //                .component(DataComponents.UNBREAKABLE, new Unbreakable(true))
-//                .component(DataComponents.ATTRIBUTE_MODIFIERS, boomerangModifier.attributeModifiersBuilder.build())
-                .stacksTo(1)
-        ));
+                .stacksTo(1)));
     }
 
     public static void acceptTag(IntrinsicHolderTagsProvider.IntrinsicTagAppender<Item> tag) {

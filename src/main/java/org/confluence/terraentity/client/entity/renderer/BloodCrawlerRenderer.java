@@ -9,7 +9,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class BloodCrawlerRenderer extends GeoEntityRenderer<BloodCrawler> {
     public BloodCrawlerRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new GeoNormalModel<>(TerraEntity.asResource("blood_crawler")));
+        super(renderManager, new GeoNormalModel<>(TerraEntity.space("blood_crawler")));
     }
 
     @Override

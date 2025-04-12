@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.client.block.renderer.FigureBlockRenderer;
 import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.entity.renderer.BoomerangProjRenderer;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
@@ -24,7 +25,9 @@ import org.confluence.terraentity.client.gui.config_container.ConfigContainerReg
 import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.client.util.RegisterUtils;
 import org.confluence.terraentity.entity.proj.BaseProj;
+import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
+import org.confluence.terraentity.init.block.TEFigureBlocks;
 import org.confluence.terraentity.init.entity.*;
 
 import java.lang.reflect.Field;
@@ -61,6 +64,7 @@ public final class ModClientEvent {
 //                    () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> new ConfigScreen(screen)));
 //        });
     }
+
     @SubscribeEvent
     public static void onEnqueue(final InterModEnqueueEvent event) {
         ConfigContainerRegister.registerModsPage(event);
@@ -78,11 +82,8 @@ public final class ModClientEvent {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        TEBossEntities.registerRenderers(event);
-        TEMonsterEntities.registerRenderers(event);
-        TEProjectileEntities.registerRenderers(event);
-        TERideableEntities.registerRenderers(event);
-        TESummonEntities.registerRenderers(event);
+
+        TEEntities.registerEntityRenderers(event);
 
         // replaced
 //        if (ClientConfig.ENABLE_NON_SPIDER_MODEL.get()) {
@@ -91,7 +92,7 @@ public final class ModClientEvent {
 //            event.registerEntityRenderer(BLOOD_CRAWLER.get(), c -> new ReplacedSpiderRenderer<>(c, "blood_crawler", BLOOD_CRAWLER.get()));
 //        }
 
-
+        event.registerBlockEntityRenderer(TEFigureBlocks.FIGURE_BLOCK_ENTITY.get(), FigureBlockRenderer::new);
     }
 
     @SubscribeEvent

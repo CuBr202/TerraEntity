@@ -37,7 +37,7 @@ import org.confluence.terraentity.entity.ai.goal.summon.SummonPriorAttackGoal;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.item.SummonItem;
-import org.confluence.terraentity.mixinauxiliary.SelfGetter;
+import org.confluence.terraentity.mixed.SelfGetter;
 
 import javax.annotation.Nullable;
 import java.util.Optional;

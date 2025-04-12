@@ -10,7 +10,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.confluence.terraentity.config.ConfigRegistry;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
-import org.confluence.terraentity.data.gen.biome.TEBiomes;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.registries.TERegistries;
 import org.slf4j.Logger;
@@ -30,26 +29,21 @@ public class TerraEntity {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         TERegistries.register(modEventBus);
 
+        TEAi.register(modEventBus);
         TEEntities.register(modEventBus);
         TESounds.SOUNDS.register(modEventBus);
         TEParticles.PARTICLES.register(modEventBus);
         TEItems.register(modEventBus);
         TEEffects.EFFECTS.register(modEventBus);
         TEAttributes.ATTRIBUTES.register(modEventBus);
-        TEEnchantments.ENCHANTMENTS.register(modEventBus);
-
+        TEEntityDataSerializers.SERIALIZERS.register(modEventBus);
+        TEBlocks.register(modEventBus);
 
 //        TEBiomes.register(modEventBus);
+        TEEnchantments.ENCHANTMENTS.register(modEventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigRegistry.register());
 //        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SPEC);
     }
 
-    public static ResourceLocation asResource(String path) {
-        return new ResourceLocation(MODID, path);
-    }
-
-    public static ResourceLocation asResource(String id, String path) {
-        return new ResourceLocation(id, path);
-    }
 }

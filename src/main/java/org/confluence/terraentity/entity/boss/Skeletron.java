@@ -7,6 +7,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -51,7 +52,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     public static final EntityDataAccessor<Boolean> DATA_SPINNING = SynchedEntityData.defineId(Skeletron.class, EntityDataSerializers.BOOLEAN);
 
     public Skeletron(EntityType<? extends Monster> entityType, Level level) {
-        super(entityType, level, 10, 1);
+        super(entityType, level, 800, 10);
         setDiscardFriction(true);
         if (ServerConfig.BOSS_NO_PHYSICS.get()) {
             noPhysics = true;
@@ -131,6 +132,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
                 this.getAttribute(Attributes.ARMOR).setBaseValue(0);
             }
             server = true;
+            if(target!= null && position().y < target.getY()){
+                addDeltaMovement(new Vec3(0,0.02f,0));
+            }
         }
         super.tick();
         if (server) {
@@ -206,6 +210,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     }
 
     public class FloatGoal extends Goal {
+        boolean crazy = false;
         @Override
         public boolean canUse() {
 //            return false;
@@ -235,6 +240,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
                 resultVelocity = resultVelocity.scale(maxSpeed / resultSpeed);
             }
             setDeltaMovement(resultVelocity);
+            if(crazy){
+                addDeltaMovement(getTarget().position().subtract(position()).scale(0.01f));
+            }
             lookAt(90);
         }
 
@@ -244,6 +252,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
             if (random.nextBoolean()) {
                 setTarget(findTarget());
             }
+            crazy = random.nextFloat() < 0.3f;
         }
     }
 
@@ -262,7 +271,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
                 setDeltaMovement(vec.normalize().scale(1));
             }else if (expert) { // 专家以上越远越快
                 double distance = vec.length();
-                double speed = Mth.clamp(0.01 * distance + 0.16, 0.2, 0.45);
+                double speed = Mth.clamp(0.01 * distance + 0.16, 0.22, 0.48);
                 if (ftw) {
                     speed *= 1.3;
                 }
@@ -310,5 +319,12 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
                 level().addFreshEntity(skull);
             }
         }
+    }
+    protected BossEvent.BossBarColor getBossBarColor(){
+        return BossEvent.BossBarColor.WHITE;
+    };
+
+    protected boolean shouldOverPlayer(){
+        return true;
     }
 }

@@ -1,4 +1,4 @@
-package org.confluence.terraentity.mixinauxiliary;
+package org.confluence.terraentity.mixed;
 
 @SuppressWarnings("unchecked")
 public interface SelfGetter<T> {

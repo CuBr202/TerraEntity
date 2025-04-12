@@ -155,8 +155,8 @@ public class Snatcher extends AbstractMonster{
     }
 
     @Override
-    public void onAddedToWorld(){
-        super.onAddedToWorld();
+    public void onAddedToLevel(){
+        super.onAddedToLevel();
         if(!level().isClientSide) {
             Vec3 dir = new Vec3(this.random.nextFloat() - 0.5f, this.random.nextFloat()- 0.5f, this.random.nextFloat()- 0.5f);
             Vec3 vec3 = this.position();

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEAttributes;
+import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.entity.TERideableEntities;
@@ -49,10 +50,7 @@ public class ModEvent {
     // 注册怪物属性
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        TEBossEntities.registerEntityAttributes(event);
-        TEMonsterEntities.registerEntityAttributes(event);
-        TERideableEntities.registerEntityAttributes(event);
-        TESummonEntities.registerEntityAttributes(event);
+        TEEntities.registerEntityAttributes(event);
     }
 
     // 注册生成位置

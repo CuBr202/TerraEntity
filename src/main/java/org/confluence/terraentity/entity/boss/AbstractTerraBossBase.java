@@ -39,7 +39,7 @@ import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.entity.ai.*;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.init.TETags;
-import org.confluence.terraentity.mixinauxiliary.IBossEvent;
+import org.confluence.terraentity.mixed.IBossEvent;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
@@ -88,8 +88,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         ){
             difficult = false;
         }
-
-        bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
+        this.addSkills();
+        bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), getBossBarColor(), BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
     }
 
     public float getAttributeMultiplier(Attribute attribute){
@@ -104,6 +104,10 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     @Override
     public void onAddedToWorld(){
+        this.onAddedToLevel();
+    }
+
+    public void onAddedToLevel(){
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.baseHealth);
         this.getAttribute(Attributes.ARMOR).setBaseValue(baseArmor);
 
@@ -238,11 +242,22 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                     this::doHurtTarget
             );
 
+            if(shouldOverPlayer() && target!= null && position().y < target.getY()){
+                addDeltaMovement(new Vec3(0,0.02f,0));
+            }
         }
 
         if (!shouldDiscardFriction()) {
             this.setDeltaMovement(getDeltaMovement().scale(0.95));//空气阻力
         }
+    }
+
+    /**
+     * 如果为true，则y坐标低于玩家时向上加速
+     * @return
+     */
+    protected boolean shouldOverPlayer(){
+        return false;
     }
 
     /**
@@ -469,4 +484,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public boolean hasLineOfSight(Entity entity) {
         return distanceToSqr(entity) < 100 * 100;
     }
+
+    protected BossEvent.BossBarColor getBossBarColor(){
+        return BossEvent.BossBarColor.RED;
+    };
 }

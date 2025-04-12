@@ -30,7 +30,7 @@ import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
-import org.confluence.terraentity.mixinauxiliary.IBossEvent;
+import org.confluence.terraentity.mixed.IBossEvent;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.FloatRGB;

@@ -4,8 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 
 import net.minecraftforge.network.NetworkEvent;
-import org.confluence.terraentity.mixinauxiliary.IBossHealthOverlay;
-import org.confluence.terraentity.mixinauxiliary.IBossEvent;
+import org.confluence.terraentity.mixed.IBossHealthOverlay;
+import org.confluence.terraentity.mixed.IBossEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;

@@ -28,10 +28,10 @@ public class GeoWormSegmentRenderer<T extends BaseWarmPart> extends GeoEntityRen
         this(renderManager, parent, body, tail,1,0);
     }
     public GeoWormSegmentRenderer(EntityRendererProvider.Context renderManager, GeoWormRenderer parent,  ResourceLocation body, ResourceLocation tail, float scale, float offsetY) {
-        super(renderManager, new GeoNormalModel<>(body));
+        super(renderManager, new GeoNormalModel<>(body, false));
         this.scale=scale;
         this.offsetY=offsetY;
-        tailModel = new GeoNormalModel<>(tail);
+        tailModel = new GeoNormalModel<>(tail,false);
         this.parent = parent;
     }
 

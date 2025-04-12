@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 
 
 public class TaskBoomerangAttack implements IRangedAttackTask {
-    public static final ResourceLocation UID = TerraEntity.asResource( "boomerang_attack");
+    public static final ResourceLocation UID = TerraEntity.space( "boomerang_attack");
 
     @Override
     public ResourceLocation getUid() {

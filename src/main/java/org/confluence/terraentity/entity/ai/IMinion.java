@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import org.confluence.terraentity.mixinauxiliary.SelfGetter;
+import org.confluence.terraentity.mixed.SelfGetter;
 
 import java.util.Optional;
 import java.util.UUID;

@@ -3,6 +3,7 @@ package org.confluence.terraentity.data.gen;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 import org.confluence.terraentity.init.TEEffects;
+import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.entity.TERideableEntities;
 import org.confluence.terraentity.init.entity.TESummonEntities;
 import org.confluence.terraentity.init.item.*;
@@ -134,6 +135,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
         add(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
 
+        add(TESpawnEggItems.GUILD_EGG.get(), "向导刷怪蛋");
+
 
         // 召唤杖
         add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
@@ -163,14 +166,17 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBoomerangItems.BeiDou_BOOMERANG.get(), "北斗飞镖");
 
         // 骑乘
-        add(TERiddenItems.SLIMY_SADDLE.get(), "粘鞍");
-        add(TERiddenItems.HONEYED_GOGGLES.get(), "凃蜜护目镜");
+        add(TERideableItems.SLIMY_SADDLE.get(), "粘鞍");
+        add(TERideableItems.HONEYED_GOGGLES.get(), "凃蜜护目镜");
 
         // mob_effect
         add(TEEffects.DEMONIC_THOUGHTS.get(), "邪念");
         add(TEEffects.SUMMON_FOCUS.get(), "狩猎");
         add(TEEffects.HELLFIRE.get(), "狱炎");
         add(TEEffects.FROST_BURN.get(), "霜冻");
+
+        add(TEItems.HOUSE_DETECTOR.get(), "房屋探测器");
+
 
         add("message.terraentity.boss_spawn", "%s已苏醒！");
         add("message.terraentity.boss_leave", "%s已被打败！");
@@ -209,6 +215,22 @@ public class TEChineseProvider extends LanguageProvider {
 
         add("tooltip.terra_entity.whip.hit_effect", "命中效果: ");
         add("tooltip.terra_entity.whip.hit_effect_beneficial", "农场主的训斥");
+        add("tooltip.terra_entity.house_detect.mode", "房屋工具模式:");
+        add("tooltip.terra_entity.house_detect.mode.check", "探测");
+        add("tooltip.terra_entity.house_detect.mode.check.owner", "所有者");
+        add("tooltip.terra_entity.house_detect.mode.add", "添加");
+        add("tooltip.terra_entity.house_detect.mode.add.failed", "添加房屋失败，房屋已存在!");
+        add("tooltip.terra_entity.house_detect.mode.add.success", "添加房屋成功!");
+        add("tooltip.terra_entity.house_detect.mode.delete", "删除");
+        add("tooltip.terra_entity.house_detect.mode.delete.success", "删除房屋成功!");
+        add("tooltip.terra_entity.house_detect.not_npc", "这不是npc!");
+        add("tooltip.terra_entity.house_detect.no_detect", "使用前先探测房屋!");
+        add("tooltip.terra_entity.house_detect.message.too_large", "这个房间太大了!");
+        add("tooltip.terra_entity.house_detect.message.too_small", "这个房间太小了!");
+        add("tooltip.terra_entity.house_detect.message.no_dynamic_light", "房间缺少光源!");
+        add("tooltip.terra_entity.house_detect.message.found_house", "这个房间很合适!");
+        add("tooltip.terra_entity.house_detect.info", "按下shift+右键切换模式");
+
 
             // boomerang
         add("tooltip.terra_entity.boomerang.penetration", "穿透数量");

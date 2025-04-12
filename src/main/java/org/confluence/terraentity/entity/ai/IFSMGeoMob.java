@@ -3,7 +3,7 @@ package org.confluence.terraentity.entity.ai;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import org.confluence.terraentity.mixinauxiliary.SelfGetter;
+import org.confluence.terraentity.mixed.SelfGetter;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animation.AnimatableManager;

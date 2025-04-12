@@ -5,7 +5,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import org.confluence.terraentity.item.IItemExtension;
-import org.confluence.terraentity.mixinauxiliary.SelfGetter;
+import org.confluence.terraentity.mixed.SelfGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

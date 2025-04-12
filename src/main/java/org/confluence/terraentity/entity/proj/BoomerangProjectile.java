@@ -32,7 +32,6 @@ import org.confluence.terraentity.item.Boomerang;
 import org.confluence.terraentity.item.Boomerang.BoomerangModifier;
 import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
 import org.confluence.terraentity.utils.TEUtils;
-
 import java.util.UUID;
 
 public class BoomerangProjectile extends AbstractHurtingProjectile {
@@ -91,7 +90,6 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
 
     }
 
-
     @Override
     protected void onHitEntity(EntityHitResult result) {
 //        if(!level().isClientSide){
@@ -130,24 +128,8 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
 
     @Override
     protected boolean canHitEntity(Entity target) {
-        Entity entity = this.getOwner();
-        if(entity == target) return false;
 
-        if (!target.isAttackable()) {
-            return false;
-        }
-        if(!(target instanceof LivingEntity)){
-            if(target instanceof PartEntity<?> part && part.getParent() instanceof LivingEntity){
-                return true;
-            }
-            return false;
-        }
-        if(!TEUtils.attackTamableTest.test(entity, target)) return false;
-
-        if(entity != null && !entity.isPassengerOfSameVehicle(target))
-            return true;
-
-        return false;
+        return TEUtils.projectileCanHitEntityTest.test(this, target) && super.canHitEntity(target);
     }
 
     protected void doKnockback(LivingEntity entity) {
@@ -227,12 +209,10 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
         this.shoot(f, f1, f2, velocity, inaccuracy);
         this.setDeltaMovement(this.getDeltaMovement());
     }
-
     @Override
     protected ParticleOptions getTrailParticle() {
         return null;
     }
-
     @Override
     public boolean isOnFire() {
         return modifier.fire && (this.level().isClientSide && this.getSharedFlag(0));

@@ -115,8 +115,8 @@ public class WhipEntity extends AbstractHurtingProjectile {
 
     private void updateWeapon(ItemStack weapon, boolean sweep){
         int sweepLevel = TEEnchantmentHelper.getEnchantmentLevel(TEEnchantments.WHIP_SWEEP.get(), weapon);
-
         if(sweepLevel > 0 &&sweep) {
+
             // 横扫之鞭
             parts = List.of(
                     Vec3KeyframeAnimation.Builder()
@@ -257,7 +257,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
                             if(!hitEntities.containsKey(entity)){
                                 if (entity instanceof LivingEntity hurter) {
                                     // 命中无多体节敌人
-                                    if(owner.canAttack(hurter) && hurter.canBeSeenAsEnemy()) {
+                                    if(owner.canAttack(hurter) && TEUtils.projectileCanHurtEntityTest.test(this, hurter)) {
                                         hitEntities.put(entity, hitCooldown);
                                         trigger = doHurt(owner, hurter, hurter);
                                     }
@@ -270,7 +270,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
                                 }else if(entity instanceof PartEntity<?> partEntity){
                                     // 名字多体节敌人
                                     if(partEntity.getParent() instanceof LivingEntity hurter){
-                                        if(owner.canAttack(hurter) && hurter.canBeSeenAsEnemy()) {
+                                        if(owner.canAttack(hurter) && TEUtils.projectileCanHurtEntityTest.test(this, hurter)) {
                                             hitEntities.put(entity, hitCooldown);
                                             trigger = doHurt(owner, hurter, partEntity);
                                         }

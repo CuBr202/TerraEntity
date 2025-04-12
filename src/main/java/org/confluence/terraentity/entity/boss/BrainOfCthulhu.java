@@ -333,8 +333,8 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
+    public void onAddedToLevel(){
+        super.onAddedToLevel();
         this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5f);
         this.skills.forceStartIndex(0);
     }

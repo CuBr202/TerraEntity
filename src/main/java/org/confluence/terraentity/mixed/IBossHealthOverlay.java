@@ -1,4 +1,4 @@
-package org.confluence.terraentity.mixinauxiliary;
+package org.confluence.terraentity.mixed;
 
 import net.minecraft.client.gui.components.LerpingBossEvent;
 

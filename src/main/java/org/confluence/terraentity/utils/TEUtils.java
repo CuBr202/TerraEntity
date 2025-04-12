@@ -16,6 +16,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.entity.PartEntity;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.Boss;
@@ -660,15 +662,21 @@ public final class TEUtils {
         }
         if(target instanceof ISummonMob<?>)
             return false;
+
         return true;
     };
 
     /**
-     * <h1>统一弹幕索敌</h1>
+     * <h1>统一弹幕目标伤害过滤</h1>
      */
-    public static BiPredicate<Projectile, Entity> projectileCanHitEntityTest = (projectile, target)-> {
-        if (!target.isAttackable() || target instanceof Villager) {
+    public static BiPredicate<Projectile, Entity> projectileCanHurtEntityTest = (projectile, target)-> {
+        if (!target.isAttackable() ||  target instanceof Villager || target instanceof ArmorStand) {
             return false;
+        }
+        if(target instanceof  LivingEntity living){
+            if(!living.canBeSeenByAnyone() || !living.canBeSeenAsEnemy()){
+                return false;
+            }
         }
         Entity entity = projectile.getOwner();
         // 防止击中仆从
@@ -680,6 +688,34 @@ public final class TEUtils {
             return true;
         }
         return target != entity;
+    };
+
+    /**
+     * <h1>统一弹幕能否命中目标和索敌过滤</h1>
+     */
+    public static BiPredicate<Projectile, Entity> projectileCanHitEntityTest = (projectile, target)-> {
+        Entity entity = projectile.getOwner();
+        // 不能攻击主人
+        if(entity == target) return false;
+
+        if (!target.isAttackable()) {
+            // 不可攻击的实体
+            return false;
+        }
+
+        if(!(target instanceof LivingEntity)){
+            // 可以攻击多体节生物
+            if(target instanceof PartEntity<?> part && part.getParent() instanceof LivingEntity){
+                return true;
+            }
+            return false;
+        }
+
+        if(entity != null && entity.isPassengerOfSameVehicle(target))
+            // 不能攻击坐骑
+            return false;
+        return true;
+
     };
 
     /**

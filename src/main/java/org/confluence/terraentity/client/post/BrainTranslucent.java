@@ -7,7 +7,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.ModRenderTypes;
 import org.confluence.terraentity.client.util.ShaderUtil;
 import org.confluence.terraentity.entity.boss.BrainOfCthulhu;
-import org.confluence.terraentity.mixinauxiliary.IShaderInstance;
+import org.confluence.terraentity.mixed.IShaderInstance;
 
 import java.util.ArrayList;
 import java.util.HashMap;

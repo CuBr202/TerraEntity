@@ -52,8 +52,8 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
     }
 
 
-    @Override
-    public void onAddedToWorld(){
+
+    public void onAddedToLevel(){
         super.onAddedToWorld();
         addToLevel();
     }

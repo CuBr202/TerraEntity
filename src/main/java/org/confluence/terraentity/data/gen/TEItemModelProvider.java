@@ -9,7 +9,6 @@ import net.minecraftforge.registries.DeferredRegister;
 
 import org.apache.logging.log4j.util.TriConsumer;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.item.*;
 
 import java.util.Arrays;
@@ -47,7 +46,7 @@ public class TEItemModelProvider extends ItemModelProvider {
                 createDir(TESpawnEggItems.ITEMS,"egg/")
         ),"item/generated", (parent, resourcePath, path) -> {
             try {
-                withExistingParent(path, parent).texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
+                withExistingParent(path, parent).texture("layer0", TerraEntity.space("item/" + resourcePath + path));
             } catch (Exception e) {
                 withExistingParent(path, "minecraft:item/template_spawn_egg");
             }
@@ -60,7 +59,7 @@ public class TEItemModelProvider extends ItemModelProvider {
                 createDir(TEBoomerangItems.ITEMS,"boomerang/")
         ),"item/handheld", (parent, resourcePath, path) -> {
             try {
-                withExistingParent(path, parent).texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
+                withExistingParent(path, parent).texture("layer0", TerraEntity.space("item/" + resourcePath + path));
             } catch (Exception e) {
                 withExistingParent(path, MISSING_ITEM);
                 System.out.println("Failed to generate model for " + path + " in " + resourcePath);
@@ -69,10 +68,10 @@ public class TEItemModelProvider extends ItemModelProvider {
 
         // general
         genModels(List.of(
-                createDir(TERiddenItems.ITEMS,"rideable/")
+                createDir(TERideableItems.ITEMS,"rideable/")
         ),"item/generated", (parent, resourcePath, path) -> {
             try {
-                withExistingParent(path, parent).texture("layer0", TerraEntity.asResource("item/" + resourcePath + path));
+                withExistingParent(path, parent).texture("layer0", TerraEntity.space("item/" + resourcePath + path));
             } catch (Exception e) {
                 withExistingParent(path, MISSING_ITEM);
                 System.out.println("Failed to generate model for " + path + " in " + resourcePath);

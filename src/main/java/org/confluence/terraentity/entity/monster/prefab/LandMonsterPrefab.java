@@ -4,6 +4,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -19,6 +20,8 @@ import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -40,6 +43,8 @@ public class LandMonsterPrefab extends AbstractPrefab {
                         g.addGoal(2, new JumpOverBlockGoal(e));
                         g.addGoal(3, new MeleeAttackGoal(e,  1f, true));
                         g.addGoal(7, new WaterAvoidingRandomStrollGoal(e, 1.0));
+                        g.addGoal(8, new LookAtPlayerGoal(e, Player.class, 6));
+
                     })
             ;
 
@@ -76,12 +81,21 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     })
                     .setController((c,e)->{
                         c.add(genericWalkRunIdleController(e));
-                        c.add(DefaultAnimations.genericAttackAnimation(e,DefaultAnimations.ATTACK_STRIKE));
+                        c.add(new AnimationController<>(e, "Attack", 0, state -> {
+                            if (e.swinging) {
+                                return state.setAndContinue(DefaultAnimations.ATTACK_STRIKE);
+                            }
+
+                            state.getController().forceAnimationReset();
+
+                            return PlayState.STOP;
+                        }));
                     })
                     .addGoal((g,e)-> {
                         g.addGoal(2, new JumpOverBlockGoal(e));
                         g.addGoal(3, new MeleeAttackGoal(e,  0.8f, true));
                         g.addGoal(7, new WaterAvoidingRandomStrollGoal(e, 1.0));
+                        g.addGoal(8, new LookAtPlayerGoal(e, Player.class, 6));
                     });
 
 

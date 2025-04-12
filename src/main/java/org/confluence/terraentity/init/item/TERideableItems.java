@@ -11,7 +11,7 @@ import org.confluence.terraentity.item.RideableItem;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
-public class TERiddenItems {
+public class TERideableItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
     public static final RegistryObject<RideableItem> SLIMY_SADDLE = ITEMS.register("slimy_saddle",()->new RideableItem<>(new Item.Properties(), TERideableEntities.RIDEABLE_SLIME));

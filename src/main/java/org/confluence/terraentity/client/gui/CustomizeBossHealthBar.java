@@ -11,8 +11,8 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.ModRenderTypes;
 import org.confluence.terraentity.client.util.ShaderUtil;
 import org.confluence.terraentity.config.ClientConfig;
-import org.confluence.terraentity.mixinauxiliary.IBossEvent;
-import org.confluence.terraentity.mixinauxiliary.IShaderInstance;
+import org.confluence.terraentity.mixed.IBossEvent;
+import org.confluence.terraentity.mixed.IShaderInstance;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -13,6 +13,8 @@ import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
+import org.confluence.terraentity.registries.npc_trade.TradeProvider;
+import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
 import org.confluence.terraentity.registries.track.TrackTypeProvider;
 import org.confluence.terraentity.registries.track.TrackTypeProviderTypes;
 
@@ -25,7 +27,13 @@ public class TERegistries {
         GenerationProviderTypes.TYPES.register(bus);
         TrackTypeProviderTypes.TYPES.register(bus);
         TEEffectStrategies.EFFECT_STRATEGY.register(bus);
+        TradeProviderTypes.TYPES.register(bus);
         TEDataComponentTypes.register(bus);
+
+    }
+
+    public static class DataComponentProviders{
+        public static final ResourceKey<Registry<DataComponentProvider<? extends IDataComponentType<?>>>> KEY = createRegistryKey(TerraEntity.space("data_component"));
 
     }
 
@@ -41,7 +49,7 @@ public class TERegistries {
      * 命中效果注册类型表
      */
     public static class EffectStrategyProviders{
-        public static final ResourceKey<Registry<EffectStrategyProvider>> KEY = createRegistryKey(TerraEntity.asResource("effect_strategy_type"));
+        public static final ResourceKey<Registry<EffectStrategyProvider>> KEY = createRegistryKey(TerraEntity.space("effect_strategy_type"));
 
     }
 
@@ -49,7 +57,7 @@ public class TERegistries {
      * 命中效果注册表
      */
     public static class EffectStrategies{
-        public static final ResourceKey<Registry<EffectStrategy>> KEY = createRegistryKey(TerraEntity.asResource("effect_strategy"));
+        public static final ResourceKey<Registry<EffectStrategy>> KEY = createRegistryKey(TerraEntity.space("effect_strategy"));
 
     }
 
@@ -61,8 +69,8 @@ public class TERegistries {
 
     }
 
-    public static class DataComponentProviders{
-        public static final ResourceKey<Registry<DataComponentProvider<? extends IDataComponentType<?>>>> KEY = createRegistryKey(TerraEntity.space("data_component"));
+    public static class TradeProviders{
+        public static final ResourceKey<Registry<TradeProvider>> KEY = createRegistryKey(TerraEntity.space("trade_provider"));
 
     }
 }

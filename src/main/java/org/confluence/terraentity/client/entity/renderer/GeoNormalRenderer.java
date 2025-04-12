@@ -41,7 +41,6 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
 
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay,  float r, float g, float b, float a) {
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, r,g,b,a);
 
         poseStack.scale(scale, scale, scale);
         poseStack.translate(0, offsetY, 0);
@@ -50,6 +49,7 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
             poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(animatable.xRotO));
 //            poseStack.translate(0, 0, 0);
         }
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, r,g,b,a);
 
     }
 

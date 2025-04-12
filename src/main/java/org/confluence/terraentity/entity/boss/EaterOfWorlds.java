@@ -199,8 +199,8 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
 
 
     @Override
-    public void onAddedToWorld(){
-        super.onAddedToWorld();
+    public void onAddedToLevel(){
+        super.onAddedToLevel();
         this.setAttactDamage(DAMAGE);
     }
 

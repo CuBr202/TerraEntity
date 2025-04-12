@@ -9,6 +9,7 @@ import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.client.post.BrainTranslucent;
 import org.confluence.terraentity.config.ClientConfig;
@@ -38,6 +39,7 @@ public class RenderEvent {
     public static void renderLevelStage(RenderLevelStageEvent event) {
         if(event.getStage()== RenderLevelStageEvent.Stage.AFTER_LEVEL){
             BrainTranslucent.render(event);
+            DebugBlocksHelper.Singleton().render(event);
         }
 
     }

@@ -22,10 +22,10 @@ public class ReplacedSpiderRenderer<T extends Spider> extends GeoReplacedEntityR
     }
 
     private static GeoModel<Entity> getModel(String texture) {
-        ResourceLocation TEXTURE = TerraEntity.asResource("textures/entity/replaced/" + texture + ".png");
+        ResourceLocation TEXTURE = TerraEntity.space("textures/entity/replaced/" + texture + ".png");
         return new GeoModel<>() {
-            private static final ResourceLocation MODEL = TerraEntity.asResource("geo/entity/spider.geo.json");
-            private static final ResourceLocation ANIMATION = TerraEntity.asResource("animations/entity/spider.animation.json");
+            private static final ResourceLocation MODEL = TerraEntity.space("geo/entity/spider.geo.json");
+            private static final ResourceLocation ANIMATION = TerraEntity.space("animations/entity/spider.animation.json");
 
             @Override
             public ResourceLocation getModelResource(Entity animatable) {
