@@ -21,7 +21,7 @@
 					]
 				},
 				{
-					"name": "Head",
+					"name": "head",
 					"parent": "body",
 					"pivot": [0, 15, 0],
 					"rotation": [17.5, 7.5, -10],

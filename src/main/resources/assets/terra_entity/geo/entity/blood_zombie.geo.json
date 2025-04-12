@@ -58,7 +58,7 @@
 					]
 				},
 				{
-					"name": "Head",
+					"name": "head",
 					"parent": "bone",
 					"pivot": [0, 24, 0],
 					"cubes": [

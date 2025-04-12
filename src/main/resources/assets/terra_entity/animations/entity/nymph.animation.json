@@ -4,7 +4,7 @@
 		"sit": {
 			"loop": true,
 			"bones": {
-				"Head": {
+				"head": {
 					"rotation": {
 						"vector": [30.97603, -16.1299, -6.88003]
 					},
@@ -58,7 +58,7 @@
 			"loop": true,
 			"animation_length": 0.6667,
 			"bones": {
-				"Head": {
+				"head": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 17.5]
