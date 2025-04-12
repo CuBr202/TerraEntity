@@ -39,6 +39,8 @@ public class RenderEvent {
     public static void renderLevelStage(RenderLevelStageEvent event) {
         if(event.getStage()== RenderLevelStageEvent.Stage.AFTER_LEVEL){
             BrainTranslucent.render(event);
+        }
+        else if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES){
             DebugBlocksHelper.Singleton().render(event);
         }
 

@@ -69,9 +69,7 @@ public abstract class AbstractBufferManager {
             beforeRender();
 
             poseStack.pushPose();
-//            poseStack.mulPose(modelMatrix);
             poseStack.translate(-playerPos.x(), -playerPos.y(), -playerPos.z());
-//            poseStack.mulPose(event.getCamera().rotation());
 
 //            minecraft.getBlockRenderer().renderSingleBlock(minecraft.level.getBlockState(BlockPos.containing(playerPos.subtract(0,-1,0))),poseStack,minecraft.renderBuffers().bufferSource(),15, OverlayTexture.NO_OVERLAY);
             vertexBuffer.bind();

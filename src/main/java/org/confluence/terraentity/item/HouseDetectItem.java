@@ -5,7 +5,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -81,7 +80,9 @@ public class HouseDetectItem extends Item {
         final BlockPos max = info.max();
         final List<BlockPos> list = info.list();
         lastInfo = info;
-        DebugBlocksHelper.Singleton().addDebugBlock(List.of(min, max));
+//        DebugBlocksHelper.Singleton().addDebugBlock(List.of(min, max));
+        DebugBlocksHelper.Singleton().addDebugBlock(list);
+
         ServerBoundHousePacket.sendAction(ServerBoundHousePacket.Action.CHECK, lastInfo.getHouse(player.getStringUUID()));
 
         return super.use(level, player, usedHand);
