@@ -17,10 +17,10 @@ import static net.minecraft.world.entity.ai.util.LandRandomPos.movePosUpOutOfSol
 /**
  * 白天在家附近随机游走
  */
-public class NpcHomeNearbyStroll {
+public class HomeNearbyStroll {
 
 
-    public NpcHomeNearbyStroll() {
+    public HomeNearbyStroll() {
     }
 
     public static OneShot<PathfinderMob> create(float speedModifier) {

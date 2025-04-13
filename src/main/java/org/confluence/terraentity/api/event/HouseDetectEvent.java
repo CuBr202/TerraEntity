@@ -5,8 +5,8 @@ import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.fml.event.IModBusEvent;
-import org.confluence.terraentity.entity.npc.HouseDetectInfo;
-import org.confluence.terraentity.entity.npc.IHouseDetector;
+import org.confluence.terraentity.entity.npc.house.HouseDetectInfo;
+import org.confluence.terraentity.entity.npc.house.IHouseDetector;
 
 
 /**

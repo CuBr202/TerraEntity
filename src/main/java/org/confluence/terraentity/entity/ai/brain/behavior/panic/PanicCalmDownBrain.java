@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc.brain;
+package org.confluence.terraentity.entity.ai.brain.behavior.panic;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.level.ServerLevel;
@@ -14,12 +14,17 @@ import org.confluence.terraentity.init.TEAi;
  * 恐慌行为清除
  */
 public class PanicCalmDownBrain extends Behavior<Mob> {
+    float chanceToCalmDown;
     public PanicCalmDownBrain() {
+        this(0);
+    }
+    public PanicCalmDownBrain(float chanceToCalmDown) {
         super(ImmutableMap.of(
                 MemoryModuleType.NEAREST_HOSTILE, MemoryStatus.REGISTERED,
                 MemoryModuleType.HURT_BY, MemoryStatus.REGISTERED,
                 MemoryModuleType.HURT_BY_ENTITY,MemoryStatus.REGISTERED
         ));
+        this.chanceToCalmDown = chanceToCalmDown;
     }
 
     public static boolean hasHostile(Mob living) {
@@ -40,8 +45,8 @@ public class PanicCalmDownBrain extends Behavior<Mob> {
         boolean hurtOrHostileOrAway = brain.hasMemoryValue(MemoryModuleType.HURT_BY)
 //                || brain.hasMemoryValue(MemoryModuleType.NEAREST_HOSTILE)
                 || brain.getMemory(MemoryModuleType.HURT_BY_ENTITY).filter(entity -> entity.distanceTo(living) < 10 && entity!= living).isPresent();
-        // 受到伤害后一定时间内不再恐慌
-        if (!hurtOrHostileOrAway || living.tickCount - living.getLastHurtByMobTimestamp() < 100 ) {
+        // 受到伤害后概率不再恐慌
+        if (!hurtOrHostileOrAway || living.getRandom().nextFloat() < chanceToCalmDown ) {
             LivingEntity target = brain.getMemory(MemoryModuleType.HURT_BY_ENTITY).orElse(null);
             brain.eraseMemory(MemoryModuleType.PATH);
             brain.eraseMemory(MemoryModuleType.WALK_TARGET);

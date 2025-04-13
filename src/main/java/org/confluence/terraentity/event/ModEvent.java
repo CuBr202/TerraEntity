@@ -11,10 +11,14 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.HouseDetectEvent;
+import org.confluence.terraentity.api.event.NPCEvent;
+import org.confluence.terraentity.entity.npc.brain.DemolitionistNPCAi;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
+import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.integration.ItemComponentModify;
+import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.network.NetworkHandler;
 
 import java.util.List;
@@ -25,6 +29,7 @@ public class ModEvent {
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+            ModChecker.check();
 
         });
     }
@@ -64,6 +69,17 @@ public class ModEvent {
     @SubscribeEvent
     public static void detectHouseEvent(HouseDetectEvent event) {
 //        System.out.println("HouseDetectEvent");
+
+    }
+
+    @SubscribeEvent
+    public static void onRegisterBrain(NPCEvent.NPCBrainRegisterEvent event){
+        if(!ModChecker.confluence) {
+            if (event.getNPC().getType() == TENpcEntities.DEMOLITIONIST.get()) {
+                event.setReplace(new DemolitionistNPCAi(event.getNPC()));
+                event.getNPC().setAttackRange(5);
+            }
+        }
 
     }
 }

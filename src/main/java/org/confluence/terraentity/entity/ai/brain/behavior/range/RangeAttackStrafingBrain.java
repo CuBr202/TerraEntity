@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc.brain;
+package org.confluence.terraentity.entity.ai.brain.behavior.range;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.level.ServerLevel;

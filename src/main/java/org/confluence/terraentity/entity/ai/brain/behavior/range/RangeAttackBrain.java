@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc.brain;
+package org.confluence.terraentity.entity.ai.brain.behavior.range;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.level.ServerLevel;
@@ -11,7 +11,6 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.Items;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.utils.TEUtils;
 
 /**
@@ -66,10 +65,7 @@ public class RangeAttackBrain extends Behavior<Mob> {
 
             if(isPreparing){
                 if(--prepareTime <= 0) {
-                    Arrow arrow = new Arrow(owner.level(), owner, Items.ARROW.getDefaultInstance(), Items.ARROW.getDefaultInstance());
-                    arrow.setPos(owner.getX(), owner.getY() + owner.getEyeHeight(), owner.getZ());
-                    arrow.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), 0.0F, 1.5F, 1.0F);
-                    owner.level().addFreshEntity(arrow);
+                    doAttack(level, owner, target);
                 }
             }
 
@@ -92,5 +88,12 @@ public class RangeAttackBrain extends Behavior<Mob> {
     @Override
     protected boolean canStillUse(ServerLevel level, Mob entity, long gameTimeIn) {
         return prepareTime > 0;
+    }
+
+    protected void doAttack(ServerLevel level, Mob owner, LivingEntity target){
+        Arrow arrow = new Arrow(owner.level(), owner, Items.ARROW.getDefaultInstance(), Items.ARROW.getDefaultInstance());
+        arrow.setPos(owner.getX(), owner.getY() + owner.getEyeHeight(), owner.getZ());
+        arrow.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), 0.0F, 1.5F, 1.0F);
+        owner.level().addFreshEntity(arrow);
     }
 }

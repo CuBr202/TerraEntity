@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc;
+package org.confluence.terraentity.entity.npc.house;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

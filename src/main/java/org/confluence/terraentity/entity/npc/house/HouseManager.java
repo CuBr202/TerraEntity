@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc;
+package org.confluence.terraentity.entity.npc.house;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;

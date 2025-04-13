@@ -11,10 +11,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.ai.IFlyRideableMob;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.House;
-import org.confluence.terraentity.entity.npc.HouseManager;
+import org.confluence.terraentity.entity.npc.house.House;
+import org.confluence.terraentity.entity.npc.house.HouseManager;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.utils.AdapterUtils;
 

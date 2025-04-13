@@ -7,6 +7,9 @@ import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
 import org.apache.commons.lang3.mutable.MutableLong;
+import org.confluence.terraentity.entity.npc.house.House;
+import org.confluence.terraentity.entity.npc.house.HouseManager;
+import org.confluence.terraentity.entity.npc.house.IHouseDetector;
 
 /**
  * NPC房屋行为

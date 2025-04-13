@@ -39,6 +39,9 @@ import net.minecraft.world.level.Level;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
+import org.confluence.terraentity.entity.npc.brain.NPCAi;
+import org.confluence.terraentity.entity.npc.house.House;
+import org.confluence.terraentity.entity.npc.house.HouseManager;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.menu.TETradesMenu;
@@ -72,7 +75,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     public Player tradingPlayer;
     public House house = House.EMPTY;
     private NPCAi ai;
-
+    private float rangeDistance = 8;
 
     private static final EntityDataAccessor<NPCTrades> DATA_DAVE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.DAVE_TRADES_SERIALIZER.get());
     private static final EntityDataAccessor<House> DATA_HOUSE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.DAVE_HOUSE_SERIALIZER.get());
@@ -109,20 +112,14 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
     @Override
     protected void registerGoals() {
-//        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2,new NPCTradeGoal(this));
-//
-//        this.goalSelector.addGoal(5, new AvoidEntityGoal<>(this, Monster.class, 20, 0.3f, 0.3f));
-//        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0));
-//        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 10.0F));
-//        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-
     }
 
     @Override
     protected Brain<?> makeBrain(Dynamic<?> dynamic) {
         NPCEvent.NPCBrainRegisterEvent event = new NPCEvent.NPCBrainRegisterEvent(this);
         AdapterUtils.postEvent(event);
+        setAttackRange(8); // 初始化晚于父类，手动提前初始化
         if(event.getReplace() != null){
             ai = event.getReplace();
         }else {
@@ -146,7 +143,11 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
      * 远程攻击的npc ai的走位距离
      */
     public float getAttackRange(){
-        return 8;
+        return rangeDistance;
+    }
+
+    public void setAttackRange(float rangeDistance){
+        this.rangeDistance = rangeDistance;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc.brain;
+package org.confluence.terraentity.entity.ai.brain.behavior.range;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.level.ServerLevel;
@@ -16,7 +16,7 @@ public class AttackCalmDownBrain extends Behavior<Mob> {
     float distanceToRemove;
     public AttackCalmDownBrain(float distanceToRemove) {
         super(ImmutableMap.of(
-                MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_PRESENT
+                MemoryModuleType.ATTACK_TARGET, MemoryStatus.REGISTERED
         ));
         this.distanceToRemove = distanceToRemove * distanceToRemove;
     }
@@ -24,9 +24,16 @@ public class AttackCalmDownBrain extends Behavior<Mob> {
     @Override
     protected void start(ServerLevel level, Mob living, long gameTimeIn) {
         Brain<?> brain = living.getBrain();
-        LivingEntity target = brain.getMemory(MemoryModuleType.ATTACK_TARGET).get();
-        // 距离过远，目标死亡，没有视线
-        boolean shouldRemove = target.distanceToSqr(living) > distanceToRemove || !target.isAlive();
+        var memory = brain.getMemory(MemoryModuleType.ATTACK_TARGET);
+        boolean shouldRemove;
+        if(memory.isEmpty()){
+            // 目标丢失，取消攻击状态
+            shouldRemove = true;
+        }else{
+            LivingEntity target = memory.get();
+            // 距离过远，目标死亡，没有视线
+            shouldRemove= target.distanceToSqr(living) > distanceToRemove || !target.isAlive();
+        }
         if (shouldRemove) {
             brain.eraseMemory(MemoryModuleType.ATTACK_TARGET);
             brain.updateActivityFromSchedule(level.getDayTime(), gameTimeIn);

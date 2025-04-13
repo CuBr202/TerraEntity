@@ -1,9 +1,4 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
-package org.confluence.terraentity.entity.npc;
+package org.confluence.terraentity.entity.npc.brain;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -27,8 +22,15 @@ import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.ai.brain.behavior.NpcHomeNearbyStroll;
-import org.confluence.terraentity.entity.npc.brain.*;
+import org.confluence.terraentity.entity.ai.brain.behavior.HomeNearbyStroll;
+import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicCalmDownBrain;
+import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicTriggerBrain;
+import org.confluence.terraentity.entity.ai.brain.behavior.range.AttackCalmDownBrain;
+import org.confluence.terraentity.entity.ai.brain.behavior.range.AttackTargetTriggerBrain;
+import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackBrain;
+import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackOnCooldownBrain;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.NPCHouseBehaviors;
 import org.confluence.terraentity.init.TEAi;
 
 public class NPCAi {
@@ -39,18 +41,26 @@ public class NPCAi {
         this.npc = npc;
     }
 
-    protected Brain.Provider<AbstractTerraNPC> brainProvider() {
+    public Brain.Provider<AbstractTerraNPC> brainProvider() {
         return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
     }
 
-    protected Brain<?> makeBrain(Brain<AbstractTerraNPC> brain) {
+    public Brain<?> makeBrain(Brain<AbstractTerraNPC> brain) {
         brain.setSchedule(TEAi.NPC_SCHEDULE.get());
         initCoreActivity(brain);
 
         brain.addActivity(Activity.IDLE, getIdlePackage(1.0F));
         brain.addActivity(TEAi.Activities.STAY_HOME, getRestPackage(1.0F));
-        brain.addActivity(Activity.PANIC, getPanicPackage(1.0F));
-        brain.addActivity(TEAi.Activities.RANGE_ATTACK, getRangeAttackPackage(1.0F));
+
+        var rangeAttackPackage = getRangeAttackPackage(1.0F);
+        brain.addActivity(TEAi.Activities.RANGE_ATTACK, rangeAttackPackage);
+        if(!rangeAttackPackage.isEmpty()) {
+            // 远程攻击的npc不会一直逃跑的panic
+            brain.addActivity(Activity.PANIC, getPanicPackage(1.0F));
+        }
+        else {
+            brain.addActivity(Activity.PANIC, getPanicNoAttackPackage(1.0F));
+        }
 
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
@@ -83,8 +93,8 @@ public class NPCAi {
     public ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getPanicPackage(float speedModifier) {
         float f = speedModifier * 1.3F;
         return ImmutableList.of(
-                Pair.of(0, new PanicCalmDownBrain()),
-                Pair.of(2, new RunOne<>( // 附近有敌人有概率逃跑 todo 如果自己没有反击能力则一定会逃跑
+                Pair.of(0, new PanicCalmDownBrain(0.1f)),
+                Pair.of(2, new RunOne<>( // 附近有敌人有概率逃跑
                         ImmutableList.of(
                                 Pair.of(SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false), 1),
                                 Pair.of(new DoNothing(1, 1), 1)))),
@@ -95,23 +105,40 @@ public class NPCAi {
     }
 
     /**
+     * 无攻击行为的npc一定会恐慌
+     */
+    public ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getPanicNoAttackPackage(float speedModifier) {
+        float f = speedModifier * 1.3F;
+        return ImmutableList.of(
+                Pair.of(0, new PanicCalmDownBrain()),
+                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false)),
+                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, f, 6, false))
+        );
+    }
+
+    /**
      * 远程攻击的行为包
      */
     public ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getRangeAttackPackage(float speedModifier) {
 
         return ImmutableList.of(
 //                Pair.of(5, new RangeAttackStrafingBrain()),  // 不是所有远程攻击都需要走位
-                Pair.of(5, new RangeAttackBrain(10, npc.getAttackRange())),
+                Pair.of(5, createRangeAttackBrain()),
                 Pair.of(5, new RangeAttackOnCooldownBrain(50, npc.getAttackRange())),
                 Pair.of(5, new AttackCalmDownBrain(15))
-//                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false)),
-//                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, f, 6, false))
-//                Pair.of(3, VillageBoundRandomStroll.create(f, 2, 2))
+
         );
     }
 
     /**
-     * 空闲状态的行为包
+     * 用于替换不同的远程攻击行为
+     */
+    protected RangeAttackBrain createRangeAttackBrain() {
+        return new RangeAttackBrain(10, npc.getAttackRange());
+    }
+
+    /**
+     * 白天空闲状态的行为包
      * @param speedModifier 速度
      */
     public ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getIdlePackage( float speedModifier) {
@@ -120,7 +147,7 @@ public class NPCAi {
                         ImmutableList.of(
                                 Pair.of(InteractWith.of(EntityType.CAT, 8, MemoryModuleType.INTERACTION_TARGET, speedModifier, 2), 1),
 //                                Pair.of(VillageBoundRandomStroll.create(speedModifier), 1),
-                                Pair.of(NpcHomeNearbyStroll.create(speedModifier), 1), // 随机游走
+                                Pair.of(HomeNearbyStroll.create(speedModifier), 1), // 随机游走
 
                                 Pair.of(SetWalkTargetFromLookTarget.create(speedModifier, 2), 1),
                                 Pair.of(new JumpOnBed(speedModifier), 1),

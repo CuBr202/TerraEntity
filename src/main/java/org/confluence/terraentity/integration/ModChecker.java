@@ -3,13 +3,11 @@ package org.confluence.terraentity.integration;
 import net.neoforged.fml.ModList;
 
 public class ModChecker {
-    public static Boolean confluenceLoaded(){
-        if(confluence == null){
-            confluence = ModList.get().isLoaded("confluence");
-        }
-        return confluence;
+
+    public static boolean confluence = false;
+
+
+    public static void check(){
+        confluence = ModList.get().isLoaded("confluence");
     }
-    private static Boolean confluence;
-
-
 }
