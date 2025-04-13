@@ -8,6 +8,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
+import org.confluence.terraentity.client.entity.renderer.NPCRenderer;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.init.TEEntities;
 
@@ -22,9 +23,9 @@ public class TENpcEntities {
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 
-        event.registerEntityRenderer(GUIDE.get(), c -> new GeoNormalRenderer<>(c, GUIDE.getId().withPrefix("npc/")));
-        event.registerEntityRenderer(DEMOLITIONIST.get(), c -> new GeoNormalRenderer<>(c, DEMOLITIONIST.getId().withPrefix("npc/")));
-        event.registerEntityRenderer(GOBLIN_TINKERER.get(), c -> new GeoNormalRenderer<>(c, GOBLIN_TINKERER.getId().withPrefix("npc/")));
+        event.registerEntityRenderer(GUIDE.get(), c -> new NPCRenderer<>(c, GUIDE.getId()));
+        event.registerEntityRenderer(DEMOLITIONIST.get(), c -> new NPCRenderer<>(c, DEMOLITIONIST.getId()));
+        event.registerEntityRenderer(GOBLIN_TINKERER.get(), c -> new NPCRenderer<>(c, GOBLIN_TINKERER.getId()));
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {

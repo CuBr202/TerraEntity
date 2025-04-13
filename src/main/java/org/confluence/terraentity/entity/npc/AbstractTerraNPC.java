@@ -16,11 +16,13 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.Brain;
@@ -33,9 +35,13 @@ import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.Level;
 
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
@@ -43,9 +49,11 @@ import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
+import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.menu.TETradesMenu;
 import org.confluence.terraentity.utils.AdapterUtils;
+import org.confluence.terraentity.utils.TEUtils;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -53,6 +61,7 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -220,21 +229,91 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         if(hand == InteractionHand.OFF_HAND){
             return super.mobInteract(player, hand);
         }
+
+
         var event = new NPCEvent.InteractNPCEvent(this, player);
         AdapterUtils.postEvent(event);
         ItemStack stack = player.getItemInHand(hand);
-        if(!(stack.getItem() instanceof HouseDetectItem)) {
-            event.execute((npc, player1) -> {
-                if(trades != null) {
-                    player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
-                            new TETradesMenu(id, playerInventory, trades), Component.translatable("title.terra_entity.npc_trade")));
-                }
-            });
+
+        if(stack.is(TEItems.HOUSE_DETECTOR.get())){
+            return InteractionResult.PASS;
         }
+
+
+        if(stack.getItem() instanceof ArmorItem armorItem){
+            // 如果是装备，则穿上
+            if(armorItem.getEquipmentSlot() == EquipmentSlot.BODY){
+                this.setItemSlot(EquipmentSlot.BODY, stack.copy());
+            }else if(armorItem.getEquipmentSlot() == EquipmentSlot.LEGS){
+                this.setItemSlot(EquipmentSlot.LEGS, stack.copy());
+            }else if(armorItem.getEquipmentSlot() == EquipmentSlot.FEET){
+                this.setItemSlot(EquipmentSlot.FEET, stack.copy());
+            }else if(armorItem.getEquipmentSlot() == EquipmentSlot.CHEST){
+                this.setItemSlot(EquipmentSlot.CHEST, stack.copy());
+            }else if(armorItem.getEquipmentSlot() == EquipmentSlot.HEAD){
+                this.setItemSlot(EquipmentSlot.HEAD, stack.copy());
+            }
+            stack.shrink(1);
+            return InteractionResult.SUCCESS;
+        }
+        else if(!stack.isEmpty()){
+            // 如果是物品，则拿在手上
+            this.setItemSlot(EquipmentSlot.MAINHAND, stack.copy());
+            stack.shrink(1);
+            return InteractionResult.SUCCESS;
+        }else if(player.isShiftKeyDown()){
+            // 如果是空手按下shift，则取下装备
+            Vec3 hit = TEUtils.calRayToAABB(player.getEyePosition(), player.getViewVector(0.5f), this.getBoundingBox());
+            if(hit != null) {
+                double dx = hit.y - position().y;
+                if(dx > 1.2){
+                    dropEquipmentToHand(EquipmentSlot.HEAD, player, hand);
+                }else if(dx > 0.7f){
+                    double dminx = Math.max(hit.x - getBoundingBox().minX, getBoundingBox().maxX - hit.x);
+                    double dminz = Math.max(hit.z - getBoundingBox().minZ, getBoundingBox().maxZ - hit.z);
+                    double dmin = Math.min(dminx, dminz);
+                    if(dmin > 0.5f){
+                        // 命中包围盒侧边，去下手中物品
+                        dropEquipmentToHand(EquipmentSlot.MAINHAND, player, hand);
+                    }else {
+                        // 命中包围盒正面，去下胸甲
+                        dropEquipmentToHand(EquipmentSlot.CHEST, player, hand);
+                    }
+                }else if(dx > 0.3f){
+                    dropEquipmentToHand(EquipmentSlot.LEGS, player, hand);
+                }else{
+                    dropEquipmentToHand(EquipmentSlot.FEET, player, hand);
+                }
+            }
+            return InteractionResult.PASS;
+        }
+
+        event.execute((npc, player1) -> {
+            if(trades != null) {
+                player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
+                        new TETradesMenu(id, playerInventory, trades), Component.translatable("title.terra_entity.npc_trade")));
+            }
+        });
+
 //        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new NPCTradesMenu(id,playerInventory, trades, forge), Component.translatable("confluence.menu.npc_shop")));
         tradingPlayer = player;
         return InteractionResult.PASS;
     }
+
+    private void dropEquipmentToHand(EquipmentSlot slot, Player player, InteractionHand hand){
+        ItemStack drop = this.getItemBySlot(slot);
+        if(!drop.isEmpty()){
+            player.setItemInHand(hand, drop.copy());
+            this.setItemSlot(slot, ItemStack.EMPTY);
+        }
+    }
+
+
+//        dir = dir.normalize();
+//
+//        Vec3 end = start.add(dir.scale(deltaX / dir.x));
+//        return end;
+//    }
 
 
     @Override

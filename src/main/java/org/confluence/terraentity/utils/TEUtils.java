@@ -744,6 +744,56 @@ public final class TEUtils {
     }
 
 
+    /**
+     * 计算射线与AABB的交点
+     * @param start 射线起点
+     * @param dir 射线方向
+     * @param aabb 包围盒
+     * @return 若交点存在，返回交点坐标；否则返回null
+     */
+    public static @Nullable Vec3 calRayToAABB(Vec3 start, Vec3 dir, AABB aabb) {
+        double tMin = 0.0;
+        double tMax = Double.MAX_VALUE;
+
+        // 检查射线与x轴的交点
+        double t1 = (aabb.minX - start.x) / dir.x;
+        double t2 = (aabb.maxX - start.x) / dir.x;
+        if (dir.x < 0) {
+            double temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+        if (t1 > tMin) tMin = t1;
+        if (t2 < tMax) tMax = t2;
+        if (tMin > tMax) return null;
+
+        // 检查射线与y轴的交点
+        t1 = (aabb.minY - start.y) / dir.y;
+        t2 = (aabb.maxY - start.y) / dir.y;
+        if (dir.y < 0) {
+            double temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+        if (t1 > tMin) tMin = t1;
+        if (t2 < tMax) tMax = t2;
+        if (tMin > tMax) return null;
+
+        // 检查射线与z轴的交点
+        t1 = (aabb.minZ - start.z) / dir.z;
+        t2 = (aabb.maxZ - start.z) / dir.z;
+        if (dir.z < 0) {
+            double temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+        if (t1 > tMin) tMin = t1;
+        if (t2 < tMax) tMax = t2;
+        if (tMin > tMax) return null;
+
+        return start.add(dir.scale(tMin));
+    }
+
 /*
     public static boolean hasBoss(double radius, Level level,
                                   AABB box){
