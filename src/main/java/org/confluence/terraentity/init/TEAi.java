@@ -16,6 +16,7 @@ public class TEAi {
 
     public static class Activities{
         public static Activity STAY_HOME = registerActivity("stay_home");
+        public static Activity RANGE_ATTACK = registerActivity("range_attack");
 
         private static Activity registerActivity(String key) {
             return Registry.register(BuiltInRegistries.ACTIVITY, key, new Activity(key));

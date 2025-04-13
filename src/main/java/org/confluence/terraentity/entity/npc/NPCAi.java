@@ -28,6 +28,7 @@ import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.behavior.NpcHomeNearbyStroll;
+import org.confluence.terraentity.entity.npc.brain.*;
 import org.confluence.terraentity.init.TEAi;
 
 public class NPCAi {
@@ -43,27 +44,37 @@ public class NPCAi {
     protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(
             MemoryModuleType.LOOK_TARGET,
             MemoryModuleType.DOORS_TO_CLOSE,
+            MemoryModuleType.HOME,
+            MemoryModuleType.WALK_TARGET,
+
+            // 恐慌行为
+            MemoryModuleType.HURT_BY,
+            MemoryModuleType.HURT_BY_ENTITY,
+            MemoryModuleType.NEAREST_HOSTILE,
+
             MemoryModuleType.NEAREST_LIVING_ENTITIES,
 
+            // 攻击行为
+            MemoryModuleType.ATTACK_TARGET,
             MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
-            MemoryModuleType.WALK_TARGET,
+            MemoryModuleType.ATTACK_COOLING_DOWN,
+
+
             MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
             MemoryModuleType.PATH,
             MemoryModuleType.BREED_TARGET,
             MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS,
             MemoryModuleType.LONG_JUMP_MID_JUMP,
-            MemoryModuleType.ATTACK_TARGET,
             MemoryModuleType.TEMPTING_PLAYER,
             MemoryModuleType.TEMPTATION_COOLDOWN_TICKS,
             MemoryModuleType.IS_TEMPTED,
-            MemoryModuleType.HURT_BY,
-            MemoryModuleType.HURT_BY_ENTITY,
+
             MemoryModuleType.NEAREST_ATTACKABLE,
             MemoryModuleType.IS_IN_WATER,
             MemoryModuleType.IS_PREGNANT,
             MemoryModuleType.IS_PANICKING,
             MemoryModuleType.UNREACHABLE_TONGUE_TARGETS,
-            MemoryModuleType.HOME,
+
             MemoryModuleType.LAST_WOKEN
     );
 
@@ -74,7 +85,10 @@ public class NPCAi {
     protected static Brain<?> makeBrain(Brain<AbstractTerraNPC> brain) {
         brain.setSchedule(TEAi.NPC_SCHEDULE.get());
         initCoreActivity(brain);
-        initIdleActivity(brain);
+        brain.addActivity(Activity.IDLE, getIdlePackage(1.0F));
+        brain.addActivity(TEAi.Activities.STAY_HOME, getRestPackage(1.0F));
+        brain.addActivity(Activity.PANIC, getPanicPackage(1.0F));
+        brain.addActivity(TEAi.Activities.RANGE_ATTACK, getRangeAttackPackage(1.0F));
 
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
@@ -83,24 +97,49 @@ public class NPCAi {
     }
 
     private static void initCoreActivity(Brain<AbstractTerraNPC> brain) {
-        brain.addActivity(Activity.CORE, 0,
-                ImmutableList.of(
-                        InteractWithDoor.create(),
-                        new Swim(0.8F),
-                        new LookAtTargetSink(45, 90),
-                        new MoveToTargetSink(),
-                        new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
-                        new CountDownCooldownTicks(MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS),
-                        NPCHouseBehaviors.FindHouse(MemoryModuleType.HOME) // 寻找家
-
-                )
-        );
+        brain.addActivity(Activity.CORE, 0, ImmutableList.of(
+                InteractWithDoor.create(),
+                new Swim(0.8F),
+                new LookAtTargetSink(45, 90),
+                new MoveToTargetSink(),
+                new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
+                new CountDownCooldownTicks(MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS),
+                new NPCPanicTriggerBrain(),
+                NPCHouseBehaviors.FindHouse(MemoryModuleType.HOME) // 寻找家
+        ));
+//        brain.addActivity(Activity.CORE, 1, ImmutableList.of(
+//                new PanicCalmDownBrain()
+//        ));
 
     }
 
-    private static void initIdleActivity(Brain<AbstractTerraNPC> brain) {
-        brain.addActivity(Activity.IDLE, getIdlePackage(1.0F));
-        brain.addActivity(TEAi.Activities.STAY_HOME, getRestPackage(1.0F));
+    /**
+     * 恐慌状态的行为包
+     */
+    public static ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getPanicPackage(float speedModifier) {
+        float f = speedModifier * 1.3F;
+        return ImmutableList.of(
+                Pair.of(0, new PanicCalmDownBrain()),
+                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false)),
+                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, f, 6, false))
+//                Pair.of(3, VillageBoundRandomStroll.create(f, 2, 2))
+        );
+    }
+
+    /**
+     * 远程攻击的行为包
+     */
+    public static ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getRangeAttackPackage(float speedModifier) {
+
+        return ImmutableList.of(
+//                Pair.of(5, new RangeAttackStrafingBrain()),  // 不是所有远程攻击都需要走位
+                Pair.of(5, new RangeAttackBrain(10)),
+                Pair.of(5, new RangeAttackOnCooldownBrain(50))
+
+//                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false)),
+//                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, f, 6, false))
+//                Pair.of(3, VillageBoundRandomStroll.create(f, 2, 2))
+        );
     }
 
     /**
@@ -133,8 +172,8 @@ public class NPCAi {
                 Pair.of(5, new RunOne<>( // 离开家时尝试回到家
                         ImmutableMap.of(MemoryModuleType.HOME, MemoryStatus.VALUE_ABSENT),
                         ImmutableList.of(
-                                Pair.of(NPCHouseBehaviors.walkToHouse(speedModifier), 1), // 走向家
-                                Pair.of(InsideBrownianWalk.create(speedModifier), 4), // 随机运动
+                                Pair.of(NPCHouseBehaviors.walkToHouse(speedModifier), 2), // 走向家
+                                Pair.of(InsideBrownianWalk.create(speedModifier), 1), // 随机运动
 
 //                                Pair.of(GoToClosestVillage.create(speedModifier, 4), 2),
                                 Pair.of(new DoNothing(20, 40), 2)))),
@@ -150,6 +189,7 @@ public class NPCAi {
                                 Pair.of(InteractWith.of(EntityType.CAT, 8, MemoryModuleType.INTERACTION_TARGET, speedModifier, 2), 1),
 //                                Pair.of(VillageBoundRandomStroll.create(speedModifier), 1),
                                 Pair.of(NpcHomeNearbyStroll.create(speedModifier), 1),
+
 
                                 Pair.of(new DoNothing(30, 60), 1)))),
                 Pair.of(99, UpdateActivityFromSchedule.create()));

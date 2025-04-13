@@ -34,6 +34,7 @@ public class DebugBlocksHelper extends AbstractBufferManager{
     public void addDebugBlock(BlockPos pos, DebugInfo debugInfo) {
         debugInfoMap.put(pos, debugInfo);
     }
+
     public void addDebugBlock(List<BlockPos> pos, DebugInfo debugInfo) {
         for(BlockPos p : pos) {
             debugInfoMap.put(p, debugInfo);

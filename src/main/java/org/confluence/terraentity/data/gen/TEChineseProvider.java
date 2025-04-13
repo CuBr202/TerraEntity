@@ -89,8 +89,6 @@ public class TEChineseProvider extends LanguageProvider {
         add(TERideableEntities.RIDEABLE_SLIME.get(), "史莱姆坐骑");
         add(TERideableEntities.RIDEABLE_BEE.get(), "蜜蜂坐骑");
 
-        add(TENpcEntities.GUIDE.get(), "向导");
-        add(TENpcEntities.DEMOLITIONIST.get(), "爆破专家");
 
         // 刷怪蛋
         add(TESpawnEggItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
@@ -144,8 +142,16 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
         add(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
 
+
+        add(TENpcEntities.GUIDE.get(), "向导");
+        add(TENpcEntities.DEMOLITIONIST.get(), "爆破专家");
+        add(TENpcEntities.GOBLIN_TINKERER.get(), "哥布林工匠");
+
+
         add(TESpawnEggItems.GUILD_EGG.get(), "向导刷怪蛋");
         add(TESpawnEggItems.DEMOLITIONIST_EGG.get(), "爆破专家刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_TINKERER_EGG.get(), "哥布林工匠刷怪蛋");
+
 
 
         // 召唤杖

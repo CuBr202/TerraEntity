@@ -14,8 +14,9 @@ import org.confluence.terraentity.init.TEEntities;
 public class TENpcEntities {
 
 
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> GUIDE = TEEntities.registerEntity("guide", AbstractTerraNPC::new, MobCategory.CREATURE, 0.65f, 1.85f);
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DEMOLITIONIST = TEEntities.registerEntity("demolitionist", AbstractTerraNPC::new, MobCategory.CREATURE, 0.65f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> GUIDE = TEEntities.registerEntity("guide", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DEMOLITIONIST = TEEntities.registerEntity("demolitionist", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> GOBLIN_TINKERER = TEEntities.registerEntity("goblin_tinkerer", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
 
 
     @OnlyIn(Dist.CLIENT)
@@ -23,11 +24,13 @@ public class TENpcEntities {
 
         event.registerEntityRenderer(GUIDE.get(), c -> new GeoNormalRenderer<>(c, GUIDE.getId().withPrefix("npc/")));
         event.registerEntityRenderer(DEMOLITIONIST.get(), c -> new GeoNormalRenderer<>(c, DEMOLITIONIST.getId().withPrefix("npc/")));
+        event.registerEntityRenderer(GOBLIN_TINKERER.get(), c -> new GeoNormalRenderer<>(c, GOBLIN_TINKERER.getId().withPrefix("npc/")));
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(GUIDE.get(), AbstractTerraNPC.createAttributes().build());
         event.put(DEMOLITIONIST.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(GOBLIN_TINKERER.get(), AbstractTerraNPC.createAttributes().build());
     }
 
     public static void register(){

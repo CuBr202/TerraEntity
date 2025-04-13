@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -57,6 +56,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
+/**
+ * 泰拉风格的npc，远程攻击，交易菜单，房屋系统
+ */
 public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
     public static final Map<MemoryModuleType<GlobalPos>, BiPredicate<AbstractTerraNPC, Holder<PoiType>>> POI_MEMORIES =
@@ -133,6 +135,12 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         return (Brain<AbstractTerraNPC>) super.getBrain();
     }
 
+    /**
+     * 远程攻击的npc ai的走位距离
+     */
+    public float getAttackRange(){
+        return 8;
+    }
 
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
@@ -181,27 +189,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     @Override
     public void tick(){
         super.tick();
-        if(!level().isClientSide()) {
-            // TODO 攻击目标
-//            LivingEntity entity = TEUtils.getAABBAngleTarget(this.position(), position().add(getLookAngle()), level(), this, 10, 180, e -> true);
-//            this.brain.setMemory(MemoryModuleType.ATTACK_TARGET,
-//                    entity
-//            );
-//            if(this.brain.hasMemoryValue(MemoryModuleType.ATTACK_TARGET)){
-//                this.brain.getActiveNonCoreActivity().ifPresent(activity -> {
-//                    System.out.println(activity);
-//                    this.brain.setMemory(MemoryModuleType.NEAREST_ATTACKABLE, entity);
-//                });
-//            }
 
-//            System.out.println("water: "+ getBrain().getMemory(MemoryModuleType.HOME));
-//            System.out.println("long: "+ getBrain().getMemory(MemoryModuleType.LONG_JUMP_MID_JUMP));
-
-        }
-    }
-
-    public void setHome(BlockPos pos){
-        this.brain.setMemory(MemoryModuleType.HOME,  GlobalPos.of(level().dimension(), pos));
     }
 
     @Override
@@ -229,9 +217,10 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         ItemStack stack = player.getItemInHand(hand);
         if(!(stack.getItem() instanceof HouseDetectItem)) {
             event.execute((npc, player1) -> {
-                player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
-                        new TETradesMenu(id,playerInventory, trades), Component.translatable("title.terra_entity.npc_trade")));
-
+                if(trades != null) {
+                    player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
+                            new TETradesMenu(id, playerInventory, trades), Component.translatable("title.terra_entity.npc_trade")));
+                }
             });
         }
 //        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new NPCTradesMenu(id,playerInventory, trades, forge), Component.translatable("confluence.menu.npc_shop")));
@@ -299,6 +288,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 //        this.releasePoi(MemoryModuleType.MEETING_POINT);
     }
 
+    // poi暂时没用上
     public void releasePoi(MemoryModuleType<GlobalPos> moduleType) {
         if (this.level() instanceof ServerLevel) {
             MinecraftServer minecraftserver = ((ServerLevel)this.level()).getServer();

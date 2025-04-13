@@ -64,8 +64,9 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> BRAIN_OF_CTHULHU_SPAWN_EGG = registerEgg("brain_of_cthulhu_spawn_egg", TEBossEntities.BRAIN_OF_CTHULHU, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> QUEEN_BEE_SPAWN_EGG = registerEgg("queen_bee_spawn_egg", TEBossEntities.QUEEN_BEE, 0xffffff, 0xffffff);
 
-    public static final DeferredItem<Item> GUILD_EGG = registerEgg("guild_egg", TENpcEntities.GUIDE, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> DEMOLITIONIST_EGG = registerEgg("demolitionist_egg", TENpcEntities.DEMOLITIONIST, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> GUILD_EGG = registerEgg("guild_spawn_egg", TENpcEntities.GUIDE, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> DEMOLITIONIST_EGG = registerEgg("demolitionist_spawn_egg", TENpcEntities.DEMOLITIONIST, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> GOBLIN_TINKERER_EGG = registerEgg("goblin_tinkerer_spawn_egg", TENpcEntities.GOBLIN_TINKERER, 0xffffff, 0xffffff);
 
 
     public static DeferredItem<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryColor, int secondaryColor){

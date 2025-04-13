@@ -27,8 +27,9 @@ public class NpcHomeNearbyStroll {
 
     public static OneShot<PathfinderMob> create(float speedModifier, int maxHorizontalDist, int maxVerticalDist) {
         return BehaviorBuilder.create((instance) -> instance.group(
-                instance.absent(MemoryModuleType.WALK_TARGET)
-        ).apply(instance, (walk_target) -> (serverLevel, mob, time) -> {
+                instance.absent(MemoryModuleType.WALK_TARGET),
+                instance.present(MemoryModuleType.HOME)
+        ).apply(instance, (walk_target, gHomePos) -> (serverLevel, mob, time) -> {
 
             Vec3 vec3;
             var home = mob.getBrain().getMemory(MemoryModuleType.HOME);
