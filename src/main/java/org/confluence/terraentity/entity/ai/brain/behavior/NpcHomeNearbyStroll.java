@@ -14,17 +14,25 @@ import java.util.Optional;
 
 import static net.minecraft.world.entity.ai.util.LandRandomPos.movePosUpOutOfSolid;
 
+/**
+ * 白天在家附近随机游走
+ */
 public class NpcHomeNearbyStroll {
-    private static final int MAX_XZ_DIST = 10;
-    private static final int MAX_Y_DIST = 7;
+
 
     public NpcHomeNearbyStroll() {
     }
 
     public static OneShot<PathfinderMob> create(float speedModifier) {
-        return create(speedModifier, 5, 5);
+        return create(speedModifier, 20, 20);
     }
 
+    /**
+     * 白天在家附近随机游走
+     * @param speedModifier 速度
+     * @param maxHorizontalDist 最大水平距离
+     * @param maxVerticalDist 最大垂直距离
+     */
     public static OneShot<PathfinderMob> create(float speedModifier, int maxHorizontalDist, int maxVerticalDist) {
         return BehaviorBuilder.create((instance) -> instance.group(
                 instance.absent(MemoryModuleType.WALK_TARGET),

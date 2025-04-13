@@ -76,7 +76,11 @@ public record HouseManager(Map<UUID, House> houses) {
      * @return 房子对象
      */
     public House getHouse(UUID uuid) {
-        return houses.get(uuid);
+        var house = houses.get(uuid);
+        if(house == null){
+            house = House.EMPTY;
+        }
+        return house;
     }
 
     /**

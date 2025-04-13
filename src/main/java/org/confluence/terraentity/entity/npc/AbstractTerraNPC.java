@@ -36,8 +36,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import org.confluence.terraentity.api.event.InitNPCTradeEvent;
-import org.confluence.terraentity.api.event.InteractNPCEvent;
+import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
@@ -72,7 +71,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     public NPCTrades trades;
     public Player tradingPlayer;
     public House house = House.EMPTY;
-
+    private NPCAi ai;
 
 
     private static final EntityDataAccessor<NPCTrades> DATA_DAVE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.DAVE_TRADES_SERIALIZER.get());
@@ -83,7 +82,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         super(entityType, level);
 
         if(!level.isClientSide()){
-            InitNPCTradeEvent event = new InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
+            NPCEvent.InitNPCTradeEvent event = new NPCEvent.InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
             AdapterUtils.postEvent(event);
             trades = NPCTrades.getTrade(event.getOrigin());
              if (trades != null) {
@@ -122,12 +121,20 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
     @Override
     protected Brain<?> makeBrain(Dynamic<?> dynamic) {
-        return NPCAi.makeBrain(this.brainProvider().makeBrain(dynamic));
+        NPCEvent.NPCBrainRegisterEvent event = new NPCEvent.NPCBrainRegisterEvent(this);
+        AdapterUtils.postEvent(event);
+        if(event.getReplace() != null){
+            ai = event.getReplace();
+        }else {
+            ai = new NPCAi(this);
+        }
+        return ai.makeBrain(this.brainProvider().makeBrain(dynamic));
     }
 
     @Override
     protected Brain.Provider<AbstractTerraNPC> brainProvider() {
-        return NPCAi.brainProvider();
+
+        return ai.brainProvider();
     }
 
     @Override
@@ -212,7 +219,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         if(hand == InteractionHand.OFF_HAND){
             return super.mobInteract(player, hand);
         }
-        var event = new InteractNPCEvent(this, player);
+        var event = new NPCEvent.InteractNPCEvent(this, player);
         AdapterUtils.postEvent(event);
         ItemStack stack = player.getItemInHand(hand);
         if(!(stack.getItem() instanceof HouseDetectItem)) {

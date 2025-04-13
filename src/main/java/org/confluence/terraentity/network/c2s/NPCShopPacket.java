@@ -8,7 +8,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.api.event.NPCTradeEvent;
+import org.confluence.terraentity.api.event.NPCEvent;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +33,11 @@ public record NPCShopPacket(ITrade trade) implements CustomPacketPayload {
         context.enqueueWork(() -> {
 
             if(context.player() instanceof ServerPlayer sp){
-                NPCTradeEvent event = new NPCTradeEvent(trade, sp);
+                AbstractTerraNPC npc = null;
+                if(((IPlayer)sp).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc1){
+                    npc = npc1;
+                }
+                NPCEvent.NPCTradeEvent event = new NPCEvent.NPCTradeEvent(npc, trade, sp);
                 AdapterUtils.postEvent(event);
                 if (event.isCanceled()) {
                     return;

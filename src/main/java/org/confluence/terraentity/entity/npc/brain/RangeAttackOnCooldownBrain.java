@@ -3,49 +3,57 @@ package org.confluence.terraentity.entity.npc.brain;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
 /**
  * 当远程攻击冷却时, 或者距离过远试图接近敌人的走a行为
  */
-public class RangeAttackOnCooldownBrain extends Behavior<AbstractTerraNPC> {
+public class RangeAttackOnCooldownBrain extends Behavior<PathfinderMob> {
 
-    public RangeAttackOnCooldownBrain(int cooldownTime) {
+    float attackRange;
+
+    public RangeAttackOnCooldownBrain(int cooldownTime, float attackRange) {
         super(ImmutableMap.of(
                 MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_PRESENT,
                 MemoryModuleType.ATTACK_COOLING_DOWN, MemoryStatus.VALUE_PRESENT
                 ),cooldownTime);
+        this.attackRange = attackRange;
     }
 
     @Override
-    protected boolean checkExtraStartConditions(ServerLevel level, AbstractTerraNPC owner) {
+    protected boolean checkExtraStartConditions(ServerLevel level, PathfinderMob owner) {
+
         var cooldownMemory = owner.getBrain().getMemory(MemoryModuleType.ATTACK_COOLING_DOWN);
         if(cooldownMemory.isPresent()){
-            // 在冷却时执行
-            return cooldownMemory.get();
+            // 在冷却时执行一定执行
+            if(cooldownMemory.get()){
+                return true;
+            }
         }
 
         var memory = owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET);
         if(memory.isPresent()){
+            // 否则距离过远时执行
             LivingEntity target = memory.get();
-            return target.distanceTo(owner) > owner.getAttackRange() + 2;
+            return target.distanceTo(owner) > attackRange;
         }
+
         return false;
     }
 
     @Override
-    protected void tick(ServerLevel level, AbstractTerraNPC owner, long gameTime) {
+    protected void tick(ServerLevel level, PathfinderMob owner, long gameTime) {
 
         if(!owner.getBrain().hasMemoryValue(MemoryModuleType.WALK_TARGET)) { // 防止一直寻路导致鬼畜
             owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).ifPresent((target) -> {
 
-                float safeDistance = owner.getAttackRange();
+                float safeDistance = attackRange;
                 Vec3 targetPos = target.position();
                 Vec3 ownerPos = owner.position();
                 Vec3 toPos;
@@ -69,17 +77,17 @@ public class RangeAttackOnCooldownBrain extends Behavior<AbstractTerraNPC> {
     }
 
     @Override
-    protected void start(ServerLevel level, AbstractTerraNPC entity, long gameTimeIn) {
+    protected void start(ServerLevel level, PathfinderMob entity, long gameTimeIn) {
 
     }
 
     @Override
-    protected void stop(ServerLevel level, AbstractTerraNPC entity, long gameTimeIn) {
+    protected void stop(ServerLevel level,PathfinderMob entity, long gameTimeIn) {
         entity.getBrain().setMemory(MemoryModuleType.ATTACK_COOLING_DOWN, false);
     }
 
     @Override
-    protected boolean canStillUse(ServerLevel level, AbstractTerraNPC entity, long gameTimeIn) {
+    protected boolean canStillUse(ServerLevel level, PathfinderMob entity, long gameTimeIn) {
         return this.checkExtraStartConditions(level, entity);
     }
 }

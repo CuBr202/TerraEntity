@@ -32,17 +32,21 @@ import org.confluence.terraentity.entity.npc.brain.*;
 import org.confluence.terraentity.init.TEAi;
 
 public class NPCAi {
-    boolean shouldRangeAttack;
 
+    protected AbstractTerraNPC npc;
 
-    public NPCAi() {
-
+    public NPCAi(AbstractTerraNPC npc) {
+        this.npc = npc;
     }
 
+    protected Brain.Provider<AbstractTerraNPC> brainProvider() {
+        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
+    }
 
-    protected static Brain<?> makeBrain(Brain<AbstractTerraNPC> brain) {
+    protected Brain<?> makeBrain(Brain<AbstractTerraNPC> brain) {
         brain.setSchedule(TEAi.NPC_SCHEDULE.get());
         initCoreActivity(brain);
+
         brain.addActivity(Activity.IDLE, getIdlePackage(1.0F));
         brain.addActivity(TEAi.Activities.STAY_HOME, getRestPackage(1.0F));
         brain.addActivity(Activity.PANIC, getPanicPackage(1.0F));
@@ -54,7 +58,7 @@ public class NPCAi {
         return brain;
     }
 
-    private static void initCoreActivity(Brain<AbstractTerraNPC> brain) {
+    protected void initCoreActivity(Brain<AbstractTerraNPC> brain) {
         brain.addActivity(Activity.CORE, 0, ImmutableList.of(
                 InteractWithDoor.create(),
                 new Swim(0.8F),
@@ -76,7 +80,7 @@ public class NPCAi {
     /**
      * 恐慌状态的行为包
      */
-    public static ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getPanicPackage(float speedModifier) {
+    public ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getPanicPackage(float speedModifier) {
         float f = speedModifier * 1.3F;
         return ImmutableList.of(
                 Pair.of(0, new PanicCalmDownBrain()),
@@ -93,13 +97,13 @@ public class NPCAi {
     /**
      * 远程攻击的行为包
      */
-    public static ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getRangeAttackPackage(float speedModifier) {
+    public ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getRangeAttackPackage(float speedModifier) {
 
         return ImmutableList.of(
 //                Pair.of(5, new RangeAttackStrafingBrain()),  // 不是所有远程攻击都需要走位
-                Pair.of(5, new RangeAttackBrain(10)),
-                Pair.of(5, new RangeAttackOnCooldownBrain(50)),
-                Pair.of(5, new AttackCalmDownBrain())
+                Pair.of(5, new RangeAttackBrain(10, npc.getAttackRange())),
+                Pair.of(5, new RangeAttackOnCooldownBrain(50, npc.getAttackRange())),
+                Pair.of(5, new AttackCalmDownBrain(15))
 //                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false)),
 //                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, f, 6, false))
 //                Pair.of(3, VillageBoundRandomStroll.create(f, 2, 2))
@@ -110,12 +114,14 @@ public class NPCAi {
      * 空闲状态的行为包
      * @param speedModifier 速度
      */
-    public static ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getIdlePackage( float speedModifier) {
+    public ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getIdlePackage( float speedModifier) {
         return ImmutableList.of(
                 Pair.of(2, new RunOne<>(
                         ImmutableList.of(
                                 Pair.of(InteractWith.of(EntityType.CAT, 8, MemoryModuleType.INTERACTION_TARGET, speedModifier, 2), 1),
-                                Pair.of(VillageBoundRandomStroll.create(speedModifier), 1),
+//                                Pair.of(VillageBoundRandomStroll.create(speedModifier), 1),
+                                Pair.of(NpcHomeNearbyStroll.create(speedModifier), 1), // 随机游走
+
                                 Pair.of(SetWalkTargetFromLookTarget.create(speedModifier, 2), 1),
                                 Pair.of(new JumpOnBed(speedModifier), 1),
                                 Pair.of(new DoNothing(30, 60), 1)))),
@@ -128,17 +134,16 @@ public class NPCAi {
      * 休息状态的行为包
      * @param speedModifier 速度
      */
-    public static ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getRestPackage(float speedModifier) {
+    public ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getRestPackage(float speedModifier) {
         return ImmutableList.of(
                 Pair.of(2, createPoi(MemoryModuleType.HOME, speedModifier, 5, 150, 1200)),
 //                Pair.of(3, new SleepInBed()),
 
                 Pair.of(5, new RunOne<>( // 离开家时尝试回到家
-                        ImmutableMap.of(MemoryModuleType.HOME, MemoryStatus.VALUE_ABSENT),
+                        ImmutableMap.of(MemoryModuleType.HOME, MemoryStatus.VALUE_PRESENT),
                         ImmutableList.of(
                                 Pair.of(NPCHouseBehaviors.walkToHouse(speedModifier), 2), // 走向家
-                                Pair.of(InsideBrownianWalk.create(speedModifier), 1), // 随机运动
-
+//                                Pair.of(VillageBoundRandomStroll.create(speedModifier), 1),
 //                                Pair.of(GoToClosestVillage.create(speedModifier, 4), 2),
                                 Pair.of(new DoNothing(20, 40), 2)))),
                 Pair.of(5, new RunOne<>( // 视觉感知
@@ -152,8 +157,8 @@ public class NPCAi {
                         ImmutableList.of(
                                 Pair.of(InteractWith.of(EntityType.CAT, 8, MemoryModuleType.INTERACTION_TARGET, speedModifier, 2), 1),
 //                                Pair.of(VillageBoundRandomStroll.create(speedModifier), 1),
-                                Pair.of(NpcHomeNearbyStroll.create(speedModifier), 1),
-
+//                                Pair.of(NpcHomeNearbyStroll.create(speedModifier), 1),
+                                Pair.of(InsideBrownianWalk.create(speedModifier), 2),
 
                                 Pair.of(new DoNothing(30, 60), 1)))),
                 Pair.of(99, UpdateActivityFromSchedule.create()));
@@ -251,7 +256,5 @@ public class NPCAi {
             MemoryModuleType.LAST_WOKEN
     );
 
-    protected static Brain.Provider<AbstractTerraNPC> brainProvider() {
-        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
-    }
+
 }
