@@ -25,14 +25,18 @@ public class RangeAttackOnCooldownBrain extends Behavior<AbstractTerraNPC> {
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel level, AbstractTerraNPC owner) {
-        if(owner.getBrain().getMemory(MemoryModuleType.ATTACK_COOLING_DOWN).get()){
+        var cooldownMemory = owner.getBrain().getMemory(MemoryModuleType.ATTACK_COOLING_DOWN);
+        if(cooldownMemory.isPresent()){
             // 在冷却时执行
-            return true;
+            return cooldownMemory.get();
         }
-        LivingEntity attackTarget = owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).get();
-        // 距离过远时尝试接近
-        return attackTarget.distanceTo(owner) > owner.getAttackRange() + 2;
 
+        var memory = owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET);
+        if(memory.isPresent()){
+            LivingEntity target = memory.get();
+            return target.distanceTo(owner) > owner.getAttackRange() + 2;
+        }
+        return false;
     }
 
     @Override

@@ -27,60 +27,18 @@ import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.ai.behavior.NpcHomeNearbyStroll;
+import org.confluence.terraentity.entity.ai.brain.behavior.NpcHomeNearbyStroll;
 import org.confluence.terraentity.entity.npc.brain.*;
 import org.confluence.terraentity.init.TEAi;
 
 public class NPCAi {
-
-    protected static final ImmutableList<SensorType<? extends Sensor<? super AbstractTerraNPC>>> SENSOR_TYPES = ImmutableList.of(
-            SensorType.NEAREST_LIVING_ENTITIES,
-            SensorType.HURT_BY,
-            SensorType.FROG_ATTACKABLES,
-            SensorType.FROG_TEMPTATIONS,
-            SensorType.IS_IN_WATER
-    );
-
-    protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(
-            MemoryModuleType.LOOK_TARGET,
-            MemoryModuleType.DOORS_TO_CLOSE,
-            MemoryModuleType.HOME,
-            MemoryModuleType.WALK_TARGET,
-
-            // 恐慌行为
-            MemoryModuleType.HURT_BY,
-            MemoryModuleType.HURT_BY_ENTITY,
-            MemoryModuleType.NEAREST_HOSTILE,
-
-            MemoryModuleType.NEAREST_LIVING_ENTITIES,
-
-            // 攻击行为
-            MemoryModuleType.ATTACK_TARGET,
-            MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
-            MemoryModuleType.ATTACK_COOLING_DOWN,
+    boolean shouldRangeAttack;
 
 
-            MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
-            MemoryModuleType.PATH,
-            MemoryModuleType.BREED_TARGET,
-            MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS,
-            MemoryModuleType.LONG_JUMP_MID_JUMP,
-            MemoryModuleType.TEMPTING_PLAYER,
-            MemoryModuleType.TEMPTATION_COOLDOWN_TICKS,
-            MemoryModuleType.IS_TEMPTED,
+    public NPCAi() {
 
-            MemoryModuleType.NEAREST_ATTACKABLE,
-            MemoryModuleType.IS_IN_WATER,
-            MemoryModuleType.IS_PREGNANT,
-            MemoryModuleType.IS_PANICKING,
-            MemoryModuleType.UNREACHABLE_TONGUE_TARGETS,
-
-            MemoryModuleType.LAST_WOKEN
-    );
-
-    protected static Brain.Provider<AbstractTerraNPC> brainProvider() {
-        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
     }
+
 
     protected static Brain<?> makeBrain(Brain<AbstractTerraNPC> brain) {
         brain.setSchedule(TEAi.NPC_SCHEDULE.get());
@@ -104,8 +62,10 @@ public class NPCAi {
                 new MoveToTargetSink(),
                 new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
                 new CountDownCooldownTicks(MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS),
-                new NPCPanicTriggerBrain(),
+                new PanicTriggerBrain(),
+                new AttackTargetTriggerBrain(12),
                 NPCHouseBehaviors.FindHouse(MemoryModuleType.HOME) // 寻找家
+
         ));
 //        brain.addActivity(Activity.CORE, 1, ImmutableList.of(
 //                new PanicCalmDownBrain()
@@ -120,8 +80,12 @@ public class NPCAi {
         float f = speedModifier * 1.3F;
         return ImmutableList.of(
                 Pair.of(0, new PanicCalmDownBrain()),
-                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false)),
-                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, f, 6, false))
+                Pair.of(2, new RunOne<>( // 附近有敌人有概率逃跑 todo 如果自己没有反击能力则一定会逃跑
+                        ImmutableList.of(
+                                Pair.of(SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false), 1),
+                                Pair.of(new DoNothing(1, 1), 1)))),
+//                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false)), // 这里如果不注释，则会一直逃跑
+                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, f, 6, false)) // 被攻击则会逃跑
 //                Pair.of(3, VillageBoundRandomStroll.create(f, 2, 2))
         );
     }
@@ -134,8 +98,8 @@ public class NPCAi {
         return ImmutableList.of(
 //                Pair.of(5, new RangeAttackStrafingBrain()),  // 不是所有远程攻击都需要走位
                 Pair.of(5, new RangeAttackBrain(10)),
-                Pair.of(5, new RangeAttackOnCooldownBrain(50))
-
+                Pair.of(5, new RangeAttackOnCooldownBrain(50)),
+                Pair.of(5, new AttackCalmDownBrain())
 //                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false)),
 //                Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, f, 6, false))
 //                Pair.of(3, VillageBoundRandomStroll.create(f, 2, 2))
@@ -239,4 +203,55 @@ public class NPCAi {
         }));
     }
 
+
+
+    protected static final ImmutableList<SensorType<? extends Sensor<? super AbstractTerraNPC>>> SENSOR_TYPES = ImmutableList.of(
+            SensorType.NEAREST_LIVING_ENTITIES,
+            SensorType.HURT_BY,
+            SensorType.FROG_ATTACKABLES,
+            SensorType.FROG_TEMPTATIONS,
+            SensorType.IS_IN_WATER,
+            TEAi.NPC_HOSTILES_SENSOR.get()
+    );
+
+    protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(
+            MemoryModuleType.LOOK_TARGET,
+            MemoryModuleType.DOORS_TO_CLOSE,
+            MemoryModuleType.HOME,
+            MemoryModuleType.WALK_TARGET,
+
+            // 恐慌行为
+            MemoryModuleType.HURT_BY,
+            MemoryModuleType.HURT_BY_ENTITY,
+            MemoryModuleType.NEAREST_HOSTILE,
+
+            MemoryModuleType.NEAREST_LIVING_ENTITIES,
+
+            // 攻击行为
+            MemoryModuleType.ATTACK_TARGET,
+            MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
+            MemoryModuleType.ATTACK_COOLING_DOWN,
+
+
+            MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
+            MemoryModuleType.PATH,
+            MemoryModuleType.BREED_TARGET,
+            MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS,
+            MemoryModuleType.LONG_JUMP_MID_JUMP,
+            MemoryModuleType.TEMPTING_PLAYER,
+            MemoryModuleType.TEMPTATION_COOLDOWN_TICKS,
+            MemoryModuleType.IS_TEMPTED,
+
+            MemoryModuleType.NEAREST_ATTACKABLE,
+            MemoryModuleType.IS_IN_WATER,
+            MemoryModuleType.IS_PREGNANT,
+            MemoryModuleType.IS_PANICKING,
+            MemoryModuleType.UNREACHABLE_TONGUE_TARGETS,
+
+            MemoryModuleType.LAST_WOKEN
+    );
+
+    protected static Brain.Provider<AbstractTerraNPC> brainProvider() {
+        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
+    }
 }

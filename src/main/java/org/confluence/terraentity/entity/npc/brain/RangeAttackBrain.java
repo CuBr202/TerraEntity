@@ -1,7 +1,6 @@
 package org.confluence.terraentity.entity.npc.brain;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.behavior.Behavior;

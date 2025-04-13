@@ -39,7 +39,7 @@ public class PanicCalmDownBrain extends Behavior<LivingEntity> {
     protected void start(ServerLevel level, LivingEntity living, long gameTimeIn) {
         Brain<?> brain = living.getBrain();
         boolean hurtOrHostileOrAway = brain.hasMemoryValue(MemoryModuleType.HURT_BY)
-                || brain.hasMemoryValue(MemoryModuleType.NEAREST_HOSTILE)
+//                || brain.hasMemoryValue(MemoryModuleType.NEAREST_HOSTILE)
                 || brain.getMemory(MemoryModuleType.HURT_BY_ENTITY).filter(entity -> entity.distanceTo(living) < 10 && entity!= living).isPresent();
         if (!hurtOrHostileOrAway) {
             LivingEntity target = brain.getMemory(MemoryModuleType.HURT_BY_ENTITY).orElse(null);
@@ -48,8 +48,10 @@ public class PanicCalmDownBrain extends Behavior<LivingEntity> {
             brain.eraseMemory(MemoryModuleType.LOOK_TARGET);
 //            brain.updateActivityFromSchedule(level.getDayTime(), gameTimeIn);
             brain.setActiveActivityIfPossible(TEAi.Activities.RANGE_ATTACK);
-            if(target!= null && target.isAlive() && target != living)
+            if(target!= null && target.isAlive() && target != living) {
                 brain.setMemory(MemoryModuleType.ATTACK_TARGET, target);
+                brain.eraseMemory(MemoryModuleType.HURT_BY_ENTITY);
+            }
             brain.setMemory(MemoryModuleType.ATTACK_COOLING_DOWN, false);
 
         }

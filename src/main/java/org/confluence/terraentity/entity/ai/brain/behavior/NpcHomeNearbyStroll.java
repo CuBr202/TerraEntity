@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.ai.behavior;
+package org.confluence.terraentity.entity.ai.brain.behavior;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;

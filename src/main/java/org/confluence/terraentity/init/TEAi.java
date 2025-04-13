@@ -2,17 +2,21 @@ package org.confluence.terraentity.init;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.entity.schedule.ScheduleBuilder;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.ai.brain.sensor.NPCHostilesSensor;
 
 import java.util.function.Supplier;
 
 public class TEAi {
-    public static final DeferredRegister<Schedule> SCHEDULE = DeferredRegister.create(BuiltInRegistries.SCHEDULE, TerraEntity.MODID);
+    public static final DeferredRegister<Schedule> SCHEDULES = DeferredRegister.create(BuiltInRegistries.SCHEDULE, TerraEntity.MODID);
+    public static final DeferredRegister<SensorType<?>> SENSORS = DeferredRegister.create(BuiltInRegistries.SENSOR_TYPE, TerraEntity.MODID);
 
     public static class Activities{
         public static Activity STAY_HOME = registerActivity("stay_home");
@@ -23,10 +27,12 @@ public class TEAi {
         }
     }
 
-    public static Supplier<Schedule> NPC_SCHEDULE = SCHEDULE.register("npc_schedule", ()->new ScheduleBuilder(new Schedule())
+    public static Supplier<Schedule> NPC_SCHEDULE = SCHEDULES.register("npc_schedule", ()->new ScheduleBuilder(new Schedule())
             .changeActivityAt(0, Activity.WORK)
             .changeActivityAt(12000, Activities.STAY_HOME)
             .build());
+
+    public static Supplier<SensorType<NPCHostilesSensor>> NPC_HOSTILES_SENSOR = SENSORS.register("npc_hostiles_sensor", ()-> new SensorType<>(() -> new NPCHostilesSensor(10)));
 
 
 
@@ -36,7 +42,8 @@ public class TEAi {
     }
 
     public static void register(IEventBus bus){
-        SCHEDULE.register(bus);
+        SCHEDULES.register(bus);
+        SENSORS.register(bus);
 
     }
 }

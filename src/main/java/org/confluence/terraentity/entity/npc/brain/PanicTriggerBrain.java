@@ -7,21 +7,20 @@ import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.schedule.Activity;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
 /**
  * 恐慌触发器
  */
-public class NPCPanicTriggerBrain extends Behavior<AbstractTerraNPC> {
-    public NPCPanicTriggerBrain() {
+public class PanicTriggerBrain extends Behavior<LivingEntity> {
+    public PanicTriggerBrain() {
         super(ImmutableMap.of());
     }
 
-    protected boolean canStillUse(ServerLevel level, AbstractTerraNPC entity, long gameTime) {
+    protected boolean canStillUse(ServerLevel level, LivingEntity entity, long gameTime) {
         return isHurt(entity) || hasHostile(entity);
     }
 
-    protected void start(ServerLevel level, AbstractTerraNPC entity, long gameTime) {
+    protected void start(ServerLevel level, LivingEntity entity, long gameTime) {
         if (isHurt(entity) || hasHostile(entity)) {
             Brain<?> brain = entity.getBrain();
             if (!brain.isActive(Activity.PANIC)) {
@@ -37,7 +36,7 @@ public class NPCPanicTriggerBrain extends Behavior<AbstractTerraNPC> {
 
     }
 
-    protected void tick(ServerLevel level, AbstractTerraNPC owner, long gameTime) {
+    protected void tick(ServerLevel level, LivingEntity owner, long gameTime) {
 
 
 
