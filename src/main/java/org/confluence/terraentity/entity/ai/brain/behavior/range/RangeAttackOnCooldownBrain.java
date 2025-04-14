@@ -14,7 +14,7 @@ import net.minecraft.world.phys.Vec3;
 /**
  * 当远程攻击冷却时, 或者距离过远试图接近敌人的走a行为
  */
-public class RangeAttackOnCooldownBrain extends Behavior<PathfinderMob> {
+public class RangeAttackOnCooldownBrain<T extends PathfinderMob> extends Behavior<T> {
 
     float attackRange;
 
@@ -27,7 +27,7 @@ public class RangeAttackOnCooldownBrain extends Behavior<PathfinderMob> {
     }
 
     @Override
-    protected boolean checkExtraStartConditions(ServerLevel level, PathfinderMob owner) {
+    protected boolean checkExtraStartConditions(ServerLevel level, T owner) {
 
         var cooldownMemory = owner.getBrain().getMemory(MemoryModuleType.ATTACK_COOLING_DOWN);
         if(cooldownMemory.isPresent()){
@@ -48,7 +48,7 @@ public class RangeAttackOnCooldownBrain extends Behavior<PathfinderMob> {
     }
 
     @Override
-    protected void tick(ServerLevel level, PathfinderMob owner, long gameTime) {
+    protected void tick(ServerLevel level, T owner, long gameTime) {
 
         if(!owner.getBrain().hasMemoryValue(MemoryModuleType.WALK_TARGET)) { // 防止一直寻路导致鬼畜
             owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).ifPresent((target) -> {
@@ -65,7 +65,7 @@ public class RangeAttackOnCooldownBrain extends Behavior<PathfinderMob> {
                 }
                 if (toPos != null) {
                     // 这里注释掉就不会动了，方便观察动作
-                    owner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(toPos, 1.0f, (int) 1f));
+//                    owner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(toPos, 1.0f, (int) 1f));
                 } else {
                     // debug
 //                    owner.setDeltaMovement(new Vec3(0, 0.02f, 0));
@@ -76,7 +76,7 @@ public class RangeAttackOnCooldownBrain extends Behavior<PathfinderMob> {
     }
 
     @Override
-    protected void start(ServerLevel level, PathfinderMob entity, long gameTimeIn) {
+    protected void start(ServerLevel level, T entity, long gameTimeIn) {
 
         var memory = entity.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET);
         if(memory.isPresent()){
@@ -89,14 +89,14 @@ public class RangeAttackOnCooldownBrain extends Behavior<PathfinderMob> {
     }
 
     @Override
-    protected void stop(ServerLevel level,PathfinderMob entity, long gameTimeIn) {
+    protected void stop(ServerLevel level,T entity, long gameTimeIn) {
         entity.getBrain().setMemory(MemoryModuleType.ATTACK_COOLING_DOWN, false);
         entity.setSprinting(false);
 
     }
 
     @Override
-    protected boolean canStillUse(ServerLevel level, PathfinderMob entity, long gameTimeIn) {
+    protected boolean canStillUse(ServerLevel level, T entity, long gameTimeIn) {
         return this.checkExtraStartConditions(level, entity);
     }
 }

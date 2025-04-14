@@ -9,6 +9,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
@@ -51,6 +52,11 @@ public final class TEEntities {
         TESummonEntities.registerEntityAttributes(event);
         TENpcEntities.registerEntityAttributes(event);
 
+    }
+
+    public static void spawnPlacementRegister(RegisterSpawnPlacementsEvent event) {
+        TEMonsterEntities.spawnPlacementRegister(event);
+        TENpcEntities.spawnPlacementRegister(event);
     }
 
     public static void register(IEventBus bus){

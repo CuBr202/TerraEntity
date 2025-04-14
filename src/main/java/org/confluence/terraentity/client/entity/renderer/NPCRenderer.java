@@ -11,10 +11,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.item.*;
 import org.confluence.terraentity.client.util.DefaultBoneBoundIdents;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.joml.Math;
@@ -192,7 +190,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
             }
 
             private void adjustHandItemRendering(PoseStack poseStack, ItemStack stack, T animatable, float partialTick, boolean offhand) {
-                poseStack.translate(0.03F,0,-0.5F);
+                poseStack.translate(0.03F,0.05,-0.5F);
             }
 
         });
@@ -223,9 +221,10 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
                                    VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
                                    int packedOverlay, int colour) {
 
+
         if(bone.getName().equals(RIGHT_HAND)) {
             if(animatable.isUsingItem()) {
-                if (animatable.getUseItem().getItem() instanceof BowItem) {
+                if (animatable.getUseItem().getItem() instanceof ProjectileWeaponItem ) {
                     double lerpx = lerpMotion(usingTime, 5, 0, 1.5 - Mth.lerp(partialTick,animatable.xRotO ,  animatable.getXRot()) * 0.017453292F);
                     bone.setRotX((float) lerpx);
 
@@ -250,16 +249,43 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
                     f2 = lerpMotion(swingTime - half2, half2, f, 0);
                 }
                 bone.setRotY((float) f2);
+            }else{
+                Item handItem = animatable.getMainHandItem().getItem();
+                if(handItem instanceof CrossbowItem){
+                    if(animatable.isCooledDown()){
+                        bone.setRotX(0.6f);
+                        bone.setRotY(0.8f);
+                    }else{
+
+
+                    }
+                }else{
+                    // 手持物品时的状态
+                    if(handItem != Items.AIR)
+                        bone.setRotX(0.3f);
+                }
             }
         }else if(bone.getName().equals(LEFT_HAND)){
             if(animatable.isUsingItem()) {
-                if (animatable.getUseItem().getItem() instanceof BowItem) {
+                if (animatable.getUseItem().getItem() instanceof ProjectileWeaponItem) {
                     double lerpx = lerpMotion(usingTime, 5, 0, 1.3 - Mth.lerp(partialTick,animatable.xRotO ,  animatable.getXRot()) * 0.017453292F);
                     bone.setRotX((float) lerpx);
 
                     bone.setRotX((float) lerpx);
                     float lerpy = Mth.lerp(partialTick,animatable.yBodyRotO - animatable.yHeadRotO ,  animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
                     bone.setRotY(lerpy - 0.5F);
+                }
+            }else{
+                Item handItem = animatable.getMainHandItem().getItem();
+                if(handItem instanceof CrossbowItem){
+                    if(animatable.isCooledDown()){
+
+                        double lerpx = lerpMotion(animatable.cooldownTick + partialTick, 20, 1, 1.2);
+                        bone.setRotX((float) lerpx);
+                        double lerpy = -lerpMotion(animatable.cooldownTick + partialTick, 20, 0.8, 1.2);
+                        bone.setRotY((float) lerpy);
+//                        bone.setRotY((float) lerpx);
+                    }
                 }
             }
         }

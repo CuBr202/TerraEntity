@@ -28,10 +28,7 @@ import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicTriggerBra
 import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackOnCooldownBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.NPCHouseBehaviors;
-import org.confluence.terraentity.entity.npc.brain.behavior.NPCAttackCalmDownBrain;
-import org.confluence.terraentity.entity.npc.brain.behavior.NPCAttackTriggerBrain;
-import org.confluence.terraentity.entity.npc.brain.behavior.NPCPanicCalmDownBrain;
-import org.confluence.terraentity.entity.npc.brain.behavior.NPCRangeAttackBrain;
+import org.confluence.terraentity.entity.npc.brain.behavior.*;
 import org.confluence.terraentity.init.TEAi;
 
 public class NPCAi {
@@ -125,7 +122,7 @@ public class NPCAi {
         return ImmutableList.of(
 //                Pair.of(5, new RangeAttackStrafingBrain()),  // 不是所有远程攻击都需要走位
                 Pair.of(5, createRangeAttackBrain()),
-                Pair.of(5, new RangeAttackOnCooldownBrain(50, npc.getAttackRange())),
+                Pair.of(5, new NPCRangeAttackOnCooldownBrain<>(npc.getCooldownTicks(), npc.getAttackRange())),
                 Pair.of(5, new NPCAttackCalmDownBrain<>(15))
 
         );

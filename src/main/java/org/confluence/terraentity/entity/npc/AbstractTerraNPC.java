@@ -13,6 +13,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -84,9 +85,12 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     private NPCAi ai;
     private float rangeDistance = 8;
     private Predicate<AbstractTerraNPC> canPerformerAttackTest;
+    public int cooldownTick = 0;
+    private int _cooldownTicks;
 
     private static final EntityDataAccessor<NPCTrades> DATA_DAVE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.DAVE_TRADES_SERIALIZER.get());
     private static final EntityDataAccessor<House> DATA_HOUSE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.DAVE_HOUSE_SERIALIZER.get());
+    private static final EntityDataAccessor<Boolean> DATA_RANGE_ATTACK_COOLDOWN = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
 
 
     public AbstractTerraNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
@@ -151,6 +155,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         NPCEvent.NPCBrainRegisterEvent event = new NPCEvent.NPCBrainRegisterEvent(this);
         AdapterUtils.postEvent(event);
         setAttackRange(8); // 初始化晚于父类，手动提前初始化
+        setCooldownTicks(20);
         if(event.getReplace() != null){
             ai = event.getReplace();
         }else {
@@ -185,6 +190,22 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         this.rangeDistance = rangeDistance;
     }
 
+    public int getCooldownTicks(){
+        return _cooldownTicks;
+    }
+
+    public void setCooldownTicks(int cooldownTicks){
+        this._cooldownTicks = cooldownTicks;
+    }
+
+    public boolean isCooledDown(){
+        return this.entityData.get(DATA_RANGE_ATTACK_COOLDOWN);
+    }
+
+    public void setCooledDown(boolean cooldown){
+        this.entityData.set(DATA_RANGE_ATTACK_COOLDOWN, cooldown);
+    }
+
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
@@ -200,6 +221,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         super.defineSynchedData(builder);
         builder.define(DATA_DAVE_DATA, new NPCTrades(List.of()));
         builder.define(DATA_HOUSE_DATA, House.EMPTY);
+        builder.define(DATA_RANGE_ATTACK_COOLDOWN, false);
     }
 
     @Override
@@ -233,6 +255,12 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     public void tick(){
         super.tick();
         this.updateSwingTime();
+        if(isCooledDown()){
+            this.cooldownTick++;
+            System.out.println("cooldownTick: " + cooldownTick);
+        }else{
+            this.cooldownTick = 0;
+        }
     }
 
     public int getCurrentSwingDuration() {

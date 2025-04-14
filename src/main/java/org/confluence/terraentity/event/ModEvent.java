@@ -2,6 +2,7 @@ package org.confluence.terraentity.event;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.CrossbowItem;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -59,7 +60,7 @@ public class ModEvent {
     // 注册生成位置
     @SubscribeEvent
     public static void spawnPlacementRegister(RegisterSpawnPlacementsEvent event) {
-        TEMonsterEntities.spawnPlacementRegister(event);
+        TEEntities.spawnPlacementRegister(event);
     }
 
     // 修改物品组件
@@ -83,11 +84,13 @@ public class ModEvent {
                 event.setReplace(new DemolitionistNPCAi(npc));
                 npc.setAttackRange(5);
                 npc.setCanPerformerAttackTest(e->true); // 不需要手持TNT
-            }
-
-            else if(npc.getType() == TENpcEntities.GUIDE.get()){
+            } else if(npc.getType() == TENpcEntities.GUIDE.get()){
                 npc.setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof BowItem);
 
+            }else if(npc.getType() == TENpcEntities.ARMS_DEALER.get()){
+                npc.setAttackRange(10);
+                npc.setCooldownTicks(20);
+                npc.setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof CrossbowItem);
             }
         }
 

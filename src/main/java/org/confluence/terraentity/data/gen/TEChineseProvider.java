@@ -146,11 +146,14 @@ public class TEChineseProvider extends LanguageProvider {
         add(TENpcEntities.GUIDE.get(), "向导");
         add(TENpcEntities.DEMOLITIONIST.get(), "爆破专家");
         add(TENpcEntities.GOBLIN_TINKERER.get(), "哥布林工匠");
+        add(TENpcEntities.ARMS_DEALER.get(), "军火商");
 
 
-        add(TESpawnEggItems.GUILD_EGG.get(), "向导刷怪蛋");
-        add(TESpawnEggItems.DEMOLITIONIST_EGG.get(), "爆破专家刷怪蛋");
-        add(TESpawnEggItems.GOBLIN_TINKERER_EGG.get(), "哥布林工匠刷怪蛋");
+
+        add(TESpawnEggItems.GUILD_SPAWN_EGG.get(), "向导刷怪蛋");
+        add(TESpawnEggItems.DEMOLITIONIST_SPAWN_EGG.get(), "爆破专家刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_TINKERER_SPAWN_EGG.get(), "哥布林工匠刷怪蛋");
+        add(TESpawnEggItems.ARMS_DEALER_SPAWN_EGG.get(), "军火商刷怪蛋");
 
 
 
