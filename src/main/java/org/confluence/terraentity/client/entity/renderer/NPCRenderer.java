@@ -1,18 +1,24 @@
 package org.confluence.terraentity.client.entity.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import org.confluence.terraentity.client.util.DefaultBoneBoundIdents;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.joml.Math;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
 import software.bernie.geckolib.renderer.layer.ItemArmorGeoLayer;
@@ -39,6 +45,10 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
     private static final String LEFT_SLEEVE = DefaultBoneBoundIdents.LEFT_ARM_ARMOR_BONE_IDENT;
 
     private static final String HELMET = DefaultBoneBoundIdents.HEAD_ARMOR_BONE_IDENT;
+
+    protected float usingTime = 0;
+    protected float rightBoneRotX;
+
 
     public NPCRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
         super(renderManager, path.withPrefix("npc/"));
@@ -126,7 +136,11 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
             @Nullable
             @Override
             protected ItemStack getStackForBone(GeoBone bone, T animatable) {
+                // 重置原骨骼的旋转，防止多次应用旋转
 
+                bone.setRotY(0);
+                bone.setRotZ(0);
+                bone.setRotX(0);
                 // Retrieve the items in the entity's hands for the relevant bone
                 return switch (bone.getName()) {
                     case LEFT_HAND -> animatable.isLeftHanded() ?
@@ -140,6 +154,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
             @Override
             protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, T animatable) {
                 // Apply the camera transform for the given hand
+
                 return switch (bone.getName()) {
                     case RIGHT_HAND, "torso" -> ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
                     case LEFT_HAND -> ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
@@ -151,6 +166,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
             @Override
             protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, T animatable,
                                               MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
+
                 poseStack.translate(0, 0, -0.0625);
                 poseStack.translate(0, -0.0625, 0);
                 boolean offhand = stack == animatable.getOffhandItem();
@@ -174,11 +190,84 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
                 adjustHandItemRendering(poseStack, stack, animatable, partialTick, offhand);
                 super.renderStackForBone(poseStack, bone, stack, animatable, bufferSource, partialTick, packedLight, packedOverlay);
             }
+
+            private void adjustHandItemRendering(PoseStack poseStack, ItemStack stack, T animatable, float partialTick, boolean offhand) {
+                poseStack.translate(0.03F,0,-0.5F);
+            }
+
         });
+
+
     }
 
-    protected void adjustHandItemRendering(PoseStack poseStack, ItemStack stack, T animatable, float partialTick, boolean offhand) {
-        poseStack.translate(0.03F,0,-0.5F);
+    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        if(!isReRender){
+            if(animatable.isUsingItem()){
+                usingTime = animatable.getTicksUsingItem() + partialTick;
+            }else{
+                usingTime = 0;
+            }
+            model.getBone(RIGHT_HAND).ifPresent(b->{
+                rightBoneRotX = b.getRotX();
+
+            });
+
+        }
+    }
+
+    /**
+     * 对骨骼进行硬编码动作和插值
+     */
+    public void renderRecursively(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource,
+                                   VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
+                                   int packedOverlay, int colour) {
+
+        if(bone.getName().equals(RIGHT_HAND)) {
+            if(animatable.isUsingItem()) {
+                if (animatable.getUseItem().getItem() instanceof BowItem) {
+                    double lerpx = lerpMotion(usingTime, 5, 0, 1.5 - Mth.lerp(partialTick,animatable.xRotO ,  animatable.getXRot()) * 0.017453292F);
+                    bone.setRotX((float) lerpx);
+
+                    float lerpy = Mth.lerp(partialTick,animatable.yBodyRotO - animatable.yHeadRotO ,  animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
+                    bone.setRotY(lerpy);
+                }
+            }else if(animatable.swinging){
+                float swingTime = animatable.swingTime + partialTick;
+                float swingTicks = animatable.getCurrentSwingDuration();
+                double lerpx = lerpMotion(swingTime, swingTicks, 0, 1f );
+
+                double f = lerpx * (1 - lerpx) * 4 * 1.3f;
+                float half = swingTicks * 0.5f;
+                if(swingTime > half){
+                    f = lerpMotion(swingTime - half, half, f, rightBoneRotX);
+                }
+                bone.setRotX((float) f);
+
+                double f2 = lerpx * (1 - lerpx) * 4;
+                float half2 = swingTicks * 0.5f;
+                if(swingTime > half2){
+                    f2 = lerpMotion(swingTime - half2, half2, f, 0);
+                }
+                bone.setRotY((float) f2);
+            }
+        }else if(bone.getName().equals(LEFT_HAND)){
+            if(animatable.isUsingItem()) {
+                if (animatable.getUseItem().getItem() instanceof BowItem) {
+                    double lerpx = lerpMotion(usingTime, 5, 0, 1.3 - Mth.lerp(partialTick,animatable.xRotO ,  animatable.getXRot()) * 0.017453292F);
+                    bone.setRotX((float) lerpx);
+
+                    bone.setRotX((float) lerpx);
+                    float lerpy = Mth.lerp(partialTick,animatable.yBodyRotO - animatable.yHeadRotO ,  animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
+                    bone.setRotY(lerpy - 0.5F);
+                }
+            }
+        }
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+    }
+
+    protected double lerpMotion(double partialTickTotal, double transitionTime, double start, double end){
+        return Mth.lerp(Math.min(partialTickTotal  / transitionTime,1), start, end);
     }
 
 }

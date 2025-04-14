@@ -16,7 +16,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -36,11 +35,10 @@ import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.Level;
 
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
@@ -61,11 +59,11 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 /**
  * 泰拉风格的npc，远程攻击，交易菜单，房屋系统
@@ -85,6 +83,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     public House house = House.EMPTY;
     private NPCAi ai;
     private float rangeDistance = 8;
+    private Predicate<AbstractTerraNPC> canPerformerAttackTest;
 
     private static final EntityDataAccessor<NPCTrades> DATA_DAVE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.DAVE_TRADES_SERIALIZER.get());
     private static final EntityDataAccessor<House> DATA_HOUSE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.DAVE_HOUSE_SERIALIZER.get());
@@ -107,12 +106,14 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         this.setCustomNameVisible(true);
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
         ((GroundPathNavigation)this.getNavigation()).setCanPassDoors(true);
+        if(canPerformerAttackTest == null){
+            canPerformerAttackTest = npc->npc.getMainHandItem().getItem() instanceof BowItem;
+        }
     }
 
     /**
      * <p>设置npc的房屋
      * <p>使用前需要使用HouseManager.getInstance().tryAddHouse检查房屋是否可以添加</p>
-     * @param house
      */
     public void setHouse(House house){
         this.house = house;
@@ -125,7 +126,28 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     }
 
     @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic) {
+    protected Brain<AbstractTerraNPC> makeBrain(Dynamic<?> dynamic) {
+        return initAI().makeBrain(this.brainProvider().makeBrain(dynamic));
+    }
+
+    @Override
+    protected Brain.Provider<AbstractTerraNPC> brainProvider() {
+        return ai.brainProvider();
+    }
+
+    @Override
+    public Brain<AbstractTerraNPC> getBrain() {
+        return (Brain<AbstractTerraNPC>) super.getBrain();
+    }
+
+    public void refreshBrain(ServerLevel serverLevel) {
+        Brain<AbstractTerraNPC> brain = this.getBrain();
+        brain.stopAll(serverLevel, this);
+        this.brain = brain.copyWithoutBehaviors();
+        initAI().makeBrain(this.getBrain());
+    }
+
+    protected NPCAi initAI(){
         NPCEvent.NPCBrainRegisterEvent event = new NPCEvent.NPCBrainRegisterEvent(this);
         AdapterUtils.postEvent(event);
         setAttackRange(8); // 初始化晚于父类，手动提前初始化
@@ -134,18 +156,22 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         }else {
             ai = new NPCAi(this);
         }
-        return ai.makeBrain(this.brainProvider().makeBrain(dynamic));
+        return ai;
     }
 
-    @Override
-    protected Brain.Provider<AbstractTerraNPC> brainProvider() {
-
-        return ai.brainProvider();
+    /**
+     * 能否攻击敌怪，如果否，则会经常远离敌怪
+     */
+    public boolean canPerformerAttack(){
+        return canPerformerAttackTest != null && canPerformerAttackTest.test(this);
     }
 
-    @Override
-    public Brain<AbstractTerraNPC> getBrain() {
-        return (Brain<AbstractTerraNPC>) super.getBrain();
+    /**
+     * 设置能触发攻击状态的手持条件
+     * @param canPerformerAttackTest
+     */
+    public void setCanPerformerAttackTest(Predicate<AbstractTerraNPC> canPerformerAttackTest){
+        this.canPerformerAttackTest = canPerformerAttackTest;
     }
 
     /**
@@ -206,7 +232,11 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     @Override
     public void tick(){
         super.tick();
+        this.updateSwingTime();
+    }
 
+    public int getCurrentSwingDuration() {
+        return super.getCurrentSwingDuration();
     }
 
     @Override
@@ -309,20 +339,11 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     }
 
 
-//        dir = dir.normalize();
-//
-//        Vec3 end = start.add(dir.scale(deltaX / dir.x));
-//        return end;
-//    }
-
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "Walk/Idle", 5, state ->
                 state.setAndContinue(state.isMoving() ? DefaultAnimations.WALK : DefaultAnimations.IDLE)
         ));
-
-
     }
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -393,4 +414,6 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
             });
         }
     }
+
+
 }

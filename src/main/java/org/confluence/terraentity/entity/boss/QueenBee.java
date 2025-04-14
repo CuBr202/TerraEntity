@@ -15,6 +15,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.IAngryMob;
 import org.confluence.terraentity.entity.ai.MobSkill;
@@ -49,6 +50,8 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
         this.noPhysics = true;
         this.setAttactDamage(14);
         this.xpReward = 1000;
+        if(ServerConfig.BOSS_NO_PHYSICS.get())
+            this.noPhysics = true;
 
         this.dashComponent = new DashComponent(this);
     }

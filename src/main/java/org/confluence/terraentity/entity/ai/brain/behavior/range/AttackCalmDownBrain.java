@@ -12,7 +12,7 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 /**
  * 攻击行为清除
  */
-public class AttackCalmDownBrain extends Behavior<Mob> {
+public class AttackCalmDownBrain<T extends Mob> extends Behavior<T> {
     float distanceToRemove;
     public AttackCalmDownBrain(float distanceToRemove) {
         super(ImmutableMap.of(
@@ -22,7 +22,7 @@ public class AttackCalmDownBrain extends Behavior<Mob> {
     }
 
     @Override
-    protected void start(ServerLevel level, Mob living, long gameTimeIn) {
+    protected void start(ServerLevel level, T living, long gameTimeIn) {
         Brain<?> brain = living.getBrain();
         var memory = brain.getMemory(MemoryModuleType.ATTACK_TARGET);
         boolean shouldRemove;
@@ -35,8 +35,13 @@ public class AttackCalmDownBrain extends Behavior<Mob> {
             shouldRemove= target.distanceToSqr(living) > distanceToRemove || !target.isAlive();
         }
         if (shouldRemove) {
-            brain.eraseMemory(MemoryModuleType.ATTACK_TARGET);
-            brain.updateActivityFromSchedule(level.getDayTime(), gameTimeIn);
+            calmDown(level, living, gameTimeIn);
         }
+    }
+
+    protected void calmDown(ServerLevel level, T living, long gameTimeIn) {
+        Brain<?> brain = living.getBrain();
+        brain.eraseMemory(MemoryModuleType.ATTACK_TARGET);
+        brain.updateActivityFromSchedule(level.getDayTime(), gameTimeIn);
     }
 }

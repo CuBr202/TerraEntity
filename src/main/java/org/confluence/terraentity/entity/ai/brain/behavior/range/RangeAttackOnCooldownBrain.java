@@ -58,18 +58,17 @@ public class RangeAttackOnCooldownBrain extends Behavior<PathfinderMob> {
                 Vec3 ownerPos = owner.position();
                 Vec3 toPos;
                 if (ownerPos.distanceTo(targetPos) > safeDistance) {
-//                owner.getNavigation().moveTo(targetPos.x, targetPos.y, targetPos.z, 1.0);
                     toPos = LandRandomPos.getPosTowards(owner, (int) safeDistance, 5, targetPos);
 
                 } else {
-//                owner.getNavigation().stop();
                     toPos = LandRandomPos.getPosAway(owner, (int) safeDistance, 5, targetPos);
                 }
                 if (toPos != null) {
+                    // 这里注释掉就不会动了，方便观察动作
                     owner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(toPos, 1.0f, (int) 1f));
                 } else {
                     // debug
-                    owner.setDeltaMovement(new Vec3(0, 0.02f, 0));
+//                    owner.setDeltaMovement(new Vec3(0, 0.02f, 0));
                 }
 
             });
@@ -79,11 +78,21 @@ public class RangeAttackOnCooldownBrain extends Behavior<PathfinderMob> {
     @Override
     protected void start(ServerLevel level, PathfinderMob entity, long gameTimeIn) {
 
+        var memory = entity.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET);
+        if(memory.isPresent()){
+            LivingEntity target = memory.get();
+            if(target.distanceTo(entity) < attackRange * 0.6f){
+                // 快速撤离
+                entity.setSprinting(true);
+            }
+        }
     }
 
     @Override
     protected void stop(ServerLevel level,PathfinderMob entity, long gameTimeIn) {
         entity.getBrain().setMemory(MemoryModuleType.ATTACK_COOLING_DOWN, false);
+        entity.setSprinting(false);
+
     }
 
     @Override

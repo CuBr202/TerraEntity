@@ -1,6 +1,7 @@
 package org.confluence.terraentity.event;
 
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.BowItem;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -12,6 +13,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.HouseDetectEvent;
 import org.confluence.terraentity.api.event.NPCEvent;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.brain.DemolitionistNPCAi;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEntities;
@@ -75,9 +77,17 @@ public class ModEvent {
     @SubscribeEvent
     public static void onRegisterBrain(NPCEvent.NPCBrainRegisterEvent event){
         if(!ModChecker.confluence) {
-            if (event.getNPC().getType() == TENpcEntities.DEMOLITIONIST.get()) {
-                event.setReplace(new DemolitionistNPCAi(event.getNPC()));
-                event.getNPC().setAttackRange(5);
+            AbstractTerraNPC npc = event.getNPC();
+
+            if (npc.getType() == TENpcEntities.DEMOLITIONIST.get()) {
+                event.setReplace(new DemolitionistNPCAi(npc));
+                npc.setAttackRange(5);
+                npc.setCanPerformerAttackTest(e->true); // 不需要手持TNT
+            }
+
+            else if(npc.getType() == TENpcEntities.GUIDE.get()){
+                npc.setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof BowItem);
+
             }
         }
 

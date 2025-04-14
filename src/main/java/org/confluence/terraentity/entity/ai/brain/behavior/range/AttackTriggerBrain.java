@@ -12,9 +12,9 @@ import org.confluence.terraentity.init.TEAi;
 /**
  * 触发攻击行为
  */
-public class AttackTargetTriggerBrain extends Behavior<LivingEntity> {
+public class AttackTriggerBrain<T extends LivingEntity> extends Behavior<T> {
     float detectDistance;
-    public AttackTargetTriggerBrain(float detectDistance) {
+    public AttackTriggerBrain(float detectDistance) {
         super(ImmutableMap.of(
                 MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_ABSENT,
                 MemoryModuleType.NEAREST_HOSTILE, MemoryStatus.VALUE_PRESENT
@@ -23,16 +23,20 @@ public class AttackTargetTriggerBrain extends Behavior<LivingEntity> {
     }
 
     @Override
-    protected void start(ServerLevel level, LivingEntity living, long gameTimeIn) {
+    protected void start(ServerLevel level, T living, long gameTimeIn) {
         Brain<?> brain = living.getBrain();
         var memory = brain.getMemory(MemoryModuleType.NEAREST_HOSTILE);
         if(memory.isPresent()) {
             LivingEntity target = memory.get();
-            boolean shouldAdd = target.distanceToSqr(living) < detectDistance * detectDistance && target.isAlive();
+            boolean shouldAdd = target.distanceToSqr(living) < getDetectDistanceSqr(living) && target.isAlive();
             if (shouldAdd) {
                 brain.setMemory(MemoryModuleType.ATTACK_TARGET, target);
                 brain.setActiveActivityIfPossible(TEAi.Activities.RANGE_ATTACK);
             }
         }
+    }
+
+    protected float getDetectDistanceSqr(T living) {
+        return detectDistance * detectDistance;
     }
 }

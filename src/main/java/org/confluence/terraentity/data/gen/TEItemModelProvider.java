@@ -66,7 +66,7 @@ public class TEItemModelProvider extends ItemModelProvider {
         // general
         genModels(List.of(
                 createDir(TERideableItems.ITEMS,"rideable/"),
-                createDir(TEItems.TOOLS,"tools/")
+                createDir(TEItems.TOOLS,"tool/")
         ),"item/generated", (parent, resourcePath, path) -> {
             try {
                 withExistingParent(path, parent).texture("layer0", TerraEntity.space("item/" + resourcePath + path));

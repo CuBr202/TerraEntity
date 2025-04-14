@@ -25,12 +25,14 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.brain.behavior.HomeNearbyStroll;
 import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicCalmDownBrain;
 import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicTriggerBrain;
-import org.confluence.terraentity.entity.ai.brain.behavior.range.AttackCalmDownBrain;
-import org.confluence.terraentity.entity.ai.brain.behavior.range.AttackTargetTriggerBrain;
 import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackBrain;
 import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackOnCooldownBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.NPCHouseBehaviors;
+import org.confluence.terraentity.entity.npc.brain.behavior.NPCAttackCalmDownBrain;
+import org.confluence.terraentity.entity.npc.brain.behavior.NPCAttackTriggerBrain;
+import org.confluence.terraentity.entity.npc.brain.behavior.NPCPanicCalmDownBrain;
+import org.confluence.terraentity.entity.npc.brain.behavior.NPCRangeAttackBrain;
 import org.confluence.terraentity.init.TEAi;
 
 public class NPCAi {
@@ -45,7 +47,7 @@ public class NPCAi {
         return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
     }
 
-    public Brain<?> makeBrain(Brain<AbstractTerraNPC> brain) {
+    public Brain<AbstractTerraNPC> makeBrain(Brain<AbstractTerraNPC> brain) {
         brain.setSchedule(TEAi.NPC_SCHEDULE.get());
         initCoreActivity(brain);
 
@@ -77,7 +79,7 @@ public class NPCAi {
                 new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
                 new CountDownCooldownTicks(MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS),
                 new PanicTriggerBrain(),
-                new AttackTargetTriggerBrain(12),
+                new NPCAttackTriggerBrain<>(),
                 NPCHouseBehaviors.FindHouse(MemoryModuleType.HOME) // 寻找家
 
         ));
@@ -93,7 +95,7 @@ public class NPCAi {
     public ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getPanicPackage(float speedModifier) {
         float f = speedModifier * 1.3F;
         return ImmutableList.of(
-                Pair.of(0, new PanicCalmDownBrain(0.1f)),
+                Pair.of(0, new NPCPanicCalmDownBrain<>(0.1f)),
                 Pair.of(2, new RunOne<>( // 附近有敌人有概率逃跑
                         ImmutableList.of(
                                 Pair.of(SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false), 1),
@@ -110,7 +112,7 @@ public class NPCAi {
     public ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getPanicNoAttackPackage(float speedModifier) {
         float f = speedModifier * 1.3F;
         return ImmutableList.of(
-                Pair.of(0, new PanicCalmDownBrain()),
+                Pair.of(0, new PanicCalmDownBrain<>()),
                 Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.NEAREST_HOSTILE, f, 6, false)),
                 Pair.of(1, SetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, f, 6, false))
         );
@@ -125,7 +127,7 @@ public class NPCAi {
 //                Pair.of(5, new RangeAttackStrafingBrain()),  // 不是所有远程攻击都需要走位
                 Pair.of(5, createRangeAttackBrain()),
                 Pair.of(5, new RangeAttackOnCooldownBrain(50, npc.getAttackRange())),
-                Pair.of(5, new AttackCalmDownBrain(15))
+                Pair.of(5, new NPCAttackCalmDownBrain<>(15))
 
         );
     }
@@ -133,8 +135,8 @@ public class NPCAi {
     /**
      * 用于替换不同的远程攻击行为
      */
-    protected RangeAttackBrain createRangeAttackBrain() {
-        return new RangeAttackBrain(10, npc.getAttackRange());
+    protected NPCRangeAttackBrain<? super AbstractTerraNPC> createRangeAttackBrain() {
+        return new NPCRangeAttackBrain<>(10, npc.getAttackRange());
     }
 
     /**
@@ -177,7 +179,7 @@ public class NPCAi {
                         ImmutableList.of(
                                 Pair.of(SetEntityLookTarget.create(EntityType.VILLAGER, 8.0F), 2),
                                 Pair.of(SetEntityLookTarget.create(EntityType.PLAYER, 8.0F), 2),
-                                Pair.of(new DoNothing(30, 60), 8)
+                                Pair.of(new DoNothing(30, 60), 4)
                         )
                 )),
                 Pair.of(5, new RunOne<>( // 在家里时随机走动

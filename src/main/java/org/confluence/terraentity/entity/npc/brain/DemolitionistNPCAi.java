@@ -16,8 +16,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.brain.behavior.NPCRangeAttackBrain;
 
 import java.util.Optional;
 
@@ -30,8 +30,8 @@ public class DemolitionistNPCAi extends NPCAi {
         super(npc);
     }
 
-    protected RangeAttackBrain createRangeAttackBrain() {
-        return new RangeAttackBrain(10, npc.getAttackRange()){
+    protected NPCRangeAttackBrain<? super AbstractTerraNPC> createRangeAttackBrain() {
+        return new NPCRangeAttackBrain<>(10, npc.getAttackRange()){
 
             @Override
             protected void doAttack(ServerLevel level, Mob owner, LivingEntity target){
@@ -74,5 +74,4 @@ public class DemolitionistNPCAi extends NPCAi {
             }
         };
     }
-
 }

@@ -3,6 +3,7 @@ package org.confluence.terraentity.entity.ai.brain.behavior.range;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.behavior.Behavior;
@@ -16,7 +17,7 @@ import org.confluence.terraentity.utils.TEUtils;
 /**
  * 执行远程攻击的行为
  */
-public class RangeAttackBrain extends Behavior<Mob> {
+public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
 
     int prepareTime; // 看向敌人后，瞄准需要时间
     int _prepareTime;
@@ -36,17 +37,16 @@ public class RangeAttackBrain extends Behavior<Mob> {
     }
 
     @Override
-    protected boolean checkExtraStartConditions(ServerLevel level, Mob owner) {
+    protected boolean checkExtraStartConditions(ServerLevel level, T owner) {
         LivingEntity target = owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).get();
         if(target.distanceTo(owner) > attackRange){
             return false;
         }
-
         return !owner.getBrain().getMemory(MemoryModuleType.ATTACK_COOLING_DOWN).get();
     }
 
     @Override
-    protected void tick(ServerLevel level, Mob owner, long gameTime) {
+    protected void tick(ServerLevel level, T owner, long gameTime) {
         owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).ifPresent((target) -> {
             BehaviorUtils.lookAtEntity(owner, target);
             owner.lookAt(target, 10, owner.getMaxHeadYRot());
@@ -64,6 +64,7 @@ public class RangeAttackBrain extends Behavior<Mob> {
             }
 
             if(isPreparing){
+                onPrepare(level, owner, target, prepareTime);
                 if(--prepareTime <= 0) {
                     doAttack(level, owner, target);
                 }
@@ -71,11 +72,18 @@ public class RangeAttackBrain extends Behavior<Mob> {
 
         });
 
+    }
 
+    protected void onPrepare(ServerLevel level, T owner, LivingEntity target, int prepareTime){
+        // 可能要停下来瞄准
+//        if(owner.getRandom().nextFloat() < 0.1f){
+//            owner.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
+//        }
     }
 
     @Override
     protected void start(ServerLevel level, Mob entity, long gameTimeIn) {
+        entity.startUsingItem(InteractionHand.MAIN_HAND);
     }
 
     @Override
@@ -83,6 +91,8 @@ public class RangeAttackBrain extends Behavior<Mob> {
         entity.getBrain().setMemory(MemoryModuleType.ATTACK_COOLING_DOWN, true);
         isPreparing = false;
         prepareTime = _prepareTime;
+        entity.stopUsingItem();
+//        entity.swing(InteractionHand.MAIN_HAND, true);
     }
 
     @Override
