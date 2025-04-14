@@ -15,7 +15,7 @@ import org.confluence.terraentity.entity.npc.house.IHouseDetector;
  * NPC房屋行为
  */
 public class NPCHouseBehaviors {
-    public static int Detect_Interval = 100;
+    public static int Detect_Interval = 511;
 
     public static BehaviorControl<AbstractTerraNPC> walkToHouse(float speedModifier) {
 
@@ -45,12 +45,12 @@ public class NPCHouseBehaviors {
 
 
 
-    public static BehaviorControl<AbstractTerraNPC> FindHouse(MemoryModuleType<GlobalPos> poiPosMemory) {
+    public static BehaviorControl<AbstractTerraNPC> findHouse(MemoryModuleType<GlobalPos> poiPosMemory) {
         return BehaviorBuilder.create((instance) -> instance.group(
                 instance.registered(poiPosMemory)
         ).apply(instance, (memoryAccessor) -> (serverLevel, entity, l) -> {
 
-            boolean timeToRefresh = entity.tickCount % Detect_Interval == 0;
+            boolean timeToRefresh = (entity.tickCount & Detect_Interval) == 0;
             if(timeToRefresh) {
 
                 // 如果已有房屋，检查房屋是否合理

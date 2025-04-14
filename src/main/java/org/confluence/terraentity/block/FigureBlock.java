@@ -78,7 +78,7 @@ public class FigureBlock extends BaseEntityBlock {
             } else {
                 blockEntity.entity = BuiltInRegistries.ENTITY_TYPE.get(entityType).create(level);
             }
-            if (!level.isClientSide && blockEntity.ticks % 20 == 0) {
+            if (!level.isClientSide && (blockEntity.ticks & 63) == 0) {
 
 //                level.sendBlockUpdated(pos, state, state, 2);
                 blockEntity.setChanged();

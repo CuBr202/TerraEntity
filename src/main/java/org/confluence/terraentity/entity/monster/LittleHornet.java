@@ -59,7 +59,7 @@ public class LittleHornet extends Hornet implements IMinion<LittleHornet> {
     @Override
     public void tick() {
         super.tick();
-        if (level() instanceof ServerLevel  sl&& this.owner != null && tickCount % 20 == 0) {
+        if (level() instanceof ServerLevel  sl&& this.owner != null && (tickCount & 31) == 0) {
             setTarget(this.owner.getTarget());
             if(distanceTo(this.owner) > 30 && sl.getBlockState(owner.blockPosition()).is(Blocks.AIR))
                 setPos(this.owner.position());

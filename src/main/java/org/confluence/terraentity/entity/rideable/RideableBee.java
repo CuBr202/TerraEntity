@@ -36,7 +36,7 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
                 this.getOwner().stopRiding();
                 this.discard();
             }
-            if(isInputtingJumping() && tickCount % 2 == 1){
+            if(isInputtingJumping() && (tickCount & 1) == 0){
                 playSound(SoundEvents.BEEHIVE_WORK, 0.5F, 2F);
             }
         }

@@ -388,7 +388,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                         EaterOfWorldsSegment curSeg = (EaterOfWorldsSegment)current;
 
                         //TODO 被区块刷新掉的体节重现
-                        if(current.isRemoved() && tickCount % 50 == 0){
+                        if(current.isRemoved()){
 /*
                             curSeg = new EaterOfWorld_Segment(newHead,level());
                             curSeg.setPos(newHead.position());

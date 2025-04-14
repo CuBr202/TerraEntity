@@ -25,7 +25,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.brain.behavior.HomeNearbyStroll;
 import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicCalmDownBrain;
 import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicTriggerBrain;
-import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackBrain;
 import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackOnCooldownBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.NPCHouseBehaviors;
@@ -80,7 +79,7 @@ public class NPCAi {
                 new CountDownCooldownTicks(MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS),
                 new PanicTriggerBrain(),
                 new NPCAttackTriggerBrain<>(),
-                NPCHouseBehaviors.FindHouse(MemoryModuleType.HOME) // 寻找家
+                NPCHouseBehaviors.findHouse(MemoryModuleType.HOME) // 寻找家
 
         ));
 //        brain.addActivity(Activity.CORE, 1, ImmutableList.of(

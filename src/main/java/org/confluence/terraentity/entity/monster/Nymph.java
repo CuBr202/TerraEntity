@@ -11,16 +11,17 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.EventHooks;
 import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
+import org.confluence.terraentity.entity.ai.goal.summon.SummonFollowOwnerGoal;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,7 @@ import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.constant.DefaultAnimations;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -59,7 +61,7 @@ public class Nymph extends AbstractMonster {
     @Override
     protected EntityDimensions getDefaultDimensions(Pose pose) {
 
-        if(!this.isTrigger()) {
+        if(!this.isTrigger() && !isTamed) {
             return super.getDefaultDimensions(pose).scale(1, 0.75f).withEyeHeight(1.05f);
         }
         return super.getDefaultDimensions(pose);
@@ -84,7 +86,7 @@ public class Nymph extends AbstractMonster {
     public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         isTamed = tag.getBoolean("isTamed");
-        this.entityData.set(DATA_TAMED, isTamed);
+        this.setTamed(isTamed);
     }
 
     @Override
@@ -94,6 +96,7 @@ public class Nymph extends AbstractMonster {
             refreshDimensions();
         }else if(key == DATA_TAMED){
             this.isTamed = this.entityData.get(DATA_TAMED);
+            refreshDimensions();
         }
     }
 
@@ -106,6 +109,14 @@ public class Nymph extends AbstractMonster {
             }
         });
         this.lookAtPlayerGoal = new NymphLookAtPlayerGoal(this, Player.class, 10f);
+        this.goalSelector.addGoal(5, new RandomStrollGoal(this,1.0f,10,true){
+            @Override
+            public boolean canUse() {
+                return Nymph.this.isTamed && super.canUse();
+            }
+        });
+
+
         this.goalSelector.addGoal(8, lookAtPlayerGoal);
 //        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0){
 //            @Override
@@ -165,18 +176,20 @@ public class Nymph extends AbstractMonster {
             }
             if(!this.isTrigger()) {
                 this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(5);
-
+                this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.25f);
                 // 未变异时眼睛朝向
-                if (getLook() == null) {
+                if (getLook() == null && !isTamed) {
                     this.getLookControl().setLookAt(getEyePosition().add(getForward().scale(5)).add(0, -0.1f, 0));
                     delayTime = 0;
 
                 } else {
-                    setYRot(getYHeadRot());
+                    if(!isTamed())
+                        setYRot(getYHeadRot());
                 }
                 setSprinting(false);
             }else{
                 this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32);
+
                 delayTime++;
 
                 // 变异后恢复计时
@@ -215,9 +228,19 @@ public class Nymph extends AbstractMonster {
         if (!this.isSilent()) {
             serverLevel.levelEvent(null, 1027, this.blockPosition(), 0);
         }
-        this.isTamed = true;
+        this.setTamed(true);
         setTrigger( false);
+        refreshDimensions();
         EventHooks.onLivingConvert(this, this);
+    }
+
+    public void setTamed(boolean tamed) {
+        this.isTamed = tamed;
+        this.entityData.set(DATA_TAMED, tamed);
+    }
+
+    public boolean isTamed() {
+        return isTamed;
     }
 
     public boolean isConverting() {
@@ -231,7 +254,7 @@ public class Nymph extends AbstractMonster {
             if (this.hasEffect(MobEffects.WEAKNESS) && !this.isTamed) {
                 itemstack.consume(1, player);
                 if (!this.level().isClientSide) {
-                    this.startConverting(player.getUUID(), this.random.nextInt(50) + 100);
+                    this.startConverting(player.getUUID(), initConversionTime());
                 }
 
                 return InteractionResult.SUCCESS;
@@ -241,6 +264,10 @@ public class Nymph extends AbstractMonster {
         } else {
             return super.mobInteract(player, hand);
         }
+    }
+
+    protected int initConversionTime() {
+        return this.random.nextInt(500) + 2000;
     }
 
     private void startConverting(@Nullable UUID conversionStarter, int villagerConversionTime) {
@@ -258,7 +285,11 @@ public class Nymph extends AbstractMonster {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 20, state->{
+        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 10, state->{
+            if(isTamed){
+
+                return state.setAndContinue(state.isMoving() ? DefaultAnimations.WALK : DefaultAnimations.IDLE);
+            }
             if(!isTrigger()){
                 return state.setAndContinue(sit);
             }
@@ -289,5 +320,9 @@ public class Nymph extends AbstractMonster {
     @Override
     public boolean canBeSeenAsEnemy() {
         return super.canBeSeenAsEnemy() && !isTamed;
+    }
+
+    protected Vec3 getLeashOffset() {
+        return new Vec3(-0.3, this.getEyeHeight() * 0.5f, this.getBbWidth() * 0.1F);
     }
 }

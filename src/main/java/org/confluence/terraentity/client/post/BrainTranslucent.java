@@ -59,8 +59,8 @@ public class BrainTranslucent {
             if(brain!= null && brain.isAlive()){
                 // 对每个BOSS本体虚影渲染
                 c++;
-                out = c % 2 == 0? temp: temp2;
-                in = c % 2 == 0? temp2: temp;
+                out = (c & 1) == 0? temp: temp2;
+                in = (c & 1) == 0? temp2: temp;
                 out.bindWrite(true);
                 tuple tuple = entityMap.get(brain);
                 float alpha = Math.clamp(brain.getFadeProgress(), 0, 1);

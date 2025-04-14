@@ -7,7 +7,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.behavior.ReactToBell;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -21,10 +20,27 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * 抓人草
  */
 public class Snatcher extends AbstractMonster{
+
+    // 尝试生成的方向
+    private static final List<Vec3> _GENERATE_DIRS = List.of(
+            new Vec3(1, 0, 0), new Vec3(-1, 0, 0), new Vec3(0, 1, 0),
+            new Vec3(0, -1, 0), new Vec3(0, 0, 1), new Vec3(0, 0, -1),
+            new Vec3(1, 1, 0), new Vec3(-1, 1, 0), new Vec3(1, -1, 0),
+            new Vec3(-1, -1, 0), new Vec3(1, 0, 1), new Vec3(-1, 0, 1),
+            new Vec3(1, 0, -1), new Vec3(-1, 0, -1), new Vec3(0, 1, 1),
+            new Vec3(0, -1, 1), new Vec3(0, 1, -1), new Vec3(0, -1, -1),
+            new Vec3(1, 1, 1), new Vec3(-1, 1, 1), new Vec3(1, -1, 1),
+            new Vec3(-1, -1, 1), new Vec3(1, 1, -1), new Vec3(-1, 1, -1),
+            new Vec3(1, -1, -1), new Vec3(-1, -1, -1)
+    );
 
     Vec3 initPos;
     Vec3 initDir;
@@ -37,6 +53,8 @@ public class Snatcher extends AbstractMonster{
     float backSpeed = 0.1f; // 返回起始点速度
     float backLen = 5;  // 距离起始点方向的距离
     float v_speed = 5f;   // 回到起始方向的速度
+
+    int switchTime = 100; // 切换方向的时间
 
     private static final EntityDataAccessor<Vector3f> DATA_TRIGGER =  SynchedEntityData.defineId(Snatcher.class, EntityDataSerializers.VECTOR3);
 
@@ -78,7 +96,6 @@ public class Snatcher extends AbstractMonster{
         }
         if(initPos!= null && initDir!= null){
 
-
             Vec3 speed = Vec3.ZERO;
 
             if(getTarget() != null ) {
@@ -102,8 +119,19 @@ public class Snatcher extends AbstractMonster{
                 speed = speed.add(v_v);
                 // 朝向目标的速度
                 initDir = c.normalize();
-
+            }else{
+                // 当无目标的时候，随机切换方向
+                if(--switchTime <= 0){
+                    switchTime = random.nextInt(200) + 100;
+                    Vec3 testDir = new Vec3(Math.random() - 0.5f, Math.random() - 0.5f, Math.random() - 0.5f).normalize();
+                    BlockPos testPos = BlockPos.containing(testDir.scale(5).add(position()));
+                    BlockState blockState = level().getBlockState(testPos);
+                    // 尝试离开墙体或虚空
+                    if(blockState.isAir() && testPos.getY() > -65)
+                        initDir = testDir ;
+                }
             }
+
 //            Vec3 forward = initDir.normalize().scale(forwardSpeed * Math.sin(this.tickCount * forwardFreq));
 //            // 回复到初始位置的速度
 //            Vec3 backPos = initPos.add(initDir.scale(backLen));
@@ -116,7 +144,12 @@ public class Snatcher extends AbstractMonster{
             Vec3 backPos = initPos.add(initDir.scale(backLen * lengthFactor * 0.5f * (2 + (Math.sin(this.tickCount * 0.05 * flag)))));
             Vec3 v_back = backPos.subtract(position()).scale(backSpeed);
 
-            this.setDeltaMovement(speed.add(forward).add(v_back));
+            Vec3 finalSpeed = speed.add(forward).add(v_back);
+            double len = finalSpeed.length();
+            // 限制速度
+            double scale = len > 0.3f? 0.3f / len : 1;
+            finalSpeed = finalSpeed.scale(scale);
+            this.setDeltaMovement(finalSpeed);
 
         }
     }
@@ -158,18 +191,29 @@ public class Snatcher extends AbstractMonster{
     public void onAddedToLevel(){
         super.onAddedToLevel();
         if(!level().isClientSide) {
-            Vec3 dir = new Vec3(this.random.nextFloat() - 0.5f, this.random.nextFloat()- 0.5f, this.random.nextFloat()- 0.5f);
-            Vec3 vec3 = this.position();
-            Vec3 vec31 = vec3.add(dir.scale(50));
-            BlockHitResult result = level().clip(new ClipContext(vec3, vec31, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, this));
 
-            if (result.getType() == BlockHitResult.Type.BLOCK) {
-                Vec3 hitDir = Vec3.atLowerCornerOf(result.getDirection().getNormal()).scale(-0.5f);
-                setInitPos(result.getBlockPos().getCenter().add(hitDir).toVector3f());
-                this.initDir = dir.normalize();
-            }else{
-                this.discard();
+            boolean canSurvive = false;
+            List<Vec3> generateDirs = new ArrayList<>(_GENERATE_DIRS);
+            Collections.shuffle(generateDirs);
+
+
+            for(Vec3 dir : generateDirs){
+                Vec3 vec3 = this.position();
+                Vec3 vec31 = vec3.add(dir.scale(50));
+                BlockHitResult result = level().clip(new ClipContext(vec3, vec31, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, this));
+
+                if (result.getType() == BlockHitResult.Type.BLOCK) {
+                    Vec3 hitDir = Vec3.atLowerCornerOf(result.getDirection().getNormal()).scale(-0.5f);
+                    setInitPos(result.getBlockPos().getCenter().add(hitDir).toVector3f());
+                    this.initDir = dir.normalize();
+                    canSurvive = true;
+                    break;
+                }
             }
+            if(!canSurvive){
+                discard();
+            }
+
         }
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
  * <p>替换检测器：{@link HouseDetectEvent}
  * <p>usage:
  * <p>{@link HouseDetectItem}
- * <p>{@link NPCHouseBehaviors#FindHouse(MemoryModuleType)}
+ * <p>{@link NPCHouseBehaviors#findHouse(MemoryModuleType)}
  *
  */
 public interface IHouseDetector {

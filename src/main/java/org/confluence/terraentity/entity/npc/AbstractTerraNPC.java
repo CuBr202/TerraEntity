@@ -247,7 +247,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         }
 
         // 用于显示房间
-        if(level().isClientSide && tickCount % 100 == 0 && !house.isEmpty()){
+        if(level().isClientSide && (tickCount & 127) == 0 && !house.isEmpty()){
             if(Minecraft.getInstance().player.getMainHandItem().getItem() instanceof HouseDetectItem){
                 DebugBlocksHelper.Singleton().addDebugBlock(List.of(house.min(), house.max()));
             }
