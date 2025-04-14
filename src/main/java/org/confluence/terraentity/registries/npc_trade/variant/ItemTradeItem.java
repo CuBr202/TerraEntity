@@ -6,13 +6,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.registries.npc_trade.ITradeItem;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;
 import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
 
 import java.util.List;
 
-public record ItemTradeItem(ItemStack result, ItemStack cost) implements ITrade {
+public record ItemTradeItem(ItemStack result, ItemStack cost) implements ITradeItem {
 
     public static final MapCodec<ItemTradeItem> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemStack.CODEC.fieldOf("result").forGetter(ItemTradeItem::result),

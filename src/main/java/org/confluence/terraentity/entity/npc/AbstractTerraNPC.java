@@ -1,5 +1,7 @@
 package org.confluence.terraentity.entity.npc;
 
+import com.github.tartaricacid.touhoulittlemaid.api.event.MaidDamageEvent;
+import com.github.tartaricacid.touhoulittlemaid.api.event.MaidHurtEvent;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
@@ -17,14 +19,14 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -33,6 +35,7 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -40,7 +43,11 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
@@ -67,7 +74,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
- * 泰拉风格的npc，远程攻击，交易菜单，房屋系统
+ * 泰拉风格的npc，集成远程攻击，交易菜单，房屋系统
  */
 public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
@@ -172,8 +179,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     }
 
     /**
-     * 设置能触发攻击状态的手持条件
-     * @param canPerformerAttackTest
+     * 设置能触发攻击状态的条件
      */
     public void setCanPerformerAttackTest(Predicate<AbstractTerraNPC> canPerformerAttackTest){
         this.canPerformerAttackTest = canPerformerAttackTest;
@@ -257,7 +263,6 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         this.updateSwingTime();
         if(isCooledDown()){
             this.cooldownTick++;
-            System.out.println("cooldownTick: " + cooldownTick);
         }else{
             this.cooldownTick = 0;
         }
@@ -417,11 +422,25 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
 
     }
 
+    protected void dropEquipment() {
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            ItemStack stack = this.getItemBySlot(slot);
+            if (!stack.isEmpty()) {
+                this.spawnAtLocation(stack);
+                this.setItemSlot(slot, ItemStack.EMPTY);
+            }
+        }
+    }
+
     private void releaseAllPois() {
         this.releasePoi(MemoryModuleType.HOME);
 //        this.releasePoi(MemoryModuleType.JOB_SITE);
 //        this.releasePoi(MemoryModuleType.POTENTIAL_JOB_SITE);
 //        this.releasePoi(MemoryModuleType.MEETING_POINT);
+    }
+
+    protected void hurtArmor(DamageSource damageSource, float damage) {
+        this.doHurtEquipment(damageSource, damage, EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD);
     }
 
     // poi暂时没用上
@@ -443,5 +462,8 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         }
     }
 
+    protected Vec3 getLeashOffset() {
+        return new Vec3(-0.3, this.getEyeHeight() * 0.5f, this.getBbWidth() * 0.1F);
+    }
 
 }

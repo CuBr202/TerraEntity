@@ -7,11 +7,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.registries.TERegistries;
-import org.confluence.terraentity.registries.track.TrackTypeProvider;
-import org.confluence.terraentity.registries.track.variant.SimpleTrack;
 
 import java.util.List;
 
@@ -24,8 +20,6 @@ public interface ITrade{
      * 能否触发onTrade
      */
     boolean canTrade(Player player);
-
-    ItemStack result();
 
     /**
      * 执行交易

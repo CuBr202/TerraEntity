@@ -8,6 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.TERegistries;
+import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItem;
 
 import java.util.List;
@@ -20,15 +21,11 @@ public class TradeProviderTypes {
     public static final DeferredRegister<TradeProvider> TYPES = DeferredRegister.create(TERegistries.TradeProviders.REGISTRY, TerraEntity.MODID);
 
     public static final Supplier<TradeProvider> ITEM_TRADE_ITEM = register("item_trade_item", ItemTradeItem.CODEC);
+    public static final Supplier<TradeProvider> ITEM_TRADE_HEALTH = register("item_trade_health", ItemTradeHealth.CODEC);
 
 
     public static Supplier<TradeProvider> register(String name,
-                                                    MapCodec<? extends ITrade> codec
-//            ,
-//                                                    StreamCodec<ByteBuf, ? extends ITrade> streamCodec,
-//                                                    StreamCodec<ByteBuf, List<ITrade>> listStreamCodec
-    ) {
-//        streamCodec.apply(ByteBufCodecs.collection(NonNullList::createWithCapacity)
+                                                    MapCodec<? extends ITrade> codec) {
         return TYPES.register(name, ()->new TradeProvider(codec));
     }
 }

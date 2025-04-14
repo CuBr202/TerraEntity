@@ -9,6 +9,7 @@
     "PlayerMixin",
     "ServerBossEventMixin",
     "accessor.EntityAccessor",
+    "accessor.ProjectileWeaponAccessor",
     "accessor.SlimeAccessor"
   ],
   "client": [

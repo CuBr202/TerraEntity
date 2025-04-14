@@ -4,6 +4,9 @@ import net.minecraft.server.level.ServerLevel;
 import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
+/**
+ * NPC的远程攻击，默认发射箭
+ */
 public class NPCRangeAttackBrain<T extends AbstractTerraNPC> extends RangeAttackBrain<T> {
     public NPCRangeAttackBrain(int prepareTime, float attackRange) {
         super(prepareTime, attackRange);
@@ -11,6 +14,8 @@ public class NPCRangeAttackBrain<T extends AbstractTerraNPC> extends RangeAttack
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel level, T owner) {
+        // 添加了npc自身能力的检测条件
         return super.checkExtraStartConditions(level, owner) && owner.canPerformerAttack();
     }
+
 }

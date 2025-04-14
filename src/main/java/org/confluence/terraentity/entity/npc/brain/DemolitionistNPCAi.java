@@ -22,7 +22,7 @@ import org.confluence.terraentity.entity.npc.brain.behavior.NPCRangeAttackBrain;
 import java.util.Optional;
 
 /**
- * 爆破专家的AI
+ * 爆破专家的AI，放置TNT
  */
 public class DemolitionistNPCAi extends NPCAi {
 
@@ -34,7 +34,7 @@ public class DemolitionistNPCAi extends NPCAi {
         return new NPCRangeAttackBrain<>(10, npc.getAttackRange()){
 
             @Override
-            protected void doAttack(ServerLevel level, Mob owner, LivingEntity target){
+            protected boolean customDoAttack(ServerLevel level, Mob owner, LivingEntity target){
                 var tnt = new PrimedTnt(EntityType.TNT, level){
                     @Override
                     protected void explode() {
@@ -71,6 +71,7 @@ public class DemolitionistNPCAi extends NPCAi {
                 }
                 tnt.setPos(placePosition);
                 level.addFreshEntity(tnt);
+                return true;
             }
         };
     }

@@ -13,13 +13,13 @@ import org.confluence.terraentity.init.TEMenus;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.network.c2s.NPCShopPacket;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItem;
+import org.confluence.terraentity.registries.npc_trade.ITradeItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TETradesMenu extends AbstractContainerMenu {
+public class TETradesMenu<T extends ITradeItem> extends AbstractContainerMenu {
     private final SimpleContainer container;
-    public NPCTrades<ItemTradeItem> NPCTrades;
+    public NPCTrades<T> NPCTrades;
     public int selectedMerchantIndex = -1;
 
     public TETradesMenu(int containerId, Inventory playerInventory) {
@@ -27,7 +27,7 @@ public class TETradesMenu extends AbstractContainerMenu {
 
     }
 
-    public TETradesMenu(int containerId, Inventory playerInventory, @Nullable NPCTrades<ItemTradeItem> NPCTrades) {
+    public TETradesMenu(int containerId, Inventory playerInventory, @Nullable NPCTrades<T> NPCTrades) {
         super(TEMenus.NPC_TRADES_MENU.get(), containerId);
         this.NPCTrades = NPCTrades;
         if(NPCTrades == null) this.NPCTrades = ((IPlayer)playerInventory.player).terra_entity$getDaveTrades();

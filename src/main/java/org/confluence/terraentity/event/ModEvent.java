@@ -15,6 +15,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.HouseDetectEvent;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.brain.ArmDealerNPCAi;
 import org.confluence.terraentity.entity.npc.brain.DemolitionistNPCAi;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEntities;
@@ -88,6 +89,7 @@ public class ModEvent {
                 npc.setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof BowItem);
 
             }else if(npc.getType() == TENpcEntities.ARMS_DEALER.get()){
+                event.setReplace(new ArmDealerNPCAi(npc));
                 npc.setAttackRange(10);
                 npc.setCooldownTicks(20);
                 npc.setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof CrossbowItem);

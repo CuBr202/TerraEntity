@@ -25,24 +25,35 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.brain.behavior.HomeNearbyStroll;
 import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicCalmDownBrain;
 import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicTriggerBrain;
-import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackOnCooldownBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.NPCHouseBehaviors;
 import org.confluence.terraentity.entity.npc.brain.behavior.*;
 import org.confluence.terraentity.init.TEAi;
 
+/**
+ * npc brain的ai注册器，用于自定义npc的行为
+ */
 public class NPCAi {
 
     protected AbstractTerraNPC npc;
 
+    /**
+     * 在生成npc时的构造函数调用
+     */
     public NPCAi(AbstractTerraNPC npc) {
         this.npc = npc;
     }
 
+    /**
+     * 注册记忆和感知器
+     */
     public Brain.Provider<AbstractTerraNPC> brainProvider() {
         return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
     }
 
+    /**
+     * 注册具体行为
+     */
     public Brain<AbstractTerraNPC> makeBrain(Brain<AbstractTerraNPC> brain) {
         brain.setSchedule(TEAi.NPC_SCHEDULE.get());
         initCoreActivity(brain);
@@ -51,9 +62,9 @@ public class NPCAi {
         brain.addActivity(TEAi.Activities.STAY_HOME, getRestPackage(1.0F));
 
         var rangeAttackPackage = getRangeAttackPackage(1.0F);
-        brain.addActivity(TEAi.Activities.RANGE_ATTACK, rangeAttackPackage);
         if(!rangeAttackPackage.isEmpty()) {
             // 远程攻击的npc不会一直逃跑的panic
+            brain.addActivity(TEAi.Activities.RANGE_ATTACK, rangeAttackPackage);
             brain.addActivity(Activity.PANIC, getPanicPackage(1.0F));
         }
         else {
@@ -66,6 +77,9 @@ public class NPCAi {
         return brain;
     }
 
+    /**
+     * 初始化core行为
+     */
     protected void initCoreActivity(Brain<AbstractTerraNPC> brain) {
         brain.addActivity(Activity.CORE, 0, ImmutableList.of(
                 InteractWithDoor.create(),
@@ -79,10 +93,6 @@ public class NPCAi {
                 NPCHouseBehaviors.findHouse(MemoryModuleType.HOME) // 寻找家
 
         ));
-//        brain.addActivity(Activity.CORE, 1, ImmutableList.of(
-//                new PanicCalmDownBrain()
-//        ));
-
     }
 
     /**

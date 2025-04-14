@@ -11,8 +11,15 @@ import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import org.confluence.terraentity.utils.TEUtils;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 执行远程攻击的行为
@@ -101,6 +108,30 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
     }
 
     protected void doAttack(ServerLevel level, Mob owner, LivingEntity target){
+        if(customDoAttack(level, owner, target)){
+            return;
+        }
+        defaultDoAttack(level, owner, target);
+    }
+
+    /**
+     * 自定义远程攻击逻辑, 返回true表示已自定义攻击逻辑，否则使用默认逻辑
+     */
+    protected boolean customDoAttack(ServerLevel level, Mob owner, LivingEntity target){
+        ItemStack stack = owner.getMainHandItem();
+        if(stack.getItem() instanceof ProjectileWeaponItem weaponItem){
+            stack.hurtAndBreak(1,level,owner,(entity) -> {});
+            weaponItem.shoot( level, owner, InteractionHand.MAIN_HAND, stack, List.of(Items.ARROW.getDefaultInstance()), 1.5f, 1f, owner.getRandom().nextFloat() < 0.3f, target);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 默认远程攻击逻辑
+     */
+    protected void defaultDoAttack(ServerLevel level, Mob owner, LivingEntity target){
+        // 调用默认的方法
         Arrow arrow = new Arrow(owner.level(), owner, Items.ARROW.getDefaultInstance(), Items.ARROW.getDefaultInstance());
         arrow.setPos(owner.getX(), owner.getY() + owner.getEyeHeight(), owner.getZ());
         arrow.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), 0.0F, 1.5F, 1.0F);

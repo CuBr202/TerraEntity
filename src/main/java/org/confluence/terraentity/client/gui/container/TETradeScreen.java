@@ -20,12 +20,15 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
 import org.confluence.terraentity.menu.TETradesMenu;
 import org.confluence.terraentity.mixed.IPlayer;
+import org.confluence.terraentity.registries.npc_trade.ITradeItem;
 
-import java.awt.*;
 import java.util.List;
 
-
-public class TETradeScreen extends AbstractContainerScreen<TETradesMenu> {
+/**
+ * 由于交易的物品是单个，统一使用tradeItem的抽象菜单类，继承本类后自行写渲染cost的物品或者其他东西逻辑
+ * @param <T> the type of trade item
+ */
+public abstract class TETradeScreen<T extends ITradeItem> extends AbstractContainerScreen<TETradesMenu> {
     private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller");
     private static final ResourceLocation SCROLLER_DISABLED_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller_disabled");
     private static final ResourceLocation MENU_LOCATION = TerraEntity.space("textures/gui/container/npc_shop.png");
@@ -161,7 +164,7 @@ public class TETradeScreen extends AbstractContainerScreen<TETradesMenu> {
             int y = offsetY + (shopItem / col- scrollOff) * 20;
             renderSlotHighlight(guiGraphics,x ,y , 20);
         }
-        var trades = menu.NPCTrades.trades();
+        List<T> trades = menu.NPCTrades.trades();
         int x = offsetX;
         int y = offsetY;
         for (int l = 0; l < Math.min(row, NUMBER_OF_LINES); l++) {
@@ -212,17 +215,8 @@ public class TETradeScreen extends AbstractContainerScreen<TETradesMenu> {
 //        int[] coins = PlayerUtils.decodeCoin(trade.cost());
         x = ii + 120;
         y = jj + 21;
-        List<ItemStack> needs = List.of(trade.cost());
-        for(int k = 0; k < needs.size(); k++){
-            guiGraphics.renderItem(needs.get(k), x, y );
-            guiGraphics.renderItemDecorations(this.font, needs.get(k), x, y);
-//            guiGraphics.drawString(this.font, String.valueOf(needs.get(k)), x+4, y+16 , Color.orange.getRGB(), true);
-            x+=20;
-            if( k % 3 == 2){
-                y += 25;
-                x = ii + 130;
-            }
-        }
+        renderCosts(guiGraphics, x, y, ii, trade);
+
 
 
         boolean canBuy = trade.canTrade(Minecraft.getInstance().player);
@@ -236,6 +230,8 @@ public class TETradeScreen extends AbstractContainerScreen<TETradesMenu> {
             guiGraphics.blit(MENU_LOCATION,ii+203,jj+35,276,17,35,17,512,256);
         }
     }
+
+    protected abstract void renderCosts(GuiGraphics guiGraphics, int x, int y, int startx,  T trade);
 
     private boolean canScroll() {
         return row > NUMBER_OF_LINES;
