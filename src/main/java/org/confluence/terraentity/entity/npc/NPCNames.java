@@ -35,7 +35,7 @@ public record NPCNames(Map<String, Float> namesWeights) {
         return names_map.get(id);
     }
 
-    public static @Nullable String getRandomName(ResourceLocation id, RandomSource random) {
+    public static @Nullable String getRandomName(ResourceLocation id) {
         NPCNames names = names_map.get(id);
         if(names == null || names.namesWeights.isEmpty()){
             return null;

@@ -43,8 +43,8 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     private final int col = 5;
     private int offsetX;
     private int offsetY;
-    private int intervalX = 17;
-    private int intervalY = 17;
+    private int intervalX = 18;
+    private int intervalY = 18;
 
     int tickCount;
 
@@ -73,8 +73,8 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         if (menu.NPCTrades.trades().size() % 3 != 0)
             this.row++;
 
-        offsetX = (this.width - this.imageWidth) / 2 + 7;
-        offsetY = (this.height - this.imageHeight) / 2 + 20;
+        offsetX = (this.width - this.imageWidth) / 2 + 5;
+        offsetY = (this.height - this.imageHeight) / 2 + 16;
 
         interpolator = KeyframeAnimation.Builder()
                 .addKeyframe(5, 0)
@@ -120,9 +120,9 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
             if (this.scrollOff == i - 1) {
                 i1 = 113;
             }
-            guiGraphics.blitSprite(SCROLLER_SPRITE, posX + 94, posY + 18 + i1, 0, 6, 27);
+            guiGraphics.blitSprite(SCROLLER_SPRITE, posX + 95, posY + 17 + i1, 0, 6, 27);
         } else {
-            guiGraphics.blitSprite(SCROLLER_DISABLED_SPRITE, posX + 94, posY + 18, 0, 6, 27);
+            guiGraphics.blitSprite(SCROLLER_DISABLED_SPRITE, posX + 95, posY + 17, 0, 6, 27);
         }
     }
 
@@ -169,8 +169,12 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
             renderSlotHighlight(guiGraphics,x ,y , 20);
         }
         List<ITrade> trades = menu.NPCTrades.trades();
+
         int x = offsetX;
         int y = offsetY;
+        int xcache = x;
+        int ycache = y;
+        int cacheIndex = -1;
         for (int l = 0; l < Math.min(row, NUMBER_OF_LINES); l++) {
             for(int k = 0; k < col; k++){
                 int index = k+(l+ scrollOff) * col;
@@ -179,30 +183,40 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
 
                 // 渲染获得的物品
                 renderResult(guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade);
+                if(mouseX > x && mouseX < x+16 && mouseY > y && mouseY < y+16){
+                    xcache = x;
+                    ycache = y;
+                    cacheIndex = index;
+                }
 
                 x+=intervalX;
             }
             x = offsetX;
             y += intervalY;
         }
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
 
-        // 上面的材料物品
+        // 如果选择了交易项
+        // 渲染上面的材料物品
         if(shopItem < 0 ||shopItem >= trades.size())
             return;
-
         var trade = trades.get(this.shopItem);
-
-        x = ii + 120;
-        y = jj + 21;
+        x = ii + 116;
+        y = jj + 19;
         renderCosts(guiGraphics, font,  x, y, ii, jj, mouseX, mouseY, trade);
-        
+
 
         x = ii + 203;
-        y = jj + 35;
+        y = jj + 36;
         // 能否购买
         boolean canBuy = trade.canTrade(Minecraft.getInstance().player);
         renderResultSlot(guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, canBuy);
+
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
+
+        // 重新渲染悬浮时物品信息
+        if(cacheIndex != -1){
+            renderResultHover(guiGraphics, font, xcache, ycache, ii, jj, mouseX, mouseY, trades.get(cacheIndex));
+        }
 
     }
 
@@ -212,6 +226,9 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
 
     protected void renderResult(GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
         trade.renderResult(guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+    }
+    protected void renderResultHover(GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
+        trade.renderResultHover(guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
     }
 
     protected void renderResultSlot(GuiGraphics guiGraphics,Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade, boolean canBuy){

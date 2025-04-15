@@ -101,7 +101,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
              if (trades != null) {
                 entityData.set(DATA_DAVE_DATA, trades);
              }
-             String name = NPCNames.getRandomName(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()), getRandom());
+             String name = NPCNames.getRandomName(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
              if(name!= null) {
                  this.setCustomName(Component.literal(name));
              }

@@ -28,12 +28,16 @@ public interface ITradeItem extends ITrade{
 
         guiGraphics.renderItem(it, x , y );
 
-        if(mouseX > x && mouseX < x+16 && mouseY > y && mouseY < y+16){
-//                    guiGraphics.setColor(1, 1, 1, 1);
-            guiGraphics.renderTooltip(font, it, mouseX, mouseY);
-        }
         guiGraphics.renderItemDecorations(font, it, x, y);
     }
+
+    @OnlyIn(Dist.CLIENT)
+    default void renderResultHover(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+
+        guiGraphics.renderTooltip(font, result(), mouseX, mouseY);
+    }
+
+
 
     @OnlyIn(Dist.CLIENT)
     default void renderResultSlot(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot){

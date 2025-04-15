@@ -3,6 +3,8 @@ package org.confluence.terraentity.registries.npc_trade.variant;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +30,11 @@ public record ItemTradeHealth(ItemStack cost, int health) implements IItemTrade,
     public void onTrade(ServerPlayer player) {
         ITradeHealth.super.onTrade(player);
         IItemTrade.super.onTrade(player);
+    }
+
+    @Override
+    public void renderResultHover(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
+
     }
 
 

@@ -52,6 +52,12 @@ public interface ITrade{
     void renderResult(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
 
     /**
+     * 悬浮于交易列表物品上调用，只会在悬浮于交易项时调用一次
+     */
+    @OnlyIn(Dist.CLIENT)
+    void renderResultHover(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
+
+    /**
      * 渲染交易列表的物品槽调用
      */
     @OnlyIn(Dist.CLIENT)
