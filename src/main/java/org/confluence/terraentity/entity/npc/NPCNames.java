@@ -7,7 +7,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.util.RandomSource;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.LoadNPCNamesEvent;
 import org.confluence.terraentity.utils.AdapterUtils;

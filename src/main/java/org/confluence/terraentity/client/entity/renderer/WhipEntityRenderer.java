@@ -77,7 +77,7 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
             toInterpoloate.add(vec3.subtract(new Vec3(lerpx, lerpy, lerpz)).scale(2));
 
             // Catmull-Rom样条插值
-            int count = (int)entity.getRange(player) * 20;
+            int count = (int)(entity.getRange(player) * 20);
             List<Vec3> positions = FrameUtil.getInterpolatedPoints(toInterpoloate, count);
 
             float f5 = 0.0F;

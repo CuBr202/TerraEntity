@@ -45,7 +45,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
     protected float _damageDeclineMax = 0.5f; // 最大伤害衰减系数
     protected float damageDecline = 1f; // 伤害衰减
 
-    protected float _rangeFactor = 0.5f; // 基础鞭范围
+    protected float _rangeFactor = 0.2f; // 基础鞭范围
     public int hitCooldown = 5; // 击中冷却时间
     public EffectStrategyComponent hiteffect; // 击中特效
     public EffectStrategyComponent hiteffect_beneficial; // 农场主增益
