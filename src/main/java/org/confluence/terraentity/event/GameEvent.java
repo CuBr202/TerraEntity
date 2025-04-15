@@ -8,6 +8,7 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
+import org.confluence.terraentity.entity.npc.NPCNames;
 import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
 
@@ -26,6 +27,7 @@ public class GameEvent {
     public static void serverStarted(ServerStartedEvent event) {
         NPCTrades.readTradesFromJson(event.getServer().getResourceManager());
         HouseStoreSaver.get(event.getServer().overworld());
+        NPCNames.loadNPCNames(event.getServer().getResourceManager());
     }
 
     @SubscribeEvent

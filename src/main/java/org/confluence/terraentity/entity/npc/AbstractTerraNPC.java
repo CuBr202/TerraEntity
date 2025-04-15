@@ -100,11 +100,16 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
             trades = NPCTrades.getTrade(event.getOrigin());
              if (trades != null) {
                 entityData.set(DATA_DAVE_DATA, trades);
-            }
+             }
+             String name = NPCNames.getRandomName(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()), getRandom());
+             if(name!= null) {
+                 this.setCustomName(Component.literal(name));
+             }
         }
 
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3f);
         this.getNavigation().setCanFloat(true);
+
         this.setCustomNameVisible(true);
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
         ((GroundPathNavigation)this.getNavigation()).setCanPassDoors(true);

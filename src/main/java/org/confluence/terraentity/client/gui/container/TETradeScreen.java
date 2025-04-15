@@ -26,11 +26,11 @@ import org.confluence.terraentity.registries.npc_trade.ITrade;
 import java.util.List;
 
 /**
- * <p>由于交易的物品是单个，统一使用tradeItem的抽象菜单类
+ * <p>由于交易的获得的内容是单个，统一使用trade的抽象菜单类
  * <p>渲染cost的逻辑在{@link org.confluence.terraentity.registries.npc_trade.ITrade#renderCosts(GuiGraphics, Font, int, int, int, int, int, int)}
  * <p>使用时必须继承此类，否则会出现类型推断不匹配</p>
  */
-public abstract class TETradeItemScreen< M extends TETradesMenu> extends AbstractContainerScreen<M> {
+public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractContainerScreen<M> {
     private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller");
     private static final ResourceLocation SCROLLER_DISABLED_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller_disabled");
     public static final ResourceLocation MENU_LOCATION = TerraEntity.space("textures/gui/container/npc_shop.png");
@@ -40,10 +40,12 @@ public abstract class TETradeItemScreen< M extends TETradesMenu> extends Abstrac
     private int shopItem = -1;
     private int hoveredItem = -1;
     private int row;
-    private final int col = 4;
+    private final int col = 5;
     private int offsetX;
     private int offsetY;
-    private int intervalX = 20;
+    private int intervalX = 17;
+    private int intervalY = 17;
+
     int tickCount;
 
     int scrollOff;
@@ -51,7 +53,7 @@ public abstract class TETradeItemScreen< M extends TETradesMenu> extends Abstrac
     KeyframeAnimation interpolator;
 
 
-    public TETradeItemScreen(M menu, Inventory playerInventory, Component title) {
+    public TETradeScreen(M menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth = 290;
         this.inventoryLabelX = 107;
@@ -71,7 +73,7 @@ public abstract class TETradeItemScreen< M extends TETradesMenu> extends Abstrac
         if (menu.NPCTrades.trades().size() % 3 != 0)
             this.row++;
 
-        offsetX = (this.width - this.imageWidth) / 2 + 10;
+        offsetX = (this.width - this.imageWidth) / 2 + 7;
         offsetY = (this.height - this.imageHeight) / 2 + 20;
 
         interpolator = KeyframeAnimation.Builder()
@@ -157,13 +159,13 @@ public abstract class TETradeItemScreen< M extends TETradesMenu> extends Abstrac
         // 左侧物品
         if(this.hoveredItem >= 0 && this.hoveredItem < menu.NPCTrades.trades().size()){
             int x = offsetX + hoveredItem % col * intervalX;
-            int y = offsetY + (hoveredItem / col - scrollOff) * 20;
+            int y = offsetY + (hoveredItem / col - scrollOff) * intervalY;
             renderSlotHighlight(guiGraphics,x ,y, 20);
         }
         // 左侧物品
         if(this.shopItem >= 0 && this.shopItem < menu.NPCTrades.trades().size()){
             int x = offsetX + shopItem % col * intervalX;
-            int y = offsetY + (shopItem / col- scrollOff) * 20;
+            int y = offsetY + (shopItem / col- scrollOff) * intervalY;
             renderSlotHighlight(guiGraphics,x ,y , 20);
         }
         List<ITrade> trades = menu.NPCTrades.trades();
@@ -181,7 +183,7 @@ public abstract class TETradeItemScreen< M extends TETradesMenu> extends Abstrac
                 x+=intervalX;
             }
             x = offsetX;
-            y += 20;
+            y += intervalY;
         }
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
@@ -258,9 +260,9 @@ public abstract class TETradeItemScreen< M extends TETradesMenu> extends Abstrac
         int x = (int) (mouseX - offsetX);
         int y = (int) (mouseY - offsetY);
         int i = x / intervalX;
-        int j = y / 20;
+        int j = y / intervalY;
         if (i >= 0 && i < col && j >= 0 && j < row
-                && x % intervalX < 16 && y % 20 < 16
+                && x % intervalX < 16 && y % intervalY < 16
                 && x >= 0 && y >= 0
         ) {
             int index = i + (j + scrollOff) * col;

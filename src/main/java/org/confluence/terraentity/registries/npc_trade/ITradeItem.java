@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-import static org.confluence.terraentity.client.gui.container.TETradeItemScreen.MENU_LOCATION;
+import static org.confluence.terraentity.client.gui.container.TETradeScreen.MENU_LOCATION;
 
 /**
  * 当交易获得的物品是单个物品时继承这个接口

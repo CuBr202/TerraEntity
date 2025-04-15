@@ -7,7 +7,7 @@ import org.confluence.terraentity.menu.SimpleTradeMenu;
 /**
  * 这个类提供简单统一的菜单界面{@link org.confluence.terraentity.registries.npc_trade.ITrade}
  */
-public class SimpleTradeScreen extends TETradeItemScreen<SimpleTradeMenu> {
+public class SimpleTradeScreen extends TETradeScreen<SimpleTradeMenu> {
     public SimpleTradeScreen(SimpleTradeMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }

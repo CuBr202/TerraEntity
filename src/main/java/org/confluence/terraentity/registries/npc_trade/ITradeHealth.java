@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.TerraEntity;
 import org.jetbrains.annotations.Nullable;
 
-import static org.confluence.terraentity.client.gui.container.TETradeItemScreen.MENU_LOCATION;
+import static org.confluence.terraentity.client.gui.container.TETradeScreen.MENU_LOCATION;
 
 /**
  * 当交易的内容是恢复生命值时继承这个接口
