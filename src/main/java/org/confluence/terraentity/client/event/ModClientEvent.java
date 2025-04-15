@@ -14,8 +14,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.block.renderer.FigureBlockRenderer;
 import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.entity.renderer.ReplacedSpiderRenderer;
-import org.confluence.terraentity.client.gui.container.TEItemTradeItemScreen;
-import org.confluence.terraentity.client.gui.container.TETradeScreen;
+import org.confluence.terraentity.client.gui.container.SimpleTradeScreen;
 import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.init.TEEntities;
@@ -102,7 +101,7 @@ public final class ModClientEvent {
 
     @SubscribeEvent
     public static void registerMenuScreens(RegisterMenuScreensEvent event) {
-        event.register(TEMenus.NPC_TRADES_MENU.get(), TEItemTradeItemScreen::new);
+        event.register(TEMenus.SIMPLE_NPC_TRADES_MENU.get(), SimpleTradeScreen::new);
 
     }
 

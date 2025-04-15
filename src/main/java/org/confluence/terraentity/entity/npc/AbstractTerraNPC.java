@@ -1,7 +1,5 @@
 package org.confluence.terraentity.entity.npc;
 
-import com.github.tartaricacid.touhoulittlemaid.api.event.MaidDamageEvent;
-import com.github.tartaricacid.touhoulittlemaid.api.event.MaidHurtEvent;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
@@ -12,6 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -19,9 +18,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -35,7 +31,6 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
-import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -43,11 +38,7 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
@@ -57,7 +48,7 @@ import org.confluence.terraentity.entity.npc.house.HouseManager;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
-import org.confluence.terraentity.menu.TETradesMenu;
+import org.confluence.terraentity.menu.SimpleTradeMenu;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -233,8 +224,8 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("dave_data", 10)) {
-            DataResult<NPCTrades> data = NPCTrades.CODEC.parse(NbtOps.INSTANCE, compound.get("dave_data"));
+        if (compound.contains("te_npc_data", 10)) {
+            DataResult<NPCTrades> data = NPCTrades.CODEC.parse(NbtOps.INSTANCE, compound.get("te_npc_data"));
             this.entityData.set(DATA_DAVE_DATA, data.result().get());
             this.trades = data.result().get();
         }
@@ -243,8 +234,10 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-//        DataResult<Tag> data = NPCTrades.CODEC.encodeStart(NbtOps.INSTANCE, trades);
-//        compound.put("dave_data",data.result().get());
+        if(trades != null) {
+            DataResult<Tag> data = NPCTrades.CODEC.encodeStart(NbtOps.INSTANCE, trades);
+            compound.put("te_npc_data", data.result().get());
+        }
     }
 
 
@@ -321,7 +314,9 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         }
         else if(!stack.isEmpty()){
             // 如果是物品，则拿在手上
-            this.setItemSlot(EquipmentSlot.MAINHAND, stack.copy());
+            ItemStack stack1 = stack.copy();
+            this.dropEquipmentToHand(EquipmentSlot.MAINHAND, player, hand);
+            this.setItemSlot(EquipmentSlot.MAINHAND, stack1.copy());
             stack.shrink(1);
             return InteractionResult.SUCCESS;
         }else if(player.isShiftKeyDown()){
@@ -354,7 +349,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity {
         event.execute((npc, player1) -> {
             if(trades != null) {
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
-                        new TETradesMenu(id, playerInventory, trades), Component.translatable("title.terra_entity.npc_trade")));
+                        new SimpleTradeMenu(id, playerInventory, trades), Component.translatable("title.terra_entity.npc_trade")));
             }
         });
 

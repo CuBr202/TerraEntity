@@ -24,6 +24,8 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -792,6 +794,17 @@ public final class TEUtils {
         if (tMin > tMax) return null;
 
         return start.add(dir.scale(tMin));
+    }
+
+    public static void consumeItemCount(List<ItemStack> have, Item item, int consumeCount) {
+        int count = 0;
+        for (ItemStack stack : have) {
+            if (stack.is(item) && count < consumeCount) {
+                int toConsume = Math.min(stack.getCount(), consumeCount - count);
+                stack.shrink(toConsume);
+                count += toConsume;
+            }
+        }
     }
 
 /*

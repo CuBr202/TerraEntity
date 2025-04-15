@@ -21,7 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record NPCTrades<T extends ITrade>(List<T> trades) {
+/**
+ * 交易清单
+ * @param trades 交易列表
+ */
+public record NPCTrades(List<ITrade> trades) {
     public static final String KEY = "npc_shop";
     public static final Codec<NPCTrades> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ITrade.TYPED_CODEC.listOf().fieldOf("trades").forGetter(NPCTrades::trades)

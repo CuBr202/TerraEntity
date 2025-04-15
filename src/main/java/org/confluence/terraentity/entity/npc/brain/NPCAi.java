@@ -155,7 +155,8 @@ public class NPCAi {
                         ImmutableList.of(
                                 Pair.of(InteractWith.of(EntityType.CAT, 8, MemoryModuleType.INTERACTION_TARGET, speedModifier, 2), 1),
 //                                Pair.of(VillageBoundRandomStroll.create(speedModifier), 1),
-                                Pair.of(HomeNearbyStroll.create(speedModifier), 1), // 随机游走
+                                Pair.of(HomeNearbyStroll.create(speedModifier), 2), // 家附近随机游走
+                                Pair.of(RandomStroll.stroll(1.0f), 1), // 随机游走
 
                                 Pair.of(SetWalkTargetFromLookTarget.create(speedModifier, 2), 1),
                                 Pair.of(new JumpOnBed(speedModifier), 1),
@@ -180,6 +181,11 @@ public class NPCAi {
                                 Pair.of(NPCHouseBehaviors.walkToHouse(speedModifier), 2), // 走向家
 //                                Pair.of(VillageBoundRandomStroll.create(speedModifier), 1),
 //                                Pair.of(GoToClosestVillage.create(speedModifier, 4), 2),
+                                Pair.of(new DoNothing(20, 40), 2)))),
+                Pair.of(5, new RunOne<>( // 没有家的时候随机游走
+                        ImmutableMap.of(MemoryModuleType.HOME, MemoryStatus. VALUE_ABSENT),
+                        ImmutableList.of(
+                                Pair.of(RandomStroll.stroll(1.0f), 1), // 走向家
                                 Pair.of(new DoNothing(20, 40), 2)))),
                 Pair.of(5, new RunOne<>( // 视觉感知
                         ImmutableList.of(

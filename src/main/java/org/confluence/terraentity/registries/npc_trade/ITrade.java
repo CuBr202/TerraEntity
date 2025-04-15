@@ -2,11 +2,18 @@ package org.confluence.terraentity.registries.npc_trade;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.registries.TERegistries;
 
 import java.util.List;
@@ -22,10 +29,44 @@ public interface ITrade{
     boolean canTrade(Player player);
 
     /**
-     * 执行交易
+     * 当canTrade为true时触发
      */
     void onTrade(ServerPlayer player);
 
+    /**
+     * 渲染框内的所需物品
+     * @param guiGraphics guiGraphics
+     * @param font font
+     * @param x 当前绘制位置x
+     * @param y 当前绘制位置y
+     * @param startx 菜单左上角位置x
+     * @param starty 菜单左上角位置y
+     */
+    @OnlyIn(Dist.CLIENT)
+    void renderCosts(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
+
+    /**
+     * 渲染交易列表的表格调用
+     */
+    @OnlyIn(Dist.CLIENT)
+    void renderResult(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
+
+    /**
+     * 渲染交易列表的物品槽调用
+     */
+    @OnlyIn(Dist.CLIENT)
+    void renderResultSlot(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot);
+
+    /**
+     * 当客户端点击物品槽时调用，自定义播放声音
+     */
+    default void onLocalClickSlot(Player player, int button, ClickType clickType){
+        if(canTrade(player)){
+            player.playSound(SoundEvents.UI_BUTTON_CLICK.value());
+        }else{
+            player.playSound(SoundEvents.UI_TOAST_IN);
+        }
+    }
     /**
      * 获取编解码器
      * @return 编解码器

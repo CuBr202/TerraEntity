@@ -12,13 +12,18 @@ import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
 import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.init.item.TEWhipItems;
+import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.registries.npc_trade.variant.ItemListTradeItem;
+import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItem;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
  * 生成单个NPC单个配方
+ *
  * @see org.confluence.terraentity.registries.npc_trade.ITrade
  */
 public class TENPCShopProvider extends AbstractRecipeProvider {
@@ -34,25 +39,46 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
     @Override
     public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider holderLookup) {
 
-        add(TENpcEntities.GUIDE.getId()).addRecipe(new Builder()
+        add(TENpcEntities.GUIDE.getId()).addRecipe(builder()
                 .add(new ItemStack(Blocks.OAK_SAPLING.asItem(), 1), Items.ARROW.getDefaultInstance())
-                .add(new ItemStack(Blocks.TORCH.asItem(), 10),  Items.ARROW.getDefaultInstance())
-                .add(new ItemStack(Items.ARROW.asItem(), 10),  Items.ARROW.getDefaultInstance())
-                .add(new ItemStack(TEWhipItems.LEATHER_WHIP.get(), 1),  Items.ARROW.getDefaultInstance())
+                .add(new ItemStack(Blocks.TORCH.asItem(), 10), Items.ARROW.getDefaultInstance())
+                .add(new ItemStack(Items.ARROW.asItem(), 10), Items.ARROW.getDefaultInstance())
+                .add(new ItemStack(TEWhipItems.LEATHER_WHIP.get(), 1), Items.ARROW.getDefaultInstance())
                 .build());
 
-        add(TENpcEntities.DEMOLITIONIST.getId()).addRecipe(new Builder()
+        add(TENpcEntities.DEMOLITIONIST.getId()).addRecipe(builder()
                 .add(new ItemStack(Blocks.TNT.asItem(), 1), Items.EGG.getDefaultInstance())
+                .build());
+
+        add(TENpcEntities.NURSE.getId()).addRecipe(builder()
+                .add(ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 10))
+                .add(new ItemStack(Items.ARROW.asItem(), 10), Items.ARROW.getDefaultInstance())
+                .add(ItemListTradeItem.builder(Items.ARROW.asItem(), 10)
+                        .addCost(Items.IRON_GOLEM_SPAWN_EGG, 1)
+                        .addCost(Items.WITHER_SKELETON_SKULL, 1)
+                        .addCost(Items.ZOMBIE_HEAD, 20)
+                        .addCost(Items.SKELETON_HORSE_SPAWN_EGG, 1)
+                        .addCost(Items.CREEPER_HEAD, 1)
+                        .addCost(Items.SPIDER_EYE, 1)
+                        .addCost(Items.BLAZE_ROD, 1)
+                        .addCost(Items.GHAST_TEAR, 1)
+                        .addCost(Items.ENDER_PEARL, 1)
+                        .addCost(Items.MAGMA_CREAM, 1)
+                        .build()
+                )
                 .build());
     }
 
-    private Appender<NPCTrades> add(ResourceLocation id){
+    protected Appender<NPCTrades> add(ResourceLocation id) {
         return recipe(NPCTrades.CODEC, pathProvider().json(id));
     }
 
+    protected Builder builder() {
+        return new Builder();
+    }
 
     public static class Builder {
-        private final List<ItemTradeItem> trades;
+        private final List<ITrade> trades;
 
         public Builder() {
             this.trades = new ArrayList<>();
@@ -60,6 +86,11 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
 
         public Builder add(ItemStack it, ItemStack cost) {
             trades.add(new ItemTradeItem(it, cost));
+            return this;
+        }
+
+        public Builder add(ITrade trade) {
+            trades.add(trade);
             return this;
         }
 

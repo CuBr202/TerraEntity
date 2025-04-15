@@ -1,6 +1,7 @@
 package org.confluence.terraentity.client.gui.container;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -20,18 +21,19 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
 import org.confluence.terraentity.menu.TETradesMenu;
 import org.confluence.terraentity.mixed.IPlayer;
-import org.confluence.terraentity.registries.npc_trade.ITradeItem;
+import org.confluence.terraentity.registries.npc_trade.ITrade;
 
 import java.util.List;
 
 /**
- * 由于交易的物品是单个，统一使用tradeItem的抽象菜单类，继承本类后自行写渲染cost的物品或者其他东西逻辑
- * @param <T> the type of trade item
+ * <p>由于交易的物品是单个，统一使用tradeItem的抽象菜单类
+ * <p>渲染cost的逻辑在{@link org.confluence.terraentity.registries.npc_trade.ITrade#renderCosts(GuiGraphics, Font, int, int, int, int, int, int)}
+ * <p>使用时必须继承此类，否则会出现类型推断不匹配</p>
  */
-public abstract class TETradeScreen<T extends ITradeItem> extends AbstractContainerScreen<TETradesMenu> {
+public abstract class TETradeItemScreen< M extends TETradesMenu> extends AbstractContainerScreen<M> {
     private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller");
     private static final ResourceLocation SCROLLER_DISABLED_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller_disabled");
-    private static final ResourceLocation MENU_LOCATION = TerraEntity.space("textures/gui/container/npc_shop.png");
+    public static final ResourceLocation MENU_LOCATION = TerraEntity.space("textures/gui/container/npc_shop.png");
     private static final int NUMBER_OF_LINES = 7;
     private static final Component TRADES_LABEL = Component.translatable("title.terra_entity.npc_trade");
 
@@ -49,7 +51,7 @@ public abstract class TETradeScreen<T extends ITradeItem> extends AbstractContai
     KeyframeAnimation interpolator;
 
 
-    public TETradeScreen(TETradesMenu menu, Inventory playerInventory, Component title) {
+    public TETradeItemScreen(M menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth = 290;
         this.inventoryLabelX = 107;
@@ -164,22 +166,18 @@ public abstract class TETradeScreen<T extends ITradeItem> extends AbstractContai
             int y = offsetY + (shopItem / col- scrollOff) * 20;
             renderSlotHighlight(guiGraphics,x ,y , 20);
         }
-        List<T> trades = menu.NPCTrades.trades();
+        List<ITrade> trades = menu.NPCTrades.trades();
         int x = offsetX;
         int y = offsetY;
         for (int l = 0; l < Math.min(row, NUMBER_OF_LINES); l++) {
             for(int k = 0; k < col; k++){
                 int index = k+(l+ scrollOff) * col;
                 if(index >= trades.size()) break;
-                var it = trades.get(index).result();
+                var trade = trades.get(index);
 
-                guiGraphics.renderItem(it, x , y );
-                if(mouseX > x && mouseX < x+16 && mouseY > y && mouseY < y+16){
-//                    guiGraphics.setColor(1, 1, 1, 1);
-                    guiGraphics.renderTooltip(this.font, it, mouseX, mouseY);
-                }
+                // 渲染获得的物品
+                renderResult(guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade);
 
-                guiGraphics.renderItemDecorations(this.font, it, x, y);
                 x+=intervalX;
             }
             x = offsetX;
@@ -187,51 +185,37 @@ public abstract class TETradeScreen<T extends ITradeItem> extends AbstractContai
         }
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
-//        //背包的金币
-//
-//        int []myCoins =  PlayerUtils.getCoins(Minecraft.getInstance().player);
-//        x = ii + 5;
-//        y = jj - 20;
-//        for( int i = 0; i < myCoins.length; i++){
-//            ItemStack stack = new ItemStack(coinItem.get(i), myCoins[i]);
-//            int count = stack.getCount();
-//            guiGraphics.renderItem(stack, x, y );
-//            float scale = (count < 1000) ? 1.0F : 0.75F;
-//            int moveX = (count < 1000) ? 0 : 6;
-//            int moveY = (count < 1000) ? 0 : 5;
-//            guiGraphics.pose().pushPose();
-//            guiGraphics.pose().scale(scale, scale, 1.0F);
-//            guiGraphics.renderItemDecorations(this.font, stack, (int) (x / scale) + moveX, (int) (y / scale) + moveY);
-//            guiGraphics.pose().popPose();
-//            x+= (count == 0) ? 0 : 20;
-//        }
-
         // 上面的材料物品
         if(shopItem < 0 ||shopItem >= trades.size())
             return;
 
         var trade = trades.get(this.shopItem);
 
-//        int[] coins = PlayerUtils.decodeCoin(trade.cost());
         x = ii + 120;
         y = jj + 21;
-        renderCosts(guiGraphics, x, y, ii, trade);
+        renderCosts(guiGraphics, font,  x, y, ii, jj, mouseX, mouseY, trade);
+        
 
-
-
-        boolean canBuy = trade.canTrade(Minecraft.getInstance().player);
-
+        x = ii + 203;
+        y = jj + 35;
         // 能否购买
-        if(canBuy){
-            menu.slots.get(0).set(trade.result().copy());
-            guiGraphics.blit(MENU_LOCATION,ii+203,jj+35,276,0,35,17,512,256);
-        }else{
-            menu.slots.get(0).set(ItemStack.EMPTY);
-            guiGraphics.blit(MENU_LOCATION,ii+203,jj+35,276,17,35,17,512,256);
-        }
+        boolean canBuy = trade.canTrade(Minecraft.getInstance().player);
+        renderResultSlot(guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, canBuy);
+
     }
 
-    protected abstract void renderCosts(GuiGraphics guiGraphics, int x, int y, int startx,  T trade);
+    protected void renderCosts(GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
+        trade.renderCosts(guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+    }
+
+    protected void renderResult(GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
+        trade.renderResult(guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+    }
+
+    protected void renderResultSlot(GuiGraphics guiGraphics,Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade, boolean canBuy){
+        trade.renderResultSlot(guiGraphics,font, x, y, startx, starty, mouseX, mouseY, canBuy, menu.slots.get(0));
+    }
+
 
     private boolean canScroll() {
         return row > NUMBER_OF_LINES;
