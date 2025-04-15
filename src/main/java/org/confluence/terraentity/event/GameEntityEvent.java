@@ -12,6 +12,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -27,7 +28,6 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.Decayeder;
@@ -37,9 +37,11 @@ import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.entity.summon.ISummonMob;
-import org.confluence.terraentity.init.*;
+import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.init.TEAttributes;
+import org.confluence.terraentity.init.TEEffects;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.utils.TEUtils;
@@ -216,7 +218,7 @@ public class GameEntityEvent {
         }
         ServerLevelAccessor level = event.getLevel();
         if (event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < 0.05F) {
-            BaseSlime slime = TEMonsterEntities.BLUE_SLIME.get().create(mob.level());
+            BaseSlime slime = (zombie instanceof ZombifiedPiglin ? TEMonsterEntities.LAVA_SLIME.get() : TEMonsterEntities.BLUE_SLIME.get()).create(mob.level());
             if (slime != null) {
                 Vec3 position = zombie.getPassengerRidingPosition(slime);
                 slime.moveTo(position.x, position.y, position.z, zombie.getYRot(), 0.0F);
