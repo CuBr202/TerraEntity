@@ -5,6 +5,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
@@ -31,6 +32,7 @@ public class TEItemTagsProvider extends ItemTagsProvider {
         TEWhipItems.ITEMS.getEntries().forEach(item -> {
             tag(ItemTags.DURABILITY_ENCHANTABLE).add(item.get());
             tag(TETags.Items.WHIP_ENCHANTABLE).add(item.get());
+            tag(Tags.Items.MELEE_WEAPON_TOOLS).add(item.get()); // 鞭子属于近战武器
         });
         TESummonItems.ITEMS.getEntries().forEach(item ->{
             tag(TETags.Items.WEAPONS);
