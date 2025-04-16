@@ -21,7 +21,9 @@ public class ItemRendererMixin {
         if (entity instanceof Player player && !leftHand && itemStack.getItem() instanceof BaseWhipItem item) {
              // 右手使用鞭子时取消渲染
             if (player.getCooldowns().isOnCooldown(item)) {
-                ci.cancel();
+                if(displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND) {
+                    ci.cancel();
+                }
             }
         }
     }

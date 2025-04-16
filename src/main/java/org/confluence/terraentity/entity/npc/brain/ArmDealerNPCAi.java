@@ -19,6 +19,11 @@ public class ArmDealerNPCAi extends NPCAi {
 
     public ArmDealerNPCAi(AbstractTerraNPC npc) {
         super(npc);
+
+    }
+
+    @Override
+    protected void init(){
         npc.setAttackRange(10);
         npc.setCooldownTicks(20);
     }

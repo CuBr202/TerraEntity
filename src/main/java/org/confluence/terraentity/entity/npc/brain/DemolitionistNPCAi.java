@@ -28,6 +28,9 @@ public class DemolitionistNPCAi extends NPCAi {
 
     public DemolitionistNPCAi(AbstractTerraNPC npc) {
         super(npc);
+
+    }
+    protected void init(){
         npc.setAttackRange(5);
         npc.setCanPerformerAttackTest(e->true); // 不需要手持TNT
     }

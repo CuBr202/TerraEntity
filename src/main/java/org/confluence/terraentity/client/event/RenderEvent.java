@@ -1,8 +1,11 @@
 package org.confluence.terraentity.client.event;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
@@ -49,6 +52,21 @@ public class RenderEvent {
 
     @SubscribeEvent
     public static void renderHand(RenderHandEvent event) {
+        ItemStack stack = event.getItemStack();
+        if (event.getHand() == InteractionHand.MAIN_HAND && stack.getItem() instanceof BaseWhipItem item) {
+            // 右手使用鞭子时取消渲染
+            Player player = Minecraft.getInstance().player;
+            if (player != null && player.getCooldowns().isOnCooldown(item)) {
+//                ci.cancel();
+                float progress = (player.tickCount - BaseWhipItem.clickTime + event.getPartialTick());
+                int cooldown = BaseWhipItem.cooldownTime;
+                progress = Math.min(progress, cooldown) / cooldown;
+
+                System.out.println(progress);
+                progress = progress > 0.5? 2 - progress * 2 : progress * 2;
+                event.getPoseStack().translate(0, -progress  ,0);
+            }
+        }
 
 
     }

@@ -40,6 +40,9 @@ public class BaseWhipItem extends Item {
 //    public final float attackSpeed;
     public final Supplier<? extends ParticleOptions> particleOptions;
     public final float chance;
+    public static int clickTime;
+    public static int cooldownTime;
+
 
     public Supplier<BlockState> blockStateSupplier;
 
@@ -124,6 +127,9 @@ public class BaseWhipItem extends Item {
                 level.addFreshEntity(whipEntity);
 //                stack.hurtAndBreak(1, player, (Consumer<LivingEntity>) (e -> e.playSound(SoundEvents.)));
             }
+        }else{
+            clickTime = player.tickCount;
+            cooldownTime = (int) (20 * getCdReduction(player));
         }
         player.swing(usedHand);
         return InteractionResultHolder.success(stack);

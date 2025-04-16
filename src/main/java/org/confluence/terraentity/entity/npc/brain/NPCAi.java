@@ -43,8 +43,12 @@ public class NPCAi {
      */
     public NPCAi(AbstractTerraNPC npc) {
         this.npc = npc;
+        this.init();
     }
 
+    protected void init(){
+
+    }
 
 
     /**

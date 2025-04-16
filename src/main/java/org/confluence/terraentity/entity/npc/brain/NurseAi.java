@@ -2,27 +2,20 @@ package org.confluence.terraentity.entity.npc.brain;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
-import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.behavior.SetWalkTargetAwayFrom;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
 import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicCalmDownBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.brain.behavior.NPCRangeAttackBrain;
 import org.confluence.terraentity.entity.npc.brain.behavior.NurseAttackTriggerBrain;
+import org.confluence.terraentity.entity.npc.brain.behavior.NurseRangeAttackBrain;
 import org.confluence.terraentity.init.TEAi;
 
 import java.util.List;
@@ -34,26 +27,20 @@ public class NurseAi extends NPCAi {
 
     /**
      * 在生成npc时的构造函数调用
-     *
-     * @param npc
+     * @param npc npc实例
      */
     public NurseAi(AbstractTerraNPC npc) {
         super(npc);
+
+    }
+
+    @Override
+    protected void init(){
         npc.setAttackRange(5);
         npc.setCooldownTicks(30);
         npc.setCanPerformerAttackTest(npc1->{
             var targetOpt = npc1.getBrain().getMemory(TEAi.MemoryModules.NEAREST_VISIBLE_ALLIANCE_NURSE_TARGET.get());
-            if(targetOpt.isPresent()){
-//                LivingEntity living = targetOpt.get();
-//                if(living == npc1){
-//                    return
-//                }
-//                if(living.getHealth() >= living.getMaxHealth() * 0.8f){
-//                    return false;
-//                }
-                return true;
-            }
-            return false;
+            return targetOpt.isPresent();
         });
     }
 
@@ -90,30 +77,6 @@ public class NurseAi extends NPCAi {
      * 替换不同的远程攻击行为
      */
     protected NPCRangeAttackBrain<? super AbstractTerraNPC> getRangeAttackBrain() {
-        return new NPCRangeAttackBrain<>(10, npc.getAttackRange()){
-            protected boolean customDoAttack(ServerLevel level, AbstractTerraNPC owner, LivingEntity target){
-                ThrownPotion thrownpotion = new ThrownPotion(level, owner);
-                ItemStack stack = new ItemStack(Items.POTION);
-                stack.set(DataComponents.POTION_CONTENTS, PotionContents.EMPTY.withPotion(Potions.HEALING));
-                thrownpotion.setItem(stack);
-                thrownpotion.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), -20.0F, 0.5F, 1.0F);
-                level.addFreshEntity(thrownpotion);
-                return true;
-            }
-
-            protected void tickLook(ServerLevel level, AbstractTerraNPC owner, LivingEntity target){
-                if(owner == target){
-                    owner.getLookControl().setLookAt(owner.position());
-                    owner.lookAt(EntityAnchorArgument.Anchor.EYES, owner.position());
-                }
-                else{
-                    super.tickLook(level, owner, target);
-                }
-            }
-
-            protected boolean canTrigger(AbstractTerraNPC owner, LivingEntity target, double angle){
-                return true;
-            }
-        };
+        return new NurseRangeAttackBrain<>(10, npc.getAttackRange());
     }
 }

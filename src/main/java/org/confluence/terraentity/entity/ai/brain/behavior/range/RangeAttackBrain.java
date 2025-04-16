@@ -59,12 +59,10 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
         owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).ifPresent((target) -> {
 
             this.tickLook(level, owner, target);
-
-            double angle = TEUtils.angleBetween(owner.getLookAngle(), target.getEyePosition().subtract(owner.getEyePosition()).normalize());
-            angle = Mth.wrapDegrees(angle);
-
-            if(this.canTrigger(owner, target, angle)) {
+            // 如果能触发攻击
+            if(this.canTrigger(owner, target)) {
                 if(owner.getSensing().hasLineOfSight(target)){
+                    // 开始准备
                     isPreparing = true;
                 }else{
                     this.doStop(level, owner, gameTime);
@@ -74,8 +72,10 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
             }
 
             if(isPreparing){
+                // 准备阶段
                 onPrepare(level, owner, target, prepareTime);
                 if(--prepareTime <= 0) {
+                    // 开始攻击
                     doAttack(level, owner, target);
                 }
             }
@@ -84,10 +84,18 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
 
     }
 
-    protected boolean canTrigger(T owner, LivingEntity target, double angle){
+    /**
+     * 是否可以触发远程攻击，默认条件是视线朝向敌人
+     */
+    protected boolean canTrigger(T owner, LivingEntity target){
+        double angle = TEUtils.angleBetween(owner.getLookAngle(), target.getEyePosition().subtract(owner.getEyePosition()).normalize());
+        angle = Mth.wrapDegrees(angle);
         return angle < 0.1f;
     }
 
+    /**
+     * 准备开始执行远程攻击
+     */
     protected void onPrepare(ServerLevel level, T owner, LivingEntity target, int prepareTime){
         // 可能要停下来瞄准
 //        if(owner.getRandom().nextFloat() < 0.1f){
