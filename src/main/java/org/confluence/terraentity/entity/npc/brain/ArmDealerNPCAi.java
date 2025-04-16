@@ -19,11 +19,13 @@ public class ArmDealerNPCAi extends NPCAi {
 
     public ArmDealerNPCAi(AbstractTerraNPC npc) {
         super(npc);
+        npc.setAttackRange(10);
+        npc.setCooldownTicks(20);
     }
 
-    protected NPCRangeAttackBrain<? super AbstractTerraNPC> createRangeAttackBrain() {
+    protected NPCRangeAttackBrain<? super AbstractTerraNPC> getRangeAttackBrain() {
         return new NPCRangeAttackBrain<>(10, npc.getAttackRange()){
-            protected boolean customDoAttack(ServerLevel level, Mob owner, LivingEntity target){
+            protected boolean customDoAttack(ServerLevel level, AbstractTerraNPC owner, LivingEntity target){
                 ItemStack stack = owner.getMainHandItem();
 
                 if(stack.getItem() instanceof CrossbowItem weaponItem){

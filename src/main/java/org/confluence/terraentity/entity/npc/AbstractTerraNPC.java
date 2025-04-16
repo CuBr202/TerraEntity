@@ -22,10 +22,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -372,6 +369,10 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
             player.setItemInHand(hand, drop.copy());
             this.setItemSlot(slot, ItemStack.EMPTY);
         }
+    }
+
+    public boolean isAllianceTo(LivingEntity entity){
+        return entity instanceof AbstractTerraNPC || entity instanceof Player;
     }
 
 

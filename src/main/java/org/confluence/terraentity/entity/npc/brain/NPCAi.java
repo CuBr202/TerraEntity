@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 
+import java.util.List;
 import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
@@ -44,12 +45,7 @@ public class NPCAi {
         this.npc = npc;
     }
 
-    /**
-     * 注册记忆和感知器
-     */
-    public Brain.Provider<AbstractTerraNPC> brainProvider() {
-        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
-    }
+
 
     /**
      * 注册具体行为
@@ -89,10 +85,17 @@ public class NPCAi {
                 new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
                 new CountDownCooldownTicks(MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS),
                 new PanicTriggerBrain(),
-                new NPCAttackTriggerBrain<>(),
+                getAttackTriggerBrain(),
                 NPCHouseBehaviors.findHouse(MemoryModuleType.HOME) // 寻找家
 
         ));
+    }
+
+    /**
+     * 替换触发攻击行为
+     */
+    protected Behavior<? super AbstractTerraNPC> getAttackTriggerBrain(){
+        return new NPCAttackTriggerBrain<>();
     }
 
     /**
@@ -131,7 +134,7 @@ public class NPCAi {
 
         return ImmutableList.of(
 //                Pair.of(5, new RangeAttackStrafingBrain()),  // 不是所有远程攻击都需要走位
-                Pair.of(5, createRangeAttackBrain()),
+                Pair.of(5, getRangeAttackBrain()),
                 Pair.of(5, new NPCRangeAttackOnCooldownBrain<>(npc.getCooldownTicks(), npc.getAttackRange())),
                 Pair.of(5, new NPCAttackCalmDownBrain<>(15))
 
@@ -139,9 +142,9 @@ public class NPCAi {
     }
 
     /**
-     * 用于替换不同的远程攻击行为
+     * 替换不同的远程攻击行为
      */
-    protected NPCRangeAttackBrain<? super AbstractTerraNPC> createRangeAttackBrain() {
+    protected NPCRangeAttackBrain<? super AbstractTerraNPC> getRangeAttackBrain() {
         return new NPCRangeAttackBrain<>(10, npc.getAttackRange());
     }
 
@@ -250,16 +253,65 @@ public class NPCAi {
     }
 
 
+    /**
+     * 注册记忆和感知器
+     */
+    public Brain.Provider<AbstractTerraNPC> brainProvider() {
+        return Brain.provider(getMemoryList(), getSensorList());
+    }
 
+    /**
+     * 注册额外的记忆模块
+     */
+    protected List<MemoryModuleType<?>> getMemoryAddition(){
+        return List.of();
+    }
+
+    /**
+     * 注册额外的感知器
+     */
+    protected List<SensorType<? extends Sensor<? super AbstractTerraNPC>>> getSensorAddition(){
+        return List.of();
+    }
+
+    private List<MemoryModuleType<?>> getMemoryList(){
+        var addition = getMemoryAddition();
+        if(addition.isEmpty()){
+            return MEMORY_TYPES;
+        }
+        var builder = ImmutableList.<MemoryModuleType<?>>builder();
+        builder.addAll(MEMORY_TYPES);
+        builder.addAll(addition);
+        return builder.build();
+    }
+
+    private List<SensorType<? extends Sensor<? super AbstractTerraNPC>>> getSensorList(){
+        var addition = getSensorAddition();
+        if(addition.isEmpty()){
+            return SENSOR_TYPES;
+        }
+        var builder = ImmutableList.<SensorType<? extends Sensor<? super AbstractTerraNPC>>>builder();
+        builder.addAll(SENSOR_TYPES);
+        builder.addAll(addition);
+        return builder.build();
+    }
+
+    /**
+     * 共有的感知器
+     */
     protected static final ImmutableList<SensorType<? extends Sensor<? super AbstractTerraNPC>>> SENSOR_TYPES = ImmutableList.of(
             SensorType.NEAREST_LIVING_ENTITIES,
             SensorType.HURT_BY,
             SensorType.FROG_ATTACKABLES,
             SensorType.FROG_TEMPTATIONS,
             SensorType.IS_IN_WATER,
-            TEAi.NPC_HOSTILES_SENSOR.get()
-    );
+            TEAi.Sensors.NPC_HOSTILES_SENSOR.get(),
+            TEAi.Sensors.NEAREST_VISIBLE_ALLIANCE_SENSOR.get()
+            );
 
+    /**
+     * 共有的记忆模块
+     */
     protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(
             MemoryModuleType.LOOK_TARGET,
             MemoryModuleType.DOORS_TO_CLOSE,
@@ -277,6 +329,7 @@ public class NPCAi {
             MemoryModuleType.ATTACK_TARGET,
             MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
             MemoryModuleType.ATTACK_COOLING_DOWN,
+            TEAi.MemoryModules.NEAREST_VISIBLE_ALLIANCE.get(),
 
 
             MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,

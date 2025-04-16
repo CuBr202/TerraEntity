@@ -11,14 +11,11 @@ import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.projectile.Arrow;
-import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import org.confluence.terraentity.utils.TEUtils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -52,15 +49,21 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
         return !owner.getBrain().getMemory(MemoryModuleType.ATTACK_COOLING_DOWN).get();
     }
 
+    protected void tickLook(ServerLevel level, T owner, LivingEntity target){
+        BehaviorUtils.lookAtEntity(owner, target);
+        owner.lookAt(target, 10, owner.getMaxHeadYRot());
+    }
+
     @Override
     protected void tick(ServerLevel level, T owner, long gameTime) {
         owner.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).ifPresent((target) -> {
-            BehaviorUtils.lookAtEntity(owner, target);
-            owner.lookAt(target, 10, owner.getMaxHeadYRot());
+
+            this.tickLook(level, owner, target);
+
             double angle = TEUtils.angleBetween(owner.getLookAngle(), target.getEyePosition().subtract(owner.getEyePosition()).normalize());
             angle = Mth.wrapDegrees(angle);
 
-            if(angle < 0.1f) {
+            if(this.canTrigger(owner, target, angle)) {
                 if(owner.getSensing().hasLineOfSight(target)){
                     isPreparing = true;
                 }else{
@@ -81,6 +84,10 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
 
     }
 
+    protected boolean canTrigger(T owner, LivingEntity target, double angle){
+        return angle < 0.1f;
+    }
+
     protected void onPrepare(ServerLevel level, T owner, LivingEntity target, int prepareTime){
         // 可能要停下来瞄准
 //        if(owner.getRandom().nextFloat() < 0.1f){
@@ -89,12 +96,12 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
     }
 
     @Override
-    protected void start(ServerLevel level, Mob entity, long gameTimeIn) {
+    protected void start(ServerLevel level, T entity, long gameTimeIn) {
         entity.startUsingItem(InteractionHand.MAIN_HAND);
     }
 
     @Override
-    protected void stop(ServerLevel level, Mob entity, long gameTimeIn) {
+    protected void stop(ServerLevel level, T entity, long gameTimeIn) {
         entity.getBrain().setMemory(MemoryModuleType.ATTACK_COOLING_DOWN, true);
         isPreparing = false;
         prepareTime = _prepareTime;
@@ -103,11 +110,11 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
     }
 
     @Override
-    protected boolean canStillUse(ServerLevel level, Mob entity, long gameTimeIn) {
+    protected boolean canStillUse(ServerLevel level, T entity, long gameTimeIn) {
         return prepareTime > 0;
     }
 
-    protected void doAttack(ServerLevel level, Mob owner, LivingEntity target){
+    protected void doAttack(ServerLevel level, T owner, LivingEntity target){
         if(customDoAttack(level, owner, target)){
             return;
         }
@@ -117,7 +124,7 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
     /**
      * 自定义远程攻击逻辑, 返回true表示已自定义攻击逻辑，否则使用默认逻辑
      */
-    protected boolean customDoAttack(ServerLevel level, Mob owner, LivingEntity target){
+    protected boolean customDoAttack(ServerLevel level, T owner, LivingEntity target){
         ItemStack stack = owner.getMainHandItem();
         if(stack.getItem() instanceof ProjectileWeaponItem weaponItem){
             stack.hurtAndBreak(1,level,owner,(entity) -> {});
@@ -130,7 +137,7 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
     /**
      * 默认远程攻击逻辑
      */
-    protected void defaultDoAttack(ServerLevel level, Mob owner, LivingEntity target){
+    protected void defaultDoAttack(ServerLevel level, T owner, LivingEntity target){
         // 调用默认的方法
         Arrow arrow = new Arrow(owner.level(), owner, Items.ARROW.getDefaultInstance(), Items.ARROW.getDefaultInstance());
         arrow.setPos(owner.getX(), owner.getY() + owner.getEyeHeight(), owner.getZ());

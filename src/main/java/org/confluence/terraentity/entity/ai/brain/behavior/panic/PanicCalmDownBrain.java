@@ -54,12 +54,17 @@ public class PanicCalmDownBrain<T extends Mob> extends Behavior<T> {
 //            brain.updateActivityFromSchedule(level.getDayTime(), gameTimeIn);
             brain.setActiveActivityIfPossible(TEAi.Activities.RANGE_ATTACK);
             if(target!= null && target.isAlive() && target != living) {
-                brain.setMemory(MemoryModuleType.ATTACK_TARGET, target);
-                brain.eraseMemory(MemoryModuleType.HURT_BY_ENTITY);
+
+                onCalmDown(level, brain, target);
             }
             brain.setMemory(MemoryModuleType.ATTACK_COOLING_DOWN, false);
 
         }
+    }
+
+    protected void onCalmDown(ServerLevel level, Brain<?> brain, LivingEntity target) {
+        brain.setMemory(MemoryModuleType.ATTACK_TARGET, target);
+        brain.eraseMemory(MemoryModuleType.HURT_BY_ENTITY);
     }
 
     public float getCalmDownChance(T living){

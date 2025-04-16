@@ -28,13 +28,15 @@ public class DemolitionistNPCAi extends NPCAi {
 
     public DemolitionistNPCAi(AbstractTerraNPC npc) {
         super(npc);
+        npc.setAttackRange(5);
+        npc.setCanPerformerAttackTest(e->true); // 不需要手持TNT
     }
 
-    protected NPCRangeAttackBrain<? super AbstractTerraNPC> createRangeAttackBrain() {
+    protected NPCRangeAttackBrain<? super AbstractTerraNPC> getRangeAttackBrain() {
         return new NPCRangeAttackBrain<>(10, npc.getAttackRange()){
 
             @Override
-            protected boolean customDoAttack(ServerLevel level, Mob owner, LivingEntity target){
+            protected boolean customDoAttack(ServerLevel level, AbstractTerraNPC owner, LivingEntity target){
                 var tnt = new PrimedTnt(EntityType.TNT, level){
                     @Override
                     protected void explode() {

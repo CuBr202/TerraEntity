@@ -1,13 +1,22 @@
 package org.confluence.terraentity.entity.npc.brain.behavior;
 
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import org.confluence.terraentity.entity.ai.brain.behavior.range.AttackTriggerBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
+import java.util.function.Function;
+
 public class NPCAttackTriggerBrain<T extends AbstractTerraNPC> extends AttackTriggerBrain<T> {
 
+    public NPCAttackTriggerBrain(Function<ImmutableMap.Builder<MemoryModuleType<?>, MemoryStatus>, ImmutableMap.Builder<MemoryModuleType<?>, MemoryStatus>> modifier) {
+        super(modifier, 0);
+    }
+
     public NPCAttackTriggerBrain() {
-        super(0);
+        super(0); // npc使用自带的攻击距离
     }
 
     protected boolean checkExtraStartConditions(ServerLevel level, T owner) {
