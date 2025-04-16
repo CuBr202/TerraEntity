@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.color.FloatRGB;
 import org.confluence.terraentity.entity.boss.KingSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
@@ -167,12 +168,15 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         }
         return super.isInWater();
     }
-
+    @Override
+    protected boolean isDealsDamage() {
+        return this.isEffectiveAi();
+    }
     @Override
     protected void dealDamage(@NotNull LivingEntity pLivingEntity) {
         if (isAlive()) {
             int i = getSize();
-            if (distanceToSqr(pLivingEntity) < 0.6 * (double) i * 0.6 * (double) i && hasLineOfSight(pLivingEntity) && pLivingEntity.hurt(damageSources().mobAttack(this), getAttackDamage())) {
+            if (distanceToSqr(pLivingEntity) < 0.5 * (double) i && hasLineOfSight(pLivingEntity) && pLivingEntity.hurt(damageSources().mobAttack(this), getAttackDamage())) {
                 playSound(SoundEvents.SLIME_ATTACK, 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
                 DamageSource damagesource = this.damageSources().mobAttack(this);
                 if (this.level() instanceof ServerLevel serverlevel)
