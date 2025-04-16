@@ -20,7 +20,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -33,9 +33,9 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.entity.PartEntity;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.FTWSetter;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.summon.ISummonMob;
@@ -669,7 +669,7 @@ public final class TEUtils {
      * <h1>统一弹幕目标伤害过滤</h1>
      */
     public static BiPredicate<Projectile, Entity> projectileCanHurtEntityTest = (projectile, target)-> {
-        if (!target.isAttackable() ||  target instanceof Villager || target instanceof ArmorStand) {
+        if (!target.isAttackable() ||  target instanceof     Npc  || target instanceof ArmorStand) {
             return false;
         }
         if(target instanceof  LivingEntity living){
