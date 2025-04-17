@@ -13,10 +13,12 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.brain.sensor.NPCHostilesSensor;
+import org.confluence.terraentity.entity.ai.brain.sensor.NPCNearbyOthersSensor;
 import org.confluence.terraentity.entity.ai.brain.sensor.NPCNearestVisibleAllianceSensor;
 import org.confluence.terraentity.entity.ai.brain.sensor.NPCNurseTargetSensor;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -43,6 +45,7 @@ public class TEAi {
     public static class MemoryModules {
         public static Supplier<MemoryModuleType<LivingEntity>> NEAREST_VISIBLE_ALLIANCE = MEMORY_MODULES.register("nearest_visible_alliance", () -> new MemoryModuleType<>(Optional.empty()));
         public static Supplier<MemoryModuleType<LivingEntity>> NEAREST_VISIBLE_ALLIANCE_NURSE_TARGET = MEMORY_MODULES.register("nearest_visible_alliance_nurse_target", () -> new MemoryModuleType<>(Optional.empty()));
+        public static Supplier<MemoryModuleType<List<AbstractTerraNPC>>> NEARBY_NPC = MEMORY_MODULES.register("nearby_npc", () -> new MemoryModuleType<>(Optional.empty()));
 
         public static void register(IEventBus bus){
             MEMORY_MODULES.register(bus);
@@ -63,6 +66,7 @@ public class TEAi {
         public static Supplier<SensorType<NPCHostilesSensor<AbstractTerraNPC>>> NPC_HOSTILES_SENSOR = SENSORS.register("npc_hostiles_sensor", ()-> new SensorType<>(() -> new NPCHostilesSensor<>(10)));
         public static Supplier<SensorType<NPCNearestVisibleAllianceSensor<AbstractTerraNPC>>> NEAREST_VISIBLE_ALLIANCE_SENSOR = SENSORS.register("nearest_visible_alliance_sensor", ()-> new SensorType<>(() -> new NPCNearestVisibleAllianceSensor<>(10)));
         public static Supplier<SensorType<NPCNurseTargetSensor<AbstractTerraNPC>>> NEAREST_NURSE_TARGET_SENSOR = SENSORS.register("nearest_nurse_target_sensor", ()-> new SensorType<>(() -> new NPCNurseTargetSensor<>(10)));
+        public static Supplier<SensorType<NPCNearbyOthersSensor>> NEARBY_NPC_SENSOR = SENSORS.register("nearby_npc_sensor", ()-> new SensorType<>(() -> new NPCNearbyOthersSensor(16)));
 
 
         public static void register(IEventBus bus){

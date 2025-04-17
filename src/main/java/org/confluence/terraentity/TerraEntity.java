@@ -57,7 +57,7 @@ public class TerraEntity {
 
     public void newListener(IEventBus eventBus){
         eventBus.addListener(WhipRegisterModifyEvent.class, event -> {});
-        eventBus.addListener(ModEvent::onRegisterBrain);
+        eventBus.addListener(ModEvent::onCollectBrains);
 
     }
 }

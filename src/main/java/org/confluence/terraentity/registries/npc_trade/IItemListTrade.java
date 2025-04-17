@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface IItemListTrade extends ITrade{
     List<ItemStack> costs();
 
     @Override
-    default boolean canTrade(Player player) {
+    default boolean canTrade(Player player, AbstractTerraNPC npc) {
         // todo 不能匹配分开的物品
         for (ItemStack cost : costs()) {
             if (!player.getInventory().hasAnyMatching(i->ItemStack.isSameItem(i, cost))) {
@@ -32,7 +33,7 @@ public interface IItemListTrade extends ITrade{
     }
 
     @Override
-    default void onTrade(ServerPlayer player) {
+    default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
         // todo
         for (ItemStack cost : costs()) {
 

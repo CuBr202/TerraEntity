@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.registries.npc_trade.*;
 import org.confluence.terraentity.utils.TEUtils;
 
@@ -56,9 +57,9 @@ public record ItemListTradeItem(ItemStack result, List<ItemStack> costs) impleme
     }
 
     @Override
-    public void onTrade(ServerPlayer player) {
-        ITradeItem.super.onTrade(player);
-        IItemListTrade.super.onTrade(player);
+    public void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
+        ITradeItem.super.onTrade(player, npc);
+        IItemListTrade.super.onTrade(player, npc);
     }
 
     @Override

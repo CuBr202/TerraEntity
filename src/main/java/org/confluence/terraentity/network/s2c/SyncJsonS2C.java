@@ -27,17 +27,19 @@ public class SyncJsonS2C implements CustomPacketPayload {
      */
     public static class CodecEnum<T>{
         private final Codec<T> codec;
-        JsonType type;
+        int type;
 
         /**
          * 用于发包指定枚举类型
          * @param codec codec
          * @param type 枚举类型
          */
-        private CodecEnum(Codec<T> codec, JsonType type){
+        private CodecEnum(int type, Codec<T> codec, Runnable handle){
             this.codec = codec;
             this.type = type;
+            this.handle = handle;
         }
+        Runnable handle;
         private JsonElement encode(T value){
             return codec.encodeStart(JsonOps.INSTANCE, value).result().get();
         }
@@ -46,36 +48,39 @@ public class SyncJsonS2C implements CustomPacketPayload {
         }
     }
 
-    enum JsonType {
-        NPC_DIALOGS_S2C;
-    }
+    static int idIndex = 0;
 
-    static Map<JsonType, CodecEnum<?>> handlers = new HashMap<>();
+    static Map<Integer, CodecEnum<?>> handlers = new HashMap<>();
+
+
+    public static final CodecEnum<Map<ResourceLocation, NPCDialogs>> NPC_DIALOGS_S2C_CODEC = registerHandler(NPCDialogs.MAP_CODEC, ()->{
+        NPCDialogs.loadFromServer(null);
+    });
+
+
     // 指定codec对应的枚举
-    public static final CodecEnum<Map<ResourceLocation, NPCDialogs>> NPC_DIALOGS_S2C_CODEC = registerHandler(new CodecEnum<>(NPCDialogs.MAP_CODEC, JsonType.NPC_DIALOGS_S2C));
-
-
-    static <T> CodecEnum<T> registerHandler(CodecEnum<T> handler){
+    static <T> CodecEnum<T> registerHandler(Codec<T> codec, Runnable handle){
+        CodecEnum<T> handler = new CodecEnum<>(idIndex++, codec, handle);
         handlers.put(handler.type, handler);
         return handler;
     }
 
 
-    private final JsonType type;
+    private final int type;
     private final JsonElement json;
 
-    public SyncJsonS2C(JsonType type, JsonElement json) {
+    private SyncJsonS2C(int type, JsonElement json) {
         this.type = type;
         this.json = json;
     }
 
     public SyncJsonS2C(FriendlyByteBuf buffer) {
-        this.type = buffer.readEnum(JsonType.class);
+        this.type = buffer.readInt();
         this.json = GsonHelper.parse(buffer.readUtf());
     }
 
     public static final Type<SyncJsonS2C> TYPE = new Type<>(TerraEntity.space("sync_json_packet_s2c"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, SyncJsonS2C> STREAM_CODEC = CustomPacketPayload.codec(SyncJsonS2C::encode, SyncJsonS2C::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, SyncJsonS2C> STREAM_CODEC = CustomPacketPayload.codec(SyncJsonS2C::encode, SyncJsonS2C::decode);
 
 
     @Override
@@ -84,20 +89,18 @@ public class SyncJsonS2C implements CustomPacketPayload {
     }
 
     public static SyncJsonS2C decode(FriendlyByteBuf buffer) {
-        return new SyncJsonS2C(buffer.readEnum(JsonType.class), GsonHelper.parse(buffer.readUtf()));
+        return new SyncJsonS2C(buffer);
     }
 
     public static void encode(SyncJsonS2C packet, FriendlyByteBuf buf) {
-        buf.writeEnum(packet.type);
+        buf.writeInt(packet.type);
         buf.writeUtf(packet.json.toString());
     }
 
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
 //            Object value = handlers.get(type).decode(json);
-            if(type == JsonType.NPC_DIALOGS_S2C){
-                NPCDialogs.loadFromServer(json);
-            }
+            handlers.get(type).handle.run();
         }).exceptionally(e -> null);
     }
 

@@ -88,11 +88,11 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
 
         if(triggerOnce) {
             // 如果没有对话，则不显示对话框
-            if(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc){
-                if(NPCDialogs.getDialog_map().get(BuiltInRegistries.ENTITY_TYPE.getKey(npc.getType())) != null) {
+//            if(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc){
+//                if(NPCDialogs.getDialog_map().get(BuiltInRegistries.ENTITY_TYPE.getKey(npc.getType())) != null) {
                     Minecraft.getInstance().setScreen(new DialogScreen(Component.literal("123"), this));
-                }
-            }
+//                }
+//            }
             triggerOnce = false;
         }
 
@@ -221,7 +221,8 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         x = ii + 203;
         y = jj + 36;
         // 能否购买
-        boolean canBuy = trade.canTrade(Minecraft.getInstance().player);
+        AbstractTerraNPC npc = (AbstractTerraNPC) ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
+        boolean canBuy = trade.canTrade(Minecraft.getInstance().player, npc);
         renderResultSlot(guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, canBuy);
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);

@@ -659,8 +659,9 @@ public final class TEUtils {
         ){
             return false;
         }
-        if(target instanceof ISummonMob<?>)
+        if(target instanceof ISummonMob<?>) {
             return false;
+        }
 
         return true;
     };
@@ -710,9 +711,10 @@ public final class TEUtils {
             return false;
         }
 
-        if(entity != null && entity.isPassengerOfSameVehicle(target))
+        if(entity != null && entity.isPassengerOfSameVehicle(target)) {
             // 不能攻击坐骑
             return false;
+        }
         return true;
 
     };

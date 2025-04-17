@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.network.c2s.NPCShopPacket;
@@ -122,7 +123,9 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
                 if (selectedMerchantIndex >= 0 && selectedMerchantIndex < d.trades().size()) {
                     ITrade trade = d.trades().get(selectedMerchantIndex);
                     PacketDistributor.sendToServer(new NPCShopPacket(trade));
-                    trade.onLocalClickSlot(player, button, clickType);
+                    var npc = ((IPlayer) player).terra_entity$getInteractingEntity();
+                    if(npc instanceof AbstractTerraNPC npc1)
+                        trade.onLocalClickSlot(player, button, clickType, npc1);
                 }
             }
         }

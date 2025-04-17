@@ -310,8 +310,10 @@ public class NPCAi {
             SensorType.FROG_TEMPTATIONS,
             SensorType.IS_IN_WATER,
             TEAi.Sensors.NPC_HOSTILES_SENSOR.get(),
-            TEAi.Sensors.NEAREST_VISIBLE_ALLIANCE_SENSOR.get()
-            );
+            TEAi.Sensors.NEAREST_VISIBLE_ALLIANCE_SENSOR.get(),
+            TEAi.Sensors.NEARBY_NPC_SENSOR.get()
+
+    );
 
     /**
      * 共有的记忆模块
@@ -334,6 +336,10 @@ public class NPCAi {
             MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
             MemoryModuleType.ATTACK_COOLING_DOWN,
             TEAi.MemoryModules.NEAREST_VISIBLE_ALLIANCE.get(),
+
+            // 心情行为
+            TEAi.MemoryModules.NEARBY_NPC.get(),
+
 
 
             MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,

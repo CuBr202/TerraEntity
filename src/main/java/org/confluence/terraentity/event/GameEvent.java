@@ -7,11 +7,13 @@ import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
 import org.confluence.terraentity.entity.npc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.NPCNames;
 import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
+import org.confluence.terraentity.utils.AdapterUtils;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = TerraEntity.MODID)
 public class GameEvent {
@@ -30,6 +32,7 @@ public class GameEvent {
         HouseStoreSaver.get(event.getServer().overworld());
         NPCNames.loadNPCNames(event.getServer().getResourceManager());
         NPCDialogs.loadNPCDialogs(event.getServer().getResourceManager());
+        AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
     }
 
     @SubscribeEvent

@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.jetbrains.annotations.Nullable;
 
 import static org.confluence.terraentity.client.gui.container.TETradeScreen.MENU_LOCATION;
@@ -25,12 +26,12 @@ public interface ITradeHealth extends ITrade {
     }
 
     @Override
-    default boolean canTrade(Player player) {
+    default boolean canTrade(Player player, AbstractTerraNPC npc) {
         return player.getHealth() < player.getMaxHealth();
     }
 
     @Override
-    default void onTrade(ServerPlayer player) {
+    default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
         player.heal(getHealth(player));
     }
 
@@ -53,4 +54,10 @@ public interface ITradeHealth extends ITrade {
             guiGraphics.blit(MENU_LOCATION,x,y,276,17,35,17,512,256);
         }
     }
+
+    @Override
+    default void renderResultHover(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
+
+    }
+
 }

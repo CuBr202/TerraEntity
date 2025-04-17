@@ -27,6 +27,10 @@ public class TENpcEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ARMS_DEALER = TEEntities.registerEntity("arms_dealer", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /** 护士*/
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> NURSE = TEEntities.registerEntity("nurse", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 商人
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> MERCHANT = TEEntities.registerEntity("merchant", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -36,6 +40,7 @@ public class TENpcEntities {
         event.registerEntityRenderer(GOBLIN_TINKERER.get(), c -> new NPCRenderer<>(c, GOBLIN_TINKERER.getId()));
         event.registerEntityRenderer(ARMS_DEALER.get(), c -> new NPCRenderer<>(c, ARMS_DEALER.getId()));
         event.registerEntityRenderer(NURSE.get(), c -> new NPCRenderer<>(c, NURSE.getId()));
+        event.registerEntityRenderer(MERCHANT.get(), c -> new NPCRenderer<>(c, MERCHANT.getId()));
 
 
     }
@@ -46,6 +51,7 @@ public class TENpcEntities {
         event.put(GOBLIN_TINKERER.get(), AbstractTerraNPC.createAttributes().build());
         event.put(ARMS_DEALER.get(), AbstractTerraNPC.createAttributes().build());
         event.put(NURSE.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(MERCHANT.get(), AbstractTerraNPC.createAttributes().build());
 
 
     }
@@ -57,7 +63,7 @@ public class TENpcEntities {
         event.register(GOBLIN_TINKERER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ARMS_DEALER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(NURSE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-
+        event.register(MERCHANT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
     }
 

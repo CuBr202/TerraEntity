@@ -14,6 +14,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.registries.TERegistries;
 
 import java.util.List;
@@ -26,12 +27,12 @@ public interface ITrade{
     /**
      * 能否触发onTrade
      */
-    boolean canTrade(Player player);
+    boolean canTrade(Player player, AbstractTerraNPC npc);
 
     /**
      * 当canTrade为true时触发
      */
-    void onTrade(ServerPlayer player);
+    void onTrade(ServerPlayer player, AbstractTerraNPC npc);
 
     /**
      * 渲染框内的所需物品
@@ -66,8 +67,8 @@ public interface ITrade{
     /**
      * 当客户端点击物品槽时调用，自定义播放声音
      */
-    default void onLocalClickSlot(Player player, int button, ClickType clickType){
-        if(canTrade(player)){
+    default void onLocalClickSlot(Player player, int button, ClickType clickType, AbstractTerraNPC npc){
+        if(canTrade(player, npc)){
             player.playSound(SoundEvents.UI_BUTTON_CLICK.value());
         }else{
             player.playSound(SoundEvents.UI_TOAST_IN);

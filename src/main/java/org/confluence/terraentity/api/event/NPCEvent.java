@@ -1,6 +1,7 @@
 package org.confluence.terraentity.api.event;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
@@ -11,7 +12,10 @@ import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * NPC事件基类
@@ -136,18 +140,20 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
     }
 
     /**
-     * <p>当npc生成时，初始化brain时触发
+     * <p>不作为事件触发，仅用于收集替换ai的容器
      * <p>用于替换npc的brain
      * <p>因此所有的ai必须继承自{@link NPCAi}
      */
-    public static class NPCBrainRegisterEvent extends NPCEvent implements IModBusEvent, ICancellableEvent {
+    public static class NPCBrainCollector implements ICancellableEvent {
 
         NPCAi replace;
-
-        public NPCBrainRegisterEvent(AbstractTerraNPC npc) {
-            super(npc);
+        AbstractTerraNPC npc;
+        public NPCBrainCollector(AbstractTerraNPC npc) {
+            this.npc = npc;
         }
-
+        public AbstractTerraNPC getNPC() {
+            return npc;
+        }
         /**
          * 设置替换brain，当replace不为空时，使用这个brain
          */
@@ -157,6 +163,27 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
 
         public NPCAi getReplace() {
             return replace;
+        }
+
+    }
+
+    /**
+     * 服务器初始化时触发，以免每次生成npc都post相同的event。且将线性的if else转为map提高效率
+     */
+    public static class NPCBrainCollectionEvent extends Event implements IModBusEvent, ICancellableEvent {
+
+        private static final Map<EntityType<?>, Consumer<NPCBrainCollector>> consumerMap = new HashMap<>();
+
+        public static Consumer<NPCBrainCollector> getConsumer(EntityType<?> id) {
+            return consumerMap.get(id);
+        }
+
+        public NPCBrainCollectionEvent() {
+
+        }
+
+        public void register(EntityType<?> type, Consumer<NPCBrainCollector> consumer) {
+            consumerMap.put(type, consumer);
         }
 
     }

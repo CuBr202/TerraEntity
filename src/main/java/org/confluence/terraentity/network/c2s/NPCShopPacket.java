@@ -42,11 +42,11 @@ public record NPCShopPacket(ITrade trade) implements CustomPacketPayload {
                 if (event.isCanceled()) {
                     return;
                 }
-                if(event.isAlwaysPass() || trade.canTrade(sp)) {
+                if(event.isAlwaysPass() || trade.canTrade(sp, npc)) {
                     if(event.getRedirection()!=null){
                         event.getRedirection().accept(sp, trade );
                     }else{
-                        trade.onTrade(sp);
+                        trade.onTrade(sp, npc);
                     }
                 }
             }else{

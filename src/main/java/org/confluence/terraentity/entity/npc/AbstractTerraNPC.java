@@ -45,6 +45,7 @@ import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
+import org.confluence.terraentity.entity.npc.mood.MoodInfo;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
@@ -83,12 +84,17 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
     private NPCAi ai;
     private float rangeDistance = 8;
     private Predicate<AbstractTerraNPC> canPerformerAttackTest;
+
     public int cooldownTick = 0;
     private int _cooldownTicks;
 
-    private static final EntityDataAccessor<NPCTrades> DATA_DAVE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.DAVE_TRADES_SERIALIZER.get());
-    private static final EntityDataAccessor<House> DATA_HOUSE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.DAVE_HOUSE_SERIALIZER.get());
+    private NPCMood mood;
+
+
+    private static final EntityDataAccessor<NPCTrades> DATA_DAVE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADES_SERIALIZER.get());
+    private static final EntityDataAccessor<House> DATA_HOUSE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_HOUSE_SERIALIZER.get());
     private static final EntityDataAccessor<Boolean> DATA_RANGE_ATTACK_COOLDOWN = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<NPCMood> DATA_MOOD = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_MOOD_SERIALIZER.get());
 
 
     public AbstractTerraNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
@@ -155,10 +161,17 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
     }
 
     protected NPCAi initAI(){
-        NPCEvent.NPCBrainRegisterEvent event = new NPCEvent.NPCBrainRegisterEvent(this);
-        AdapterUtils.postEvent(event);
+        NPCEvent.NPCBrainCollector event = new NPCEvent.NPCBrainCollector(this);
         setAttackRange(8); // 初始化晚于父类，手动提前初始化
         setCooldownTicks(20);
+        this.mood = new NPCMood();
+//        AdapterUtils.postEvent(event);
+        // 使用预先注册的事件处理器
+        var consumer = NPCEvent.NPCBrainCollectionEvent.getConsumer(getType());
+        if(consumer != null) {
+            consumer.accept(event);
+        }
+
         if(event.getReplace() != null){
             ai = event.getReplace();
         }else {
@@ -208,13 +221,31 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
         this.entityData.set(DATA_RANGE_ATTACK_COOLDOWN, cooldown);
     }
 
+    public NPCMood getMood(){
+        return mood;
+    }
+
+    public void syncMood(){
+        NPCMood mood = new NPCMood();
+        mood.copyFrom(this.mood);
+        this.entityData.set(DATA_MOOD, mood);
+    }
+
+
+
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        if (level().isClientSide() && DATA_DAVE_DATA.equals(key)) {
-            this.trades = this.entityData.get(DATA_DAVE_DATA);
-        }else if(DATA_HOUSE_DATA.equals(key)){
-            this.house = this.entityData.get(DATA_HOUSE_DATA);
+        if(level().isClientSide()) {
+            if (DATA_DAVE_DATA.equals(key)) {
+                this.trades = this.entityData.get(DATA_DAVE_DATA);
+            } else if (DATA_HOUSE_DATA.equals(key)) {
+                this.house = this.entityData.get(DATA_HOUSE_DATA);
+            }
+        }
+        if (DATA_MOOD.equals(key)) {
+            if(level().isClientSide())
+                this.mood.copyFrom(this.entityData.get(DATA_MOOD));
         }
     }
 
@@ -224,6 +255,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
         builder.define(DATA_DAVE_DATA, new NPCTrades(List.of()));
         builder.define(DATA_HOUSE_DATA, House.EMPTY);
         builder.define(DATA_RANGE_ATTACK_COOLDOWN, false);
+        builder.define(DATA_MOOD, new NPCMood());
     }
 
     @Override
@@ -259,6 +291,11 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
     public void tick(){
         super.tick();
         this.updateSwingTime();
+        if(level().isClientSide){
+            if(mood.getValue() != 100){
+//                System.out.println(mood..getValue());
+            }
+        }
         if(isCooledDown()){
             this.cooldownTick++;
         }else{

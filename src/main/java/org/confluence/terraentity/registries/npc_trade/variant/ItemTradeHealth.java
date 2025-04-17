@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.registries.npc_trade.*;
 
 public record ItemTradeHealth(ItemStack cost, int health) implements IItemTrade, ITradeHealth {
@@ -22,14 +23,14 @@ public record ItemTradeHealth(ItemStack cost, int health) implements IItemTrade,
     }
 
     @Override
-    public boolean canTrade(Player player) {
-        return ITradeHealth.super.canTrade(player) && IItemTrade.super.canTrade(player);
+    public boolean canTrade(Player player, AbstractTerraNPC npc) {
+        return ITradeHealth.super.canTrade(player, npc) && IItemTrade.super.canTrade(player, npc);
     }
 
     @Override
-    public void onTrade(ServerPlayer player) {
-        ITradeHealth.super.onTrade(player);
-        IItemTrade.super.onTrade(player);
+    public void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
+        ITradeHealth.super.onTrade(player, npc);
+        IItemTrade.super.onTrade(player, npc);
     }
 
     @Override

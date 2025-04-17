@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.List;
@@ -22,12 +23,12 @@ public interface IItemTrade extends ITrade{
     ItemStack cost();
 
     @Override
-    default boolean canTrade(Player player) {
+    default boolean canTrade(Player player, AbstractTerraNPC npc) {
         return player.getInventory().hasAnyMatching(i->ItemStack.isSameItem(i, cost()));
     }
 
     @Override
-    default void onTrade(ServerPlayer player) {
+    default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
         TEUtils.consumeItemCount(player.getInventory().items, cost().getItem(), cost().getCount());
     }
 

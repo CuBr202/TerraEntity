@@ -6,6 +6,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.npc.mood.MoodInfo;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
@@ -28,6 +29,7 @@ public class TERegistries {
         event.register(GenerationProviders.REGISTRY);
         event.register(EffectStrategies.REGISTRY);
         event.register(TradeProviders.REGISTRY);
+        event.register(TERegistries.MoodInfos.REGISTRY);
     }
 
     public static void register(IEventBus bus) {
@@ -36,6 +38,7 @@ public class TERegistries {
         TrackTypeProviderTypes.TYPES.register(bus);
         TradeProviderTypes.TYPES.register(bus);
         TEEffectStrategies.EFFECT_STRATEGY.register(bus);
+        org.confluence.terraentity.entity.npc.mood.MoodInfos.TYPES.register(bus);
 
     }
 
@@ -74,5 +77,10 @@ public class TERegistries {
     public static class TradeProviders{
         public static final ResourceKey<Registry<TradeProvider>> KEY = createRegistryKey(TerraEntity.space("trade_provider"));
         public static final Registry<TradeProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
+    }
+
+    public static class MoodInfos{
+        public static final ResourceKey<Registry<MoodInfo>> KEY = createRegistryKey(TerraEntity.space("mood_info"));
+        public static final Registry<MoodInfo> REGISTRY = new RegistryBuilder<>(KEY).create();
     }
 }

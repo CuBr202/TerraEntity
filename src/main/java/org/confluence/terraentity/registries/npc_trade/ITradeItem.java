@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
 import static org.confluence.terraentity.client.gui.container.TETradeScreen.MENU_LOCATION;
 
@@ -18,7 +19,7 @@ public interface ITradeItem extends ITrade{
     ItemStack result();
 
     @Override
-    default void onTrade(ServerPlayer player) {
+    default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
         player.getInventory().add(result());
     }
 

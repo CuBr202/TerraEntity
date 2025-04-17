@@ -18,6 +18,7 @@ import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.brain.ArmDealerNPCAi;
 import org.confluence.terraentity.entity.npc.brain.DemolitionistNPCAi;
 import org.confluence.terraentity.entity.npc.brain.NurseAi;
+import org.confluence.terraentity.entity.npc.mood.MoodInfos;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
@@ -78,25 +79,28 @@ public class ModEvent {
     }
 
     @SubscribeEvent
-    public static void onRegisterBrain(NPCEvent.NPCBrainRegisterEvent event){
+    public static void onCollectBrains(NPCEvent.NPCBrainCollectionEvent event) {
         if(!ModChecker.confluence) {
-            AbstractTerraNPC npc = event.getNPC();
+            event.register(TENpcEntities.DEMOLITIONIST.get(), (event1)->{
+                event1.setReplace(new DemolitionistNPCAi(event1.getNPC()));
+            });
+            event.register(TENpcEntities.GUIDE.get(), (event1)->{
+                event1.getNPC().setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof BowItem);
+                event1.getNPC().getMood().addMoodInfo(MoodInfos.GUILD1.get());
+                event1.getNPC().getMood().addMoodInfo(MoodInfos.GUILD2.get());
 
-            if (npc.getType() == TENpcEntities.DEMOLITIONIST.get()) {
-                event.setReplace(new DemolitionistNPCAi(npc));
-
-            } else if(npc.getType() == TENpcEntities.GUIDE.get()){
-                npc.setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof BowItem);
-
-            }else if(npc.getType() == TENpcEntities.ARMS_DEALER.get()){
-                event.setReplace(new ArmDealerNPCAi(npc));
-
-                npc.setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof CrossbowItem);
-            }else if(npc.getType() == TENpcEntities.NURSE.get()){
-                event.setReplace(new NurseAi(npc));
-
-            }
+            });
+            event.register(TENpcEntities.ARMS_DEALER.get(), (event1)->{
+                event1.setReplace(new ArmDealerNPCAi(event1.getNPC()));
+                event1.getNPC().setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof CrossbowItem);
+            });
+            event.register(TENpcEntities.NURSE.get(), (event1)->{
+                event1.setReplace(new NurseAi(event1.getNPC()));
+            });
+            event.register(TENpcEntities.GOBLIN_TINKERER.get(), (event1)->{
+                event1.getNPC().setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof BowItem);
+            });
         }
-
     }
+
 }
