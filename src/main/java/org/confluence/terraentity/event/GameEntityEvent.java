@@ -1,5 +1,6 @@
 package org.confluence.terraentity.event;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -37,6 +38,7 @@ import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.NPCDialogs;
 import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
@@ -44,6 +46,7 @@ import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
+import org.confluence.terraentity.network.s2c.SyncJsonS2C;
 import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -231,7 +234,16 @@ public class GameEntityEvent {
             TEUtils.monsterEnhance(living);
         else if (event.getEntity() instanceof Slime slime)
             TEUtils.monsterEnhance(slime);
+
     }
 
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)  {
+        if(event.getEntity() instanceof ServerPlayer player) {
+            SyncJsonS2C.syncNpcDialogs(player);
+        }
+
+
+    }
 
 }

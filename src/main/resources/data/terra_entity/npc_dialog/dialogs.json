@@ -1,0 +1,15 @@
+{
+  "terra_entity:guide": {
+    "dialogs": [
+      "hello",
+      "hi",
+      "how are you"
+    ]
+  },
+  "terra_entity:nurse": {
+    "dialogs": [
+      "i'm fine, thank you",
+      "i'm doing well, thank you"
+    ]
+  }
+}

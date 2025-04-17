@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.api.event.LoadNPCNamesEvent;
+import org.confluence.terraentity.api.event.LoadResourceEvent;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 
@@ -52,7 +52,7 @@ public record NPCNames(Map<String, Float> namesWeights) {
 
     public static void loadNPCNames(ResourceManager manager) {
         clear();
-        LoadNPCNamesEvent event = new LoadNPCNamesEvent();
+        LoadResourceEvent event = new LoadResourceEvent(LoadResourceEvent.Type.NPC_NAMES);
         AdapterUtils.postEvent(event);
         if(!event.isCanceled()) {
             if(!event.isReplace()) {
