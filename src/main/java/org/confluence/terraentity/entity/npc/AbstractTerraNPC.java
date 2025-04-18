@@ -60,6 +60,7 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -170,25 +171,12 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
         this.mood = new NPCMood();
         var info = NPCMoods.BY_ENTITY_TYPE.get(getType());
         if(info != null){
-            NPCMoods.MoodSetting setting = info.setting();
-            int a = setting.toIntFunction().get(Mood.HATE);
-            int b = setting.toIntFunction().get(Mood.DISLIKE);
-            int c = setting.toIntFunction().get(Mood.NEUTRAL);
-            int d = setting.toIntFunction().get(Mood.LIKE);
-            int e = setting.toIntFunction().get(Mood.LOVER);
-
-            this.mood.setMoodValueTable(mood -> switch (mood) {
-                case HATE -> a;
-                case DISLIKE -> b;
-                case NEUTRAL -> c;
-                case LIKE -> d;
-                case LOVER -> e;
-            });
+            EnumMap<Mood, Integer> map = info.getSetting().getToIntFunction();
+            this.mood.setMoodValueTable(map);
             for (var info1 : info.moodInfos()) {
                 this.mood.addMoodInfo(info1.moodInfo());
             }
         }
-
 
 //        AdapterUtils.postEvent(event);
         // 使用预先注册的事件处理器

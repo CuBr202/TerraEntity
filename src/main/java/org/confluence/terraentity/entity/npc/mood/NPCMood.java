@@ -10,11 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.NPCMoods;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.ToIntFunction;
+import java.util.*;
 
 /**
  * 心情系统:数值越大，心情越好，100为正常
@@ -45,6 +41,10 @@ public class NPCMood {
      * 当前心情值
      */
     private int value = 100;
+
+    /**
+     * 心情列表
+     */
     List<ResourceLocation> moodInfoList = new ArrayList<>();
 
     /**
@@ -55,18 +55,18 @@ public class NPCMood {
     /**
      * 将心情值转换为数值
      */
-    private ToIntFunction<Mood> getMoodValue;
-
+    private EnumMap<Mood,Integer> getMoodValue = new EnumMap<>(Mood.class);
 
     public NPCMood(){
-
+        getMoodValue.put(Mood.HATE, -20);
+        getMoodValue.put(Mood.DISLIKE, -10);
+        getMoodValue.put(Mood.NEUTRAL, 0);
+        getMoodValue.put(Mood.LIKE, 10);
+        getMoodValue.put(Mood.LOVER, 20);
     }
 
     public int getValue(){
-        if(value <= 50){
-            return 50;
-        }
-        return value;
+        return Math.max(value, 50);
     }
 
     /**
@@ -95,29 +95,20 @@ public class NPCMood {
      * 添加心情测试实例
      */
     public void addMoodInfo(MoodInfo moodInfo){
-        moodInfoMap.put(moodInfo.getEntityType(), moodInfo);
+        moodInfoMap.put(moodInfo.entityType(), moodInfo);
     }
 
     /**
-     * 获取心情值转换表
+     * 获取心情值转换值
      */
     public int getValue(Mood mood){
-        if(getMoodValue == null){
-            getMoodValue = (mood1)->switch (mood1){
-                case HATE -> -20;
-                case DISLIKE -> -10;
-                case NEUTRAL -> 0;
-                case LIKE -> 10;
-                case LOVER -> 20;
-            };
-        }
-        return getMoodValue.applyAsInt(mood);
+        return getMoodValue.get(mood);
     }
 
     /**
      * 设置心情值转换表
      */
-    public void setMoodValueTable(ToIntFunction<Mood> moodValue){
+    public void setMoodValueTable(EnumMap<Mood,Integer> moodValue){
         this.getMoodValue = moodValue;
     }
 
@@ -128,10 +119,10 @@ public class NPCMood {
         int[] counts = {0, 0, 0, 0, 0};
         moodInfoList.clear();
         for(AbstractTerraNPC npc : entities){
-            MoodInfo mood1 = test(npc);
-            if(mood1 != MoodInfo.empty) {
-                counts[mood1.mood.ordinal()]++;
-                ResourceLocation location = NPCMoods.getId(mood1);
+            MoodInfo moodInfo = test(npc);
+            if(moodInfo != MoodInfo.empty) {
+                counts[moodInfo.mood().ordinal()]++;
+                ResourceLocation location = NPCMoods.getId(moodInfo);
                 if(!moodInfoList.contains(location)) {
                     moodInfoList.add(location);
                 }

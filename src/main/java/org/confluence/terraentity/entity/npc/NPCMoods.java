@@ -20,17 +20,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NPCMoods {
-//    public static DeferredRegister<MoodInfo> TYPES = DeferredRegister.create(TERegistries.MoodInfoRegistry.KEY, TerraEntity.MODID);
-//
-//
-//    public static final DeferredHolder<MoodInfo,MoodInfo> GUILD1 = TYPES.register("guild1", ()->new MoodInfo(TENpcEntities.GOBLIN_TINKERER, "guild1.2", Mood.HATE));
-//    public static final DeferredHolder<MoodInfo,MoodInfo> GUILD2 = TYPES.register("guild2", ()->new MoodInfo(TENpcEntities.MERCHANT, "guild2.2", Mood.LOVER));
 
     public static final String KEY = "npc_mood";
     public static final String FILE_NAME = "mood_infos";
@@ -47,6 +39,16 @@ public class NPCMoods {
             this(Map.of(Mood.HATE,a, Mood.DISLIKE,b, Mood.NEUTRAL,c, Mood.LIKE,d, Mood.LOVER,e));
         }
 
+        public EnumMap<Mood, Integer> getToIntFunction(){
+            EnumMap<Mood, Integer> toIntFunction = new EnumMap<>(Mood.class);
+            for(Mood mood : Mood.values()){
+                toIntFunction.put(mood, this.toIntFunction.getOrDefault(mood, 0));
+            }
+            return toIntFunction;
+        }
+
+        public static MoodSetting DEFAULT = new MoodSetting(-20, -10, 0, 10, 20);
+
         public static MoodSetting of(int hate, int dislike, int neutral, int like, int lover){
             return new MoodSetting(hate, dislike, neutral, like, lover);
         }
@@ -55,11 +57,18 @@ public class NPCMoods {
         ).apply(instance, MoodSetting::new));
     }
 
-    public record EntityMood(MoodSetting setting, List<MoodInfoData> moodInfos){
+    public record EntityMood(Optional<MoodSetting> setting, List<MoodInfoData> moodInfos){
         public static Codec<EntityMood> CODEC = RecordCodecBuilder.create(instance->instance.group(
-                MoodSetting.CODEC.fieldOf("setting").forGetter(EntityMood::setting),
+                MoodSetting.CODEC.optionalFieldOf("setting").forGetter(EntityMood::setting),
                 Codec.list(MoodInfoData.CODEC).fieldOf("moodInfos").forGetter(EntityMood::moodInfos)
         ).apply(instance, EntityMood::new));
+
+        /**
+         * 安全获取setting，如果没有设置，则返回默认设置
+         */
+        public MoodSetting getSetting(){
+            return setting.orElse(MoodSetting.DEFAULT);
+        }
 
         public static class Builder{
             private MoodSetting setting;
@@ -80,10 +89,7 @@ public class NPCMoods {
             }
 
             public EntityMood build(){
-                if(setting == null){
-                    setting = MoodSetting.of(-20,-10,0,10,20);
-                }
-                return new EntityMood(setting, moodInfos);
+                return new EntityMood(Optional.of(setting), moodInfos);
             }
         }
     }

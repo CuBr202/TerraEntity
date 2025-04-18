@@ -58,10 +58,10 @@ public class DialogScreen extends Screen {
         for(int i = 0; i < list.size(); i++){
             ResourceLocation location = list.get(i);
 
-            MoodInfo info = NPCMoods.getMoodInfo(location);
+            MoodInfo moodInfo = NPCMoods.getMoodInfo(location);
 
-            if(info == null) continue;
-            guiGraphics.drawString(font, Component.translatable(info.info), 20, height / 2 - 100 + i * 10, 0xFFFFFF);
+            if(moodInfo == null) continue;
+            guiGraphics.drawString(font, Component.translatable(moodInfo.info()), 20, height / 2 - 100 + i * 10, 0xFFFFFF);
         }
 
     }
