@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc;
+package org.confluence.terraentity.entity.npc.mood;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -7,9 +7,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import org.confluence.terraentity.entity.npc.mood.Mood;
-import org.confluence.terraentity.entity.npc.mood.MoodInfo;
-import org.confluence.terraentity.registries.TERegistries;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.NPCMoods;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,7 @@ public class NPCMood {
 
     public static Codec<NPCMood> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("value").forGetter(i->i.value),
-            ResourceLocation.CODEC.listOf().fieldOf("moodCounts").forGetter(i->i.moodInfoList)
+            ResourceLocation.CODEC.listOf().fieldOf("moodIdList").forGetter(i->i.moodInfoList)
     ).apply(instance, (a,b)->{
         NPCMood mood = new NPCMood();
         mood.value = a;
@@ -70,10 +69,16 @@ public class NPCMood {
         return value;
     }
 
+    /**
+     * 获取心情实例表
+     */
     public List<ResourceLocation> getMoodInfoList(){
         return moodInfoList;
     }
 
+    /**
+     * 复制需要同步的信息
+     */
     public void copyFrom(NPCMood mood) {
         this.value = mood.value;
         this.moodInfoList = new ArrayList<>(mood.moodInfoList);
@@ -86,12 +91,15 @@ public class NPCMood {
         return MoodInfo.empty;
     }
 
+    /**
+     * 添加心情测试实例
+     */
     public void addMoodInfo(MoodInfo moodInfo){
         moodInfoMap.put(moodInfo.getEntityType(), moodInfo);
     }
 
     /**
-     * 设置心情值转换表
+     * 获取心情值转换表
      */
     public int getValue(Mood mood){
         if(getMoodValue == null){
@@ -123,9 +131,9 @@ public class NPCMood {
             MoodInfo mood1 = test(npc);
             if(mood1 != MoodInfo.empty) {
                 counts[mood1.mood.ordinal()]++;
-                ResourceLocation location = TERegistries.MoodInfos.REGISTRY.getKey(mood1);
+                ResourceLocation location = NPCMoods.getId(mood1);
                 if(!moodInfoList.contains(location)) {
-                    moodInfoList.add(TERegistries.MoodInfos.REGISTRY.getKey(mood1));
+                    moodInfoList.add(location);
                 }
             }
         }

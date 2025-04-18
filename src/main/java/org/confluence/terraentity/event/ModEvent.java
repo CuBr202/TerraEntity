@@ -14,14 +14,11 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.HouseDetectEvent;
 import org.confluence.terraentity.api.event.NPCEvent;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.brain.ArmDealerNPCAi;
 import org.confluence.terraentity.entity.npc.brain.DemolitionistNPCAi;
 import org.confluence.terraentity.entity.npc.brain.NurseAi;
-import org.confluence.terraentity.entity.npc.mood.MoodInfos;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.integration.ItemComponentModify;
 import org.confluence.terraentity.integration.ModChecker;
@@ -81,24 +78,24 @@ public class ModEvent {
     @SubscribeEvent
     public static void onCollectBrains(NPCEvent.NPCBrainCollectionEvent event) {
         if(!ModChecker.confluence) {
-            event.register(TENpcEntities.DEMOLITIONIST.get(), (event1)->{
-                event1.setReplace(new DemolitionistNPCAi(event1.getNPC()));
+            event.register(TENpcEntities.DEMOLITIONIST.get(), (collector)->{
+                collector.setReplace(new DemolitionistNPCAi(collector.getNPC()));
             });
-            event.register(TENpcEntities.GUIDE.get(), (event1)->{
-                event1.getNPC().setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof BowItem);
-                event1.getNPC().getMood().addMoodInfo(MoodInfos.GUILD1.get());
-                event1.getNPC().getMood().addMoodInfo(MoodInfos.GUILD2.get());
+            event.register(TENpcEntities.GUIDE.get(), (collector)->{
+                collector.getNPC().setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof BowItem);
+//                collector.getNPC().getMood().addMoodInfo(MoodInfos.GUILD1.get());
+//                collector.getNPC().getMood().addMoodInfo(MoodInfos.GUILD2.get());
 
             });
-            event.register(TENpcEntities.ARMS_DEALER.get(), (event1)->{
-                event1.setReplace(new ArmDealerNPCAi(event1.getNPC()));
-                event1.getNPC().setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof CrossbowItem);
+            event.register(TENpcEntities.ARMS_DEALER.get(), (collector)->{
+                collector.setReplace(new ArmDealerNPCAi(collector.getNPC()));
+                collector.getNPC().setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof CrossbowItem);
             });
-            event.register(TENpcEntities.NURSE.get(), (event1)->{
-                event1.setReplace(new NurseAi(event1.getNPC()));
+            event.register(TENpcEntities.NURSE.get(), (collector)->{
+                collector.setReplace(new NurseAi(collector.getNPC()));
             });
-            event.register(TENpcEntities.GOBLIN_TINKERER.get(), (event1)->{
-                event1.getNPC().setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof BowItem);
+            event.register(TENpcEntities.GOBLIN_TINKERER.get(), (collector)->{
+                collector.getNPC().setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof BowItem);
             });
         }
     }

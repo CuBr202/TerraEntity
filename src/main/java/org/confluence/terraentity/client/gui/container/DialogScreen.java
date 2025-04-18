@@ -10,8 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.mood.MoodInfo;
+import org.confluence.terraentity.entity.npc.NPCMoods;
 import org.confluence.terraentity.mixed.IPlayer;
-import org.confluence.terraentity.registries.TERegistries;
 
 public class DialogScreen extends Screen {
     Button button;
@@ -40,23 +40,28 @@ public class DialogScreen extends Screen {
         addRenderableWidget(button);
     }
 
+    @Override
     public void onClose() {
 //        super.onClose();
         minecraft.setScreen(parent);
     }
 
+    @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         if(dialogText != null){
             guiGraphics.drawString(font, dialogText, 20, height / 2 -10, 0xFFFFFF);
         }
 
+        // todo draw
         var list = entity.getMood().getMoodInfoList();
         for(int i = 0; i < list.size(); i++){
             ResourceLocation location = list.get(i);
-            MoodInfo info = TERegistries.MoodInfos.REGISTRY.get(location);
+
+            MoodInfo info = NPCMoods.getMoodInfo(location);
+
             if(info == null) continue;
-            guiGraphics.drawString(font, info.info, 20, height / 2 - 20 + i * 10, 0xFFFFFF);
+            guiGraphics.drawString(font, Component.translatable(info.info), 20, height / 2 - 100 + i * 10, 0xFFFFFF);
         }
 
     }

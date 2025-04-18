@@ -14,7 +14,8 @@ import java.util.List;
 public class LoadResourceEvent extends Event implements IModBusEvent, ICancellableEvent {
     public enum Type {
         NPC_NAMES,
-        NPC_DIALOGS
+        NPC_DIALOGS,
+        NPC_MOODS
     }
     List<ResourceLocation> files = new ArrayList<>();
     boolean replace = false;

@@ -45,7 +45,8 @@ import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
-import org.confluence.terraentity.entity.npc.mood.MoodInfo;
+import org.confluence.terraentity.entity.npc.mood.Mood;
+import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
@@ -164,7 +165,31 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
         NPCEvent.NPCBrainCollector event = new NPCEvent.NPCBrainCollector(this);
         setAttackRange(8); // 初始化晚于父类，手动提前初始化
         setCooldownTicks(20);
+
+        // 初始化心情系统
         this.mood = new NPCMood();
+        var info = NPCMoods.BY_ENTITY_TYPE.get(getType());
+        if(info != null){
+            NPCMoods.MoodSetting setting = info.setting();
+            int a = setting.toIntFunction().get(Mood.HATE);
+            int b = setting.toIntFunction().get(Mood.DISLIKE);
+            int c = setting.toIntFunction().get(Mood.NEUTRAL);
+            int d = setting.toIntFunction().get(Mood.LIKE);
+            int e = setting.toIntFunction().get(Mood.LOVER);
+
+            this.mood.setMoodValueTable(mood -> switch (mood) {
+                case HATE -> a;
+                case DISLIKE -> b;
+                case NEUTRAL -> c;
+                case LIKE -> d;
+                case LOVER -> e;
+            });
+            for (var info1 : info.moodInfos()) {
+                this.mood.addMoodInfo(info1.moodInfo());
+            }
+        }
+
+
 //        AdapterUtils.postEvent(event);
         // 使用预先注册的事件处理器
         var consumer = NPCEvent.NPCBrainCollectionEvent.getConsumer(getType());
@@ -389,10 +414,10 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
         }
 
         event.execute((npc, player1) -> {
-            if(trades != null) {
+//            if(trades != null) {
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
                         new SimpleTradeMenu(id, playerInventory, trades), Component.translatable("title.terra_entity.npc_trade")));
-            }
+//            }
         });
 
 //        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new NPCTradesMenu(id,playerInventory, trades, forge), Component.translatable("confluence.menu.npc_shop")));

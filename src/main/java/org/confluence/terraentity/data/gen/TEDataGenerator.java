@@ -47,6 +47,7 @@ public class TEDataGenerator {
         generator.addProvider(server, TELootTableProvider.getProvider(output, lookup));
         generator.addProvider(server, new CollectRecipeProvider(output, lookup, TENPCShopProvider::new, TERecipeProvider::new));
         generator.addProvider(server, new NPCNameProvider(output));
+        generator.addProvider(server, new NPCMoodProvider(output));
 
         boolean client = event.includeClient();
         generator.addProvider(client, new TEChineseProvider(output));

@@ -10,6 +10,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
 import org.confluence.terraentity.entity.npc.NPCDialogs;
+import org.confluence.terraentity.entity.npc.NPCMoods;
 import org.confluence.terraentity.entity.npc.NPCNames;
 import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
@@ -32,6 +33,7 @@ public class GameEvent {
         HouseStoreSaver.get(event.getServer().overworld());
         NPCNames.loadNPCNames(event.getServer().getResourceManager());
         NPCDialogs.loadNPCDialogs(event.getServer().getResourceManager());
+        NPCMoods.loadMoods(event.getServer().getResourceManager());
         AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
     }
 

@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public class SyncJsonS2C implements CustomPacketPayload {
 
@@ -34,12 +35,12 @@ public class SyncJsonS2C implements CustomPacketPayload {
          * @param codec codec
          * @param type 枚举类型
          */
-        private CodecEnum(int type, Codec<T> codec, Runnable handle){
+        private CodecEnum(int type, Codec<T> codec, BiConsumer<CodecEnum<T>,JsonElement> handle){
             this.codec = codec;
             this.type = type;
             this.handle = handle;
         }
-        Runnable handle;
+        BiConsumer<CodecEnum<T>,JsonElement> handle;
         private JsonElement encode(T value){
             return codec.encodeStart(JsonOps.INSTANCE, value).result().get();
         }
@@ -53,13 +54,13 @@ public class SyncJsonS2C implements CustomPacketPayload {
     static Map<Integer, CodecEnum<?>> handlers = new HashMap<>();
 
 
-    public static final CodecEnum<Map<ResourceLocation, NPCDialogs>> NPC_DIALOGS_S2C_CODEC = registerHandler(NPCDialogs.MAP_CODEC, ()->{
-        NPCDialogs.loadFromServer(null);
+    public static final CodecEnum<Map<ResourceLocation, NPCDialogs>> NPC_DIALOGS_S2C_CODEC = registerHandler(NPCDialogs.MAP_CODEC, (self, json)->{
+        NPCDialogs.loadFromServer(json);
     });
 
 
     // 指定codec对应的枚举
-    static <T> CodecEnum<T> registerHandler(Codec<T> codec, Runnable handle){
+    static <T> CodecEnum<T> registerHandler(Codec<T> codec, BiConsumer<CodecEnum<T>,JsonElement> handle){
         CodecEnum<T> handler = new CodecEnum<>(idIndex++, codec, handle);
         handlers.put(handler.type, handler);
         return handler;
@@ -100,7 +101,9 @@ public class SyncJsonS2C implements CustomPacketPayload {
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
 //            Object value = handlers.get(type).decode(json);
-            handlers.get(type).handle.run();
+            CodecEnum handler = handlers.get(type);
+            var handle = handler.handle;
+            handle.accept(handler, json);
         }).exceptionally(e -> null);
     }
 
