@@ -149,6 +149,10 @@ public class TEChineseProvider extends LanguageProvider {
         add(TENpcEntities.ARMS_DEALER.get(), "军火商");
         add(TENpcEntities.NURSE.get(), "护士");
         add(TENpcEntities.MERCHANT.get(), "商人");
+        add(TENpcEntities.PAINTER.get(), "油漆工");
+        add(TENpcEntities.DRYAD.get(), "树妖");
+        add(TENpcEntities.DYE_TRADER.get(), "染料商");
+        add(TENpcEntities.ANGLER.get(), "渔夫");
 
 
 
@@ -158,6 +162,10 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.ARMS_DEALER_SPAWN_EGG.get(), "军火商刷怪蛋");
         add(TESpawnEggItems.NURSE_SPAWN_EGG.get(), "护士刷怪蛋");
         add(TESpawnEggItems.MERCHANT_SPAWN_EGG.get(), "商人刷怪蛋");
+        add(TESpawnEggItems.PAINTER_SPAWN_EGG.get(), "油漆工刷怪蛋");
+        add(TESpawnEggItems.DRYAD_SPAWN_EGG.get(), "树妖刷怪蛋");
+        add(TESpawnEggItems.DYE_TRADER_SPAWN_EGG.get(), "染料商刷怪蛋");
+        add(TESpawnEggItems.ANGLER_SPAWN_EGG.get(), "渔夫刷怪蛋");
 
 
 

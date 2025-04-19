@@ -51,8 +51,10 @@ import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.menu.SimpleTradeMenu;
+import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -68,9 +70,9 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
- * 泰拉风格的npc，集成远程攻击，交易菜单，房屋系统
+ * 泰拉风格的npc，集成远程攻击，{@link NPCTrades 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
  */
-public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc    {
+public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
 
     public static final Map<MemoryModuleType<GlobalPos>, BiPredicate<AbstractTerraNPC, Holder<PoiType>>> POI_MEMORIES =
             ImmutableMap.of(
@@ -80,6 +82,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
             );
 
 
+    private final float moveSpeed = 0.3f;
     public NPCTrades trades;
     public Player tradingPlayer;
     public House house = House.EMPTY;
@@ -115,7 +118,8 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
              }
         }
 
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3f);
+        Optional.ofNullable(this.getAttribute(Attributes.MOVEMENT_SPEED)).ifPresent(att->att.setBaseValue(moveSpeed));
+
         this.getNavigation().setCanFloat(true);
 
         this.setCustomNameVisible(true);
@@ -141,17 +145,18 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
     }
 
     @Override
-    protected Brain<AbstractTerraNPC> makeBrain(Dynamic<?> dynamic) {
+    protected @NotNull Brain<AbstractTerraNPC> makeBrain(@NotNull Dynamic<?> dynamic) {
         return initAI().makeBrain(this.brainProvider().makeBrain(dynamic));
     }
 
     @Override
-    protected Brain.Provider<AbstractTerraNPC> brainProvider() {
+    protected Brain.@NotNull Provider<AbstractTerraNPC> brainProvider() {
         return ai.brainProvider();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Brain<AbstractTerraNPC> getBrain() {
+    public @NotNull Brain<AbstractTerraNPC> getBrain() {
         return (Brain<AbstractTerraNPC>) super.getBrain();
     }
 
@@ -171,7 +176,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
         this.mood = new NPCMood();
         var info = NPCMoods.BY_ENTITY_TYPE.get(getType());
         if(info != null){
-            EnumMap<Mood, Integer> map = info.getSetting().getToIntFunction();
+            EnumMap<Mood, Integer> map = info.getSetting().createEnumMap();
             this.mood.setMoodValueTable(map);
             for (var info1 : info.moodInfos()) {
                 this.mood.addMoodInfo(info1.moodInfo());
@@ -244,10 +249,20 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
         this.entityData.set(DATA_MOOD, mood);
     }
 
+    public int getTradeTaskNext(ITradeTask task){
+        return 0;
+    }
 
+    public int getTradeTaskCurrent(ITradeTask task){
+        return 0;
+    }
+
+    public void setTradeTaskIndex(int index){
+
+    }
 
     @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if(level().isClientSide()) {
             if (DATA_DAVE_DATA.equals(key)) {
@@ -263,7 +278,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_DAVE_DATA, new NPCTrades(List.of()));
         builder.define(DATA_HOUSE_DATA, House.EMPTY);
@@ -272,21 +287,23 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        if (compound.contains("te_npc_data", 10)) {
-            DataResult<NPCTrades> data = NPCTrades.CODEC.parse(NbtOps.INSTANCE, compound.get("te_npc_data"));
-            this.entityData.set(DATA_DAVE_DATA, data.result().get());
-            this.trades = data.result().get();
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if (tag.contains("te_npc_data", 10)) {
+            DataResult<NPCTrades> data = NPCTrades.CODEC.parse(NbtOps.INSTANCE, tag.get("te_npc_data"));
+            data.result().ifPresent(npcTrades -> {
+                this.trades = npcTrades;
+                this.entityData.set(DATA_DAVE_DATA, npcTrades);
+            });
         }
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
         if(trades != null) {
             DataResult<Tag> data = NPCTrades.CODEC.encodeStart(NbtOps.INSTANCE, trades);
-            compound.put("te_npc_data", data.result().get());
+            data.result().ifPresent(tag1 -> tag.put("te_npc_data", tag));
         }
     }
 
@@ -304,11 +321,12 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
     public void tick(){
         super.tick();
         this.updateSwingTime();
-        if(level().isClientSide){
-            if(mood.getValue() != 100){
-//                System.out.println(mood..getValue());
-            }
-        }
+
+//        if(level().isClientSide){
+//            if(mood.getValue() != 100){
+//                System.out.println(mood..getValue()); // debug
+//            }
+//        }
         if(isCooledDown()){
             this.cooldownTick++;
         }else{
@@ -329,14 +347,15 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
 
         // 用于显示房间
         if(level().isClientSide && (tickCount & 127) == 0 && !house.isEmpty()){
-            if(Minecraft.getInstance().player.getMainHandItem().getItem() instanceof HouseDetectItem){
+            if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.getMainHandItem().getItem() instanceof HouseDetectItem) {
                 DebugBlocksHelper.Singleton().addDebugBlock(List.of(house.min(), house.max()));
             }
         }
     }
 
+    @SuppressWarnings("all")
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if(hand == InteractionHand.OFF_HAND){
             return super.mobInteract(player, hand);
         }
@@ -454,7 +473,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
 
 
     @Override
-    public void startSleeping(BlockPos pos) {
+    public void startSleeping(@NotNull BlockPos pos) {
         super.startSleeping(pos);
         this.brain.setMemory(MemoryModuleType.LAST_SLEPT, this.level().getGameTime());
         this.brain.eraseMemory(MemoryModuleType.WALK_TARGET);
@@ -468,7 +487,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
     }
 
     @Override
-    public void die(DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
 
         this.releaseAllPois();
         super.die(cause);
@@ -476,6 +495,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
 
     }
 
+    @Override
     protected void dropEquipment() {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             ItemStack stack = this.getItemBySlot(slot);
@@ -493,7 +513,8 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
 //        this.releasePoi(MemoryModuleType.MEETING_POINT);
     }
 
-    protected void hurtArmor(DamageSource damageSource, float damage) {
+    @Override
+    protected void hurtArmor(@NotNull DamageSource damageSource, float damage) {
         this.doHurtEquipment(damageSource, damage, EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD);
     }
 
@@ -516,7 +537,8 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity ,  Npc 
         }
     }
 
-    protected Vec3 getLeashOffset() {
+    @Override
+    protected @NotNull Vec3 getLeashOffset() {
         return new Vec3(-0.3, this.getEyeHeight() * 0.5f, this.getBbWidth() * 0.1F);
     }
 

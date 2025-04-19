@@ -24,7 +24,7 @@ public interface ITradeItem extends ITrade{
     }
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResult(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
         var it = result();
 
         guiGraphics.renderItem(it, x , y );
@@ -33,7 +33,7 @@ public interface ITradeItem extends ITrade{
     }
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResultHover(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+    default void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
 
         guiGraphics.renderTooltip(font, result(), mouseX, mouseY);
     }
@@ -41,7 +41,7 @@ public interface ITradeItem extends ITrade{
 
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResultSlot(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot){
+    default void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot){
         if(canBuy){
             slot.set(result().copy());
             guiGraphics.blit(MENU_LOCATION,x,y,276,0,35,17,512,256);

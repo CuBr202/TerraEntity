@@ -70,6 +70,10 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> ARMS_DEALER_SPAWN_EGG = registerEgg("arms_dealer_spawn_egg", TENpcEntities.ARMS_DEALER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> NURSE_SPAWN_EGG = registerEgg("nurse_spawn_egg", TENpcEntities.NURSE, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> MERCHANT_SPAWN_EGG = registerEgg("merchant_spawn_egg", TENpcEntities.MERCHANT, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> PAINTER_SPAWN_EGG = registerEgg("painter_spawn_egg", TENpcEntities.PAINTER, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> DRYAD_SPAWN_EGG = registerEgg("dryad_spawn_egg", TENpcEntities.DRYAD, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> DYE_TRADER_SPAWN_EGG = registerEgg("dye_trader_spawn_egg", TENpcEntities.DYE_TRADER, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> ANGLER_SPAWN_EGG = registerEgg("angler_spawn_egg", TENpcEntities.ANGLER, 0xffffff, 0xffffff);
 
 
     public static DeferredItem<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryColor, int secondaryColor){

@@ -44,25 +44,25 @@ public interface ITrade{
      * @param starty 菜单左上角位置y
      */
     @OnlyIn(Dist.CLIENT)
-    void renderCosts(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
+    void renderCosts(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
 
     /**
      * 渲染交易列表的表格调用
      */
     @OnlyIn(Dist.CLIENT)
-    void renderResult(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
+    void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
 
     /**
      * 悬浮于交易列表物品上调用，只会在悬浮于交易项时调用一次
      */
     @OnlyIn(Dist.CLIENT)
-    void renderResultHover(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
+    void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
 
     /**
      * 渲染交易列表的物品槽调用
      */
     @OnlyIn(Dist.CLIENT)
-    void renderResultSlot(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot);
+    void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot);
 
     /**
      * 当客户端点击物品槽时调用，自定义播放声音
@@ -74,6 +74,8 @@ public interface ITrade{
             player.playSound(SoundEvents.UI_TOAST_IN);
         }
     }
+
+
     /**
      * 获取编解码器
      * @return 编解码器

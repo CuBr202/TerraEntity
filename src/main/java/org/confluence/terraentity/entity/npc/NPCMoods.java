@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
 
+/**
+ * npc心情加载器
+ */
 public class NPCMoods {
 
     public static final String KEY = "npc_mood";
@@ -34,29 +37,34 @@ public class NPCMoods {
 
     }
 
-    public record MoodSetting(Map<Mood, Integer> toIntFunction){
-        public MoodSetting(int a,int b,int c,int d,int e){
+    /**
+     * 心情的设置选项，可扩展
+     * @param toIntMap
+     */
+    public record MoodSetting(Map<Mood, Integer> toIntMap){
+        public static Codec<MoodSetting> CODEC = RecordCodecBuilder.create(instance->instance.group(
+                Codec.unboundedMap(Mood.CODEC, Codec.INT).fieldOf("moodToValue").forGetter(MoodSetting::toIntMap)
+        ).apply(instance, MoodSetting::new));
+
+        MoodSetting(int a,int b,int c,int d,int e){
             this(Map.of(Mood.HATE,a, Mood.DISLIKE,b, Mood.NEUTRAL,c, Mood.LIKE,d, Mood.LOVER,e));
         }
-
-        public EnumMap<Mood, Integer> getToIntFunction(){
-            EnumMap<Mood, Integer> toIntFunction = new EnumMap<>(Mood.class);
-            for(Mood mood : Mood.values()){
-                toIntFunction.put(mood, this.toIntFunction.getOrDefault(mood, 0));
-            }
-            return toIntFunction;
-        }
-
-        public static MoodSetting DEFAULT = new MoodSetting(-20, -10, 0, 10, 20);
 
         public static MoodSetting of(int hate, int dislike, int neutral, int like, int lover){
             return new MoodSetting(hate, dislike, neutral, like, lover);
         }
-        public static Codec<MoodSetting> CODEC = RecordCodecBuilder.create(instance->instance.group(
-                Codec.unboundedMap(Mood.CODEC, Codec.INT).fieldOf("moodToValue").forGetter(MoodSetting::toIntFunction)
-        ).apply(instance, MoodSetting::new));
+
+        public static MoodSetting DEFAULT = new MoodSetting(-20, -10, 0, 10, 20);
+
+        public EnumMap<Mood, Integer> createEnumMap(){
+            return new EnumMap<>(toIntMap);
+        }
+
     }
 
+    /**
+     * npc的心情设置和具体信息
+     */
     public record EntityMood(Optional<MoodSetting> setting, List<MoodInfoData> moodInfos){
         public static Codec<EntityMood> CODEC = RecordCodecBuilder.create(instance->instance.group(
                 MoodSetting.CODEC.optionalFieldOf("setting").forGetter(EntityMood::setting),
@@ -89,7 +97,7 @@ public class NPCMoods {
             }
 
             public EntityMood build(){
-                return new EntityMood(Optional.of(setting), moodInfos);
+                return new EntityMood(Optional.ofNullable(setting), moodInfos);
             }
         }
     }

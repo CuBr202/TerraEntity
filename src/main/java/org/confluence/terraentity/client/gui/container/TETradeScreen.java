@@ -182,6 +182,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
             renderSlotHighlight(guiGraphics,x ,y , 20);
         }
         List<ITrade> trades = menu.NPCTrades.trades();
+        AbstractTerraNPC npc = (AbstractTerraNPC) ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
 
         int x = offsetX;
         int y = offsetY;
@@ -195,7 +196,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
                 var trade = trades.get(index);
 
                 // 渲染获得的物品
-                renderResult(guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade);
+                renderResult(npc, guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade);
                 if(mouseX > x && mouseX < x+16 && mouseY > y && mouseY < y+16){
                     xcache = x;
                     ycache = y;
@@ -215,38 +216,37 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         var trade = trades.get(this.shopItem);
         x = ii + 116;
         y = jj + 19;
-        renderCosts(guiGraphics, font,  x, y, ii, jj, mouseX, mouseY, trade);
+        renderCosts(npc, guiGraphics, font,  x, y, ii, jj, mouseX, mouseY, trade);
 
 
         x = ii + 203;
         y = jj + 36;
         // 能否购买
-        AbstractTerraNPC npc = (AbstractTerraNPC) ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
         boolean canBuy = trade.canTrade(Minecraft.getInstance().player, npc);
-        renderResultSlot(guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, canBuy);
+        renderResultSlot(npc,guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, canBuy);
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
         // 重新渲染悬浮时物品信息
         if(cacheIndex != -1){
-            renderResultHover(guiGraphics, font, xcache, ycache, ii, jj, mouseX, mouseY, trades.get(cacheIndex));
+            renderResultHover(npc,guiGraphics, font, xcache, ycache, ii, jj, mouseX, mouseY, trades.get(cacheIndex));
         }
 
     }
 
-    protected void renderCosts(GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
-        trade.renderCosts(guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+    protected void renderCosts(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
+        trade.renderCosts(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
     }
 
-    protected void renderResult(GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
-        trade.renderResult(guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+    protected void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
+        trade.renderResult(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
     }
-    protected void renderResultHover(GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
-        trade.renderResultHover(guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+    protected void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
+        trade.renderResultHover(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
     }
 
-    protected void renderResultSlot(GuiGraphics guiGraphics,Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade, boolean canBuy){
-        trade.renderResultSlot(guiGraphics,font, x, y, startx, starty, mouseX, mouseY, canBuy, menu.slots.get(0));
+    protected void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics,Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade, boolean canBuy){
+        trade.renderResultSlot(npc,guiGraphics,font, x, y, startx, starty, mouseX, mouseY, canBuy, menu.slots.get(0));
     }
 
 

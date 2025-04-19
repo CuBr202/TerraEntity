@@ -15,6 +15,8 @@ import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;
 import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
+import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
+import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTypes;
 import org.confluence.terraentity.registries.track.TrackTypeProvider;
 import org.confluence.terraentity.registries.track.TrackTypeProviderTypes;
 
@@ -29,6 +31,7 @@ public class TERegistries {
         event.register(GenerationProviders.REGISTRY);
         event.register(EffectStrategies.REGISTRY);
         event.register(TradeProviders.REGISTRY);
+        event.register(TradeTaskProviders.REGISTRY);
 //        event.register(MoodInfoRegistry.REGISTRY);
     }
 
@@ -38,6 +41,7 @@ public class TERegistries {
         TrackTypeProviderTypes.TYPES.register(bus);
         TradeProviderTypes.TYPES.register(bus);
         TEEffectStrategies.EFFECT_STRATEGY.register(bus);
+        TradeTaskProviderTypes.TYPES.register(bus);
 //        org.confluence.terraentity.entity.npc.mood.MoodInfos.TYPES.register(bus);
 
     }
@@ -82,7 +86,13 @@ public class TERegistries {
         public static final ResourceKey<Registry<TradeProvider>> KEY = createRegistryKey(TerraEntity.space("trade_provider"));
         public static final Registry<TradeProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
     }
-
+    /**
+     * NPC交易任务注册表
+     */
+    public static class TradeTaskProviders{
+        public static final ResourceKey<Registry<TradeTaskProvider>> KEY = createRegistryKey(TerraEntity.space("trade_task_provider"));
+        public static final Registry<TradeTaskProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
+    }
     /**
      * NPC心情注册表
      */

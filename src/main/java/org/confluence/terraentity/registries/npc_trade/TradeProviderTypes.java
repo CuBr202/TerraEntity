@@ -11,12 +11,13 @@ import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemListTradeItem;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItem;
+import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemTask;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * 注册追踪编解码器的类型
+ * 注册交易编解码器的类型
  */
 public class TradeProviderTypes {
     public static final DeferredRegister<TradeProvider> TYPES = DeferredRegister.create(TERegistries.TradeProviders.REGISTRY, TerraEntity.MODID);
@@ -24,6 +25,7 @@ public class TradeProviderTypes {
     public static final Supplier<TradeProvider> ITEM_TRADE_ITEM = register("item_trade_item", ItemTradeItem.CODEC);
     public static final Supplier<TradeProvider> ITEM_TRADE_HEALTH = register("item_trade_health", ItemTradeHealth.CODEC);
     public static final Supplier<TradeProvider> ITEM_LIST_TRADE_ITEM = register("item_list_trade_health", ItemListTradeItem.CODEC);
+    public static final Supplier<TradeProvider> ITEM_TRADE_ITEM_TASK = register("item_trade_item_task", ItemTradeItemTask.CODEC);
 
 
     public static Supplier<TradeProvider> register(String name,

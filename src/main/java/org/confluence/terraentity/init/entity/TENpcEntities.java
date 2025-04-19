@@ -13,6 +13,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.client.entity.renderer.NPCRenderer;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.AngleNPC;
 import org.confluence.terraentity.init.TEEntities;
 
 public class TENpcEntities {
@@ -31,6 +32,23 @@ public class TENpcEntities {
      * 商人
      */
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> MERCHANT = TEEntities.registerEntity("merchant", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 油漆工
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> PAINTER = TEEntities.registerEntity("painter", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 渔夫
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ANGLER = TEEntities.registerEntity("angler", AngleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+//    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> FEMALE_ANGLER = TEEntities.registerEntity("", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 树妖
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DRYAD = TEEntities.registerEntity("dryad", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 染料商
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DYE_TRADER = TEEntities.registerEntity("dye_trader", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -41,7 +59,10 @@ public class TENpcEntities {
         event.registerEntityRenderer(ARMS_DEALER.get(), c -> new NPCRenderer<>(c, ARMS_DEALER.getId()));
         event.registerEntityRenderer(NURSE.get(), c -> new NPCRenderer<>(c, NURSE.getId()));
         event.registerEntityRenderer(MERCHANT.get(), c -> new NPCRenderer<>(c, MERCHANT.getId()));
-
+        event.registerEntityRenderer(PAINTER.get(), c -> new NPCRenderer<>(c, PAINTER.getId()));
+        event.registerEntityRenderer(ANGLER.get(), c -> new NPCRenderer<>(c, ANGLER.getId()));
+        event.registerEntityRenderer(DRYAD.get(), c -> new NPCRenderer<>(c, DRYAD.getId()));
+        event.registerEntityRenderer(DYE_TRADER.get(), c -> new NPCRenderer<>(c, DYE_TRADER.getId()));
 
     }
 
@@ -52,6 +73,10 @@ public class TENpcEntities {
         event.put(ARMS_DEALER.get(), AbstractTerraNPC.createAttributes().build());
         event.put(NURSE.get(), AbstractTerraNPC.createAttributes().build());
         event.put(MERCHANT.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(PAINTER.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(ANGLER.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(DRYAD.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(DYE_TRADER.get(), AbstractTerraNPC.createAttributes().build());
 
 
     }
@@ -64,7 +89,10 @@ public class TENpcEntities {
         event.register(ARMS_DEALER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(NURSE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(MERCHANT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-
+        event.register(PAINTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ANGLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(DRYAD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(DYE_TRADER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     public static void register(){

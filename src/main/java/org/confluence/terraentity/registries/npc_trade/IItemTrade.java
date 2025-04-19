@@ -34,7 +34,7 @@ public interface IItemTrade extends ITrade{
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    default void renderCosts(GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+    default void renderCosts(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
         guiGraphics.blit(MENU_LOCATION,startx + 113,starty + 16,434,0,78,57,512,256);
 
         x += 30;

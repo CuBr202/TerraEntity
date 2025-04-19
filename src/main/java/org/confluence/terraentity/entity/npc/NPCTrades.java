@@ -70,21 +70,4 @@ public record NPCTrades(List<ITrade> trades) {
         });
     }
 
-//    public record Trade(ItemStack result, long cost) {
-//        public boolean canTrade(Player player) {
-//            return PlayerUtils.getMoney(player) >= cost;
-//        }
-//
-//        public static final Codec<Trade> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-//                ItemStack.CODEC.fieldOf("result").forGetter(Trade::result),
-//                Codec.LONG.fieldOf("cost").forGetter(Trade::cost)
-//        ).apply(instance, Trade::new));
-//
-//        public static StreamCodec<RegistryFriendlyByteBuf, Trade> STREAM_CODEC = StreamCodec.composite(
-//                ItemStack.STREAM_CODEC, Trade::result,
-//                ByteBufCodecs.VAR_LONG, Trade::cost,
-//                Trade::new
-//        );
-//        public static StreamCodec<RegistryFriendlyByteBuf, List<Trade>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.collection(NonNullList::createWithCapacity));
-//    }
 }
