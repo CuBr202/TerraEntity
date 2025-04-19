@@ -8,6 +8,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +37,7 @@ public interface ITradeHealth extends ITrade {
         player.heal(getHealth(player));
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
         ResourceLocation iconSprite = TerraEntity.defaultPath("hud/heart/full");
@@ -44,6 +47,7 @@ public interface ITradeHealth extends ITrade {
         guiGraphics.drawString(font, s, x + 19 - 2 - font.width(s), y + 6 + 3, 0x12bc63, true);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     default void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot) {
         slot.set(ItemStack.EMPTY);
@@ -55,6 +59,7 @@ public interface ITradeHealth extends ITrade {
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     default void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
 

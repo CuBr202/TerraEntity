@@ -34,39 +34,6 @@ public record ItemTradeItemTask (ITradeTask task) implements ITrade {
     }
 
 
-    @OnlyIn(Dist.CLIENT)
-    public void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
-        ITrade selected = getSelected(npc);
-        if(selected != null) {
-            selected.renderResult(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
-
-            String s = "o";
-            guiGraphics.pose().translate(0.0F, 0.0F, 200.0F);
-            guiGraphics.drawString(font, s,x, y , 0x1263bc, true);
-        }else {
-            String s = "√";
-            guiGraphics.pose().translate(0.0F, 0.0F, 200.0F);
-            guiGraphics.drawString(font, s, x, y, 0x1263bc, true);
-        }
-    }
-
-    @Override
-    public void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
-        ITrade selected = getSelected(npc);
-        if(selected != null) {
-            selected.renderResultHover(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
-        }
-    }
-
-    @Override
-    public void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot) {
-
-        ITrade selected = getSelected(npc);
-        if(selected != null) {
-            selected.renderResultSlot(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY, canBuy, slot);
-        }
-    }
-
     @Override
     public boolean canTrade(Player player, AbstractTerraNPC npc) {
 
@@ -87,6 +54,43 @@ public record ItemTradeItemTask (ITradeTask task) implements ITrade {
 
     }
 
+
+    @OnlyIn(Dist.CLIENT)
+    public void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+        ITrade selected = getSelected(npc);
+        if(selected != null) {
+            selected.renderResult(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+
+            String s = "o";
+            guiGraphics.pose().translate(0.0F, 0.0F, 200.0F);
+            guiGraphics.drawString(font, s,x, y , 0x1263bc, true);
+        }else {
+            String s = "√";
+            guiGraphics.pose().translate(0.0F, 0.0F, 200.0F);
+            guiGraphics.drawString(font, s, x, y, 0x1263bc, true);
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
+        ITrade selected = getSelected(npc);
+        if(selected != null) {
+            selected.renderResultHover(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot) {
+
+        ITrade selected = getSelected(npc);
+        if(selected != null) {
+            selected.renderResultSlot(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY, canBuy, slot);
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void renderCosts(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
         ITrade selected = getSelected(npc);

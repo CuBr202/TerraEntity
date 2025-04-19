@@ -8,6 +8,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.registries.npc_trade.*;
 
@@ -33,6 +35,7 @@ public record ItemTradeHealth(ItemStack cost, int health) implements IItemTrade,
         IItemTrade.super.onTrade(player, npc);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
 
