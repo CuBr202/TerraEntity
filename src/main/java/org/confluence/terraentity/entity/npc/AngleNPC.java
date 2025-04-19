@@ -55,12 +55,16 @@ public class AngleNPC extends AbstractTerraNPC {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
+        if (tag.contains("TradeTaskIndex")) {
+            setTradeTaskIndex( tag.getInt("TradeTaskIndex"));
+        }
 
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
+        tag.putInt("TradeTaskIndex", getTradeTaskIndex());
 
     }
 

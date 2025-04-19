@@ -26,7 +26,7 @@ public record ItemTradeHealth(ItemStack cost, int health) implements IItemTrade,
 
     @Override
     public boolean canTrade(Player player, AbstractTerraNPC npc) {
-        return IItemTrade.super.canTrade(player, npc);
+        return ITradeHealth.super.canTrade(player, npc) && IItemTrade.super.canTrade(player, npc);
     }
 
     @Override

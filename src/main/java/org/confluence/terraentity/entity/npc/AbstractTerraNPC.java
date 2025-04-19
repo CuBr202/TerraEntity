@@ -303,7 +303,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
         super.addAdditionalSaveData(tag);
         if(trades != null) {
             DataResult<Tag> data = NPCTrades.CODEC.encodeStart(NbtOps.INSTANCE, trades);
-            data.result().ifPresent(tag1 -> tag.put("te_npc_data", tag));
+            data.result().ifPresent(tag1 -> tag.put("te_npc_data", tag1));
         }
     }
 
