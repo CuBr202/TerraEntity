@@ -9,18 +9,18 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.init.item.TEWhipItems;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemListTradeItem;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItem;
-import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
+import org.confluence.terraentity.registries.npc_trade.variant.*;
+import org.confluence.terraentity.registries.npc_trade_task.variant.AnglerTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.ProgressTradeTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -88,6 +88,17 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
                         ItemTradeHealth.of(Items.DIRT.getDefaultInstance(), 40),
                         ItemTradeHealth.of(Items.DIRT.getDefaultInstance(), 50)
                 ))))
+
+                        .add(TradeTask.create(new AnglerTradeTask(
+                                Map.of(
+                                        1, ItemTradeItemList.of(Items.APPLE.getDefaultInstance(),
+                                                List.of(Items.DIAMOND.getDefaultInstance(), Items.EMERALD.getDefaultInstance())),
+                                        3, ItemTradeItemList.of(Items.APPLE.getDefaultInstance(),
+                                                List.of(Items.ICE.getDefaultInstance(), Items.EMERALD.getDefaultInstance()))
+                                ),
+                                0,
+                                ItemTradeLootTable.of(Items.APPLE.getDefaultInstance(), TerraEntity.fromSpaceAndPath("minecraft", "entities/zombie"))
+                                )))
                 .build());
 
     }

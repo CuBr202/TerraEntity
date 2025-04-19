@@ -31,6 +31,8 @@ public interface ITradeTask {
 
     void setNext(AbstractTerraNPC npc);
 
+    boolean canTrade(AbstractTerraNPC npc);
+
     default void onTrade(AbstractTerraNPC npc, ITrade trade) {
         setNext(npc);
     }

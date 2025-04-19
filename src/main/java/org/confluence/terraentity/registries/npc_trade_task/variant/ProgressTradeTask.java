@@ -16,7 +16,7 @@ import java.util.List;
  * 按进度的任务
  */
 public class ProgressTradeTask implements ITradeTask {
-
+    // 由于是可变的，所以不能用record
     protected final List<ITrade> trades;
     protected int current;
 
@@ -60,6 +60,11 @@ public class ProgressTradeTask implements ITradeTask {
     public void setNext(AbstractTerraNPC npc) {
         this.current += 1;
         npc.syncTradeTasks();
+    }
+
+    @Override
+    public boolean canTrade(AbstractTerraNPC npc) {
+        return current < trades.size();
     }
 
     @Override

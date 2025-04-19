@@ -2,10 +2,7 @@ package org.confluence.terraentity.registries.npc_trade;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.Slot;
@@ -23,33 +20,34 @@ import java.util.List;
 
 import static org.confluence.terraentity.client.gui.container.TETradeScreen.MENU_LOCATION;
 
-/**
- * 当交易获得的物品是单个物品时继承这个接口
- */
-public interface ITradeItem extends ITrade{
+public interface ITradeLootTable extends ITrade{
 
-    ItemStack result();
+    ResourceKey<LootTable> lootTable();
 
     @Override
     default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
-        player.getInventory().placeItemBackInInventory(result().copy());
-
-
+        List<ItemStack> loot = player.level().getServer().reloadableRegistries()
+                .getLootTable(lootTable())
+                .getRandomItems(new LootParams.Builder((ServerLevel) player.level())
+                        .withParameter(LootContextParams.THIS_ENTITY, player)
+                        .withParameter(LootContextParams.ORIGIN, player.position())
+                        .create(LootContextParamSets.GIFT));
+        for(ItemStack stack : loot){
+            player.getInventory().placeItemBackInInventory(stack);
+        }
     }
 
     @OnlyIn(Dist.CLIENT)
     default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
-        var it = result();
+        // TODO 自定义贴图
+        guiGraphics.blitSprite(TerraEntity.space("unknown"),x,y,16,16);
 
-        guiGraphics.renderItem(it, x , y );
-
-        guiGraphics.renderItemDecorations(font, it, x, y);
     }
 
     @OnlyIn(Dist.CLIENT)
     default void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
 
-        guiGraphics.renderTooltip(font, result(), mouseX, mouseY);
+//        guiGraphics.renderTooltip(font, result(), mouseX, mouseY);
     }
 
 
@@ -57,12 +55,14 @@ public interface ITradeItem extends ITrade{
     @OnlyIn(Dist.CLIENT)
     default void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot){
         if(canBuy){
-            slot.set(result().copy());
+            // TODO 自定义贴图
+            guiGraphics.blitSprite(TerraEntity.space("unknown"),x+35,y+2,16,16);
             guiGraphics.blit(MENU_LOCATION,x,y,276,0,35,17,512,256);
         }else{
-            slot.set(ItemStack.EMPTY);
+
             guiGraphics.blit(MENU_LOCATION,x,y,276,17,35,17,512,256);
         }
+        slot.set(ItemStack.EMPTY);
     }
 
 }

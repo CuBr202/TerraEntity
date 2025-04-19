@@ -4,10 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.TERegistries;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemListTradeItem;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItem;
-import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
+import org.confluence.terraentity.registries.npc_trade.variant.*;
 
 import java.util.function.Supplier;
 
@@ -21,6 +18,8 @@ public class TradeProviderTypes {
     public static final Supplier<TradeProvider> ITEM_TRADE_HEALTH = register("item_trade_health", ItemTradeHealth.CODEC);
     public static final Supplier<TradeProvider> ITEM_LIST_TRADE_ITEM = register("item_list_trade_health", ItemListTradeItem.CODEC);
     public static final Supplier<TradeProvider> TRADE_TASK = register("trade_task", TradeTask.CODEC);
+    public static final Supplier<TradeProvider> ITEM_TRADE_LOOT_TABLE = register("item_trade_loot_table", ItemTradeLootTable.CODEC);
+    public static final Supplier<TradeProvider> ITEM_TRADE_ITEM_LIST = register("item_trade_item_list", ItemTradeItemList.CODEC);
 
 
     public static Supplier<TradeProvider> register(String name,
