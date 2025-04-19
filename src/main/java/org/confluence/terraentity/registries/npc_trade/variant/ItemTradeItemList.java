@@ -25,9 +25,9 @@ public record ItemTradeItemList(ItemStack cost, List<ItemStack> result) implemen
     }
 
     @Override
-    public void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
-        IItemTrade.super.onTrade(player, npc);
-        ITradeItemList.super.onTrade(player, npc);
+    public void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+        IItemTrade.super.onTrade(player, npc, index);
+        ITradeItemList.super.onTrade(player, npc, index);
     }
 
 

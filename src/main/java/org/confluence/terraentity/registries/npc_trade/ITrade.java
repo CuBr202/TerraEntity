@@ -27,12 +27,12 @@ public interface ITrade{
     /**
      * 能否触发onTrade
      */
-    boolean canTrade(Player player, AbstractTerraNPC npc);
+    boolean canTrade(Player player, AbstractTerraNPC npc, int index);
 
     /**
      * 当canTrade为true时触发
      */
-    void onTrade(ServerPlayer player, AbstractTerraNPC npc);
+    void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index);
 
     /**
      * 渲染框内的所需物品
@@ -50,7 +50,7 @@ public interface ITrade{
      * 渲染交易列表的表格调用
      */
     @OnlyIn(Dist.CLIENT)
-    void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
+    void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int slotIndex);
 
     /**
      * 悬浮于交易列表物品上调用，只会在悬浮于交易项时调用一次
@@ -67,8 +67,8 @@ public interface ITrade{
     /**
      * 当客户端点击物品槽时调用，自定义播放声音
      */
-    default void onLocalClickSlot(Player player, int button, ClickType clickType, AbstractTerraNPC npc){
-        if(canTrade(player, npc)){
+    default void onLocalClickSlot(Player player, int button, ClickType clickType, AbstractTerraNPC npc, int index){
+        if(canTrade(player, npc, index)){
             player.playSound(SoundEvents.UI_BUTTON_CLICK.value());
         }else{
             player.playSound(SoundEvents.UI_TOAST_IN);

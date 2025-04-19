@@ -15,37 +15,33 @@ public class RandomTradeTask extends ProgressTradeTask {
 
     /**
      * @param trades 任务顺序列表
-     * @param current 当前进度
      */
-    public RandomTradeTask(List<ITrade> trades, int current) {
-        super(trades, current);
-    }
 
     public RandomTradeTask(List<ITrade> trades) {
         super(trades);
     }
 
     public static MapCodec<RandomTradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Codec.list(ITrade.TYPED_CODEC).fieldOf("trades").forGetter(RandomTradeTask::trades),
-            Codec.INT.optionalFieldOf("current", 0).forGetter(RandomTradeTask::current)
+            Codec.list(ITrade.TYPED_CODEC).fieldOf("trades").forGetter(RandomTradeTask::trades)
     ).apply(instance, RandomTradeTask::new));
 
     @Override
-    public @Nullable ITrade getSelected(AbstractTerraNPC npc) {
+    public @Nullable ITrade getSelected(AbstractTerraNPC npc, int index) {
         int size = trades.size();
-        int target = npc.getTradeTaskCurrent(this);
+        int target = npc.getTradeParams().getParam(index);
         if (target >= size) {
             target = npc.getRandom().nextInt(size);
-            npc.setTradeTaskIndex(target);
+            npc.getTradeParams().setParam(index, target);
         }
         return trades.get(target);
     }
 
     @Override
-    public void setNext(AbstractTerraNPC npc) {
+    public void setNext(AbstractTerraNPC npc, int index) {
         int size = trades.size();
         int target = npc.getRandom().nextInt(size);
-        npc.setTradeTaskIndex(target);
+        npc.getTradeParams().setParam(index, target);
+        npc.syncTradeTasksParams();
     }
 
     @Override

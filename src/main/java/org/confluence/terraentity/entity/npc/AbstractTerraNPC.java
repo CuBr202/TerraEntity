@@ -89,6 +89,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
     private NPCAi ai;
     private float rangeDistance = 8;
     private Predicate<AbstractTerraNPC> canPerformerAttackTest;
+    public int selectTradeIndex = 0;
 
     public int cooldownTick = 0;
     private int _cooldownTicks;
@@ -100,6 +101,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
     private static final EntityDataAccessor<House> DATA_HOUSE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_HOUSE_SERIALIZER.get());
     private static final EntityDataAccessor<Boolean> DATA_RANGE_ATTACK_COOLDOWN = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<NPCMood> DATA_MOOD = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_MOOD_SERIALIZER.get());
+    private static final EntityDataAccessor<TradeParams> DATA_TRADE_PARAMS = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADE_PARAMS_SERIALIZER.get());
 
 
     public AbstractTerraNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
@@ -234,6 +236,11 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
         this.entityData.set(DATA_RANGE_ATTACK_COOLDOWN, cooldown);
     }
 
+    public TradeParams getTradeParams(){
+        return this.entityData.get(DATA_TRADE_PARAMS);
+    }
+
+
     public NPCMood getMood(){
         return mood;
     }
@@ -262,8 +269,18 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
 
     }
 
+    /**
+     * 同步交易表，当使用<b>动态交易表任务</b>的时候需要调用，保证服务器和客户端的交易表一致
+     */
     public void syncTradeTasks(){
         this.entityData.set(DATA_DAVE_DATA, this.trades, true);
+    }
+
+    /**
+     * 同步交易表参数，当某些使用参数的交易表任务交易成功后需要调用
+     */
+    public void syncTradeTasksParams(){
+        this.entityData.set(DATA_TRADE_PARAMS, this.getTradeParams(),true);
     }
 
     @Override
@@ -289,6 +306,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
         builder.define(DATA_HOUSE_DATA, House.EMPTY);
         builder.define(DATA_RANGE_ATTACK_COOLDOWN, false);
         builder.define(DATA_MOOD, new NPCMood());
+        builder.define(DATA_TRADE_PARAMS, TradeParams.create());
     }
 
     @Override

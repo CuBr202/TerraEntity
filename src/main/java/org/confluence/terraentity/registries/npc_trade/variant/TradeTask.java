@@ -16,7 +16,7 @@ import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 import javax.annotation.Nullable;
 
 /**
- * <p>渔夫交易任务</p>
+ * <p>交易任务</p>
  *
  */
 public record TradeTask(ITradeTask task) implements ITrade {
@@ -26,8 +26,8 @@ public record TradeTask(ITradeTask task) implements ITrade {
     ).apply(instance, TradeTask::new));
 
     @Nullable
-    ITrade getSelected(AbstractTerraNPC npc){
-        return task().getSelected(npc);
+    ITrade getSelected(AbstractTerraNPC npc, int index){
+        return task().getSelected(npc, index);
     }
 
     public static TradeTask create(ITradeTask task){
@@ -36,31 +36,31 @@ public record TradeTask(ITradeTask task) implements ITrade {
 
 
     @Override
-    public boolean canTrade(Player player, AbstractTerraNPC npc) {
+    public boolean canTrade(Player player, AbstractTerraNPC npc, int index) {
 
-        ITrade selected = getSelected(npc);
+        ITrade selected = getSelected(npc, index);
         if(selected != null) {
-            return selected.canTrade(player, npc);
+            return selected.canTrade(player, npc, index);
         }
         return false;
     }
 
     @Override
-    public void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
-        ITrade selected = getSelected(npc);
+    public void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+        ITrade selected = getSelected(npc, index);
         if(selected != null) {
-            selected.onTrade(player, npc);
-            task().onTrade(npc, getSelected(npc));
+            selected.onTrade(player, npc, index);
+            task().onTrade(npc, index);
         }
 
     }
 
 
     @OnlyIn(Dist.CLIENT)
-    public void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
-        ITrade selected = getSelected(npc);
+    public void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int slotIndex){
+        ITrade selected = getSelected(npc, slotIndex);
         if(selected != null) {
-            selected.renderResult(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+            selected.renderResult(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY, slotIndex);
 
             String s = "o";
             guiGraphics.pose().translate(0.0F, 0.0F, 200.0F);
@@ -75,7 +75,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
-        ITrade selected = getSelected(npc);
+        ITrade selected = getSelected(npc,npc.selectTradeIndex );
         if(selected != null) {
             selected.renderResultHover(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
         }
@@ -85,7 +85,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
     @Override
     public void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot) {
 
-        ITrade selected = getSelected(npc);
+        ITrade selected = getSelected(npc,npc.selectTradeIndex);
         if(selected != null) {
             selected.renderResultSlot(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY, canBuy, slot);
         }
@@ -94,7 +94,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void renderCosts(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
-        ITrade selected = getSelected(npc);
+        ITrade selected = getSelected(npc,npc.selectTradeIndex);
         if(selected != null) {
             selected.renderCosts(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
         }

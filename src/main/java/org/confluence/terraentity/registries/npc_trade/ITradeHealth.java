@@ -28,19 +28,19 @@ public interface ITradeHealth extends ITrade {
     }
 
     @Override
-    default boolean canTrade(Player player, AbstractTerraNPC npc) {
+    default boolean canTrade(Player player, AbstractTerraNPC npc, int index) {
 //        return true; // debug
         return player.getHealth() < player.getMaxHealth();
     }
 
     @Override
-    default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
+    default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
         player.heal(getHealth(player));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
+    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int slotIndex) {
         ResourceLocation iconSprite = TerraEntity.defaultPath("hud/heart/full");
         guiGraphics.blitSprite(iconSprite, x, y, 16, 16);
         String s = "↑" + getHealth(Minecraft.getInstance().player);
@@ -53,7 +53,7 @@ public interface ITradeHealth extends ITrade {
     default void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot) {
         slot.set(ItemStack.EMPTY);
         if(canBuy){
-            renderResult(npc, guiGraphics, font, x+35, y+2, startx, starty, mouseX, mouseY);
+            renderResult(npc, guiGraphics, font, x+35, y+2, startx, starty, mouseX, mouseY,0);
             guiGraphics.blit(MENU_LOCATION,x,y,276,0,35,17,512,256);
         }else{
             guiGraphics.blit(MENU_LOCATION,x,y,276,17,35,17,512,256);

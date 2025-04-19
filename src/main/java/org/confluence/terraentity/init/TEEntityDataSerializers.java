@@ -4,6 +4,7 @@ import net.minecraft.network.syncher.EntityDataSerializer;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.npc.TradeParams;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.NPCTrades;
@@ -17,6 +18,7 @@ public final class TEEntityDataSerializers {
     public static final Supplier<EntityDataSerializer<NPCTrades>> NPC_TRADES_SERIALIZER = SERIALIZERS.register(NPCTrades.KEY, () -> EntityDataSerializer.forValueType(NPCTrades.STREAM_CODEC));
     public static final Supplier<EntityDataSerializer<House>> NPC_HOUSE_SERIALIZER = SERIALIZERS.register(House.KEY, () -> EntityDataSerializer.forValueType(House.STREAM_CODEC));
     public static final Supplier<EntityDataSerializer<NPCMood>> NPC_MOOD_SERIALIZER = SERIALIZERS.register(NPCMood.KEY, () -> EntityDataSerializer.forValueType(NPCMood.STREAM_CODEC));
+    public static final Supplier<EntityDataSerializer<TradeParams>> NPC_TRADE_PARAMS_SERIALIZER = SERIALIZERS.register(TradeParams.KEY, () -> EntityDataSerializer.forValueType(TradeParams.STREAM_CODEC));
 
 
 

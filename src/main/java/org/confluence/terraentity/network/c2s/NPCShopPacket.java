@@ -33,8 +33,8 @@ public record NPCShopPacket(int tradeIndex) implements CustomPacketPayload {
         context.enqueueWork(() -> {
 
             if(context.player() instanceof ServerPlayer sp){
-                AbstractTerraNPC npc = null;
-                ITrade trade = null;
+                AbstractTerraNPC npc;
+                ITrade trade;
                 if(((IPlayer)sp).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc1){
                     npc = npc1;
                     trade = npc.getTrades().trades().get(tradeIndex);
@@ -44,11 +44,11 @@ public record NPCShopPacket(int tradeIndex) implements CustomPacketPayload {
                     if (event.isCanceled()) {
                         return;
                     }
-                    if(event.isAlwaysPass() || trade.canTrade(sp, npc)) {
+                    if(event.isAlwaysPass() || trade.canTrade(sp, npc, tradeIndex)) {
                         if(event.getRedirection()!=null){
                             event.getRedirection().accept(sp, trade );
                         }else{
-                            trade.onTrade(sp, npc);
+                            trade.onTrade(sp, npc, tradeIndex);
                         }
                     }
                 }

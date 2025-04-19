@@ -23,12 +23,12 @@ public interface IItemTrade extends ITrade{
     ItemStack cost();
 
     @Override
-    default boolean canTrade(Player player, AbstractTerraNPC npc) {
+    default boolean canTrade(Player player, AbstractTerraNPC npc, int index) {
         return player.getInventory().hasAnyMatching(i->ItemStack.isSameItem(i, cost()));
     }
 
     @Override
-    default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
+    default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
         TEUtils.consumeItemCount(player.getInventory().items, cost().getItem(), cost().getCount());
     }
 

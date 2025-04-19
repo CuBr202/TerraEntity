@@ -23,18 +23,38 @@ import java.util.List;
 
 /**
  * <h1>npc交易任务接口</h1>
+ * <p>用一个交易格按照情况生成不同的交易
  */
 public interface ITradeTask {
 
+    /**
+     * 获取当前交易格的交易项
+     * @param npc npc实体
+     * @param index 当前交易格的索引
+     * @return 当前交易格的交易项
+     */
     @Nullable
-    ITrade getSelected(AbstractTerraNPC npc);
+    ITrade getSelected(AbstractTerraNPC npc, int index);
 
-    void setNext(AbstractTerraNPC npc);
+    /**
+     * 设置动态设置下一次的交易物品
+     * @param npc NPC实体，用来获取交易参数或者根据npc的情况生成下一个交易
+     * @param index 当前交易格的索引
+     */
+    void setNext(AbstractTerraNPC npc, int index);
 
-    boolean canTrade(AbstractTerraNPC npc);
+    /**
+     * 未来可能有用
+     */
+    boolean canTrade(AbstractTerraNPC npc, int index);
 
-    default void onTrade(AbstractTerraNPC npc, ITrade trade) {
-        setNext(npc);
+    /**
+     * 交易任务项完成后自动调用，默认生成下一次的交易
+     * @param npc npc实体
+     * @param index 当前交易格的索引
+     */
+    default void onTrade(AbstractTerraNPC npc, int index) {
+        setNext(npc, index);
     }
     /**
      * 获取编解码器

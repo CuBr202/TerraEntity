@@ -31,9 +31,9 @@ public record ItemTradeItem(ItemStack result, ItemStack cost) implements ITradeI
     }
 
     @Override
-    public void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
-        ITradeItem.super.onTrade(player, npc);
-        IItemTrade.super.onTrade(player, npc);
+    public void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+        ITradeItem.super.onTrade(player, npc, index);
+        IItemTrade.super.onTrade(player, npc, index);
     }
 
     @Override

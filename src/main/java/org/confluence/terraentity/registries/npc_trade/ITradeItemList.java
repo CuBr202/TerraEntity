@@ -18,14 +18,14 @@ public interface ITradeItemList extends ITrade {
     List<ItemStack> result();
 
     @Override
-    default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
+    default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
         for(ItemStack stack : result()){{
             player.getInventory().placeItemBackInInventory(stack.copy());
         }}
     }
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY,int index){
         // todo 轮流切换
         var it = result().get(0);
 

@@ -31,14 +31,14 @@ public interface ITradeItem extends ITrade{
     ItemStack result();
 
     @Override
-    default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
+    default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
         player.getInventory().placeItemBackInInventory(result().copy());
 
 
     }
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int slotIndex){
         var it = result();
 
         guiGraphics.renderItem(it, x , y );

@@ -14,6 +14,11 @@ import org.confluence.terraentity.registries.npc_trade.ITradeLootTable;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;
 import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
 
+/**
+ * 战利品交易表
+ * @param cost 花费的物品
+ * @param lootTable 战利品掉落表
+ */
 public record ItemTradeLootTable(ItemStack cost, ResourceKey<LootTable> lootTable) implements IItemTrade, ITradeLootTable {
 
     public ItemTradeLootTable(ItemStack item, ResourceLocation lootTable) {
@@ -32,9 +37,9 @@ public record ItemTradeLootTable(ItemStack cost, ResourceKey<LootTable> lootTabl
 
 
     @Override
-    public void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
-        IItemTrade.super.onTrade(player, npc);
-        ITradeLootTable.super.onTrade(player, npc);
+    public void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+        IItemTrade.super.onTrade(player, npc, index);
+        ITradeLootTable.super.onTrade(player, npc, index);
     }
 
 

@@ -22,7 +22,7 @@ public interface IItemListTrade extends ITrade{
     List<ItemStack> costs();
 
     @Override
-    default boolean canTrade(Player player, AbstractTerraNPC npc) {
+    default boolean canTrade(Player player, AbstractTerraNPC npc, int index) {
         // todo 不能匹配分开的物品
         for (ItemStack cost : costs()) {
             if (!player.getInventory().hasAnyMatching(i->ItemStack.isSameItem(i, cost))) {
@@ -33,7 +33,7 @@ public interface IItemListTrade extends ITrade{
     }
 
     @Override
-    default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
+    default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
         // todo
         for (ItemStack cost : costs()) {
 

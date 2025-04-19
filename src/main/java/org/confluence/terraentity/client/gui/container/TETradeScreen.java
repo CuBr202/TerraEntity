@@ -196,7 +196,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
                 var trade = trades.get(index);
 
                 // 渲染获得的物品
-                renderResult(npc, guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade);
+                renderResult(npc, guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, index);
                 if(mouseX > x && mouseX < x+16 && mouseY > y && mouseY < y+16){
                     xcache = x;
                     ycache = y;
@@ -222,7 +222,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         x = ii + 203;
         y = jj + 36;
         // 能否购买
-        boolean canBuy = trade.canTrade(Minecraft.getInstance().player, npc);
+        boolean canBuy = trade.canTrade(Minecraft.getInstance().player, npc, shopItem);
         renderResultSlot(npc,guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, canBuy);
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
@@ -238,8 +238,8 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         trade.renderCosts(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
     }
 
-    protected void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
-        trade.renderResult(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+    protected void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade, int slotIndex){
+        trade.renderResult(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY, slotIndex);
     }
     protected void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
         trade.renderResultHover(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
@@ -281,6 +281,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         }
         this.shopItem = hoveredItem;
         menu.selectedMerchantIndex = shopItem;
+        ((AbstractTerraNPC)(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity())).selectTradeIndex = shopItem;
         if(menu.selectedMerchantIndex <0) menu.slots.get(0).set(ItemStack.EMPTY);
         return super.mouseClicked(mouseX, mouseY, button);
     }

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.TradeParams;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
@@ -16,40 +17,29 @@ import java.util.List;
  * 按进度的任务
  */
 public class ProgressTradeTask implements ITradeTask {
-    // 由于是可变的，所以不能用record
+
     protected final List<ITrade> trades;
-    protected int current;
 
     /**
      * @param trades 任务顺序列表
-     * @param current 当前进度
      */
-    public ProgressTradeTask(List<ITrade> trades, int current) {
+    public ProgressTradeTask(List<ITrade> trades) {
         this.trades = trades;
-        this.current = current;
     }
 
-    public ProgressTradeTask(List<ITrade> trades) {
-        this(trades, 0);
-    }
 
     public static MapCodec<ProgressTradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Codec.list(ITrade.TYPED_CODEC).fieldOf("trades").forGetter(ProgressTradeTask::trades),
-            Codec.INT.fieldOf("current").forGetter(ProgressTradeTask::current)
+            Codec.list(ITrade.TYPED_CODEC).fieldOf("trades").forGetter(ProgressTradeTask::trades)
     ).apply(instance, ProgressTradeTask::new));
 
     public List<ITrade> trades() {
         return trades;
     }
 
-    public int current() {
-        return current;
-    }
-
-
     @Override
-    public @Nullable ITrade getSelected(AbstractTerraNPC npc) {
-        int target = current;
+    public @Nullable ITrade getSelected(AbstractTerraNPC npc, int index) {
+        TradeParams params = npc.getTradeParams();
+        int target = params.getParam(index);;
         if (target >= trades.size()) {
             return null;
         }
@@ -57,14 +47,14 @@ public class ProgressTradeTask implements ITradeTask {
     }
 
     @Override
-    public void setNext(AbstractTerraNPC npc) {
-        this.current += 1;
-        npc.syncTradeTasks();
+    public void setNext(AbstractTerraNPC npc, int index) {
+        npc.getTradeParams().increase(index);
+        npc.syncTradeTasksParams();
     }
 
     @Override
-    public boolean canTrade(AbstractTerraNPC npc) {
-        return current < trades.size();
+    public boolean canTrade(AbstractTerraNPC npc, int index) {
+        return npc.getTradeParams().getParam(index) < trades.size();
     }
 
     @Override

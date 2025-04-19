@@ -25,7 +25,7 @@ public interface ITradeLootTable extends ITrade{
     ResourceKey<LootTable> lootTable();
 
     @Override
-    default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
+    default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
         List<ItemStack> loot = player.level().getServer().reloadableRegistries()
                 .getLootTable(lootTable())
                 .getRandomItems(new LootParams.Builder((ServerLevel) player.level())
@@ -38,7 +38,7 @@ public interface ITradeLootTable extends ITrade{
     }
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY,int index){
         // TODO 自定义贴图
         guiGraphics.blitSprite(TerraEntity.space("unknown"),x,y,16,16);
 

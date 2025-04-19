@@ -129,7 +129,7 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
                     PacketDistributor.sendToServer(new NPCShopPacket(selectedMerchantIndex));
                     var npc = ((IPlayer) player).terra_entity$getInteractingEntity();
                     if(npc instanceof AbstractTerraNPC npc1)
-                        trade.onLocalClickSlot(player, button, clickType, npc1);
+                        trade.onLocalClickSlot(player, button, clickType, npc1, selectedMerchantIndex);
                 }
             }
         }

@@ -25,14 +25,14 @@ public record ItemTradeHealth(ItemStack cost, int health) implements IItemTrade,
     }
 
     @Override
-    public boolean canTrade(Player player, AbstractTerraNPC npc) {
-        return ITradeHealth.super.canTrade(player, npc) && IItemTrade.super.canTrade(player, npc);
+    public boolean canTrade(Player player, AbstractTerraNPC npc, int index) {
+        return ITradeHealth.super.canTrade(player, npc, index) && IItemTrade.super.canTrade(player, npc, index);
     }
 
     @Override
-    public void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
-        ITradeHealth.super.onTrade(player, npc);
-        IItemTrade.super.onTrade(player, npc);
+    public void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+        ITradeHealth.super.onTrade(player, npc, index);
+        IItemTrade.super.onTrade(player, npc, index);
     }
 
     @OnlyIn(Dist.CLIENT)
