@@ -4,10 +4,6 @@ import com.mojang.serialization.MapCodec;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.TERegistries;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemListTradeItem;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItem;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.ProgressTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.RandomTradeTask;
 

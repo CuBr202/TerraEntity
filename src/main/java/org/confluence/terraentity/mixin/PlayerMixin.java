@@ -4,6 +4,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.lib.mixed.SelfGetter;
 
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +19,7 @@ public abstract class PlayerMixin implements IPlayer , SelfGetter<Player> {
 
     @Override
     public NPCTrades terra_entity$getDaveTrades() {
-        return terra_entity$NPCTrades;
+        return terra_entity$interactingEntity instanceof AbstractTerraNPC npc? npc.getTrades() : terra_entity$NPCTrades;
     }
 
     @Override

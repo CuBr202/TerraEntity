@@ -12,17 +12,45 @@ import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTyp
 import javax.annotation.Nullable;
 import java.util.List;
 
-public record ProgressTradeTask(List<ITrade> trades) implements ITradeTask {
+/**
+ * 按进度的任务
+ */
+public class ProgressTradeTask implements ITradeTask {
+
+    protected final List<ITrade> trades;
+    protected int current;
+
+    /**
+     * @param trades 任务顺序列表
+     * @param current 当前进度
+     */
+    public ProgressTradeTask(List<ITrade> trades, int current) {
+        this.trades = trades;
+        this.current = current;
+    }
+
+    public ProgressTradeTask(List<ITrade> trades) {
+        this(trades, 0);
+    }
 
     public static MapCodec<ProgressTradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Codec.list(ITrade.TYPED_CODEC).fieldOf("trades").forGetter(ProgressTradeTask::trades)
+            Codec.list(ITrade.TYPED_CODEC).fieldOf("trades").forGetter(ProgressTradeTask::trades),
+            Codec.INT.fieldOf("current").forGetter(ProgressTradeTask::current)
     ).apply(instance, ProgressTradeTask::new));
+
+    public List<ITrade> trades() {
+        return trades;
+    }
+
+    public int current() {
+        return current;
+    }
+
 
     @Override
     public @Nullable ITrade getSelected(AbstractTerraNPC npc) {
-        int size = trades.size();
-        int target = npc.getTradeTaskCurrent(this);
-        if (target >= size) {
+        int target = current;
+        if (target >= trades.size()) {
             return null;
         }
         return trades.get(target);
@@ -30,7 +58,8 @@ public record ProgressTradeTask(List<ITrade> trades) implements ITradeTask {
 
     @Override
     public void setNext(AbstractTerraNPC npc) {
-        npc.setTradeTaskIndex(npc.getTradeTaskCurrent(this) + 1);
+        this.current += 1;
+        npc.syncTradeTasks();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.confluence.terraentity.menu;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +34,10 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
     public TETradesMenu(MenuType<?> menuType, int containerId, Inventory playerInventory, @Nullable NPCTrades NPCTrades) {
         super(menuType, containerId);
         this.NPCTrades = NPCTrades;
-        if(NPCTrades == null) this.NPCTrades = ((IPlayer)playerInventory.player).terra_entity$getDaveTrades();
+        if(NPCTrades == null) {
+            AbstractTerraNPC npc = (AbstractTerraNPC) ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
+            this.NPCTrades = npc.getTrades();
+        }
 
         this.container = new SimpleContainer(1);
         this.addSlot(new Slot(this.container, 0, 238, 37){
@@ -122,7 +126,7 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
 
                 if (selectedMerchantIndex >= 0 && selectedMerchantIndex < d.trades().size()) {
                     ITrade trade = d.trades().get(selectedMerchantIndex);
-                    PacketDistributor.sendToServer(new NPCShopPacket(trade));
+                    PacketDistributor.sendToServer(new NPCShopPacket(selectedMerchantIndex));
                     var npc = ((IPlayer) player).terra_entity$getInteractingEntity();
                     if(npc instanceof AbstractTerraNPC npc1)
                         trade.onLocalClickSlot(player, button, clickType, npc1);

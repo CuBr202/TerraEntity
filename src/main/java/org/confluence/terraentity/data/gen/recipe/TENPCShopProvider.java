@@ -16,7 +16,7 @@ import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemListTradeItem;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItem;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemTask;
+import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.ProgressTradeTask;
 
 import java.util.ArrayList;
@@ -71,13 +71,22 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
                 .build());
 
         add(TENpcEntities.ANGLER.getId()).addRecipe(builder()
-                .add(ItemTradeItemTask.create(new ProgressTradeTask(List.of(
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
                         ItemTradeItem.of(Items.DIAMOND.getDefaultInstance(), Items.EMERALD.getDefaultInstance()),
                         ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 10),
                         ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 20),
                         ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 30),
                         ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 40),
                         ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 50)
+                ))))
+
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
+                        ItemTradeItem.of(Items.ICE.getDefaultInstance(), Items.EMERALD.getDefaultInstance()),
+                        ItemTradeHealth.of(Items.DIRT.getDefaultInstance(), 10),
+                        ItemTradeHealth.of(Items.DIRT.getDefaultInstance(), 20),
+                        ItemTradeHealth.of(Items.DIRT.getDefaultInstance(), 30),
+                        ItemTradeHealth.of(Items.DIRT.getDefaultInstance(), 40),
+                        ItemTradeHealth.of(Items.DIRT.getDefaultInstance(), 50)
                 ))))
                 .build());
 

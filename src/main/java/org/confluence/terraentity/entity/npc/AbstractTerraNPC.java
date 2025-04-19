@@ -83,7 +83,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
 
 
     private final float moveSpeed = 0.3f;
-    public NPCTrades trades;
+    private NPCTrades trades;
     public Player tradingPlayer;
     public House house = House.EMPTY;
     private NPCAi ai;
@@ -106,12 +106,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
         super(entityType, level);
 
         if(!level.isClientSide()){
-            NPCEvent.InitNPCTradeEvent event = new NPCEvent.InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
-            AdapterUtils.postEvent(event);
-            trades = NPCTrades.getTrade(event.getOrigin());
-             if (trades != null) {
-                entityData.set(DATA_DAVE_DATA, trades);
-             }
+
              String name = NPCNames.getRandomName(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
              if(name!= null) {
                  this.setCustomName(Component.literal(name));
@@ -243,6 +238,12 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
         return mood;
     }
 
+    public NPCTrades getTrades(){
+        return trades;
+    }
+
+
+
     public void syncMood(){
         NPCMood mood = new NPCMood();
         mood.copyFrom(this.mood);
@@ -259,6 +260,10 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
 
     public void setTradeTaskIndex(int index){
 
+    }
+
+    public void syncTradeTasks(){
+        this.entityData.set(DATA_DAVE_DATA, this.trades, true);
     }
 
     @Override
@@ -305,16 +310,22 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
             DataResult<Tag> data = NPCTrades.CODEC.encodeStart(NbtOps.INSTANCE, trades);
             data.result().ifPresent(tag1 -> tag.put("te_npc_data", tag1));
         }
+
     }
 
 
     @Override
     public void onAddedToLevel() {
         super.onAddedToLevel();
-        if(level().isClientSide()){
-            this.trades = this.entityData.get(DATA_DAVE_DATA);
-        }
 
+        NPCEvent.InitNPCTradeEvent event = new NPCEvent.InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
+        AdapterUtils.postEvent(event);
+        if (trades == null) {
+            trades = NPCTrades.getCopy(event.getOrigin());
+            if (trades != null) {
+                entityData.set(DATA_DAVE_DATA, trades);
+            }
+        }
     }
 
     @Override

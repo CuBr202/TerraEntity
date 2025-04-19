@@ -159,7 +159,7 @@ public class GameEntityEvent {
     public static void entityInteract(PlayerInteractEvent.EntityInteract event) {
         // 打开商店
         if (event.getTarget() instanceof AbstractTerraNPC npc) {
-            ((IPlayer) event.getEntity()).terra_entity$setDaveTrades(npc.trades);
+            ((IPlayer) event.getEntity()).terra_entity$setDaveTrades(npc.getTrades());
             ((IPlayer) event.getEntity()).terra_entity$setInteractingEntity(npc);
             return;
         }

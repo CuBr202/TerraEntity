@@ -20,7 +20,7 @@ public interface ITradeItem extends ITrade{
 
     @Override
     default void onTrade(ServerPlayer player, AbstractTerraNPC npc) {
-        player.getInventory().add(result());
+        player.getInventory().add(result().copy());
     }
 
     @OnlyIn(Dist.CLIENT)

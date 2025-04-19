@@ -16,21 +16,22 @@ import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 import javax.annotation.Nullable;
 
 /**
- * 渔夫交易任务
+ * <p>渔夫交易任务</p>
+ *
  */
-public record ItemTradeItemTask (ITradeTask task) implements ITrade {
+public record TradeTask(ITradeTask task) implements ITrade {
 
-    public static final MapCodec<ItemTradeItemTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ITradeTask.TYPED_CODEC.fieldOf("trade_task").forGetter(ItemTradeItemTask::task)
-    ).apply(instance, ItemTradeItemTask::new));
+    public static final MapCodec<TradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ITradeTask.TYPED_CODEC.fieldOf("trade_task").forGetter(TradeTask::task)
+    ).apply(instance, TradeTask::new));
 
     @Nullable
     ITrade getSelected(AbstractTerraNPC npc){
         return task().getSelected(npc);
     }
 
-    public static ItemTradeItemTask create(ITradeTask task){
-        return new ItemTradeItemTask(task);
+    public static TradeTask create(ITradeTask task){
+        return new TradeTask(task);
     }
 
 
@@ -101,7 +102,7 @@ public record ItemTradeItemTask (ITradeTask task) implements ITrade {
 
     @Override
     public TradeProvider getCodec() {
-        return TradeProviderTypes.ITEM_TRADE_ITEM_TASK.get();
+        return TradeProviderTypes.TRADE_TASK.get();
     }
 
 }

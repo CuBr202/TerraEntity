@@ -5,17 +5,29 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
-import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTypes;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public record RandomTradeTask(List<ITrade> trades) implements ITradeTask {
+public class RandomTradeTask extends ProgressTradeTask {
+
+    /**
+     * @param trades 任务顺序列表
+     * @param current 当前进度
+     */
+    public RandomTradeTask(List<ITrade> trades, int current) {
+        super(trades, current);
+    }
+
+    public RandomTradeTask(List<ITrade> trades) {
+        super(trades);
+    }
 
     public static MapCodec<RandomTradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Codec.list(ITrade.TYPED_CODEC).fieldOf("trades").forGetter(RandomTradeTask::trades)
+            Codec.list(ITrade.TYPED_CODEC).fieldOf("trades").forGetter(RandomTradeTask::trades),
+            Codec.INT.optionalFieldOf("current", 0).forGetter(RandomTradeTask::current)
     ).apply(instance, RandomTradeTask::new));
 
     @Override

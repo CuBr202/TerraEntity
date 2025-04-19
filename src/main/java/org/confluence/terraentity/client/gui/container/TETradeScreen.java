@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * <p>由于交易的获得的内容是单个，统一使用trade的抽象菜单类
- * <p>渲染cost的逻辑在{@link org.confluence.terraentity.registries.npc_trade.ITrade#renderCosts(GuiGraphics, Font, int, int, int, int, int, int)}
+ * <p>渲染cost的逻辑在{@link org.confluence.terraentity.registries.npc_trade.ITrade#renderCosts(AbstractTerraNPC, GuiGraphics, Font, int, int, int, int, int, int)}
  * <p>使用时必须继承此类，否则会出现类型推断不匹配</p>
  */
 public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractContainerScreen<M> {
@@ -149,10 +149,11 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if(interpolator == null) return;
+        AbstractTerraNPC npc = (AbstractTerraNPC) ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
 
-        if (menu.NPCTrades == null) {
-            menu.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getDaveTrades();
-            if (menu.NPCTrades == null){
+        if(npc != null){
+            menu.NPCTrades = npc.getTrades();
+            if(menu.NPCTrades == null){
                 return;
             }
         }
@@ -182,7 +183,6 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
             renderSlotHighlight(guiGraphics,x ,y , 20);
         }
         List<ITrade> trades = menu.NPCTrades.trades();
-        AbstractTerraNPC npc = (AbstractTerraNPC) ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
 
         int x = offsetX;
         int y = offsetY;

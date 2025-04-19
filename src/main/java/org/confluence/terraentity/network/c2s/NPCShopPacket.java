@@ -1,7 +1,8 @@
 package org.confluence.terraentity.network.c2s;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,11 +17,10 @@ import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
 
 
-public record NPCShopPacket(ITrade trade) implements CustomPacketPayload {
+public record NPCShopPacket(int tradeIndex) implements CustomPacketPayload {
     public static final Type<NPCShopPacket> TYPE = new Type<>(TerraEntity.space("npc_trade_packet_s2c"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, NPCShopPacket> STREAM_CODEC = StreamCodec.composite(
-            ITrade.STREAM_CODEC,
-            NPCShopPacket::trade,
+    public static final StreamCodec<ByteBuf, NPCShopPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT,NPCShopPacket::tradeIndex,
             NPCShopPacket::new
     );
 
@@ -34,21 +34,25 @@ public record NPCShopPacket(ITrade trade) implements CustomPacketPayload {
 
             if(context.player() instanceof ServerPlayer sp){
                 AbstractTerraNPC npc = null;
+                ITrade trade = null;
                 if(((IPlayer)sp).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc1){
                     npc = npc1;
-                }
-                NPCEvent.NPCTradeEvent event = new NPCEvent.NPCTradeEvent(npc, trade, sp);
-                AdapterUtils.postEvent(event);
-                if (event.isCanceled()) {
-                    return;
-                }
-                if(event.isAlwaysPass() || trade.canTrade(sp, npc)) {
-                    if(event.getRedirection()!=null){
-                        event.getRedirection().accept(sp, trade );
-                    }else{
-                        trade.onTrade(sp, npc);
+                    trade = npc.getTrades().trades().get(tradeIndex);
+
+                    NPCEvent.NPCTradeEvent event = new NPCEvent.NPCTradeEvent(npc, trade, sp);
+                    AdapterUtils.postEvent(event);
+                    if (event.isCanceled()) {
+                        return;
+                    }
+                    if(event.isAlwaysPass() || trade.canTrade(sp, npc)) {
+                        if(event.getRedirection()!=null){
+                            event.getRedirection().accept(sp, trade );
+                        }else{
+                            trade.onTrade(sp, npc);
+                        }
                     }
                 }
+
             }else{
                 context.player().sendSystemMessage(Component.translatable("message.terra_entity.trade.not_enough_items"));
             }

@@ -29,6 +29,7 @@ public interface ITradeHealth extends ITrade {
 
     @Override
     default boolean canTrade(Player player, AbstractTerraNPC npc) {
+//        return true; // debug
         return player.getHealth() < player.getMaxHealth();
     }
 

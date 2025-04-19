@@ -52,7 +52,23 @@ public record NPCTrades(List<ITrade> trades) {
      */
     @Nullable
     public static NPCTrades getTrade(ResourceLocation id) {
+        if(!TRADE_MAP.containsKey(id)){
+            return null;
+        }
         return TRADE_MAP.get(id);
+    }
+
+    /**
+     * 用于初始化npc时给出不同的交易列表防止影响全局
+     * @param id 交易表id
+     * @return 交易列表的拷贝
+     */
+    @Nullable
+    public static NPCTrades getCopy(ResourceLocation id) {
+        if(!TRADE_MAP.containsKey(id)){
+            return null;
+        }
+        return CODEC.decode(JsonOps.INSTANCE, CODEC.encodeStart(JsonOps.INSTANCE, TRADE_MAP.get(id)).getOrThrow()).result().get().getFirst();
     }
 
     public static void readTradesFromJson(ResourceManager manager) {
