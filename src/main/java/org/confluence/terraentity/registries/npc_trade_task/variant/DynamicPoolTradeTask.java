@@ -100,7 +100,7 @@ public class DynamicPoolTradeTask implements ITradeTask {
 //            npc.syncTrades();
             npc.getTradeManager().addToBeSync(index);
         }
-        npc.getTradeParam(index).ifPresent(TradeParams.Param::increaseLevel);
+        npc.getTradeParams().increaseLevel(index);
         npc.syncTradeTasksParams();
     }
 

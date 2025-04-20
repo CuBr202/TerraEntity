@@ -42,7 +42,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
         }
         ITrade selected = getSelected(npc, index);
         if(selected != null) {
-            return selected.canTrade(player, npc, index);
+            return selected.canTradeWithLock(player, npc, index);
         }
         return false;
     }

@@ -612,6 +612,8 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         return false;
     }
 
-
+    public BlockPos blockPos(){
+        return this.blockPosition();
+    }
 
 }

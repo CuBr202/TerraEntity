@@ -227,7 +227,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         x = ii + 203;
         y = jj + 36;
         // 能否购买
-        boolean canBuy = trade.canTrade(Minecraft.getInstance().player, holder, shopItem);
+        boolean canBuy =  trade.canTradeWithLock(Minecraft.getInstance().player, holder, shopItem);
         renderResultSlot(holder,guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, canBuy);
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);

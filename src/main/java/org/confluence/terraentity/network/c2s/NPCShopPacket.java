@@ -44,7 +44,8 @@ public record NPCShopPacket(int tradeIndex) implements CustomPacketPayload {
                     if (event.isCanceled()) {
                         return;
                     }
-                    if(event.isAlwaysPass() || trade.canTrade(sp, npc, tradeIndex)) {
+                    if(event.isAlwaysPass() || trade.canTradeWithLock(sp, npc, tradeIndex)
+                    ) {
                         if(event.getRedirection()!=null){
                             event.getRedirection().accept(sp, trade );
                         }else{

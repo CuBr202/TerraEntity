@@ -14,6 +14,7 @@ import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.*;
+import org.confluence.terraentity.registries.npc_trade_lock.variant.TimeLock;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.FixedMapTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicPoolTradeTask;
@@ -158,7 +159,9 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
                         ItemTradeLootTable.of(
                                 Items.APPLE.getDefaultInstance(),
                                 TerraEntity.fromSpaceAndPath("minecraft", "entities/zombie"),
-                                TerraEntity.space("random_gift")),
+                                TerraEntity.space("random_gift"),
+                                new TimeLock(0,12000,false)
+                        ),
                         Map.of(
                                 1, List.of(Items.DIAMOND.getDefaultInstance(), Items.EMERALD.getDefaultInstance()),
                                 3, List.of(Items.ICE.getDefaultInstance(), Items.EMERALD.getDefaultInstance())
@@ -190,7 +193,7 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
         }
 
         public Builder add(ItemStack it, ItemStack cost) {
-            trades.add(new ItemTradeItem(it, cost));
+            trades.add(ItemTradeItem.of(it, cost));
             return this;
         }
 

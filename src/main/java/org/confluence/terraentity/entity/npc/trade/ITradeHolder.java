@@ -1,8 +1,9 @@
 package org.confluence.terraentity.entity.npc.trade;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +51,9 @@ public interface ITradeHolder {
         return Optional.ofNullable(getTradeParams().params().get(key));
     }
 
+    Level level();
+
+    BlockPos blockPos();
 
     /**
      * 获取交易列表

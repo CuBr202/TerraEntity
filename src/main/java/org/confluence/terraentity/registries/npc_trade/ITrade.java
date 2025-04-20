@@ -15,6 +15,8 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.TERegistries;
+import org.confluence.terraentity.registries.npc_trade_lock.ITradeLock;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * <h1>npc交易接口</h1>
@@ -30,6 +32,18 @@ public interface ITrade{
      * 当canTrade为true时触发
      */
     void onTrade(ServerPlayer player, ITradeHolder npc, int index);
+
+    /**
+     * 获取交易锁
+     */
+
+    default @Nullable ITradeLock lock(){
+        return null;
+    }
+
+    default boolean canTradeWithLock(Player player, ITradeHolder npc, int index){
+        return canTrade(player, npc, index) && (lock() == null || lock().canTrade(player, npc, index));
+    }
 
     /**
      * 渲染框内的所需物品

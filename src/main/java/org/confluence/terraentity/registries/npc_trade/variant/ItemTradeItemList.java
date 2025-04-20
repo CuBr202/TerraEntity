@@ -10,18 +10,24 @@ import org.confluence.terraentity.registries.npc_trade.IItemTrade;
 import org.confluence.terraentity.registries.npc_trade.ITradeItemList;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;
 import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
+import org.confluence.terraentity.registries.npc_trade_lock.ITradeLock;
 
 import java.util.List;
+import java.util.Optional;
 
-public record ItemTradeItemList(ItemStack cost, List<ItemStack> result) implements IItemTrade, ITradeItemList {
+public record ItemTradeItemList(ItemStack cost, List<ItemStack> result, ITradeLock lock) implements IItemTrade, ITradeItemList {
 
     public static MapCodec<ItemTradeItemList> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemStack.CODEC.fieldOf("cost").forGetter(ItemTradeItemList::cost),
-            Codec.list(ItemStack.CODEC).fieldOf("result").forGetter(ItemTradeItemList::result)
-    ).apply(instance, ItemTradeItemList::new));
+            Codec.list(ItemStack.CODEC).fieldOf("result").forGetter(ItemTradeItemList::result),
+            ITradeLock.TYPED_CODEC.optionalFieldOf("lock").forGetter(i-> Optional.ofNullable(i.lock))
+    ).apply(instance, (cost, result, lock)->new ItemTradeItemList(cost, result, lock.orElse(null))));
 
     public static ItemTradeItemList of(ItemStack cost, List<ItemStack> result) {
-        return new ItemTradeItemList(cost, result);
+        return new ItemTradeItemList(cost, result, null);
+    }
+    public static ItemTradeItemList of(ItemStack cost, List<ItemStack> result,ITradeLock lock) {
+        return new ItemTradeItemList(cost, result, lock);
     }
 
     @Override

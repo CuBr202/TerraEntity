@@ -1,0 +1,12 @@
+package org.confluence.terraentity.registries.npc_trade_lock;
+
+import com.mojang.serialization.MapCodec;
+import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
+
+/**
+ * 用于提供NPC交易类型编解码器
+ * @param codec
+ */
+public record TradeLockProvider(MapCodec<? extends ITradeLock> codec){
+
+}

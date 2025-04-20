@@ -106,7 +106,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
 
         }else{
             dynamicTrade = null;
-            defaultTrade = new ItemTradeLootTable(cost, defaultTrade.lootTable(), defaultTrade.sprite());
+            defaultTrade = new ItemTradeLootTable(cost, defaultTrade.lootTable(), defaultTrade.sprite(), defaultTrade.lock());
         }
 
     }
