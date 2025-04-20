@@ -10,6 +10,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
@@ -67,7 +69,7 @@ public class AngleNPC extends AbstractTerraNPC {
     }
 
     @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if(key == DATA_WAKE_UP){
             if(isWakeUp()){
@@ -111,13 +113,38 @@ public class AngleNPC extends AbstractTerraNPC {
     public boolean isLieDown(){
         return !isWakeUp();
     }
-
+    Vec3 dir = Vec3.ZERO;
+    Vec3 speed = Vec3.ZERO;
     @Override
     public void tick(){
         super.tick();
         if(!level().isClientSide){
             if(timeToTradeFish()){
                 resetFishTask();
+            }
+            if(!this.isWakeUp()){
+                if(this.isInWater() ){
+                    this.setDeltaMovement(0,0.02f,0);
+
+                }
+                if(this.isInWater() || level().getBlockState(this.blockPosition()).is(Blocks.WATER)){
+                    if(this.dir == null){
+                        this.dir = Vec3.ZERO;
+                    }
+                    if(this.speed == null){
+                        this.speed = Vec3.ZERO;
+                    }
+                    float f = 0.001f;
+                    float maxSpeed = 0.008f;
+                    speed = new Vec3(Math.random() * 2 * f - f, 0, Math.random() * 2 * f - f);
+                    this.dir = this.dir.add(speed);
+                    if(dir.length() > maxSpeed * 1.4F){
+                        dir = dir.scale(0.9F);
+                    }
+
+                    this.addDeltaMovement(dir);
+
+                }
             }
         }
     }

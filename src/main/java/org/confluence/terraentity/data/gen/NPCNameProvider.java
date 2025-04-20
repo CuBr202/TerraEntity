@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.npc.NPCNames;
+import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 
 import java.util.Map;

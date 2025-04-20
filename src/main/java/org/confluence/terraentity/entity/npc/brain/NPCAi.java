@@ -27,7 +27,7 @@ import org.confluence.terraentity.entity.ai.brain.behavior.HomeNearbyStroll;
 import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicCalmDownBrain;
 import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicTriggerBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.NPCHouseBehaviors;
+import org.confluence.terraentity.entity.npc.brain.behavior.NPCHouseBehaviors;
 import org.confluence.terraentity.entity.npc.brain.behavior.*;
 import org.confluence.terraentity.init.TEAi;
 
@@ -61,14 +61,14 @@ public class NPCAi {
         brain.addActivity(Activity.IDLE, getIdlePackage(1.0F));
         brain.addActivity(TEAi.Activities.STAY_HOME, getRestPackage(1.0F));
 
-        var rangeAttackPackage = getRangeAttackPackage(1.0F);
+        var rangeAttackPackage = getRangeAttackPackage(1.3F);
         if(!rangeAttackPackage.isEmpty()) {
             // 远程攻击的npc不会一直逃跑的panic
             brain.addActivity(TEAi.Activities.RANGE_ATTACK, rangeAttackPackage);
-            brain.addActivity(Activity.PANIC, getPanicPackage(1.0F));
+            brain.addActivity(Activity.PANIC, getPanicPackage(1.5F));
         }
         else {
-            brain.addActivity(Activity.PANIC, getPanicNoAttackPackage(1.0F));
+            brain.addActivity(Activity.PANIC, getPanicNoAttackPackage(1.5F));
         }
 
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
@@ -139,7 +139,7 @@ public class NPCAi {
         return ImmutableList.of(
 //                Pair.of(5, new RangeAttackStrafingBrain()),  // 不是所有远程攻击都需要走位
                 Pair.of(5, getRangeAttackBrain()),
-                Pair.of(5, new NPCRangeAttackOnCooldownBrain<>(npc.getCooldownTicks(), npc.getAttackRange())),
+                Pair.of(5, new NPCRangeAttackOnCooldownBrain<>(npc.getCooldownTicks(), npc.getAttackRange(),speedModifier)),
                 Pair.of(5, new NPCAttackCalmDownBrain<>(15))
 
         );

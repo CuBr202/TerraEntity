@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import org.confluence.terraentity.entity.npc.ITradeHolder;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 
 public record ItemTradeHealth(ItemStack cost, int health) implements IItemTrade, ITradeHealth {

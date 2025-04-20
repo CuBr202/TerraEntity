@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import org.confluence.terraentity.entity.npc.ITradeHolder;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.network.c2s.NPCShopPacket;
 import org.confluence.terraentity.registries.npc_trade.ITrade;

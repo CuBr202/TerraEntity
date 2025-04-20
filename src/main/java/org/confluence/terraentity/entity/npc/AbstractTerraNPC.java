@@ -40,12 +40,16 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
-import org.confluence.terraentity.entity.monster.Nymph;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
+import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.Mood;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
+import org.confluence.terraentity.entity.npc.mood.NPCMoods;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
+import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
@@ -68,7 +72,7 @@ import java.util.function.Predicate;
 /**
  * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
  */
-public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc , ITradeHolder{
+public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc , ITradeHolder {
 
 
     public static final Map<MemoryModuleType<GlobalPos>, BiPredicate<AbstractTerraNPC, Holder<PoiType>>> POI_MEMORIES =
@@ -79,7 +83,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             );
 
 
-    private final float moveSpeed = 0.15f;
+    private final float moveSpeed = 0.18f;
     private NPCTradeManager trades;
     public Player tradingPlayer;
     public House house = House.EMPTY;
@@ -109,6 +113,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(!level.isClientSide()){
             if(shouldInitName()){
                 initName();
+
             }
         }
 
@@ -116,7 +121,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
         this.getNavigation().setCanFloat(true);
 
-        this.setCustomNameVisible(true);
+
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
         ((GroundPathNavigation)this.getNavigation()).setCanPassDoors(true);
         if(canPerformerAttackTest == null){
@@ -133,6 +138,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(name!= null) {
             this.setCustomName(Component.literal(name));
         }
+        this.setCustomNameVisible(true);
     }
 
     /**

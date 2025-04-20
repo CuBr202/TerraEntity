@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootTable;
-import org.confluence.terraentity.entity.npc.ITradeHolder;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.IItemTrade;
 import org.confluence.terraentity.registries.npc_trade.ITradeLootTable;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;

@@ -15,7 +15,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.npc.ITradeHolder;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 
 import java.util.List;
 import java.util.Optional;

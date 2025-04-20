@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.api.event.HouseDetectEvent;
-import org.confluence.terraentity.entity.npc.NPCHouseBehaviors;
+import org.confluence.terraentity.entity.npc.brain.behavior.NPCHouseBehaviors;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.utils.AdapterUtils;
 

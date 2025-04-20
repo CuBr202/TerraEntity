@@ -13,6 +13,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * 更新npc交易的单个列表，以节省网络流量
+ */
 public class UpdateNPCTradePacket implements CustomPacketPayload {
 
     private final int index;

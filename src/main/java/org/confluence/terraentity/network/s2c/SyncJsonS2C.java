@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.npc.NPCDialogs;
+import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
 

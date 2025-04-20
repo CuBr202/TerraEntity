@@ -8,9 +8,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.NPCDialogs;
+import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.mood.MoodInfo;
-import org.confluence.terraentity.entity.npc.NPCMoods;
+import org.confluence.terraentity.entity.npc.mood.NPCMoods;
 import org.confluence.terraentity.mixed.IPlayer;
 
 public class DialogScreen extends Screen {

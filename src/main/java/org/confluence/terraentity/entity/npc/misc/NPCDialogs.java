@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc;
+package org.confluence.terraentity.entity.npc.misc;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

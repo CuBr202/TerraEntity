@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.npc.NPCTradeManager;
+import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.*;

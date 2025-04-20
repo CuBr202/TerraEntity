@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import org.confluence.terraentity.entity.npc.ITradeHolder;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
@@ -61,7 +61,4 @@ public interface ITradeTask {
             .dispatch(ITradeTask::getCodec, TradeTaskProvider::codec);
 
     StreamCodec<ByteBuf, ITradeTask> STREAM_CODEC = ByteBufCodecs.fromCodec(TYPED_CODEC);
-
-    StreamCodec<ByteBuf, List<ITradeTask>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.collection(NonNullList::createWithCapacity));
-
 }

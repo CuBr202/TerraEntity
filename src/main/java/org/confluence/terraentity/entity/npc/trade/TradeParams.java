@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc;
+package org.confluence.terraentity.entity.npc.trade;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

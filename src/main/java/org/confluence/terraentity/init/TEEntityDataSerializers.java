@@ -4,10 +4,10 @@ import net.minecraft.network.syncher.EntityDataSerializer;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.npc.TradeParams;
+import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.entity.npc.house.House;
-import org.confluence.terraentity.entity.npc.NPCTradeManager;
+import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 
 import java.util.function.Supplier;
 

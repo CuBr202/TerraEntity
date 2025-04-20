@@ -3,7 +3,7 @@ package org.confluence.terraentity.mixin;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.lib.mixed.SelfGetter;
 
-import org.confluence.terraentity.entity.npc.ITradeHolder;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc;
+package org.confluence.terraentity.entity.npc.trade;
 
 import net.minecraft.util.RandomSource;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
@@ -34,7 +34,6 @@ public interface ITradeHolder {
     /**
      * 获取交易管理器
      */
-    @Nullable
     NPCTradeManager getTradeManager();
 
     /**

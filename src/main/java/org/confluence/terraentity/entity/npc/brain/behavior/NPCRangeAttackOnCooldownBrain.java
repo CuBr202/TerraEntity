@@ -6,8 +6,8 @@ import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackOnCo
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
 public class NPCRangeAttackOnCooldownBrain<T extends AbstractTerraNPC> extends RangeAttackOnCooldownBrain<T> {
-    public NPCRangeAttackOnCooldownBrain(int cooldownTime, float attackRange) {
-        super(cooldownTime, attackRange);
+    public NPCRangeAttackOnCooldownBrain(int cooldownTime, float attackRange, float speedModifier) {
+        super(cooldownTime, attackRange, speedModifier);
     }
 
     @Override

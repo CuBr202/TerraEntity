@@ -3,7 +3,7 @@ package org.confluence.terraentity.registries.npc_trade_task.variant;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import org.confluence.terraentity.entity.npc.ITradeHolder;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTypes;

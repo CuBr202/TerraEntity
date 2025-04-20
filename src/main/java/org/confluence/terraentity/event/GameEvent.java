@@ -9,10 +9,10 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
-import org.confluence.terraentity.entity.npc.NPCDialogs;
-import org.confluence.terraentity.entity.npc.NPCMoods;
-import org.confluence.terraentity.entity.npc.NPCNames;
-import org.confluence.terraentity.entity.npc.NPCTradeManager;
+import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
+import org.confluence.terraentity.entity.npc.mood.NPCMoods;
+import org.confluence.terraentity.entity.npc.misc.NPCNames;
+import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
 import org.confluence.terraentity.utils.AdapterUtils;
 

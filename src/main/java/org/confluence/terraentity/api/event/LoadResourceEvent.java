@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.fml.event.IModBusEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,8 @@ public class LoadResourceEvent extends Event implements IModBusEvent, ICancellab
     List<ResourceLocation> files = new ArrayList<>();
     boolean replace = false;
     Type type;
-    public LoadResourceEvent(Type type){
+
+    public LoadResourceEvent(@Nullable Type type){
         this.type = type;
     }
     public Type getType(){

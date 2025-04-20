@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc;
+package org.confluence.terraentity.entity.npc.mood;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
@@ -13,8 +13,6 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EntityType;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.LoadResourceEvent;
-import org.confluence.terraentity.entity.npc.mood.Mood;
-import org.confluence.terraentity.entity.npc.mood.MoodInfo;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.Nullable;
 

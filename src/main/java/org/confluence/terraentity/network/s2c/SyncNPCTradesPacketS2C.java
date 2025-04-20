@@ -8,7 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.npc.NPCTradeManager;
+import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

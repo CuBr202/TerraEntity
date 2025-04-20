@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.mood.Mood;
 import org.confluence.terraentity.entity.npc.mood.MoodInfo;
-import org.confluence.terraentity.entity.npc.NPCMoods;
+import org.confluence.terraentity.entity.npc.mood.NPCMoods;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 
 import java.util.HashMap;

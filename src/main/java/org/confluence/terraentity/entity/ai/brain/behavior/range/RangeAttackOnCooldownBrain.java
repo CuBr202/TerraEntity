@@ -17,13 +17,15 @@ import net.minecraft.world.phys.Vec3;
 public class RangeAttackOnCooldownBrain<T extends PathfinderMob> extends Behavior<T> {
 
     float attackRange;
+    float speedModifier;
 
-    public RangeAttackOnCooldownBrain(int cooldownTime, float attackRange) {
+    public RangeAttackOnCooldownBrain(int cooldownTime, float attackRange, float speedModifier) {
         super(ImmutableMap.of(
                 MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_PRESENT,
                 MemoryModuleType.ATTACK_COOLING_DOWN, MemoryStatus.VALUE_PRESENT
                 ),cooldownTime);
         this.attackRange = attackRange;
+        this.speedModifier = speedModifier;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class RangeAttackOnCooldownBrain<T extends PathfinderMob> extends Behavio
                 }
                 if (toPos != null) {
                     // 这里注释掉就不会动了，方便观察动作
-                    owner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(toPos, 1.0f, (int) 1f));
+                    owner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(toPos, speedModifier, (int) 1f));
                 } else {
                     // debug
 //                    owner.setDeltaMovement(new Vec3(0, 0.02f, 0));

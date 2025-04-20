@@ -19,7 +19,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
-import org.confluence.terraentity.entity.npc.ITradeHolder;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.menu.TETradesMenu;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
