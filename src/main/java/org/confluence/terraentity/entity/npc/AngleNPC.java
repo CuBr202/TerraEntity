@@ -8,12 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.confluence.terraentity.registries.npc_trade.ITrade;
-import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
-import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * 渔夫：可以设置处理交易任务
@@ -59,20 +54,8 @@ public class AngleNPC extends AbstractTerraNPC {
     public void resetFishTask() {
         this.entityData.set(DATA_TIME_TO_TRADE_FISH_DATA, true);
 
-
-//        List<ITrade> trades = this.getTrades().trades();
-//        int index = 0;
-//        for(ITrade trade : trades){
-//            if(trade instanceof TradeTask task){
-//                if(task.task() instanceof DynamicAnglerTradeTask anglerTradeTask){
-//                    anglerTradeTask.setNext(this, index);
-//                }
-//            }
-//            index++;
-//        }
         syncTradeTasksParams();
-        syncTradeTasks();
-
+        this.getTrades().syncDirtyTrade();
     }
 
 

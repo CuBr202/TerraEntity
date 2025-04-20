@@ -12,20 +12,64 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.network.s2c.UpdateNPCTradePacket;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 交易清单
- * @param trades 交易列表
  */
-public record NPCTrades(List<ITrade> trades) {
+public class NPCTrades{
+
+    private final List<ITrade> trades;
+    private AbstractTerraNPC npc;
+    protected List<Integer> toBeSync = new ArrayList<>();
+
+    /**
+     * 记录需要更新的交易表
+     * @param index 交易表索引
+     */
+    public void addToBeSync(int index){
+        toBeSync.add(index);
+    }
+
+    /**
+     * 局部更新所有交易表
+     */
+    public void syncDirtyTrade(){
+        for(int index : toBeSync){
+            syncTradeTasks(index);
+        }
+        toBeSync.clear();
+    }
+
+    private void syncTradeTasks(int index){
+        if(npc != null) {
+            UpdateNPCTradePacket.syncNpcTrade(index, npc);
+        }
+    }
+
+    public NPCTrades(List<ITrade> trades) {
+        this.trades = new ArrayList<>(trades);
+    }
+
+
+    public void setOwner(AbstractTerraNPC npc) {
+        this.npc = npc;
+    }
+
+    public List<ITrade> trades() {
+        return trades;
+    }
+
+
     public static final String KEY = "npc_shop";
     public static final Codec<NPCTrades> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ITrade.TYPED_CODEC.listOf().fieldOf("trades").forGetter(NPCTrades::trades)
@@ -51,7 +95,7 @@ public record NPCTrades(List<ITrade> trades) {
      * @param id 交易表id
      */
     @Nullable
-    public static NPCTrades getTrade(ResourceLocation id) {
+    public static NPCTrades getTradeById(ResourceLocation id) {
         if(!TRADE_MAP.containsKey(id)){
             return null;
         }

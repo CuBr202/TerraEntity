@@ -51,6 +51,7 @@ import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.menu.SimpleTradeMenu;
+import org.confluence.terraentity.network.s2c.UpdateNPCTradePacket;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -61,10 +62,7 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -72,6 +70,7 @@ import java.util.function.Predicate;
  * 泰拉风格的npc，集成远程攻击，{@link NPCTrades 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
  */
 public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
+
 
     public static final Map<MemoryModuleType<GlobalPos>, BiPredicate<AbstractTerraNPC, Holder<PoiType>>> POI_MEMORIES =
             ImmutableMap.of(
@@ -86,6 +85,8 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public Player tradingPlayer;
     public House house = House.EMPTY;
     private NPCMood mood;
+
+
 
 
     private NPCAi ai;
@@ -251,26 +252,22 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
 
     /**
+     * <P>强行同步所有的交易表，当使用<b>动态交易表任务</b>的时候需要调用，保证服务器和客户端的交易表一致。
+     * <p>当数据量过大时应该采用局部更新</p>
+     */
+    public void syncTradeTasks(){
+        this.entityData.set(DATA_TRADES_DATA, this.trades, true);
+    }
+
+
+
+    /**
      * 同步心情系统
      */
     public void syncMood(){
         NPCMood mood = new NPCMood();
         mood.copyFrom(this.mood);
         this.entityData.set(DATA_MOOD, mood);
-    }
-
-
-    /**
-     * <P>同步所有的交易表，当使用<b>动态交易表任务</b>的时候需要调用，保证服务器和客户端的交易表一致。
-     *
-     */
-    public void syncTradeTasks(){
-        this.entityData.set(DATA_TRADES_DATA, this.trades, true);
-    }
-
-    // todo 优化：只在生成npc后调用一次，以后更新交易表使用局部更新
-    public void syncTradeTasks(int index){
-
     }
 
     /**
@@ -286,6 +283,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(level().isClientSide()) {
             if (DATA_TRADES_DATA.equals(key)) {
                 this.trades = this.entityData.get(DATA_TRADES_DATA);
+                this.trades.setOwner(this);
             } else if (DATA_HOUSE_DATA.equals(key)) {
                 this.house = this.entityData.get(DATA_HOUSE_DATA);
             }
@@ -313,6 +311,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             DataResult<NPCTrades> data = NPCTrades.CODEC.parse(NbtOps.INSTANCE, tag.get("te_npc_data"));
             data.result().ifPresent(npcTrades -> {
                 this.trades = npcTrades;
+                this.trades.setOwner(this);
                 this.entityData.set(DATA_TRADES_DATA, npcTrades);
             });
         }
@@ -347,6 +346,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public void tick(){
         super.tick();
         this.updateSwingTime();
+
 
 //        if(level().isClientSide){
 //            if(mood.getValue() != 100){

@@ -117,6 +117,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
         ITradeTask.super.onTrade(npc, index);
         npc.onTradeFishTask();
         npc.getTradeParams().increase(index);
+        npc.getTrades().addToBeSync(index);
     }
 
     @Override

@@ -16,6 +16,7 @@ public final class NetworkHandler {
         registrar.playToClient(SyncBossEventHealthPacket.TYPE, SyncBossEventHealthPacket.STREAM_CODEC, SyncBossEventHealthPacket::handle);
         registrar.playToClient(SyncNPCTradesPacketS2C.TYPE, SyncNPCTradesPacketS2C.STREAM_CODEC, SyncNPCTradesPacketS2C::handle);
         registrar.playToClient(SyncJsonS2C.TYPE, SyncJsonS2C.STREAM_CODEC, SyncJsonS2C::handle);
+        registrar.playToClient(UpdateNPCTradePacket.TYPE, UpdateNPCTradePacket.STREAM_CODEC, UpdateNPCTradePacket::handle);
 
         registrar.playToServer(ServerBoundVehicleExtensionPacket.TYPE, ServerBoundVehicleExtensionPacket.STREAM_CODEC, ServerBoundVehicleExtensionPacket::handle);
         registrar.playToServer(ServerBoundHousePacket.TYPE, ServerBoundHousePacket.STREAM_CODEC, ServerBoundHousePacket::handle);
