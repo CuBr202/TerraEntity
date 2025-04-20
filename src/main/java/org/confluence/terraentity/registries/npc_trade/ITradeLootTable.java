@@ -3,6 +3,7 @@ package org.confluence.terraentity.registries.npc_trade;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.Slot;
@@ -17,12 +18,15 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.confluence.terraentity.client.gui.container.TETradeScreen.MENU_LOCATION;
 
 public interface ITradeLootTable extends ITrade{
 
     ResourceKey<LootTable> lootTable();
+
+    Optional<ResourceLocation> sprite();
 
     @Override
     default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
@@ -39,8 +43,9 @@ public interface ITradeLootTable extends ITrade{
 
     @OnlyIn(Dist.CLIENT)
     default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY,int index){
-        // TODO 自定义贴图
-        guiGraphics.blitSprite(TerraEntity.space("unknown"),x,y,16,16);
+
+        ResourceLocation sprite = sprite().orElse(TerraEntity.space("unknown"));
+        guiGraphics.blitSprite(sprite,x,y,16,16);
 
     }
 
@@ -55,8 +60,8 @@ public interface ITradeLootTable extends ITrade{
     @OnlyIn(Dist.CLIENT)
     default void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot){
         if(canBuy){
-            // TODO 自定义贴图
-            guiGraphics.blitSprite(TerraEntity.space("unknown"),x+35,y+2,16,16);
+            ResourceLocation sprite = sprite().orElse(TerraEntity.space("unknown"));
+            guiGraphics.blitSprite(sprite,x+35,y+2,16,16);
             guiGraphics.blit(MENU_LOCATION,x,y,276,0,35,17,512,256);
         }else{
 

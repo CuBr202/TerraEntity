@@ -14,26 +14,31 @@ import org.confluence.terraentity.registries.npc_trade.ITradeLootTable;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;
 import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
 
+import java.util.Optional;
+
 /**
  * 战利品交易表
  * @param cost 花费的物品
  * @param lootTable 战利品掉落表
  */
-public record ItemTradeLootTable(ItemStack cost, ResourceKey<LootTable> lootTable) implements IItemTrade, ITradeLootTable {
+public record ItemTradeLootTable(ItemStack cost, ResourceKey<LootTable> lootTable, Optional<ResourceLocation> sprite) implements IItemTrade, ITradeLootTable {
 
-    public ItemTradeLootTable(ItemStack item, ResourceLocation lootTable) {
-        this(item, ResourceKey.create(Registries.LOOT_TABLE, lootTable));
+    public ItemTradeLootTable(ItemStack item, ResourceLocation lootTable, ResourceLocation sprite) {
+        this(item, ResourceKey.create(Registries.LOOT_TABLE, lootTable), Optional.ofNullable(sprite));
     }
 
     public static MapCodec<ItemTradeLootTable> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemStack.CODEC.fieldOf("item").forGetter(ItemTradeLootTable::cost),
-            ResourceLocation.CODEC.fieldOf("loot_table").forGetter(i->i.lootTable().location())
-    ).apply(instance, ItemTradeLootTable::new));
+            ResourceLocation.CODEC.fieldOf("loot_table").forGetter(i->i.lootTable().location()),
+            ResourceLocation.CODEC.optionalFieldOf("sprite").forGetter(ItemTradeLootTable::sprite)
+    ).apply(instance, (item, lootTable, sprite)->new ItemTradeLootTable(item, ResourceKey.create(Registries.LOOT_TABLE, lootTable), sprite)));
 
-    public static ItemTradeLootTable of(ItemStack item, ResourceLocation lootTable) {
-        return new ItemTradeLootTable(item, lootTable);
+    public static ItemTradeLootTable of(ItemStack item, ResourceLocation lootTable, ResourceLocation sprite) {
+        return new ItemTradeLootTable(item, lootTable, sprite);
     }
-
+    public static ItemTradeLootTable of(ItemStack item, ResourceLocation lootTable) {
+        return of(item, lootTable, null);
+    }
 
 
     @Override

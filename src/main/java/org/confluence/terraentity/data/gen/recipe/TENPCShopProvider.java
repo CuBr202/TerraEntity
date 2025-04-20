@@ -101,7 +101,10 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
                 )))
 
                 .add(TradeTask.create(new DynamicAnglerTradeTask(
-                        ItemTradeLootTable.of(Items.APPLE.getDefaultInstance(), TerraEntity.fromSpaceAndPath("minecraft", "entities/zombie")),
+                        ItemTradeLootTable.of(
+                                Items.APPLE.getDefaultInstance(),
+                                TerraEntity.fromSpaceAndPath("minecraft", "entities/zombie"),
+                                TerraEntity.space("random_gift")),
                         Map.of(
                                 1, List.of(Items.DIAMOND.getDefaultInstance(), Items.EMERALD.getDefaultInstance()),
                                 3, List.of(Items.ICE.getDefaultInstance(), Items.EMERALD.getDefaultInstance())

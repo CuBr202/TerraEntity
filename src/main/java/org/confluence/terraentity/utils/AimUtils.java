@@ -11,39 +11,39 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Aim UtilsµÄ×÷ÓÃÊÇ¸ù¾İ ÊµÌåµÄÎ»ÖÃ/Ô¤ÅĞÉä³öµÄÎ»ÖÃ£¬ÒªÔ¤ÅĞµÄÊµÌåÒÔ¼°Ô¤ÅĞµÄÉèÖÃ ½øĞĞÔ¤ÅĞ <br>
- * ×¢Òâ£º±¾ÀàµÄ·µ»ØÖµÊÇÃé×¼µÄËÙ¶È£»Ïê¼û¸÷²¿·ÖµÄdocs¡£
+ * Aim Utilsçš„ä½œç”¨æ˜¯æ ¹æ® å®ä½“çš„ä½ç½®/é¢„åˆ¤å°„å‡ºçš„ä½ç½®ï¼Œè¦é¢„åˆ¤çš„å®ä½“ä»¥åŠé¢„åˆ¤çš„è®¾ç½® è¿›è¡Œé¢„åˆ¤ <br>
+ * æ³¨æ„ï¼šæœ¬ç±»çš„è¿”å›å€¼æ˜¯ç„å‡†çš„é€Ÿåº¦ï¼›è¯¦è§å„éƒ¨åˆ†çš„docsã€‚
  */
 public class AimUtils {
-    public static int MAX_TICKS = 60; // µ¯µÀÔ¤ÅĞ×î³¤Ê±¼ä£¬µ¥Î»£º¿Ì
+    public static int MAX_TICKS = 60; // å¼¹é“é¢„åˆ¤æœ€é•¿æ—¶é—´ï¼Œå•ä½ï¼šåˆ»
 
     /**
-     * Ô¤ÅĞµÄÉèÖÃ£»¿É¶ÔÓÚÒ»ÀàÔ¤ÅĞÀàĞÍÍ¨ÓÃ£¨×¢£º²»Í¬¹­¼ıÖ®¼äµÄËÙ¶È¡¢¼ÓËÙ¶ÈµÈ¿ÉÄÜÓĞÏ¸Î¢²î±ğ£¬×¢ÒâÕç±ğ£©<br>
-     * ×¢Òâ£ºticksMonsterExtraµÄÓÃ·¨ÒªÈ¡¾öÓÚÊ¹ÓÃ°¸Àı¡£ÈôÊÇÍæ¼Ò·¢Éäµ¯Ä»Ôòµ¯Ä»·¢Éäºó»á±»µ÷ÓÃÒ»´Îtick£»
-     * ÈôÊÇÒ¶ÂÌ¼ı×²Ç½µ¯»ØÔò±»Ô¤ÅĞµÄ¹ÖÎïÏàµ±ÓÚ¶àÁËÒ»´ÎÒÆ¶¯tick£¬´ËÊ±½¨Òé½«ticksMonsterExtraÉèÎª1£¨×¢£ºÀÏÑòÔÚ1.12.2µÄ¹Û²ìËùµÃ£»ÒÔ¶Ô¸ßËÙµ¥Î»µÄÊµ¼ù¾­ÑéÎª×¼£©¡£ <br>
-     * ½¨ÒéÔÚÔ¤ÅĞ²»¾«×¼Ê±£¬È·ÈÏ¼ıÊ¸µÄÖØÁ¦¼ÓËÙ¶È/ËÙ¶È³ËÊı/ÆğÊ¼ËÙ¶È ±»ÕıÈ·ÉèÖÃ£¬¶øºó¿¼ÂÇµ÷ÕûticksMonsterExtra¡£
+     * é¢„åˆ¤çš„è®¾ç½®ï¼›å¯å¯¹äºä¸€ç±»é¢„åˆ¤ç±»å‹é€šç”¨ï¼ˆæ³¨ï¼šä¸åŒå¼“ç®­ä¹‹é—´çš„é€Ÿåº¦ã€åŠ é€Ÿåº¦ç­‰å¯èƒ½æœ‰ç»†å¾®å·®åˆ«ï¼Œæ³¨æ„ç”„åˆ«ï¼‰<br>
+     * æ³¨æ„ï¼šticksMonsterExtraçš„ç”¨æ³•è¦å–å†³äºä½¿ç”¨æ¡ˆä¾‹ã€‚è‹¥æ˜¯ç©å®¶å‘å°„å¼¹å¹•åˆ™å¼¹å¹•å‘å°„åä¼šè¢«è°ƒç”¨ä¸€æ¬¡tickï¼›
+     * è‹¥æ˜¯å¶ç»¿ç®­æ’å¢™å¼¹å›åˆ™è¢«é¢„åˆ¤çš„æ€ªç‰©ç›¸å½“äºå¤šäº†ä¸€æ¬¡ç§»åŠ¨tickï¼Œæ­¤æ—¶å»ºè®®å°†ticksMonsterExtraè®¾ä¸º1ï¼ˆæ³¨ï¼šè€ç¾Šåœ¨1.12.2çš„è§‚å¯Ÿæ‰€å¾—ï¼›ä»¥å¯¹é«˜é€Ÿå•ä½çš„å®è·µç»éªŒä¸ºå‡†ï¼‰ã€‚ <br>
+     * å»ºè®®åœ¨é¢„åˆ¤ä¸ç²¾å‡†æ—¶ï¼Œç¡®è®¤ç®­çŸ¢çš„é‡åŠ›åŠ é€Ÿåº¦/é€Ÿåº¦ä¹˜æ•°/èµ·å§‹é€Ÿåº¦ è¢«æ­£ç¡®è®¾ç½®ï¼Œè€Œåè€ƒè™‘è°ƒæ•´ticksMonsterExtraã€‚
      */
     public static class AimHelperOptions {
-        double projectileGravity = 0.05d, // ¼ıÊ¸µÄÖØÁ¦¼ÓËÙ¶È
-                projectileSpeed = 0d, // ¼ıÊ¸µÄÆğÊ¼ËÙ¶È£»**ĞèÒªÉèÖÃ£¡**
-                projectileSpeedMax = 99d, // ¼ıÊ¸×î´óËÙ¶È£¨½ö£º¶ñÄ§³úµ¶µÈ¼ÓËÙµ¯Ä»£©
-                projectileSpeedMulti = 0.99d, // ¼ıÊ¸Ã¿¿ÌËÙ¶È³ËÊı
-                randomOffsetRadius = 0d, // ×·×ÙÎ»ÖÃµÄËæ»úÆ«ÒÆ£¬µ¥Î»£º¸ñ
-                ticksTotal = 10, // ÈôÔ¤ÅĞ·½°¸Îª¹Ì¶¨tick£¨MC¿Ì£©£¬ÔòÔ¤ÅĞÊµÌåÔÚ´ËÊ±¼äºóµÄÎ»ÖÃ¡£
-                ticksMonsterExtra = 0; // ¸ù¾İMCÊµÌåtickµÄÏÈºóË³Ğò£¬ÓĞÊ±¹ÖÎï»á¶à³öÒ»´ÎÒÆ¶¯tick£¬´ËÊ±½«ÆäÉèÎª1
+        double projectileGravity = 0.05d, // ç®­çŸ¢çš„é‡åŠ›åŠ é€Ÿåº¦
+                projectileSpeed = 0d, // ç®­çŸ¢çš„èµ·å§‹é€Ÿåº¦ï¼›**éœ€è¦è®¾ç½®ï¼**
+                projectileSpeedMax = 99d, // ç®­çŸ¢æœ€å¤§é€Ÿåº¦ï¼ˆä»…ï¼šæ¶é­”é”„åˆ€ç­‰åŠ é€Ÿå¼¹å¹•ï¼‰
+                projectileSpeedMulti = 0.99d, // ç®­çŸ¢æ¯åˆ»é€Ÿåº¦ä¹˜æ•°
+                randomOffsetRadius = 0d, // è¿½è¸ªä½ç½®çš„éšæœºåç§»ï¼Œå•ä½ï¼šæ ¼
+                ticksTotal = 10, // è‹¥é¢„åˆ¤æ–¹æ¡ˆä¸ºå›ºå®štickï¼ˆMCåˆ»ï¼‰ï¼Œåˆ™é¢„åˆ¤å®ä½“åœ¨æ­¤æ—¶é—´åçš„ä½ç½®ã€‚
+                ticksMonsterExtra = 0; // æ ¹æ®MCå®ä½“tickçš„å…ˆåé¡ºåºï¼Œæœ‰æ—¶æ€ªç‰©ä¼šå¤šå‡ºä¸€æ¬¡ç§»åŠ¨tickï¼Œæ­¤æ—¶å°†å…¶è®¾ä¸º1
         boolean useAcceleration = false, useTickEstimation = false;
-        int epoch = 5, // ¶Ôµ¯µÀÔ¤ÅĞµÄ±Æ½üÑ­»·´ÎÊıÉÏÏŞ£¨ÊÕÁ²Ê±»áÌáÇ°½áÊø£©
-                noGravityTicks = 0; // Èôµ¯Ä»Ç°¼¸tickÎŞÖØÁ¦Ó°Ïì£¬Çë¸üĞÂ´ËÌØĞÔ¡£
-        // µĞÈË¼ÓËÙ¶ÈµÄ¶îÍâÆ«ÒÆÁ¿
+        int epoch = 5, // å¯¹å¼¹é“é¢„åˆ¤çš„é€¼è¿‘å¾ªç¯æ¬¡æ•°ä¸Šé™ï¼ˆæ”¶æ•›æ—¶ä¼šæå‰ç»“æŸï¼‰
+                noGravityTicks = 0; // è‹¥å¼¹å¹•å‰å‡ tickæ— é‡åŠ›å½±å“ï¼Œè¯·æ›´æ–°æ­¤ç‰¹æ€§ã€‚
+        // æ•ŒäººåŠ é€Ÿåº¦çš„é¢å¤–åç§»é‡
         Vec3 accelerationOffset = new Vec3(0, 0, 0);
-        // ¹¹ÔìÆ÷
+        // æ„é€ å™¨
         public AimHelperOptions() {
             super();
         }
-        // ¹¹ÔìÆ÷ - ¿ÉºóĞøµ÷Õû£»¶ÔÓÚÌØÊâµÄµ¯ÉäÎïÀàĞÍ×ÃÇéÉèÖÃÖØÁ¦¡¢ËÙ¶È³ËÊıĞÅÏ¢
+        // æ„é€ å™¨ - å¯åç»­è°ƒæ•´ï¼›å¯¹äºç‰¹æ®Šçš„å¼¹å°„ç‰©ç±»å‹é…Œæƒ…è®¾ç½®é‡åŠ›ã€é€Ÿåº¦ä¹˜æ•°ä¿¡æ¯
         public AimHelperOptions(Projectile projectile) {
             this();
-            // TODO ÍêÉÆ´Ë´¦£¬Ê¹¹¹ÔìÆ÷ÊµÏÖµÄĞ§¹ûÓëµ¯Ä»±¾ÉíÒ»ÖÂ
+            // TODO å®Œå–„æ­¤å¤„ï¼Œä½¿æ„é€ å™¨å®ç°çš„æ•ˆæœä¸å¼¹å¹•æœ¬èº«ä¸€è‡´
             setProjectileGravity(projectile.getGravity());
         }
 
@@ -106,20 +106,20 @@ public class AimUtils {
     }
 
     /**
-     * È¡µÃÊµÌåµÄËÙ¶ÈÓÃÀ´½øĞĞÔ¤ÅĞ¡£
-     * TODO£ºÎ´À´½øĞĞbossÔ¤ÅĞ³å´ÌÊ±£¬Íæ¼ÒµÄËÙ¶È¿ÉÄÜĞèÒªÌØÊâ´¦Àí¡£
-     * @param entity Òª¼ÆËãµÄÊµÌå
-     * @return ÊµÌåµÄËÙ¶È
+     * å–å¾—å®ä½“çš„é€Ÿåº¦ç”¨æ¥è¿›è¡Œé¢„åˆ¤ã€‚
+     * TODOï¼šæœªæ¥è¿›è¡Œbossé¢„åˆ¤å†²åˆºæ—¶ï¼Œç©å®¶çš„é€Ÿåº¦å¯èƒ½éœ€è¦ç‰¹æ®Šå¤„ç†ã€‚
+     * @param entity è¦è®¡ç®—çš„å®ä½“
+     * @return å®ä½“çš„é€Ÿåº¦
      */
     private static Vec3 getEntityVelocity(Entity entity) {
         return entity.getDeltaMovement();
     }
 
     /**
-     * È¡µÃÊµÌåµÄ¼ÓËÙ¶ÈÓÃÀ´½øĞĞÔ¤ÅĞ¡£
-     * TODO£ºĞèÒªÃÔĞÅÒ»ÏÂÀ´ÈÃÊµÌåÀà´æ´¢ÉÏÒ»¿ÌµÄËÙ¶ÈÓÃÒÔ¼ÆËã¼ÓËÙ¶È¡£
-     * @param entity Òª¼ÆËãµÄÊµÌå
-     * @return ÊµÌåµÄ¼ÓËÙ¶È
+     * å–å¾—å®ä½“çš„åŠ é€Ÿåº¦ç”¨æ¥è¿›è¡Œé¢„åˆ¤ã€‚
+     * TODOï¼šéœ€è¦è¿·ä¿¡ä¸€ä¸‹æ¥è®©å®ä½“ç±»å­˜å‚¨ä¸Šä¸€åˆ»çš„é€Ÿåº¦ç”¨ä»¥è®¡ç®—åŠ é€Ÿåº¦ã€‚
+     * @param entity è¦è®¡ç®—çš„å®ä½“
+     * @return å®ä½“çš„åŠ é€Ÿåº¦
      */
     private static Vec3 getEntityAcceleration(Entity entity) {
         // TODO: Mixin this...
@@ -130,46 +130,46 @@ public class AimUtils {
 
 
     /**
-     * Ô¤²âÊµÌåÔÚÒ»¶¨tickºóµÄÎ»ÖÃ£»×¢Òâ£¬±¾·½·¨·µ»ØÎ»ÖÃ¶ø·ÇËÙ¶È¡£
-     * @param target Ô¤ÅĞµÄÊµÌå
-     * @param enemyVel ÊµÌåµÄËÙ¶È
-     * @param enemyAcc ÊµÌåµÄ¼ÓËÙ¶È£»²»Ê¹ÓÃ¼ÓËÙ¶ÈÔòÉèÎª(0,0,0)
-     * @param ticksMonsterMovement Ô¤ÅĞÊ±³¤
-     * @param physics ÊÇ·ñ¼ÆËã·½¿éÅö×²
-     * @return Ô¤ÅĞ½á¹ûÎ»ÖÃ
+     * é¢„æµ‹å®ä½“åœ¨ä¸€å®štickåçš„ä½ç½®ï¼›æ³¨æ„ï¼Œæœ¬æ–¹æ³•è¿”å›ä½ç½®è€Œéé€Ÿåº¦ã€‚
+     * @param target é¢„åˆ¤çš„å®ä½“
+     * @param enemyVel å®ä½“çš„é€Ÿåº¦
+     * @param enemyAcc å®ä½“çš„åŠ é€Ÿåº¦ï¼›ä¸ä½¿ç”¨åŠ é€Ÿåº¦åˆ™è®¾ä¸º(0,0,0)
+     * @param ticksMonsterMovement é¢„åˆ¤æ—¶é•¿
+     * @param physics æ˜¯å¦è®¡ç®—æ–¹å—ç¢°æ’
+     * @return é¢„åˆ¤ç»“æœä½ç½®
      */
     public static Vec3 predictEntityPositionAfter(Entity target, Vec3 enemyVel, Vec3 enemyAcc, int ticksMonsterMovement, boolean physics) {
         Vec3 predictedLoc = target.getBoundingBox().getCenter();
-        // ËÙ¶Èµ¼ÖÂµÄÎ»ÒÆ
+        // é€Ÿåº¦å¯¼è‡´çš„ä½ç§»
         predictedLoc = predictedLoc.add(enemyVel.scale(ticksMonsterMovement));
-        // ¼ÓËÙ¶Èµ¼ÖÂµÄÎ»ÒÆ
-        // µÚÒ»¿ÌµÄ¼ÓËÙ¶ÈÓ°ÏìÊ£Óàn-1¿Ì£»µÚ¶ş¿ÌÓ°ÏìÊ£Óàn-2£¬ÒÔ´ËÀàÍÆ
-        // ¼´£¬¼ÓËÙ¶Èµ¼ÖÂµÄÎ»ÒÆÎª£ºsum(1, 2, ..., n-2, n-1) = n(n-1) / 2
+        // åŠ é€Ÿåº¦å¯¼è‡´çš„ä½ç§»
+        // ç¬¬ä¸€åˆ»çš„åŠ é€Ÿåº¦å½±å“å‰©ä½™n-1åˆ»ï¼›ç¬¬äºŒåˆ»å½±å“å‰©ä½™n-2ï¼Œä»¥æ­¤ç±»æ¨
+        // å³ï¼ŒåŠ é€Ÿåº¦å¯¼è‡´çš„ä½ç§»ä¸ºï¼šsum(1, 2, ..., n-2, n-1) = n(n-1) / 2
         double accFactor = ticksMonsterMovement * (ticksMonsterMovement - 1) / 2d;
         predictedLoc = predictedLoc.add(enemyAcc.scale(accFactor));
-        // ·½¿éÅö×²Âß¼­£»×²µ½·½¿éÊ±ËÙ¶ÈµÄÏàÓ¦·½Ïò¸ÄÎª0
+        // æ–¹å—ç¢°æ’é€»è¾‘ï¼›æ’åˆ°æ–¹å—æ—¶é€Ÿåº¦çš„ç›¸åº”æ–¹å‘æ”¹ä¸º0
         if ( physics ) {
             Vec3 loopBeginLoc = target.position().add(0, 1e-5, 0);
             Vec3 loopEndLoc = predictedLoc;
             Level level = target.level();
-            // ×î¶à¼ÆËã3´ÎÅö×²£¨Èı´ÎºóX,Y,ZËÙ¶È¶¼Îª0£©
+            // æœ€å¤šè®¡ç®—3æ¬¡ç¢°æ’ï¼ˆä¸‰æ¬¡åX,Y,Zé€Ÿåº¦éƒ½ä¸º0ï¼‰
             for (int blockCheckIdx = 0; blockCheckIdx < 3; blockCheckIdx ++) {
-                // ÆğÊ¼½áÊøÎ»ÖÃ·Ç³£Ïà½üÊ±ÌáÇ°½áÊøÑ­»·
+                // èµ·å§‹ç»“æŸä½ç½®éå¸¸ç›¸è¿‘æ—¶æå‰ç»“æŸå¾ªç¯
                 if (loopBeginLoc.distanceToSqr(loopEndLoc) < 1e-5)
                     break;
                 BlockHitResult blockCollInfo = level.clip(new ClipContext(loopBeginLoc, loopEndLoc, net.minecraft.world.level.ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, target));
-                // ÎŞ·½¿éÅö×²£¬½áÊøÑ­»·
+                // æ— æ–¹å—ç¢°æ’ï¼Œç»“æŸå¾ªç¯
                 if (blockCollInfo.getType() == HitResult.Type.MISS)
                     break;
 
-                // ·½¿éÅö×²£¬¸üĞÂËÙ¶È
+                // æ–¹å—ç¢°æ’ï¼Œæ›´æ–°é€Ÿåº¦
                 Direction collDir = blockCollInfo.getDirection();
-                // ÏòÅö×²·½Ïò¶Ô²àÂÔÎ¢ÒÆ¶¯·ÀÖ¹¸¡µãÊı¾«¶ÈÎÊÌâÔì³ÉµÄºóĞø´íÎóÅö×²¼ì²â
+                // å‘ç¢°æ’æ–¹å‘å¯¹ä¾§ç•¥å¾®ç§»åŠ¨é˜²æ­¢æµ®ç‚¹æ•°ç²¾åº¦é—®é¢˜é€ æˆçš„åç»­é”™è¯¯ç¢°æ’æ£€æµ‹
                 loopBeginLoc = blockCollInfo.getLocation().add(
                         new Vec3(collDir.getStepX(), collDir.getStepY(), collDir.getStepZ()).scale(0.1));
                 Vec3 updatedMoveDir = loopEndLoc.subtract(loopBeginLoc);
                 updatedMoveDir = updatedMoveDir.with(collDir.getAxis(), 0);
-                // ¸ù¾İĞÂËÙ¶È¸üĞÂÎ»ÖÃ
+                // æ ¹æ®æ–°é€Ÿåº¦æ›´æ–°ä½ç½®
                 loopEndLoc = loopBeginLoc.add(updatedMoveDir);
             }
         }
@@ -178,12 +178,12 @@ public class AimUtils {
 
 
     /**
-     * Ãé×¼ÊµÌåºó·µ»Øµ¯Ä»Éä³öµÄËÙ¶ÈÏòÁ¿£»Ê¹ÓÃsourceµÄeyePositionÎªÆğÊ¼Î»ÖÃ¡£<br>
-     * ×¢Òâ£¬±¾·½·¨·µ»ØµÄÊÇËÙ¶ÈÏòÁ¿¡£
-     * @param source Éä³öµ¯Ä»µÄÊµÌå
-     * @param target ±»Ãé×¼µÄÊµÌå
-     * @param aimHelperOption Ãé×¼µÄĞÅÏ¢
-     * @return Ô¤ÅĞµÄµ¯Ä»ËÙ¶ÈÏòÁ¿
+     * ç„å‡†å®ä½“åè¿”å›å¼¹å¹•å°„å‡ºçš„é€Ÿåº¦å‘é‡ï¼›ä½¿ç”¨sourceçš„eyePositionä¸ºèµ·å§‹ä½ç½®ã€‚<br>
+     * æ³¨æ„ï¼Œæœ¬æ–¹æ³•è¿”å›çš„æ˜¯é€Ÿåº¦å‘é‡ã€‚
+     * @param source å°„å‡ºå¼¹å¹•çš„å®ä½“
+     * @param target è¢«ç„å‡†çš„å®ä½“
+     * @param aimHelperOption ç„å‡†çš„ä¿¡æ¯
+     * @return é¢„åˆ¤çš„å¼¹å¹•é€Ÿåº¦å‘é‡
      */
     public static Vec3 helperAimEntity(Entity source, Entity target, AimHelperOptions aimHelperOption) {
         Vec3 shootLoc = source.getEyePosition();
@@ -191,23 +191,23 @@ public class AimUtils {
     }
 
     /**
-     * Ãé×¼ÊµÌåºó·µ»Øµ¯Ä»Éä³öµÄËÙ¶ÈÏòÁ¿£»Ê¹ÓÃ×Ô¶¨ÒåµÄÆğÊ¼Î»ÖÃ¡£<br>
-     * ×¢Òâ£¬±¾·½·¨·µ»ØµÄÊÇËÙ¶ÈÏòÁ¿¡£
-     * @param shootLoc Éä³öµ¯Ä»µÄÎ»ÖÃ
-     * @param target ±»Ãé×¼µÄÊµÌå
-     * @param aimHelperOption Ãé×¼µÄĞÅÏ¢
-     * @return Ô¤ÅĞµÄµ¯Ä»ËÙ¶ÈÏòÁ¿
+     * ç„å‡†å®ä½“åè¿”å›å¼¹å¹•å°„å‡ºçš„é€Ÿåº¦å‘é‡ï¼›ä½¿ç”¨è‡ªå®šä¹‰çš„èµ·å§‹ä½ç½®ã€‚<br>
+     * æ³¨æ„ï¼Œæœ¬æ–¹æ³•è¿”å›çš„æ˜¯é€Ÿåº¦å‘é‡ã€‚
+     * @param shootLoc å°„å‡ºå¼¹å¹•çš„ä½ç½®
+     * @param target è¢«ç„å‡†çš„å®ä½“
+     * @param aimHelperOption ç„å‡†çš„ä¿¡æ¯
+     * @return é¢„åˆ¤çš„å¼¹å¹•é€Ÿåº¦å‘é‡
      */
     public static Vec3 helperAimEntity(Vec3 shootLoc, Entity target, AimHelperOptions aimHelperOption) {
-        // È·±£ÔÚËÙ¶ÈÃ»ÓĞ±»³õÊ¼»¯Ê±Å×³ö´íÎó
+        // ç¡®ä¿åœ¨é€Ÿåº¦æ²¡æœ‰è¢«åˆå§‹åŒ–æ—¶æŠ›å‡ºé”™è¯¯
         assert aimHelperOption.projectileSpeed != 0d;
 
-        // ³õÊ¼»¯µĞÈËµÄËÙ¶È/¼ÓËÙ¶È/Î»ÖÃ
+        // åˆå§‹åŒ–æ•Œäººçš„é€Ÿåº¦/åŠ é€Ÿåº¦/ä½ç½®
         Vec3 enemyVel = getEntityVelocity(target);
         Vec3 enemyAcc = getEntityAcceleration(target);
-        enemyAcc = enemyAcc.add(aimHelperOption.accelerationOffset); // ¼ÓËÙ¶ÈÆ«ÒÆÁ¿
+        enemyAcc = enemyAcc.add(aimHelperOption.accelerationOffset); // åŠ é€Ÿåº¦åç§»é‡
         Vec3 targetLoc = target.getBoundingBox().getCenter();
-        // Ëæ»úÆ«ÒÆÏòÁ¿
+        // éšæœºåç§»å‘é‡
         double randomOffset = aimHelperOption.randomOffsetRadius;
         Vec3 offsetDir = new Vec3(0, 0, 0);
         if (randomOffset > 1e-5) {
@@ -217,9 +217,9 @@ public class AimUtils {
                     Math.random() * randomOffset - randomOffsetHalved);
         }
 
-        // Ô¤²âµÄÎ»ÖÃ
+        // é¢„æµ‹çš„ä½ç½®
         Vec3 predictedLoc = targetLoc;
-        // ²»Òª¶Ô´©Ç½/×ø¿ó³µµÄµĞÈËÔ¤ÅĞ·½¿éÅö×²
+        // ä¸è¦å¯¹ç©¿å¢™/åçŸ¿è½¦çš„æ•Œäººé¢„åˆ¤æ–¹å—ç¢°æ’
         boolean checkBlockColl;
         Entity targetMount = target.getVehicle();
         if (targetMount == null)
@@ -230,57 +230,57 @@ public class AimUtils {
 
         double ticksElapse = Math.floor(targetLoc.distanceTo(shootLoc) / aimHelperOption.projectileSpeed);
         double lastTicksOffset;
-        // ÔÚÖÁ¶àepoch´ÎÑ­»·±Æ½üÖĞÊÔÍ¼Ñ°ÕÒµĞÈË±»µ¯Ä»»÷ÖĞµÄÎ»ÖÃ
+        // åœ¨è‡³å¤šepochæ¬¡å¾ªç¯é€¼è¿‘ä¸­è¯•å›¾å¯»æ‰¾æ•Œäººè¢«å¼¹å¹•å‡»ä¸­çš„ä½ç½®
         for (int currEpoch = 0; currEpoch < aimHelperOption.epoch; currEpoch ++) {
-            // ¼ÆËãµĞÈËÒÆ¶¯µÄ¿ÌÊı
+            // è®¡ç®—æ•Œäººç§»åŠ¨çš„åˆ»æ•°
             double ticksMonsterMovement = ticksElapse + aimHelperOption.ticksMonsterExtra;
-            // ¸üĞÂµĞÈËÎ»ÖÃÔ¤ÅĞ
+            // æ›´æ–°æ•Œäººä½ç½®é¢„åˆ¤
             predictedLoc = predictEntityPositionAfter(target, enemyVel, enemyAcc, (int) ticksMonsterMovement, checkBlockColl);
             predictedLoc = predictedLoc.add(offsetDir);
-            // µ¯Ä»ÖØÁ¦ - Èôµ¯Ä»Ç°¼¸tickÎŞÖØÁ¦¼ÇµÃ¸ü¸Äoption£»noGravityTicksÄ¬ÈÏÎª0¡£
-            // ÎªÁË¼ÆËã¼òµ¥£¬µ¯Ä»ÏÂ×¹µÈĞ§ÓÚµĞÈËÉÏ¸¡¡£
+            // å¼¹å¹•é‡åŠ› - è‹¥å¼¹å¹•å‰å‡ tickæ— é‡åŠ›è®°å¾—æ›´æ”¹optionï¼›noGravityTicksé»˜è®¤ä¸º0ã€‚
+            // ä¸ºäº†è®¡ç®—ç®€å•ï¼Œå¼¹å¹•ä¸‹å ç­‰æ•ˆäºæ•Œäººä¸Šæµ®ã€‚
             if (ticksElapse >= aimHelperOption.noGravityTicks) {
-                // ÔËËãÂß¼­¼ûpredictEntityPositionAfter¡£
+                // è¿ç®—é€»è¾‘è§predictEntityPositionAfterã€‚
                 predictedLoc = predictedLoc.add(new Vec3(0,
                         (ticksElapse - aimHelperOption.noGravityTicks + 1) * (ticksElapse - aimHelperOption.noGravityTicks + 2)
                                 * aimHelperOption.projectileGravity / 2d, 0));
             }
 
-            // ¸üĞÂ¶Ô»÷ÖĞËùĞèÊ±¼äµÄÔ¤ÅĞ
+            // æ›´æ–°å¯¹å‡»ä¸­æ‰€éœ€æ—¶é—´çš„é¢„åˆ¤
             lastTicksOffset = ticksElapse;
             if (aimHelperOption.useTickEstimation)
                 ticksElapse = aimHelperOption.ticksTotal;
             else {
                 double distance = predictedLoc.distanceTo(shootLoc), currSpd = aimHelperOption.projectileSpeed;
-                // µ¯µÀËÙ¶Èºã¶¨
+                // å¼¹é“é€Ÿåº¦æ’å®š
                 if (aimHelperOption.projectileSpeedMulti == 1) {
                     ticksElapse = distance / currSpd;
                 }
-                // µ¯µÀ´æÔÚËÙ¶È±¶ÂÊ
+                // å¼¹é“å­˜åœ¨é€Ÿåº¦å€ç‡
                 else {
                     ticksElapse = 0;
                     double distTraveled = 0;
-                    // µ¯Ä»ËÙ¶Èµİ¼õÊ±±ÜÃâÎŞÏŞÑ­»·µÄ¿ÉÄÜĞÔ
+                    // å¼¹å¹•é€Ÿåº¦é€’å‡æ—¶é¿å…æ— é™å¾ªç¯çš„å¯èƒ½æ€§
                     while (distTraveled < distance && (aimHelperOption.projectileSpeedMulti >= 1d || ticksElapse < MAX_TICKS)) {
                         ticksElapse ++;
                         distTraveled += currSpd;
                         currSpd *= aimHelperOption.projectileSpeedMulti;
-                        // µ¯Ä»¼ÓËÙ£¨Èç¶ñÄ§³úµ¶£©´ïµ½×î´óËÙ¶Èºó°´ÕÕÔÈËÙÒÆ¶¯¼ÆËã
+                        // å¼¹å¹•åŠ é€Ÿï¼ˆå¦‚æ¶é­”é”„åˆ€ï¼‰è¾¾åˆ°æœ€å¤§é€Ÿåº¦åæŒ‰ç…§åŒ€é€Ÿç§»åŠ¨è®¡ç®—
                         if (currSpd > aimHelperOption.projectileSpeedMax) {
                             ticksElapse += (distance - distTraveled) / aimHelperOption.projectileSpeedMax;
                             break;
                         }
                     }
                 }
-                // µ¯µÀÔ¤ÅĞ¹ı¾Ã»áÍ½Ôö¹¤×÷Á¿ÇÒÔ¤ÅĞ²»¿ÉÄÜ×¼È·£»ÉèÖÃÉÏÏŞ¡£
+                // å¼¹é“é¢„åˆ¤è¿‡ä¹…ä¼šå¾’å¢å·¥ä½œé‡ä¸”é¢„åˆ¤ä¸å¯èƒ½å‡†ç¡®ï¼›è®¾ç½®ä¸Šé™ã€‚
                 ticksElapse = Math.min( Math.floor(ticksElapse),  MAX_TICKS );
             }
 
-            // Ô¤ÅĞËùĞèÊ±¼äÓëÉÏÒ»´ÎÑ­»·ÏàÍ¬£¬¼´ÒÑÊÕÁ²¡£
+            // é¢„åˆ¤æ‰€éœ€æ—¶é—´ä¸ä¸Šä¸€æ¬¡å¾ªç¯ç›¸åŒï¼Œå³å·²æ”¶æ•›ã€‚
             if (lastTicksOffset == ticksElapse)
                 break;
         }
-        // ×ª»»Îªµ¯Ä»ËÙ¶È
+        // è½¬æ¢ä¸ºå¼¹å¹•é€Ÿåº¦
         return TEUtils.getDirection(shootLoc, predictedLoc, aimHelperOption.projectileSpeed);
     }
 }

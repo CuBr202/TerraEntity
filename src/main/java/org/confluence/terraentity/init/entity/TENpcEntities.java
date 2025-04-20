@@ -39,7 +39,7 @@ public class TENpcEntities {
     /**
      * 渔夫
      */
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ANGLER = TEEntities.registerEntity("angler", AngleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ANGLER = TEEntities.registerEntity("angler", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
 //    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> FEMALE_ANGLER = TEEntities.registerEntity("", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
      * 树妖

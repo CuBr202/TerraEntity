@@ -51,7 +51,6 @@ import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.menu.SimpleTradeMenu;
-import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -86,20 +85,21 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
     private NPCTrades trades;
     public Player tradingPlayer;
     public House house = House.EMPTY;
-    private NPCAi ai;
-    private float rangeDistance = 8;
-    private Predicate<AbstractTerraNPC> canPerformerAttackTest;
-    public int selectTradeIndex = 0;
-
-    public int cooldownTick = 0;
-    private int _cooldownTicks;
-
     private NPCMood mood;
 
 
-    private static final EntityDataAccessor<NPCTrades> DATA_DAVE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADES_SERIALIZER.get());
-    private static final EntityDataAccessor<House> DATA_HOUSE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_HOUSE_SERIALIZER.get());
+    private NPCAi ai;
+    private float rangeDistance = 8; // 远程攻击范围
+    private Predicate<AbstractTerraNPC> canPerformerAttackTest;
+    public int selectTradeIndex = 0; // 用于客户端方便获得选择的交易项
+
+    public int cooldownTick = 0; // 攻击冷却时间
+    private int _cooldownTicks;
+
+
     private static final EntityDataAccessor<Boolean> DATA_RANGE_ATTACK_COOLDOWN = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<NPCTrades> DATA_TRADES_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADES_SERIALIZER.get());
+    private static final EntityDataAccessor<House> DATA_HOUSE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_HOUSE_SERIALIZER.get());
     private static final EntityDataAccessor<NPCMood> DATA_MOOD = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_MOOD_SERIALIZER.get());
     private static final EntityDataAccessor<TradeParams> DATA_TRADE_PARAMS = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADE_PARAMS_SERIALIZER.get());
 
@@ -257,23 +257,12 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
         this.entityData.set(DATA_MOOD, mood);
     }
 
-    public int getTradeTaskNext(ITradeTask task){
-        return 0;
-    }
-
-    public int getTradeTaskCurrent(ITradeTask task){
-        return 0;
-    }
-
-    public void setTradeTaskIndex(int index){
-
-    }
 
     /**
      * 同步交易表，当使用<b>动态交易表任务</b>的时候需要调用，保证服务器和客户端的交易表一致
      */
     public void syncTradeTasks(){
-        this.entityData.set(DATA_DAVE_DATA, this.trades, true);
+        this.entityData.set(DATA_TRADES_DATA, this.trades, true);
     }
 
     /**
@@ -287,8 +276,8 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
     public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if(level().isClientSide()) {
-            if (DATA_DAVE_DATA.equals(key)) {
-                this.trades = this.entityData.get(DATA_DAVE_DATA);
+            if (DATA_TRADES_DATA.equals(key)) {
+                this.trades = this.entityData.get(DATA_TRADES_DATA);
             } else if (DATA_HOUSE_DATA.equals(key)) {
                 this.house = this.entityData.get(DATA_HOUSE_DATA);
             }
@@ -302,7 +291,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_DAVE_DATA, new NPCTrades(List.of()));
+        builder.define(DATA_TRADES_DATA, new NPCTrades(List.of()));
         builder.define(DATA_HOUSE_DATA, House.EMPTY);
         builder.define(DATA_RANGE_ATTACK_COOLDOWN, false);
         builder.define(DATA_MOOD, new NPCMood());
@@ -316,7 +305,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
             DataResult<NPCTrades> data = NPCTrades.CODEC.parse(NbtOps.INSTANCE, tag.get("te_npc_data"));
             data.result().ifPresent(npcTrades -> {
                 this.trades = npcTrades;
-                this.entityData.set(DATA_DAVE_DATA, npcTrades);
+                this.entityData.set(DATA_TRADES_DATA, npcTrades);
             });
         }
     }
@@ -341,7 +330,7 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
         if (trades == null) {
             trades = NPCTrades.getCopy(event.getOrigin());
             if (trades != null) {
-                entityData.set(DATA_DAVE_DATA, trades);
+                entityData.set(DATA_TRADES_DATA, trades);
             }
         }
     }
