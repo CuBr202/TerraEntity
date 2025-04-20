@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeLootTable;
@@ -83,7 +83,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
     }
 
     @Override
-    public @Nullable ITrade getSelected(AbstractTerraNPC npc, int index) {
+    public @Nullable ITrade getSelected(ITradeHolder npc, int index) {
         int cur = npc.getTradeParams().getParam(index);
         if(resultPool.containsKey(cur)){
             return dynamicTrade == null ? defaultTrade:dynamicTrade;
@@ -93,7 +93,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
 
     // 由于渔夫是一天一次，所以要setNext后不要立即同步数据
     @Override
-    public void setNext(AbstractTerraNPC npc, int index) {
+    public void setNext(ITradeHolder npc, int index) {
         int cur = npc.getTradeParams().getParam(index)+1;
         int size = costPool.size();
         int randomIndex = npc.getRandom().nextInt(size);
@@ -113,7 +113,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
 
 
     @Override
-    public void onTrade(AbstractTerraNPC npc, int index) {
+    public void onTrade(ITradeHolder npc, int index) {
         ITradeTask.super.onTrade(npc, index);
         npc.onTradeFishTask();
         npc.getTradeParams().increase(index);
@@ -121,7 +121,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
     }
 
     @Override
-    public boolean canTrade(AbstractTerraNPC npc, int index) {
+    public boolean canTrade(ITradeHolder npc, int index) {
         return npc.readyToTradeFishTask();
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;

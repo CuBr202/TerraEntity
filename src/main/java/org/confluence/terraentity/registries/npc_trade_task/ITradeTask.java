@@ -2,19 +2,10 @@ package org.confluence.terraentity.registries.npc_trade_task;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.Slot;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 
@@ -34,26 +25,26 @@ public interface ITradeTask {
      * @return 当前交易格的交易项
      */
     @Nullable
-    ITrade getSelected(AbstractTerraNPC npc, int index);
+    ITrade getSelected(ITradeHolder npc, int index);
 
     /**
      * 设置动态设置下一次的交易物品
      * @param npc NPC实体，用来获取交易参数或者根据npc的情况生成下一个交易
      * @param index 当前交易格的索引
      */
-    void setNext(AbstractTerraNPC npc, int index);
+    void setNext(ITradeHolder npc, int index);
 
     /**
      * 未来可能有用
      */
-    boolean canTrade(AbstractTerraNPC npc, int index);
+    boolean canTrade(ITradeHolder npc, int index);
 
     /**
      * 交易任务项完成后自动调用，默认生成下一次的交易
      * @param npc npc实体
      * @param index 当前交易格的索引
      */
-    default void onTrade(AbstractTerraNPC npc, int index) {
+    default void onTrade(ITradeHolder npc, int index) {
         setNext(npc, index);
     }
     /**

@@ -7,7 +7,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 
 import java.util.List;
 
@@ -18,14 +18,14 @@ public interface ITradeItemList extends ITrade {
     List<ItemStack> result();
 
     @Override
-    default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+    default void onTrade(ServerPlayer player, ITradeHolder npc, int index) {
         for(ItemStack stack : result()){{
             player.getInventory().placeItemBackInInventory(stack.copy());
         }}
     }
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY,int index){
+    default void renderResult(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int index){
         // todo 轮流切换
         var it = result().get(0);
 
@@ -35,7 +35,7 @@ public interface ITradeItemList extends ITrade {
     }
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+    default void renderResultHover(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
         // todo 轮流切换
         guiGraphics.renderTooltip(font, result().get(0), mouseX, mouseY);
     }
@@ -43,7 +43,7 @@ public interface ITradeItemList extends ITrade {
 
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot){
+    default void renderResultSlot(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot){
         if(canBuy){
             // todo 轮流切换
             slot.set(result().get(0).copy());

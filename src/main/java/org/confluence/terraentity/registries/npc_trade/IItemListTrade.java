@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public interface IItemListTrade extends ITrade{
     List<ItemStack> costs();
 
     @Override
-    default boolean canTrade(Player player, AbstractTerraNPC npc, int index) {
+    default boolean canTrade(Player player, ITradeHolder npc, int index) {
         // todo 不能匹配分开的物品
         for (ItemStack cost : costs()) {
             if (!player.getInventory().hasAnyMatching(i->ItemStack.isSameItem(i, cost))) {
@@ -33,7 +33,7 @@ public interface IItemListTrade extends ITrade{
     }
 
     @Override
-    default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+    default void onTrade(ServerPlayer player, ITradeHolder npc, int index) {
         // todo
         for (ItemStack cost : costs()) {
 
@@ -44,7 +44,7 @@ public interface IItemListTrade extends ITrade{
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    default void renderCosts(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+    default void renderCosts(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
         guiGraphics.blit(MENU_LOCATION,startx + 113,starty + 16,355,0,78,57,512,256);
 
 

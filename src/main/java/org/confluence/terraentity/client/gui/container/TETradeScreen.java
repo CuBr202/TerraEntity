@@ -5,7 +5,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -21,7 +20,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.NPCDialogs;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.menu.TETradesMenu;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
@@ -30,7 +29,7 @@ import java.util.List;
 
 /**
  * <p>由于交易的获得的内容是单个，统一使用trade的抽象菜单类
- * <p>渲染cost的逻辑在{@link org.confluence.terraentity.registries.npc_trade.ITrade#renderCosts(AbstractTerraNPC, GuiGraphics, Font, int, int, int, int, int, int)}
+ * <p>渲染cost的逻辑在{@link ITrade#renderCosts(ITradeHolder, GuiGraphics, Font, int, int, int, int, int, int)}
  * <p>使用时必须继承此类，否则会出现类型推断不匹配</p>
  */
 public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractContainerScreen<M> {
@@ -67,7 +66,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     protected void init() {
         super.init();
         if (menu.NPCTrades == null) {
-            menu.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getDaveTrades();
+            menu.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
             if (menu.NPCTrades == null){
                 return;
             }
@@ -107,7 +106,11 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         guiGraphics.drawString(this.font, ((MutableComponent)this.title).withStyle(Style.EMPTY.withBold(true)), 49 + this.imageWidth / 2 - this.font.width(this.title) / 2, fy, 0xFF5656, false);
         guiGraphics.setColor(1, 1, 1, 1);
         guiGraphics.drawString(this.font, this.playerInventoryTitle,90 + this.imageWidth / 2, this.inventoryLabelY, 4210752, false);
-        Entity interactEntity = ((IPlayer)minecraft.player).terra_entity$getInteractingEntity();
+        var interAct = ((IPlayer)minecraft.player).terra_entity$getInteractingEntity();
+        Entity interactEntity = null;
+        if(interAct instanceof Entity e){
+            interactEntity = e;
+        }
         Component title = interactEntity == null || interactEntity.getDisplayName() == null? TRADES_LABEL : interactEntity.getDisplayName();
 
         int l = this.font.width(title);
@@ -149,10 +152,10 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if(interpolator == null) return;
-        AbstractTerraNPC npc = (AbstractTerraNPC) ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
+        ITradeHolder holder = ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
 
-        if(npc != null){
-            menu.NPCTrades = npc.getTrades();
+        if(holder != null){
+            menu.NPCTrades = holder;
             if(menu.NPCTrades == null){
                 return;
             }
@@ -196,7 +199,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
                 var trade = trades.get(index);
 
                 // 渲染获得的物品
-                renderResult(npc, guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, index);
+                renderResult(holder, guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, index);
                 if(mouseX > x && mouseX < x+16 && mouseY > y && mouseY < y+16){
                     xcache = x;
                     ycache = y;
@@ -216,37 +219,37 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         var trade = trades.get(this.shopItem);
         x = ii + 116;
         y = jj + 19;
-        renderCosts(npc, guiGraphics, font,  x, y, ii, jj, mouseX, mouseY, trade);
+        renderCosts(holder, guiGraphics, font,  x, y, ii, jj, mouseX, mouseY, trade);
 
 
         x = ii + 203;
         y = jj + 36;
         // 能否购买
-        boolean canBuy = trade.canTrade(Minecraft.getInstance().player, npc, shopItem);
-        renderResultSlot(npc,guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, canBuy);
+        boolean canBuy = trade.canTrade(Minecraft.getInstance().player, holder, shopItem);
+        renderResultSlot(holder,guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, canBuy);
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
         // 重新渲染悬浮时物品信息
         if(cacheIndex != -1){
-            renderResultHover(npc,guiGraphics, font, xcache, ycache, ii, jj, mouseX, mouseY, trades.get(cacheIndex));
+            renderResultHover(holder,guiGraphics, font, xcache, ycache, ii, jj, mouseX, mouseY, trades.get(cacheIndex));
         }
 
     }
 
-    protected void renderCosts(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
-        trade.renderCosts(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+    protected void renderCosts(ITradeHolder holder, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
+        trade.renderCosts(holder,guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
     }
 
-    protected void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade, int slotIndex){
-        trade.renderResult(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY, slotIndex);
+    protected void renderResult(ITradeHolder holder, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade, int slotIndex){
+        trade.renderResult(holder,guiGraphics, font, x, y, startx, starty, mouseX, mouseY, slotIndex);
     }
-    protected void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
-        trade.renderResultHover(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+    protected void renderResultHover(ITradeHolder holder, GuiGraphics guiGraphics, Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade){
+        trade.renderResultHover(holder,guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
     }
 
-    protected void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics,Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade, boolean canBuy){
-        trade.renderResultSlot(npc,guiGraphics,font, x, y, startx, starty, mouseX, mouseY, canBuy, menu.slots.get(0));
+    protected void renderResultSlot(ITradeHolder holder, GuiGraphics guiGraphics,Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade, boolean canBuy){
+        trade.renderResultSlot(holder,guiGraphics,font, x, y, startx, starty, mouseX, mouseY, canBuy, menu.slots.get(0));
     }
 
 

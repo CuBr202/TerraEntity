@@ -26,7 +26,8 @@ public class AngleNPC extends AbstractTerraNPC {
 
 
     /**
-     * 获取交易任务物品
+     * 渔夫独有的钓鱼系统
+     * 获取每天的交易任务物品，仅渔夫可以使用
      * @return 交易任务物品
      */
     public ItemStack getTradeTaskItem(){
@@ -50,7 +51,6 @@ public class AngleNPC extends AbstractTerraNPC {
     /**
      * 每天12点重置交易任务
      */
-    @Override
     public void resetFishTask() {
         this.entityData.set(DATA_TIME_TO_TRADE_FISH_DATA, true);
 
@@ -58,6 +58,9 @@ public class AngleNPC extends AbstractTerraNPC {
         this.getTrades().syncDirtyTrade();
     }
 
+    protected boolean timeToTradeFish(){
+        return level().dayTime() % 24000 == 0;
+    }
 
     @Override
     public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
@@ -109,7 +112,5 @@ public class AngleNPC extends AbstractTerraNPC {
         }
     }
 
-    protected boolean timeToTradeFish(){
-        return level().dayTime() % 24000 == 0;
-    }
+
 }

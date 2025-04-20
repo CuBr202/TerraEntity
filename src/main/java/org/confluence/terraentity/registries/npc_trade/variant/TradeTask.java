@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.Slot;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 
@@ -26,7 +27,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
     ).apply(instance, TradeTask::new));
 
     @Nullable
-    ITrade getSelected(AbstractTerraNPC npc, int index){
+    ITrade getSelected(ITradeHolder npc, int index){
         return task().getSelected(npc, index);
     }
 
@@ -36,7 +37,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
 
 
     @Override
-    public boolean canTrade(Player player, AbstractTerraNPC npc, int index) {
+    public boolean canTrade(Player player, ITradeHolder npc, int index) {
         if(!task.canTrade(npc, index)){
             return false;
         }
@@ -48,7 +49,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
     }
 
     @Override
-    public void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+    public void onTrade(ServerPlayer player, ITradeHolder npc, int index) {
         ITrade selected = getSelected(npc, index);
         if(selected != null) {
             selected.onTrade(player, npc, index);
@@ -59,7 +60,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
 
 
     @OnlyIn(Dist.CLIENT)
-    public void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int slotIndex){
+    public void renderResult(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int slotIndex){
         ITrade selected = getSelected(npc, slotIndex);
         if(selected != null) {
             selected.renderResult(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY, slotIndex);
@@ -76,8 +77,8 @@ public record TradeTask(ITradeTask task) implements ITrade {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
-        ITrade selected = getSelected(npc,npc.selectTradeIndex );
+    public void renderResultHover(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
+        ITrade selected = getSelected(npc,npc.selectTradeIndex() );
         if(selected != null) {
             selected.renderResultHover(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
         }
@@ -85,9 +86,9 @@ public record TradeTask(ITradeTask task) implements ITrade {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot) {
+    public void renderResultSlot(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot) {
 
-        ITrade selected = getSelected(npc,npc.selectTradeIndex);
+        ITrade selected = getSelected(npc,npc.selectTradeIndex());
         if(selected != null) {
             selected.renderResultSlot(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY, canBuy, slot);
         }
@@ -95,8 +96,8 @@ public record TradeTask(ITradeTask task) implements ITrade {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderCosts(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
-        ITrade selected = getSelected(npc,npc.selectTradeIndex);
+    public void renderCosts(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
+        ITrade selected = getSelected(npc,npc.selectTradeIndex());
         if(selected != null) {
             selected.renderCosts(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
         }

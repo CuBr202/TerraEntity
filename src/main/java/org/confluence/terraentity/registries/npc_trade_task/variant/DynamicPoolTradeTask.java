@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
@@ -80,7 +80,7 @@ public class DynamicPoolTradeTask implements ITradeTask {
     }
 
     @Override
-    public @Nullable ITrade getSelected(AbstractTerraNPC npc, int index) {
+    public @Nullable ITrade getSelected(ITradeHolder npc, int index) {
         int cur = npc.getTradeParams().getParam(index);
         if(resultPool.containsKey(cur)){
             return dynamicTrade == null ? defaultTrade:dynamicTrade;
@@ -89,14 +89,14 @@ public class DynamicPoolTradeTask implements ITradeTask {
     }
 
     @Override
-    public void setNext(AbstractTerraNPC npc, int index) {
+    public void setNext(ITradeHolder npc, int index) {
         int cur = npc.getTradeParams().getParam(index)+1;
         if(resultPool.containsKey(cur)){
             int maxCost = costPool.size();
             int random = npc.getRandom().nextInt(maxCost);
 
             dynamicTrade = ItemTradeItemList.of(costPool.get(random), resultPool.get(cur));
-//            npc.syncTradeTasks();
+//            npc.syncTrades();
             npc.getTrades().addToBeSync(index);
         }
         npc.getTradeParams().increase(index);
@@ -106,7 +106,7 @@ public class DynamicPoolTradeTask implements ITradeTask {
 
 
     @Override
-    public boolean canTrade(AbstractTerraNPC npc, int index) {
+    public boolean canTrade(ITradeHolder npc, int index) {
         return true;
     }
 

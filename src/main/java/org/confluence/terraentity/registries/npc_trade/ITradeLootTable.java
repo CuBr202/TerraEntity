@@ -15,7 +15,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +29,7 @@ public interface ITradeLootTable extends ITrade{
     Optional<ResourceLocation> sprite();
 
     @Override
-    default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+    default void onTrade(ServerPlayer player, ITradeHolder npc, int index) {
         List<ItemStack> loot = player.level().getServer().reloadableRegistries()
                 .getLootTable(lootTable())
                 .getRandomItems(new LootParams.Builder((ServerLevel) player.level())
@@ -42,7 +42,7 @@ public interface ITradeLootTable extends ITrade{
     }
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY,int index){
+    default void renderResult(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int index){
 
         ResourceLocation sprite = sprite().orElse(TerraEntity.space("unknown"));
         guiGraphics.blitSprite(sprite,x,y,16,16);
@@ -50,7 +50,7 @@ public interface ITradeLootTable extends ITrade{
     }
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+    default void renderResultHover(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
 
 //        guiGraphics.renderTooltip(font, result(), mouseX, mouseY);
     }
@@ -58,7 +58,7 @@ public interface ITradeLootTable extends ITrade{
 
 
     @OnlyIn(Dist.CLIENT)
-    default void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot){
+    default void renderResultSlot(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot){
         if(canBuy){
             ResourceLocation sprite = sprite().orElse(TerraEntity.space("unknown"));
             guiGraphics.blitSprite(sprite,x+35,y+2,16,16);

@@ -1,6 +1,5 @@
 package org.confluence.terraentity.registries.npc_trade;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.server.level.ServerPlayer;
@@ -8,10 +7,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.utils.TEUtils;
-
-import java.util.List;
 
 import static org.confluence.terraentity.client.gui.container.TETradeScreen.MENU_LOCATION;
 
@@ -23,18 +20,18 @@ public interface IItemTrade extends ITrade{
     ItemStack cost();
 
     @Override
-    default boolean canTrade(Player player, AbstractTerraNPC npc, int index) {
+    default boolean canTrade(Player player, ITradeHolder npc, int index) {
         return player.getInventory().hasAnyMatching(i->ItemStack.isSameItem(i, cost()));
     }
 
     @Override
-    default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+    default void onTrade(ServerPlayer player, ITradeHolder npc, int index) {
         TEUtils.consumeItemCount(player.getInventory().items, cost().getItem(), cost().getCount());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    default void renderCosts(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
+    default void renderCosts(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
         guiGraphics.blit(MENU_LOCATION,startx + 113,starty + 16,434,0,78,57,512,256);
 
         x += 30;

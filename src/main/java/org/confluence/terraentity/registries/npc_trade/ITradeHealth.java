@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.jetbrains.annotations.Nullable;
 
 import static org.confluence.terraentity.client.gui.container.TETradeScreen.MENU_LOCATION;
@@ -28,19 +28,19 @@ public interface ITradeHealth extends ITrade {
     }
 
     @Override
-    default boolean canTrade(Player player, AbstractTerraNPC npc, int index) {
+    default boolean canTrade(Player player, ITradeHolder npc, int index) {
 //        return true; // debug
         return player.getHealth() < player.getMaxHealth();
     }
 
     @Override
-    default void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+    default void onTrade(ServerPlayer player, ITradeHolder npc, int index) {
         player.heal(getHealth(player));
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    default void renderResult(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int slotIndex) {
+    default void renderResult(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int slotIndex) {
         ResourceLocation iconSprite = TerraEntity.defaultPath("hud/heart/full");
         guiGraphics.blitSprite(iconSprite, x, y, 16, 16);
         String s = "↑" + getHealth(Minecraft.getInstance().player);
@@ -50,7 +50,7 @@ public interface ITradeHealth extends ITrade {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    default void renderResultSlot(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot) {
+    default void renderResultSlot(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot) {
         slot.set(ItemStack.EMPTY);
         if(canBuy){
             renderResult(npc, guiGraphics, font, x+35, y+2, startx, starty, mouseX, mouseY,0);
@@ -62,7 +62,7 @@ public interface ITradeHealth extends ITrade {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    default void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
+    default void renderResultHover(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
 
     }
 

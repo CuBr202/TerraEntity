@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 
 public record ItemTradeHealth(ItemStack cost, int health) implements IItemTrade, ITradeHealth {
@@ -25,19 +25,19 @@ public record ItemTradeHealth(ItemStack cost, int health) implements IItemTrade,
     }
 
     @Override
-    public boolean canTrade(Player player, AbstractTerraNPC npc, int index) {
+    public boolean canTrade(Player player, ITradeHolder npc, int index) {
         return ITradeHealth.super.canTrade(player, npc, index) && IItemTrade.super.canTrade(player, npc, index);
     }
 
     @Override
-    public void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+    public void onTrade(ServerPlayer player, ITradeHolder npc, int index) {
         ITradeHealth.super.onTrade(player, npc, index);
         IItemTrade.super.onTrade(player, npc, index);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderResultHover(AbstractTerraNPC npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
+    public void renderResultHover(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
 
     }
 

@@ -18,6 +18,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -69,7 +70,7 @@ import java.util.function.Predicate;
 /**
  * 泰拉风格的npc，集成远程攻击，{@link NPCTrades 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
  */
-public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
+public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc , ITradeHolder{
 
 
     public static final Map<MemoryModuleType<GlobalPos>, BiPredicate<AbstractTerraNPC, Holder<PoiType>>> POI_MEMORIES =
@@ -251,14 +252,22 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     }
 
 
+    public int selectTradeIndex(){
+        return selectTradeIndex;
+    }
+
     /**
      * <P>强行同步所有的交易表，当使用<b>动态交易表任务</b>的时候需要调用，保证服务器和客户端的交易表一致。
      * <p>当数据量过大时应该采用局部更新</p>
      */
-    public void syncTradeTasks(){
+    public void syncTrades(){
         this.entityData.set(DATA_TRADES_DATA, this.trades, true);
     }
 
+    public void syncNpcTrade(int index){
+        UpdateNPCTradePacket.syncNpcTrade(index, this);
+
+    }
 
 
     /**
@@ -312,7 +321,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             data.result().ifPresent(npcTrades -> {
                 this.trades = npcTrades;
                 this.trades.setOwner(this);
-                this.entityData.set(DATA_TRADES_DATA, npcTrades);
+                syncTrades();
             });
         }
     }
@@ -334,10 +343,11 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
         NPCEvent.InitNPCTradeEvent event = new NPCEvent.InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
         AdapterUtils.postEvent(event);
+        // 如果是第一次生成
         if (trades == null) {
             trades = NPCTrades.getCopy(event.getOrigin());
             if (trades != null) {
-                entityData.set(DATA_TRADES_DATA, trades);
+                syncTrades();
             }
         }
     }
@@ -449,7 +459,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         event.execute((npc, player1) -> {
 //            if(trades != null) {
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
-                        new SimpleTradeMenu(id, playerInventory, trades), Component.translatable("title.terra_entity.npc_trade")));
+                        new SimpleTradeMenu(id, playerInventory, this), Component.translatable("title.terra_entity.npc_trade")));
 //            }
         });
 
@@ -569,28 +579,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     }
 
 
-    /**
-     * 渔夫独有的钓鱼系统
-     * 获取每天的交易任务物品，仅渔夫可以使用
-     * @return 交易任务物品
-     */
-    public ItemStack getTradeTaskItem() {
-        return ItemStack.EMPTY;
-    }
-
-    public void setTradeTaskItem(ItemStack tradeTaskItem) {
-    }
-
-    public boolean readyToTradeFishTask() {
-        return false;
-    }
-
-    public void onTradeFishTask() {
-    }
-
-    public void resetFishTask() {
-
-    }
 
 
 

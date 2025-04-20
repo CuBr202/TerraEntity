@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootTable;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.IItemTrade;
 import org.confluence.terraentity.registries.npc_trade.ITradeLootTable;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;
@@ -42,7 +42,7 @@ public record ItemTradeLootTable(ItemStack cost, ResourceKey<LootTable> lootTabl
 
 
     @Override
-    public void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+    public void onTrade(ServerPlayer player, ITradeHolder npc, int index) {
         IItemTrade.super.onTrade(player, npc, index);
         ITradeLootTable.super.onTrade(player, npc, index);
     }

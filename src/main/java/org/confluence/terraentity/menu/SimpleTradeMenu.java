@@ -1,7 +1,7 @@
 package org.confluence.terraentity.menu;
 
 import net.minecraft.world.entity.player.Inventory;
-import org.confluence.terraentity.entity.npc.NPCTrades;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.init.TEMenus;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +14,7 @@ public class SimpleTradeMenu extends TETradesMenu {
         super(TEMenus.SIMPLE_NPC_TRADES_MENU.get(), containerId, playerInventory);
     }
 
-    public SimpleTradeMenu(int containerId, Inventory playerInventory, @Nullable NPCTrades NPCTrades) {
+    public SimpleTradeMenu(int containerId, Inventory playerInventory, @Nullable ITradeHolder NPCTrades) {
         super(TEMenus.SIMPLE_NPC_TRADES_MENU.get(), containerId, playerInventory, NPCTrades);
     }
 }

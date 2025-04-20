@@ -3,7 +3,7 @@ package org.confluence.terraentity.registries.npc_trade_task.variant;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.entity.npc.TradeParams;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
@@ -37,7 +37,7 @@ public class ProgressTradeTask implements ITradeTask {
     }
 
     @Override
-    public @Nullable ITrade getSelected(AbstractTerraNPC npc, int index) {
+    public @Nullable ITrade getSelected(ITradeHolder npc, int index) {
         TradeParams params = npc.getTradeParams();
         int target = params.getParam(index);;
         if (target >= trades.size()) {
@@ -47,13 +47,13 @@ public class ProgressTradeTask implements ITradeTask {
     }
 
     @Override
-    public void setNext(AbstractTerraNPC npc, int index) {
+    public void setNext(ITradeHolder npc, int index) {
         npc.getTradeParams().increase(index);
         npc.syncTradeTasksParams();
     }
 
     @Override
-    public boolean canTrade(AbstractTerraNPC npc, int index) {
+    public boolean canTrade(ITradeHolder npc, int index) {
         return npc.getTradeParams().getParam(index) < trades.size();
     }
 

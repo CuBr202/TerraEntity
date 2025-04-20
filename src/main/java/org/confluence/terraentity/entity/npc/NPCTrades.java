@@ -29,7 +29,7 @@ import java.util.Map;
 public class NPCTrades{
 
     private final List<ITrade> trades;
-    private AbstractTerraNPC npc;
+    private ITradeHolder owner;
     protected List<Integer> toBeSync = new ArrayList<>();
 
     /**
@@ -51,8 +51,8 @@ public class NPCTrades{
     }
 
     private void syncTradeTasks(int index){
-        if(npc != null) {
-            UpdateNPCTradePacket.syncNpcTrade(index, npc);
+        if(owner != null) {
+            owner.syncNpcTrade(index);
         }
     }
 
@@ -61,8 +61,8 @@ public class NPCTrades{
     }
 
 
-    public void setOwner(AbstractTerraNPC npc) {
-        this.npc = npc;
+    public void setOwner(ITradeHolder npc) {
+        this.owner = npc;
     }
 
     public List<ITrade> trades() {

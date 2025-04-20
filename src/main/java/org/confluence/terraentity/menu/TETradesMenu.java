@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.network.c2s.NPCShopPacket;
@@ -24,19 +25,18 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class TETradesMenu extends AbstractContainerMenu {
     private final SimpleContainer container;
-    public NPCTrades NPCTrades;
+    public ITradeHolder NPCTrades;
     public int selectedMerchantIndex = -1;
 
     public TETradesMenu(MenuType<?> menuType, int containerId, Inventory playerInventory) {
         this(menuType, containerId, playerInventory, null);
     }
 
-    public TETradesMenu(MenuType<?> menuType, int containerId, Inventory playerInventory, @Nullable NPCTrades NPCTrades) {
+    public TETradesMenu(MenuType<?> menuType, int containerId, Inventory playerInventory, @Nullable  ITradeHolder NPCTrades) {
         super(menuType, containerId);
         this.NPCTrades = NPCTrades;
         if(NPCTrades == null) {
-            AbstractTerraNPC npc = (AbstractTerraNPC) ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
-            this.NPCTrades = npc.getTrades();
+            this.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
         }
 
         this.container = new SimpleContainer(1);
@@ -74,7 +74,7 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
     }
 
     public boolean stillValid(Player player) {
-        return ((IPlayer)player).terra_entity$getDaveTrades() == NPCTrades;
+        return ((IPlayer)player).terra_entity$getInteractingEntity() == NPCTrades;
     }
 
     public ItemStack quickMoveStack(Player player, int index) {
@@ -122,13 +122,13 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
     public void clicked(int slotId, int button, ClickType clickType, Player player) {
         if(slotId == 0){
             if(player.isLocalPlayer()) {
-                var d = ((IPlayer) player).terra_entity$getDaveTrades();
+                var d = ((IPlayer) player).terra_entity$getInteractingEntity();
 
                 if (selectedMerchantIndex >= 0 && selectedMerchantIndex < d.trades().size()) {
                     ITrade trade = d.trades().get(selectedMerchantIndex);
                     PacketDistributor.sendToServer(new NPCShopPacket(selectedMerchantIndex));
                     var npc = ((IPlayer) player).terra_entity$getInteractingEntity();
-                    if(npc instanceof AbstractTerraNPC npc1)
+                    if(npc instanceof ITradeHolder npc1)
                         trade.onLocalClickSlot(player, button, clickType, npc1, selectedMerchantIndex);
                 }
             }

@@ -3,12 +3,10 @@ package org.confluence.terraentity.registries.npc_trade.variant;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
-import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +55,7 @@ public record ItemListTradeItem(ItemStack result, List<ItemStack> costs) impleme
     }
 
     @Override
-    public void onTrade(ServerPlayer player, AbstractTerraNPC npc, int index) {
+    public void onTrade(ServerPlayer player, ITradeHolder npc, int index) {
         ITradeItem.super.onTrade(player, npc, index);
         IItemListTrade.super.onTrade(player, npc, index);
     }
