@@ -5,6 +5,7 @@ import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 持有交易列表的接口，便于扩展方块实体的交易
@@ -34,7 +35,7 @@ public interface ITradeHolder {
      * 获取交易管理器
      */
     @Nullable
-    NPCTradeManager getTrades();
+    NPCTradeManager getTradeManager();
 
     /**
      * 获取随机数生成器
@@ -46,15 +47,17 @@ public interface ITradeHolder {
      */
     TradeParams getTradeParams();
 
+    default Optional<TradeParams.Param> getTradeParam(int key){
+        return Optional.ofNullable(getTradeParams().params().get(key));
+    }
 
 
     /**
      * 获取交易列表
      */
-    @Nullable
     default List<ITrade> trades(){
-        if(getTrades() == null) return null;
-        return getTrades().trades();
+        if(getTradeManager() == null) return null;
+        return getTradeManager().trades();
     }
 
     /**
@@ -68,16 +71,5 @@ public interface ITradeHolder {
      */
     void syncTradeTasksParams();
 
-    /**
-     * 渔夫任务，当渔夫交易时调用，用于同步实体readyToTradeFishTask的数据
-     */
-    default void onTradeFishTask(){
-    }
 
-    /**
-     * 是否准备好进行渔夫交易，当不是渔夫的时候不应该重写这个方法
-     */
-    default boolean readyToTradeFishTask(){
-        return false;
-    }
 }

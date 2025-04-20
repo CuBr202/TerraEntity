@@ -113,16 +113,20 @@ public class DynamicAnglerTradeTask implements ITradeTask {
 
 
     @Override
-    public void onTrade(ITradeHolder npc, int index) {
-        ITradeTask.super.onTrade(npc, index);
-        npc.onTradeFishTask();
-        npc.getTradeParams().increaseLevel(index);
-        npc.getTrades().addToBeSync(index);
+    public void afterTrade(ITradeHolder npc, int index) {
+//        ITradeTask.super.afterTrade(npc, index);
+
+        // 更新参数
+        npc.getTradeParams().setIsReady(index, false);
+        npc.syncTradeTasksParams();
+        // 添加到脏数据
+        npc.getTradeManager().addToBeSync(index);
+
     }
 
     @Override
     public boolean canTrade(ITradeHolder npc, int index) {
-        return npc.readyToTradeFishTask();
+        return npc.getTradeParams().isReady(index);
     }
 
     @Override

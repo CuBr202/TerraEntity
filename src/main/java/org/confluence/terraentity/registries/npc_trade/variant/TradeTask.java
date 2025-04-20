@@ -9,7 +9,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
@@ -53,7 +52,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
         ITrade selected = getSelected(npc, index);
         if(selected != null) {
             selected.onTrade(player, npc, index);
-            task().onTrade(npc, index);
+            task().afterTrade(npc, index);
         }
 
     }

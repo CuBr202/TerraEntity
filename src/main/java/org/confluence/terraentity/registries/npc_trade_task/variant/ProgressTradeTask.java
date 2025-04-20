@@ -48,7 +48,7 @@ public class ProgressTradeTask implements ITradeTask {
 
     @Override
     public void setNext(ITradeHolder npc, int index) {
-        npc.getTradeParams().increaseLevel(index);
+        npc.getTradeParam(index).ifPresent(TradeParams.Param::increaseLevel);
         npc.syncTradeTasksParams();
     }
 

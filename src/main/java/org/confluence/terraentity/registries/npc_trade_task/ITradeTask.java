@@ -46,7 +46,7 @@ public interface ITradeTask {
      * @param npc npc实体
      * @param index 当前交易格的索引
      */
-    default void onTrade(ITradeHolder npc, int index) {
+    default void afterTrade(ITradeHolder npc, int index) {
         setNext(npc, index);
     }
     /**

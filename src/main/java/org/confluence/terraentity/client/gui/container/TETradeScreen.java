@@ -23,6 +23,7 @@ import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.menu.TETradesMenu;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -68,7 +69,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
             menu.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder();
 
         }
-        if (menu.NPCTrades == null || menu.NPCTrades.getTrades() == null){
+        if (menu.NPCTrades == null || menu.NPCTrades.getTradeManager() == null){
             return;
         }
         this.row = menu.NPCTrades.trades().size() / 3;
@@ -150,8 +151,8 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
 
     double v;
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (menu.NPCTrades == null || menu.NPCTrades.getTrades() == null ||menu.NPCTrades.trades() == null){
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (menu.NPCTrades == null || menu.NPCTrades.getTradeManager() == null ||menu.NPCTrades.trades() == null){
             this.onClose();
             return;
         }

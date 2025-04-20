@@ -243,7 +243,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         return mood;
     }
 
-    public NPCTradeManager getTrades(){
+    public NPCTradeManager getTradeManager(){
         return trades;
     }
 

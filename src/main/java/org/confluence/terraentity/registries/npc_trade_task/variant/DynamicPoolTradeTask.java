@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.entity.npc.ITradeHolder;
+import org.confluence.terraentity.entity.npc.TradeParams;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
@@ -97,9 +98,9 @@ public class DynamicPoolTradeTask implements ITradeTask {
 
             dynamicTrade = ItemTradeItemList.of(costPool.get(random), resultPool.get(cur));
 //            npc.syncTrades();
-            npc.getTrades().addToBeSync(index);
+            npc.getTradeManager().addToBeSync(index);
         }
-        npc.getTradeParams().increaseLevel(index);
+        npc.getTradeParam(index).ifPresent(TradeParams.Param::increaseLevel);
         npc.syncTradeTasksParams();
     }
 

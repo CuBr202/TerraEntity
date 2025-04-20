@@ -77,6 +77,14 @@ public record TradeParams(Map<Integer, Param> params) {
                 return new Param(current, Optional.ofNullable(isReady));
             }
         }
+
+        public void increaseLevel(){
+            level++;
+        }
+
+        public void setIsReady(boolean isReady){
+            this.isReady = Optional.of(isReady);
+        }
     }
 
     public static Codec<TradeParams> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -126,7 +134,7 @@ public record TradeParams(Map<Integer, Param> params) {
 
     public boolean isReady(int index){
         if(!params.containsKey(index)){
-            return false;
+            return true;
         }
         return params.get(index).isReady.orElse(true);
     }

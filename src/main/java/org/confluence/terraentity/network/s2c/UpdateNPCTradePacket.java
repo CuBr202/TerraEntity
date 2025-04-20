@@ -7,7 +7,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +54,7 @@ public class UpdateNPCTradePacket implements CustomPacketPayload {
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
             if(context.player().level().getEntities().get(this.npcId) instanceof AbstractTerraNPC npc){
-                npc.getTrades().trades().set(this.index, this.trade);
+                npc.getTradeManager().trades().set(this.index, this.trade);
             }
             
         }).exceptionally(e -> null);
@@ -64,6 +63,6 @@ public class UpdateNPCTradePacket implements CustomPacketPayload {
 
 
     public static void syncNpcTrade(int index, AbstractTerraNPC npc){
-        AdapterUtils.sendToAllPlayers(new UpdateNPCTradePacket(index, npc.getUUID(), npc.getTrades().trades().get(index)));
+        AdapterUtils.sendToAllPlayers(new UpdateNPCTradePacket(index, npc.getUUID(), npc.getTradeManager().trades().get(index)));
     }
 }

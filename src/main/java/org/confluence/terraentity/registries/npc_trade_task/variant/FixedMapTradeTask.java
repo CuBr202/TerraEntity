@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.confluence.terraentity.entity.npc.ITradeHolder;
+import org.confluence.terraentity.entity.npc.TradeParams;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
@@ -67,7 +68,7 @@ public class FixedMapTradeTask implements ITradeTask  {
 
     @Override
     public void setNext(ITradeHolder npc, int index) {
-        npc.getTradeParams().increaseLevel(index);
+        npc.getTradeParam(index).ifPresent(TradeParams.Param::increaseLevel);
         npc.syncTradeTasksParams();
     }
 
