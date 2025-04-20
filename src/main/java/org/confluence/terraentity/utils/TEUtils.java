@@ -34,7 +34,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.api.FTWSetter;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
@@ -414,7 +413,7 @@ public final class TEUtils {
     }
 
     public static boolean isFTWWorld(ServerLevel level) {
-        return FTWSetter.isFTW();
+        return false; // confluence mixed here
     }
 
     /**
