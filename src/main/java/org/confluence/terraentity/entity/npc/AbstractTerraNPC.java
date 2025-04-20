@@ -80,7 +80,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             );
 
 
-    private final float moveSpeed = 0.3f;
+    private final float moveSpeed = 0.15f;
     private NPCTrades trades;
     public Player tradingPlayer;
     public House house = House.EMPTY;
