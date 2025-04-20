@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>固定等级给予固定物品交易任务，固定次数会获得固定的交易表，其他时候获得指定战利品表。</p>
- * <p>这个接口没有随机性，如果需要随机，采用动态池{@link DynamicAnglerTradeTask}</p>
+ * <p>这个接口没有随机性，如果需要随机，采用动态池{@link DynamicPoolTradeTask}</p>
  */
 public class FixedMapTradeTask implements ITradeTask  {
 

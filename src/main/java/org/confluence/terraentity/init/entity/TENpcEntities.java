@@ -14,41 +14,42 @@ import org.confluence.terraentity.client.entity.renderer.NPCRenderer;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.AngleNPC;
+import org.confluence.terraentity.entity.npc.SimpleNPC;
 import org.confluence.terraentity.init.TEEntities;
 
 public class TENpcEntities {
 
     /** 向导*/
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> GUIDE = TEEntities.registerEntity("guide", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> GUIDE = TEEntities.registerEntity("guide", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /** 爆破专家*/
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DEMOLITIONIST = TEEntities.registerEntity("demolitionist", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DEMOLITIONIST = TEEntities.registerEntity("demolitionist", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /** 哥布林*/
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> GOBLIN_TINKERER = TEEntities.registerEntity("goblin_tinkerer", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> GOBLIN_TINKERER = TEEntities.registerEntity("goblin_tinkerer", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /** 武器商*/
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ARMS_DEALER = TEEntities.registerEntity("arms_dealer", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ARMS_DEALER = TEEntities.registerEntity("arms_dealer", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /** 护士*/
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> NURSE = TEEntities.registerEntity("nurse", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> NURSE = TEEntities.registerEntity("nurse", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
      * 商人
      */
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> MERCHANT = TEEntities.registerEntity("merchant", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> MERCHANT = TEEntities.registerEntity("merchant", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
      * 油漆工
      */
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> PAINTER = TEEntities.registerEntity("painter", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> PAINTER = TEEntities.registerEntity("painter", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
      * 渔夫
      */
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ANGLER = TEEntities.registerEntity("angler", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ANGLER = TEEntities.registerEntity("angler", AngleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
 //    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> FEMALE_ANGLER = TEEntities.registerEntity("", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
      * 树妖
      */
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DRYAD = TEEntities.registerEntity("dryad", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DRYAD = TEEntities.registerEntity("dryad", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
      * 染料商
      */
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DYE_TRADER = TEEntities.registerEntity("dye_trader", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DYE_TRADER = TEEntities.registerEntity("dye_trader", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

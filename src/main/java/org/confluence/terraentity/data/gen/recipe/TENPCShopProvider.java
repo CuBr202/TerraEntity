@@ -12,11 +12,11 @@ import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.init.entity.TENpcEntities;
-import org.confluence.terraentity.init.item.TEWhipItems;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.*;
-import org.confluence.terraentity.registries.npc_trade_task.variant.FixedMapTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
+import org.confluence.terraentity.registries.npc_trade_task.variant.FixedMapTradeTask;
+import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicPoolTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.ProgressTradeTask;
 
 import java.util.ArrayList;
@@ -42,12 +42,12 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
     @Override
     public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider holderLookup) {
 
-        add(TENpcEntities.GUIDE.getId()).addRecipe(builder()
-                .add(new ItemStack(Blocks.OAK_SAPLING.asItem(), 1), Items.ARROW.getDefaultInstance())
-                .add(new ItemStack(Blocks.TORCH.asItem(), 10), Items.ARROW.getDefaultInstance())
-                .add(new ItemStack(Items.ARROW.asItem(), 10), Items.ARROW.getDefaultInstance())
-                .add(new ItemStack(TEWhipItems.LEATHER_WHIP.get(), 1), Items.ARROW.getDefaultInstance())
-                .build());
+//        add(TENpcEntities.GUIDE.getId()).addRecipe(builder()
+//                .add(new ItemStack(Blocks.OAK_SAPLING.asItem(), 1), Items.ARROW.getDefaultInstance())
+//                .add(new ItemStack(Blocks.TORCH.asItem(), 10), Items.ARROW.getDefaultInstance())
+//                .add(new ItemStack(Items.ARROW.asItem(), 10), Items.ARROW.getDefaultInstance())
+//                .add(new ItemStack(TEWhipItems.LEATHER_WHIP.get(), 1), Items.ARROW.getDefaultInstance())
+//                .build());
 
         add(TENpcEntities.DEMOLITIONIST.getId()).addRecipe(builder()
                 .add(new ItemStack(Blocks.TNT.asItem(), 1), Items.EGG.getDefaultInstance())
@@ -81,6 +81,60 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
                         ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 50)
                 ))))
 
+                .add(TradeTask.create(new FixedMapTradeTask(
+                        Map.of(
+                                1, ItemTradeItemList.of(Items.APPLE.getDefaultInstance(),
+                                        List.of(Items.DIAMOND.getDefaultInstance(), Items.EMERALD.getDefaultInstance())),
+                                3, ItemTradeItemList.of(Items.APPLE.getDefaultInstance(),
+                                        List.of(Items.ICE.getDefaultInstance(), Items.EMERALD.getDefaultInstance()))
+                        ),
+                        ItemTradeLootTable.of(Items.APPLE.getDefaultInstance(), TerraEntity.fromSpaceAndPath("minecraft", "entities/zombie"))
+                )))
+
+                .add(TradeTask.create(new DynamicPoolTradeTask(
+                        ItemTradeLootTable.of(
+                                Items.APPLE.getDefaultInstance(),
+                                TerraEntity.fromSpaceAndPath("minecraft", "entities/zombie"),
+                                TerraEntity.space("random_gift")),
+                        Map.of(
+                                1, List.of(Items.DIAMOND.getDefaultInstance(), Items.EMERALD.getDefaultInstance()),
+                                3, List.of(Items.ICE.getDefaultInstance(), Items.EMERALD.getDefaultInstance())
+                        ),
+                        List.of(
+                                Items.DIRT.getDefaultInstance(),
+                                Items.ICE.getDefaultInstance(),
+                                Items.EMERALD.getDefaultInstance()
+                        )
+                )))
+
+                .add(TradeTask.create(new DynamicAnglerTradeTask(
+                        ItemTradeLootTable.of(
+                                Items.APPLE.getDefaultInstance(),
+                                TerraEntity.fromSpaceAndPath("minecraft", "entities/zombie"),
+                                TerraEntity.space("random_gift")),
+                        Map.of(
+                                1, List.of(Items.DIAMOND.getDefaultInstance(), Items.EMERALD.getDefaultInstance()),
+                                3, List.of(Items.ICE.getDefaultInstance(), Items.EMERALD.getDefaultInstance())
+                        ),
+                        List.of(
+                                Items.DIRT.getDefaultInstance(),
+                                Items.ICE.getDefaultInstance(),
+                                Items.EMERALD.getDefaultInstance()
+                        )
+                )))
+
+                .build());
+
+        add(TENpcEntities.GUIDE.getId()).addRecipe(builder()
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
+                        ItemTradeItem.of(Items.DIAMOND.getDefaultInstance(), Items.EMERALD.getDefaultInstance()),
+                        ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 10),
+                        ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 20),
+                        ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 30),
+                        ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 40),
+                        ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 50)
+                ))))
+
                 .add(TradeTask.create(new ProgressTradeTask(List.of(
                         ItemTradeItem.of(Items.ICE.getDefaultInstance(), Items.EMERALD.getDefaultInstance()),
                         ItemTradeHealth.of(Items.DIRT.getDefaultInstance(), 10),
@@ -100,7 +154,7 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
                         ItemTradeLootTable.of(Items.APPLE.getDefaultInstance(), TerraEntity.fromSpaceAndPath("minecraft", "entities/zombie"))
                 )))
 
-                .add(TradeTask.create(new DynamicAnglerTradeTask(
+                .add(TradeTask.create(new DynamicPoolTradeTask(
                         ItemTradeLootTable.of(
                                 Items.APPLE.getDefaultInstance(),
                                 TerraEntity.fromSpaceAndPath("minecraft", "entities/zombie"),

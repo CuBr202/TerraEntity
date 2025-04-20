@@ -37,7 +37,9 @@ public record TradeTask(ITradeTask task) implements ITrade {
 
     @Override
     public boolean canTrade(Player player, AbstractTerraNPC npc, int index) {
-
+        if(!task.canTrade(npc, index)){
+            return false;
+        }
         ITrade selected = getSelected(npc, index);
         if(selected != null) {
             return selected.canTrade(player, npc, index);

@@ -71,7 +71,7 @@ import java.util.function.Predicate;
 /**
  * 泰拉风格的npc，集成远程攻击，{@link NPCTrades 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
  */
-public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
+public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
 
     public static final Map<MemoryModuleType<GlobalPos>, BiPredicate<AbstractTerraNPC, Holder<PoiType>>> POI_MEMORIES =
             ImmutableMap.of(
@@ -250,7 +250,9 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
     }
 
 
-
+    /**
+     * 同步心情系统
+     */
     public void syncMood(){
         NPCMood mood = new NPCMood();
         mood.copyFrom(this.mood);
@@ -259,10 +261,16 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
 
 
     /**
-     * 同步交易表，当使用<b>动态交易表任务</b>的时候需要调用，保证服务器和客户端的交易表一致
+     * <P>同步所有的交易表，当使用<b>动态交易表任务</b>的时候需要调用，保证服务器和客户端的交易表一致。
+     *
      */
     public void syncTradeTasks(){
         this.entityData.set(DATA_TRADES_DATA, this.trades, true);
+    }
+
+    // todo 优化：只在生成npc后调用一次，以后更新交易表使用局部更新
+    public void syncTradeTasks(int index){
+
     }
 
     /**
@@ -559,5 +567,31 @@ public class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc {
     protected @NotNull Vec3 getLeashOffset() {
         return new Vec3(-0.3, this.getEyeHeight() * 0.5f, this.getBbWidth() * 0.1F);
     }
+
+
+    /**
+     * 渔夫独有的钓鱼系统
+     * 获取每天的交易任务物品，仅渔夫可以使用
+     * @return 交易任务物品
+     */
+    public ItemStack getTradeTaskItem() {
+        return ItemStack.EMPTY;
+    }
+
+    public void setTradeTaskItem(ItemStack tradeTaskItem) {
+    }
+
+    public boolean readyToTradeFishTask() {
+        return false;
+    }
+
+    public void onTradeFishTask() {
+    }
+
+    public void resetFishTask() {
+
+    }
+
+
 
 }

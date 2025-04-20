@@ -7,7 +7,6 @@ import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
-import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeLootTable;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTypes;
@@ -20,29 +19,27 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * <p>渔夫动态交易表
- * <P>相对于{@link DynamicPoolTradeTask},将战利品统一成{@link ItemTradeLootTable}和{@link ItemTradeItemList}
- * <P>resultPool存放每个等级对应的固定奖励List，cost来自于渔夫定时刷新，所以对于其他npc是没有用的
+ * 动态交易表，resultPool存放每个等级对应的固定奖励List，若不含这个等级，则使用默认奖励
  */
-public class DynamicAnglerTradeTask implements ITradeTask {
+public class DynamicPoolTradeTask implements ITradeTask {
 
-    private ItemTradeItemList dynamicTrade;
+    private final ITrade defaultTrade;
+    private ITrade dynamicTrade;
 
-    private ItemTradeLootTable defaultTrade;
-    private final Map<Integer, List<ItemStack>> resultPool;
     private final List<ItemStack> costPool;
+    private final Map<Integer, List<ItemStack>> resultPool;
 
-    public static final MapCodec<DynamicAnglerTradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemTradeLootTable.CODEC.fieldOf("default_trade").forGetter(DynamicAnglerTradeTask::getDefaultTrade),
+    public static final MapCodec<DynamicPoolTradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ITrade.TYPED_CODEC.fieldOf("default_trade").forGetter(DynamicPoolTradeTask::getDefaultTrade),
             Codec.unboundedMap(Codec.STRING, ItemStack.CODEC.listOf()).fieldOf("result_pool").forGetter(
                     task -> task.resultPool.entrySet().stream()
                             .map(entry->new AbstractMap.SimpleEntry<>(entry.getKey().toString(), entry.getValue()))
                             .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue))
             ),
-            ItemStack.CODEC.listOf().fieldOf("cost_pool").forGetter(DynamicAnglerTradeTask::getCostPool),
-            ItemTradeItemList.CODEC.codec().optionalFieldOf("dynamic_trade").forGetter(DynamicAnglerTradeTask::getDynamicTrade)
+            ItemStack.CODEC.listOf().fieldOf("cost_pool").forGetter(DynamicPoolTradeTask::getCostPool),
+            ITrade.TYPED_CODEC.optionalFieldOf("dynamic_trade").forGetter(DynamicPoolTradeTask::getDynamicTrade)
     ).apply(instance, (defaultTrade, solid_rewards, costPool, dynamicTrade)->{
-        return new DynamicAnglerTradeTask(
+        return new DynamicPoolTradeTask(
                 defaultTrade,
                 solid_rewards.entrySet()
                         .stream()
@@ -53,33 +50,33 @@ public class DynamicAnglerTradeTask implements ITradeTask {
         );
     }));
 
+    private Optional<ITrade> getDynamicTrade() {
+        return Optional.ofNullable(dynamicTrade);
+    }
+
     private List<ItemStack> getCostPool() {
         return costPool;
     }
 
-    private Optional<ItemTradeItemList> getDynamicTrade() {
-        return Optional.ofNullable(dynamicTrade);
-    }
-
-
-    private ItemTradeLootTable getDefaultTrade() {
+    private ITrade getDefaultTrade() {
         return defaultTrade;
     }
 
     /**
      * 用于数据生成
-     * @param defaultTrade 默认奖励，渔夫使用{@link ItemTradeLootTable 战利品池交易表}
+     * @param defaultTrade 默认奖励
      * @param resultPool 等级对应的固定奖励池
+     * @param costPool 消耗物品池
      */
-    public DynamicAnglerTradeTask(ItemTradeLootTable defaultTrade, Map<Integer, List<ItemStack>> resultPool, List<ItemStack> costPool) {
-        this(defaultTrade, resultPool,  costPool,null);
+    public DynamicPoolTradeTask(ITrade defaultTrade, Map<Integer, List<ItemStack>> resultPool, List<ItemStack> costPool) {
+        this(defaultTrade, resultPool, costPool, null);
     }
 
-    public DynamicAnglerTradeTask(ItemTradeLootTable defaultTrade, Map<Integer, List<ItemStack>> resultPool, List<ItemStack> costPool, ItemTradeItemList dynamicTrade) {
+    public DynamicPoolTradeTask(ITrade defaultTrade, Map<Integer, List<ItemStack>> resultPool, List<ItemStack> costPool, ITrade dynamicTrade) {
         this.defaultTrade = defaultTrade;
         this.resultPool = resultPool;
-        this.dynamicTrade = dynamicTrade;
         this.costPool = costPool;
+        this.dynamicTrade = dynamicTrade;
     }
 
     @Override
@@ -91,41 +88,29 @@ public class DynamicAnglerTradeTask implements ITradeTask {
         return defaultTrade;
     }
 
-    // 由于渔夫是一天一次，所以要setNext后不要立即同步数据
     @Override
     public void setNext(AbstractTerraNPC npc, int index) {
         int cur = npc.getTradeParams().getParam(index)+1;
-        int size = costPool.size();
-        int randomIndex = npc.getRandom().nextInt(size);
-        ItemStack cost = costPool.get(randomIndex);
-        if(cost.isEmpty()){
-            return;
-        }
         if(resultPool.containsKey(cur)){
-            dynamicTrade = ItemTradeItemList.of(cost, resultPool.get(cur));
+            int maxCost = costPool.size();
+            int random = npc.getRandom().nextInt(maxCost);
 
-        }else{
-            dynamicTrade = null;
-            defaultTrade = new ItemTradeLootTable(cost, defaultTrade.lootTable(), defaultTrade.sprite());
+            dynamicTrade = ItemTradeItemList.of(costPool.get(random), resultPool.get(cur));
+            npc.syncTradeTasks();
         }
-
-    }
-
-
-    @Override
-    public void onTrade(AbstractTerraNPC npc, int index) {
-        ITradeTask.super.onTrade(npc, index);
-        npc.onTradeFishTask();
         npc.getTradeParams().increase(index);
+        npc.syncTradeTasksParams();
     }
+
+
 
     @Override
     public boolean canTrade(AbstractTerraNPC npc, int index) {
-        return npc.readyToTradeFishTask();
+        return true;
     }
 
     @Override
     public TradeTaskProvider getCodec() {
-        return TradeTaskProviderTypes.DYNAMIC_ANGLER_TRADE_TASK.get();
+        return TradeTaskProviderTypes.DYNAMIC_POOL_MAP_TRADE_TASK.get();
     }
 }
