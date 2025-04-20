@@ -13,7 +13,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.client.entity.renderer.NPCRenderer;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.AngleNPC;
+import org.confluence.terraentity.entity.npc.AnglerNPC;
 import org.confluence.terraentity.entity.npc.SimpleNPC;
 import org.confluence.terraentity.init.TEEntities;
 
@@ -40,7 +40,7 @@ public class TENpcEntities {
     /**
      * 渔夫
      */
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ANGLER = TEEntities.registerEntity("angler", AngleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ANGLER = TEEntities.registerEntity("angler", AnglerNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
 //    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> FEMALE_ANGLER = TEEntities.registerEntity("", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
      * 树妖

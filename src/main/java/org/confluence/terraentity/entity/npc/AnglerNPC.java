@@ -7,7 +7,10 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -20,14 +23,14 @@ import org.jetbrains.annotations.NotNull;
 /**
  * 渔夫：可以设置处理交易任务
  */
-public class AngleNPC extends AbstractTerraNPC {
+public class AnglerNPC extends AbstractTerraNPC {
 
-    public AngleNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
+    public AnglerNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
 
     }
 
-    private static final EntityDataAccessor<Boolean> DATA_WAKE_UP = SynchedEntityData.defineId(AngleNPC.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_WAKE_UP = SynchedEntityData.defineId(AnglerNPC.class, EntityDataSerializers.BOOLEAN);
 
     /**
      * 每天12点重置交易任务
@@ -152,6 +155,7 @@ public class AngleNPC extends AbstractTerraNPC {
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if(!isWakeUp() && player.level() instanceof ServerLevel serverLevel){
+            // confluence mixed here
             setWakeUp(true);
             this.refreshBrain(serverLevel);
             this.refreshDimensions();

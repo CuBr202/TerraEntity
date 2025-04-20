@@ -65,7 +65,10 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -131,6 +134,11 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
     protected boolean shouldInitName(){
         return true;
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return false; // 防止被刷走
     }
 
     protected void initName(){
