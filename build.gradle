@@ -141,7 +141,9 @@ var dev = true
 
 dependencies {
     if (dev) {
-        implementation project(":Confluence-Magic-Lib")
+//        implementation project(":Confluence-Magic-Lib")
+        implementation files("libs/confluence_magic_lib-1.0.0.jar")
+        jarJar("org.confluence.lib:confluence_magic_lib:1.0.0") { }
         implementation("software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}")
     } else {
         implementation jarJar(project(":Confluence-Magic-Lib"))

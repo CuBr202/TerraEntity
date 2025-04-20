@@ -1,7 +1,6 @@
 package org.confluence.terraentity.entity.npc;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -10,7 +9,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -18,7 +16,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -68,7 +65,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
- * 泰拉风格的npc，集成远程攻击，{@link NPCTrades 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
+ * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
  */
 public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc , ITradeHolder{
 
@@ -82,7 +79,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
 
     private final float moveSpeed = 0.15f;
-    private NPCTrades trades;
+    private NPCTradeManager trades;
     public Player tradingPlayer;
     public House house = House.EMPTY;
     private NPCMood mood;
@@ -93,14 +90,13 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     private NPCAi ai;
     private float rangeDistance = 8; // 远程攻击范围
     private Predicate<AbstractTerraNPC> canPerformerAttackTest;
-    public int selectTradeIndex = 0; // 用于客户端方便获得选择的交易项
 
     public int cooldownTick = 0; // 攻击冷却时间
     private int _cooldownTicks;
 
 
     private static final EntityDataAccessor<Boolean> DATA_RANGE_ATTACK_COOLDOWN = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<NPCTrades> DATA_TRADES_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADES_SERIALIZER.get());
+    private static final EntityDataAccessor<NPCTradeManager> DATA_TRADES_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADES_SERIALIZER.get());
     private static final EntityDataAccessor<House> DATA_HOUSE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_HOUSE_SERIALIZER.get());
     private static final EntityDataAccessor<NPCMood> DATA_MOOD = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_MOOD_SERIALIZER.get());
     private static final EntityDataAccessor<TradeParams> DATA_TRADE_PARAMS = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADE_PARAMS_SERIALIZER.get());
@@ -247,14 +243,11 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         return mood;
     }
 
-    public NPCTrades getTrades(){
+    public NPCTradeManager getTrades(){
         return trades;
     }
 
 
-    public int selectTradeIndex(){
-        return selectTradeIndex;
-    }
 
     /**
      * <P>强行同步所有的交易表，当使用<b>动态交易表任务</b>的时候需要调用，保证服务器和客户端的交易表一致。
@@ -306,7 +299,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_TRADES_DATA, new NPCTrades(List.of()));
+        builder.define(DATA_TRADES_DATA, new NPCTradeManager(List.of()));
         builder.define(DATA_HOUSE_DATA, House.EMPTY);
         builder.define(DATA_RANGE_ATTACK_COOLDOWN, false);
         builder.define(DATA_MOOD, new NPCMood());
@@ -317,11 +310,14 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("te_npc_data", 10)) {
-            DataResult<NPCTrades> data = NPCTrades.CODEC.parse(NbtOps.INSTANCE, tag.get("te_npc_data"));
-            data.result().ifPresent(npcTrades -> {
+            NPCTradeManager.CODEC.parse(NbtOps.INSTANCE, tag.get("te_npc_data")).result().ifPresent(npcTrades -> {
                 this.trades = npcTrades;
                 this.trades.setOwner(this);
                 syncTrades();
+
+                TradeParams.CODEC.parse(NbtOps.INSTANCE, tag.get("te_npc_trade_params")).result().ifPresent(params->{
+                    this.entityData.set(DATA_TRADE_PARAMS, params);
+                });
             });
         }
     }
@@ -330,9 +326,17 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if(trades != null) {
-            DataResult<Tag> data = NPCTrades.CODEC.encodeStart(NbtOps.INSTANCE, trades);
-            data.result().ifPresent(tag1 -> tag.put("te_npc_data", tag1));
+            NPCTradeManager.CODEC.encodeStart(NbtOps.INSTANCE, trades).result().ifPresent(trade -> {
+                tag.put("te_npc_data", trade);
+            });
+
+            if(!this.trades.trades().isEmpty() && !this.getTradeParams().isEmpty()){
+                TradeParams.CODEC.encodeStart(NbtOps.INSTANCE, this.getTradeParams()).result().ifPresent(params->{
+                    tag.put("te_npc_trade_params", params);
+                });
+            }
         }
+
 
     }
 
@@ -345,8 +349,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         AdapterUtils.postEvent(event);
         // 如果是第一次生成
         if (trades == null) {
-            trades = NPCTrades.getCopy(event.getOrigin());
+            trades = NPCTradeManager.getCopy(event.getOrigin());
             if (trades != null) {
+                trades.setOwner(this);
                 syncTrades();
             }
         }
@@ -357,12 +362,12 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         super.tick();
         this.updateSwingTime();
 
-
 //        if(level().isClientSide){
 //            if(mood.getValue() != 100){
 //                System.out.println(mood..getValue()); // debug
 //            }
 //        }
+
         if(isCooledDown()){
             this.cooldownTick++;
         }else{

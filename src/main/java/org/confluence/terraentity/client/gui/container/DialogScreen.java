@@ -23,10 +23,11 @@ public class DialogScreen extends Screen {
         this.parent = parent;
     }
 
+    @Override
     protected void init() {
         super.init();
 
-        if(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc){
+        if(((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder() instanceof AbstractTerraNPC npc){
             entity = npc;
             String dialog = NPCDialogs.getRandomDialog(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()));
             if(dialog!= null) {
@@ -66,11 +67,18 @@ public class DialogScreen extends Screen {
 
     }
 
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == 69) {
+        if (keyCode == 69) { // E
             this.onClose();
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
 }

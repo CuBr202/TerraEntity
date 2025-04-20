@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 public interface IPlayer {
 
     @Nullable
-    ITradeHolder terra_entity$getInteractingEntity(); //
+    ITradeHolder terra_entity$getTradeHolder(); //
 
-    void terra_entity$setInteractingEntity(ITradeHolder  entity); //
+    void terra_entity$setTradeHolder(ITradeHolder  entity); //
 }

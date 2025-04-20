@@ -28,10 +28,10 @@ public class RandomTradeTask extends ProgressTradeTask {
     @Override
     public @Nullable ITrade getSelected(ITradeHolder npc, int index) {
         int size = trades.size();
-        int target = npc.getTradeParams().getParam(index);
+        int target = npc.getTradeParams().getLevel(index);
         if (target >= size) {
             target = npc.getRandom().nextInt(size);
-            npc.getTradeParams().setParam(index, target);
+            npc.getTradeParams().setLevel(index, target);
         }
         return trades.get(target);
     }
@@ -40,7 +40,7 @@ public class RandomTradeTask extends ProgressTradeTask {
     public void setNext(ITradeHolder npc, int index) {
         int size = trades.size();
         int target = npc.getRandom().nextInt(size);
-        npc.getTradeParams().setParam(index, target);
+        npc.getTradeParams().setLevel(index, target);
         npc.syncTradeTasksParams();
     }
 

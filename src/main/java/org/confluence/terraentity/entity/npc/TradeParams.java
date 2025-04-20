@@ -5,14 +5,17 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * npc交易表参数
+ * <p>npc任务表参数，用于更新静态交易任务，
+ * <p>而不需要使用局部更新任务列表实例
  * @param params 交易表序列号对应的参数表
  */
 public record TradeParams(Map<Integer, Param> params) {
@@ -24,11 +27,56 @@ public record TradeParams(Map<Integer, Param> params) {
     }
 
     // 可以扩展参数数量
-    public record Param(int current){
+
+    /**
+     * 交易表参数
+     */
+    public static class Param {
+        private int level;
+        private Optional<Boolean> isReady;
+
+        public int level() {
+            return level;
+        }
+        public Optional<Boolean> isReady() {
+            return isReady;
+        }
+        /**
+         * @param level 等级
+         * @param isReady 是否准备好，当某些任务使用{@link ITradeTask#canTrade(ITradeHolder, int) 额外判断}条件时使用
+         */
+        public Param(int level, Optional<Boolean> isReady) {
+            this.level = level;
+            this.isReady = isReady;
+        }
 
         public static Codec<Param> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codec.INT.fieldOf("current").forGetter(Param::current)
+                Codec.INT.fieldOf("i").forGetter(Param::level),
+                Codec.BOOL.optionalFieldOf("b").forGetter(Param::isReady)
         ).apply(instance, Param::new));
+
+        public static Builder builder(){
+            return new Builder();
+        }
+
+        public static class Builder{
+            private int current;
+            private Boolean isReady;
+
+            public Builder current(int current){
+                this.current = current;
+                return this;
+            }
+
+            public Builder isReady(boolean isReady){
+                this.isReady = isReady;
+                return this;
+            }
+
+            public Param build(){
+                return new Param(current, Optional.ofNullable(isReady));
+            }
+        }
     }
 
     public static Codec<TradeParams> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -45,23 +93,45 @@ public record TradeParams(Map<Integer, Param> params) {
 
     public static StreamCodec<ByteBuf, TradeParams> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
-    public void setParam(int index, int value){
-        params.put(index, new Param(value));
+
+    public boolean isEmpty(){
+        return params.isEmpty();
     }
 
-    public void increase(int index){
+    public void setLevel(int index, int value){
         if(!params.containsKey(index)){
-            params.put(index, new Param(0));
+            params.put(index, Param.builder().current(value).build());
         }
-        setParam(index, params.get(index).current+1);
+        params.get(index).level = value;
     }
 
-    public int getParam(int index){
+    public void increaseLevel(int index){
+        setLevel(index, getLevel(index)+1);
+    }
+
+    public int getLevel(int index){
         if(!params.containsKey(index)){
             return 0;
         }
-        return params.get(index).current;
+        return params.get(index).level;
     }
+
+
+    public void setIsReady(int index, boolean value){
+        if(!params.containsKey(index)){
+            params.put(index, Param.builder().current(0).build());
+        }
+        params.get(index).isReady = Optional.of(value);
+    }
+
+    public boolean isReady(int index){
+        if(!params.containsKey(index)){
+            return false;
+        }
+        return params.get(index).isReady.orElse(true);
+    }
+
+
 
 
 }

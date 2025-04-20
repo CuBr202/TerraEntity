@@ -12,7 +12,7 @@ import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
 import org.confluence.terraentity.entity.npc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.NPCMoods;
 import org.confluence.terraentity.entity.npc.NPCNames;
-import org.confluence.terraentity.entity.npc.NPCTrades;
+import org.confluence.terraentity.entity.npc.NPCTradeManager;
 import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
 import org.confluence.terraentity.utils.AdapterUtils;
 
@@ -29,7 +29,7 @@ public class GameEvent {
 
     @SubscribeEvent
     public static void serverStarted(ServerStartedEvent event) {
-        NPCTrades.readTradesFromJson(event.getServer().getResourceManager());
+        NPCTradeManager.readTradesFromJson(event.getServer().getResourceManager());
         HouseStoreSaver.get(event.getServer().overworld());
         NPCNames.loadNPCNames(event.getServer().getResourceManager());
         NPCDialogs.loadNPCDialogs(event.getServer().getResourceManager());

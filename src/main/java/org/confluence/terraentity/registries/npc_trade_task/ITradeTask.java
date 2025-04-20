@@ -8,6 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -21,7 +22,7 @@ public interface ITradeTask {
     /**
      * 获取当前交易格的交易项
      * @param npc npc实体
-     * @param index 当前交易格的索引
+     * @param index 当前交易格的索引,可能为负数或者超界
      * @return 当前交易格的交易项
      */
     @Nullable
@@ -35,7 +36,8 @@ public interface ITradeTask {
     void setNext(ITradeHolder npc, int index);
 
     /**
-     * 未来可能有用
+     * <P>对交易进行额外的优先判断
+     * <P>如：{@link DynamicAnglerTradeTask#canTrade(ITradeHolder, int) 渔夫任务} 要先判断是否准备好
      */
     boolean canTrade(ITradeHolder npc, int index);
 

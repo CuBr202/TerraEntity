@@ -11,9 +11,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.ITradeHolder;
-import org.confluence.terraentity.entity.npc.NPCTrades;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.network.c2s.NPCShopPacket;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
@@ -36,7 +34,7 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
         super(menuType, containerId);
         this.NPCTrades = NPCTrades;
         if(NPCTrades == null) {
-            this.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
+            this.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder();
         }
 
         this.container = new SimpleContainer(1);
@@ -74,7 +72,7 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
     }
 
     public boolean stillValid(Player player) {
-        return ((IPlayer)player).terra_entity$getInteractingEntity() == NPCTrades;
+        return ((IPlayer)player).terra_entity$getTradeHolder() == NPCTrades;
     }
 
     public ItemStack quickMoveStack(Player player, int index) {
@@ -122,12 +120,12 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
     public void clicked(int slotId, int button, ClickType clickType, Player player) {
         if(slotId == 0){
             if(player.isLocalPlayer()) {
-                var d = ((IPlayer) player).terra_entity$getInteractingEntity();
+                var d = ((IPlayer) player).terra_entity$getTradeHolder();
 
                 if (selectedMerchantIndex >= 0 && selectedMerchantIndex < d.trades().size()) {
                     ITrade trade = d.trades().get(selectedMerchantIndex);
                     PacketDistributor.sendToServer(new NPCShopPacket(selectedMerchantIndex));
-                    var npc = ((IPlayer) player).terra_entity$getInteractingEntity();
+                    var npc = ((IPlayer) player).terra_entity$getTradeHolder();
                     if(npc instanceof ITradeHolder npc1)
                         trade.onLocalClickSlot(player, button, clickType, npc1, selectedMerchantIndex);
                 }

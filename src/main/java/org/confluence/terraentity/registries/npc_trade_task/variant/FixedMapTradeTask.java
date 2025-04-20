@@ -58,7 +58,7 @@ public class FixedMapTradeTask implements ITradeTask  {
 
     @Override
     public @Nullable ITrade getSelected(ITradeHolder npc, int index) {
-        int current = npc.getTradeParams().getParam(index);
+        int current = npc.getTradeParams().getLevel(index);
         if(fixed_Rewards.containsKey(current)){
             return fixed_Rewards.get(current);
         }
@@ -67,8 +67,7 @@ public class FixedMapTradeTask implements ITradeTask  {
 
     @Override
     public void setNext(ITradeHolder npc, int index) {
-
-        npc.getTradeParams().increase(index);
+        npc.getTradeParams().increaseLevel(index);
         npc.syncTradeTasksParams();
     }
 

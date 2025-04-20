@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
  */
 public class DynamicPoolTradeTask implements ITradeTask {
 
-    private final ITrade defaultTrade;
     private ITrade dynamicTrade;
 
-    private final List<ItemStack> costPool;
+    private final ITrade defaultTrade;
     private final Map<Integer, List<ItemStack>> resultPool;
+    private final List<ItemStack> costPool;
 
     public static final MapCodec<DynamicPoolTradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ITrade.TYPED_CODEC.fieldOf("default_trade").forGetter(DynamicPoolTradeTask::getDefaultTrade),
@@ -81,7 +81,7 @@ public class DynamicPoolTradeTask implements ITradeTask {
 
     @Override
     public @Nullable ITrade getSelected(ITradeHolder npc, int index) {
-        int cur = npc.getTradeParams().getParam(index);
+        int cur = npc.getTradeParams().getLevel(index);
         if(resultPool.containsKey(cur)){
             return dynamicTrade == null ? defaultTrade:dynamicTrade;
         }
@@ -90,7 +90,7 @@ public class DynamicPoolTradeTask implements ITradeTask {
 
     @Override
     public void setNext(ITradeHolder npc, int index) {
-        int cur = npc.getTradeParams().getParam(index)+1;
+        int cur = npc.getTradeParams().getLevel(index)+1;
         if(resultPool.containsKey(cur)){
             int maxCost = costPool.size();
             int random = npc.getRandom().nextInt(maxCost);
@@ -99,7 +99,7 @@ public class DynamicPoolTradeTask implements ITradeTask {
 //            npc.syncTrades();
             npc.getTrades().addToBeSync(index);
         }
-        npc.getTradeParams().increase(index);
+        npc.getTradeParams().increaseLevel(index);
         npc.syncTradeTasksParams();
     }
 

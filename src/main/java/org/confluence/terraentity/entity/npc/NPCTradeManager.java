@@ -12,7 +12,6 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.network.s2c.UpdateNPCTradePacket;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +25,7 @@ import java.util.Map;
 /**
  * 交易清单
  */
-public class NPCTrades{
+public class NPCTradeManager {
 
     private final List<ITrade> trades;
     private ITradeHolder owner;
@@ -56,7 +55,7 @@ public class NPCTrades{
         }
     }
 
-    public NPCTrades(List<ITrade> trades) {
+    public NPCTradeManager(List<ITrade> trades) {
         this.trades = new ArrayList<>(trades);
     }
 
@@ -69,25 +68,29 @@ public class NPCTrades{
         return trades;
     }
 
+    public boolean isEmpty(){
+        return trades.isEmpty();
+    }
+
 
     public static final String KEY = "npc_shop";
-    public static final Codec<NPCTrades> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ITrade.TYPED_CODEC.listOf().fieldOf("trades").forGetter(NPCTrades::trades)
-    ).apply(instance, NPCTrades::new));
+    public static final Codec<NPCTradeManager> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ITrade.TYPED_CODEC.listOf().fieldOf("trades").forGetter(NPCTradeManager::trades)
+    ).apply(instance, NPCTradeManager::new));
 
-    public static final StreamCodec<ByteBuf, NPCTrades> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
+    public static final StreamCodec<ByteBuf, NPCTradeManager> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
-    public static final Codec<Map<ResourceLocation,NPCTrades>> MAP_CODEC = Codec.unboundedMap(ResourceLocation.CODEC, CODEC);
-    public static final StreamCodec<ByteBuf, Map<ResourceLocation, NPCTrades>> MAP_STREAM_CODEC = ByteBufCodecs.fromCodec(MAP_CODEC);
+    public static final Codec<Map<ResourceLocation, NPCTradeManager>> MAP_CODEC = Codec.unboundedMap(ResourceLocation.CODEC, CODEC);
+    public static final StreamCodec<ByteBuf, Map<ResourceLocation, NPCTradeManager>> MAP_STREAM_CODEC = ByteBufCodecs.fromCodec(MAP_CODEC);
 
-    private static final Map<ResourceLocation, NPCTrades> TRADE_MAP = new HashMap<>();
+    private static final Map<ResourceLocation, NPCTradeManager> TRADE_MAP = new HashMap<>();
 
-    public static void reset(Map<ResourceLocation, NPCTrades> tradeMap){
+    public static void reset(Map<ResourceLocation, NPCTradeManager> tradeMap){
         TRADE_MAP.clear();
         TRADE_MAP.putAll(tradeMap);
     }
 
-    public static Map<ResourceLocation, NPCTrades> getTradeMap() {
+    public static Map<ResourceLocation, NPCTradeManager> getTradeMap() {
         return TRADE_MAP;
     }
     /**
@@ -95,7 +98,7 @@ public class NPCTrades{
      * @param id 交易表id
      */
     @Nullable
-    public static NPCTrades getTradeById(ResourceLocation id) {
+    public static NPCTradeManager getTradeById(ResourceLocation id) {
         if(!TRADE_MAP.containsKey(id)){
             return null;
         }
@@ -108,7 +111,7 @@ public class NPCTrades{
      * @return 交易列表的拷贝
      */
     @Nullable
-    public static NPCTrades getCopy(ResourceLocation id) {
+    public static NPCTradeManager getCopy(ResourceLocation id) {
         if(!TRADE_MAP.containsKey(id)){
             return null;
         }
@@ -123,7 +126,7 @@ public class NPCTrades{
                         k.getPath().replace(".json", "").replace(KEY + "/", ""));
                 Reader reader = manager.openAsReader(k);
                 JsonObject jsonobject = GsonHelper.parse(reader);
-                TRADE_MAP.put(id, NPCTrades.CODEC.decode(JsonOps.INSTANCE, jsonobject).result().get().getFirst());
+                TRADE_MAP.put(id, NPCTradeManager.CODEC.decode(JsonOps.INSTANCE, jsonobject).result().get().getFirst());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

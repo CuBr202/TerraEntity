@@ -35,7 +35,7 @@ public record NPCShopPacket(int tradeIndex) implements CustomPacketPayload {
             if(context.player() instanceof ServerPlayer sp){
                 AbstractTerraNPC npc;
                 ITrade trade;
-                if(((IPlayer)sp).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc1){
+                if(((IPlayer)sp).terra_entity$getTradeHolder() instanceof AbstractTerraNPC npc1){
                     npc = npc1;
                     trade = npc.getTrades().trades().get(tradeIndex);
 

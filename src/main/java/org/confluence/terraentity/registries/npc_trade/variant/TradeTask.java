@@ -78,7 +78,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void renderResultHover(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
-        ITrade selected = getSelected(npc,npc.selectTradeIndex() );
+        ITrade selected = getSelected(npc,ITradeHolder.selectTradeIndex() );
         if(selected != null) {
             selected.renderResultHover(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
         }
@@ -88,7 +88,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
     @Override
     public void renderResultSlot(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot) {
 
-        ITrade selected = getSelected(npc,npc.selectTradeIndex());
+        ITrade selected = getSelected(npc,ITradeHolder.selectTradeIndex());
         if(selected != null) {
             selected.renderResultSlot(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY, canBuy, slot);
         }
@@ -97,7 +97,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void renderCosts(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY) {
-        ITrade selected = getSelected(npc,npc.selectTradeIndex());
+        ITrade selected = getSelected(npc,ITradeHolder.selectTradeIndex());
         if(selected != null) {
             selected.renderCosts(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
         }

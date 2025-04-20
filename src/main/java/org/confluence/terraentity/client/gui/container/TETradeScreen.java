@@ -19,7 +19,6 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.ITradeHolder;
 import org.confluence.terraentity.menu.TETradesMenu;
 import org.confluence.terraentity.mixed.IPlayer;
@@ -66,10 +65,11 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     protected void init() {
         super.init();
         if (menu.NPCTrades == null) {
-            menu.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
-            if (menu.NPCTrades == null){
-                return;
-            }
+            menu.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder();
+
+        }
+        if (menu.NPCTrades == null || menu.NPCTrades.getTrades() == null){
+            return;
         }
         this.row = menu.NPCTrades.trades().size() / 3;
         if (menu.NPCTrades.trades().size() % 3 != 0)
@@ -106,7 +106,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         guiGraphics.drawString(this.font, ((MutableComponent)this.title).withStyle(Style.EMPTY.withBold(true)), 49 + this.imageWidth / 2 - this.font.width(this.title) / 2, fy, 0xFF5656, false);
         guiGraphics.setColor(1, 1, 1, 1);
         guiGraphics.drawString(this.font, this.playerInventoryTitle,90 + this.imageWidth / 2, this.inventoryLabelY, 4210752, false);
-        var interAct = ((IPlayer)minecraft.player).terra_entity$getInteractingEntity();
+        var interAct = ((IPlayer)minecraft.player).terra_entity$getTradeHolder();
         Entity interactEntity = null;
         if(interAct instanceof Entity e){
             interactEntity = e;
@@ -151,14 +151,15 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     double v;
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (menu.NPCTrades == null || menu.NPCTrades.getTrades() == null ||menu.NPCTrades.trades() == null){
+            this.onClose();
+            return;
+        }
         if(interpolator == null) return;
-        ITradeHolder holder = ((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity();
+        ITradeHolder holder = ((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder();
 
         if(holder != null){
             menu.NPCTrades = holder;
-            if(menu.NPCTrades == null){
-                return;
-            }
         }
         this.row = menu.NPCTrades.trades().size() / 3;
         if (menu.NPCTrades.trades().size() % 3 != 0)
@@ -284,7 +285,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         }
         this.shopItem = hoveredItem;
         menu.selectedMerchantIndex = shopItem;
-        ((AbstractTerraNPC)(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity())).selectTradeIndex = shopItem;
+        ITradeHolder.setSelectTradeIndex(shopItem);
         if(menu.selectedMerchantIndex <0) menu.slots.get(0).set(ItemStack.EMPTY);
         return super.mouseClicked(mouseX, mouseY, button);
     }

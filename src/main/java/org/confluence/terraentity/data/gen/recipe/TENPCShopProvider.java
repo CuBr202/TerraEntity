@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.npc.NPCTrades;
+import org.confluence.terraentity.entity.npc.NPCTradeManager;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.*;
@@ -174,8 +174,8 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
 
     }
 
-    protected Appender<NPCTrades> add(ResourceLocation id) {
-        return recipe(NPCTrades.CODEC, pathProvider().json(id));
+    protected Appender<NPCTradeManager> add(ResourceLocation id) {
+        return recipe(NPCTradeManager.CODEC, pathProvider().json(id));
     }
 
     protected Builder builder() {
@@ -199,8 +199,8 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
             return this;
         }
 
-        public NPCTrades build() {
-            return new NPCTrades(trades);
+        public NPCTradeManager build() {
+            return new NPCTradeManager(trades);
         }
     }
 

@@ -84,7 +84,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
 
     @Override
     public @Nullable ITrade getSelected(ITradeHolder npc, int index) {
-        int cur = npc.getTradeParams().getParam(index);
+        int cur = npc.getTradeParams().getLevel(index);
         if(resultPool.containsKey(cur)){
             return dynamicTrade == null ? defaultTrade:dynamicTrade;
         }
@@ -94,7 +94,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
     // 由于渔夫是一天一次，所以要setNext后不要立即同步数据
     @Override
     public void setNext(ITradeHolder npc, int index) {
-        int cur = npc.getTradeParams().getParam(index)+1;
+        int cur = npc.getTradeParams().getLevel(index)+1;
         int size = costPool.size();
         int randomIndex = npc.getRandom().nextInt(size);
         ItemStack cost = costPool.get(randomIndex);
@@ -116,7 +116,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
     public void onTrade(ITradeHolder npc, int index) {
         ITradeTask.super.onTrade(npc, index);
         npc.onTradeFishTask();
-        npc.getTradeParams().increase(index);
+        npc.getTradeParams().increaseLevel(index);
         npc.getTrades().addToBeSync(index);
     }
 

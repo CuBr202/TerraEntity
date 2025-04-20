@@ -39,7 +39,7 @@ public class ProgressTradeTask implements ITradeTask {
     @Override
     public @Nullable ITrade getSelected(ITradeHolder npc, int index) {
         TradeParams params = npc.getTradeParams();
-        int target = params.getParam(index);;
+        int target = params.getLevel(index);;
         if (target >= trades.size()) {
             return null;
         }
@@ -48,13 +48,13 @@ public class ProgressTradeTask implements ITradeTask {
 
     @Override
     public void setNext(ITradeHolder npc, int index) {
-        npc.getTradeParams().increase(index);
+        npc.getTradeParams().increaseLevel(index);
         npc.syncTradeTasksParams();
     }
 
     @Override
     public boolean canTrade(ITradeHolder npc, int index) {
-        return npc.getTradeParams().getParam(index) < trades.size();
+        return npc.getTradeParams().getLevel(index) < trades.size();
     }
 
     @Override
