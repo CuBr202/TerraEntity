@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.*;
 import org.confluence.terraentity.client.util.DefaultBoneBoundIdents;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
@@ -201,6 +200,10 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
         if(!isReRender){
+            if(animatable.isLieDown()){
+                poseStack.mulPose(Axis.XP.rotationDegrees(-90F));
+                poseStack.translate(0,-1,0);
+            }
             if(animatable.isUsingItem()){
                 usingTime = animatable.getTicksUsingItem() + partialTick;
             }else{

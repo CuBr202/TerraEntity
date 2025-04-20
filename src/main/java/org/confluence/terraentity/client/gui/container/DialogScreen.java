@@ -55,6 +55,9 @@ public class DialogScreen extends Screen {
         }
 
         // todo draw
+        if(entity.getMood() == null){
+            return;
+        }
         var list = entity.getMood().getMoodInfoList();
         for(int i = 0; i < list.size(); i++){
             ResourceLocation location = list.get(i);

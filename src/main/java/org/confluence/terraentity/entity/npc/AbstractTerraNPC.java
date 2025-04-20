@@ -40,6 +40,7 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
+import org.confluence.terraentity.entity.monster.Nymph;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
@@ -106,11 +107,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         super(entityType, level);
 
         if(!level.isClientSide()){
-
-             String name = NPCNames.getRandomName(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
-             if(name!= null) {
-                 this.setCustomName(Component.literal(name));
-             }
+            if(shouldInitName()){
+                initName();
+            }
         }
 
         Optional.ofNullable(this.getAttribute(Attributes.MOVEMENT_SPEED)).ifPresent(att->att.setBaseValue(moveSpeed));
@@ -122,6 +121,17 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         ((GroundPathNavigation)this.getNavigation()).setCanPassDoors(true);
         if(canPerformerAttackTest == null){
             canPerformerAttackTest = npc->npc.getMainHandItem().getItem() instanceof BowItem;
+        }
+    }
+
+    protected boolean shouldInitName(){
+        return true;
+    }
+
+    protected void initName(){
+        String name = NPCNames.getRandomName(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
+        if(name!= null) {
+            this.setCustomName(Component.literal(name));
         }
     }
 
@@ -584,6 +594,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     }
 
 
+    public boolean isLieDown(){
+        return false;
+    }
 
 
 

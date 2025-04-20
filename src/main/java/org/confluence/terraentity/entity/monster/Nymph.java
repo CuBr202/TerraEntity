@@ -21,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.EventHooks;
 import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
-import org.confluence.terraentity.entity.ai.goal.summon.SummonFollowOwnerGoal;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.jetbrains.annotations.NotNull;
@@ -60,7 +59,6 @@ public class Nymph extends AbstractMonster {
 
     @Override
     protected EntityDimensions getDefaultDimensions(Pose pose) {
-
         if(!this.isTrigger() && !isTamed) {
             return super.getDefaultDimensions(pose).scale(1, 0.75f).withEyeHeight(1.05f);
         }
