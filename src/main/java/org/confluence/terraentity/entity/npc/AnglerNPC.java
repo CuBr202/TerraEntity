@@ -62,6 +62,11 @@ public class AnglerNPC extends AbstractTerraNPC {
     }
 
     @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return !isWakeUp();
+    }
+
+    @Override
     public void onAddedToLevel() {
         super.onAddedToLevel();
 
