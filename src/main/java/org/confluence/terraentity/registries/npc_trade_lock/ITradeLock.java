@@ -7,10 +7,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.TERegistries;
-import org.confluence.terraentity.registries.npc_trade.ITrade;
-import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
-
-import javax.annotation.Nullable;
 
 /**
  * <h1>npc交易锁接口</h1>

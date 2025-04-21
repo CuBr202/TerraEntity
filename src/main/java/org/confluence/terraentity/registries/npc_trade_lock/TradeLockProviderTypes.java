@@ -6,8 +6,8 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.BiomeLock;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.KillEntityLock;
+import org.confluence.terraentity.registries.npc_trade_lock.variant.MoodLock;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.TimeLock;
-import org.confluence.terraentity.registries.npc_trade_task.variant.*;
 
 import java.util.function.Supplier;
 
@@ -20,6 +20,7 @@ public class TradeLockProviderTypes {
     public static final Supplier<TradeLockProvider> BIOME_LOCK = register("biome_lock", BiomeLock.CODEC);
     public static final Supplier<TradeLockProvider> TIME_LOCK = register("time_lock", TimeLock.CODEC);
     public static final Supplier<TradeLockProvider> KILL_ENTITY_LOCK = register("kill_entity_lock", KillEntityLock.CODEC);
+    public static final Supplier<TradeLockProvider> MOOD_LOCK = register("mood_lock", MoodLock.CODEC);
 
 
 

@@ -13,15 +13,23 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 
-public record ItemTradeHealth(ItemStack cost, int health) implements IItemTrade, ITradeHealth {
+import java.util.Optional;
+
+public record ItemTradeHealth(ItemStack cost, int health, TradeProperties properties) implements IItemTrade, ITradeHealth {
 
     public static final MapCodec<ItemTradeHealth> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemStack.CODEC.fieldOf("cost").forGetter(ItemTradeHealth::cost),
-            Codec.INT.fieldOf("health").forGetter(ItemTradeHealth::health)
-    ).apply(instance, ItemTradeHealth::new));
+            Codec.INT.fieldOf("health").forGetter(ItemTradeHealth::health),
+            TradeProperties.CODEC.optionalFieldOf("properties").forGetter(i-> Optional.ofNullable(i.properties))
+
+    ).apply(instance, (cost, health, properties)->new ItemTradeHealth(
+            cost,
+            health,
+            properties.orElse(null)
+    )));
 
     public static ItemTradeHealth of(ItemStack cost, int health) {
-        return new ItemTradeHealth(cost, health);
+        return new ItemTradeHealth(cost, health, null);
     }
 
     @Override

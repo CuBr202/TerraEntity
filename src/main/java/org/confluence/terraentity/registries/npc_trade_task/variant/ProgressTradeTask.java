@@ -3,6 +3,7 @@ package org.confluence.terraentity.registries.npc_trade_task.variant;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.chat.Component;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
@@ -44,6 +45,11 @@ public class ProgressTradeTask implements ITradeTask {
             return null;
         }
         return trades.get(target);
+    }
+
+    @Override
+    public Component getTitle(ITradeHolder holder, Component original){
+        return Component.translatable(title() == null?"title.terra_entity.npc_trade.task.progress":title());
     }
 
     @Override

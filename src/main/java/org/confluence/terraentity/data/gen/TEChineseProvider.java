@@ -22,8 +22,11 @@ public class TEChineseProvider extends LanguageProvider {
         add("itemGroup.terraentity.title", "泰拉生物");
 
         add("title.terra_entity.npc_trade", "泰拉商店");
-
-
+        add("title.terra_entity.npc_trade.task.daily", "每日任务");
+        add("title.terra_entity.npc_trade.task.fixed_level", "固定等级任务");
+        add("title.terra_entity.npc_trade.task.random", "随机任务");
+        add("title.terra_entity.npc_trade.task.dynamic_reward", "动态奖励任务");
+        add("title.terra_entity.npc_trade.task.progress", "进度任务");
 
         add("entity.terra_entity.ice_slime", "冰冻史莱姆");
         add("entity.terra_entity.blue_slime", "蓝色史莱姆");

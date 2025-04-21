@@ -3,6 +3,7 @@ package org.confluence.terraentity.registries.npc_trade_task.variant;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.chat.Component;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
@@ -43,6 +44,12 @@ public class RandomTradeTask extends ProgressTradeTask {
         npc.getTradeParams().setLevel(index, target);
         npc.syncTradeTasksParams();
     }
+
+    @Override
+    public Component getTitle(ITradeHolder holder, Component original){
+        return Component.translatable(title() == null? "title.terra_entity.npc_trade.task.random" : title());
+    }
+
 
     @Override
     public TradeTaskProvider getCodec() {

@@ -41,7 +41,12 @@ public class TEEnglishProvider extends LanguageProvider {
 
         add("itemGroup.terraentity.title", "Terra Entity");
 
-        add("title.terra_entity.npc_trade", "terra shop");
+        add("title.terra_entity.npc_trade", "Terra Shop");
+        add("title.terra_entity.npc_trade.task.daily", "Daily Task");
+        add("title.terra_entity.npc_trade.task.fixed_level", "Fixed Level Task");
+        add("title.terra_entity.npc_trade.task.random", "Random Task");
+        add("title.terra_entity.npc_trade.task.dynamic_reward", "Dynamic Reward Task");
+        add("title.terra_entity.npc_trade.task.progress", "Progress Task");
 
 
 

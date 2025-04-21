@@ -6,28 +6,31 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
-import org.confluence.terraentity.registries.npc_trade.IItemTrade;
-import org.confluence.terraentity.registries.npc_trade.ITradeItemList;
-import org.confluence.terraentity.registries.npc_trade.TradeProvider;
-import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
-import org.confluence.terraentity.registries.npc_trade_lock.ITradeLock;
+import org.confluence.terraentity.registries.npc_trade.*;
 
 import java.util.List;
 import java.util.Optional;
 
-public record ItemTradeItemList(ItemStack cost, List<ItemStack> result, ITradeLock lock) implements IItemTrade, ITradeItemList {
+public record ItemTradeItemList(ItemStack cost,
+                                List<ItemStack> result,
+                                TradeProperties properties
+) implements IItemTrade, ITradeItemList {
 
     public static MapCodec<ItemTradeItemList> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemStack.CODEC.fieldOf("cost").forGetter(ItemTradeItemList::cost),
             Codec.list(ItemStack.CODEC).fieldOf("result").forGetter(ItemTradeItemList::result),
-            ITradeLock.TYPED_CODEC.optionalFieldOf("lock").forGetter(i-> Optional.ofNullable(i.lock))
-    ).apply(instance, (cost, result, lock)->new ItemTradeItemList(cost, result, lock.orElse(null))));
+            TradeProperties.CODEC.optionalFieldOf("properties").forGetter(i->Optional.ofNullable(i.properties))
+    ).apply(instance, (cost, result, lock)->new ItemTradeItemList(
+            cost,
+            result,
+            lock.orElse(null)
+    )));
 
     public static ItemTradeItemList of(ItemStack cost, List<ItemStack> result) {
         return new ItemTradeItemList(cost, result, null);
     }
-    public static ItemTradeItemList of(ItemStack cost, List<ItemStack> result,ITradeLock lock) {
-        return new ItemTradeItemList(cost, result, lock);
+    public static ItemTradeItemList of(ItemStack cost, List<ItemStack> result, TradeProperties properties) {
+        return new ItemTradeItemList(cost, result, properties);
     }
 
     @Override

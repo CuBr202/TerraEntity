@@ -26,8 +26,10 @@ public interface ITradeItemList extends ITrade {
 
     @OnlyIn(Dist.CLIENT)
     default void renderResult(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int index){
-        // todo 轮流切换
-        var it = result().get(0);
+
+        int size = result().size();
+        int i = (int) (npc.level().dayTime() / 40 % size);
+        var it = result().get(i);
 
         guiGraphics.renderItem(it, x , y );
 
@@ -36,8 +38,10 @@ public interface ITradeItemList extends ITrade {
 
     @OnlyIn(Dist.CLIENT)
     default void renderResultHover(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
-        // todo 轮流切换
-        guiGraphics.renderTooltip(font, result().get(0), mouseX, mouseY);
+        int size = result().size();
+        int i = (int) (npc.level().dayTime() / 40 % size);
+        var it = result().get(i);
+        guiGraphics.renderTooltip(font, it, mouseX, mouseY);
     }
 
 
@@ -45,12 +49,25 @@ public interface ITradeItemList extends ITrade {
     @OnlyIn(Dist.CLIENT)
     default void renderResultSlot(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot){
         if(canBuy){
-            // todo 轮流切换
-            slot.set(result().get(0).copy());
             guiGraphics.blit(MENU_LOCATION,x,y,276,0,35,17,512,256);
+
+            int size = result().size();
+            int i = (int) (npc.level().dayTime() / 40 % size);
+            var it = result().get(i);
+            slot.set(it.copy());
+            int w = 16 / size;
+            x = x + 35 + ((size & 1) == 0? w / 2 : 0);
+            for(int j = 0; j < size; j++){
+                ItemStack stack = result().get(j);
+                int x1 = x + (j - size / 2) * w;
+                guiGraphics.renderItem(stack, x1, y);
+                guiGraphics.renderItemDecorations(font, stack, x1, y);
+            }
+
         }else{
-            slot.set(ItemStack.EMPTY);
+
             guiGraphics.blit(MENU_LOCATION,x,y,276,17,35,17,512,256);
         }
+        slot.set(ItemStack.EMPTY);
     }
 }

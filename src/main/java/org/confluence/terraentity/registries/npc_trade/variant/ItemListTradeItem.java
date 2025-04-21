@@ -10,13 +10,20 @@ import org.confluence.terraentity.registries.npc_trade.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public record ItemListTradeItem(ItemStack result, List<ItemStack> costs) implements ITradeItem, IItemListTrade {
+public record ItemListTradeItem(ItemStack result, List<ItemStack> costs, TradeProperties properties) implements ITradeItem, IItemListTrade {
 
     public static final MapCodec<ItemListTradeItem> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemStack.CODEC.fieldOf("result").forGetter(ItemListTradeItem::result),
-            ItemStack.CODEC.listOf().fieldOf("costs").forGetter(ItemListTradeItem::costs)
-    ).apply(instance, ItemListTradeItem::new));
+            ItemStack.CODEC.listOf().fieldOf("costs").forGetter(ItemListTradeItem::costs),
+            TradeProperties.CODEC.optionalFieldOf("properties").forGetter(i-> Optional.ofNullable(i.properties))
+
+    ).apply(instance, (result, costs, properties)->new ItemListTradeItem(
+            result,
+            costs,
+            properties.orElse(null)
+    )));
 
     public static Builder builder(ItemStack result){
         return new Builder(result);
@@ -29,6 +36,7 @@ public record ItemListTradeItem(ItemStack result, List<ItemStack> costs) impleme
     public static class Builder{
         private final ItemStack result;
         private final List<ItemStack> costs;
+        private TradeProperties properties;
 
         public Builder(ItemStack result){
             this.result = result;
@@ -49,8 +57,13 @@ public record ItemListTradeItem(ItemStack result, List<ItemStack> costs) impleme
             return addCost(new ItemStack(cost, count));
         }
 
+        public Builder setProperties(TradeProperties properties){
+            this.properties = properties;
+            return this;
+        }
+
         public ItemListTradeItem build(){
-            return new ItemListTradeItem(result, costs);
+            return new ItemListTradeItem(result, costs, properties);
         }
     }
 

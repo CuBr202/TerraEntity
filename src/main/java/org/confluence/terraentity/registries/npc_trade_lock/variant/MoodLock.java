@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.player.Player;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade_lock.ITradeLock;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProvider;
@@ -12,31 +13,29 @@ import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProviderTyp
 import java.util.Optional;
 
 /**
- * 时间锁
- * <p> 限定范围时间可以交易
- * @param from 起始时间
- * @param to 结束时间
- * @param reverse 是否翻转,默认为false,即时间区间内可以交易
+ * 心情值锁
+ * <p>仅当holder为npc有效
+ * @param value 最小/最大心情值
+ * @param reverse 默认为false。当为true时且mood小于value可交易
  */
-public record TimeLock(int from, int to, boolean reverse) implements ITradeLock  {
+public record MoodLock(int value, boolean reverse) implements ITradeLock {
 
-    public static final MapCodec<TimeLock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Codec.INT.fieldOf("from").forGetter(TimeLock::from),
-            Codec.INT.fieldOf("to").forGetter(TimeLock::to),
+    public static final MapCodec<MoodLock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.INT.fieldOf("from").forGetter(MoodLock::value),
             Codec.BOOL.optionalFieldOf("exclude").forGetter(i-> Optional.of(i.reverse))
-    ).apply(instance, (from, to, reverse)-> new TimeLock(from, to, reverse.orElse(false))));
+    ).apply(instance, (from, exclude)->new MoodLock(from, exclude.orElse(false))));
 
     @Override
     public boolean canTrade(Player player, ITradeHolder npc, int index) {
-        int dayTime = (int) (npc.level().dayTime() % 24000);
-        if(reverse){
-            return dayTime < from || dayTime > to;
+        if(npc instanceof AbstractTerraNPC terraNPC){
+            int mood = terraNPC.getMood().getValue();
+            return (reverse? mood < value : mood > value);
         }
-        return dayTime >= from && dayTime < to ;
+        return false;
     }
 
     @Override
     public TradeLockProvider getCodec() {
-        return TradeLockProviderTypes.TIME_LOCK.get();
+        return TradeLockProviderTypes.MOOD_LOCK.get();
     }
 }

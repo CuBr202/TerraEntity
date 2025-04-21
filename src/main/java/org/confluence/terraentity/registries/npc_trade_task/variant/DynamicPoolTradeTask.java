@@ -3,9 +3,9 @@ package org.confluence.terraentity.registries.npc_trade_task.variant;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
-import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
@@ -51,6 +51,11 @@ public class DynamicPoolTradeTask implements ITradeTask {
         );
     }));
 
+    public Component getTitle(ITradeHolder holder, Component original){
+        return Component.translatable(title() == null?"title.terra_entity.npc_trade.task.dynamic_reward":title());
+    }
+
+
     private Optional<ITrade> getDynamicTrade() {
         return Optional.ofNullable(dynamicTrade);
     }
@@ -89,6 +94,7 @@ public class DynamicPoolTradeTask implements ITradeTask {
         return defaultTrade;
     }
 
+    // 在指定时间由渔夫主动调用
     @Override
     public void setNext(ITradeHolder npc, int index) {
         int cur = npc.getTradeParams().getLevel(index)+1;
@@ -97,7 +103,6 @@ public class DynamicPoolTradeTask implements ITradeTask {
             int random = npc.getRandom().nextInt(maxCost);
 
             dynamicTrade = ItemTradeItemList.of(costPool.get(random), resultPool.get(cur));
-//            npc.syncTrades();
             npc.getTradeManager().addToBeSync(index);
         }
         npc.getTradeParams().increaseLevel(index);

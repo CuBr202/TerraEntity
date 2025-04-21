@@ -104,8 +104,22 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         guiGraphics.setColor(1, 1, 1, (float)(v / 60f));
         int fy = 6 - (int)((60 - v) / 5);
 
-        guiGraphics.drawString(this.font, ((MutableComponent)this.title).withStyle(Style.EMPTY.withBold(true)), 49 + this.imageWidth / 2 - this.font.width(this.title) / 2, fy, 0xFF5656, false);
+        Component label = this.title;
+        ITradeHolder holder = ((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder();
+        if(holder != null) {
+            if(shopItem >= 0 && shopItem < holder.trades().size()) {
+                label = holder.trades().get(shopItem).getTitle(holder, label);
+            }
+        }
+        if(label == title){
+            guiGraphics.drawString(this.font, ((MutableComponent)this.title).withStyle(Style.EMPTY.withBold(true)), 49 + this.imageWidth / 2 - this.font.width(this.title) / 2, fy, 0x348834, false);
+        }else{
+            guiGraphics.drawString(this.font, label, 49 + this.imageWidth / 2 - this.font.width(label) / 2, fy, 0x348834, false);
+        }
+
         guiGraphics.setColor(1, 1, 1, 1);
+
+
         guiGraphics.drawString(this.font, this.playerInventoryTitle,90 + this.imageWidth / 2, this.inventoryLabelY, 4210752, false);
         var interAct = ((IPlayer)minecraft.player).terra_entity$getTradeHolder();
         Entity interactEntity = null;
@@ -116,7 +130,12 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
 
         int l = this.font.width(title);
 
+
         guiGraphics.drawString(this.font, title, 5 - l / 2 + 48, 6, 4210752, false);
+    }
+
+    public Component getTradesLabel(Component original) {
+        return original;
     }
 
     @Override
@@ -216,26 +235,26 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
 
         // 如果选择了交易项
         // 渲染上面的材料物品
-        if(shopItem < 0 ||shopItem >= trades.size())
-            return;
-        var trade = trades.get(this.shopItem);
-        x = ii + 116;
-        y = jj + 19;
-        renderCosts(holder, guiGraphics, font,  x, y, ii, jj, mouseX, mouseY, trade);
+        if(shopItem >= 0  &&  shopItem < trades.size()) {
+
+            var trade = trades.get(this.shopItem);
+            x = ii + 116;
+            y = jj + 19;
+            renderCosts(holder, guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade);
 
 
-        x = ii + 203;
-        y = jj + 36;
-        // 能否购买
-        boolean canBuy =  trade.canTradeWithLock(Minecraft.getInstance().player, holder, shopItem);
-        renderResultSlot(holder,guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, canBuy);
+            x = ii + 203;
+            y = jj + 36;
+            // 能否购买
+            boolean canBuy = trade.canTradeWithLock(Minecraft.getInstance().player, holder, shopItem);
+            renderResultSlot(holder, guiGraphics, font, x, y, ii, jj, mouseX, mouseY, trade, canBuy);
 
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
-
-        // 重新渲染悬浮时物品信息
-        if(cacheIndex != -1){
-            renderResultHover(holder,guiGraphics, font, xcache, ycache, ii, jj, mouseX, mouseY, trades.get(cacheIndex));
+            // 重新渲染悬浮时物品信息
+            if(cacheIndex != -1){
+                renderResultHover(holder,guiGraphics, font, xcache, ycache, ii, jj, mouseX, mouseY, trades.get(cacheIndex));
+            }
         }
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
 
     }
 

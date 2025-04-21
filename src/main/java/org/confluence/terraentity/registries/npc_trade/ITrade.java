@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,15 +37,36 @@ public interface ITrade{
     /**
      * 获取交易锁
      */
-
-    default @Nullable ITradeLock lock(){
-        return null;
+    default ITradeLock lock(){
+        TradeProperties properties = properties();
+        if(properties == null){
+            return null;
+        }
+        return properties.lock();
     }
 
+    @Nullable
+    TradeProperties properties();
+
+    /**
+     * 带交易锁的交易条件，默认使用这个方法
+     */
     default boolean canTradeWithLock(Player player, ITradeHolder npc, int index){
-        return canTrade(player, npc, index) && (lock() == null || lock().canTrade(player, npc, index));
+        ITradeLock lock = lock();
+        if(lock == null){
+            return canTrade(player, npc, index);
+        }
+        return canTrade(player, npc, index) && lock.canTrade(player, npc, index);
     }
 
+    /**
+     * 委托重定向标题
+     * @param original 原始标题
+     * @return 重定向后的标题
+     */
+    default Component getTitle(ITradeHolder holder, Component original){
+        return original;
+    }
     /**
      * 渲染框内的所需物品
      * @param guiGraphics guiGraphics

@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -14,16 +15,22 @@ import org.confluence.terraentity.registries.npc_trade.*;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * <p>交易任务</p>
  *
  */
-public record TradeTask(ITradeTask task) implements ITrade {
+public record TradeTask(ITradeTask task, TradeProperties properties) implements ITrade {
 
     public static final MapCodec<TradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ITradeTask.TYPED_CODEC.fieldOf("trade_task").forGetter(TradeTask::task)
-    ).apply(instance, TradeTask::new));
+            ITradeTask.TYPED_CODEC.fieldOf("trade_task").forGetter(TradeTask::task),
+            TradeProperties.CODEC.optionalFieldOf("properties").forGetter(i-> Optional.ofNullable(i.properties))
+
+    ).apply(instance, (task, properties)->new TradeTask(
+            task,
+            properties.orElse(null)
+    )));
 
     @Nullable
     ITrade getSelected(ITradeHolder npc, int index){
@@ -31,9 +38,21 @@ public record TradeTask(ITradeTask task) implements ITrade {
     }
 
     public static TradeTask create(ITradeTask task){
-        return new TradeTask(task);
+        return new TradeTask(task, null);
     }
 
+    public static TradeTask create(ITradeTask task, TradeProperties properties){
+        return new TradeTask(task, properties);
+    }
+
+    @Override
+    public  Component getTitle(ITradeHolder holder, Component original){
+        ITrade selected = getSelected(holder,ITradeHolder.selectTradeIndex() );
+        if(selected != null) {
+            return task().getTitle(holder, original);
+        }
+        return original;
+    }
 
     @Override
     public boolean canTrade(Player player, ITradeHolder npc, int index) {
@@ -66,12 +85,13 @@ public record TradeTask(ITradeTask task) implements ITrade {
 
             String s = "o";
             guiGraphics.pose().translate(0.0F, 0.0F, 200.0F);
-            guiGraphics.drawString(font, s,x, y , 0x1263bc, true);
+            guiGraphics.drawString(font, s,x+9, y-1 , 0xbc1263, true);
         }else {
             String s = "√";
             guiGraphics.pose().translate(0.0F, 0.0F, 200.0F);
-            guiGraphics.drawString(font, s, x, y, 0x1263bc, true);
+            guiGraphics.drawString(font, s, x, y, 0x12bc63, true);
         }
+        task().renderResult(npc, guiGraphics, font, x+8, y+1, startx, starty, mouseX, mouseY, slotIndex);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -80,6 +100,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
         ITrade selected = getSelected(npc,ITradeHolder.selectTradeIndex() );
         if(selected != null) {
             selected.renderResultHover(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+            task().renderResultHover(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
         }
     }
 
@@ -90,6 +111,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
         ITrade selected = getSelected(npc,ITradeHolder.selectTradeIndex());
         if(selected != null) {
             selected.renderResultSlot(npc,guiGraphics, font, x, y, startx, starty, mouseX, mouseY, canBuy, slot);
+            task().renderResultSlot(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY, canBuy, slot);
         }
     }
 
@@ -99,6 +121,7 @@ public record TradeTask(ITradeTask task) implements ITrade {
         ITrade selected = getSelected(npc,ITradeHolder.selectTradeIndex());
         if(selected != null) {
             selected.renderCosts(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
+            task().renderCosts(npc, guiGraphics, font, x, y, startx, starty, mouseX, mouseY);
         }
     }
 
