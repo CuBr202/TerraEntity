@@ -21,13 +21,58 @@ public class NPCMoodProvider extends AbstractExistCodecProvider<Map<EntityType<?
     @Override
     protected void run() {
         Map<EntityType<?>, NPCMoods.EntityMood> map = new HashMap<>();
-        map.put(TENpcEntities.GUIDE.get(), new NPCMoods.EntityMood.Builder()
-                        .addMoodInfo(TerraEntity.space("guild1"), MoodInfo.of(TENpcEntities.GOBLIN_TINKERER.get(), "fuck_goblin", Mood.HATE))
-                        .addMoodInfo(TerraEntity.space("guild2"), MoodInfo.of(TENpcEntities.DEMOLITIONIST.get(), "love_demolition", Mood.LIKE))
-                        .build());
+        // goblin_tinkerer
         map.put(TENpcEntities.GOBLIN_TINKERER.get(), new NPCMoods.EntityMood.Builder()
-                .addMoodInfo(TerraEntity.space("goblin1"), MoodInfo.of(TENpcEntities.DEMOLITIONIST.get(), "fuck_demolitionist", Mood.HATE))
-                .addMoodInfo(TerraEntity.space("goblin2"), MoodInfo.of(TENpcEntities.NURSE.get(), "love_nurse", Mood.LIKE))
+                .addMoodInfo(TerraEntity.space("terra_entity:goblin1"), MoodInfo.of(TENpcEntities.DYE_TRADER.get(), "like_dye_trader", Mood.LIKE))
+                .build());
+
+        // guide
+        map.put(TENpcEntities.GUIDE.get(), new NPCMoods.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("terra_entity:guild1"), MoodInfo.of(TENpcEntities.PAINTER.get(), "fuck_painter", Mood.HATE))
+                .build());
+
+        // arms_dealer
+        map.put(TENpcEntities.ARMS_DEALER.get(), new NPCMoods.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("terra_entity:arms_dealer1"), MoodInfo.of(TENpcEntities.DEMOLITIONIST.get(), "fuck_demolitionist", Mood.HATE))
+                .addMoodInfo(TerraEntity.space("terra_entity:arms_dealer2"), MoodInfo.of(TENpcEntities.NURSE.get(), "love_nurse", Mood.LOVER))
+                .build());
+
+        // angler
+        map.put(TENpcEntities.ANGLER.get(), new NPCMoods.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("terra_entity:angler1"), MoodInfo.of(TENpcEntities.DEMOLITIONIST.get(), "like_demolitionist", Mood.LIKE))
+                .build());
+
+        // dye_trader
+        map.put(TENpcEntities.DYE_TRADER.get(), new NPCMoods.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("terra_entity:dye_trader1"), MoodInfo.of(TENpcEntities.ARMS_DEALER.get(), "like_arms_dealer", Mood.LIKE))
+                .addMoodInfo(TerraEntity.space("terra_entity:dye_trader2"), MoodInfo.of(TENpcEntities.PAINTER.get(), "like_painter", Mood.LIKE))
+                .build());
+
+        // demolitionist
+        map.put(TENpcEntities.DEMOLITIONIST.get(), new NPCMoods.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("terra_entity:demolitionist1"), MoodInfo.of(TENpcEntities.ARMS_DEALER.get(), "dislike_arms_dealer", Mood.DISLIKE))
+                .addMoodInfo(TerraEntity.space("terra_entity:demolitionist2"), MoodInfo.of(TENpcEntities.GOBLIN_TINKERER.get(), "dislike_goblin_tinkerer", Mood.DISLIKE))
+                .build());
+
+        // painter
+        map.put(TENpcEntities.PAINTER.get(), new NPCMoods.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("terra_entity:painter1"), MoodInfo.of(TENpcEntities.DRYAD.get(), "love_dryad", Mood.LOVER))
+                .build());
+
+        // dryad
+        map.put(TENpcEntities.DRYAD.get(), new NPCMoods.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("terra_entity:dryad1"), MoodInfo.of(TENpcEntities.ANGLER.get(), "dislike_angler", Mood.DISLIKE))
+                .build());
+
+        // merchant
+        map.put(TENpcEntities.MERCHANT.get(), new NPCMoods.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("terra_entity:merchant1"), MoodInfo.of(TENpcEntities.NURSE.get(), "like_nurse", Mood.LIKE))
+                .build());
+
+        // nurse
+        map.put(TENpcEntities.NURSE.get(), new NPCMoods.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("terra_entity:nurse1"), MoodInfo.of(TENpcEntities.ARMS_DEALER.get(), "love_arms_dealer", Mood.LOVER))
+                .addMoodInfo(TerraEntity.space("terra_entity:nurse2"), MoodInfo.of(TENpcEntities.DRYAD.get(), "dislike_dryad", Mood.DISLIKE))
                 .build());
 
         gen(TerraEntity.space(NPCMoods.FILE_NAME), map);
