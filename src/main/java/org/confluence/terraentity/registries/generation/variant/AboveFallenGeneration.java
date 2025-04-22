@@ -3,7 +3,7 @@ package org.confluence.terraentity.registries.generation.variant;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.Mth;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
@@ -12,6 +12,7 @@ import net.minecraft.world.phys.*;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.generation.IGeneration;
+import org.confluence.terraentity.utils.AimUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,34 +38,39 @@ public record AboveFallenGeneration(float maxAngle, float range, float predict, 
             Codec.FLOAT.fieldOf("offset_h").forGetter(AboveFallenGeneration::offsetH)
     ).apply(instance, AboveFallenGeneration::new));
 
-
     @Override
-    public void genProjectile(@NotNull LivingEntity owner, ItemStack weapon, float velocity, @NotNull Supplier<? extends Projectile> proj) {
+    public void genProjectile(@NotNull LivingEntity owner, ItemStack weapon, float speed, @NotNull Supplier<? extends Projectile> proj) {
         var projectile = proj.get();
         Vec3 eye = owner.getEyePosition();
-        LivingEntity target = TEUtils.getAABBAngleTarget(eye, eye.add(owner.getForward().normalize().scale(range)), owner.level(), owner, range, maxAngle, e->TEUtils.projectileCanHitEntityTest.test(projectile,e));
-        Vec3 waveTarget;
-        float angle;
+        LivingEntity target = TEUtils.getAABBAngleTarget(eye, eye.add(owner.getForward().normalize().scale(range)), owner.level(), owner, range, maxAngle, e->TEUtils.projectileCanHurtEntityTest.test(projectile,e));
         float actualInaccuracy;
-        if(target!=null){
-            //周围有目标 预判
-            waveTarget = target.getEyePosition().add(target.getDeltaMovement().scale(predict));
-            //根据夹角减少不精准度
-            angle = (float) TEUtils.angleBetween(target.getEyePosition().subtract(owner.getEyePosition()),owner.getForward());
-            actualInaccuracy = inAccuracy * Mth.lerp(angle/maxAngle,0,inAccuracy * 500) * 5;
-        }else{
-            //周围无目标 获取视线指向点
+        Vec3 firePos, projVel;
+        Vec3 fireLocOffset = new Vec3(Math.random() * offsetH * 2 - offsetH, offsetV ,Math.random() * offsetH * 2 - offsetH);
+
+        if (target!=null) {
+            // 周围有目标 预判
+            firePos = target.getEyePosition().add(fireLocOffset);
+            // 不准确性已在AimUtils中处理
+            actualInaccuracy = 0;
+            AimUtils.AimHelperOptions aimHelperOptions = new AimUtils.AimHelperOptions(projectile)
+                    .setProjectileSpeed(speed)
+                    .setRandomOffsetRadius(inAccuracy);
+            projVel = AimUtils.helperAimEntity(firePos, target, aimHelperOptions);
+        } else {
+            // 周围无目标 获取视线指向点
             Vec3 ori = owner.getEyePosition().add(0,1,0);
             Vec3 end = ori.add(owner.getForward().normalize().scale(range));
             BlockHitResult blockHitResult = owner.level().clip(new ClipContext(ori,end, ClipContext.Block.OUTLINE,ClipContext.Fluid.NONE, owner));
-            waveTarget = blockHitResult.getLocation();
-            //取中值
+            firePos = blockHitResult.getLocation().add(fireLocOffset);
+            // 取中值
             actualInaccuracy = inAccuracy / 2;
+            // 速度是开火位置的反方向
+            projVel = fireLocOffset.scale(-1);
         }
 
         projectile.setOwner(owner);
-        projectile.setPos(waveTarget.add(Math.random() * offsetH - offsetH, offsetV ,Math.random() * offsetH - offsetH));
-        projectile.shoot(waveTarget.x - projectile.getX(),waveTarget.y- projectile.getY(),waveTarget.z - projectile.getZ(), velocity, actualInaccuracy);
+        projectile.setPos(firePos);
+        projectile.shoot(projVel.get(Direction.Axis.X), projVel.get(Direction.Axis.Y), projVel.get(Direction.Axis.Z), speed, actualInaccuracy);
         owner.level().addFreshEntity(projectile);
     }
 

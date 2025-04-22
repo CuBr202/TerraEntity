@@ -4,6 +4,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEItems;
+import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.init.entity.TERideableEntities;
 import org.confluence.terraentity.init.entity.TESummonEntities;
 import org.confluence.terraentity.init.item.*;
@@ -20,6 +21,12 @@ public class TEChineseProvider extends LanguageProvider {
     protected void addTranslations() {
         add("itemGroup.terraentity.title", "泰拉生物");
 
+        add("title.terra_entity.npc_trade", "泰拉商店");
+        add("title.terra_entity.npc_trade.task.daily", "每日任务");
+        add("title.terra_entity.npc_trade.task.fixed_level", "固定等级任务");
+        add("title.terra_entity.npc_trade.task.random", "随机任务");
+        add("title.terra_entity.npc_trade.task.dynamic_reward", "动态奖励任务");
+        add("title.terra_entity.npc_trade.task.progress", "进度任务");
 
         add("entity.terra_entity.ice_slime", "冰冻史莱姆");
         add("entity.terra_entity.blue_slime", "蓝色史莱姆");
@@ -85,6 +92,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TERideableEntities.RIDEABLE_SLIME.get(), "史莱姆坐骑");
         add(TERideableEntities.RIDEABLE_BEE.get(), "蜜蜂坐骑");
 
+
         // 刷怪蛋
         add(TESpawnEggItems.BLUE_SLIME_SPAWN_EGG.get(), "蓝色史莱姆刷怪蛋");
         add(TESpawnEggItems.RED_SLIME_SPAWN_EGG.get(), "红色史莱姆刷怪蛋");
@@ -92,6 +100,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.HONEY_SLIME_SPAWN_EGG.get(), "蜂蜜史莱姆刷怪蛋");
         add(TESpawnEggItems.PURPLE_SLIME_SPAWN_EGG.get(), "紫色史莱姆刷怪蛋");
         add(TESpawnEggItems.DESERT_SLIME_SPAWN_EGG.get(), "沙漠史莱姆刷怪蛋");
+        add(TESpawnEggItems.GREEN_DUMPLING_SLIME_SPAWN_EGG.get(), "青团史莱姆刷怪蛋");
+        add(TESpawnEggItems.SWAMP_SLIME_SPAWN_EGG.get(), "沼泽史莱姆刷怪蛋");
         add(TESpawnEggItems.JUNGLE_SLIME_SPAWN_EGG.get(), "丛林史莱姆刷怪蛋");
         add(TESpawnEggItems.PINK_SLIME_SPAWN_EGG.get(), "粉色史莱姆刷怪蛋");
         add(TESpawnEggItems.ICE_SLIME_SPAWN_EGG.get(), "冰冻史莱姆刷怪蛋");
@@ -135,7 +145,31 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
         add(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
 
-        add(TESpawnEggItems.GUILD_EGG.get(), "向导刷怪蛋");
+
+        add(TENpcEntities.GUIDE.get(), "向导");
+        add(TENpcEntities.DEMOLITIONIST.get(), "爆破专家");
+        add(TENpcEntities.GOBLIN_TINKERER.get(), "哥布林工匠");
+        add(TENpcEntities.ARMS_DEALER.get(), "军火商");
+        add(TENpcEntities.NURSE.get(), "护士");
+        add(TENpcEntities.MERCHANT.get(), "商人");
+        add(TENpcEntities.PAINTER.get(), "油漆工");
+        add(TENpcEntities.DRYAD.get(), "树妖");
+        add(TENpcEntities.DYE_TRADER.get(), "染料商");
+        add(TENpcEntities.ANGLER.get(), "渔夫");
+
+
+
+        add(TESpawnEggItems.GUILD_SPAWN_EGG.get(), "向导刷怪蛋");
+        add(TESpawnEggItems.DEMOLITIONIST_SPAWN_EGG.get(), "爆破专家刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_TINKERER_SPAWN_EGG.get(), "哥布林工匠刷怪蛋");
+        add(TESpawnEggItems.ARMS_DEALER_SPAWN_EGG.get(), "军火商刷怪蛋");
+        add(TESpawnEggItems.NURSE_SPAWN_EGG.get(), "护士刷怪蛋");
+        add(TESpawnEggItems.MERCHANT_SPAWN_EGG.get(), "商人刷怪蛋");
+        add(TESpawnEggItems.PAINTER_SPAWN_EGG.get(), "油漆工刷怪蛋");
+        add(TESpawnEggItems.DRYAD_SPAWN_EGG.get(), "树妖刷怪蛋");
+        add(TESpawnEggItems.DYE_TRADER_SPAWN_EGG.get(), "染料商刷怪蛋");
+        add(TESpawnEggItems.ANGLER_SPAWN_EGG.get(), "渔夫刷怪蛋");
+
 
 
         // 召唤杖
@@ -181,6 +215,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("message.terraentity.boss_spawn", "%s已苏醒！");
         add("message.terraentity.boss_leave", "%s已被打败！");
         add("message.terraentity.boss_discard", "已离开！");
+        add("message.terra_entity.trade.not_enough_items", "你没有足够的物品来交易");
 
 
         add("terra_entity.options.title", "Terra Entity 配置");

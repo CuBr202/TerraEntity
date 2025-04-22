@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fml.event.IModBusEvent;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -44,6 +43,4 @@ public class AdapterUtils {
     public static <T> FriendlyByteBuf.Reader<T> CodecReader(Codec<T> CODEC){
         return buffer -> buffer.readJsonWithCodec(CODEC);
     }
-
-
 }

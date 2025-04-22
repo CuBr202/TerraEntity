@@ -6,6 +6,8 @@
   "refmap": "terra_entity.refmap.json",
   "mixins": [
     "BossEventMixin",
+    "ExplosionDamageCalculatorMixin",
+    "ExplosionMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "MobEffectMixin",
@@ -14,6 +16,9 @@
     "RandomStrollGoalMixin",
     "ServerBossEventMixin",
     "accessor.EntityAccessor",
+    "accessor.ExplosionAccessor",
+    "accessor.LevelAccessor",
+    "accessor.ProjectileWeaponAccessor",
     "accessor.SlimeAccessor"
   ],
   "client": [

@@ -19,12 +19,12 @@ public class EffectStrategyProviderTypes {
     public static final DeferredRegister<EffectStrategyProvider> TYPES = DeferredRegister.create(TERegistries.EffectStrategyProviders.KEY, TerraEntity.MODID);
     public static final Supplier<IForgeRegistry<EffectStrategyProvider>> REGISTRY = TYPES.makeRegistry(RegistryBuilder::new);
 
-    public static final RegistryObject<EffectStrategyProvider> TIME_POSSIBILITY_AMPLIFIER_EFFECT_PROVIDER = register("time_possibility_amplifier_effect", TimePossibilityAmplifierEffect.CODEC);
-    public static final RegistryObject<EffectStrategyProvider> PREFAB_EFFECT_PROVIDER = register("prefab_effect", PrefabEffect.CODEC);
-    public static final RegistryObject<EffectStrategyProvider> RANDOM_EFFECT_PROVIDER = register("random_weight_effect", RandomWeightEffect.CODEC);
+    public static final RegistryObject<EffectStrategyProvider> TIME_POSSIBILITY_AMPLIFIER_EFFECT_PROVIDER = register("time_possibility_amplifier_effect", ()->TimePossibilityAmplifierEffect.CODEC);
+    public static final RegistryObject<EffectStrategyProvider> PREFAB_EFFECT_PROVIDER = register("prefab_effect", ()->PrefabEffect.CODEC);
+    public static final RegistryObject<EffectStrategyProvider> RANDOM_EFFECT_PROVIDER = register("random_weight_effect", ()->RandomWeightEffect.CODEC);
 
 
-    private static<T extends IEffectStrategy> RegistryObject<EffectStrategyProvider> register(String name, MapCodec<T> codec) {
+    private static RegistryObject<EffectStrategyProvider> register(String name, Supplier<MapCodec<? extends IEffectStrategy>> codec) {
         return TYPES.register(name, ()->new EffectStrategyProvider(codec));
     }
 }

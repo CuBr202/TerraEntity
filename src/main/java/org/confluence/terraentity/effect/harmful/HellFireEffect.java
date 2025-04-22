@@ -4,13 +4,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.level.CustomExplodeCalculator;
 import org.confluence.terraentity.mixed.IMobEffectExtension;
 
 /**
@@ -34,16 +37,17 @@ public class HellFireEffect extends MobEffect implements IMobEffectExtension {
         livingEntity.level().explode(
                 livingEntity,
                 livingEntity.level().damageSources().explosion(livingEntity, livingEntity),
-                new ExplosionDamageCalculator() {
+                new CustomExplodeCalculator() {
+                    @Override
+                    public float getEntityDamageAmount(Explosion explosion, Entity entity, double original) {
+                        if(!( entity instanceof Enemy || entity instanceof AbstractTerraBossBase<?>)) return 0;
+                        return 3 + amplifier*3;
+                    }
+
                     @Override
                     public boolean shouldBlockExplode(Explosion explosion, BlockGetter reader, BlockPos pos, BlockState state, float power) {
                         return false;
                     }
-//                    @Override todo: 自定义爆炸伤害
-//                    public float getEntityDamageAmount(Explosion explosion, Entity entity) {
-//                        if(!( entity instanceof Enemy || entity instanceof AbstractTerraBossBase<?>)) return 0;
-//                        return 3 + amplifier*3;
-//                    }
                 } ,
                 livingEntity.getX(), livingEntity.getY(0.0625),livingEntity.getZ(),
                 1, true, Level.ExplosionInteraction.MOB);

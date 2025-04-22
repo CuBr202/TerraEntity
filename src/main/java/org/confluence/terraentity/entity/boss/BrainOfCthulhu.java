@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.boss;
 
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -373,4 +374,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         return this.stage != 1;
     }
 
+    protected BossEvent.BossBarColor getBossBarColor(){
+        return BossEvent.BossBarColor.YELLOW;
+    };
 }

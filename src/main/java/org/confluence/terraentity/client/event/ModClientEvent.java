@@ -1,11 +1,6 @@
 package org.confluence.terraentity.client.event;
 
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.Model;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.client.gui.screens.MenuScreens;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -18,21 +13,14 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.block.renderer.FigureBlockRenderer;
 import org.confluence.terraentity.client.entity.model.*;
-import org.confluence.terraentity.client.entity.renderer.BoomerangProjRenderer;
-import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
-import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
 import org.confluence.terraentity.client.gui.config_container.ConfigContainerRegister;
+import org.confluence.terraentity.client.gui.container.SimpleTradeScreen;
 import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.client.util.RegisterUtils;
-import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TEMenus;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.block.TEFigureBlocks;
-import org.confluence.terraentity.init.entity.*;
-
-import java.lang.reflect.Field;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 
 @Mod.EventBusSubscriber(modid = TerraEntity.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -57,12 +45,11 @@ public final class ModClientEvent {
 */
 
     @SubscribeEvent
-    public static void onClientSetup(final FMLClientSetupEvent evt) {
-//        ModList.get().getModContainerById(MODID).ifPresent(container -> {
-//            container.registerExtensionPoint(
-//                    ConfigScreenHandler.ConfigScreenFactory.class,
-//                    () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> new ConfigScreen(screen)));
-//        });
+    public static void onClientSetup(final FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+            MenuScreens.register(TEMenus.SIMPLE_NPC_TRADES_MENU.get(), SimpleTradeScreen::new);
+
+        });
     }
 
     @SubscribeEvent
@@ -106,6 +93,8 @@ public final class ModClientEvent {
         WhipModelRegister.getInstance().register(event);
         EntityBlockModelRegister.getInstance().register(event);
     }
+
+
 
 
 

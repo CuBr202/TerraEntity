@@ -1,27 +1,113 @@
 package org.confluence.terraentity.registries.npc_trade;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.core.NonNullList;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.registries.TERegistries;
-import org.confluence.terraentity.registries.track.TrackTypeProvider;
-import org.confluence.terraentity.registries.track.variant.SimpleTrack;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
 
-import java.util.List;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.registries.npc_trade_lock.ITradeLock;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 /**
- * <h1>跟踪方式</h1>
+ * <h1>npc交易接口</h1>
  */
 public interface ITrade{
 
-    boolean canTrade(Player player);
+    /**
+     * 能否触发onTrade
+     */
+    boolean canTrade(Player player, ITradeHolder npc, int index);
 
-    ItemStack result();
+    /**
+     * 当canTrade为true时触发
+     */
+    void onTrade(ServerPlayer player, ITradeHolder npc, int index);
+
+    /**
+     * 获取交易锁
+     */
+    default ITradeLock lock(){
+        TradeProperties properties = properties();
+        if(properties == null){
+            return null;
+        }
+        return properties.lock();
+    }
+
+    @Nullable
+    TradeProperties properties();
+
+    /**
+     * 带交易锁的交易条件，默认使用这个方法
+     */
+    default boolean canTradeWithLock(Player player, ITradeHolder npc, int index){
+        ITradeLock lock = lock();
+        if(lock == null){
+            return canTrade(player, npc, index);
+        }
+        return canTrade(player, npc, index) && lock.canTrade(player, npc, index);
+    }
+
+    /**
+     * 委托重定向标题
+     * @param original 原始标题
+     * @return 重定向后的标题
+     */
+    default Component getTitle(ITradeHolder holder, Component original){
+        return original;
+    }
+    /**
+     * 渲染框内的所需物品
+     * @param guiGraphics guiGraphics
+     * @param font font
+     * @param x 当前绘制位置x
+     * @param y 当前绘制位置y
+     * @param startx 菜单左上角位置x
+     * @param starty 菜单左上角位置y
+     */
+    @OnlyIn(Dist.CLIENT)
+    void renderCosts(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
+
+    /**
+     * 渲染交易列表的表格调用
+     */
+    @OnlyIn(Dist.CLIENT)
+    void renderResult(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int slotIndex);
+
+    /**
+     * 悬浮于交易列表物品上调用，只会在悬浮于交易项时调用一次
+     */
+    @OnlyIn(Dist.CLIENT)
+    void renderResultHover(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY);
+
+    /**
+     * 渲染交易列表的物品槽调用
+     */
+    @OnlyIn(Dist.CLIENT)
+    void renderResultSlot(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, boolean canBuy, Slot slot);
+
+    /**
+     * 当客户端点击物品槽时调用，自定义播放声音
+     */
+    default void onLocalClickSlot(Player player, int button, ClickType clickType, ITradeHolder npc, int index){
+        if(canTrade(player, npc, index)){
+            player.playSound(SoundEvents.UI_BUTTON_CLICK.value());
+        }else{
+            player.playSound(SoundEvents.UI_TOAST_IN);
+        }
+    }
+
 
     /**
      * 获取编解码器
@@ -30,12 +116,12 @@ public interface ITrade{
     TradeProvider getCodec();
 
 
-    MapCodec<ITrade> TYPED_CODEC = TradeProviderTypes.REGISTRY.get()
-            .getCodec()
-            .dispatchMap(ITrade::getCodec, i->i.codec().codec());
+
+    Codec<ITrade> TYPED_CODEC = TradeProviderTypes.REGISTRY.get()
+                    .getCodec()
+                    .dispatch(ITrade::getCodec, i->i.codec().codec());
+
 
 //    StreamCodec<ByteBuf, ITrade> STREAM_CODEC = ByteBufCodecs.fromCodec(TYPED_CODEC);
-
-//    StreamCodec<ByteBuf, List<ITrade>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.collection(NonNullList::createWithCapacity));
 
 }

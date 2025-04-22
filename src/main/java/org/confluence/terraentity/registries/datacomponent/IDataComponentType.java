@@ -1,6 +1,5 @@
 package org.confluence.terraentity.registries.datacomponent;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
@@ -25,7 +24,7 @@ public interface IDataComponentType<T extends IDataComponentType<T>> {
      * @param tag 待写入的NBT,由框架自动调用
      */
     default void writeToNBT(Supplier<DataComponentProvider<T>> provider, CompoundTag tag){
-        JsonElement obj = provider.get().codec().get().encodeStart(JsonOps.INSTANCE, (T) this).result().get();
+        JsonElement obj = provider.get().codec().encodeStart(JsonOps.INSTANCE, (T) this).result().get();
         tag.putString(provider.get().name(), obj.toString());
     }
 
@@ -46,7 +45,7 @@ public interface IDataComponentType<T extends IDataComponentType<T>> {
      */
     static <B extends IDataComponentType<B>> B readFromNBT(CompoundTag tag, DataComponentProvider<B> provider){
         String name = provider.name();
-        return provider.codec().get().decode(JsonOps.INSTANCE, GsonHelper.parse(tag.getString(name))).result().get().getFirst();
+        return provider.codec().decode(JsonOps.INSTANCE, GsonHelper.parse(tag.getString(name))).result().get().getFirst();
     }
 
     /**
@@ -79,7 +78,7 @@ public interface IDataComponentType<T extends IDataComponentType<T>> {
             return null;
         }
 
-        return component.codec().get().decode(JsonOps.INSTANCE, JsonParser.parseString(tag1)).result().get().getFirst();
+        return component.codec().decode(JsonOps.INSTANCE, JsonParser.parseString(tag1)).result().get().getFirst();
     }
 
     static <B extends IDataComponentType<B>> @Nullable B getData(ItemStack stack, Supplier<DataComponentProvider<B>> component){

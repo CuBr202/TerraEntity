@@ -15,7 +15,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.IHouseDetector;
+import org.confluence.terraentity.entity.npc.house.IHouseDetector;
 import org.confluence.terraentity.network.c2s.ServerBoundHousePacket;
 import org.confluence.terraentity.utils.TEUtils;
 

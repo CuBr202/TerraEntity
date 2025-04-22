@@ -28,6 +28,8 @@ public class TESpawnEggItems {
     public static final RegistryObject<Item> BLACK_SLIME_SPAWN_EGG = registerEgg("black_slime_spawn_egg", TEMonsterEntities.BLACK_SLIME, 0x7E7E7E, 0x373535);
     public static final RegistryObject<Item> PINK_SLIME_SPAWN_EGG = registerEgg("pink_slime_spawn_egg", TEMonsterEntities.PINK_SLIME, 0xFF87B3, 0xf89fe3);
     public static final RegistryObject<Item> DESERT_SLIME_SPAWN_EGG = registerEgg("desert_slime_spawn_egg", TEMonsterEntities.DESERT_SLIME, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> GREEN_DUMPLING_SLIME_SPAWN_EGG = registerEgg("green_dumpling_slime_spawn_egg", TEMonsterEntities.GREEN_DUMPLING_SLIME, 0xa2f89f, 0x3de838);
+    public static final RegistryObject<Item> SWAMP_SLIME_SPAWN_EGG = registerEgg("swamp_slime_spawn_egg", TEMonsterEntities.SWAMP_SLIME, 0xa2f89f, 0x3de838);
     public static final RegistryObject<Item> JUNGLE_SLIME_SPAWN_EGG = registerEgg("jungle_slime_spawn_egg", TEMonsterEntities.JUNGLE_SLIME, 0x9ae920, 0xC7AB5E);
     public static final RegistryObject<Item> JUNGLE_BAT_SPAWN_EGG = registerEgg("jungle_bat_spawn_egg", TEMonsterEntities.JUNGLE_BAT, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> SNATCHER_SPAWN_EGG = registerEgg("snatcher_spawn_egg", TEMonsterEntities.SNATCHER, 0xffffff, 0xffffff);
@@ -64,9 +66,19 @@ public class TESpawnEggItems {
     public static final RegistryObject<Item> BRAIN_OF_CTHULHU_SPAWN_EGG = registerEgg("brain_of_cthulhu_spawn_egg", TEBossEntities.BRAIN_OF_CTHULHU, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> QUEEN_BEE_SPAWN_EGG = registerEgg("queen_bee_spawn_egg", TEBossEntities.QUEEN_BEE, 0xffffff, 0xffffff);
 
-    public static final RegistryObject<Item> GUILD_EGG = registerEgg("guild_spawn_egg", TENpcEntities.GUIDE, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> GUILD_SPAWN_EGG = registerEgg("guild_spawn_egg", TENpcEntities.GUIDE, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> DEMOLITIONIST_SPAWN_EGG = registerEgg("demolitionist_spawn_egg", TENpcEntities.DEMOLITIONIST, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> GOBLIN_TINKERER_SPAWN_EGG = registerEgg("goblin_tinkerer_spawn_egg", TENpcEntities.GOBLIN_TINKERER, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> ARMS_DEALER_SPAWN_EGG = registerEgg("arms_dealer_spawn_egg", TENpcEntities.ARMS_DEALER, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> NURSE_SPAWN_EGG = registerEgg("nurse_spawn_egg", TENpcEntities.NURSE, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> MERCHANT_SPAWN_EGG = registerEgg("merchant_spawn_egg", TENpcEntities.MERCHANT, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> PAINTER_SPAWN_EGG = registerEgg("painter_spawn_egg", TENpcEntities.PAINTER, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> DRYAD_SPAWN_EGG = registerEgg("dryad_spawn_egg", TENpcEntities.DRYAD, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> DYE_TRADER_SPAWN_EGG = registerEgg("dye_trader_spawn_egg", TENpcEntities.DYE_TRADER, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> ANGLER_SPAWN_EGG = registerEgg("angler_spawn_egg", TENpcEntities.ANGLER, 0xffffff, 0xffffff);
 
-    public static RegistryObject<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>>  entityType, int primaryColor, int secondaryColor){
+
+    public static RegistryObject<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryColor, int secondaryColor){
         return ITEMS.register(name, () -> new ForgeSpawnEggItem(entityType, primaryColor, secondaryColor,new Item.Properties()));
     }
 }

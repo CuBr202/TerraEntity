@@ -7,6 +7,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
@@ -56,6 +57,11 @@ public final class TEEntities {
         TESummonEntities.registerEntityAttributes(event);
         TENpcEntities.registerEntityAttributes(event);
 
+    }
+
+    public static void spawnPlacementRegister(SpawnPlacementRegisterEvent event) {
+        TEMonsterEntities.spawnPlacementRegister(event);
+        TENpcEntities.spawnPlacementRegister(event);
     }
 
     public static void register(IEventBus bus){

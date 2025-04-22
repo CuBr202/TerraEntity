@@ -9,6 +9,8 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
+import org.confluence.terraentity.data.gen.recipe.CollectRecipeProvider;
+import org.confluence.terraentity.data.gen.recipe.TENPCShopProvider;
 import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 import org.confluence.terraentity.data.gen.tags.TEDamageTypeTagsProvider;
 import org.confluence.terraentity.data.gen.tags.TEBlockTagsProvider;
@@ -31,12 +33,11 @@ public class TEDataGenerator {
         ExistingFileHelper helper = event.getExistingFileHelper();
 
         CompletableFuture<HolderLookup.Provider> lookup = event.getLookupProvider();
-        boolean server = event.includeServer();
 
-
-        DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookup, TERegisterDataPack.DATA_BUILDER, Set.of(MODID));
+        DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookup, TERegisterDataPack.DATA_BUILDER, Set.of("minecraft", MODID));
         lookup = provider.getRegistryProvider();
 
+        boolean server = event.includeServer();
 
         generator.addProvider(server, provider);
         generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
@@ -44,11 +45,11 @@ public class TEDataGenerator {
         TEBlockTagsProvider blockTagsProvider = new TEBlockTagsProvider(output, lookup, helper);
         generator.addProvider(server, blockTagsProvider);
         generator.addProvider(server, new TEItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
+
         generator.addProvider(server, TELootTableProvider.getProvider(output,lookup));
-        generator.addProvider(server, new TERecipeProvider(output));
-
-//        generator.addProvider(server, new ModPoiTypeTagsProvider(output, lookup, helper));
-
+        generator.addProvider(server, new CollectRecipeProvider(output, TENPCShopProvider::new, TERecipeProvider::new));
+        generator.addProvider(server, new NPCNameProvider(output));
+        generator.addProvider(server, new NPCMoodProvider(output));
 
         boolean client = event.includeClient();
         generator.addProvider(client, new TEChineseProvider(output));

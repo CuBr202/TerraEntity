@@ -4,8 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 import net.minecraftforge.eventbus.api.Event;
-import org.confluence.terraentity.entity.npc.HouseDetectInfo;
-import org.confluence.terraentity.entity.npc.IHouseDetector;
+import org.confluence.terraentity.entity.npc.house.HouseDetectInfo;
+import org.confluence.terraentity.entity.npc.house.IHouseDetector;
 
 
 /**

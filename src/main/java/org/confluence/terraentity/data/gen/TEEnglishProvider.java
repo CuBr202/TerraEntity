@@ -6,7 +6,6 @@ import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
 import org.confluence.terraentity.init.item.TESummonItems;
@@ -42,12 +41,22 @@ public class TEEnglishProvider extends LanguageProvider {
 
         add("itemGroup.terraentity.title", "Terra Entity");
 
+        add("title.terra_entity.npc_trade", "Terra Shop");
+        add("title.terra_entity.npc_trade.task.daily", "Daily Task");
+        add("title.terra_entity.npc_trade.task.fixed_level", "Fixed Level Task");
+        add("title.terra_entity.npc_trade.task.random", "Random Task");
+        add("title.terra_entity.npc_trade.task.dynamic_reward", "Dynamic Reward Task");
+        add("title.terra_entity.npc_trade.task.progress", "Progress Task");
+
+
+
         add("entity.terra_entity.mother_slime", "Mother Slime");
         add("entity.terra_entity.baby_slime", "Baby Slime");
 
         add("message.terraentity.boss_spawn", "%s Has Awoken!");
         add("message.terraentity.boss_leave", "%s Have Been Defeated!");
         add("message.terraentity.boss_discard", "Has Been Discarded！");
+        add("message.terra_entity.trade.not_enough_items", "Not Enough Items");
 
 
         add("terra_entity.options.title", "Terra Entity Options");

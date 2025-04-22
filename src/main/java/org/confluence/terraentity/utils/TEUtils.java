@@ -18,10 +18,13 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -389,15 +392,15 @@ public final class TEUtils {
 
     /**
      * 获取玩家视角下距离指定距离的实体
-     * @param player
+     * @param entity
      * @param distance
      * @return
      */
-    public static EntityHitResult getEyeTraceHitResult(Player player, double distance){
-        AABB aabb = player.getBoundingBox().inflate(distance);
-        Vec3 from = player.getEyePosition();
-        Vec3 to = player.getEyePosition().add(player.getLookAngle().scale(distance));
-        return ProjectileUtil.getEntityHitResult(player.level(), player, from, to, aabb, e-> true, 0.1F);
+    public static EntityHitResult getEyeTraceHitResult(Entity entity, double distance){
+        AABB aabb = entity.getBoundingBox().inflate(distance);
+        Vec3 from = entity.getEyePosition();
+        Vec3 to = entity.getEyePosition().add(entity.getLookAngle().scale(distance));
+        return ProjectileUtil.getEntityHitResult(entity.level(), entity, from, to, aabb, e-> true, 0.1F);
     }
 
     /**
@@ -415,7 +418,7 @@ public final class TEUtils {
     }
 
     public static boolean isFTWWorld(ServerLevel level) {
-        return false;
+        return false; // confluence mixed here
     }
 
     /**
@@ -660,8 +663,9 @@ public final class TEUtils {
         ){
             return false;
         }
-        if(target instanceof ISummonMob<?>)
+        if(target instanceof ISummonMob<?>) {
             return false;
+        }
 
         return true;
     };
@@ -670,7 +674,7 @@ public final class TEUtils {
      * <h1>统一弹幕目标伤害过滤</h1>
      */
     public static BiPredicate<Projectile, Entity> projectileCanHurtEntityTest = (projectile, target)-> {
-        if (!target.isAttackable() ||  target instanceof Villager || target instanceof ArmorStand) {
+        if (!target.isAttackable() ||  target instanceof     Npc  || target instanceof ArmorStand) {
             return false;
         }
         if(target instanceof  LivingEntity living){
@@ -711,9 +715,10 @@ public final class TEUtils {
             return false;
         }
 
-        if(entity != null && entity.isPassengerOfSameVehicle(target))
+        if(entity != null && entity.isPassengerOfSameVehicle(target)) {
             // 不能攻击坐骑
             return false;
+        }
         return true;
 
     };
@@ -744,6 +749,68 @@ public final class TEUtils {
 
         // 5. 构造四元数
         return new Quaternionf().fromAxisAngleRad(cross, theta);
+    }
+
+
+    /**
+     * 计算射线与AABB的交点
+     * @param start 射线起点
+     * @param dir 射线方向
+     * @param aabb 包围盒
+     * @return 若交点存在，返回交点坐标；否则返回null
+     */
+    public static @Nullable Vec3 calRayToAABB(Vec3 start, Vec3 dir, AABB aabb) {
+        double tMin = 0.0;
+        double tMax = Double.MAX_VALUE;
+
+        // 检查射线与x轴的交点
+        double t1 = (aabb.minX - start.x) / dir.x;
+        double t2 = (aabb.maxX - start.x) / dir.x;
+        if (dir.x < 0) {
+            double temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+        if (t1 > tMin) tMin = t1;
+        if (t2 < tMax) tMax = t2;
+        if (tMin > tMax) return null;
+
+        // 检查射线与y轴的交点
+        t1 = (aabb.minY - start.y) / dir.y;
+        t2 = (aabb.maxY - start.y) / dir.y;
+        if (dir.y < 0) {
+            double temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+        if (t1 > tMin) tMin = t1;
+        if (t2 < tMax) tMax = t2;
+        if (tMin > tMax) return null;
+
+        // 检查射线与z轴的交点
+        t1 = (aabb.minZ - start.z) / dir.z;
+        t2 = (aabb.maxZ - start.z) / dir.z;
+        if (dir.z < 0) {
+            double temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+        if (t1 > tMin) tMin = t1;
+        if (t2 < tMax) tMax = t2;
+        if (tMin > tMax) return null;
+
+        return start.add(dir.scale(tMin));
+    }
+
+    public static void consumeItemCount(List<ItemStack> have, Item item, int consumeCount) {
+        int count = 0;
+        for (ItemStack stack : have) {
+            if (stack.is(item) && count < consumeCount) {
+                int toConsume = Math.min(stack.getCount(), consumeCount - count);
+                stack.shrink(toConsume);
+                count += toConsume;
+            }
+        }
     }
 
 

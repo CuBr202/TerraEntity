@@ -10,8 +10,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.House;
-import org.confluence.terraentity.entity.npc.HouseManager;
+import org.confluence.terraentity.entity.npc.house.House;
+import org.confluence.terraentity.entity.npc.house.HouseManager;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.utils.AdapterUtils;
 
@@ -95,7 +95,12 @@ public class ServerBoundHousePacket {
                     }
                 }
             }else if(action == Action.DELETE){
-                HouseManager.getInstance().removeHouse(id);
+                if(id.equals(player.getUUID())){
+                    // 选中实体为空，则删除当前位置的房屋，有时候可能会出现实体死亡但没有刷新缓存，需要手动删除
+                    HouseManager.getInstance().removeHouse(house.center());
+                }else {
+                    HouseManager.getInstance().removeHouse(id);
+                }
                 player.sendSystemMessage(Component.translatable("tooltip.terra_entity.house_detect.mode.delete.success"));
             }
         });

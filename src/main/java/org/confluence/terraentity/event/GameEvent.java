@@ -8,9 +8,14 @@ import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
-import org.confluence.terraentity.entity.npc.NPCTrades;
+import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
+import org.confluence.terraentity.entity.npc.misc.NPCNames;
+import org.confluence.terraentity.entity.npc.mood.NPCMoods;
+import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
+import org.confluence.terraentity.utils.AdapterUtils;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = TerraEntity.MODID)
 public class GameEvent {
@@ -25,8 +30,14 @@ public class GameEvent {
 
     @SubscribeEvent
     public static void serverStarted(ServerStartedEvent event) {
-        NPCTrades.readTradesFromJson(event.getServer().getResourceManager());
+        NPCTradeManager.readTradesFromJson(event.getServer().getResourceManager());
         HouseStoreSaver.get(event.getServer().overworld());
+        NPCNames.loadNPCNames(event.getServer().getResourceManager());
+        NPCDialogs.loadNPCDialogs(event.getServer().getResourceManager());
+        NPCMoods.loadMoods(event.getServer().getResourceManager());
+        ModEvent.onCollectBrains(new NPCEvent.NPCBrainCollectionEvent()); // 本模组优先注册
+        AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
+
     }
 
     @SubscribeEvent
