@@ -20,6 +20,11 @@ public class NurseRangeAttackBrain<T extends AbstractTerraNPC> extends NPCRangeA
     }
 
     @Override
+    protected void start(ServerLevel level, T entity, long gameTimeIn) {
+
+    }
+
+    @Override
     protected boolean customDoAttack(ServerLevel level, T owner, LivingEntity target){
         ThrownPotion thrownpotion = new ThrownPotion(level, owner);
         ItemStack stack = new ItemStack(Items.POTION);

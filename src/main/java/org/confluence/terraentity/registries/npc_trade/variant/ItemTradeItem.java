@@ -15,24 +15,24 @@ import java.util.Optional;
  * @param result
  * @param cost
  */
-public record ItemTradeItem(ItemStack result, ItemStack cost, TradeProperties properties) implements ITradeItem, IItemTrade {
+public record ItemTradeItem(ItemStack cost, ItemStack result, TradeProperties properties) implements ITradeItem, IItemTrade {
 
     public static final MapCodec<ItemTradeItem> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemStack.CODEC.fieldOf("result").forGetter(ItemTradeItem::result),
             ItemStack.CODEC.fieldOf("cost").forGetter(ItemTradeItem::cost),
+            ItemStack.CODEC.fieldOf("result").forGetter(ItemTradeItem::result),
             TradeProperties.CODEC.optionalFieldOf("properties").forGetter(i->Optional.ofNullable(i.properties))
-    ).apply(instance, (result, cost, lock)-> new ItemTradeItem(
-            result,
+    ).apply(instance, ( cost,result, lock)-> new ItemTradeItem(
             cost,
+            result,
             lock.orElse(null)
     )));
 
-    public static ItemTradeItem of(ItemStack result, ItemStack cost) {
-        return new ItemTradeItem(result, cost, null);
+    public static ItemTradeItem of(ItemStack cost, ItemStack result) {
+        return new ItemTradeItem(cost, result, null);
     }
 
-    public static ItemTradeItem of(ItemLike result, int resultCount, ItemLike cost, int costCount) {
-        return new ItemTradeItem(new ItemStack(result.asItem(), resultCount), new ItemStack(cost, costCount), null);
+    public static ItemTradeItem of(ItemLike cost, int costCount, ItemLike result, int resultCount) {
+        return new ItemTradeItem(new ItemStack(cost, costCount), new ItemStack(result.asItem(), resultCount), null);
     }
 
     public static Builder builder() {
@@ -66,7 +66,7 @@ public record ItemTradeItem(ItemStack result, ItemStack cost, TradeProperties pr
             return this;
         }
         public ItemTradeItem build() {
-            return new ItemTradeItem(result, cost, properties);
+            return new ItemTradeItem(cost, result,  properties);
         }
     }
 

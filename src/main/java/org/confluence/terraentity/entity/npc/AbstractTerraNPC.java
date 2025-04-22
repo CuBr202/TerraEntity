@@ -102,6 +102,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public int cooldownTick = 0; // 攻击冷却时间
     private int _cooldownTicks;
 
+    public int stopUsingItemTick = 0; // 停止使用物品后的时间
 
     private static final EntityDataAccessor<Boolean> DATA_RANGE_ATTACK_COOLDOWN = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<NPCTradeManager> DATA_TRADES_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADES_SERIALIZER.get());
@@ -381,8 +382,16 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
     }
 
+    int lastUseItemTick = 0;
+    public double mainHandLerpRotXFrom = 0;
+    public double mainHandLerpRotYFrom = 0;
+
+    public double offHandLerpRotXFrom = 0;
+    public double offHandLerpRotYFrom = 0;
+
     @Override
     public void tick(){
+
         super.tick();
         this.updateSwingTime();
 
@@ -397,6 +406,16 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }else{
             this.cooldownTick = 0;
         }
+        if(level().isClientSide) {
+            ++stopUsingItemTick;
+
+            if (getUseItemRemainingTicks() == 0 && lastUseItemTick > 0) {
+                // 停止使用物品
+                stopUsingItemTick = 0;
+            }
+            lastUseItemTick = getUseItemRemainingTicks();
+        }
+
     }
 
     public int getCurrentSwingDuration() {
@@ -616,4 +635,8 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         return this.blockPosition();
     }
 
+    public void stopUsingItem() {
+        super.stopUsingItem();
+        stopUsingItemTick = 0;
+    }
 }

@@ -7,7 +7,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.event.entity.living.MobDespawnEvent;
 import org.confluence.terraentity.api.event.WhipRegisterModifyEvent;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.event.ModEvent;

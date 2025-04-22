@@ -197,6 +197,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
 
     }
 
+    @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
         if(!isReRender){
@@ -233,8 +234,23 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
 
                     float lerpy = Mth.lerp(partialTick,animatable.yBodyRotO - animatable.yHeadRotO ,  animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
                     bone.setRotY(lerpy);
+                    animatable.mainHandLerpRotXFrom = lerpx;
+                    animatable.mainHandLerpRotYFrom = lerpy;
+
                 }
-            }else if(animatable.swinging){
+            }
+            else if(animatable.stopUsingItemTick < 5){
+                double from = animatable.mainHandLerpRotXFrom;
+                double to = bone.getRotX();
+                double lerpx = lerpMotion(animatable.stopUsingItemTick + partialTick, 6, from, to);
+                bone.setRotX((float) lerpx);
+
+                double from1 = animatable.mainHandLerpRotYFrom;
+                double to1 = bone.getRotY();
+                double lerpy = lerpMotion(animatable.stopUsingItemTick + partialTick, 6, from1, to1);
+                bone.setRotY((float) lerpy);
+            }
+            else if(animatable.swinging){
                 float swingTime = animatable.swingTime + partialTick;
                 float swingTicks = animatable.getCurrentSwingDuration();
                 double lerpx = lerpMotion(swingTime, swingTicks, 0, 1f );
@@ -264,8 +280,11 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
                     }
                 }else{
                     // 手持物品时的状态
-                    if(handItem != Items.AIR)
-                        bone.setRotX(0.3f);
+                    if(handItem != Items.AIR) {
+                        // 手持物品走动的时候手也会动
+                        float rotO = bone.getRotX();
+                        bone.setRotX(0.3f + rotO * 0.5F);
+                    }
                 }
             }
         }else if(bone.getName().equals(LEFT_HAND)){
@@ -276,9 +295,15 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
 
                     bone.setRotX((float) lerpx);
                     float lerpy = Mth.lerp(partialTick,animatable.yBodyRotO - animatable.yHeadRotO ,  animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
-                    bone.setRotY(lerpy - 0.5F);
+                    // 防止转太多穿模
+                    lerpy = Math.max(lerpy - 0.5F,-1.4f);
+                    bone.setRotY(lerpy);
+
+                    animatable.offHandLerpRotXFrom = lerpx;
+                    animatable.offHandLerpRotYFrom = lerpy;
                 }
-            }else{
+            }
+            else{
                 Item handItem = animatable.getMainHandItem().getItem();
                 if(handItem instanceof CrossbowItem){
                     if(animatable.isCooledDown()){

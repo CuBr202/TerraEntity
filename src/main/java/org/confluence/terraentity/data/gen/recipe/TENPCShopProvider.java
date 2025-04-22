@@ -42,7 +42,7 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
 
     public TENPCShopProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
         super(output, lookup);
-        this.npcShopPathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "npc_shop");
+        this.npcShopPathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, NPCTradeManager.KEY);
 
     }
 

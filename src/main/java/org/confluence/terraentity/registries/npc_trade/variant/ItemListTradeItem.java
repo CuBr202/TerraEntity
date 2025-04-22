@@ -12,16 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public record ItemListTradeItem(ItemStack result, List<ItemStack> costs, TradeProperties properties) implements ITradeItem, IItemListTrade {
+public record ItemListTradeItem(List<ItemStack> costs, ItemStack result, TradeProperties properties) implements ITradeItem, IItemListTrade {
 
     public static final MapCodec<ItemListTradeItem> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemStack.CODEC.fieldOf("result").forGetter(ItemListTradeItem::result),
             ItemStack.CODEC.listOf().fieldOf("costs").forGetter(ItemListTradeItem::costs),
+            ItemStack.CODEC.fieldOf("result").forGetter(ItemListTradeItem::result),
             TradeProperties.CODEC.optionalFieldOf("properties").forGetter(i-> Optional.ofNullable(i.properties))
 
-    ).apply(instance, (result, costs, properties)->new ItemListTradeItem(
-            result,
+    ).apply(instance, (costs, result, properties)->new ItemListTradeItem(
             costs,
+            result,
             properties.orElse(null)
     )));
 
@@ -63,7 +63,7 @@ public record ItemListTradeItem(ItemStack result, List<ItemStack> costs, TradePr
         }
 
         public ItemListTradeItem build(){
-            return new ItemListTradeItem(result, costs, properties);
+            return new ItemListTradeItem(costs, result, properties);
         }
     }
 
