@@ -2,8 +2,13 @@ package org.confluence.terraentity.effect.harmful;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.common.EffectCure;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terraentity.init.TETags;
+
+import java.util.Set;
 
 //// 免疫:
 // 远古幻影妖
@@ -36,7 +41,14 @@ public class FrostburnEffect extends MobEffect { //霜冻：缓慢损失生命 �
         return true;
     }
 
+    @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return duration % 20 == 0;
+    }
+
+    @Override
+    public void fillEffectCures(Set<EffectCure> cures, MobEffectInstance effectInstance) {
+        super.fillEffectCures(cures, effectInstance);
+        cures.add(LibUtils.DENY_HEAL);
     }
 }
