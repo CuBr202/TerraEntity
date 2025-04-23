@@ -102,7 +102,10 @@ public class DynamicPoolTradeTask implements ITradeTask {
             int maxCost = costPool.size();
             int random = npc.getRandom().nextInt(maxCost);
 
-            dynamicTrade = ItemTradeItemList.of(costPool.get(random), resultPool.get(cur));
+
+            dynamicTrade = ItemTradeItemList.builder()
+                    .addCost(costPool.get(random))
+                    .addResult(resultPool.get(cur)).build();
             npc.getTradeManager().addToBeSync(index);
         }
         npc.getTradeParams().increaseLevel(index);

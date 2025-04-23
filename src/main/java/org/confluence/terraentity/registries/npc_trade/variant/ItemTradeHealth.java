@@ -7,18 +7,19 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 
+import java.util.List;
 import java.util.Optional;
 
-public record ItemTradeHealth(ItemStack cost, int health, TradeProperties properties) implements IItemTrade, ITradeHealth {
+public record ItemTradeHealth(List<AmountIngredient> costs, int health, TradeProperties properties) implements IIngredientTrade, ITradeHealth {
 
     public static final MapCodec<ItemTradeHealth> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemStack.CODEC.fieldOf("cost").forGetter(ItemTradeHealth::cost),
+            AmountIngredient.CODEC.codec().listOf().fieldOf("costs").forGetter(ItemTradeHealth::costs),
             Codec.INT.fieldOf("health").forGetter(ItemTradeHealth::health),
             TradeProperties.CODEC.optionalFieldOf("properties").forGetter(i-> Optional.ofNullable(i.properties))
 
@@ -28,19 +29,16 @@ public record ItemTradeHealth(ItemStack cost, int health, TradeProperties proper
             properties.orElse(null)
     )));
 
-    public static ItemTradeHealth of(ItemStack cost, int health) {
-        return new ItemTradeHealth(cost, health, null);
-    }
 
     @Override
     public boolean canTrade(Player player, ITradeHolder npc, int index) {
-        return ITradeHealth.super.canTrade(player, npc, index) && IItemTrade.super.canTrade(player, npc, index);
+        return ITradeHealth.super.canTrade(player, npc, index) && IIngredientTrade.super.canTrade(player, npc, index);
     }
 
     @Override
     public void onTrade(ServerPlayer player, ITradeHolder npc, int index) {
         ITradeHealth.super.onTrade(player, npc, index);
-        IItemTrade.super.onTrade(player, npc, index);
+        IIngredientTrade.super.onTrade(player, npc, index);
     }
 
     @OnlyIn(Dist.CLIENT)

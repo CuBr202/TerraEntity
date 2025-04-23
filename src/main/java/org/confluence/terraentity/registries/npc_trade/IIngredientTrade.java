@@ -3,13 +3,17 @@ package org.confluence.terraentity.registries.npc_trade;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,4 +138,32 @@ public interface IIngredientTrade extends ITrade{
 
         return matches;
     }
+
+    abstract class Builder<T extends IIngredientTrade, B extends Builder<T, B>>{
+        protected final List<AmountIngredient> costs = new ArrayList<>();
+        protected TradeProperties properties;
+        public B addCost(AmountIngredient cost) {
+            this.costs.add(cost);
+            return (B) this;
+        }
+
+        public B addCost(ItemLike item, int count) {
+            return addCost(new AmountIngredient(Ingredient.of(item), count));
+        }
+
+        public B addCost(ItemStack itemStack) {
+            return addCost(new AmountIngredient(Ingredient.of(itemStack), itemStack.getCount()));
+        }
+
+        public B addCost(TagKey<Item> tag, int count) {
+            return addCost(new AmountIngredient(Ingredient.of(tag), count));
+        }
+        public B setProperties(TradeProperties properties) {
+            this.properties = properties;
+            return (B) this;
+        }
+
+        public abstract T build();
+    }
+
 }
