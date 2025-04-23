@@ -13,24 +13,22 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.registries.npc_trade_list.ITradeGenerator;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 交易清单
  */
 public class NPCTradeManager {
 
-    private final List<ITrade> trades;
+    private List<ITrade> trades;
     private ITradeHolder owner;
     protected List<Integer> toBeSync = new ArrayList<>();
-
+    ITradeGenerator tradeList;
     /**
      * 记录需要更新的交易表
      * @param index 交易表索引
@@ -55,28 +53,81 @@ public class NPCTradeManager {
         }
     }
 
-    public NPCTradeManager(List<ITrade> trades) {
-        this.trades = new ArrayList<>(trades);
+    /**
+     * 用于传输数据
+     * @param trade 当为空时，表示未初始化
+     */
+    public NPCTradeManager(List<ITrade> trade) {
+        this.trades = trade;
+
+    }
+
+    /**
+     * 用于初始化
+     * @param tradeList 交易列表的生成方式
+     */
+    public NPCTradeManager(ITradeGenerator tradeList) {
+        this.tradeList = tradeList;
+    }
+
+    /**
+     * 初始化交易列表，将未生成的表生成子表，同时设置owner
+     */
+    public void initTrades(ITradeHolder holder){
+        if(tradeList!= null){
+            this.trades = tradeList.generateTrades();
+            this.tradeList = null;
+        }
+        this.setOwner(holder);
     }
 
 
-    public void setOwner(ITradeHolder npc) {
+    private void setOwner(ITradeHolder npc) {
         this.owner = npc;
     }
 
     public List<ITrade> trades() {
-        return trades;
+        return this.trades;
     }
 
+//    public List<ITrade> availableTrades() {
+//        List<ITrade> availableTrades = new ArrayList<>();
+//        for(ITrade trade : trades){
+//            TradeProperties properties = trade.properties();
+//            if(properties != null ){
+//                properties.lock().canTrade()
+//
+//            }
+//        return this.trades;
+//    }
+
     public boolean isEmpty(){
-        return trades.isEmpty();
+        return this.trades.isEmpty();
     }
 
 
     public static final String KEY = "npc_shop";
+//    public static final Codec<NPCTradeManager> CODEC =Codec.withAlternative(
+//            RecordCodecBuilder.create(instance -> instance.group(
+//            ITrade.TYPED_CODEC.listOf().fieldOf("trades").forGetter(NPCTradeManager::trades)
+//    ).apply(instance, NPCTradeManager::new)),
+//            RecordCodecBuilder.create(instance -> instance.group(
+//                    ITradeList.TYPED_CODEC.fieldOf("trades_generator").forGetter(i->i.tradeList)
+//            ).apply(instance, NPCTradeManager::new))
+//            );
+
     public static final Codec<NPCTradeManager> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ITrade.TYPED_CODEC.listOf().fieldOf("trades").forGetter(NPCTradeManager::trades)
-    ).apply(instance, NPCTradeManager::new));
+            ITrade.TYPED_CODEC.listOf().optionalFieldOf("trades").forGetter(i-> Optional.ofNullable(i.trades)),
+            ITradeGenerator.TYPED_CODEC.optionalFieldOf("trades_generator").forGetter(i-> Optional.ofNullable(i.tradeList))
+    ).apply(instance, (trades, tradeList)->{
+        if(trades.isPresent()){
+            return new NPCTradeManager(trades.get());
+        }else if(tradeList.isPresent()){
+            return new NPCTradeManager(tradeList.get());
+        }else{
+            return new NPCTradeManager(List.of());
+        }
+    }));
 
     public static final StreamCodec<ByteBuf, NPCTradeManager> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 

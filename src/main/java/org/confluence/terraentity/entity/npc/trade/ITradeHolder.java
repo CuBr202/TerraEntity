@@ -56,12 +56,20 @@ public interface ITradeHolder {
     BlockPos blockPos();
 
     /**
-     * 获取交易列表
+     * 获取所有交易列表
      */
     default List<ITrade> trades(){
         if(getTradeManager() == null) return null;
         return getTradeManager().trades();
     }
+
+//    /**
+//     * 获取可用的交易列表
+//     */
+//    default List<ITrade> availableTrades(){
+//        if(getTradeManager() == null) return null;
+//        return getTradeManager().availableTrades();
+//    }
 
     /**
      * 局部更新NPC交易列表

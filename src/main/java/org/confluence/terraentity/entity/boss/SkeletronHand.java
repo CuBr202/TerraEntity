@@ -20,6 +20,9 @@ import java.util.UUID;
  * 骷髅王之手
  */
 public class SkeletronHand extends Skeletron {
+
+    private float attackDamage = 5; // 攻击伤害
+
     public Skeletron owner;
     public HandSide handSide;
     protected final int slapInterval;
@@ -37,6 +40,8 @@ public class SkeletronHand extends Skeletron {
         // 重新设置属性
         this.baseHealth = 200;
         this.baseArmor = 2;
+        this.attackDamage = 10;
+        this.setAttactDamage(attackDamage);
 
         this.handSide = handSide;
         this.owner = owner;

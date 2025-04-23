@@ -6,7 +6,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.npc.mood.MoodInfo;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
@@ -15,6 +14,8 @@ import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;
 import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
+import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProvider;
+import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProviderTypes;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProvider;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProviderTypes;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
@@ -35,6 +36,7 @@ public class TERegistries {
         event.register(TradeProviders.REGISTRY);
         event.register(TradeTaskProviders.REGISTRY);
         event.register(TradeLockProviders.REGISTRY);
+        event.register(TradeGeneratorProviders.REGISTRY);
 //        event.register(MoodInfoRegistry.REGISTRY);
     }
 
@@ -46,6 +48,7 @@ public class TERegistries {
         TEEffectStrategies.EFFECT_STRATEGY.register(bus);
         TradeTaskProviderTypes.TYPES.register(bus);
         TradeLockProviderTypes.TYPES.register(bus);
+        TradeGeneratorProviderTypes.TYPES.register(bus);
 //        org.confluence.terraentity.entity.npc.mood.MoodInfos.TYPES.register(bus);
 
     }
@@ -103,5 +106,13 @@ public class TERegistries {
     public static class TradeLockProviders {
         public static final ResourceKey<Registry<TradeLockProvider>> KEY = createRegistryKey(TerraEntity.space("trade_lock_provider"));
         public static final Registry<TradeLockProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
+    }
+
+    /**
+     * NPC交易列表注册表
+     */
+    public static class TradeGeneratorProviders {
+        public static final ResourceKey<Registry<TradeGeneratorProvider>> KEY = createRegistryKey(TerraEntity.space("trade_generator_provider"));
+        public static final Registry<TradeGeneratorProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
     }
 }

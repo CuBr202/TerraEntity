@@ -5,14 +5,17 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.component.Fireworks;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 
 import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
+import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.init.entity.TENpcEntities;
@@ -20,6 +23,8 @@ import org.confluence.terraentity.init.item.TESpawnEggItems;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.TradeProperties;
 import org.confluence.terraentity.registries.npc_trade.variant.*;
+import org.confluence.terraentity.registries.npc_trade_list.ITradeGenerator;
+import org.confluence.terraentity.registries.npc_trade_list.variant.WeightMapGenerator;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.TimeLock;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.FixedMapTradeTask;
@@ -199,7 +204,56 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
                                 Items.EMERALD.getDefaultInstance()
                         )
                 )))
+
+                .add(new IngredientsTradeItemList(
+                        List.of(
+                                new AmountIngredient(Ingredient.of(Items.APPLE),5),
+                                new AmountIngredient(Ingredient.of(ItemTags.PLANKS),10)
+                        ),
+                        List.of(
+                                new ItemStack(Items.APPLE)
+                        ),
+                        null)
+                )
+
+                .add(new IngredientsTradeItemList(
+                        List.of(
+                                new AmountIngredient(Ingredient.of(Items.APPLE),5)
+                        ),
+                        List.of(
+                                new ItemStack(Items.APPLE),
+                                new ItemStack(Items.DIAMOND,3)
+                        ),
+                        null)
+                )
+
+                .add(new IngredientsTradeItemList(
+                        List.of(
+                                new AmountIngredient(Ingredient.of(Items.APPLE),5),
+                                new AmountIngredient(Ingredient.of(ItemTags.PLANKS),10)
+                        ),
+                        List.of(
+                                new ItemStack(Items.APPLE),
+                                new ItemStack(Items.DIAMOND,3),
+                                new ItemStack(Items.EMERALD,5)
+                        ),
+                        null)
+                )
+
                 .build());
+
+        shop(TENpcEntities.PAINTER.getId()).addRecipe(new ComplexBuilder(
+                WeightMapGenerator.builder(3)
+                        .addTrade(ItemTradeItem.of(Items.JUNGLE_SAPLING, 2, Items.COAL,1), 1)
+                        .addTrade(ItemTradeItem.of(Items.ACACIA_SAPLING, 2, Items.COAL,1), 1)
+                        .addTrade(ItemTradeItem.of(Items.DARK_OAK_SAPLING, 2, Items.COAL,1), 1)
+                        .addTrade(ItemTradeItem.of(Items.GRASS_BLOCK, 1, Items.COAL,1), 1)
+                        .addTrade(ItemTradeItem.of(Items.SAND, 1, Items.COAL,1), 1)
+                        .addTrade(ItemTradeItem.of(Items.RED_SAND, 1, Items.COAL,1), 1)
+                        .build()
+        ).build());
+
+
 
     }
 
@@ -230,6 +284,21 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
 
         public NPCTradeManager build() {
             return new NPCTradeManager(trades);
+        }
+    }
+
+    /**
+     * 生成未初始化的NPCTradeManager，用于生成随机的交易表
+     */
+    public static class ComplexBuilder {
+
+        ITradeGenerator list;
+        public ComplexBuilder(ITradeGenerator list) {
+            this.list = list;
+        }
+
+        public NPCTradeManager build() {
+            return new NPCTradeManager(list);
         }
     }
 

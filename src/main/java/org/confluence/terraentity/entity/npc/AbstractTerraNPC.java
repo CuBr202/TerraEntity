@@ -310,7 +310,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(level().isClientSide()) {
             if (DATA_TRADES_DATA.equals(key)) {
                 this.trades = this.entityData.get(DATA_TRADES_DATA);
-                this.trades.setOwner(this);
+                this.trades.initTrades(this);
             } else if (DATA_HOUSE_DATA.equals(key)) {
                 this.house = this.entityData.get(DATA_HOUSE_DATA);
             }
@@ -337,7 +337,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if (tag.contains("te_npc_data", 10)) {
             NPCTradeManager.CODEC.parse(NbtOps.INSTANCE, tag.get("te_npc_data")).result().ifPresent(npcTrades -> {
                 this.trades = npcTrades;
-                this.trades.setOwner(this);
+                this.trades.initTrades(this);
                 syncTrades();
 
                 TradeParams.CODEC.parse(NbtOps.INSTANCE, tag.get("te_npc_trade_params")).result().ifPresent(params->{
@@ -376,7 +376,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if (trades == null) {
             trades = NPCTradeManager.getCopy(event.getOrigin());
             if (trades != null) {
-                trades.setOwner(this);
+                trades.initTrades(this);
                 syncTrades();
             }
         }

@@ -389,6 +389,35 @@ public final class TEUtils {
     }
 
     /**
+     * 根据权重随机获取物品
+     */
+    public static <T> T getRandomByWeightInt(Map<T, Integer> map) {
+        // 计算总权重
+        float totalWeight = 0.0f;
+
+        for (var pair : map.values()) {
+            totalWeight += pair;
+        }
+
+        if (totalWeight == 0.0f) {
+            throw new IllegalArgumentException("Total weight cannot be zero.");
+        }
+
+        float randomValue = ThreadLocalRandom.current().nextFloat(0, totalWeight);
+
+        // 遍历物品，累积权重，直到累积权重超过随机数
+        float cumulativeWeight = 0.0f;
+        for (var entry : map.entrySet()) {
+            cumulativeWeight += entry.getValue();
+            if (cumulativeWeight >= randomValue) {
+                return entry.getKey();
+            }
+        }
+        // 理论上不会走到这里
+        throw new IllegalStateException("Failed to find random item.");
+    }
+
+    /**
      * 获取玩家视角下距离指定距离的实体
      * @param entity
      * @param distance

@@ -7,6 +7,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
@@ -153,6 +154,11 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
         }
     }
 
+    @Override
     public boolean shouldShowBossBar(){return false;};
 
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA);
+    }
 }
