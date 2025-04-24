@@ -37,8 +37,6 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.entity.ai.motion.BoneStateMachine;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
@@ -67,7 +65,6 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -96,10 +93,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     private NPCMood mood;
 
 
-    @OnlyIn(Dist.CLIENT)
     public BoneStateMachine leftArm= new BoneStateMachine();
-
-    @OnlyIn(Dist.CLIENT)
     public BoneStateMachine rightArm = new BoneStateMachine();
 
 
@@ -110,7 +104,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public int cooldownTick = 0; // 攻击冷却时间
     private int _cooldownTicks;
 
-    public int stopUsingItemTick = 0; // 停止使用物品后的时间
+    int lastUseItemTick = 0;
 
     private static final EntityDataAccessor<Boolean> DATA_RANGE_ATTACK_COOLDOWN = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<NPCTradeManager> DATA_TRADES_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADES_SERIALIZER.get());
@@ -126,7 +120,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(!level.isClientSide()){
             if(shouldInitName()){
                 initName();
-
             }
         }
 
@@ -156,7 +149,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(name!= null) {
             this.setCustomName(Component.literal(name));
         }
-        this.setCustomNameVisible(true);
+
     }
 
     /**
@@ -284,7 +277,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
 
     /**
-     * <P>强行同步所有的交易表，当使用<b>动态交易表任务</b>的时候需要调用，保证服务器和客户端的交易表一致。
+     * <P>强行同步所有的交易表，当使用初始化的时候需要调用，保证服务器和客户端的交易表一致。
      * <p>当数据量过大时应该采用局部更新</p>
      */
     public void syncTrades(){
@@ -322,10 +315,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
                 this.trades.initTrades(this);
             } else if (DATA_HOUSE_DATA.equals(key)) {
                 this.house = this.entityData.get(DATA_HOUSE_DATA);
-            }else if(DATA_LIVING_ENTITY_FLAGS.equals(key)){
-                if(!isUsingItem()){
-                    this.stopUsingItemTick = 0;
-                }
+            }else if(DATA_TRADE_PARAMS.equals(key)){
+                this.getTradeManager().refreshAvailableTrades();
+
             }
         }
         if (DATA_MOOD.equals(key)) {
@@ -396,12 +388,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
     }
 
-    int lastUseItemTick = 0;
-    public double mainHandLerpRotXFrom = 0;
-    public double mainHandLerpRotYFrom = 0;
-
-    public double offHandLerpRotXFrom = 0;
-    public double offHandLerpRotYFrom = 0;
 
     @Override
     public void tick(){
@@ -420,16 +406,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }else{
             this.cooldownTick = 0;
         }
-        if(level().isClientSide) {
-            ++stopUsingItemTick;
-
-            if (getUseItemRemainingTicks() == 0 && lastUseItemTick > 0) {
-                // 停止使用物品
-                stopUsingItemTick = 0;
-            }
-            lastUseItemTick = getUseItemRemainingTicks();
-        }
-
     }
 
     public int getCurrentSwingDuration() {
@@ -457,7 +433,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(hand == InteractionHand.OFF_HAND){
             return super.mobInteract(player, hand);
         }
-
+        this.setCustomNameVisible(true);
 
         ItemStack stack = player.getItemInHand(hand);
 
@@ -520,6 +496,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         AdapterUtils.postEvent(event);
         event.execute((npc, player1) -> {
 //            if(trades != null) {
+            this.getTradeManager().reCheckAvailableTrades(player1);
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
                         new SimpleTradeMenu(id, playerInventory, this), Component.translatable("title.terra_entity.npc_trade")));
 //            }
@@ -647,12 +624,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         return false;
     }
 
-    @Override
-    public void stopUsingItem() {
-        super.stopUsingItem();
-        stopUsingItemTick = 0;
-    }
-
     public boolean isChargingCrossbow(){
         return this.entityData.get(DATA_IS_CHARGING_CROSSBOW);
     }
@@ -666,20 +637,21 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
     }
 
-    public void performCrossbowAttack(LivingEntity user, float velocity) {
+    @Override
+    public void performCrossbowAttack(@NotNull LivingEntity user, float velocity) {
         InteractionHand interactionhand = ProjectileUtil.getWeaponHoldingHand(user, (item) -> {
             return item instanceof CrossbowItem;
         });
         ItemStack itemstack = user.getItemInHand(interactionhand);
         Item var6 = itemstack.getItem();
         if (var6 instanceof CrossbowItem crossbowitem) {
-            crossbowitem.performShooting(user.level(), user, interactionhand, itemstack, velocity, (float)(14 - user.level().getDifficulty().getId() * 4), this.getTarget());
+            crossbowitem.performShooting(user.level(), user, interactionhand, itemstack, velocity, 1, this.getTarget());
         }
 
         this.onCrossbowAttackPerformed();
     }
     @Override
-    public void performRangedAttack(LivingEntity livingEntity, float v) {
+    public void performRangedAttack(@NotNull LivingEntity livingEntity, float v) {
 
     }
 }

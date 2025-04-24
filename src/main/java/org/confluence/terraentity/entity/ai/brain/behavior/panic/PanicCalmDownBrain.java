@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.Behavior;
+import net.minecraft.world.entity.ai.behavior.BlockPosTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import org.confluence.terraentity.init.TEAi;
@@ -43,7 +44,7 @@ public class PanicCalmDownBrain<T extends Mob> extends Behavior<T> {
     protected void start(ServerLevel level, T living, long gameTimeIn) {
         Brain<?> brain = living.getBrain();
         boolean hurtOrHostileOrAway = brain.hasMemoryValue(MemoryModuleType.HURT_BY)
-//                || brain.hasMemoryValue(MemoryModuleType.NEAREST_HOSTILE)
+                || brain.hasMemoryValue(MemoryModuleType.NEAREST_HOSTILE)
                 || brain.getMemory(MemoryModuleType.HURT_BY_ENTITY).filter(entity -> entity.distanceTo(living) < 10 && entity!= living).isPresent();
         // 受到伤害后概率不再恐慌
         if (!hurtOrHostileOrAway || living.getRandom().nextFloat() < getCalmDownChance(living) ) {
@@ -54,12 +55,22 @@ public class PanicCalmDownBrain<T extends Mob> extends Behavior<T> {
 //            brain.updateActivityFromSchedule(level.getDayTime(), gameTimeIn);
             brain.setActiveActivityIfPossible(TEAi.Activities.RANGE_ATTACK);
             if(target!= null && target.isAlive() && target != living) {
-
-                onCalmDown(level, brain, target);
+                this.beforeCalmDown(level, living, brain, target);
+                if(hurtByTargetPredicate(target)) {
+                    onCalmDown(level, brain, target);
+                }
             }
             brain.setMemory(MemoryModuleType.ATTACK_COOLING_DOWN, false);
 
         }
+    }
+
+    protected boolean hurtByTargetPredicate(LivingEntity target) {
+        return target.canBeSeenAsEnemy();
+    }
+
+    protected void beforeCalmDown(ServerLevel level, T living, Brain<?> brain, LivingEntity target) {
+
     }
 
     protected void onCalmDown(ServerLevel level, Brain<?> brain, LivingEntity target) {

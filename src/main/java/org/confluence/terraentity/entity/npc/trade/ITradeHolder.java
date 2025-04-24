@@ -70,11 +70,11 @@ public interface ITradeHolder {
     BlockPos blockPosition();
 
     /**
-     * 获取所有交易列表
+     * 获取可用交易列表
      */
     default List<ITrade> trades(){
         if(getTradeManager() == null) return null;
-        return getTradeManager().trades();
+        return getTradeManager().availableTrades();
     }
 
 //    /**

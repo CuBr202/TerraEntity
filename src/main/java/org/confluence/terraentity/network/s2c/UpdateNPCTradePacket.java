@@ -59,7 +59,14 @@ public class UpdateNPCTradePacket implements CustomPacketPayload {
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
             if(context.player().level().getEntities().get(this.npcId) instanceof AbstractTerraNPC npc){
-                npc.getTradeManager().trades().set(this.index, this.trade);
+                var trades = npc.getTradeManager().trades();
+                var availableTrades = npc.getTradeManager().availableTrades();
+                var availableTrade = availableTrades.get(this.index);
+
+                // 由于客户端传来的index是availableTrades的索引，所以需要将availableTrades的索引转换为trades的索引
+                int oriIndex = trades.indexOf(availableTrade);
+                npc.getTradeManager().trades().set(oriIndex, this.trade);
+                availableTrades.set(this.index, this.trade);
             }
             
         }).exceptionally(e -> null);

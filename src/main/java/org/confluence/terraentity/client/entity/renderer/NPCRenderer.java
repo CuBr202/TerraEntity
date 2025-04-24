@@ -242,17 +242,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
                     }
                 }
             }
-            else if(animatable.stopUsingItemTick < 5){
-                double from = state.fromRotX;
-                double to = bone.getRotX();
-                double lerpx = lerpMotion(animatable.stopUsingItemTick + partialTick, 6, from, to);
 
-                double from1 = state.fromRotY;
-                double to1 = bone.getRotY();
-                double lerpy = lerpMotion(animatable.stopUsingItemTick + partialTick, 6, from1, to1);
-
-                state.updateState(3, 6, lerpx, lerpy, bone.getRotZ());
-            }
             else if(animatable.swinging){
                 float swingTime = animatable.swingTime + partialTick;
                 float swingTicks = animatable.getCurrentSwingDuration();
@@ -274,10 +264,11 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
             }else{
                 Item handItem = animatable.getMainHandItem().getItem();
                 if(handItem instanceof CrossbowItem){
-                    if(animatable.isCooledDown()){
+                    if(animatable.isChargingCrossbow()){
 
                         state.updateState(5, 3, 0.6f, 0.8f, bone.getRotZ());
                     }else{
+                        state.updateState(6,5,0.3f + 0.5F * bone.getRotX(), bone.getRotY(), bone.getRotZ());
 
                     }
                 }else{
@@ -285,9 +276,9 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
                     float rotO = bone.getRotX();
                     if(handItem != Items.AIR) {
                         // 手持物品走动的时候手也会动
-                        state.updateState(6, 5, 0.3f + rotO * 0.5F, bone.getRotY(), bone.getRotZ());
+                        state.updateState(7, 15, 0.3f + rotO * 0.5F, bone.getRotY(), bone.getRotZ());
                     }else{
-                        state.updateState(7,5,rotO, bone.getRotY(), bone.getRotZ());
+                        state.updateState(8,5,rotO, bone.getRotY(), bone.getRotZ());
                     }
                 }
             }
@@ -314,7 +305,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
                 }
             }
             else{
-                state.updateState(2, 5, bone.getRotX(), bone.getRotY(), bone.getRotZ());
+                state.updateState(2, 10, bone.getRotX(), bone.getRotY(), bone.getRotZ());
 
             }
             state.update(partialTick, bone);

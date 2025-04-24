@@ -152,16 +152,17 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
                         null)
                 )
 
-                .add(new ItemTradeItemList(
-                        List.of(
-                                new AmountIngredient(Ingredient.of(Items.APPLE),5)
-                        ),
-                        List.of(
-                                new ItemStack(Items.APPLE),
-                                new ItemStack(Items.DIAMOND,3)
-                        ),
-                        null)
-                )
+//                .add(new ItemTradeItemList(
+//                        List.of(
+//                                new AmountIngredient(Ingredient.of(Items.APPLE),5)
+//                        ),
+//                        List.of(
+//                                new ItemStack(Items.APPLE),
+//                                new ItemStack(Items.DIAMOND,3)
+//                        ),
+//                        new TradeProperties(new TimeLock(0, 12000, false)))
+//                )
+
 
                 .add(new ItemTradeItemList(
                         List.of(
@@ -173,7 +174,7 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
                                 new ItemStack(Items.DIAMOND,3),
                                 new ItemStack(Items.EMERALD,5)
                         ),
-                        null)
+                        new TradeProperties(new TimeLock(0, 12000, true)))
                 )
 
                 .build());
