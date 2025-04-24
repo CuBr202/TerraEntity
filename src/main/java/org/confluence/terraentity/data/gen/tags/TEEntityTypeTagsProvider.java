@@ -47,6 +47,11 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
                         TEMonsterEntities.BLACK_SLIME.get(),
                         EntityType.SLIME)
                 );
+        tag(TETags.EntityTypes.CORRUPT).add(
+                TEMonsterEntities.EATER_OF_SOULS.get(),
+                TEMonsterEntities.DECAYEDER.get(),
+                TEMonsterEntities.DEVOURER.get()
+        );
 
         EntityType<?>[] bosses = {
                 TEBossEntities.EYE_OF_CTHULHU.get(),
