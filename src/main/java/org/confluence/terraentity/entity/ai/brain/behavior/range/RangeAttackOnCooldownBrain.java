@@ -67,7 +67,7 @@ public class RangeAttackOnCooldownBrain<T extends PathfinderMob> extends Behavio
                 }
                 if (toPos != null) {
                     // 这里注释掉就不会动了，方便观察动作
-                    owner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(toPos, speedModifier, (int) 1f));
+//                    owner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(toPos, speedModifier, (int) 1f));
                 } else {
                     // debug
 //                    owner.setDeltaMovement(new Vec3(0, 0.02f, 0));

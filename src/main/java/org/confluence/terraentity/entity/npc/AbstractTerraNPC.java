@@ -30,7 +30,6 @@ import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
-import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
@@ -38,7 +37,10 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.api.event.NPCEvent;
+import org.confluence.terraentity.entity.ai.motion.BoneStateMachine;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
@@ -94,6 +96,11 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     private NPCMood mood;
 
 
+    @OnlyIn(Dist.CLIENT)
+    public BoneStateMachine leftArm= new BoneStateMachine();
+
+    @OnlyIn(Dist.CLIENT)
+    public BoneStateMachine rightArm = new BoneStateMachine();
 
 
     private NPCAi ai;

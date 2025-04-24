@@ -13,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import org.confluence.terraentity.client.util.DefaultBoneBoundIdents;
+import org.confluence.terraentity.entity.ai.motion.BoneStateMachine;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.joml.Math;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -227,32 +228,30 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
 
 
         if(bone.getName().equals(RIGHT_HAND)) {
+            BoneStateMachine state = animatable.rightArm;
+
             if(animatable.isUsingItem()) {
                 if (animatable.getUseItem().getItem() instanceof ProjectileWeaponItem item) {
                     if(item instanceof CrossbowItem && animatable.isChargingCrossbow()){
-                        bone.setRotX(0.6f);
-                        bone.setRotY(0.8f);
+
+                        state.updateState(1, 5, 0.6f, 0.8f, bone.getRotZ());
                     }else {
                         double lerpx = lerpMotion(usingTime, 5, 0, 1.5 - Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot()) * 0.017453292F);
-                        bone.setRotX((float) lerpx);
-
                         float lerpy = Mth.lerp(partialTick, animatable.yBodyRotO - animatable.yHeadRotO, animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
-                        bone.setRotY(lerpy);
-                        animatable.mainHandLerpRotXFrom = lerpx;
-                        animatable.mainHandLerpRotYFrom = lerpy;
+                        state.updateState(2, 5, lerpx, lerpy, bone.getRotZ());
                     }
                 }
             }
             else if(animatable.stopUsingItemTick < 5){
-                double from = animatable.mainHandLerpRotXFrom;
+                double from = state.fromRotX;
                 double to = bone.getRotX();
                 double lerpx = lerpMotion(animatable.stopUsingItemTick + partialTick, 6, from, to);
-                bone.setRotX((float) lerpx);
 
-                double from1 = animatable.mainHandLerpRotYFrom;
+                double from1 = state.fromRotY;
                 double to1 = bone.getRotY();
                 double lerpy = lerpMotion(animatable.stopUsingItemTick + partialTick, 6, from1, to1);
-                bone.setRotY((float) lerpy);
+
+                state.updateState(3, 6, lerpx, lerpy, bone.getRotZ());
             }
             else if(animatable.swinging){
                 float swingTime = animatable.swingTime + partialTick;
@@ -264,61 +263,61 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
                 if(swingTime > half){
                     f = lerpMotion(swingTime - half, half, f, rightBoneRotX);
                 }
-                bone.setRotX((float) f);
 
                 double f2 = lerpx * (1 - lerpx) * 4;
                 float half2 = swingTicks * 0.5f;
                 if(swingTime > half2){
                     f2 = lerpMotion(swingTime - half2, half2, f, 0);
                 }
-                bone.setRotY((float) f2);
+
+                state.updateState(4, 6, f, f2, bone.getRotZ());
             }else{
                 Item handItem = animatable.getMainHandItem().getItem();
                 if(handItem instanceof CrossbowItem){
                     if(animatable.isCooledDown()){
-                        bone.setRotX(0.6f);
-                        bone.setRotY(0.8f);
-                    }else{
 
+                        state.updateState(5, 3, 0.6f, 0.8f, bone.getRotZ());
+                    }else{
 
                     }
                 }else{
                     // 手持物品时的状态
+                    float rotO = bone.getRotX();
                     if(handItem != Items.AIR) {
                         // 手持物品走动的时候手也会动
-                        float rotO = bone.getRotX();
-                        bone.setRotX(0.3f + rotO * 0.5F);
+                        state.updateState(6, 5, 0.3f + rotO * 0.5F, bone.getRotY(), bone.getRotZ());
+                    }else{
+                        state.updateState(7,5,rotO, bone.getRotY(), bone.getRotZ());
                     }
                 }
             }
+            state.update(partialTick, bone);
         }else if(bone.getName().equals(LEFT_HAND)){
+            BoneStateMachine state = animatable.leftArm;
+
             if(animatable.isUsingItem()) {
                 if (animatable.getUseItem().getItem() instanceof ProjectileWeaponItem item) {
                     if(item instanceof CrossbowItem && animatable.isChargingCrossbow()){
                         double lerpx = lerpMotion(animatable.cooldownTick + partialTick, 20, 1, 1.2);
-                        bone.setRotX((float) lerpx);
                         double lerpy = -lerpMotion(animatable.cooldownTick + partialTick, 20, 0.8, 1.2);
-                        bone.setRotY((float) lerpy);
-//                        bone.setRotY((float) lerpx);
+
+                        state.updateState(0, 20, (float) lerpx, (float) lerpy, bone.getRotZ());
 
                     }else {
                         double lerpx = lerpMotion(usingTime, 5, 0, 1.3 - Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot()) * 0.017453292F);
-                        bone.setRotX((float) lerpx);
-
-                        bone.setRotX((float) lerpx);
                         float lerpy = Mth.lerp(partialTick, animatable.yBodyRotO - animatable.yHeadRotO, animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
                         // 防止转太多穿模
                         lerpy = Math.max(lerpy - 0.5F, -1.4f);
-                        bone.setRotY(lerpy);
 
-                        animatable.offHandLerpRotXFrom = lerpx;
-                        animatable.offHandLerpRotYFrom = lerpy;
+                        state.updateState(1, 5, (float) lerpx, lerpy, bone.getRotZ());
                     }
                 }
             }
             else{
+                state.updateState(2, 5, bone.getRotX(), bone.getRotY(), bone.getRotZ());
 
             }
+            state.update(partialTick, bone);
         }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
