@@ -29,12 +29,13 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
+import net.minecraft.world.entity.monster.CrossbowAttackMob;
+import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.event.NPCEvent;
@@ -75,7 +76,7 @@ import java.util.function.Predicate;
 /**
  * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
  */
-public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc , ITradeHolder {
+public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc , ITradeHolder, CrossbowAttackMob {
 
 
     public static final Map<MemoryModuleType<GlobalPos>, BiPredicate<AbstractTerraNPC, Holder<PoiType>>> POI_MEMORIES =
@@ -109,6 +110,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     private static final EntityDataAccessor<House> DATA_HOUSE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_HOUSE_SERIALIZER.get());
     private static final EntityDataAccessor<NPCMood> DATA_MOOD = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_MOOD_SERIALIZER.get());
     private static final EntityDataAccessor<TradeParams> DATA_TRADE_PARAMS = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADE_PARAMS_SERIALIZER.get());
+    private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
 
 
     public AbstractTerraNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
@@ -313,6 +315,10 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
                 this.trades.initTrades(this);
             } else if (DATA_HOUSE_DATA.equals(key)) {
                 this.house = this.entityData.get(DATA_HOUSE_DATA);
+            }else if(DATA_LIVING_ENTITY_FLAGS.equals(key)){
+                if(!isUsingItem()){
+                    this.stopUsingItemTick = 0;
+                }
             }
         }
         if (DATA_MOOD.equals(key)) {
@@ -329,6 +335,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         builder.define(DATA_RANGE_ATTACK_COOLDOWN, false);
         builder.define(DATA_MOOD, new NPCMood());
         builder.define(DATA_TRADE_PARAMS, TradeParams.create());
+        builder.define(DATA_IS_CHARGING_CROSSBOW, false);
     }
 
     @Override
@@ -626,17 +633,46 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         return new Vec3(-0.3, this.getEyeHeight() * 0.5f, this.getBbWidth() * 0.1F);
     }
 
-
+    /**
+     * 用于渲染躺下的姿势，如渔夫
+     */
     public boolean isLieDown(){
         return false;
     }
 
-    public BlockPos blockPos(){
-        return this.blockPosition();
-    }
-
+    @Override
     public void stopUsingItem() {
         super.stopUsingItem();
         stopUsingItemTick = 0;
+    }
+
+    public boolean isChargingCrossbow(){
+        return this.entityData.get(DATA_IS_CHARGING_CROSSBOW);
+    }
+
+    public void setChargingCrossbow(boolean isCharging) {
+        this.entityData.set(DATA_IS_CHARGING_CROSSBOW, isCharging);
+    }
+
+    @Override
+    public void onCrossbowAttackPerformed() {
+
+    }
+
+    public void performCrossbowAttack(LivingEntity user, float velocity) {
+        InteractionHand interactionhand = ProjectileUtil.getWeaponHoldingHand(user, (item) -> {
+            return item instanceof CrossbowItem;
+        });
+        ItemStack itemstack = user.getItemInHand(interactionhand);
+        Item var6 = itemstack.getItem();
+        if (var6 instanceof CrossbowItem crossbowitem) {
+            crossbowitem.performShooting(user.level(), user, interactionhand, itemstack, velocity, (float)(14 - user.level().getDifficulty().getId() * 4), this.getTarget());
+        }
+
+        this.onCrossbowAttackPerformed();
+    }
+    @Override
+    public void performRangedAttack(LivingEntity livingEntity, float v) {
+
     }
 }

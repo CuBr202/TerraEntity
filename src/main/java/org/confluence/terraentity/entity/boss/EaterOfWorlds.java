@@ -576,10 +576,6 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         }
     }
 
-    @Override
-    protected void postDeath(){
-
-    }
 
     @Override
     public boolean isMainBody(){

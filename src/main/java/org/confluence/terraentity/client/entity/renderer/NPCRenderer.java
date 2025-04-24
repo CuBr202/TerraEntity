@@ -228,15 +228,19 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
 
         if(bone.getName().equals(RIGHT_HAND)) {
             if(animatable.isUsingItem()) {
-                if (animatable.getUseItem().getItem() instanceof ProjectileWeaponItem ) {
-                    double lerpx = lerpMotion(usingTime, 5, 0, 1.5 - Mth.lerp(partialTick,animatable.xRotO ,  animatable.getXRot()) * 0.017453292F);
-                    bone.setRotX((float) lerpx);
+                if (animatable.getUseItem().getItem() instanceof ProjectileWeaponItem item) {
+                    if(item instanceof CrossbowItem && animatable.isChargingCrossbow()){
+                        bone.setRotX(0.6f);
+                        bone.setRotY(0.8f);
+                    }else {
+                        double lerpx = lerpMotion(usingTime, 5, 0, 1.5 - Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot()) * 0.017453292F);
+                        bone.setRotX((float) lerpx);
 
-                    float lerpy = Mth.lerp(partialTick,animatable.yBodyRotO - animatable.yHeadRotO ,  animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
-                    bone.setRotY(lerpy);
-                    animatable.mainHandLerpRotXFrom = lerpx;
-                    animatable.mainHandLerpRotYFrom = lerpy;
-
+                        float lerpy = Mth.lerp(partialTick, animatable.yBodyRotO - animatable.yHeadRotO, animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
+                        bone.setRotY(lerpy);
+                        animatable.mainHandLerpRotXFrom = lerpx;
+                        animatable.mainHandLerpRotYFrom = lerpy;
+                    }
                 }
             }
             else if(animatable.stopUsingItemTick < 5){
@@ -289,32 +293,31 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
             }
         }else if(bone.getName().equals(LEFT_HAND)){
             if(animatable.isUsingItem()) {
-                if (animatable.getUseItem().getItem() instanceof ProjectileWeaponItem) {
-                    double lerpx = lerpMotion(usingTime, 5, 0, 1.3 - Mth.lerp(partialTick,animatable.xRotO ,  animatable.getXRot()) * 0.017453292F);
-                    bone.setRotX((float) lerpx);
-
-                    bone.setRotX((float) lerpx);
-                    float lerpy = Mth.lerp(partialTick,animatable.yBodyRotO - animatable.yHeadRotO ,  animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
-                    // 防止转太多穿模
-                    lerpy = Math.max(lerpy - 0.5F,-1.4f);
-                    bone.setRotY(lerpy);
-
-                    animatable.offHandLerpRotXFrom = lerpx;
-                    animatable.offHandLerpRotYFrom = lerpy;
-                }
-            }
-            else{
-                Item handItem = animatable.getMainHandItem().getItem();
-                if(handItem instanceof CrossbowItem){
-                    if(animatable.isCooledDown()){
-
+                if (animatable.getUseItem().getItem() instanceof ProjectileWeaponItem item) {
+                    if(item instanceof CrossbowItem && animatable.isChargingCrossbow()){
                         double lerpx = lerpMotion(animatable.cooldownTick + partialTick, 20, 1, 1.2);
                         bone.setRotX((float) lerpx);
                         double lerpy = -lerpMotion(animatable.cooldownTick + partialTick, 20, 0.8, 1.2);
                         bone.setRotY((float) lerpy);
 //                        bone.setRotY((float) lerpx);
+
+                    }else {
+                        double lerpx = lerpMotion(usingTime, 5, 0, 1.3 - Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot()) * 0.017453292F);
+                        bone.setRotX((float) lerpx);
+
+                        bone.setRotX((float) lerpx);
+                        float lerpy = Mth.lerp(partialTick, animatable.yBodyRotO - animatable.yHeadRotO, animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
+                        // 防止转太多穿模
+                        lerpy = Math.max(lerpy - 0.5F, -1.4f);
+                        bone.setRotY(lerpy);
+
+                        animatable.offHandLerpRotXFrom = lerpx;
+                        animatable.offHandLerpRotYFrom = lerpy;
                     }
                 }
+            }
+            else{
+
             }
         }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);

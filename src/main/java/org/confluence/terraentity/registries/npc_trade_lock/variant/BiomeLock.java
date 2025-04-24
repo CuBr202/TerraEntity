@@ -17,7 +17,7 @@ public record BiomeLock(ResourceLocation biomeId) implements ITradeLock  {
 
     @Override
     public boolean canTrade(Player player, ITradeHolder npc, int index) {
-        return npc.level().getBiome(npc.blockPos()).is(biomeId);
+        return npc.level().getBiome(npc.blockPosition()).is(biomeId);
     }
 
     @Override

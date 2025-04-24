@@ -50,12 +50,24 @@ public interface ITradeHolder {
     @Nullable NPCMood getMood();
 
 
+    /*
+      以下三个方法，实体不用重写
+     */
+
     /**
-     * 以下三个方法，实体不用重写
+     * <p>某些task需要获取随机数</p>
      */
     RandomSource getRandom();
+
+    /**
+     * 某些lock或trade需要获取当前群系，时间
+     */
     Level level();
-    BlockPos blockPos();
+
+    /**
+     * 某些lock需要获取当前群系信息
+     */
+    BlockPos blockPosition();
 
     /**
      * 获取所有交易列表

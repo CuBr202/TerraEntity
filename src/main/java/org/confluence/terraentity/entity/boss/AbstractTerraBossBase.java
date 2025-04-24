@@ -25,7 +25,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -34,16 +33,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.ModLoader;
-import org.confluence.terraentity.api.event.BossDeathEvent;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.CircleMobSkills;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.ai.IFSMGeoMob;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
-import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.mixed.IBossEvent;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.utils.AdapterUtils;
@@ -474,11 +469,6 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public void setCustomName(@Nullable Component pName) {
         super.setCustomName(pName);
         bossEvent.setName(getDisplayName());
-    }
-
-    protected void postDeath(){
-        if(this instanceof Boss boss && boss.isMainBody())
-            ModLoader.postEvent(new BossDeathEvent(this));
     }
 
     @Override

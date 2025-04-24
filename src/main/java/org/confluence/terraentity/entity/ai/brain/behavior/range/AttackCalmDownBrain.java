@@ -21,6 +21,13 @@ public class AttackCalmDownBrain<T extends Mob> extends Behavior<T> {
         this.distanceToRemove = distanceToRemove * distanceToRemove;
     }
 
+    protected boolean checkExtraStartConditions(ServerLevel level, T owner) {
+        if(owner.getBrain().getMemory(MemoryModuleType.ATTACK_COOLING_DOWN).isPresent()){
+            return !owner.getBrain().getMemory(MemoryModuleType.ATTACK_COOLING_DOWN).get();
+        }
+        return true;
+    }
+
     @Override
     protected void start(ServerLevel level, T living, long gameTimeIn) {
         Brain<?> brain = living.getBrain();

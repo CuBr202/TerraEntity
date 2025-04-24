@@ -1,6 +1,7 @@
 package org.confluence.terraentity.api.event;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
@@ -8,6 +9,7 @@ import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.fml.event.IModBusEvent;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,16 +97,20 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
     /**
      * 当交易时触发
      */
-    public static class NPCTradeEvent extends NPCEvent implements IModBusEvent, ICancellableEvent {
+    public static class NPCTradeEvent extends Event implements IModBusEvent, ICancellableEvent {
+        ITradeHolder holder;
         ITrade trade;
         Player player;
         boolean alwaysPass = false;
         BiConsumer<Player, ITrade> reDirection;
 
-        public NPCTradeEvent(@Nullable AbstractTerraNPC npc, ITrade trade, Player player) {
-            super(npc);
+        public NPCTradeEvent(ITradeHolder holder, ITrade trade, Player player) {
+            this.holder = holder;
             this.trade = trade;
             this.player = player;
+        }
+        public ITradeHolder getHolder() {
+            return holder;
         }
 
         public ITrade getTrade() {
@@ -127,7 +133,7 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
         }
 
         /**
-         * 当交易触发时，重新设置交易的逻辑，替换{@link org.confluence.terraentity.registries.npc_trade.ITrade#onTrade(net.minecraft.server.level.ServerPlayer)}
+         * 当交易触发时，重新设置交易的逻辑，替换{@link org.confluence.terraentity.registries.npc_trade.ITrade#onTrade(ServerPlayer, ITradeHolder, int)}
          */
         public void setRedirection(BiConsumer<Player, ITrade> reDirection) {
             this.reDirection = reDirection;
