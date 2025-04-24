@@ -7,16 +7,17 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import net.minecraft.world.entity.Entity;
 import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.mood.MoodInfo;
 import org.confluence.terraentity.entity.npc.mood.NPCMoods;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.mixed.IPlayer;
 
 public class DialogScreen extends Screen {
     Button button;
     Screen parent;
-    AbstractTerraNPC entity;
+    ITradeHolder entity;
     Component dialogText;
     protected DialogScreen(Component title, Screen parent) {
         super(title);
@@ -27,9 +28,13 @@ public class DialogScreen extends Screen {
     protected void init() {
         super.init();
 
-        if(((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder() instanceof AbstractTerraNPC npc){
+        if(((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder() instanceof ITradeHolder npc){
             entity = npc;
-            String dialog = NPCDialogs.getRandomDialog(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()));
+            String dialog = null;
+            if(entity instanceof Entity e){
+                dialog = NPCDialogs.getRandomDialog(BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()));
+            }
+
             if(dialog!= null) {
                 dialogText = Component.translatable(dialog);
             }

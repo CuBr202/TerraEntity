@@ -11,6 +11,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
@@ -44,13 +45,17 @@ public record NPCShopPacket(int tradeIndex) implements CustomPacketPayload {
                     if (event.isCanceled()) {
                         return;
                     }
-                    if(event.isAlwaysPass() || trade.canTradeWithLock(sp, npc, tradeIndex)
-                    ) {
+                    if(event.isAlwaysPass() || trade.canTradeWithLock(sp, npc, tradeIndex)) {
                         if(event.getRedirection()!=null){
                             event.getRedirection().accept(sp, trade );
                         }else{
                             trade.onTrade(sp, npc, tradeIndex);
                         }
+                    }
+                }else if(((IPlayer)sp).terra_entity$getTradeHolder() instanceof ITradeHolder holder){
+                    trade = holder.getTradeManager().trades().get(tradeIndex);
+                    if(trade.canTradeWithLock(sp, holder, tradeIndex)) {
+                        trade.onTrade(sp, holder, tradeIndex);
                     }
                 }
 

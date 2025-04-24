@@ -4,9 +4,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +67,11 @@ public class UpdateNPCTradePacket implements CustomPacketPayload {
 
 
 
-    public static void syncNpcTrade(int index, AbstractTerraNPC npc){
+    public static <T extends Entity & ITradeHolder> void syncNpcTrade(int index, T npc){
         AdapterUtils.sendToAllPlayers(new UpdateNPCTradePacket(index, npc.getUUID(), npc.getTradeManager().trades().get(index)));
+    }
+
+    public static <T extends ITradeHolder> void syncNpcTrade(int index, UUID npcId, T npc){
+        AdapterUtils.sendToAllPlayers(new UpdateNPCTradePacket(index, npcId, npc.getTradeManager().trades().get(index)));
     }
 }

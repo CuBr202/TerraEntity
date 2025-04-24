@@ -36,7 +36,7 @@ import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
@@ -156,9 +156,9 @@ public class GameEntityEvent {
     @SubscribeEvent
     public static void entityInteract(PlayerInteractEvent.EntityInteract event) {
         // 打开商店
-        if (event.getTarget() instanceof AbstractTerraNPC npc) {
+        if (event.getTarget() instanceof ITradeHolder holder) {
 
-            ((IPlayer) event.getEntity()).terra_entity$setTradeHolder(npc);
+            ((IPlayer) event.getEntity()).terra_entity$setTradeHolder(holder);
             return;
         }
         ItemStack item = event.getItemStack();

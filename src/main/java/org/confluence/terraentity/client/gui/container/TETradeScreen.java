@@ -331,6 +331,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         }
     }
 
+
     @OnlyIn(Dist.CLIENT)
     static class TradeOfferButton extends Button {
         final int index;

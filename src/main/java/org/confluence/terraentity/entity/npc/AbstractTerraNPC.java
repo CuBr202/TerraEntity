@@ -445,8 +445,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
 
 
-        var event = new NPCEvent.InteractNPCEvent(this, player);
-        AdapterUtils.postEvent(event);
         ItemStack stack = player.getItemInHand(hand);
 
         if(stack.is(TEItems.HOUSE_DETECTOR.get())){
@@ -504,6 +502,8 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             return InteractionResult.PASS;
         }
 
+        var event = new NPCEvent.InteractNPCEvent(this, player);
+        AdapterUtils.postEvent(event);
         event.execute((npc, player1) -> {
 //            if(trades != null) {
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->

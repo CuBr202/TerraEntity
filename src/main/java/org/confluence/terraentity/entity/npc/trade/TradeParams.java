@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * <p>npc任务表参数，用于更新静态交易任务，
+ * <p>npc任务表参数，用于更新交易任务
  * <p>而不需要使用局部更新任务列表实例
  * @param params 交易表序列号对应的参数表
  */
@@ -78,13 +78,6 @@ public record TradeParams(Map<Integer, Param> params) {
             }
         }
 
-        public void increaseLevel(){
-            level++;
-        }
-
-        public void setIsReady(boolean isReady){
-            this.isReady = Optional.of(isReady);
-        }
     }
 
     public static Codec<TradeParams> CODEC = RecordCodecBuilder.create(instance -> instance.group(

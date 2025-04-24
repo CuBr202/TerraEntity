@@ -2,6 +2,7 @@ package org.confluence.terraentity.menu;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -34,7 +35,7 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
         super(menuType, containerId);
         this.NPCTrades = NPCTrades;
         if(NPCTrades == null) {
-            this.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder();
+            this.NPCTrades = ((IPlayer) playerInventory.player).terra_entity$getTradeHolder();
         }
 
         this.container = new SimpleContainer(1);
