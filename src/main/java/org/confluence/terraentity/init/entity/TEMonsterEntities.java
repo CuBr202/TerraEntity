@@ -1,6 +1,7 @@
 package org.confluence.terraentity.init.entity;
 
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.monster.Monster;
@@ -12,6 +13,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.client.boss.renderer.DecayederRenderer;
+import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.client.entity.model.GiantShellyModel;
 import org.confluence.terraentity.client.entity.model.NymphModel;
 import org.confluence.terraentity.client.entity.renderer.*;
@@ -138,8 +140,8 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.SPORE_BAT.get(), c-> new GeoNormalRenderer<>(c, TEMonsterEntities.SPORE_BAT.getId(),false));
 
         // bee
-        event.registerEntityRenderer(TEMonsterEntities.LITTLE_HORNET.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.LITTLE_HORNET.getId(),true, 1, 0.5f));
-        event.registerEntityRenderer(TEMonsterEntities.HORNET.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.HORNET.getId(),true, 1, 0.5f));
+        event.registerEntityRenderer(TEMonsterEntities.LITTLE_HORNET.get(), c->new GeoNormalRenderer<>(c, new GeoNormalModel<>(TEMonsterEntities.LITTLE_HORNET.getId(), false),true, 1, 0.5f));
+        event.registerEntityRenderer(TEMonsterEntities.HORNET.get(), c->new GeoNormalRenderer<>(c, new GeoNormalModel<>(TEMonsterEntities.HORNET.getId(), false),true, 1, 0.5f));
 
         event.registerEntityRenderer(TEMonsterEntities.NYMPH.get(), c->new GeoNormalRenderer<>(c, new NymphModel<>(TEMonsterEntities.NYMPH.getId()),false,1,0f));
         event.registerEntityRenderer(TEMonsterEntities.SNATCHER.get(), c->new SnatcherRenderer<>(c, TEMonsterEntities.SNATCHER.getId()));

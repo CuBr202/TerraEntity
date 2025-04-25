@@ -1,7 +1,6 @@
-package org.confluence.terraentity.entity.ai.motion;
+package org.confluence.terraentity.entity.ai.animation;
 
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
 import org.joml.Math;
 import software.bernie.geckolib.cache.object.GeoBone;
 
@@ -27,8 +26,16 @@ public class BoneStateMachine<S> {
     private double toRotY;
     private double toRotZ;
 
+    /**
+     * 只需在客户端实例化
+     * @param defaultState 初始状态
+     */
+    public BoneStateMachine(S defaultState){
+        this.state = defaultState;
+    }
 
-    public void update(double partialTick, GeoBone bone){
+
+    public void apply(double partialTick, GeoBone bone){
         updateRot(partialTick);
         applyRot(bone);
     }

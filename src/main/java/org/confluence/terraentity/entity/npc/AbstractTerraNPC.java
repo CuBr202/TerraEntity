@@ -38,10 +38,11 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.event.NPCEvent;
-import org.confluence.terraentity.entity.ai.motion.BoneStateMachine;
+import org.confluence.terraentity.entity.ai.animation.BoneStateMachine;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
+import org.confluence.terraentity.entity.ai.animation.IUseItemAnimatable;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
-import org.confluence.terraentity.client.animation.api.state.BoneStates;
+import org.confluence.terraentity.entity.ai.animation.BoneStates;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
@@ -76,7 +77,7 @@ import java.util.function.Predicate;
 /**
  * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
  */
-public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc , ITradeHolder, CrossbowAttackMob {
+public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc , ITradeHolder, IUseItemAnimatable<BoneStates>, CrossbowAttackMob  {
 
 
     public static final Map<MemoryModuleType<GlobalPos>, BiPredicate<AbstractTerraNPC, Holder<PoiType>>> POI_MEMORIES =
@@ -101,8 +102,8 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     private int _cooldownTicks;
 
 
-    public BoneStateMachine<BoneStates> leftArm = new BoneStateMachine<>();
-    public BoneStateMachine<BoneStates> rightArm = new BoneStateMachine<>();
+    public BoneStateMachine<BoneStates> leftArm;
+    public BoneStateMachine<BoneStates> rightArm;
 
 
     private static final EntityDataAccessor<Boolean> DATA_RANGE_ATTACK_COOLDOWN = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
@@ -121,7 +122,8 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
                 initName();
             }
         }else{
-
+            leftArm = new BoneStateMachine<>(BoneStates.IDLE);
+            rightArm = new BoneStateMachine<>(BoneStates.IDLE);
         }
 
         Optional.ofNullable(this.getAttribute(Attributes.MOVEMENT_SPEED)).ifPresent(att->att.setBaseValue(moveSpeed));
@@ -409,10 +411,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
     }
 
-    public int getCurrentSwingDuration() {
-        return super.getCurrentSwingDuration();
-    }
-
     @Override
     public void aiStep() {
         super.aiStep();
@@ -431,6 +429,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     @SuppressWarnings("all")
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        if(level().isClientSide()){
+            return super.mobInteract(player, hand);
+        }
         if(hand == InteractionHand.OFF_HAND){
             return super.mobInteract(player, hand);
         }
@@ -458,16 +459,17 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             }
             stack.shrink(1);
             return InteractionResult.SUCCESS;
-        }
-        else if(!stack.isEmpty()){
-            // 如果是物品，则拿在手上
-            ItemStack stack1 = stack.copy();
-            this.dropEquipmentToHand(EquipmentSlot.MAINHAND, player, hand);
-            this.setItemSlot(EquipmentSlot.MAINHAND, stack1.copy());
-            stack.shrink(1);
-            return InteractionResult.SUCCESS;
         }else if(player.isShiftKeyDown()){
-            // 如果是空手按下shift，则取下装备
+            // 如果按下shift
+            if(!stack.isEmpty()){
+                // 如果是物品，则交换物品
+                ItemStack stack1 = stack.copy();
+                this.dropEquipmentToHand(EquipmentSlot.MAINHAND, player, hand);
+                this.setItemSlot(EquipmentSlot.MAINHAND, stack1.copy());
+                stack.shrink(1);
+                return InteractionResult.SUCCESS;
+            }
+            // 如果是空手，则取下装备
             Vec3 hit = TEUtils.calRayToAABB(player.getEyePosition(), player.getViewVector(0.5f), this.getBoundingBox());
             if(hit != null) {
                 double dx = hit.y - position().y;
@@ -656,5 +658,17 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     @Override
     public void performRangedAttack(@NotNull LivingEntity livingEntity, float v) {
 
+    }
+
+    public int getChargingTicks(){
+        return this.cooldownTick;
+    }
+
+    public BoneStateMachine<BoneStates> getLeftArmBoneStateMachine(){
+        return leftArm;
+    }
+
+    public BoneStateMachine<BoneStates> getRightArmBoneStateMachine(){
+        return rightArm;
     }
 }

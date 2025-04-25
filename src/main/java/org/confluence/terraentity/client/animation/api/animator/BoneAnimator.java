@@ -1,10 +1,19 @@
 package org.confluence.terraentity.client.animation.api.animator;
 
-import org.confluence.terraentity.entity.ai.motion.BoneStateMachine;
+import org.confluence.terraentity.entity.ai.animation.BoneStateMachine;
 
-// 定义骨骼动画处理器接口
+/**
+ * 骨骼硬编码动画控制器
+ * @param <T> 实体类型
+ * @param <B> 骨骼类型
+ * @param <C> 动画控制器上下文类型
+ * @param <S> 状态机状态类型
+ */
 public interface BoneAnimator<T, B, C, S> {
+    /**
+     * 更新骨骼状态
+     * @param stateMachine 状态机
+     */
     void updateState(BoneStateMachine<S> stateMachine, T animatable, float partialTick, B bone, C context);
-
 
 }

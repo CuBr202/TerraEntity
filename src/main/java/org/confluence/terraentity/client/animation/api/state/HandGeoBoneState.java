@@ -1,7 +1,8 @@
 package org.confluence.terraentity.client.animation.api.state;
 
 import org.confluence.terraentity.client.animation.api.context.AnimatorContext;
-import org.confluence.terraentity.entity.ai.motion.BoneStateMachine;
+import org.confluence.terraentity.entity.ai.animation.BoneStateMachine;
+import org.confluence.terraentity.entity.ai.animation.BoneStates;
 import software.bernie.geckolib.cache.object.GeoBone;
 
 // 右手状态基类

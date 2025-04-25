@@ -1,5 +1,8 @@
-package org.confluence.terraentity.client.animation.api.state;
+package org.confluence.terraentity.entity.ai.animation;
 
+/**
+ * 通用手臂硬编码骨骼状态枚举类
+ */
 public enum BoneStates {
     IDLE,
     CROSSBOW_CHARGING,

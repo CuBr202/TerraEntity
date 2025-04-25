@@ -9,19 +9,19 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.*;
-import org.confluence.terraentity.client.animation.animator.LeftHandGeoBoneAnimator;
+import org.confluence.terraentity.client.animation.animator.humanoid.LeftHandGeoBoneAnimator;
 import org.confluence.terraentity.client.animation.api.animator.GeoBoneAnimator;
 import org.confluence.terraentity.client.animation.api.context.AnimatorContext;
 import org.confluence.terraentity.client.animation.api.animator.BoneAnimator;
-import org.confluence.terraentity.client.animation.api.state.BoneStates;
-import org.confluence.terraentity.client.animation.animator.RightHandGeoBoneAnimator;
+import org.confluence.terraentity.entity.ai.animation.BoneStateMachine;
+import org.confluence.terraentity.entity.ai.animation.BoneStates;
+import org.confluence.terraentity.client.animation.animator.humanoid.RightHandGeoBoneAnimator;
 import org.confluence.terraentity.client.util.DefaultBoneBoundIdents;
-import org.confluence.terraentity.entity.ai.motion.*;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.joml.Math;
+import org.confluence.terraentity.entity.ai.animation.IUseItemAnimatable;
+import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
@@ -30,7 +30,11 @@ import software.bernie.geckolib.renderer.layer.ItemArmorGeoLayer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T>{
+/**
+ *
+ * @param <T>
+ */
+public class NPCRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<BoneStates>> extends GeoNormalRenderer<T>{
     private static final String LEFT_HAND = DefaultBoneBoundIdents.LEFT_HAND_BONE_IDENT;
     private static final String RIGHT_HAND = DefaultBoneBoundIdents.RIGHT_HAND_BONE_IDENT;
 
@@ -238,9 +242,9 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
 
         AnimatorContext context = new AnimatorContext(usingTime);
         if (bone.getName().equals(RIGHT_HAND)) {
-            handleBone(animatable.rightArm, animatable, rightArmAnimator, partialTick, bone, context);
+            handleBone(animatable.getRightArmBoneStateMachine(), animatable, rightArmAnimator, partialTick, bone, context);
         } else if (bone.getName().equals(LEFT_HAND)) {
-            handleBone(animatable.leftArm, animatable, leftArmAnimator, partialTick, bone, context);
+            handleBone(animatable.getLeftArmBoneStateMachine(), animatable, leftArmAnimator, partialTick, bone, context);
         }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
@@ -248,8 +252,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends GeoNormalRenderer<T
     private void handleBone(BoneStateMachine<BoneStates> stateMachine, T animatable,
                             BoneAnimator<T, GeoBone, AnimatorContext, BoneStates> animator, float partialTick, GeoBone bone, AnimatorContext context) {
         animator.updateState(stateMachine, animatable, partialTick, bone, context);
-
-        stateMachine.update(partialTick, bone);
+        stateMachine.apply(partialTick, bone);
     }
 
 }
