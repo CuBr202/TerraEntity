@@ -63,6 +63,7 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> EATER_OF_WORLD_SPAWN_EGG = registerEgg("eater_of_world_spawn_egg", TEBossEntities.EATER_OF_WORLDS, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> BRAIN_OF_CTHULHU_SPAWN_EGG = registerEgg("brain_of_cthulhu_spawn_egg", TEBossEntities.BRAIN_OF_CTHULHU, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> QUEEN_BEE_SPAWN_EGG = registerEgg("queen_bee_spawn_egg", TEBossEntities.QUEEN_BEE, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> SKELETRON_SPAWN_EGG = registerEgg("skeletron_spawn_egg", TEBossEntities.SKELETRON, 0xffffff, 0xffffff);
 
     public static final DeferredItem<Item> GUILD_SPAWN_EGG = registerEgg("guild_spawn_egg", TENpcEntities.GUIDE, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> DEMOLITIONIST_SPAWN_EGG = registerEgg("demolitionist_spawn_egg", TENpcEntities.DEMOLITIONIST, 0xffffff, 0xffffff);

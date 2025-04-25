@@ -21,7 +21,7 @@ import java.util.UUID;
  */
 public class SkeletronHand extends Skeletron {
 
-    private float attackDamage = 5; // 攻击伤害
+    private float attackDamage = 10; // 攻击伤害
 
     public Skeletron owner;
     public HandSide handSide;
@@ -38,8 +38,8 @@ public class SkeletronHand extends Skeletron {
     public SkeletronHand(EntityType<? extends Monster> entityType, Level level, Skeletron owner, HandSide handSide) {
         super(entityType, level);
         // 重新设置属性
-        this.baseHealth = 200;
-        this.baseArmor = 2;
+        this.baseHealth = 405;
+        this.baseArmor = 4;
         this.attackDamage = 10;
         this.setAttactDamage(attackDamage);
 
