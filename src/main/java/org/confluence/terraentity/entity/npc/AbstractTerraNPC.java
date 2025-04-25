@@ -41,6 +41,7 @@ import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.entity.ai.motion.BoneStateMachine;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
+import org.confluence.terraentity.client.animation.api.state.BoneStates;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
@@ -92,11 +93,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public House house = House.EMPTY;
     private NPCMood mood;
 
-
-    public BoneStateMachine leftArm= new BoneStateMachine();
-    public BoneStateMachine rightArm = new BoneStateMachine();
-
-
     private NPCAi ai;
     private float rangeDistance = 8; // 远程攻击范围
     private Predicate<AbstractTerraNPC> canPerformerAttackTest;
@@ -104,7 +100,10 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public int cooldownTick = 0; // 攻击冷却时间
     private int _cooldownTicks;
 
-    int lastUseItemTick = 0;
+
+    public BoneStateMachine<BoneStates> leftArm = new BoneStateMachine<>();
+    public BoneStateMachine<BoneStates> rightArm = new BoneStateMachine<>();
+
 
     private static final EntityDataAccessor<Boolean> DATA_RANGE_ATTACK_COOLDOWN = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<NPCTradeManager> DATA_TRADES_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADES_SERIALIZER.get());
@@ -121,6 +120,8 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             if(shouldInitName()){
                 initName();
             }
+        }else{
+
         }
 
         Optional.ofNullable(this.getAttribute(Attributes.MOVEMENT_SPEED)).ifPresent(att->att.setBaseValue(moveSpeed));
@@ -261,7 +262,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         this.entityData.set(DATA_RANGE_ATTACK_COOLDOWN, cooldown);
     }
 
-    public TradeParams getTradeParams(){
+    public @NotNull TradeParams getTradeParams(){
         return this.entityData.get(DATA_TRADE_PARAMS);
     }
 
@@ -492,15 +493,17 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             return InteractionResult.PASS;
         }
 
-        var event = new NPCEvent.InteractNPCEvent(this, player);
-        AdapterUtils.postEvent(event);
-        event.execute((npc, player1) -> {
+        if(this.tradingPlayer == null) {
+            var event = new NPCEvent.InteractNPCEvent(this, player);
+            AdapterUtils.postEvent(event);
+            event.execute((npc, player1) -> {
 //            if(trades != null) {
-            this.getTradeManager().reCheckAvailableTrades(player1);
+                this.getTradeManager().reCheckAvailableTrades(player1);
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
                         new SimpleTradeMenu(id, playerInventory, this), Component.translatable("title.terra_entity.npc_trade")));
 //            }
-        });
+            });
+        }
 
 //        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new NPCTradesMenu(id,playerInventory, trades, forge), Component.translatable("confluence.menu.npc_shop")));
         tradingPlayer = player;

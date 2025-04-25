@@ -20,6 +20,8 @@ import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * 渔夫：可以设置处理交易任务
  */
@@ -42,7 +44,7 @@ public class AnglerNPC extends AbstractTerraNPC {
             if(trade instanceof TradeTask task){
                 if(task.task() instanceof DynamicAnglerTradeTask d){
                     // 更新参数
-                    if(!getTradeParams().isReady(c)) {
+                    if(!Objects.requireNonNull(getTradeParams()).isReady(c)) {
                         d.setNext(this, c);
 
                         getTradeParams().increaseLevel(c);
@@ -121,6 +123,7 @@ public class AnglerNPC extends AbstractTerraNPC {
     public boolean isLieDown(){
         return !isWakeUp();
     }
+
     Vec3 dir = Vec3.ZERO;
     Vec3 speed = Vec3.ZERO;
     @Override
@@ -128,7 +131,7 @@ public class AnglerNPC extends AbstractTerraNPC {
         super.tick();
         if(!level().isClientSide){
             if(timeToTradeFish()){
-                resetFishTask();
+                this.resetFishTask();
             }
             if(!this.isWakeUp()){
                 if(this.isInWater() ){
@@ -171,7 +174,7 @@ public class AnglerNPC extends AbstractTerraNPC {
     }
 
     @Override
-    protected EntityDimensions getDefaultDimensions(Pose pose) {
+    protected @NotNull EntityDimensions getDefaultDimensions(@NotNull Pose pose) {
         if(!this.isWakeUp()) {
             return super.getDefaultDimensions(pose).scale(2F, 0.5f);
         }

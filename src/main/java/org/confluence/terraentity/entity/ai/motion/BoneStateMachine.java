@@ -1,19 +1,20 @@
 package org.confluence.terraentity.entity.ai.motion;
 
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import org.joml.Math;
 import software.bernie.geckolib.cache.object.GeoBone;
 
 /**
  * 状态机优化骨骼动画插值
  */
-public class BoneStateMachine {
+public class BoneStateMachine<S> {
 
     private double curRotX;
     private double curRotY;
     private double curRotZ;
 
-    private int state;
+    private S state;
 
     private double transitionTime = 5;
     private double partialTickTotal;
@@ -26,18 +27,22 @@ public class BoneStateMachine {
     private double toRotY;
     private double toRotZ;
 
+
     public void update(double partialTick, GeoBone bone){
         updateRot(partialTick);
         applyRot(bone);
     }
 
-    public void updateState(int state, double transitionTime, double toRotX, double toRotY, double toRotZ){
+    public void updateState(S state, double transitionTime, double toRotX, double toRotY, double toRotZ){
         setState(state);
         setTransitionTime(transitionTime);
         setToRot(toRotX, toRotY, toRotZ);
     }
 
-
+    public void updateState(double transitionTime, double toRotX, double toRotY, double toRotZ){
+        setTransitionTime(transitionTime);
+        setToRot(toRotX, toRotY, toRotZ);
+    }
 
     private void updateRot(double partialTick){
         partialTickTotal += partialTick;
@@ -51,7 +56,7 @@ public class BoneStateMachine {
         bone.setRotZ((float) curRotZ);
     }
 
-    private void setState(int state){
+    public void setState(S state){
         if(state!= this.state){
             this.fromRotX = this.curRotX;
             this.fromRotY = this.curRotY;
@@ -73,4 +78,7 @@ public class BoneStateMachine {
         return Mth.lerp(Math.min(partialTickTotal  / transitionTime,1), start, end);
     }
 
+    public S getState() {
+        return state;
+    }
 }

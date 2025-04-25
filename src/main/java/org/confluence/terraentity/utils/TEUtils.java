@@ -838,6 +838,9 @@ public final class TEUtils {
         }
     }
 
+    public static double lerpMotion(double partialTickTotal, double transitionTime, double start, double end){
+        return Mth.lerp(org.joml.Math.min(partialTickTotal  / transitionTime,1), start, end);
+    }
 
 /*
     public static boolean hasBoss(double radius, Level level,
