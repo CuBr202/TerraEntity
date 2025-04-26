@@ -9,7 +9,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.init.item.*;
 import org.confluence.terraentity.item.HouseDetectItem;
 
@@ -37,11 +36,9 @@ public class TEItems {
                     .displayItems((itemDisplayParameters, output) -> {
                         TESpawnEggItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TERideableItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                        if(ServerConfig.DISPLAY_SUMMON_ITEMS.get()) {
-                            TESummonItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                            TEWhipItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                            TEBoomerangItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                        }
+                        TESummonItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        TEWhipItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        TEBoomerangItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEItems.TOOLS.getEntries().forEach(item -> output.accept(item.get()));
                     })

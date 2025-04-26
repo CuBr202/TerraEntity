@@ -9,10 +9,9 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -61,8 +60,12 @@ public class RideableSlime extends AbstractRideableEntity {
 //                    break;
 //                }
 //            }
-            if (getHitResult(0.5F, 0.5F)) {
+            Entity hitEntity = getHitResult(0.5F, 0.5F);
+            if (hitEntity != null && hitEntity.isAttackable()) {
                 trigger = true;
+                if(hitEntity instanceof LivingEntity living){
+                    living.hurt(damageSources().generic(), 5);
+                }
             }
             if (trigger) {
                 this.setDeltaMovement(getDeltaMovement().x, getJumpPower(), getDeltaMovement().z);
@@ -73,14 +76,14 @@ public class RideableSlime extends AbstractRideableEntity {
         super.tickRidden(player, travelVector);
     }
 
-    private boolean getHitResult(float offsetX, float offsetZ) {
+    private Entity getHitResult(float offsetX, float offsetZ) {
 //        HitResult hitResult = ProjectileUtil.getEntityHitResult(level(), this, position(), position().subtract(offsetX, 1f, offsetZ), getBoundingBox().inflate(2), e -> e.isAttackable());
 //        if (hitResult != null && hitResult.getType() == HitResult.Type.ENTITY) {
 //            level().getEntities(this, )
 //            return true;
 //        }
         var entities = TEUtils.getAABBAngleTarget(position(), position().add(offsetX, -1f, offsetZ), this.level(), this.getOwner(), 1, 40, e->e instanceof LivingEntity);
-        return entities != null;
+        return entities;
     }
 
     @Override
