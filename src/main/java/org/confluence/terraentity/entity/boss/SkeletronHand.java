@@ -11,6 +11,8 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.animation.BoneStates;
+import org.confluence.terraentity.entity.animation.MultiBoneStateMachine;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -29,6 +31,7 @@ public class SkeletronHand extends Skeletron {
     protected final double slapSpeed;
     protected int slapTick;
 
+    public MultiBoneStateMachine<BoneStates> stateMachine;
 
     public static final EntityDataAccessor<Optional<UUID>> DATA_OWNER = SynchedEntityData.defineId(SkeletronHand.class, EntityDataSerializers.OPTIONAL_UUID);
     public static final EntityDataAccessor<Boolean> DATA_HAND_SIDE = SynchedEntityData.defineId(SkeletronHand.class, EntityDataSerializers.BOOLEAN);
@@ -40,7 +43,7 @@ public class SkeletronHand extends Skeletron {
         // 重新设置属性
         this.baseHealth = 405;
         this.baseArmor = 4;
-        this.attackDamage = 10;
+        this.stateMachine = new MultiBoneStateMachine<>(BoneStates.IDLE);
         this.setAttactDamage(attackDamage);
 
         this.handSide = handSide;

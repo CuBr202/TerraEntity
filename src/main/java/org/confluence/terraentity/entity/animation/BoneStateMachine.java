@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.ai.animation;
+package org.confluence.terraentity.entity.animation;
 
 import net.minecraft.util.Mth;
 import org.joml.Math;
@@ -7,16 +7,15 @@ import software.bernie.geckolib.cache.object.GeoBone;
 /**
  * 状态机优化骨骼动画插值
  */
-public class BoneStateMachine<S> {
+public class BoneStateMachine<S> extends AbstractStateMachine<GeoBone, S> {
 
     private double curRotX;
     private double curRotY;
     private double curRotZ;
 
-    private S state;
 
     private double transitionTime = 5;
-    private double partialTickTotal;
+    public  double partialTickTotal;
 
     public double fromRotX;
     public double fromRotY;
@@ -26,12 +25,9 @@ public class BoneStateMachine<S> {
     private double toRotY;
     private double toRotZ;
 
-    /**
-     * 只需在客户端实例化
-     * @param defaultState 初始状态
-     */
-    public BoneStateMachine(S defaultState){
-        this.state = defaultState;
+
+    public BoneStateMachine(S initialState){
+        super(initialState);
     }
 
 
@@ -72,6 +68,8 @@ public class BoneStateMachine<S> {
         }
         this.state = state;
     }
+
+
     private void setTransitionTime(double transitionTime){
         this.transitionTime = transitionTime;
     }
@@ -85,7 +83,4 @@ public class BoneStateMachine<S> {
         return Mth.lerp(Math.min(partialTickTotal  / transitionTime,1), start, end);
     }
 
-    public S getState() {
-        return state;
-    }
 }

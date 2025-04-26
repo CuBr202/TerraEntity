@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.ai.animation;
+package org.confluence.terraentity.entity.animation;
 
 /**
  * 通用手臂硬编码骨骼状态枚举类

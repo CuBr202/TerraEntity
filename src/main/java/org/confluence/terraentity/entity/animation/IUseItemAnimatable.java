@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.ai.animation;
+package org.confluence.terraentity.entity.animation;
 
 /**
  * 手臂动画控制信息传输接口

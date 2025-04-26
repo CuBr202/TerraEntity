@@ -1,16 +1,17 @@
-package org.confluence.terraentity.client.animation.animator.humanoid;
+package org.confluence.terraentity.client.animation.bone.animator.humanoid;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
-import org.confluence.terraentity.client.animation.api.animator.AbstractGeoBoneAnimator;
+import org.confluence.terraentity.client.animation.bone.GeoBoneAnimator;
 import org.confluence.terraentity.client.animation.api.context.AnimatorContext;
-import org.confluence.terraentity.client.animation.api.state.HandGeoBoneState;
-import org.confluence.terraentity.entity.ai.animation.BoneStates;
-import org.confluence.terraentity.client.animation.api.state.GeoBoneState;
-import org.confluence.terraentity.entity.ai.animation.BoneStateMachine;
-import org.confluence.terraentity.entity.ai.animation.IUseItemAnimatable;
+import org.confluence.terraentity.entity.animation.BoneStates;
+import org.confluence.terraentity.client.animation.bone.GeoBoneState;
+import org.confluence.terraentity.entity.animation.BoneStateMachine;
+import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
 import software.bernie.geckolib.cache.object.GeoBone;
+
+import java.util.EnumMap;
 
 import static org.confluence.terraentity.utils.TEUtils.lerpMotion;
 
@@ -19,10 +20,15 @@ import static org.confluence.terraentity.utils.TEUtils.lerpMotion;
  * 人形怪右手骨骼动画控制器
  * @param <T> 实体类型
  */
-public class RightHandGeoBoneAnimator<T extends LivingEntity & IUseItemAnimatable<?>> extends AbstractGeoBoneAnimator<T> {
+public class RightHandGeoBoneAnimator<T extends LivingEntity & IUseItemAnimatable<?>> extends GeoBoneAnimator<T> {
+
+    public RightHandGeoBoneAnimator(GeoBone bone) {
+        super(bone);
+    }
 
     @Override
     protected void init() {
+        states = new EnumMap<>(BoneStates.class);
         addState(BoneStates.IDLE, new IdleState());
         addState(BoneStates.CROSSBOW_CHARGING, new CrossbowChargingState());
         addState(BoneStates.PROJECTILE_USING, new ProjectileUsingState());
@@ -33,19 +39,24 @@ public class RightHandGeoBoneAnimator<T extends LivingEntity & IUseItemAnimatabl
 
     // 方便打断点
     @Override
-    public void updateState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+    public void updateState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, AnimatorContext context) {
         GeoBoneState<T> currentState = this.states.get(state.getState());
         if (currentState != null) {
             currentState.handle(state, animatable, partialTick, bone, context);
         }else{
-            state.setState(BoneStates.IDLE);
+            state.setState(defaultState());
         }
     }
 
+    @Override
+    protected BoneStates defaultState() {
+        return BoneStates.IDLE;
+    }
 
-    class SwingingState extends HandGeoBoneState<T> {
+
+    class SwingingState implements GeoBoneState<T> {
         @Override
-        protected void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             float swingTime = animatable.swingTime + partialTick;
             float swingTicks = animatable.getCurrentSwingDuration();
             double lerpx = lerpMotion(swingTime, swingTicks, 0, 1f);
@@ -66,47 +77,47 @@ public class RightHandGeoBoneAnimator<T extends LivingEntity & IUseItemAnimatabl
         }
 
         @Override
-        protected boolean shouldTransition(T animatable, AnimatorContext context) {
+        public boolean shouldTransition(BoneStateMachine<BoneStates> state,  T animatable, AnimatorContext context) {
             return !animatable.swinging;
         }
 
         @Override
-        protected void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             state.setState(BoneStates.IDLE);
         }
     }
 
-    class CrossbowChargingState extends HandGeoBoneState<T> {
+    class CrossbowChargingState implements GeoBoneState<T> {
         @Override
-        protected void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             state.updateState(5, 0.6f, 0.8f, bone.getRotZ());
         }
 
         @Override
-        protected boolean shouldTransition(T animatable, AnimatorContext context) {
+        public boolean shouldTransition(BoneStateMachine<BoneStates> state,  T animatable, AnimatorContext context) {
             return !(animatable.getUseItem().getItem() instanceof CrossbowItem) ||
                     !animatable.isChargingCrossbow();
         }
 
         @Override
-        protected void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             state.setState(BoneStates.PROJECTILE_USING);
         }
     }
 
-    class CrossbowIdleState extends HandGeoBoneState<T> {
+    class CrossbowIdleState implements GeoBoneState<T> {
         @Override
-        protected void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             state.updateState(5, 0.3f + 0.5F * bone.getRotX(), bone.getRotY(), bone.getRotZ());
         }
 
         @Override
-        protected boolean shouldTransition(T animatable, AnimatorContext context) {
+        public boolean shouldTransition(BoneStateMachine<BoneStates> state,  T animatable, AnimatorContext context) {
             return animatable.isChargingCrossbow() || !(animatable.getMainHandItem().getItem() instanceof CrossbowItem);
         }
 
         @Override
-        protected void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             if (animatable.isChargingCrossbow()) {
                 state.setState(BoneStates.CROSSBOW_CHARGING);
             } else if (animatable.isUsingItem() && animatable.getUseItem().getItem() instanceof CrossbowItem) {
@@ -117,36 +128,36 @@ public class RightHandGeoBoneAnimator<T extends LivingEntity & IUseItemAnimatabl
         }
     }
 
-    class HandItemIdleState extends HandGeoBoneState<T> {
+    class HandItemIdleState implements GeoBoneState<T> {
         @Override
-        protected void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             state.updateState(15, 0.3f + bone.getRotX() * 0.5F, bone.getRotY(), bone.getRotZ());
         }
 
         @Override
-        protected boolean shouldTransition(T animatable, AnimatorContext context) {
+        public boolean shouldTransition(BoneStateMachine<BoneStates> state,  T animatable, AnimatorContext context) {
             return animatable.getMainHandItem().isEmpty() || animatable.isUsingItem();
         }
 
         @Override
-        protected void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             state.setState(BoneStates.IDLE);
         }
     }
 
-    class IdleState extends HandGeoBoneState<T> {
+    class IdleState implements GeoBoneState<T> {
         @Override
-        protected void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             state.updateState(5, bone.getRotX(), bone.getRotY(), bone.getRotZ());
         }
 
         @Override
-        protected boolean shouldTransition(T animatable, AnimatorContext context) {
+        public boolean shouldTransition(BoneStateMachine<BoneStates> state,  T animatable, AnimatorContext context) {
             return animatable.isUsingItem() || !animatable.getMainHandItem().isEmpty();
         }
 
         @Override
-        protected void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             if (animatable.isUsingItem()) {
                 state.setState(BoneStates.PROJECTILE_USING);
             } else {
@@ -155,21 +166,21 @@ public class RightHandGeoBoneAnimator<T extends LivingEntity & IUseItemAnimatabl
         }
     }
 
-    class ProjectileUsingState extends HandGeoBoneState<T> {
+    class ProjectileUsingState implements GeoBoneState<T> {
         @Override
-        protected void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void updateTransition(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             double lerpx = lerpMotion(context.usingTime, 5, 0, 1.5 - Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot()) * 0.017453292F);
             float lerpy = Mth.lerp(partialTick, animatable.yBodyRotO - animatable.yHeadRotO, animatable.yBodyRot - animatable.yHeadRot) * 0.017453292F;
             state.updateState(5, lerpx, lerpy, bone.getRotZ());
         }
 
         @Override
-        protected boolean shouldTransition(T animatable, AnimatorContext context) {
+        public boolean shouldTransition(BoneStateMachine<BoneStates> state,  T animatable, AnimatorContext context) {
             return !animatable.isUsingItem() || animatable.isChargingCrossbow();
         }
 
         @Override
-        protected void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
+        public void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
             if (animatable.isChargingCrossbow()) {
                 state.setState(BoneStates.CROSSBOW_CHARGING);
             } else {

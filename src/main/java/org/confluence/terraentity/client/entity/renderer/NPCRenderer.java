@@ -6,21 +6,19 @@ import com.mojang.math.Axis;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.*;
-import org.confluence.terraentity.client.animation.animator.humanoid.LeftHandGeoBoneAnimator;
-import org.confluence.terraentity.client.animation.api.animator.GeoBoneAnimator;
+import org.confluence.terraentity.client.animation.bone.animator.humanoid.LeftHandGeoBoneAnimator;
+import org.confluence.terraentity.client.animation.bone.GeoBoneAnimator;
 import org.confluence.terraentity.client.animation.api.context.AnimatorContext;
-import org.confluence.terraentity.client.animation.api.animator.BoneAnimator;
-import org.confluence.terraentity.entity.ai.animation.BoneStateMachine;
-import org.confluence.terraentity.entity.ai.animation.BoneStates;
-import org.confluence.terraentity.client.animation.animator.humanoid.RightHandGeoBoneAnimator;
+import org.confluence.terraentity.entity.animation.BoneStateMachine;
+import org.confluence.terraentity.entity.animation.BoneStates;
+import org.confluence.terraentity.client.animation.bone.animator.humanoid.RightHandGeoBoneAnimator;
 import org.confluence.terraentity.client.util.DefaultBoneBoundIdents;
-import org.confluence.terraentity.entity.ai.animation.IUseItemAnimatable;
+import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -62,6 +60,7 @@ public class NPCRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<BoneStat
 
     public NPCRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
         super(renderManager, path.withPrefix("npc/"));
+
         this.addRenderLayer(new ItemArmorGeoLayer<>(this) {
             @Nullable
             @Override
@@ -140,9 +139,6 @@ public class NPCRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<BoneStat
 
         });
 
-        rightArmAnimator = new RightHandGeoBoneAnimator<>();
-        leftArmAnimator = new LeftHandGeoBoneAnimator<>();
-
         // Add some held item rendering
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
             @Nullable
@@ -214,7 +210,6 @@ public class NPCRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<BoneStat
 
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
         if(!isReRender){
             if(animatable.isLieDown()){
                 poseStack.mulPose(Axis.XP.rotationDegrees(-90F));
@@ -230,29 +225,23 @@ public class NPCRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<BoneStat
 
             });
 
+            if(rightArmAnimator == null && leftArmAnimator == null){
+                rightArmAnimator = new RightHandGeoBoneAnimator<>(model.getBone("all").get().getChildBones().get(1));
+                leftArmAnimator = new LeftHandGeoBoneAnimator<>(model.getBone("all").get().getChildBones().get(3));
+            }
         }
-    }
-
-    /**
-     * 对骨骼进行硬编码动作和插值
-     */
-    public void renderRecursively(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource,
-                                   VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
-                                   int packedOverlay, int colour) {
 
         AnimatorContext context = new AnimatorContext(usingTime);
-        if (bone.getName().equals(RIGHT_HAND)) {
-            handleBone(animatable.getRightArmBoneStateMachine(), animatable, rightArmAnimator, partialTick, bone, context);
-        } else if (bone.getName().equals(LEFT_HAND)) {
-            handleBone(animatable.getLeftArmBoneStateMachine(), animatable, leftArmAnimator, partialTick, bone, context);
-        }
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        handleBone(animatable.getRightArmBoneStateMachine(), animatable, rightArmAnimator, partialTick,  context);
+        handleBone(animatable.getLeftArmBoneStateMachine(), animatable, leftArmAnimator, partialTick,  context);
+
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
     private void handleBone(BoneStateMachine<BoneStates> stateMachine, T animatable,
-                            BoneAnimator<T, GeoBone, AnimatorContext, BoneStates> animator, float partialTick, GeoBone bone, AnimatorContext context) {
-        animator.updateState(stateMachine, animatable, partialTick, bone, context);
-        stateMachine.apply(partialTick, bone);
+                            GeoBoneAnimator<T> animator, float partialTick,  AnimatorContext context) {
+        animator.updateState(stateMachine, animatable, partialTick, context);
+        stateMachine.apply(partialTick, animator.getBone());
     }
 
 }

@@ -115,8 +115,9 @@ public record HouseManager(Map<UUID, House> houses) {
         return house.contains(pos);
     }
 
+    // todo 可以用BVH树优化
     /**
-     * 判断pos是否在任何一个房子内
+     * 判断pos是否在任何一个房子内.
      * @param pos 坐标
      * @return 如果在房屋内，返回房屋对象，否则返回null
      */
