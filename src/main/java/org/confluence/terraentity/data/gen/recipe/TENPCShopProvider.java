@@ -68,7 +68,7 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
                 .add(TradeTask.create(
                         DynamicAnglerTradeTask.builder(
                                 ItemTradeLootTable.builder()
-                                        .addCost(Items.COD, 1)
+//                                        .addCost(Items.COD, 1)
                                         .setLootTable(TerraEntity.fromSpaceAndPath("minecraft", "entities/zombie"))
                                         .setSprite(TerraEntity.space("random_gift"))
                                         .build(),

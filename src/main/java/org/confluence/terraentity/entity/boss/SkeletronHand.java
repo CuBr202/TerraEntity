@@ -237,7 +237,9 @@ public class SkeletronHand extends Skeletron {
                 if (distanceToSqr(startPos) > 1.5) {
                     setDeltaMovement(startPos.subtract(position()).normalize().scale(slapSpeed));
                 }else{
-                    endPos = owner.getTarget().position().subtract(position()).normalize().scale(4).add(owner.getTarget().position());
+                    if(owner.getTarget() != null ) {
+                        endPos = owner.getTarget().position().subtract(position()).normalize().scale(4).add(owner.getTarget().position());
+                    }
                     phase = 1;
                 }
             } else if (phase == 1) {

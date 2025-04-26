@@ -114,7 +114,11 @@ public class DynamicAnglerTradeTask implements ITradeTask {
 
         }else{
             dynamicTrade = null;
-            defaultTrade = new ItemTradeLootTable(List.of(new AmountIngredient(Ingredient.of(cost), cost.getCount())), defaultTrade.lootTable(), defaultTrade.sprite(), defaultTrade.translationKey(), defaultTrade.properties());
+            defaultTrade = new ItemTradeLootTable(
+                    List.of(new AmountIngredient(Ingredient.of(cost), cost.getCount())),
+                    defaultTrade.lootTable(),
+                    defaultTrade.sprite(), defaultTrade.translationKey(),
+                    defaultTrade.properties());
 
         }
     }

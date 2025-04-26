@@ -49,7 +49,6 @@ public class AnglerNPC extends AbstractTerraNPC {
 
                         getTradeParams().increaseLevel(c);
                         getTradeParams().setIsReady(c, true);
-                        syncTradeTasksParams();
                     }
                 }
             }
@@ -57,6 +56,22 @@ public class AnglerNPC extends AbstractTerraNPC {
         }
         syncTradeTasksParams();
         this.getTradeManager().syncDirtyTrade();
+    }
+
+    // 渔夫初始化时随机设置交易任务
+    protected void onInitTrades(){
+        int c = 0;
+        for(ITrade trade: trades()){
+            if(trade instanceof TradeTask task){
+                if(task.task() instanceof DynamicAnglerTradeTask d){
+                    // 更新参数
+                    d.setNext(this, c);
+                    getTradeParams().increaseLevel(c);
+                }
+            }
+            c++;
+        }
+        syncTradeTasksParams();
     }
 
     protected boolean timeToTradeFish(){
