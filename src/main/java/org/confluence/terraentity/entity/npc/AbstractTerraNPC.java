@@ -38,11 +38,11 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.event.NPCEvent;
-import org.confluence.terraentity.entity.ai.animation.BoneStateMachine;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
+import org.confluence.terraentity.entity.ai.animation.BoneStateMachine;
+import org.confluence.terraentity.entity.ai.animation.BoneStates;
 import org.confluence.terraentity.entity.ai.animation.IUseItemAnimatable;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
-import org.confluence.terraentity.entity.ai.animation.BoneStates;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
@@ -67,6 +67,7 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -160,6 +161,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
      * <p>使用前需要使用HouseManager.getInstance().tryAddHouse检查房屋是否可以添加</p>
      */
     public void setHouse(House house){
+        // confluence mixed here
         this.house = house;
         this.entityData.set(DATA_HOUSE_DATA, house);
     }
