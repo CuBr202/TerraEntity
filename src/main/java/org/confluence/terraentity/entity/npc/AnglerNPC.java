@@ -163,11 +163,11 @@ public class AnglerNPC extends AbstractTerraNPC {
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if(!isWakeUp() && player.level() instanceof ServerLevel serverLevel){
-            // confluence mixed here
             setWakeUp(true);
             this.refreshBrain(serverLevel);
             this.refreshDimensions();
             initName();
+            // confluence mixed here
             return InteractionResult.CONSUME;
         }
         return super.mobInteract(player, hand);
