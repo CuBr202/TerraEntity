@@ -46,7 +46,6 @@ public class TEBossEntities {
         event.registerEntityRenderer(TEBossEntities.QUEEN_BEE.get(), c->new QueenBeeRenderer(c,new GeoBossModel<>(TEBossEntities.QUEEN_BEE)));
         event.registerEntityRenderer(TEBossEntities.SKELETRON.get(), c->new SkeletronRenderer(c,new GeoBossModel<>(TEBossEntities.SKELETRON)));
         event.registerEntityRenderer(TEBossEntities.SKELETRON_HAND.get(), c->new SkeletronHandRenderer(c,new SkeletronHandModel()));
-        event.registerEntityRenderer(TEProjectileEntities.SKULL.get(), SkullProjectileRenderer::new);
 
     }
 

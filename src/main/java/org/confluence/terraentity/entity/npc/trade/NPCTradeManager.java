@@ -1,7 +1,10 @@
 package org.confluence.terraentity.entity.npc.trade;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -237,9 +240,15 @@ public class NPCTradeManager {
                         k.getPath().replace(".json", "").replace(KEY + "/", ""));
                 Reader reader = manager.openAsReader(k);
                 JsonObject jsonobject = GsonHelper.parse(reader);
-                TRADE_MAP.put(id, NPCTradeManager.CODEC.decode(JsonOps.INSTANCE, jsonobject).result().get().getFirst());
+                DataResult<Pair<NPCTradeManager, JsonElement>> result = NPCTradeManager.CODEC.decode(JsonOps.INSTANCE, jsonobject);
+                if(result.error().isPresent()){
+                    throw new RuntimeException("Failed to read trade list " + k + " :" + result.error().get());
+                }
+                TRADE_MAP.put(id, result.result().get().getFirst());
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } catch (NoSuchElementException e){
+                throw new RuntimeException("Failed to read trade list " + k, e);
             }
         });
     }

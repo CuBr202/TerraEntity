@@ -1,9 +1,9 @@
 package org.confluence.terraentity.entity.proj;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
@@ -36,5 +36,20 @@ public class LineProj extends BaseProj<LineProj> {
     @Override
     public void tick(){
         super.tick();
+        Vec3 vec3 = initSpeed;
+        double offX = getX() + vec3.x;
+        double offY = getY() + vec3.y;
+        double offZ = getZ() + vec3.z;
+        float accelerate = 1;
+
+
+        setDeltaMovement(vec3.scale(accelerate));
+        setPos(offX, offY, offZ);
+    }
+
+    @Override
+    public void onAddedToLevel(){
+        super.onAddedToLevel();
+        this.setDeltaMovement(getDeltaMovement().scale(0.01f));
     }
 }

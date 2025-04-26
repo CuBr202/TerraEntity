@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.proj.BaseProj;
 
@@ -36,21 +35,24 @@ public class ProjRenderer<T extends BaseProj> extends EntityRenderer<T> {
     }
 
     @Override
-    public void render(T pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
-        if(pEntity.getTexture()==null) return;
+    public void render(T entity, float pEntityYaw, float pPartialTick, PoseStack poseStack, MultiBufferSource pBuffer, int pPackedLight) {
+        if(entity.getTexture()==null) return;
 
-        super.render(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
-        pPoseStack.pushPose();
-        pPoseStack.scale(size,size,size);
+        super.render(entity, pEntityYaw, pPartialTick, poseStack, pBuffer, pPackedLight);
+        poseStack.pushPose();
+        poseStack.scale(size,size,size);
 
-        pPoseStack.translate(0,offsetY,0);
+        poseStack.translate(0,offsetY,0);
 
 
-        Vec3 v = pEntity.getDeltaMovement();
+        Vec3 v = entity.getDeltaMovement();
 
         float yaw = (float) Math.atan2(v.z, v.x);
-        pPoseStack.mulPose(Axis.YN.rotation(yaw + Mth.HALF_PI));
-        pPoseStack.mulPose(Axis.XN.rotationDegrees(-pEntity.xRotO));
+        // 旋转到正前方yaw
+        poseStack.mulPose(Axis.YN.rotation((float) (yaw + Math.PI/2)));
+        float pitch = (float) Math.atan2(v.y, Math.sqrt(v.x*v.x + v.z*v.z));
+        // 旋转到正前方pitch
+        poseStack.mulPose(Axis.ZN.rotation( pitch));
 
 //        if(rotateZ) {
 //            float pitch = -(float) Math.atan2(v.y, Math.sqrt(v.x * v.x + v.z * v.z));
@@ -58,9 +60,9 @@ public class ProjRenderer<T extends BaseProj> extends EntityRenderer<T> {
 //            pPoseStack.mulPose(Axis.ZN.rotation((pEntity.tickCount + pPartialTick) * rotateZSpeed));
 //        }
 
-        VertexConsumer buffer = pBuffer.getBuffer(this.bulletModel.renderType(this.getTextureLocation(pEntity)));
-        this.bulletModel.renderToBuffer(pPoseStack,buffer,pPackedLight, OverlayTexture.NO_OVERLAY);
-        pPoseStack.popPose();
+        VertexConsumer buffer = pBuffer.getBuffer(this.bulletModel.renderType(this.getTextureLocation(entity)));
+        this.bulletModel.renderToBuffer(poseStack,buffer,pPackedLight, OverlayTexture.NO_OVERLAY);
+        poseStack.popPose();
     }
 
 }
