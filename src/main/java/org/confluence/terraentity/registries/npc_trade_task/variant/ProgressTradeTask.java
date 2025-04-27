@@ -10,9 +10,9 @@ import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTypes;
-
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 按进度的任务
@@ -54,7 +54,7 @@ public class ProgressTradeTask implements ITradeTask {
 
     @Override
     public void setNext(ITradeHolder npc, int index) {
-        npc.getTradeParam(index).ifPresent(TradeParams.Param::increaseLevel);
+        Objects.requireNonNull(npc.getTradeParams()).increaseLevel(index);
         npc.syncTradeTasksParams();
     }
 

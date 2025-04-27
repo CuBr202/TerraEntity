@@ -16,9 +16,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -39,13 +37,14 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
+import org.confluence.terraentity.entity.animation.BoneStateMachine;
+import org.confluence.terraentity.entity.animation.BoneStates;
+import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.house.House;
@@ -82,7 +81,7 @@ import java.util.function.Predicate;
 /**
  * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
  */
-public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc , ITradeHolder , CrossbowAttackMob {
+public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc , ITradeHolder, IUseItemAnimatable<BoneStates>, CrossbowAttackMob  {
 
 
     public static final Map<MemoryModuleType<GlobalPos>, BiPredicate<AbstractTerraNPC, Holder<PoiType>>> POI_MEMORIES =
@@ -99,9 +98,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public House house = House.EMPTY;
     private NPCMood mood;
 
-
-
-
     private NPCAi ai;
     private float rangeDistance = 8; // 远程攻击范围
     private Predicate<AbstractTerraNPC> canPerformerAttackTest;
@@ -110,11 +106,16 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     private int _cooldownTicks;
 
 
+    public BoneStateMachine<BoneStates> leftArm;
+    public BoneStateMachine<BoneStates> rightArm;
+
+
     private static final EntityDataAccessor<Boolean> DATA_RANGE_ATTACK_COOLDOWN = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<NPCTradeManager> DATA_TRADES_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADES_SERIALIZER.get());
     private static final EntityDataAccessor<House> DATA_HOUSE_DATA = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_HOUSE_SERIALIZER.get());
     private static final EntityDataAccessor<NPCMood> DATA_MOOD = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_MOOD_SERIALIZER.get());
     private static final EntityDataAccessor<TradeParams> DATA_TRADE_PARAMS = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADE_PARAMS_SERIALIZER.get());
+    private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
 
 
     public AbstractTerraNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
@@ -123,8 +124,10 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(!level.isClientSide()){
             if(shouldInitName()){
                 initName();
-
             }
+        }else{
+            leftArm = new BoneStateMachine<>(BoneStates.IDLE);
+            rightArm = new BoneStateMachine<>(BoneStates.IDLE);
         }
 
         Optional.ofNullable(this.getAttribute(Attributes.MOVEMENT_SPEED)).ifPresent(att->att.setBaseValue(moveSpeed));
@@ -135,7 +138,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
         ((GroundPathNavigation)this.getNavigation()).setCanPassDoors(true);
         if(canPerformerAttackTest == null){
-            canPerformerAttackTest = npc->false;
+            canPerformerAttackTest = npc->npc.getMainHandItem().getItem() instanceof BowItem;
         }
     }
 
@@ -153,7 +156,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(name!= null) {
             this.setCustomName(Component.literal(name));
         }
-        this.setCustomNameVisible(true);
+
     }
 
     /**
@@ -161,6 +164,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
      * <p>使用前需要使用HouseManager.getInstance().tryAddHouse检查房屋是否可以添加</p>
      */
     public void setHouse(House house){
+        // confluence mixed here
         this.house = house;
         this.entityData.set(DATA_HOUSE_DATA, house);
     }
@@ -265,7 +269,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         this.entityData.set(DATA_RANGE_ATTACK_COOLDOWN, cooldown);
     }
 
-    public TradeParams getTradeParams(){
+    public @NotNull TradeParams getTradeParams(){
         return this.entityData.get(DATA_TRADE_PARAMS);
     }
 
@@ -281,7 +285,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
 
     /**
-     * <P>强行同步所有的交易表，当使用<b>动态交易表任务</b>的时候需要调用，保证服务器和客户端的交易表一致。
+     * <P>强行同步所有的交易表，当使用初始化的时候需要调用，保证服务器和客户端的交易表一致。
      * <p>当数据量过大时应该采用局部更新</p>
      */
     public void syncTrades(){
@@ -316,9 +320,12 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(level().isClientSide()) {
             if (DATA_TRADES_DATA.equals(key)) {
                 this.trades = this.entityData.get(DATA_TRADES_DATA);
-                this.trades.setOwner(this);
+                this.trades.initTrades(this);
             } else if (DATA_HOUSE_DATA.equals(key)) {
                 this.house = this.entityData.get(DATA_HOUSE_DATA);
+            }else if(DATA_TRADE_PARAMS.equals(key)){
+                this.getTradeManager().refreshAvailableTrades();
+
             }
         }
         if (DATA_MOOD.equals(key)) {
@@ -335,6 +342,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         this.entityData.define(DATA_RANGE_ATTACK_COOLDOWN, false);
         this.entityData.define(DATA_MOOD, new NPCMood());
         this.entityData.define(DATA_TRADE_PARAMS, TradeParams.create());
+        this.entityData.define(DATA_IS_CHARGING_CROSSBOW, false);
     }
 
     @Override
@@ -343,7 +351,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if (tag.contains("te_npc_data", 10)) {
             NPCTradeManager.CODEC.parse(NbtOps.INSTANCE, tag.get("te_npc_data")).result().ifPresent(npcTrades -> {
                 this.trades = npcTrades;
-                this.trades.setOwner(this);
+                this.trades.initTrades(this);
                 syncTrades();
 
                 TradeParams.CODEC.parse(NbtOps.INSTANCE, tag.get("te_npc_trade_params")).result().ifPresent(params->{
@@ -382,14 +390,20 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if (trades == null) {
             trades = NPCTradeManager.getCopy(event.getOrigin());
             if (trades != null) {
-                trades.setOwner(this);
+                trades.initTrades(this);
+                onInitTrades();
                 syncTrades();
             }
         }
     }
 
+    protected void onInitTrades(){
+    }
+
+
     @Override
     public void tick(){
+
         super.tick();
         this.updateSwingTime();
 
@@ -405,7 +419,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             this.cooldownTick = 0;
         }
     }
-
 
     @Override
     public void aiStep() {
@@ -425,13 +438,14 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     @SuppressWarnings("all")
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        if(level().isClientSide()){
+            return super.mobInteract(player, hand);
+        }
         if(hand == InteractionHand.OFF_HAND){
             return super.mobInteract(player, hand);
         }
+        this.setCustomNameVisible(true);
 
-
-        var event = new NPCEvent.InteractNPCEvent(this, player);
-        AdapterUtils.postEvent(event);
         ItemStack stack = player.getItemInHand(hand);
 
         if(stack.is(TEItems.HOUSE_DETECTOR.get())){
@@ -452,16 +466,17 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             }
             stack.shrink(1);
             return InteractionResult.SUCCESS;
-        }
-        else if(!stack.isEmpty()){
-            // 如果是物品，则拿在手上
-            ItemStack stack1 = stack.copy();
-            this.dropEquipmentToHand(EquipmentSlot.MAINHAND, player, hand);
-            this.setItemSlot(EquipmentSlot.MAINHAND, stack1.copy());
-            stack.shrink(1);
-            return InteractionResult.SUCCESS;
         }else if(player.isShiftKeyDown()){
-            // 如果是空手按下shift，则取下装备
+            // 如果按下shift
+            if(!stack.isEmpty()){
+                // 如果是物品，则交换物品
+                ItemStack stack1 = stack.copy();
+                this.dropEquipmentToHand(EquipmentSlot.MAINHAND, player, hand);
+                this.setItemSlot(EquipmentSlot.MAINHAND, stack1.copy());
+                stack.shrink(1);
+                return InteractionResult.SUCCESS;
+            }
+            // 如果是空手，则取下装备
             Vec3 hit = TEUtils.calRayToAABB(player.getEyePosition(), player.getViewVector(0.5f), this.getBoundingBox());
             if(hit != null) {
                 double dx = hit.y - position().y;
@@ -487,12 +502,17 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             return InteractionResult.PASS;
         }
 
-        event.execute((npc, player1) -> {
+        if(this.tradingPlayer == null) {
+            var event = new NPCEvent.InteractNPCEvent(this, player);
+            AdapterUtils.postEvent(event);
+            event.execute((npc, player1) -> {
 //            if(trades != null) {
+                this.getTradeManager().reCheckAvailableTrades(player1);
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
                         new SimpleTradeMenu(id, playerInventory, this), Component.translatable("title.terra_entity.npc_trade")));
 //            }
-        });
+            });
+        }
 
 //        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new NPCTradesMenu(id,playerInventory, trades, forge), Component.translatable("confluence.menu.npc_shop")));
         tradingPlayer = player;
@@ -623,20 +643,19 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         return new Vec3(-0.3, this.getEyeHeight() * 0.5f, this.getBbWidth() * 0.1F);
     }
 
-
+    /**
+     * 用于渲染躺下的姿势，如渔夫
+     */
     public boolean isLieDown(){
         return false;
     }
 
-    public BlockPos blockPos(){
-        return this.blockPosition();
+    public boolean isChargingCrossbow(){
+        return this.entityData.get(DATA_IS_CHARGING_CROSSBOW);
     }
 
-
-
-    @Override
-    public void setChargingCrossbow(boolean b) {
-
+    public void setChargingCrossbow(boolean isCharging) {
+        this.entityData.set(DATA_IS_CHARGING_CROSSBOW, isCharging);
     }
 
     @Override
@@ -664,10 +683,20 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public void onCrossbowAttackPerformed() {
 
     }
-
     @Override
     public void performRangedAttack(LivingEntity livingEntity, float v) {
 
     }
 
+    public int getChargingTicks(){
+        return this.cooldownTick;
+    }
+
+    public BoneStateMachine<BoneStates> getLeftArmBoneStateMachine(){
+        return leftArm;
+    }
+
+    public BoneStateMachine<BoneStates> getRightArmBoneStateMachine(){
+        return rightArm;
+    }
 }

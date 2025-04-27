@@ -32,13 +32,6 @@ public class TEDamageTypeTagsProvider extends DamageTypeTagsProvider {
 //                TETags.DamageTypes.FROST_BURN
 //        );
 
-        // 九头蛇可以收到的伤害类型
-        tag(DamageTypeTags.BYPASSES_INVULNERABILITY).add(
-                TETags.DamageTypes.SUMMON,
-                TETags.DamageTypes.SUMMONER,
-                DamageTypes.MOB_PROJECTILE
-        );
-
     }
 
 }

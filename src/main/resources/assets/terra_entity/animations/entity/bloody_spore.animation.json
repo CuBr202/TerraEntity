@@ -24,7 +24,7 @@
 						}
 					}
 				},
-				"head": {
+				"Head": {
 					"rotation": {
 						"0.0": {
 							"vector": [-5, 0, 0]

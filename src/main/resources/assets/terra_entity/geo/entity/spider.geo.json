@@ -355,7 +355,7 @@
 					]
 				},
 				{
-					"name": "head",
+					"name": "Head",
 					"parent": "up",
 					"pivot": [-0.16065, 23.23724, -0.21295],
 					"cubes": [
@@ -518,7 +518,7 @@
 				},
 				{
 					"name": "right",
-					"parent": "head",
+					"parent": "Head",
 					"pivot": [-1.625, 24.8735, -3.025]
 				},
 				{
@@ -597,7 +597,7 @@
 				},
 				{
 					"name": "left",
-					"parent": "head",
+					"parent": "Head",
 					"pivot": [1.625, 24.8735, -3.025]
 				},
 				{

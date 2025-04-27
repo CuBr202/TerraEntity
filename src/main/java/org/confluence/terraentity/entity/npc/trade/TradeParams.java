@@ -12,16 +12,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * <p>npc任务表参数，用于更新静态交易任务，
+ * <p>npc任务表参数，用于更新交易任务
  * <p>而不需要使用局部更新任务列表实例
  * @param params 交易表序列号对应的参数表
+ * @param bitMask 交易表的位掩码,为0表示启用，1表示禁用
  */
-public record TradeParams(Map<Integer, Param> params) {
+public record TradeParams(Map<Integer, Param> params, BitMask bitMask) {
 
     public static final String KEY = "npc_trade_params";
 
     public static TradeParams create(){
-        return new TradeParams(new HashMap<>());
+        return new TradeParams(new HashMap<>(), BitMask.create());
     }
 
     // 可以扩展参数数量
@@ -76,24 +77,19 @@ public record TradeParams(Map<Integer, Param> params) {
             }
         }
 
-        public void increaseLevel(){
-            level++;
-        }
-
-        public void setIsReady(boolean isReady){
-            this.isReady = Optional.of(isReady);
-        }
     }
 
     public static Codec<TradeParams> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.unboundedMap(Codec.STRING, Param.CODEC).fieldOf("params").forGetter(param->param.params.entrySet().stream()
                     .map(entry->new AbstractMap.SimpleEntry<>(entry.getKey().toString(), entry.getValue()))
-                    .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)))
-    ).apply(instance, (params)->{
+                    .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue))),
+            BitMask.CODEC.fieldOf("bit_mask").forGetter(TradeParams::bitMask)
+    ).apply(instance, (params, bitMask)->{
                 return new TradeParams(params.entrySet()
                         .stream()
                         .map(entry->new AbstractMap.SimpleEntry<>(Integer.parseInt(entry.getKey()), entry.getValue()))
-                        .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue))
+                        .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)),
+                        bitMask
                 );
             }));
 

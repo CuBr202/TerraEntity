@@ -158,7 +158,6 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
                 i1 = 113;
             }
             ClientAdapterUtil.blitSprite(guiGraphics,SCROLLER_SPRITE, posX + 95, posY + 17, 6, 27);
-
         } else {
             ClientAdapterUtil.blitSprite(guiGraphics, SCROLLER_DISABLED_SPRITE, posX + 95, posY + 17, 6, 27);
         }
@@ -332,6 +331,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
             this.hoveredItem = -1;
         }
     }
+
 
     @OnlyIn(Dist.CLIENT)
     static class TradeOfferButton extends Button {

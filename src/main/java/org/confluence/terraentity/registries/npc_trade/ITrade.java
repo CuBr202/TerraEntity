@@ -17,8 +17,6 @@ import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade_lock.ITradeLock;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 /**
  * <h1>npc交易接口</h1>
  */

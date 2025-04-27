@@ -21,8 +21,8 @@ public class ArmDealerNPCAi extends NPCAi {
 
     @Override
     protected void init(){
-        npc.setAttackRange(10);
-        npc.setCooldownTicks(20);
+        npc.setAttackRange(13);
+        npc.setCooldownTicks(30);
     }
 
     @Override
@@ -30,7 +30,6 @@ public class ArmDealerNPCAi extends NPCAi {
         return new NPCRangeAttackBrain<>(10, npc.getAttackRange()){
             protected boolean customDoAttack(ServerLevel level, AbstractTerraNPC owner, LivingEntity target){
                 ItemStack stack = owner.getMainHandItem();
-
                 if(stack.getItem() instanceof CrossbowItem){
                     Projectile projectile = getArrow(level, owner, stack, Items.ARROW.getDefaultInstance());
                     owner.shootCrossbowProjectile(target, stack, projectile, 0f);
@@ -42,8 +41,7 @@ public class ArmDealerNPCAi extends NPCAi {
                 }
                 return false;
             }
+
         };
     }
-
-
 }

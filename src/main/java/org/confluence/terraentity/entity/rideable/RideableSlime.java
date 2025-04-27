@@ -3,6 +3,7 @@ package org.confluence.terraentity.entity.rideable;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Vector3f;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -24,6 +26,7 @@ import software.bernie.geckolib.core.object.PlayState;
 public class RideableSlime extends AbstractRideableEntity {
 
     Vector3f initSpeed;
+    boolean wasOnGround;
     private static final EntityDataAccessor<Vector3f> DATA_INIT_SPEED = SynchedEntityData.defineId(RideableSlime.class, EntityDataSerializers.VECTOR3);;
 
     public RideableSlime(EntityType<? extends Mob> entityType, Level level) {
@@ -32,7 +35,6 @@ public class RideableSlime extends AbstractRideableEntity {
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.5f);
         this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(2.0f);
         this.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.12f);
-
     }
 
     @Override
@@ -53,32 +55,42 @@ public class RideableSlime extends AbstractRideableEntity {
     protected void tickRidden(Player player, Vec3 travelVector) {
         if (this.isJumping && !onGround()) {
             boolean trigger = false;
-            for (int i = 0; i < 4; i++) {
-                float offsetX = (i == 1 || i == 2) ? 1 : 0;
-                float offsetZ = (i == 2 || i == 3) ? 1 : 0;
-                if (getHitResult(offsetX, offsetZ)) {
-                    trigger = true;
-                    break;
+//            for (int i = 0; i < 4; i++) {
+//                float offsetX = (i == 1 || i == 2) ? 1 : 0;
+//                float offsetZ = (i == 2 || i == 3) ? 1 : 0;
+//                if (getHitResult(offsetX, offsetZ)) {
+//                    trigger = true;
+//                    break;
+//                }
+//            }
+            Entity hitEntity = getHitResult(0.5F, 0.5F);
+            if (hitEntity != null && hitEntity.isAttackable()) {
+                trigger = true;
+                if(hitEntity instanceof LivingEntity living){
+                    living.hurt(damageSources().generic(), 5);
                 }
             }
             if (trigger) {
                 this.setDeltaMovement(getDeltaMovement().x, getJumpPower(), getDeltaMovement().z);
+                level().playLocalSound(this.blockPosition(), SoundEvents.SLIME_BLOCK_PLACE, getSoundSource(), 0.5f, 2.0f, false);
+                playSound(SoundEvents.SLIME_BLOCK_PLACE);
             }
         }
         super.tickRidden(player, travelVector);
     }
 
-    private boolean getHitResult(float offsetX, float offsetZ) {
-        HitResult hitResult = ProjectileUtil.getEntityHitResult(level(), this, position(), position().subtract(offsetX, 1f, offsetZ), getBoundingBox().inflate(2), e -> e.isAttackable());
-        if (hitResult != null && hitResult.getType() == HitResult.Type.ENTITY) {
-            return true;
-        }
-        return false;
+    private Entity getHitResult(float offsetX, float offsetZ) {
+//        HitResult hitResult = ProjectileUtil.getEntityHitResult(level(), this, position(), position().subtract(offsetX, 1f, offsetZ), getBoundingBox().inflate(2), e -> e.isAttackable());
+//        if (hitResult != null && hitResult.getType() == HitResult.Type.ENTITY) {
+//            level().getEntities(this, )
+//            return true;
+//        }
+        var entities = TEUtils.getAABBAngleTarget(position(), position().add(offsetX, -1f, offsetZ), this.level(), this.getOwner(), 1, 40, e->e instanceof LivingEntity);
+        return entities;
     }
 
     @Override
     public void tick() {
-
         super.tick();
 
         if(this.isInWater() && !level().isClientSide){
@@ -89,6 +101,21 @@ public class RideableSlime extends AbstractRideableEntity {
                 this.addDeltaMovement(new Vec3(0,power,0));
             }
         }
+
+        if(!level().isClientSide){
+            if(!wasOnGround && onGround()){
+                playSound(SoundEvents.SLIME_SQUISH_SMALL);
+            }
+            if(wasOnGround && !onGround()){
+                playSound(SoundEvents.SLIME_BLOCK_HIT);
+            }
+
+        }
+
+        this.wasOnGround = this.onGround();
+
+
+
     }
 
     /**

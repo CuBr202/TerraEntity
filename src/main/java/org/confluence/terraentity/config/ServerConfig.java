@@ -12,7 +12,6 @@ public class ServerConfig {
 
 
 
-    public static ForgeConfigSpec.ConfigValue<Boolean> DISPLAY_SUMMON_ITEMS;
 
     public static ForgeConfigSpec.ConfigValue<Boolean> ENHANCE_ALL_MONSTER;
     public static ForgeConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH;
@@ -43,10 +42,6 @@ public class ServerConfig {
 //        RESPAWN_PROTECT = BUILDER
 //                .comment("Should players be protected from respawning?.If true, nearby bosses will be discard")
 //                .define("respawn_protect", true);
-
-        DISPLAY_SUMMON_ITEMS = BUILDER
-                .comment("Should summon items be displayed in this mod?")
-                .define("display_summon_items", true);
 
         ENHANCE_ALL_MONSTER = BUILDER
                 .comment("Should all monsters be enhanced?\nIf false, only specific monsters in this mod.")

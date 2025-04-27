@@ -36,7 +36,6 @@ public class ConfigContainerRegister {
                 .comment("0.0625 ~ 100.0");
         builder.addDoubleEditBox(ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH)
                 .comment("0.0625 ~ 100.0");
-        builder.addCheckBox(ServerConfig.DISPLAY_SUMMON_ITEMS);
         builder.addCheckBox(ServerConfig.ENHANCE_ALL_MONSTER);
         builder.addCheckBox(ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET);
         builder.addCheckBox(ServerConfig.BOSS_NO_PHYSICS);

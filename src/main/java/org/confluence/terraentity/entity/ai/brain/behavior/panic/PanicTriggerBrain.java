@@ -11,18 +11,19 @@ import net.minecraft.world.entity.schedule.Activity;
 /**
  * 恐慌触发器
  */
-public class PanicTriggerBrain extends Behavior<LivingEntity> {
+public class PanicTriggerBrain<T extends LivingEntity> extends Behavior<T> {
     public PanicTriggerBrain() {
         super(ImmutableMap.of());
     }
 
-    protected boolean canStillUse(ServerLevel level, LivingEntity entity, long gameTime) {
+    protected boolean canStillUse(ServerLevel level, T entity, long gameTime) {
         return isHurt(entity) || hasHostile(entity);
     }
 
-    protected void start(ServerLevel level, LivingEntity entity, long gameTime) {
+    protected void start(ServerLevel level, T entity, long gameTime) {
         if (isHurt(entity) || hasHostile(entity)) {
             Brain<?> brain = entity.getBrain();
+
             if (!brain.isActive(Activity.PANIC)) {
                 brain.eraseMemory(MemoryModuleType.PATH);
                 brain.eraseMemory(MemoryModuleType.WALK_TARGET);
@@ -31,22 +32,25 @@ public class PanicTriggerBrain extends Behavior<LivingEntity> {
                 brain.eraseMemory(MemoryModuleType.INTERACTION_TARGET);
             }
 
-            brain.setActiveActivityIfPossible(Activity.PANIC);
+            if(shouldPanic(entity)) {
+                brain.setActiveActivityIfPossible(Activity.PANIC);
+            }
         }
 
     }
 
-    protected void tick(ServerLevel level, LivingEntity owner, long gameTime) {
-
-
-
+    protected void tick(ServerLevel level, T owner, long gameTime) {
     }
 
-    public static boolean hasHostile(LivingEntity entity) {
+    public boolean hasHostile(T entity) {
         return entity.getBrain().hasMemoryValue(MemoryModuleType.NEAREST_HOSTILE);
     }
 
-    public static boolean isHurt(LivingEntity entity) {
-        return entity.getBrain().hasMemoryValue(MemoryModuleType.HURT_BY);
+    public boolean isHurt(T owner) {
+        return owner.getBrain().hasMemoryValue(MemoryModuleType.HURT_BY);
+    }
+
+    protected boolean shouldPanic(T entity) {
+        return true;
     }
 }

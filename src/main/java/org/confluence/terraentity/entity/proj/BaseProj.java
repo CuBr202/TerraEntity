@@ -1,6 +1,9 @@
 package org.confluence.terraentity.entity.proj;
 
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -24,6 +27,8 @@ import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.registries.track.ITrackType;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +45,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     public Consumer<BaseProj> clientTickCallback;
     public ITrackType trackType;
     public IGeneration generation;
+
+    protected Vec3 initSpeed = new Vec3(0, 0, 0);
+
+    protected static final EntityDataAccessor<Vector3f> DATA_INIT_SPEED = SynchedEntityData.defineId(BaseProj.class, EntityDataSerializers.VECTOR3);
 
     public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
         super(pEntityType, pLevel);
@@ -85,6 +94,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
         return (T) this;
     }
 
+
+
+
     public ResourceLocation getTexture(){return texture;}
     public abstract int getLifetime();
     public boolean shouldBeSaved(){
@@ -117,8 +129,27 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+
+        this.entityData.define(DATA_INIT_SPEED, new Vector3f(0, 0, 0));
+
     }
 
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> data){
+        super.onSyncedDataUpdated(data);
+        if(level().isClientSide) {
+            if (data == DATA_INIT_SPEED) {
+                this.initSpeed = new Vec3(this.entityData.get(DATA_INIT_SPEED));
+                this.setDeltaMovement(initSpeed);
+            }
+        }
+    }
+    @Override
+    public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
+        super.shoot(x, y, z, velocity, inaccuracy);
+        this.entityData.set(DATA_INIT_SPEED, getDeltaMovement().toVector3f());
+        this.initSpeed = getDeltaMovement();
+    }
 
     @Override
     public void tick() {
@@ -201,13 +232,13 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
 
     @Override//设置粒子效果
     protected ParticleOptions getTrailParticle() {
-        return super.getTrailParticle();
+        return null;
     }
 
     @Override
     protected boolean canHitEntity(@NotNull Entity target) {
         // 不能攻击自己和不能被弹幕攻击的实体
-        if(target == getOwner() || !target.canBeHitByProjectile()){
+        if(target == getOwner() || !target.isAttackable()){
             return false;
         }
         // 不能攻击已经被弹幕攻击过的实体
@@ -221,7 +252,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
         // 有主人的弹幕只能攻击主人可以攻击的目标
         if(getOwner()!=null && getOwner() instanceof LivingEntity living && target instanceof LivingEntity tar)
             return living.canAttack(tar);
-        return true;
+        return false;
     }
 
 //    @Override//流体阻力

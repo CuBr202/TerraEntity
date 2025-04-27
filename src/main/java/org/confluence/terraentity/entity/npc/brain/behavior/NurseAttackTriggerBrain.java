@@ -15,16 +15,16 @@ public class NurseAttackTriggerBrain<T extends AbstractTerraNPC> extends NPCAtta
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel level, T owner) {
-        if(owner.getHealth() / owner.getMaxHealth() < 0.8f){
-            return true;
-        }
-        var memory = owner.getBrain().getMemory(TEAi.MemoryModules.NEAREST_VISIBLE_ALLIANCE_NURSE_TARGET.get());
-        if(memory.isPresent()){
-            LivingEntity living = memory.get();
-            return living.getHealth() / living.getMaxHealth() < 0.33f;
-        }
-        return false;
-//        return super.checkExtraStartConditions(level, owner);
+//        if(owner.getHealth() / owner.getMaxHealth() < 0.8f){
+//            return true;
+//        }
+//        var memory = owner.getBrain().getMemory(TEAi.MemoryModules.NEAREST_VISIBLE_ALLIANCE_NURSE_TARGET.get());
+//        if(memory.isPresent()){
+//            LivingEntity living = memory.get();
+//            return living.getHealth() / living.getMaxHealth() < 0.33f;
+//        }
+//        return false;
+        return super.checkExtraStartConditions(level, owner);
     }
 
     protected MemoryModuleType<LivingEntity> targetMemoryType() {

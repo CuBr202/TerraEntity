@@ -16,6 +16,8 @@ import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;
 import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
+import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProvider;
+import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProviderTypes;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProvider;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProviderTypes;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
@@ -43,10 +45,11 @@ public class TERegistries {
         EffectStrategyProviderTypes.TYPES.register(bus);
         GenerationProviderTypes.TYPES.register(bus);
         TrackTypeProviderTypes.TYPES.register(bus);
-        TEEffectStrategies.EFFECT_STRATEGY.register(bus);
-        TradeLockProviderTypes.TYPES.register(bus);
         TradeProviderTypes.TYPES.register(bus);
+        TEEffectStrategies.EFFECT_STRATEGY.register(bus);
         TradeTaskProviderTypes.TYPES.register(bus);
+        TradeLockProviderTypes.TYPES.register(bus);
+        TradeGeneratorProviderTypes.TYPES.register(bus);
         TEDataComponentTypes.register(bus);
 
     }
@@ -106,7 +109,12 @@ public class TERegistries {
 
     }
 
-
+    /**
+     * NPC交易列表注册表
+     */
+    public static class TradeGeneratorProviders {
+        public static final ResourceKey<Registry<TradeGeneratorProvider>> KEY = createRegistryKey(TerraEntity.space("trade_generator_provider"));
+    }
 
     public static class DataComponentProviders{
         public static final ResourceKey<Registry<DataComponentProvider<? extends IDataComponentType<?>>>> KEY = createRegistryKey(TerraEntity.space("data_component"));

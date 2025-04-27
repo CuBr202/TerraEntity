@@ -1,7 +1,10 @@
 package org.confluence.terraentity.entity.npc.trade;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
@@ -9,27 +12,28 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.registries.npc_trade_list.ITradeGenerator;
+import org.confluence.terraentity.registries.npc_trade_lock.ITradeLock;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 交易清单
  */
 public class NPCTradeManager {
 
-    private final List<ITrade> trades;
+    private List<ITrade> trades;
+    private List<ITrade> availableTrades;
     private ITradeHolder owner;
     protected List<Integer> toBeSync = new ArrayList<>();
-
+    ITradeGenerator tradeList;
     /**
      * 记录需要更新的交易表
      * @param index 交易表索引
@@ -54,21 +58,113 @@ public class NPCTradeManager {
         }
     }
 
-    public NPCTradeManager(List<ITrade> trades) {
-        this.trades = new ArrayList<>(trades);
+    /**
+     * 用于传输数据
+     * @param trade 当为空时，表示未初始化
+     */
+    public NPCTradeManager(List<ITrade> trade) {
+        this.trades = trade;
+
+    }
+
+    /**
+     * 用于初始化
+     * @param tradeList 交易列表的生成方式
+     */
+    public NPCTradeManager(ITradeGenerator tradeList) {
+        this.tradeList = tradeList;
+    }
+
+    /**
+     * 初始化交易列表，将未生成的表生成子表，同时设置owner
+     */
+    public void initTrades(ITradeHolder holder){
+        if(tradeList!= null){
+            this.trades = tradeList.generateTrades();
+            this.tradeList = null;
+        }
+        this.setOwner(holder);
     }
 
 
-    public void setOwner(ITradeHolder npc) {
+    private void setOwner(ITradeHolder npc) {
         this.owner = npc;
     }
 
+    /**
+     * 获取所有的交易列表
+     */
     public List<ITrade> trades() {
-        return trades;
+        return this.trades;
     }
 
+    /**
+     * 获取可用的交易列表
+     */
+    public List<ITrade> availableTrades() {
+        if(this.availableTrades == null){
+            return this.trades;
+        }
+        return this.availableTrades;
+    }
+
+    /**
+     * 设置可用的交易列表，在玩家打开商店时，服务端调用
+     * @param player 玩家
+     */
+    public void reCheckAvailableTrades(Player player){
+        int index = 0;
+        TradeParams params = this.owner.getTradeParams();
+        if (params == null) {
+            this.availableTrades = this.trades;
+            return;
+        }
+        BitMask bitMask = params.bitMask();
+        boolean dirty = false;
+        this.availableTrades = new ArrayList<>();
+        for (ITrade trade : this.trades) {
+            ITradeLock lock = trade.lock();
+            if (lock == null || lock.canTrade(player, owner, index)) {
+                this.availableTrades.add(trade);
+                if (bitMask.remove(index)) {
+                    dirty = true;
+                }
+            } else {
+                if (bitMask.add(index)) {
+                    dirty = true;
+                }
+            }
+            index++;
+        }
+        if (dirty) {
+            this.owner.syncTradeTasksParams();
+        }
+    }
+
+    /**
+     * 刷新可用的交易列表，在同步参数时，客户端调用
+     */
+    public void refreshAvailableTrades(){
+        this.availableTrades = new ArrayList<>();
+        TradeParams params = this.owner.getTradeParams();
+        if (params == null) {
+            this.availableTrades = this.trades;
+            return;
+        }
+        BitMask bitMask = params.bitMask();
+        int index = 0;
+        for (ITrade trade : this.trades) {
+            if (!bitMask.contains(index)) {
+                this.availableTrades.add(trade);
+            }
+            index++;
+        }
+    }
+
+
+
     public boolean isEmpty(){
-        return trades.isEmpty();
+        return this.trades.isEmpty();
     }
 
 
@@ -129,9 +225,15 @@ public class NPCTradeManager {
                         k.getPath().replace(".json", "").replace(KEY + "/", ""));
                 Reader reader = manager.openAsReader(k);
                 JsonObject jsonobject = GsonHelper.parse(reader);
-                TRADE_MAP.put(id, NPCTradeManager.CODEC.decode(JsonOps.INSTANCE, jsonobject).result().get().getFirst());
+                DataResult<Pair<NPCTradeManager, JsonElement>> result = NPCTradeManager.CODEC.decode(JsonOps.INSTANCE, jsonobject);
+                if(result.error().isPresent()){
+                    throw new RuntimeException("Failed to read trade list " + k + " :" + result.error().get());
+                }
+                TRADE_MAP.put(id, result.result().get().getFirst());
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } catch (NoSuchElementException e){
+                throw new RuntimeException("Failed to read trade list " + k, e);
             }
         });
     }

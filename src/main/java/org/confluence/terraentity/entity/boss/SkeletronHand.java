@@ -11,6 +11,8 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.animation.BoneStates;
+import org.confluence.terraentity.entity.animation.MultiBoneStateMachine;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -20,12 +22,16 @@ import java.util.UUID;
  * 骷髅王之手
  */
 public class SkeletronHand extends Skeletron {
+
+    private float attackDamage = 10; // 攻击伤害
+
     public Skeletron owner;
     public HandSide handSide;
     protected final int slapInterval;
     protected final double slapSpeed;
     protected int slapTick;
 
+    public MultiBoneStateMachine<BoneStates> stateMachine;
 
     public static final EntityDataAccessor<Optional<UUID>> DATA_OWNER = SynchedEntityData.defineId(SkeletronHand.class, EntityDataSerializers.OPTIONAL_UUID);
     public static final EntityDataAccessor<Boolean> DATA_HAND_SIDE = SynchedEntityData.defineId(SkeletronHand.class, EntityDataSerializers.BOOLEAN);
@@ -35,8 +41,12 @@ public class SkeletronHand extends Skeletron {
     public SkeletronHand(EntityType<? extends Monster> entityType, Level level, Skeletron owner, HandSide handSide) {
         super(entityType, level);
         // 重新设置属性
-        this.baseHealth = 200;
-        this.baseArmor = 2;
+        this.baseHealth = 405;
+        this.baseArmor = 4;
+        if(level.isClientSide) {
+            this.stateMachine = new MultiBoneStateMachine<>(BoneStates.IDLE);
+        }
+        this.setAttactDamage(attackDamage);
 
         this.handSide = handSide;
         this.owner = owner;
@@ -101,7 +111,7 @@ public class SkeletronHand extends Skeletron {
 
     public void initOwner() {
         if(owner == null && getEntityData().get(DATA_OWNER).isPresent()) {
-//            owner = (Skeletron) level().getEntities().get(getEntityData().get(DATA_OWNER).get());
+            owner = (Skeletron) level().getEntities().get(getEntityData().get(DATA_OWNER).get());
         }
     }
 
@@ -229,7 +239,9 @@ public class SkeletronHand extends Skeletron {
                 if (distanceToSqr(startPos) > 1.5) {
                     setDeltaMovement(startPos.subtract(position()).normalize().scale(slapSpeed));
                 }else{
-                    endPos = owner.getTarget().position().subtract(position()).normalize().scale(4).add(owner.getTarget().position());
+                    if(owner.getTarget() != null ) {
+                        endPos = owner.getTarget().position().subtract(position()).normalize().scale(4).add(owner.getTarget().position());
+                    }
                     phase = 1;
                 }
             } else if (phase == 1) {

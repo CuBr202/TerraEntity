@@ -20,6 +20,8 @@ import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * 渔夫：可以设置处理交易任务
  */
@@ -42,12 +44,11 @@ public class AnglerNPC extends AbstractTerraNPC {
             if(trade instanceof TradeTask task){
                 if(task.task() instanceof DynamicAnglerTradeTask d){
                     // 更新参数
-                    if(!getTradeParams().isReady(c)) {
+                    if(!Objects.requireNonNull(getTradeParams()).isReady(c)) {
                         d.setNext(this, c);
 
                         getTradeParams().increaseLevel(c);
                         getTradeParams().setIsReady(c, true);
-                        syncTradeTasksParams();
                     }
                 }
             }
@@ -55,6 +56,22 @@ public class AnglerNPC extends AbstractTerraNPC {
         }
         syncTradeTasksParams();
         this.getTradeManager().syncDirtyTrade();
+    }
+
+    // 渔夫初始化时随机设置交易任务
+    protected void onInitTrades(){
+        int c = 0;
+        for(ITrade trade: trades()){
+            if(trade instanceof TradeTask task){
+                if(task.task() instanceof DynamicAnglerTradeTask d){
+                    // 更新参数
+                    d.setNext(this, c);
+                    getTradeParams().increaseLevel(c);
+                }
+            }
+            c++;
+        }
+        syncTradeTasksParams();
     }
 
     protected boolean timeToTradeFish(){
@@ -121,6 +138,7 @@ public class AnglerNPC extends AbstractTerraNPC {
     public boolean isLieDown(){
         return !isWakeUp();
     }
+
     Vec3 dir = Vec3.ZERO;
     Vec3 speed = Vec3.ZERO;
     @Override
@@ -128,7 +146,7 @@ public class AnglerNPC extends AbstractTerraNPC {
         super.tick();
         if(!level().isClientSide){
             if(timeToTradeFish()){
-                resetFishTask();
+                this.resetFishTask();
             }
             if(!this.isWakeUp()){
                 if(this.isInWater() ){
@@ -160,11 +178,11 @@ public class AnglerNPC extends AbstractTerraNPC {
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if(!isWakeUp() && player.level() instanceof ServerLevel serverLevel){
-            // confluence mixed here
             setWakeUp(true);
             this.refreshBrain(serverLevel);
             this.refreshDimensions();
             initName();
+            // confluence mixed here
             return InteractionResult.CONSUME;
         }
         return super.mobInteract(player, hand);
@@ -172,12 +190,12 @@ public class AnglerNPC extends AbstractTerraNPC {
 
     @Override
     public EntityDimensions getDimensions(Pose pose) {
-
         if(!this.isWakeUp()) {
             return super.getDimensions(pose).scale(2F, 0.5f);
         }
         return super.getDimensions(pose);
     }
+
     protected boolean shouldInitName(){
         return false;
     }

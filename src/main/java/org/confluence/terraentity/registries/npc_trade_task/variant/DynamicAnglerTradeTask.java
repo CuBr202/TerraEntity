@@ -181,18 +181,18 @@ public class DynamicAnglerTradeTask implements ITradeTask {
             return this;
         }
 
-        public Builder setDefaultTrade(ItemTradeLootTable defaultTrade) {
-            this.defaultTrade = defaultTrade;
-            return this;
-        }
-
         public Builder addResult(int level, List<ItemStack> items) {
             this.resultPool.put(level, items);
             return this;
         }
 
-        public Builder setCostPool(List<ItemStack> costPool) {
+        private Builder setCostPool(List<ItemStack> costPool) {
             this.costPool = costPool;
+            return this;
+        }
+
+        private Builder setDefaultTrade(ItemTradeLootTable defaultTrade) {
+            this.defaultTrade = defaultTrade;
             return this;
         }
 

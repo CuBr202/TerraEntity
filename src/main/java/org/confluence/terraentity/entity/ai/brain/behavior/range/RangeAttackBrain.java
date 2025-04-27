@@ -24,9 +24,9 @@ import org.confluence.terraentity.utils.TEUtils;
  */
 public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
 
-    int prepareTime; // 看向敌人后，瞄准需要时间
-    int _prepareTime;
-    boolean isPreparing; // 是否准备攻击
+    protected int prepareTime; // 看向敌人后，瞄准需要时间
+    protected int _prepareTime;
+    protected boolean isPreparing; // 是否准备攻击
     float attackRange;
 
     public RangeAttackBrain(int prepareTime, float attackRange) {
@@ -39,6 +39,7 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
         this.prepareTime = prepareTime;
         this._prepareTime = prepareTime;
         this.attackRange = attackRange;
+
     }
 
     @Override
@@ -120,7 +121,7 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
 
     @Override
     protected boolean canStillUse(ServerLevel level, T entity, long gameTimeIn) {
-        return prepareTime > 0;
+        return prepareTime > 0 && entity.getBrain().hasMemoryValue(MemoryModuleType.ATTACK_TARGET);
     }
 
     protected void doAttack(ServerLevel level, T owner, LivingEntity target){

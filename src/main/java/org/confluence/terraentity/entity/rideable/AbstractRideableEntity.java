@@ -6,6 +6,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.players.OldUsersConverter;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.*;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -18,7 +20,6 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.IFlyRideableMob;
 import software.bernie.geckolib.animatable.GeoEntity;
-
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -256,6 +257,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
 //            this.setJumping(false);
             if (this.playerJumpPendingScale > 0.0F && !this.isJumping) {
                 isJumping = true;
+                playLocalJumpSound();
                 this.executeRidersJump(this.playerJumpPendingScale, travelVector);
             }
             this.playerJumpPendingScale = 0.0F;
@@ -304,7 +306,13 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
         return (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
+    public boolean canBeSeenAsEnemy() {
+        return false;
+    }
 
+    public boolean canBeSeenByAnyone() {
+        return false;
+    }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
@@ -402,7 +410,25 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
 
 
     public void onInit(Player player){
+        this.playEnterSound();
+    }
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+        this.playExitSound();
+    }
+    protected void playEnterSound() {
+        this.playSound(SoundEvents.AMBIENT_UNDERWATER_ENTER, 0.5F, 3.0F);
+
+    }
+    protected void playExitSound() {
+        this.playSound(SoundEvents.AMBIENT_UNDERWATER_EXIT, 0.5F, 3.0F);
+
+    }
+    protected void playLocalJumpSound() {
 
     }
 
+    public SoundSource getSoundSource() {
+        return SoundSource.PLAYERS;
+    }
 }

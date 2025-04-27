@@ -7,17 +7,21 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
+import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
+import org.confluence.terraentity.init.entity.TEProjectileEntities;
 
 /**
  * 世吞体节
@@ -26,6 +30,8 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     private static final float MAX_HEALTHS = 50f;
     private static final float DAMAGE = 4f;//接触伤害
 
+    private int _shootTick = 100;
+    private int shootTick = _shootTick;
     public float segmentInternal = 2.8f;
     public EaterOfWorlds head;
     public AbstractTerraBossBase lastSegment;
@@ -92,6 +98,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
 
     int discardTimer = 0;
     int _discardTimer;
+
     @Override
     public void tick(){
         super.tick();
@@ -107,6 +114,20 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
                 return;
             }
             discardTimer = 0;
+
+            if(target != null && this.level().canSeeSky(this.blockPosition())){
+                if(--this.shootTick <= 0){
+                    shootTick = _shootTick + random.nextInt(50);
+                    LineProj projectile = TEProjectileEntities.VILE_SPIT_PROJ.get().create(level());
+                    if(projectile != null) {
+                        projectile.setOwner(this);
+                        projectile.setPos(position());
+                        projectile.setDamage((float) this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
+                        projectile.shoot(target.getX() - getX(), target.getY() + 1 - getY(), target.getZ() - getZ(), 0.3F, 3);
+                        level().addFreshEntity(projectile);
+                    }
+                }
+            }
         }
     }
 
@@ -153,6 +174,11 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
         }
     }
 
+    @Override
     public boolean shouldShowBossBar(){return false;};
 
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA);
+    }
 }

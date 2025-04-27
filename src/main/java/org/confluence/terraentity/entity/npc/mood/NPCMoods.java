@@ -27,6 +27,12 @@ public class NPCMoods {
 
     public static final String KEY = "npc_mood";
     public static final String FILE_NAME = "mood_infos";
+
+    /**
+     * 心情的信息
+     * @param moodId 心情id，用来查询对应的信息
+     * @param moodInfo 心情信息
+     */
     public record MoodInfoData(ResourceLocation moodId, MoodInfo moodInfo){
         public static Codec<MoodInfoData> CODEC = RecordCodecBuilder.create(instance->instance.group(
                 ResourceLocation.CODEC.fieldOf("moodId").forGetter(MoodInfoData::moodId),

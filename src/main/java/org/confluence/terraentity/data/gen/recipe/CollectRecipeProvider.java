@@ -1,11 +1,9 @@
 package org.confluence.terraentity.data.gen.recipe;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.world.item.FireworkStarItem;
 
 import java.util.Arrays;
 import java.util.List;

@@ -49,12 +49,16 @@ public class AttackTriggerBrain<T extends LivingEntity> extends Behavior<T> {
         var memory = brain.getMemory(targetMemoryType());
         if(memory.isPresent()) {
             LivingEntity target = memory.get();
-            boolean shouldAdd = target.distanceToSqr(living) < getDetectDistanceSqr(living) && target.isAlive();
+            boolean shouldAdd = shouldAttack(target, living);
             if (shouldAdd) {
                 brain.setMemory(MemoryModuleType.ATTACK_TARGET, target);
                 brain.setActiveActivityIfPossible(TEAi.Activities.RANGE_ATTACK.get());
             }
         }
+    }
+
+    protected boolean shouldAttack(LivingEntity target, T living) {
+        return target.canBeSeenAsEnemy() &&  target.distanceToSqr(living) < getDetectDistanceSqr(living) && target.isAlive();
     }
 
     protected MemoryModuleType<LivingEntity> targetMemoryType() {

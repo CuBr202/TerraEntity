@@ -21,9 +21,8 @@ import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.ai.behavior.HomeNearbyStroll;
+import org.confluence.terraentity.entity.ai.brain.behavior.HomeNearbyStroll;
 import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicCalmDownBrain;
-import org.confluence.terraentity.entity.ai.brain.behavior.panic.PanicTriggerBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.brain.behavior.NPCHouseBehaviors;
 import org.confluence.terraentity.entity.npc.brain.behavior.*;
@@ -86,7 +85,7 @@ public class NPCAi {
                 new MoveToTargetSink(),
                 new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
                 new CountDownCooldownTicks(MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS),
-                new PanicTriggerBrain(),
+                new NPCPanicTriggerBrain<>(),
                 getAttackTriggerBrain(),
                 NPCHouseBehaviors.findHouse(MemoryModuleType.HOME) // 寻找家
 
@@ -137,7 +136,7 @@ public class NPCAi {
         return ImmutableList.of(
 //                Pair.of(5, new RangeAttackStrafingBrain()),  // 不是所有远程攻击都需要走位
                 Pair.of(5, getRangeAttackBrain()),
-                Pair.of(5, new NPCRangeAttackOnCooldownBrain<>(npc.getCooldownTicks(), npc.getAttackRange(),speedModifier)),
+                Pair.of(5, new NPCRangeAttackOnCooldownBrain<>(npc.getCooldownTicks(), npc.getAttackRange() * 0.6F,speedModifier)),
                 Pair.of(5, new NPCAttackCalmDownBrain<>(15))
 
         );
@@ -165,7 +164,7 @@ public class NPCAi {
 
                                 Pair.of(SetWalkTargetFromLookTarget.create(speedModifier, 2), 1),
                                 Pair.of(new JumpOnBed(speedModifier), 1),
-                                Pair.of(new DoNothing(30, 60), 1)))),
+                                Pair.of(new DoNothing(10, 30), 1)))),
                 Pair.of(0, SetEntityLookTargetSometimes.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60))),
                 Pair.of(99, UpdateActivityFromSchedule.create()));
     }
@@ -190,13 +189,13 @@ public class NPCAi {
                 Pair.of(5, new RunOne<>( // 没有家的时候随机游走
                         ImmutableMap.of(MemoryModuleType.HOME, MemoryStatus. VALUE_ABSENT),
                         ImmutableList.of(
-                                Pair.of(RandomStroll.stroll(1.0f), 1), // 走向家
+                                Pair.of(RandomStroll.stroll(1.0f), 1),
                                 Pair.of(new DoNothing(20, 40), 2)))),
                 Pair.of(5, new RunOne<>( // 视觉感知
                         ImmutableList.of(
                                 Pair.of(SetEntityLookTarget.create(EntityType.VILLAGER, 8.0F), 2),
                                 Pair.of(SetEntityLookTarget.create(EntityType.PLAYER, 8.0F), 2),
-                                Pair.of(new DoNothing(30, 60), 4)
+                                Pair.of(new DoNothing(20, 40), 4)
                         )
                 )),
                 Pair.of(5, new RunOne<>( // 在家里时随机走动

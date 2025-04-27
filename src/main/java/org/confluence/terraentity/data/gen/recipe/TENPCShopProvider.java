@@ -3,11 +3,12 @@ package org.confluence.terraentity.data.gen.recipe;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Blocks;
-
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.init.entity.TENpcEntities;
@@ -20,7 +21,6 @@ import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAngle
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicPoolTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.FixedMapTradeTask;
 import org.confluence.terraentity.utils.TEItemUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,34 +47,29 @@ public class TENPCShopProvider extends AbstractRecipeProvider {
         shop(TENpcEntities.DEMOLITIONIST.getId()).addRecipe(builder()
                 .add(ItemTradeItem.of(Blocks.TNT.asItem(), 1, Items.IRON_INGOT,1))
                 .add(ItemTradeItem.builder()
-                        .setCost(Items.IRON_INGOT.getDefaultInstance())
+                        .setCost(new ItemStack(Items.COAL, 2))
                         .setResult(TEItemUtil.make(Items.FIREWORK_ROCKET, 1, stack ->{
-//                                    stack.set(DataComponents.FIREWORKS, new Fireworks(1, List.of()))
-                                }
+                            FireworkRocketItem.setDuration(stack, (byte) 1);
+                        }
                         )).build()
                 )
                 .add(ItemTradeItem.builder()
                         .setCost(Items.IRON_INGOT.getDefaultInstance())
                         .setResult(TEItemUtil.make(Items.FIREWORK_ROCKET, 1, stack ->{
-//                                    stack.set(DataComponents.FIREWORKS, new Fireworks(1, List.of()))
-                                }
+                            FireworkRocketItem.setDuration(stack, (byte) 1);
+                        }
                         )).build()
                 )
                 .build());
 
         shop(TENpcEntities.NURSE.getId()).addRecipe(builder()
                 .add(ItemTradeHealth.of(Items.EMERALD.getDefaultInstance(), 10))
-                .add(ItemListTradeItem.builder(TEItemUtil.make(Items.POTION, 1, stack -> {
-//                                            stack.set(DataComponents.POTION_CONTENTS, PotionContents.EMPTY.withPotion(Potions.HEALING))
-                                        }
-                                ))
+                .add(ItemListTradeItem.builder(TEItemUtil.make(Items.POTION, 1, stack -> PotionUtils.setPotion(stack, Potions.HEALING)))
                         .addCost(Items.RED_MUSHROOM,1)
                         .addCost(Items.BROWN_MUSHROOM,1)
                         .build()
                 )
-                .add(ItemListTradeItem.builder(TEItemUtil.make(Items.POTION, 1, stack -> {
-//                    stack.set(DataComponents.POTION_CONTENTS, PotionContents.EMPTY.withPotion(Potions.STRONG_HEALING))
-                                }))
+                .add(ItemListTradeItem.builder(TEItemUtil.make(Items.POTION, 1, stack -> PotionUtils.setPotion(stack, Potions.STRONG_HEALING)))
                         .addCost(Items.RED_MUSHROOM,1)
                         .addCost(Items.BROWN_MUSHROOM,1)
                         .addCost(Items.WARPED_FUNGUS, 1)
