@@ -63,7 +63,7 @@ public class NPCTradeManager {
      * @param trade 当为空时，表示未初始化
      */
     public NPCTradeManager(List<ITrade> trade) {
-        this.trades = trade;
+        this.trades = new ArrayList<>(trade);
 
     }
 
@@ -169,9 +169,27 @@ public class NPCTradeManager {
 
 
     public static final String KEY = "npc_shop";
+//    public static final Codec<NPCTradeManager> CODEC =Codec.withAlternative(
+//            RecordCodecBuilder.create(instance -> instance.group(
+//            ITrade.TYPED_CODEC.listOf().fieldOf("trades").forGetter(NPCTradeManager::trades)
+//    ).apply(instance, NPCTradeManager::new)),
+//            RecordCodecBuilder.create(instance -> instance.group(
+//                    ITradeList.TYPED_CODEC.fieldOf("trades_generator").forGetter(i->i.tradeList)
+//            ).apply(instance, NPCTradeManager::new))
+//            );
+
     public static final Codec<NPCTradeManager> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ITrade.TYPED_CODEC.listOf().fieldOf("trades").forGetter(NPCTradeManager::trades)
-    ).apply(instance, NPCTradeManager::new));
+            ITrade.TYPED_CODEC.listOf().optionalFieldOf("trades").forGetter(i-> Optional.ofNullable(i.trades)),
+            ITradeGenerator.TYPED_CODEC.optionalFieldOf("trades_generator").forGetter(i-> Optional.ofNullable(i.tradeList))
+    ).apply(instance, (trades, tradeList)->{
+        if(trades.isPresent()){
+            return new NPCTradeManager(trades.get());
+        }else if(tradeList.isPresent()){
+            return new NPCTradeManager(tradeList.get());
+        }else{
+            return new NPCTradeManager(List.of());
+        }
+    }));
 
     public static FriendlyByteBuf.Writer<NPCTradeManager> WRITER = AdapterUtils.CodecWriter(CODEC);
     public static FriendlyByteBuf.Reader<NPCTradeManager> READER = AdapterUtils.CodecReader(CODEC);

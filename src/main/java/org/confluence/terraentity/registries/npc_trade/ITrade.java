@@ -106,6 +106,10 @@ public interface ITrade{
         }
     }
 
+    default void onClick(double mouseX, double mouseY, int button, int index, Slot slot){
+
+    }
+
 
     /**
      * 获取编解码器

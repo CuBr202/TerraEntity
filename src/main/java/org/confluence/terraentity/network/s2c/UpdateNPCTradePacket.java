@@ -3,7 +3,7 @@ package org.confluence.terraentity.network.s2c;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.mixin.accessor.LevelAccessor;
+import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
 
@@ -51,10 +51,17 @@ public class UpdateNPCTradePacket {
         ITrade trade = packet.trade;
 
         context.enqueueWork(() -> {
-            if(((LevelAccessor)(player.level())).callGetEntities().get(npcId) instanceof AbstractTerraNPC npc){
-                npc.getTradeManager().trades().set(index, trade);
+            if(player.level().getEntities().get(npcId) instanceof ITradeHolder npc){
+                var trades = npc.getTradeManager().trades();
+                var availableTrades = npc.getTradeManager().availableTrades();
+                var availableTrade = availableTrades.get(index);
+
+                // 由于客户端传来的index是availableTrades的索引，所以需要将availableTrades的索引转换为trades的索引
+                int oriIndex = trades.indexOf(availableTrade);
+                npc.getTradeManager().trades().set(oriIndex, trade);
+                availableTrades.set(index, trade);
             }
-            
+
         }).exceptionally(e -> null);
     }
 

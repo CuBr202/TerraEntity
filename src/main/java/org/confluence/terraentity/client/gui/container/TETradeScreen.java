@@ -304,11 +304,24 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         ) {
             return super.mouseClicked(mouseX, mouseY, button);
         }
-        this.shopItem = hoveredItem;
-        menu.selectedMerchantIndex = shopItem;
-        ITradeHolder.setSelectTradeIndex(shopItem);
-        if(menu.selectedMerchantIndex <0) menu.slots.get(0).set(ItemStack.EMPTY);
+        if(canSelect(hoveredItem,mouseX, mouseY, button)) {
+            this.shopItem = hoveredItem;
+            menu.selectedMerchantIndex = shopItem;
+            ITradeHolder.setSelectTradeIndex(shopItem);
+            if(shopItem >= 0 ){
+                onClick(mouseX, mouseY, button, shopItem);
+            }
+            if (menu.selectedMerchantIndex < 0) menu.slots.get(0).set(ItemStack.EMPTY);
+        }
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    protected boolean canSelect(int index,double mouseX, double mouseY, int button) {
+        return true;
+    }
+
+    protected void onClick(double mouseX, double mouseY, int button, int index){
+        this.menu.NPCTrades.trades().get(index).onClick(mouseX, mouseY, button, index, this.menu.slots.get(0));
     }
 
     @Override

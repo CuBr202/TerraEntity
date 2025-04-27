@@ -44,6 +44,9 @@ public class NPCShopPacket {
                 int tradeIndex = packet.tradeIndex;
                 if(((IPlayer)sp).terra_entity$getTradeHolder() instanceof AbstractTerraNPC npc1){
                     npc = npc1;
+                    if(tradeIndex < 0 ){
+                        return;
+                    }
                     trade = npc.getTradeManager().trades().get(tradeIndex);
 
                     NPCEvent.NPCTradeEvent event = new NPCEvent.NPCTradeEvent(npc, trade, sp);
