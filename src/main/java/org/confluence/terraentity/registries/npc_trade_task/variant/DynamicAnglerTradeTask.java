@@ -7,8 +7,10 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.confluence.terraentity.data.util.AmountIngredient;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
@@ -106,11 +108,18 @@ public class DynamicAnglerTradeTask implements ITradeTask {
             return;
         }
         if(resultPool.containsKey(cur)){
-            dynamicTrade = ItemTradeItemList.of(cost, resultPool.get(cur));
+            dynamicTrade = ItemTradeItemList.builder()
+                    .addCost(cost)
+                    .addResult(resultPool.get(cur)).build();
 
         }else{
             dynamicTrade = null;
-            defaultTrade = new ItemTradeLootTable(cost, defaultTrade.lootTable(), defaultTrade.sprite(), defaultTrade.translationKey(), defaultTrade.properties());
+            defaultTrade = new ItemTradeLootTable(
+                    List.of(new AmountIngredient(Ingredient.of(cost), cost.getCount())),
+                    defaultTrade.lootTable(),
+                    defaultTrade.sprite(), defaultTrade.translationKey(),
+                    defaultTrade.properties());
+
         }
     }
 

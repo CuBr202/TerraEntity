@@ -5,28 +5,27 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
+import org.confluence.terraentity.data.util.AmountIngredient;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
  * 战利品交易表
- * @param cost 花费的物品
  * @param lootTable 战利品掉落表
  */
 public record ItemTradeLootTable(
-        ItemStack cost,
+        List<AmountIngredient> costs,
         ResourceLocation lootTable,
         ResourceLocation sprite,
         String translationKey,
         TradeProperties properties
-) implements IItemTrade, ITradeLootTable {
+) implements IIngredientTrade, ITradeLootTable {
 
     public static MapCodec<ItemTradeLootTable> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemStack.CODEC.fieldOf("cost").forGetter(ItemTradeLootTable::cost),
+            AmountIngredient.CODEC.codec().listOf().fieldOf("costs").forGetter(ItemTradeLootTable::costs),
             ResourceLocation.CODEC.fieldOf("loot_table").forGetter(i->i.lootTable),
             ResourceLocation.CODEC.optionalFieldOf("sprite").forGetter(i->Optional.ofNullable(i.sprite())),
             Codec.STRING.optionalFieldOf("translation_key").forGetter(i->Optional.ofNullable(i.translationKey())),
@@ -43,22 +42,12 @@ public record ItemTradeLootTable(
         return new Builder();
     }
 
-    public static class Builder{
-        private ItemStack cost;
+    public static class Builder extends IIngredientTrade.Builder<ItemTradeLootTable, Builder> {
         private ResourceLocation lootTable;
         private ResourceLocation sprite;
         private String translationKey;
-        private TradeProperties properties;
         public Builder(){
 
-        }
-        public Builder setCost(ItemStack cost){
-            this.cost = cost;
-            return this;
-        }
-        public Builder setCost(ItemLike cost, int count){
-            this.cost = new ItemStack(cost, count);
-            return this;
         }
         public Builder setLootTable(ResourceLocation lootTable){
             this.lootTable = lootTable;
@@ -72,19 +61,16 @@ public record ItemTradeLootTable(
             this.translationKey = translationKey;
             return this;
         }
-        public Builder setProperties(TradeProperties properties){
-            this.properties = properties;
-            return this;
-        }
+
         public ItemTradeLootTable build(){
-            return new ItemTradeLootTable(cost, lootTable, sprite, translationKey, properties);
+            return new ItemTradeLootTable(costs, lootTable, sprite, translationKey, properties);
         }
 
     }
 
     @Override
     public void onTrade(ServerPlayer player, ITradeHolder npc, int index) {
-        IItemTrade.super.onTrade(player, npc, index);
+        IIngredientTrade.super.onTrade(player, npc, index);
         ITradeLootTable.super.onTrade(player, npc, index);
     }
 

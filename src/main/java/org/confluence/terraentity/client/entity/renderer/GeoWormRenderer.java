@@ -2,6 +2,7 @@ package org.confluence.terraentity.client.entity.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -72,7 +73,7 @@ public class GeoWormRenderer<T extends BaseWarm> extends GeoNormalRenderer<T> {
         for(BaseWarmPart part : entity.bodySegments){
             poseStack.pushPose();
             float lerpYRot = Mth.lerp(partialTick, part.yRotO, part.getYRot());
-            partRenderer.render(part, lerpYRot, partialTick, poseStack, bufferSource, packedLight);
+            partRenderer.render(part, lerpYRot, partialTick, poseStack, bufferSource, Minecraft.getInstance().getEntityRenderDispatcher().getPackedLightCoords(part, partialTick));
             poseStack.popPose();
         }
     }

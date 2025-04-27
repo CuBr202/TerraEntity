@@ -507,7 +507,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             AdapterUtils.postEvent(event);
             event.execute((npc, player1) -> {
 //            if(trades != null) {
-                this.getTradeManager().reCheckAvailableTrades(player1);
+                if(getTradeManager() != null) {
+                    this.getTradeManager().reCheckAvailableTrades(player1);
+                }
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
                         new SimpleTradeMenu(id, playerInventory, this), Component.translatable("title.terra_entity.npc_trade")));
 //            }
