@@ -51,6 +51,10 @@ public class TENpcEntities {
      * 染料商
      */
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DYE_TRADER = TEEntities.registerEntity("dye_trader", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 老人
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> OLD_MAN = TEEntities.registerEntity("old_man", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -65,7 +69,7 @@ public class TENpcEntities {
         event.registerEntityRenderer(ANGLER.get(), c -> new NPCRenderer<>(c, ANGLER.getId()));
         event.registerEntityRenderer(DRYAD.get(), c -> new NPCRenderer<>(c, DRYAD.getId()));
         event.registerEntityRenderer(DYE_TRADER.get(), c -> new NPCRenderer<>(c, DYE_TRADER.getId()));
-
+        event.registerEntityRenderer(OLD_MAN.get(), c -> new HumanoidRenderer<>(c, OLD_MAN.getId()));
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -79,7 +83,7 @@ public class TENpcEntities {
         event.put(ANGLER.get(), AbstractTerraNPC.createAttributes().build());
         event.put(DRYAD.get(), AbstractTerraNPC.createAttributes().build());
         event.put(DYE_TRADER.get(), AbstractTerraNPC.createAttributes().build());
-
+        event.put(OLD_MAN.get(), AbstractTerraNPC.createAttributes().build());
 
     }
 
@@ -95,6 +99,8 @@ public class TENpcEntities {
         event.register(ANGLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(DRYAD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(DYE_TRADER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(OLD_MAN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
     }
 
     public static void register(){

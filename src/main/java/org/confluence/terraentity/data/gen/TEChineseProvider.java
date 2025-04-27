@@ -157,6 +157,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TENpcEntities.DRYAD.get(), "树妖");
         add(TENpcEntities.DYE_TRADER.get(), "染料商");
         add(TENpcEntities.ANGLER.get(), "渔夫");
+        add(TENpcEntities.OLD_MAN.get(), "老人");
 
 
 
@@ -170,7 +171,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.DRYAD_SPAWN_EGG.get(), "树妖刷怪蛋");
         add(TESpawnEggItems.DYE_TRADER_SPAWN_EGG.get(), "染料商刷怪蛋");
         add(TESpawnEggItems.ANGLER_SPAWN_EGG.get(), "渔夫刷怪蛋");
-
+        add(TESpawnEggItems.OLD_MAN_SPAWN_EGG.get(), "老人刷怪蛋");
 
 
         // 召唤杖

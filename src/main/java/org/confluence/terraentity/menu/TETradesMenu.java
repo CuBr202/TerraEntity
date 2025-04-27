@@ -1,6 +1,10 @@
 package org.confluence.terraentity.menu;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JavaOps;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.client.Minecraft;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,10 +16,13 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
+import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.network.c2s.NPCShopPacket;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -129,10 +136,9 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
 
                 if (selectedMerchantIndex >= 0 && selectedMerchantIndex < d.trades().size()) {
                     ITrade trade = d.trades().get(selectedMerchantIndex);
-                    PacketDistributor.sendToServer(new NPCShopPacket(selectedMerchantIndex));
+                    AdapterUtils.sendToServer(new NPCShopPacket(selectedMerchantIndex));
                     var npc = ((IPlayer) player).terra_entity$getTradeHolder();
-                    if(npc instanceof ITradeHolder npc1)
-                        trade.onLocalClickSlot(player, button, clickType, npc1, selectedMerchantIndex);
+                    trade.onLocalClickSlot(player, button, clickType, npc, selectedMerchantIndex);
                 }
             }
         }
