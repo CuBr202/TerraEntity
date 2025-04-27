@@ -58,7 +58,7 @@ public class UpdateNPCTradePacket implements CustomPacketPayload {
 
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
-            if(context.player().level().getEntities().get(this.npcId) instanceof AbstractTerraNPC npc){
+            if(context.player().level().getEntities().get(this.npcId) instanceof ITradeHolder npc){
                 var trades = npc.getTradeManager().trades();
                 var availableTrades = npc.getTradeManager().availableTrades();
                 var availableTrade = availableTrades.get(this.index);

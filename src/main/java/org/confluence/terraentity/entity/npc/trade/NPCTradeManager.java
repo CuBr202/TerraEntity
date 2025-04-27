@@ -64,7 +64,7 @@ public class NPCTradeManager {
      * @param trade 当为空时，表示未初始化
      */
     public NPCTradeManager(List<ITrade> trade) {
-        this.trades = trade;
+        this.trades = new ArrayList<>(trade);
 
     }
 
@@ -81,7 +81,7 @@ public class NPCTradeManager {
      */
     public void initTrades(ITradeHolder holder){
         if(tradeList!= null){
-            this.trades = tradeList.generateTrades();
+            this.trades = new ArrayList<>(tradeList.generateTrades());
             this.tradeList = null;
         }
         this.setOwner(holder);
