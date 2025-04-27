@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * npc交易菜单，提供统一处理ITrade的逻辑
  */
 public abstract class TETradesMenu extends AbstractContainerMenu {
-    private final SimpleContainer container;
+    protected final SimpleContainer container;
     public ITradeHolder NPCTrades;
     public int selectedMerchantIndex = -1;
 
@@ -39,6 +39,21 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
         }
 
         this.container = new SimpleContainer(1);
+        this.addResultSlot();
+
+        int k;
+        for(k = 0; k < 3; ++k) {
+            for(int j = 0; j < 9; ++j) {
+                this.addSlot(new Slot(playerInventory, j + k * 9 + 9, 108 + j * 18, 84 + k * 18));
+            }
+        }
+
+        for(k = 0; k < 9; ++k) {
+            this.addSlot(new Slot(playerInventory, k, 108 + k * 18, 142));
+        }
+    }
+
+    protected void addResultSlot(){
         this.addSlot(new Slot(this.container, 0, 238, 37){
             @Override
             public boolean mayPlace(ItemStack stack) {
@@ -53,17 +68,6 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
                 super.onTake(player, stack);
             }
         });
-
-        int k;
-        for(k = 0; k < 3; ++k) {
-            for(int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInventory, j + k * 9 + 9, 108 + j * 18, 84 + k * 18));
-            }
-        }
-
-        for(k = 0; k < 9; ++k) {
-            this.addSlot(new Slot(playerInventory, k, 108 + k * 18, 142));
-        }
     }
 
     @Override
