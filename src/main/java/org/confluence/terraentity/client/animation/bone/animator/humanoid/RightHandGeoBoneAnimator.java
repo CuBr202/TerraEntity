@@ -141,7 +141,11 @@ public class RightHandGeoBoneAnimator<T extends LivingEntity & IUseItemAnimatabl
 
         @Override
         public void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
-            state.setState(BoneStates.IDLE);
+            if(animatable.isUsingItem()){
+                state.setState(BoneStates.PROJECTILE_USING);
+            }else {
+                state.setState(BoneStates.IDLE);
+            }
         }
     }
 

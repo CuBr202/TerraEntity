@@ -10,6 +10,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.confluence.terraentity.client.entity.renderer.HumanoidRenderer;
 import org.confluence.terraentity.client.entity.renderer.NPCRenderer;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;

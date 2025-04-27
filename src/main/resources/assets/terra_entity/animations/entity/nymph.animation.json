@@ -4,7 +4,7 @@
 		"sit": {
 			"loop": true,
 			"bones": {
-				"head": {
+				"Head": {
 					"rotation": {
 						"vector": [30.97603, -16.1299, -6.88003]
 					},
@@ -58,7 +58,7 @@
 			"loop": true,
 			"animation_length": 0.6667,
 			"bones": {
-				"head": {
+				"Head": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 17.5]
@@ -256,7 +256,7 @@
 			"loop": true,
 			"animation_length": 1,
 			"bones": {
-				"head": {
+				"Head": {
 					"position": {
 						"0.0": {
 							"vector": [0, -0.25, 0]
@@ -519,7 +519,7 @@
 			"loop": true,
 			"animation_length": 3.5,
 			"bones": {
-				"head": {
+				"Head": {
 					"position": {
 						"0.0": {
 							"vector": [0, 0, 0]

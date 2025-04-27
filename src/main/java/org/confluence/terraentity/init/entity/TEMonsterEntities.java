@@ -1,7 +1,6 @@
 package org.confluence.terraentity.init.entity;
 
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.monster.Monster;
@@ -12,7 +11,6 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.confluence.terraentity.client.boss.renderer.DecayederRenderer;
 import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.client.entity.model.GiantShellyModel;
 import org.confluence.terraentity.client.entity.model.NymphModel;
@@ -122,7 +120,7 @@ public class TEMonsterEntities {
             event.registerEntityRenderer(TEMonsterEntities.BLOOD_CRAWLER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.BLOOD_CRAWLER.getId()));
         }
         event.registerEntityRenderer(TEMonsterEntities.BLOODY_SPORE.get(), BloodySporeRenderer::new);
-        event.registerEntityRenderer(TEMonsterEntities.DECAYEDER.get(), DecayederRenderer::new);
+        event.registerEntityRenderer(TEMonsterEntities.DECAYEDER.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.DECAYEDER.getId()));
 
 
         event.registerEntityRenderer(TEMonsterEntities.FACE_MONSTER.get(), c-> new GeoNormalRenderer<>(c, TEMonsterEntities.FACE_MONSTER.getId(),false));

@@ -6,13 +6,31 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.level.Level;
+import org.confluence.terraentity.entity.animation.BoneStateMachine;
+import org.confluence.terraentity.entity.animation.BoneStates;
+import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 /**
  * 腐瘸
  */
-public class Decayeder extends Skeleton {
+public class Decayeder extends Skeleton implements GeoEntity, IUseItemAnimatable<BoneStates> {
+
+    BoneStateMachine<BoneStates> leftArmBoneStateMachine;
+    BoneStateMachine<BoneStates> rightArmBoneStateMachine;
+
+
     public Decayeder(EntityType<? extends Skeleton> entityType, Level level) {
         super(entityType, level);
+        if(level.isClientSide){
+            leftArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
+            rightArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
+        }
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -23,6 +41,44 @@ public class Decayeder extends Skeleton {
     }
     @Override
     protected boolean isSunBurnTick() {
+        return false;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "Walk/Idle", 5, state ->
+                state.setAndContinue(state.isMoving() ? DefaultAnimations.WALK : DefaultAnimations.IDLE)
+        ));
+    }
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public boolean isChargingCrossbow() {
+        return false;
+    }
+
+    @Override
+    public int getChargingTicks() {
+        return 0;
+    }
+
+    @Override
+    public BoneStateMachine<BoneStates> getLeftArmBoneStateMachine() {
+        return leftArmBoneStateMachine;
+    }
+
+    @Override
+    public BoneStateMachine<BoneStates> getRightArmBoneStateMachine() {
+        return rightArmBoneStateMachine;
+    }
+
+    @Override
+    public boolean isLieDown() {
         return false;
     }
 }

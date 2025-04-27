@@ -6,7 +6,7 @@ package org.confluence.terraentity.entity.animation;
 public interface IUseItemAnimatable<S> {
 
     /**
-     * 是否在拉弩
+     * 是否在拉弩。对于不需要使用弩的实体应该返回false
      */
     boolean isChargingCrossbow();
 

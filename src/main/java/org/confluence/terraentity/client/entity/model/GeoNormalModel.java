@@ -36,7 +36,7 @@ public class GeoNormalModel<T extends GeoEntity> extends DefaultedEntityGeoModel
     }
 
     protected String getHead(){
-        return "head";
+        return "Head";
     }
 
 }

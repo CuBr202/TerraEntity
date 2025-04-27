@@ -16,7 +16,7 @@
 						"vector": [1, 1, 1]
 					}
 				},
-				"head": {
+				"Head": {
 					"rotation": {
 						"vector": [2.5, 0, 0]
 					},
@@ -486,7 +486,7 @@
 						}
 					}
 				},
-				"head": {
+				"Head": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -1428,7 +1428,7 @@
 						}
 					}
 				},
-				"head": {
+				"Head": {
 					"rotation": {
 						"0.0": {
 							"vector": [-17.5, 0, 0]
@@ -3181,7 +3181,7 @@
 						}
 					}
 				},
-				"head": {
+				"Head": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -3256,7 +3256,7 @@
 						"vector": [6, 0, 0]
 					}
 				},
-				"head": {
+				"Head": {
 					"position": {
 						"vector": [0, 4, 0]
 					}

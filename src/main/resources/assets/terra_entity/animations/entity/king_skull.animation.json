@@ -5,7 +5,7 @@
 			"loop": true,
 			"animation_length": 1,
 			"bones": {
-				"head": {
+				"Head": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -20,7 +20,7 @@
 		"animation.model.fire": {
 			"animation_length": 1,
 			"bones": {
-				"head": {
+				"Head": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]

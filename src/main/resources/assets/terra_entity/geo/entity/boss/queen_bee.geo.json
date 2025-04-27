@@ -178,7 +178,7 @@
 					]
 				},
 				{
-					"name": "head",
+					"name": "Head",
 					"parent": "bone3",
 					"pivot": [0, 18, 4],
 					"cubes": [
@@ -215,7 +215,7 @@
 				},
 				{
 					"name": "left_m",
-					"parent": "head",
+					"parent": "Head",
 					"pivot": [6, 18.5, 0.5],
 					"cubes": [
 						{
@@ -233,7 +233,7 @@
 				},
 				{
 					"name": "right_m",
-					"parent": "head",
+					"parent": "Head",
 					"pivot": [-6, 18.5, 0.5],
 					"cubes": [
 						{
@@ -251,7 +251,7 @@
 				},
 				{
 					"name": "left_j",
-					"parent": "head",
+					"parent": "Head",
 					"pivot": [2.5, 30.83595, 2.33837],
 					"cubes": [
 						{
@@ -271,7 +271,7 @@
 				},
 				{
 					"name": "right_j",
-					"parent": "head",
+					"parent": "Head",
 					"pivot": [-2.5, 30.83595, 2.33837],
 					"cubes": [
 						{

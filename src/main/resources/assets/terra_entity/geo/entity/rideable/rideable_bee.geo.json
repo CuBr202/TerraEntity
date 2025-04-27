@@ -12,7 +12,7 @@
 			},
 			"bones": [
 				{
-					"name": "head",
+					"name": "Head",
 					"pivot": [0, 12, -10],
 					"cubes": [
 						{"origin": [-4, 10, -14], "size": [8, 8, 8], "uv": [64, 0]},
@@ -21,7 +21,7 @@
 				},
 				{
 					"name": "bone",
-					"parent": "head",
+					"parent": "Head",
 					"pivot": [0, 17.75, -12.66667],
 					"rotation": [-15, 0, 0],
 					"cubes": [
@@ -32,7 +32,7 @@
 				},
 				{
 					"name": "bone6",
-					"parent": "head",
+					"parent": "Head",
 					"pivot": [0, 18, -12],
 					"cubes": [
 						{"origin": [3, 18, -18], "size": [0, 8, 8], "pivot": [3, 22, -14], "rotation": [0, -22.5, 0], "uv": [48, 68]},
