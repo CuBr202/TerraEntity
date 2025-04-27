@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss {
 
-    private float projDamageFactor = 1.0f; // 弹幕伤害倍率，相对于攻击力
+    private float projDamageFactor = 0.33f; // 弹幕伤害倍率，相对于攻击力
     private float attackDamage = 18.2f; // 攻击伤害
     public int phase = 0;
     public boolean enraged = false;
