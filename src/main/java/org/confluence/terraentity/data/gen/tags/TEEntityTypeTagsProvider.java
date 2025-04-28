@@ -31,6 +31,7 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
                         TEMonsterEntities.BLUE_SLIME.get(),
                         TEMonsterEntities.GREEN_SLIME.get(),
                         TEMonsterEntities.PINK_SLIME.get(),
+                        TEMonsterEntities.DUNGEON_SLIME.get(),
                         TEMonsterEntities.CORRUPTED_SLIME.get(),
                         TEMonsterEntities.DESERT_SLIME.get(),
                         TEMonsterEntities.JUNGLE_SLIME.get(),
