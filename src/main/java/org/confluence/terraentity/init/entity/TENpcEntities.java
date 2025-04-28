@@ -69,7 +69,7 @@ public class TENpcEntities {
         event.registerEntityRenderer(ANGLER.get(), c -> new NPCRenderer<>(c, ANGLER.getId()));
         event.registerEntityRenderer(DRYAD.get(), c -> new NPCRenderer<>(c, DRYAD.getId()));
         event.registerEntityRenderer(DYE_TRADER.get(), c -> new NPCRenderer<>(c, DYE_TRADER.getId()));
-        event.registerEntityRenderer(OLD_MAN.get(), c -> new HumanoidRenderer<>(c, OLD_MAN.getId()));
+        event.registerEntityRenderer(OLD_MAN.get(), c -> new NPCRenderer<>(c, OLD_MAN.getId()));
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
