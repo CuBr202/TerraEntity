@@ -1,0 +1,95 @@
+{
+  "trades": [
+    {
+      "type": "terra_entity:trade_task",
+      "trade_task": {
+        "type": "terra_entity:dynamic_angler_trade_task",
+        "cost_pool": [
+          {
+            "count": 1,
+            "id": "minecraft:cod"
+          },
+          {
+            "count": 1,
+            "id": "minecraft:pufferfish"
+          },
+          {
+            "count": 1,
+            "id": "minecraft:tropical_fish"
+          },
+          {
+            "count": 1,
+            "id": "minecraft:salmon"
+          },
+          {
+            "count": 1,
+            "id": "minecraft:ink_sac"
+          },
+          {
+            "count": 1,
+            "id": "minecraft:glow_ink_sac"
+          }
+        ],
+        "default_trade": {
+          "costs": [
+            {
+              "count": 1,
+              "ingredient": {
+                "item": "minecraft:cod"
+              }
+            }
+          ],
+          "loot_table": "terra_entity:npc/angler",
+          "sprite": "terra_entity:random_gift"
+        },
+        "result_pool": {
+          "1": [
+            {
+              "components": {
+                "minecraft:enchantment": {
+                  "levels": {
+                    "minecraft:sharpness": 5
+                  },
+                  show_in_tooltip: true
+                }
+              },
+              "count": 1,
+              "id": "minecraft:fishing_rod"
+            }
+          ],
+          "15": [
+            {
+              "count": 20,
+              "id": "minecraft:iron_ingot"
+            }
+          ],
+          "25": [
+            {
+              "count": 20,
+              "id": "minecraft:gold_ingot"
+            }
+          ],
+          "35": [
+            {
+              "count": 20,
+              "id": "minecraft:diamond"
+            }
+          ],
+          "45": [
+            {
+              "count": 20,
+              "id": "minecraft:emerald"
+            }
+          ],
+          "5": [
+            {
+              "count": 1,
+              "id": "minecraft:bucket"
+            }
+          ]
+        },
+        "title": "title.terra_entity.npc_trade.task.fishman"
+      }
+    }
+  ]
+}

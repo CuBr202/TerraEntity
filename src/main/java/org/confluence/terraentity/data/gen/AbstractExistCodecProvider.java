@@ -3,7 +3,8 @@ package org.confluence.terraentity.data.gen;
 import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.JavaOps;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -21,10 +22,12 @@ public abstract class AbstractExistCodecProvider<T> implements DataProvider {
     private final List<CompletableFuture<?>> futures;
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public AbstractExistCodecProvider(PackOutput output) {
+    protected CompletableFuture<HolderLookup.Provider> lookupProvider;
+    public AbstractExistCodecProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         this.output = output;
         this.jsons = new ArrayList<>();
         this.futures = new ArrayList<>();
+        this.lookupProvider = lookupProvider;
     }
     private record tuple(JsonObject json, ResourceLocation location) {}
 
@@ -44,7 +47,7 @@ public abstract class AbstractExistCodecProvider<T> implements DataProvider {
     protected abstract Codec<T> getCodec();
 
     protected void gen(ResourceLocation location, T checkPoint){
-        JsonElement res = parseCodec(getCodec().encodeStart(JavaOps.INSTANCE,checkPoint));
+        JsonElement res = parseCodec(getCodec().encodeStart(JsonOps.INSTANCE,checkPoint));
         addJson(res.getAsJsonObject(), location);
     }
 

@@ -13,11 +13,12 @@ import org.confluence.terraentity.entity.npc.mood.MoodInfo;
 import org.confluence.terraentity.entity.npc.mood.NPCMoods;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.mixed.IPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class DialogScreen extends Screen {
     Button button;
     Screen parent;
-    ITradeHolder entity;
+    ITradeHolder holder;
     Component dialogText;
     protected DialogScreen(Component title, Screen parent) {
         super(title);
@@ -28,19 +29,20 @@ public class DialogScreen extends Screen {
     protected void init() {
         super.init();
 
-        if(((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder() instanceof ITradeHolder npc){
-            entity = npc;
-            String dialog = null;
-            if(entity instanceof Entity e){
-                dialog = NPCDialogs.getRandomDialog(BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()));
-            }
-
-            if(dialog!= null) {
-                dialogText = Component.translatable(dialog);
-            }
+        holder = ((IPlayer)Minecraft.getInstance().player).terra_entity$getTradeHolder();
+        String dialog = null;
+        if(holder instanceof Entity e){
+            dialog = NPCDialogs.getRandomDialog(BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()));
         }
+
+        if(dialog!= null) {
+            dialogText = Component.translatable(dialog);
+        }
+
         button = Button.builder(Component.literal("Trade"), p->{
-            minecraft.setScreen(parent);
+            if (minecraft != null) {
+                minecraft.setScreen(parent);
+            }
         }).pos(width/2 - 80, height / 2 + 25).build();
 
         addRenderableWidget(button);
@@ -48,22 +50,22 @@ public class DialogScreen extends Screen {
 
     @Override
     public void onClose() {
-//        super.onClose();
-        minecraft.setScreen(parent);
+        super.onClose();
+
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         if(dialogText != null){
             guiGraphics.drawString(font, dialogText, 20, height / 2 -10, 0xFFFFFF);
         }
 
         // todo draw
-        if(entity.getMood() == null){
+        if(holder.getMood() == null){
             return;
         }
-        var list = entity.getMood().getMoodInfoList();
+        var list = holder.getMood().getMoodInfoList();
         for(int i = 0; i < list.size(); i++){
             ResourceLocation location = list.get(i);
 
@@ -78,7 +80,9 @@ public class DialogScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == 69) { // E
-            this.onClose();
+            if (minecraft != null) {
+                minecraft.setScreen(parent);
+            }
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);

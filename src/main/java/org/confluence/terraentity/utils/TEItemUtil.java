@@ -13,6 +13,10 @@ public class TEItemUtil {
         return stack;
     }
 
+    public static ItemStack make(Item item, int count){
+        return new ItemStack(item, count);
+    }
+
     /**
      * 合并堆叠物品
      * @param items 物品列表

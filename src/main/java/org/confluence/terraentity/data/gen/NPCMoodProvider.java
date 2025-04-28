@@ -1,6 +1,7 @@
 package org.confluence.terraentity.data.gen;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.entity.EntityType;
 import org.confluence.terraentity.TerraEntity;
@@ -11,11 +12,12 @@ import org.confluence.terraentity.init.entity.TENpcEntities;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class NPCMoodProvider extends AbstractExistCodecProvider<Map<EntityType<?>, NPCMoods.EntityMood>> {
 
-    public NPCMoodProvider(PackOutput output) {
-        super(output);
+    public NPCMoodProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider);
     }
 
     @Override

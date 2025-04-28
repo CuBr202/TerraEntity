@@ -206,6 +206,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     LivingEntity target;
     protected static final int DISCARD_TICK = 100;
     protected int discardTick = 0;
+    boolean isCreativePlayer; // 如果附近有创造模式玩家，则不清除
 
     @Override
     public void tick() {
@@ -224,12 +225,14 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                     return;
                 }
 
-                discardTick++;
-                if(!level().isClientSide && discardTick > DISCARD_TICK && ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get() && shouldEscape()){
-                    this.bossEvent.getPlayers().forEach(p->p.sendSystemMessage(this.getDisplayName().copy().append(Component.translatable("message.terraentity.boss_discard"))));
-                    this.discard();
+                if(!isCreativePlayer) {
+                    discardTick++;
+                    if (!level().isClientSide && discardTick > DISCARD_TICK && ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get() && shouldEscape()) {
+                        this.bossEvent.getPlayers().forEach(p -> p.sendSystemMessage(this.getDisplayName().copy().append(Component.translatable("message.terraentity.boss_discard"))));
+                        this.discard();
+                    }
+                    return;
                 }
-                return;
             }
             discardTick = 0;
 
@@ -279,9 +282,13 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     protected List<Player> getNearbyPlayers(double range) {
         List<Player> players = new ArrayList<>();
+        isCreativePlayer = false;
         for (Player player : level().players()) {
             if (player.canBeSeenAsEnemy() && this.distanceToSqr(player) < range * range) {
                 players.add(player);
+            }
+            if(!isCreativePlayer && !player.canBeSeenAsEnemy()){
+                isCreativePlayer = true;
             }
         }
         return players;

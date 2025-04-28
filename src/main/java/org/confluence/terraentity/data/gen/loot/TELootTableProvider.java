@@ -22,7 +22,9 @@ public class TELootTableProvider extends LootTableProvider {
         return new LootTableProvider(output, Collections.emptySet(),
                 List.of(
                         new SubProviderEntry(TEBlockLootProvider::new, LootContextParamSets.BLOCK),
-                        new SubProviderEntry(TEEntityLootProvider::new, LootContextParamSets.ENTITY)),
+                        new SubProviderEntry(TEEntityLootProvider::new, LootContextParamSets.ENTITY),
+                        new SubProviderEntry(TENPCLoot::new, LootContextParamSets.EMPTY)
+                ),
                 lookupProviderFuture);
     }
 }

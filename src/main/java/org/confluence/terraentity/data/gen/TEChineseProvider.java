@@ -309,5 +309,102 @@ public class TEChineseProvider extends LanguageProvider {
         add("enchantment.terra_entity.multi_boomerang", "影分身");
         add("enchantment.terra_entity.whip_sweep", "横扫之鞭");
 
+        // npc对话
+        add("dialogs.terra_entity.guide.0", "我的工作是为你接下来的任务提供建议。建议你遇到任何困难时都来和我谈谈。");
+        add("dialogs.terra_entity.guide.1", "他们说，有个人会告诉你如何在这地方上生存……哦等下。那个人就是我。");
+        add("dialogs.terra_entity.guide.2", "晚上你应该呆在家里。黑夜在外面转悠非常危险。");
+        add("dialogs.terra_entity.guide.3", "在融合的世界中，你会收获多倍的宝藏，但这也以为着承担多倍的风险。");
+        add("dialogs.terra_entity.guide.4", "据我所知这个世界上的人类比我们原来的世界更多。");
+        add("dialogs.terra_entity.guide.5", "抱歉，有时候我不得不开门。");
+        add("dialogs.terra_entity.guide.6", "那些会爆炸的家伙比一般的地表怪物更具威胁！");
+        add("dialogs.terra_entity.guide.7", "草地上的生命蘑菇有时候可以救你一命。");
+        add("dialogs.terra_entity.guide.8", "地下有水晶之心，可以用来提高你的最大生命值。你可以用镐来打碎它们。");
+        add("dialogs.terra_entity.guide.9", "地底下有一种具有神奇魔力的湖，它非常稀有。");
+        add("dialogs.terra_entity.guide.10", "夜晚，星星在坠落，洒满全世界。它们的用途极为广泛。如果你看到了，一定要拿到手，因为星星在日出后就会消失。");
+        add("dialogs.terra_entity.guide.11", "无论是什么东西在疯狂蔓延，你都将意识到是时候阻止它们。");
+        add("dialogs.terra_entity.guide.12", "如果你想活下来，你需要制造武器和建造房屋。首先要砍树并收集木材。");
+        add("dialogs.terra_entity.guide.13", "拥有一把剑后，你可以试试从史莱姆身上收集一些凝胶。用木棍和凝胶制作火把！");
+        add("dialogs.terra_entity.guide.14", "如果你拥有了一些矿石，你需要将它铸成矿锭，才能用来制作物品。这需要熔炉！");
+        add("dialogs.terra_entity.guide.15", "如果在祭坛上合成晶状体，你也许能够找到方法来召唤一个强大的怪物。不过，最好等到夜晚再用它。");
+
+
+        add("dialogs.terra_entity.nurse.0", "我要和向导认真谈一谈。你一周到底有多少次被熔岩烫成重伤？");
+        add("dialogs.terra_entity.nurse.1", "看到那个在地牢周围转来转去的老人没？他看上去遇到麻烦了。");
+        add("dialogs.terra_entity.nurse.2", "嗨，军火商有没有提过要去看医生啥的？就随便问问。");
+        add("dialogs.terra_entity.nurse.3", "又惹上混混了？");
+        add("dialogs.terra_entity.nurse.4", "别像个孩子似的！我见过更糟的。");
+        add("dialogs.terra_entity.nurse.5", "你这么做的时候疼吗？别那么做。");
+
+        add("dialogs.terra_entity.demolitionist.0", "炸药如今十分火爆。马上买一些！");
+        add("dialogs.terra_entity.demolitionist.1", "今天是个找死的好日子！");
+        add("dialogs.terra_entity.demolitionist.2", "让我看看这样会怎……（轰！）……哦，对不起，你还要那条腿吗？");
+        add("dialogs.terra_entity.demolitionist.3", "看看我的商品；都是惊爆价");
+        add("dialogs.terra_entity.demolitionist.4", "雷管，这是我特别为你准备的灵丹妙药，包治百病。");
+        add("dialogs.terra_entity.demolitionist.5", "想穿过那些邪恶石头，嗯？为什么不用炸药炸掉它！");
+
+        add("dialogs.terra_entity.goblin_tinkerer.0", "哥布林太容易生气了。事实上，他们能为了一些破布发动战争！");
+        add("dialogs.terra_entity.goblin_tinkerer.1", "老实说，大部分哥布林都不是真正的火箭科学家。好吧，有一些是。");
+        add("dialogs.terra_entity.goblin_tinkerer.2", "你知不知道为什么大家到哪儿都带着这些尖刺球？因为我不知道。");
+        add("dialogs.terra_entity.goblin_tinkerer.3", "我刚刚完成了最新的作品！这个版本就算你对着它猛力吹吸也不会猛烈爆炸。");
+        add("dialogs.terra_entity.goblin_tinkerer.4", "哥布林盗贼不太擅长偷东西。没上锁的箱子都不会偷！");
+        add("dialogs.terra_entity.goblin_tinkerer.5", "唷，我听说你喜欢火箭和跑鞋，所以我在你的跑鞋上加了一些火箭。");
+
+        add("dialogs.terra_entity.arms_dealer.0", "哥们，把手从我的枪上拿开！");
+        add("dialogs.terra_entity.arms_dealer.1", "嘿，兄弟，这可不是演电影。需要另行准备弹药。");
+        add("dialogs.terra_entity.arms_dealer.2", "我看你在盯着迷你鲨……你绝对想不到它是怎么做成的。");
+        add("dialogs.terra_entity.arms_dealer.3", "我想买护士卖的东西。你说啥？她什么也不卖？");
+        add("dialogs.terra_entity.arms_dealer.4", "飞鱼？我把它叫作打靶！");
+        add("dialogs.terra_entity.arms_dealer.5", "别和爆破专家浪费时间了。我这边有你要的一切。");
+
+        add("dialogs.terra_entity.merchant.0", "剑克纸！赶紧买一把。");
+        add("dialogs.terra_entity.merchant.1", "你想要苹果？你想要胡萝卜？你想要菠萝？我们只有火把。");
+        add("dialogs.terra_entity.merchant.2", "看看我的土块；它们特别土。");
+        add("dialogs.terra_entity.merchant.3", "你是不知道土块能在国外卖多少钱。");
+        add("dialogs.terra_entity.merchant.4", "总有一天他们会讲述你的传奇……肯定会是好故事。");
+        add("dialogs.terra_entity.merchant.5", "Kosh, kapleck Mog。哦，对不起，这是克林贡语，意思是“要么买，要么死。");
+
+        add("dialogs.terra_entity.painter.0", "我知道青绿色和蓝绿色之间的差别。但我不会告诉你。");
+        add("dialogs.terra_entity.painter.1", "钛白色用完了，别问了。");
+        add("dialogs.terra_entity.painter.2", "尝试调合粉色和紫色，肯定管用，我发誓！");
+        add("dialogs.terra_entity.painter.3", "不、不、不……灰色也分很多种！别让我开始……");
+        add("dialogs.terra_entity.painter.4", "我希望别下雨了，漆还没干。下雨就惨了！");
+        add("dialogs.terra_entity.painter.5", "我试过举办一次彩弹大战，但是每个人都只想要食物和装饰品。");
+
+        add("dialogs.terra_entity.dryad.0", "注意安全！两边的世界都需要你！");
+        add("dialogs.terra_entity.dryad.1", "时间的沙漏在缓缓流逝。而你并没有优雅地变老。");
+        add("dialogs.terra_entity.dryad.2", "两个哥布林走进酒吧，其中一个对另一个说：“来杯啤酒？！");
+        add("dialogs.terra_entity.dryad.3", "说我雷声大雨点小是啥意思？");
+        add("dialogs.terra_entity.dryad.4", "你必须停止邪恶的蔓延。");
+        add("dialogs.terra_entity.dryad.5", "这个世界更为广阔……自然的力量也更强大了");
+
+        add("dialogs.terra_entity.dye_trader.0", "我带给你最丰富的色彩，以换取你的财富。");
+        add("dialogs.terra_entity.dye_trader.1", "亲爱的，你的穿着太单调了。你一定得好好学学，怎么给单调的衣服染色！");
+        add("dialogs.terra_entity.dye_trader.2", "我唯一愿意染的木材是红木。给任何其他木材染色都是浪费。");
+        add("dialogs.terra_entity.dye_trader.3", "噢，不行，不行，这样是不行的。有钱也没用，你必须拿稀有的植物样本来和我交换！");
+        add("dialogs.terra_entity.dye_trader.4", "这些染料瓶？抱歉，亲爱的朋友，这些是非卖品。我只接受用最珍稀的植物来交换它们！");
+        add("dialogs.terra_entity.dye_trader.5", "你以为可以骗过我的眼睛？我可不这么想！我只接受用最稀有的花来交换这些特别的瓶子。");
+
+        add("dialogs.terra_entity.angler.0", "谢谢，我想，谢谢你救了我之类的。你是个优秀的得力仆从！");
+        add("dialogs.terra_entity.angler.1", "啥？你是哪位？我绝对不是溺水之类的！");
+        add("dialogs.terra_entity.angler.2", "你救了我！你太好了，我可以使唤你……呃，我是说，雇你帮我做些了不起的事！");
+        add("dialogs.terra_entity.angler.3", "我没有妈妈，也没有爸爸，但我有很多鱼！这就够了！");
+        add("dialogs.terra_entity.angler.4", "嘿！当心！我设了许多陷阱，用来实施史上最大的恶作剧！没人会发觉！你敢告诉别人试试！");
+        add("dialogs.terra_entity.angler.5", "听说过会叫的鱼吗？！我没听说过，只是想知道你听说过没！");
+
+        add("goblin_tinkerer_like_dye_trader", "染料商知道把东西混在一起是多么有趣，我能理解！");
+        add("guide_hate_painter", "我讨厌油漆工在附近。世界本来挺美好的！");
+        add("arms_dealer_hate_demolitionist", "爆破专家怎么回事啊？难道他没发现我们卖的东西完全不同？");
+        add("arms_dealer_love_nurse", "那啥，你觉得护士对我有意思吗");
+        add("angler_like_demolitionist", "爆破专家其实知道他们在做什么，不像某些其他人！我挺喜欢的！");
+        add("dye_trader_like_arms_dealer", "军火商善于发现鲜艳的颜色和商机，对吧？我喜欢。");
+        add("dye_trader_like_painter", "油漆工善于发现鲜艳的颜色和商机，对吧？我喜欢。”");
+        add("demolitionist_dislike_arms_dealer", "我想把军火商绑到火箭上，看看会发生什么！");
+        add("demolitionist_dislike_goblin_tinkerer", "我想把哥布林工匠绑到火箭上，看看会发生什么！");
+        add("painter_love_dryad", "我真的很想画树妖……当然是因为色彩鲜艳！");
+        add("dryad_dislike_angler", "我不喜欢渔夫不尊重其他生物。");
+        add("merchant_like_nurse", "护士赚了很多钱，我喜欢有钱人。");
+        add("nurse_love_arms_dealer", "什么？军火商？我才没有暗恋他！我没有！闭嘴！");
+        add("nurse_dislike_dryad", "我不太喜欢树妖，这个人有点奇怪。");
+
     }
 }

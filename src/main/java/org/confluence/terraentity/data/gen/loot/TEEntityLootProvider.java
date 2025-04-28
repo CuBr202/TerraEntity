@@ -134,19 +134,19 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
     }
 
 
-    private LootPool.Builder singleItemPool(ItemLike item, int count, float chance){
+    public static LootPool.Builder singleItemPool(ItemLike item, int count, float chance){
         return weightLootPool(singleItem(item, count), chance);
     }
 
-    private LootPool.Builder singleItemPool(ItemLike item, float chance){
+    public static LootPool.Builder singleItemPool(ItemLike item, float chance){
         return weightLootPool(singleItem(item, 1), chance);
     }
 
-    private LootPool.Builder singleItemPool(ItemLike item){
+    public static LootPool.Builder singleItemPool(ItemLike item){
         return weightLootPool(singleItem(item, 1), 1);
     }
 
-    private LootPool.Builder weightLootPool(LootPoolSingletonContainer.Builder<?> builder, float chance){
+    public static LootPool.Builder weightLootPool(LootPoolSingletonContainer.Builder<?> builder, float chance){
         if(chance >= 1){
             return LootPool.lootPool().add(builder);
         }
@@ -156,21 +156,21 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
     }
 
 
-    private LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int count){
+    public static LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int count){
         if(count == 1)
             return LootItem.lootTableItem(item);
         return LootItem.lootTableItem(item).apply(SetItemCountFunction.setCount(ConstantValue.exactly(count)));
     }
 
-    private LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int countMin, int countMax){
+    public static LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int countMin, int countMax){
         return LootItem.lootTableItem(item).apply(SetItemCountFunction.setCount(UniformGenerator.between(countMin, countMax)));
     }
 
-    private LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int count, float enchantmentChance){
+    public LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int count, float enchantmentChance){
         return singleItem(item, count).apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, Math.max(count * enchantmentChance, 1.0F))));
     }
 
-    private LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int countMin, int countMax, float enchantmentChance){
+    public LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int countMin, int countMax, float enchantmentChance){
         return singleItem(item, countMin, countMax).apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, Math.max(countMax * enchantmentChance, 1.0F))));
     }
 

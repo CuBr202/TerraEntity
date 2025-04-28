@@ -140,6 +140,7 @@ public class NPCMoods {
                 resource -> {
 
                     try {
+                        BY_ENTITY_TYPE = new HashMap<>();
                         Map<ResourceLocation, MoodInfo> tempMap = new HashMap<>();
                         Reader reader = resource.openAsReader();
                         JsonObject jsonobject = GsonHelper.parse(reader);
@@ -161,6 +162,7 @@ public class NPCMoods {
                 },
                 ()->{
                     TerraEntity.LOGGER.warn("No NPC mood data found for NPCs");
+                    BY_ID = ImmutableBiMap.of();
                 }
         );
 //        TerraEntity.LOGGER.info("Loaded {} NPC names", dialog_map.size());
