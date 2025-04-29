@@ -129,7 +129,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
     @Override
     protected boolean canHitEntity(Entity target) {
 
-        return TEUtils.projectileCanHitEntityTest.test(this, target) && super.canHitEntity(target);
+        return TEUtils.projectileCanHitEntityTest.test(this, target);
     }
 
     protected void doKnockback(LivingEntity entity) {
