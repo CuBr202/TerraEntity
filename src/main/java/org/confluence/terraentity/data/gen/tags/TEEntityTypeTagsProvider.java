@@ -58,7 +58,7 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
                 TEBossEntities.EYE_OF_CTHULHU.get(),
                 TEBossEntities.KING_SLIME.get(),
                 TEBossEntities.EATER_OF_WORLDS.get(),
-                TEBossEntities.EATER_OF_WORLD_SEGMENT.get(),
+                TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(),
                 TEBossEntities.BRAIN_OF_CTHULHU.get(),
                 TEBossEntities.QUEEN_BEE.get(),
                 TEBossEntities.SKELETRON.get(),

@@ -122,6 +122,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             skills.forceStartIndex(0);
     }
 
+
+
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 1)

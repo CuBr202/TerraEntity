@@ -4,9 +4,7 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEItems;
-import org.confluence.terraentity.init.entity.TENpcEntities;
-import org.confluence.terraentity.init.entity.TERideableEntities;
-import org.confluence.terraentity.init.entity.TESummonEntities;
+import org.confluence.terraentity.init.entity.*;
 import org.confluence.terraentity.init.item.*;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -74,16 +72,17 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.spore_bat", "孢子蝙蝠");
 
 
-        add("entity.terra_entity.king_slime", "史莱姆王");
-        add("entity.terra_entity.eye_of_cthulhu", "克苏鲁之眼");
-        add("entity.terra_entity.eater_of_worlds", "世界吞噬怪");
-        add("entity.terra_entity.eater_of_worlds_segment", "世界吞噬怪体节");
-        add("entity.terra_entity.brain_of_cthulhu", "克苏鲁之脑");
-        add("entity.terra_entity.brain_fake", "克苏鲁之脑幻象");
-        add("entity.terra_entity.visual_neuron", "视神经元");
-        add("entity.terra_entity.queen_bee", "蜂王");
-        add("entity.terra_entity.little_hornet", "小黄蜂");
-        add("entity.terra_entity.skeletron", "骷髅王");
+        add(TEBossEntities.KING_SLIME.get(), "史莱姆王");
+        add(TEBossEntities.EYE_OF_CTHULHU.get(), "克苏鲁之眼");
+        add(TEBossEntities.EATER_OF_WORLDS.get(), "世界吞噬怪");
+        add(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), "世界吞噬怪体节");
+        add(TEBossEntities.BRAIN_OF_CTHULHU.get(), "克苏鲁之脑");
+        add(TEBossEntities.BRAIN_FAKE.get(), "克苏鲁之脑幻象");
+        add(TEMonsterEntities.VISUAL_NEURON.get(), "视神经元");
+        add(TEBossEntities.QUEEN_BEE.get(), "蜂王");
+        add(TEMonsterEntities.LITTLE_HORNET.get(), "小黄蜂");
+        add(TEBossEntities.SKELETRON.get(), "骷髅王");
+        add(TEBossEntities.DUNGEON_GUARDIAN.get(), "地牢守卫");
 
 
         add(TESummonEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
@@ -147,6 +146,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之脑刷怪蛋");
         add(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
         add(TESpawnEggItems.SKELETRON_SPAWN_EGG.get(), "骷髅王刷怪蛋");
+        add(TESpawnEggItems.DUNGEON_GUARDIAN_SPAWN_EGG.get(), "地牢守卫刷怪蛋");
+
 
 
         add(TENpcEntities.GUIDE.get(), "向导");
