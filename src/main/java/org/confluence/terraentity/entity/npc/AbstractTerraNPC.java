@@ -41,10 +41,10 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
+import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
-import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
@@ -139,6 +139,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        // confluence mixed here
         return !this.hasCustomName(); // 交互以后不会被刷走
     }
 
