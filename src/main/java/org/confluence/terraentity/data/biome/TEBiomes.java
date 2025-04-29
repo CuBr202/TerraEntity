@@ -1,4 +1,4 @@
-package org.confluence.terraentity.data.gen.biome;
+package org.confluence.terraentity.data.biome;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.HolderGetter;

@@ -16,6 +16,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -36,6 +37,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
@@ -118,11 +120,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public AbstractTerraNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
 
-        if(!level.isClientSide()){
-            if(shouldInitName()){
-                initName();
-            }
-        }else{
+        if(level.isClientSide()){
             leftArm = new BoneStateMachine<>(BoneStates.IDLE);
             rightArm = new BoneStateMachine<>(BoneStates.IDLE);
         }
@@ -139,13 +137,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
     }
 
-    protected boolean shouldInitName(){
-        return true;
-    }
-
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return false; // 防止被刷走
+        return !this.hasCustomName(); // 交互以后不会被刷走
     }
 
     protected void initName(){
@@ -154,6 +148,11 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             this.setCustomName(Component.literal(name));
         }
 
+    }
+
+    @Override
+    public void onRemovedFromLevel() {
+         super.onRemovedFromLevel();
     }
 
     /**
@@ -438,6 +437,11 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(level().isClientSide()){
             return super.mobInteract(player, hand);
         }
+
+        if(!this.hasCustomName()) {
+            initName();
+        }
+
         if(hand == InteractionHand.OFF_HAND){
             return super.mobInteract(player, hand);
         }
@@ -623,6 +627,22 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
     }
 
+    public static boolean checkRoutineMonsterSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+//        if (!(pLevel instanceof Level level)) {
+//            return false; // 如果 pLevel 不是 Level 的实例，返回 false
+//        }
+
+        if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
+            return false;
+        }
+
+        int y = pPos.getY();
+        if (y >= 260) {
+            return false; // 不能生成在 y = 260 或更高的位置
+        }
+
+        return true;
+    }
     @Override
     protected @NotNull Vec3 getLeashOffset() {
         return new Vec3(-0.3, this.getEyeHeight() * 0.5f, this.getBbWidth() * 0.1F);

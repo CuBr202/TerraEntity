@@ -9,6 +9,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import org.confluence.terraentity.api.event.WhipRegisterModifyEvent;
 import org.confluence.terraentity.config.ServerConfig;
+import org.confluence.terraentity.data.biome.TEBiomes;
 import org.confluence.terraentity.event.ModEvent;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.init.TEBlocks;
@@ -45,8 +46,7 @@ public class TerraEntity {
         TEBlocks.register(modEventBus);
         TEAi.register(modEventBus);
         TEMenus.TYPES.register(modEventBus);
-
-//        TEBiomes.register(modEventBus);
+        TEBiomes.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);

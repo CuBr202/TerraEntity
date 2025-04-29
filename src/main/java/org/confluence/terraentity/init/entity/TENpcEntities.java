@@ -10,9 +10,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.confluence.terraentity.client.entity.renderer.HumanoidRenderer;
 import org.confluence.terraentity.client.entity.renderer.NPCRenderer;
-import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.AnglerNPC;
 import org.confluence.terraentity.entity.npc.SimpleNPC;
@@ -89,17 +87,17 @@ public class TENpcEntities {
 
     public static void spawnPlacementRegister(RegisterSpawnPlacementsEvent event) {
 
-        event.register(GUIDE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(DEMOLITIONIST.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(GOBLIN_TINKERER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(ARMS_DEALER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(NURSE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(MERCHANT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(PAINTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(ANGLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(DRYAD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(DYE_TRADER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(OLD_MAN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GUIDE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(DEMOLITIONIST.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_TINKERER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ARMS_DEALER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(NURSE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(MERCHANT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(PAINTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ANGLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(DRYAD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(DYE_TRADER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(OLD_MAN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
     }
 

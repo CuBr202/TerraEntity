@@ -181,7 +181,6 @@ public class AnglerNPC extends AbstractTerraNPC {
             setWakeUp(true);
             this.refreshBrain(serverLevel);
             this.refreshDimensions();
-            initName();
             // confluence mixed here
             return InteractionResult.CONSUME;
         }
@@ -194,10 +193,6 @@ public class AnglerNPC extends AbstractTerraNPC {
             return super.getDefaultDimensions(pose).scale(2F, 0.5f);
         }
         return super.getDefaultDimensions(pose);
-    }
-
-    protected boolean shouldInitName(){
-        return false;
     }
 
 }

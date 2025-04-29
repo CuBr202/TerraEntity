@@ -1,4 +1,4 @@
-package org.confluence.terraentity.data.gen.biome;
+package org.confluence.terraentity.data.biome;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
@@ -36,7 +36,7 @@ public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<
 
     @Override
     public void modify(@NotNull Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.@NotNull Builder builder) {
-        if (phase == Phase.ADD && this.biomes.contains(biome) && !this.excludedBiomes.contains(biome)) {
+        if (this.biomes.contains(biome) && !this.excludedBiomes.contains(biome)) {
             MobSpawnSettingsBuilder spawns = builder.getMobSpawnSettings();
             for (ExtendedSpawnData spawner : this.spawners) {
                 spawns.addSpawn(spawner.category, spawner);
