@@ -18,7 +18,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
     }
 
     @Override
-    protected void run() {
+    protected void run(HolderLookup.Provider provider) {
         gen(TerraEntity.space(NPCNames.FILE_NAME),Map.of(
                 TENpcEntities.GUIDE.getId(),
                 NPCNames.of(Map.of(

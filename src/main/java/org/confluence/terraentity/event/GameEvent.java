@@ -29,7 +29,7 @@ public class GameEvent {
 
     @SubscribeEvent
     public static void serverStarted(ServerStartedEvent event) {
-        NPCTradeManager.readTradesFromJson(event.getServer().getResourceManager());
+        NPCTradeManager.readTradesFromJson(event.getServer());
         HouseStoreSaver.get(event.getServer().overworld());
         NPCNames.loadNPCNames(event.getServer().getResourceManager());
         NPCDialogs.loadNPCDialogs(event.getServer().getResourceManager());

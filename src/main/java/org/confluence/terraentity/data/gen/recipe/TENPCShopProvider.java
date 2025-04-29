@@ -3,8 +3,8 @@ package org.confluence.terraentity.data.gen.recipe;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
@@ -14,12 +14,16 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.data.gen.AbstractExistCodecProvider;
 import org.confluence.terraentity.data.gen.loot.TENPCLoot;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.init.entity.TENpcEntities;
+import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.TradeProperties;
@@ -52,18 +56,9 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
     }
 
     @Override
-    protected void run() {
-        this.buildRecipes(null, this.lookupProvider);
-    }
+    protected void run(HolderLookup.Provider lookupProvider) {
 
-    @Override
-    protected Codec<NPCTradeManager> getCodec() {
-        return NPCTradeManager.CODEC;
-    }
-
-//    @Override
-    public void buildRecipes(RecipeOutput recipeOutput, CompletableFuture<HolderLookup.Provider>  holderLookup) {
-
+        HolderLookup.RegistryLookup<Enchantment> enchantmentLookup = lookupProvider.lookup(Registries.ENCHANTMENT).get();
 
 
         shop(TENpcEntities.DEMOLITIONIST.getId(),builder()
@@ -82,26 +77,24 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
         shop(TENpcEntities.ANGLER.getId(),builder()
                 .add(TradeTask.create(
                         DynamicAnglerTradeTask.builder(
-                                ItemTradeLootTable.builder()
-                                        .addCost(Items.COD, 1)
-                                        .setLootTable(TENPCLoot.Angler.location())
-                                        .setSprite(TerraEntity.space("random_gift"))
-                                        .build(),
+                                        ItemTradeLootTable.builder()
+                                                .addCost(Items.COD, 1)
+                                                .setLootTable(TENPCLoot.Angler.location())
+                                                .setSprite(TerraEntity.space("random_gift"))
+                                                .build(),
                                         List.of(Items.COD.getDefaultInstance(), Items.PUFFERFISH.getDefaultInstance(), Items.TROPICAL_FISH.getDefaultInstance(), Items.SALMON.getDefaultInstance(),Items.INK_SAC.getDefaultInstance(), Items.GLOW_INK_SAC.getDefaultInstance() )
                                 )
                                 .addResult(1, List.of(Items.FISHING_ROD.getDefaultInstance()))
-//                                .addResult(1, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LURE).get(),1)), TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LUCK_OF_THE_SEA).get(),1))))
-
                                 .addResult(5, List.of(Items.BUCKET.getDefaultInstance()))
-//                                .addResult(10, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LURE).get(),1)), TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LUCK_OF_THE_SEA).get(),1))))
+                                .addResult(10, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LURE).get(),1)), TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LUCK_OF_THE_SEA).get(),1))))
                                 .addResult(15, List.of(TEItemUtil.make(Items.IRON_INGOT,20)))
-//                                .addResult(20, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LURE).get(),2)),TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LUCK_OF_THE_SEA).get(),2))))
+                                .addResult(20, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LURE).get(),2)),TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LUCK_OF_THE_SEA).get(),2))))
                                 .addResult(25, List.of(TEItemUtil.make(Items.GOLD_INGOT,20)))
-//                                .addResult(30, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LURE).get(),3)),TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LUCK_OF_THE_SEA).get(),3))))
+                                .addResult(30, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LURE).get(),3)),TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LUCK_OF_THE_SEA).get(),3))))
                                 .addResult(35, List.of(TEItemUtil.make(Items.DIAMOND,20)))
-//                                .addResult(40, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.MENDING).get(),1))))
+                                .addResult(40, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.MENDING).get(),1))))
                                 .addResult(45, List.of(TEItemUtil.make(Items.EMERALD,20)))
-//                                .addResult(50, List.of(TEItemUtil.make(Items.NETHERITE_INGOT,5), TEItemUtil.make(TEBoomerangItems.FLAMARANG.get(), 1, stack->stack.enchant(enchantmentLookup.get(TEEnchantments.MULTI_BOOMERANG).get(),1))))
+                                .addResult(50, List.of(TEItemUtil.make(Items.NETHERITE_INGOT,5), TEItemUtil.make(TEBoomerangItems.FLAMARANG.get(), 1, stack->stack.enchant(enchantmentLookup.get(TEEnchantments.MULTI_BOOMERANG).get(),1))))
                                 .addResult(55, List.of(TEItemUtil.make(Items.NETHERITE_INGOT,5)))
                                 .setTitle("title.terra_entity.npc_trade.task.fishman")
                                 .build()
@@ -208,6 +201,17 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
 
     }
 
+    @Override
+    protected Codec<NPCTradeManager> getCodec() {
+        return NPCTradeManager.CODEC;
+    }
+
+    @Override
+    public String getName() {
+        return "npc_shop";
+    }
+
+
 //    protected Appender<NPCTradeManager> shop(ResourceLocation id) {
 //        return recipe(NPCTradeManager.CODEC, pathProvider().json(id));
 //    }
@@ -219,10 +223,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
         return new Builder();
     }
 
-    @Override
-    public String getName() {
-        return "npc_shop";
-    }
+
 
     public static class Builder {
         private final List<ITrade> trades;

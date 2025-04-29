@@ -384,8 +384,8 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         NPCEvent.InitNPCTradeEvent event = new NPCEvent.InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
         AdapterUtils.postEvent(event);
         // 如果是第一次生成
-        if (trades == null) {
-            trades = NPCTradeManager.getCopy(event.getOrigin());
+        if (trades == null && !level().isClientSide) {
+            trades = NPCTradeManager.getCopy(event.getOrigin(), this.registryAccess());
             if (trades != null) {
                 trades.initTrades(this);
                 onInitTrades();

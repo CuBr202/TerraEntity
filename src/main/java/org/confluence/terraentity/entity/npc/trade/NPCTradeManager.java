@@ -3,14 +3,14 @@ package org.confluence.terraentity.entity.npc.trade;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.buffer.ByteBuf;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
@@ -29,6 +29,8 @@ import java.util.*;
  * 交易清单
  */
 public class NPCTradeManager {
+
+    public static DynamicOps<JsonElement> ops;
 
     private List<ITrade> trades;
     private List<ITrade> availableTrades;
@@ -192,10 +194,10 @@ public class NPCTradeManager {
         }
     }));
 
-    public static final StreamCodec<ByteBuf, NPCTradeManager> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, NPCTradeManager> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
     public static final Codec<Map<ResourceLocation, NPCTradeManager>> MAP_CODEC = Codec.unboundedMap(ResourceLocation.CODEC, CODEC);
-    public static final StreamCodec<ByteBuf, Map<ResourceLocation, NPCTradeManager>> MAP_STREAM_CODEC = ByteBufCodecs.fromCodec(MAP_CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, Map<ResourceLocation, NPCTradeManager>> MAP_STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(MAP_CODEC);
 
     private static final Map<ResourceLocation, NPCTradeManager> TRADE_MAP = new HashMap<>();
 
@@ -225,14 +227,17 @@ public class NPCTradeManager {
      * @return 交易列表的拷贝
      */
     @Nullable
-    public static NPCTradeManager getCopy(ResourceLocation id) {
+    public static NPCTradeManager getCopy(ResourceLocation id, RegistryAccess registryAccess) {
         if(!TRADE_MAP.containsKey(id)){
             return null;
         }
-        return CODEC.decode(JsonOps.INSTANCE, CODEC.encodeStart(JsonOps.INSTANCE, TRADE_MAP.get(id)).getOrThrow()).result().get().getFirst();
+        return CODEC.decode(ops, CODEC.encodeStart(ops, TRADE_MAP.get(id)).getOrThrow()).result().get().getFirst();
     }
 
-    public static void readTradesFromJson(ResourceManager manager) {
+    public static void readTradesFromJson(MinecraftServer server) {
+        ResourceManager manager = server.getResourceManager();
+        NPCTradeManager.ops = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
+
         Map<ResourceLocation, Resource> jsons = manager.listResources(KEY, r -> r.getPath().endsWith(".json"));
         jsons.forEach((k, v) -> {
             try {
@@ -240,7 +245,7 @@ public class NPCTradeManager {
                         k.getPath().replace(".json", "").replace(KEY + "/", ""));
                 Reader reader = manager.openAsReader(k);
                 JsonObject jsonobject = GsonHelper.parse(reader);
-                DataResult<Pair<NPCTradeManager, JsonElement>> result = NPCTradeManager.CODEC.decode(JsonOps.INSTANCE, jsonobject);
+                DataResult<Pair<NPCTradeManager, JsonElement>> result = NPCTradeManager.CODEC.decode(ops, jsonobject);
                 if(result.error().isPresent()){
                     throw new RuntimeException("Failed to read trade list " + k + " :" + result.error().get());
                 }

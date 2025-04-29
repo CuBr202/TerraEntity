@@ -21,7 +21,7 @@ public class NPCMoodProvider extends AbstractExistCodecProvider<Map<EntityType<?
     }
 
     @Override
-    protected void run() {
+    protected void run(HolderLookup.Provider provider) {
         Map<EntityType<?>, NPCMoods.EntityMood> map = new HashMap<>();
         // goblin_tinkerer
         map.put(TENpcEntities.GOBLIN_TINKERER.get(), new NPCMoods.EntityMood.Builder()
