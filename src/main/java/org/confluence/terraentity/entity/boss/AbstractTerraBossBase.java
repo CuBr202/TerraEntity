@@ -68,7 +68,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     public float ironGlomResistance = 0.4f;
     public float explosionResistance = 0.5f;
-    protected boolean difficult = true;
+    protected boolean difficult = true; // 困难模式
     protected boolean dirty = true;
     protected ServerBossEvent bossEvent;
     protected float baseHealth;
