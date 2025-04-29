@@ -7,7 +7,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -22,6 +22,7 @@ import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.data.gen.AbstractExistCodecProvider;
 import org.confluence.terraentity.data.gen.loot.TENPCLoot;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
+import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
@@ -29,15 +30,14 @@ import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.TradeProperties;
 import org.confluence.terraentity.registries.npc_trade.variant.*;
 import org.confluence.terraentity.registries.npc_trade_list.ITradeGenerator;
-import org.confluence.terraentity.registries.npc_trade_list.variant.WeightMapGenerator;
-import org.confluence.terraentity.registries.npc_trade_lock.variant.TimeLock;
+import org.confluence.terraentity.registries.npc_trade_lock.variant.KillEntityLock;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
-import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicPoolTradeTask;
+import org.confluence.terraentity.registries.npc_trade_task.variant.ProgressTradeTask;
+import org.confluence.terraentity.registries.npc_trade_task.variant.RandomTradeTask;
 import org.confluence.terraentity.utils.TEItemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -137,67 +137,150 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 .build());
 
 
-        shop(TENpcEntities.GUIDE.getId(),builder()
 
-                .add(TradeTask.create(new DynamicPoolTradeTask(
-                        ItemTradeLootTable.builder()
-                                .addCost(Items.APPLE, 1)
-                                .setLootTable(TerraEntity.fromSpaceAndPath("minecraft", "entities/zombie"))
-                                .setSprite(TerraEntity.space("random_gift"))
-                                .setTranslationKey("angler_gift")
-                                .setProperties(TradeProperties.builder()
-                                        .setLock(new TimeLock(0,10000, true))
-                                        .build())
-                                .build()
-                        ,
-                        Map.of(
-                                1, List.of(Items.DIAMOND.getDefaultInstance(), Items.EMERALD.getDefaultInstance()),
-                                3, List.of(Items.ICE.getDefaultInstance(), Items.EMERALD.getDefaultInstance())
-                        ),
-                        List.of(
-                                Items.DIRT.getDefaultInstance(),
-                                Items.ICE.getDefaultInstance()
-                        )
-                )))
 
-                .add(new ItemTradeItemList(
-                        List.of(
-                                new AmountIngredient(Ingredient.of(Items.APPLE),5),
-                                new AmountIngredient(Ingredient.of(ItemTags.PLANKS),10)
-                        ),
-                        List.of(
-                                new ItemStack(Items.APPLE),
-                                new ItemStack(Items.DIAMOND,3),
-                                new ItemStack(Items.EMERALD,5)
-                        ),
-                        new TradeProperties(new TimeLock(0, 12000, true)))
-                )
+        int wool2dye = 2;
+        int dye2money = 3;
+        Item to = Items.EMERALD;
+
+        shop(TENpcEntities.PAINTER.getId(),builder()
+                .add(TradeTask.create(new RandomTradeTask(List.of(
+                        ItemTradeItemList.builder().addCost(Items.RED_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.LIGHT_BLUE_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.MAGENTA_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.ORANGE_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.BLUE_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.BROWN_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.BLACK_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.WHITE_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.GREEN_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.PURPLE_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.CYAN_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.LIGHT_GRAY_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.GRAY_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.PINK_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.LIME_DYE,dye2money).addResult(to,1).build(),
+                        ItemTradeItemList.builder().addCost(Items.YELLOW_DYE,dye2money).addResult(to,1).build()
+                ))))
 
                 .build());
 
-        shop(TENpcEntities.PAINTER.getId(),new NPCTradeManager(
-                WeightMapGenerator.builder(3)
+        dye2money = 5;
+        shop(TENpcEntities.DYE_TRADER.getId(),builder()
+                .add(ItemTradeItemList.builder().addCost(Items.RED_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.LIGHT_BLUE_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.MAGENTA_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.ORANGE_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.BLUE_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.BROWN_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.BLACK_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.WHITE_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.GREEN_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.PURPLE_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.CYAN_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.LIGHT_GRAY_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.GRAY_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.PINK_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.LIME_DYE,dye2money).addResult(to,1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.YELLOW_DYE,dye2money).addResult(to,1).build())
 
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.JUNGLE_SAPLING, 2).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.ACACIA_SAPLING, 2).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.DARK_OAK_SAPLING, 2).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.GRASS_BLOCK, 1).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.SAND, 1).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.RED_SAND, 1).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .build()
-        ));
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.RED_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.LIGHT_BLUE_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.MAGENTA_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.ORANGE_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.BLUE_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.BROWN_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.BLACK_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.WHITE_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.GREEN_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.PURPLE_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.CYAN_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.LIGHT_GRAY_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.GRAY_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.PINK_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.LIME_DYE,wool2dye).build())
+                .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.YELLOW_DYE,wool2dye).build())
+                .build());
 
-        shop(TENpcEntities.DYE_TRADER.getId(),new ComplexBuilder(
-                WeightMapGenerator.builder(3)
+        shop(TENpcEntities.GUIDE.getId(),builder()
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
+                        ItemTradeItemList.builder().addCost(ItemTags.PLANKS, 4).addResult(Items.CRAFTING_TABLE).build(),
+                        ItemTradeItemList.builder().addCost(Items.COAL, 10).addResult(Items.TORCH, 64).build(),
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND, 5).addCost(Items.EGG, 1).addResult(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get()).build(),
+                        ItemTradeItemList.builder().addCost(Items.ENDER_EYE, 5).addCost(Items.REDSTONE, 20).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get()).build(),
+                        ItemTradeItemList.builder().addCost(Items.OBSIDIAN, 10).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG.get()).build(),
+                        ItemTradeItemList.builder().addCost(Items.SPIDER_EYE, 5).addCost(Items.ROTTEN_FLESH,5).addCost(Items.EGG, 1).addResult(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get()).build(),
+                        ItemTradeItemList.builder().addCost(Items.HONEY_BOTTLE, 5).addCost(Items.HONEYCOMB,5).addCost(Items.EGG, 1).addResult(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get()).build()
 
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.ACACIA_WOOD, 1).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.ACACIA_SAPLING, 2).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.DARK_OAK_SAPLING, 2).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.GRASS_BLOCK, 1).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.SAND, 1).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .addTrade(ItemTradeItemList.builder().addCost(Items.RED_SAND, 1).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build(), 1)
-                        .build()
-        ).build());
+                ))))
+                .add(ItemTradeItemList.builder().addCost(Items.DIAMOND, 8).addCost(Items.EGG, 1).addResult(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.ENDER_EYE, 8).addCost(Items.REDSTONE, 20).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.KING_SLIME.get())).build()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.OBSIDIAN, 15).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.EYE_OF_CTHULHU.get())).build()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.SPIDER_EYE, 8).addCost(Items.ROTTEN_FLESH,8).addCost(Items.EGG, 1).addResult(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.EATER_OF_WORLDS.get())).build()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.HONEY_BOTTLE, 8).addCost(Items.HONEYCOMB,8).addCost(Items.EGG, 1).addResult(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.BRAIN_OF_CTHULHU.get())).build()).build())
+
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
+                        ItemTradeItemList.builder().addCost(ItemTags.PLANKS, 2).addResult(Items.WOODEN_SWORD).build(),
+                        ItemTradeItemList.builder().addCost(Items.WOODEN_SWORD).addCost(Items.COBBLESTONE).addResult(Items.STONE_SWORD).build(),
+                        ItemTradeItemList.builder().addCost(Items.STONE_SWORD).addCost(Items.IRON_INGOT).addResult(Items.IRON_SWORD).build(),
+                        ItemTradeItemList.builder().addCost(Items.IRON_SWORD).addCost(Items.GOLD_INGOT).addResult(Items.GOLDEN_SWORD).build(),
+                        ItemTradeItemList.builder().addCost(Items.GOLDEN_SWORD).addCost(Items.DIAMOND).addResult(Items.DIAMOND_SWORD).build(),
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND_SWORD).addCost(Items.NETHERITE_INGOT).addResult(Items.NETHERITE_SWORD).build()
+                ))))
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
+                        ItemTradeItemList.builder().addCost(ItemTags.PLANKS, 3).addResult(Items.WOODEN_AXE).build(),
+                        ItemTradeItemList.builder().addCost(Items.WOODEN_AXE).addCost(Items.COBBLESTONE).addResult(Items.STONE_AXE).build(),
+                        ItemTradeItemList.builder().addCost(Items.STONE_AXE).addCost(Items.IRON_INGOT).addResult(Items.IRON_AXE).build(),
+                        ItemTradeItemList.builder().addCost(Items.IRON_AXE).addCost(Items.GOLD_INGOT).addResult(Items.GOLDEN_AXE).build(),
+                        ItemTradeItemList.builder().addCost(Items.GOLDEN_AXE).addCost(Items.DIAMOND).addResult(Items.DIAMOND_AXE).build(),
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND_AXE).addCost(Items.NETHERITE_INGOT).addResult(Items.NETHERITE_AXE).build()
+                ))))
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
+                        ItemTradeItemList.builder().addCost(ItemTags.PLANKS, 3).addResult(Items.WOODEN_PICKAXE).build(),
+                        ItemTradeItemList.builder().addCost(Items.WOODEN_PICKAXE).addCost(Items.COBBLESTONE).addResult(Items.STONE_PICKAXE).build(),
+                        ItemTradeItemList.builder().addCost(Items.STONE_PICKAXE).addCost(Items.IRON_INGOT).addResult(Items.IRON_PICKAXE).build(),
+                        ItemTradeItemList.builder().addCost(Items.IRON_PICKAXE).addCost(Items.GOLD_INGOT).addResult(Items.GOLDEN_PICKAXE).build(),
+                        ItemTradeItemList.builder().addCost(Items.GOLDEN_PICKAXE).addCost(Items.DIAMOND).addResult(Items.DIAMOND_PICKAXE).build(),
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND_PICKAXE).addCost(Items.NETHERITE_INGOT).addResult(Items.NETHERITE_PICKAXE).build()
+                ))))
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
+                        ItemTradeItemList.builder().addCost(ItemTags.PLANKS, 2).addResult(Items.WOODEN_SWORD).build(),
+                        ItemTradeItemList.builder().addCost(Items.WOODEN_SWORD).addCost(Items.COBBLESTONE).addResult(Items.STONE_SWORD).build(),
+                        ItemTradeItemList.builder().addCost(Items.STONE_SWORD).addCost(Items.IRON_INGOT).addResult(Items.IRON_SWORD).build(),
+                        ItemTradeItemList.builder().addCost(Items.IRON_SWORD).addCost(Items.GOLD_INGOT).addResult(Items.GOLDEN_SWORD).build(),
+                        ItemTradeItemList.builder().addCost(Items.GOLDEN_SWORD).addCost(Items.DIAMOND).addResult(Items.DIAMOND_SWORD).build(),
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND_SWORD).addCost(Items.NETHERITE_INGOT).addResult(Items.NETHERITE_SWORD).build()
+                ))))
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
+                        ItemTradeItemList.builder().addCost(Items.LEATHER, 3).addResult(Items.LEATHER_HELMET).build(),
+                        ItemTradeItemList.builder().addCost(Items.LEATHER_HELMET).addCost(Items.IRON_INGOT, 2).addResult(Items.IRON_HELMET).build(),
+                        ItemTradeItemList.builder().addCost(Items.IRON_HELMET).addCost(Items.GOLD_INGOT, 2).addResult(Items.GOLDEN_HELMET).build(),
+                        ItemTradeItemList.builder().addCost(Items.GOLDEN_HELMET).addCost(Items.DIAMOND, 2).addResult(Items.DIAMOND_HELMET).build(),
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND_HELMET).addCost(Items.NETHERITE_INGOT).addResult(Items.NETHERITE_HELMET).build()
+                ))))
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
+                        ItemTradeItemList.builder().addCost(Items.LEATHER, 6).addResult(Items.LEATHER_CHESTPLATE).build(),
+                        ItemTradeItemList.builder().addCost(Items.LEATHER_CHESTPLATE).addCost(Items.IRON_INGOT, 4).addResult(Items.IRON_CHESTPLATE).build(),
+                        ItemTradeItemList.builder().addCost(Items.IRON_CHESTPLATE).addCost(Items.GOLD_INGOT, 4).addResult(Items.GOLDEN_CHESTPLATE).build(),
+                        ItemTradeItemList.builder().addCost(Items.GOLDEN_CHESTPLATE).addCost(Items.DIAMOND, 4).addResult(Items.DIAMOND_CHESTPLATE).build(),
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND_CHESTPLATE).addCost(Items.NETHERITE_INGOT).addResult(Items.NETHERITE_CHESTPLATE).build()
+                ))))
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
+                        ItemTradeItemList.builder().addCost(Items.LEATHER, 5).addResult(Items.LEATHER_LEGGINGS).build(),
+                        ItemTradeItemList.builder().addCost(Items.LEATHER_LEGGINGS).addCost(Items.IRON_INGOT, 3).addResult(Items.IRON_LEGGINGS).build(),
+                        ItemTradeItemList.builder().addCost(Items.IRON_LEGGINGS).addCost(Items.GOLD_INGOT, 3).addResult(Items.GOLDEN_LEGGINGS).build(),
+                        ItemTradeItemList.builder().addCost(Items.GOLDEN_LEGGINGS).addCost(Items.DIAMOND, 3).addResult(Items.DIAMOND_LEGGINGS).build(),
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND_LEGGINGS).addCost(Items.NETHERITE_INGOT).addResult(Items.NETHERITE_LEGGINGS).build()
+                ))))
+                .add(TradeTask.create(new ProgressTradeTask(List.of(
+                        ItemTradeItemList.builder().addCost(Items.LEATHER, 2).addResult(Items.LEATHER_BOOTS).build(),
+                        ItemTradeItemList.builder().addCost(Items.LEATHER_BOOTS).addCost(Items.IRON_INGOT, 2).addResult(Items.IRON_BOOTS).build(),
+                        ItemTradeItemList.builder().addCost(Items.IRON_BOOTS).addCost(Items.GOLD_INGOT, 2).addResult(Items.GOLDEN_BOOTS).build(),
+                        ItemTradeItemList.builder().addCost(Items.GOLDEN_BOOTS).addCost(Items.DIAMOND, 2).addResult(Items.DIAMOND_BOOTS).build(),
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND_BOOTS).addCost(Items.NETHERITE_INGOT).addResult(Items.NETHERITE_BOOTS).build()
+                ))))
+                .build());
+
 
     }
 

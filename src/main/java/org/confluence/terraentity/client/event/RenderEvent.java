@@ -62,7 +62,6 @@ public class RenderEvent {
                 int cooldown = BaseWhipItem.cooldownTime;
                 progress = Math.min(progress, cooldown) / cooldown;
 
-                System.out.println(progress);
                 progress = progress > 0.5? 2 - progress * 2 : progress * 2;
                 event.getPoseStack().translate(0, -progress  ,0);
             }

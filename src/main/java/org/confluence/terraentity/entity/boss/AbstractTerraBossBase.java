@@ -151,8 +151,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
 
-        if(!ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get() && !(this instanceof EaterOfWorldsSegment))
-            this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f, 0));
+
+        this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f, 0));
 
     }
 
@@ -232,6 +232,10 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                         this.discard();
                     }
                     return;
+                }else{
+                    // 有创造玩家，强行写入目标
+//                    setTarget(this.level().getNearestPlayer(this, this.getAttributeValue(Attributes.FOLLOW_RANGE)));
+
                 }
             }
             discardTick = 0;
@@ -240,7 +244,6 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                     e-> e instanceof LivingEntity  living && canAttack(living) && e!= this && living.canBeSeenAsEnemy(),
                     this::doHurtTarget
             );
-
             if(shouldOverPlayer() && target!= null && position().y < target.getY()){
                 addDeltaMovement(new Vec3(0,0.02f,0));
             }
