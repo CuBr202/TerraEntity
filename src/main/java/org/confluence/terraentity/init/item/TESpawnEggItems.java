@@ -73,7 +73,7 @@ public class TESpawnEggItems {
 
     // 地牢骷髅
 
-    public static final DeferredItem<Item> ANGER_BONES_SPAWN_EGG = registerEgg("old_man_spawn_egg", TEMonsterEntities.ANGER_BONES, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> ANGER_BONES_SPAWN_EGG = registerEgg("anger_bones_spawn_egg", TEMonsterEntities.ANGER_BONES, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> SHORT_BONES_SPAWN_EGG = registerEgg("short_bones_spawn_egg", TEMonsterEntities.SHORT_BONES, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> BIG_BONES_SPAWN_EGG = registerEgg("big_bones_spawn_egg", TEMonsterEntities.BIG_BONES, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> BIG_ANGER_BONES_SPAWN_EGG = registerEgg("big_anger_bones_spawn_egg", TEMonsterEntities.BIG_ANGER_BONES, 0xffffff, 0xffffff);
