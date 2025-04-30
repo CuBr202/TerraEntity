@@ -16,10 +16,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.entity.PartEntity;
-import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
 import org.confluence.terraentity.entity.ai.goal.ComeAndBackDashAttackGoal;
 import org.confluence.terraentity.entity.ai.goal.RandomWanderGoal;
+import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -31,7 +31,7 @@ public class BaseWarm extends AbstractMonster {
     private float segInternal = 1.6f;
     public BaseWarmPart[] bodySegments;
 
-    public BaseWarm(EntityType<? extends Monster> type, Level level, AbstractMonster.Builder builder) {
+    public BaseWarm(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level, builder);
         this.collisionProperties = new CollisionProperties(3,3,0);
         bodySegments = new BaseWarmPart[currentSegmentCount];

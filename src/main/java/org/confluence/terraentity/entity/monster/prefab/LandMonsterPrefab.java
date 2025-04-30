@@ -16,7 +16,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
 import org.confluence.terraentity.entity.ai.goal.JumpAttack;
 import org.confluence.terraentity.entity.ai.goal.JumpOverBlockGoal;
-import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import software.bernie.geckolib.animation.AnimationController;
@@ -30,7 +29,7 @@ import static software.bernie.geckolib.constant.DefaultAnimations.genericWalkRun
 
 public class LandMonsterPrefab extends AbstractPrefab {
 
-    public static Supplier<AbstractMonster.Builder> FACE_MONSTER_BUILDER =
+    public static Supplier<AttributeBuilder> FACE_MONSTER_BUILDER =
             ()->new LandMonsterPrefab(36,2,13,64,0.7f,0.1f).getPrefab()
                     .setStepHeight(3.2f)
                     .setAmbientSound(TESounds.FACE_HOOT)
@@ -48,7 +47,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     })
             ;
 
-    public static Supplier<AbstractMonster.Builder> BLOOD_TUMORS =
+    public static Supplier<AttributeBuilder> BLOOD_TUMORS =
             ()->new LandMonsterPrefab(1,0,0,0,0,0,0).getPrefab()
                     .setSafeFall(80)
                     .setNoAttachAttack()
@@ -70,7 +69,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     })
             ;
 
-    public static Supplier<AbstractMonster.Builder> BLOOD_ZOMBIE_BUILDER =
+    public static Supplier<AttributeBuilder> BLOOD_ZOMBIE_BUILDER =
             ()->new LandMonsterPrefab(39,2,10,60,0.5f,0.1f).getPrefab()
                     .setMovementSpeed(0.15f)
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
@@ -122,7 +121,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
     }
 
 
-    public AbstractMonster.Builder getPrefab() {
+    public AttributeBuilder getPrefab() {
         return SIMPLE_MONSTER;
     }
 

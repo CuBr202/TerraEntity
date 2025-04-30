@@ -6,7 +6,6 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.goal.DashGoal;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
-import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TESounds;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimationController;
@@ -23,7 +22,7 @@ import static org.confluence.terraentity.entity.monster.AbstractMonster.copyFrom
 public class FlyMonsterPrefab extends AbstractPrefab {
 
     //在预制体上修改参数
-    public static Supplier<AbstractMonster.Builder> CRIMSON_KEMERA_BUILDER =
+    public static Supplier<AttributeBuilder> CRIMSON_KEMERA_BUILDER =
             ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
                     .setHurtSound(TESounds.ROUTINE_HURT)
                     .setDeathSound(TESounds.ROUTINE_DEATH)
@@ -33,7 +32,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     })
             ;
 
-    public static final Supplier<AbstractMonster.Builder> EATER_OF_SOULS_BUILDER =
+    public static final Supplier<AttributeBuilder> EATER_OF_SOULS_BUILDER =
             ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
                     .setHurtSound(TESounds.ROUTINE_HURT)
                     .setDeathSound(TESounds.ROUTINE_DEATH)
@@ -43,7 +42,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     })
             ;
 
-    public static final Supplier<AbstractMonster.Builder> DRIPPLER_BUILDER  =
+    public static final Supplier<AttributeBuilder> DRIPPLER_BUILDER  =
             ()->new FlyMonsterPrefab(26,3,14,64,0.5f,0.2f).getPrefab()
                 .setHurtSound(TESounds.DRIPPLER_HURT)
                 .setDeathSound(TESounds.DRIPPLER_DEATH)
@@ -53,7 +52,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                 })
             ;
 
-    public static Supplier<AbstractMonster.Builder> FLYING_FISH_BUILDER  =
+    public static Supplier<AttributeBuilder> FLYING_FISH_BUILDER  =
             ()->new FlyMonsterPrefab(10,1,2,30,0.5f,0.3f).getPrefab()
                 .setHurtSound(TESounds.ROUTINE_HURT)
                 .setDeathSound(TESounds.ROUTINE_DEATH)
@@ -64,7 +63,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                 })
             ;
 
-    public static Supplier<AbstractMonster.Builder> CAVE_BAT_BUILDER  =
+    public static Supplier<AttributeBuilder> CAVE_BAT_BUILDER  =
             ()->new FlyMonsterPrefab(8,1,4,60,0.2f,0.5f).getPrefab()
                     .setHurtSound(TESounds.ROUTINE_HURT)
                     .setDeathSound(TESounds.ROUTINE_DEATH)
@@ -77,8 +76,8 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                         e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));
                     })
             ;
-    public static Supplier<AbstractMonster.Builder> JUNGLE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(17).setAttackDamage(8);
-    public static Supplier<AbstractMonster.Builder> HELL_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(23).setArmor(2).setAttackDamage(15)
+    public static Supplier<AttributeBuilder> JUNGLE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(17).setAttackDamage(8);
+    public static Supplier<AttributeBuilder> HELL_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(23).setArmor(2).setAttackDamage(15)
             .setTicker(e->{
                 e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));
                 if(e.level().isClientSide){
@@ -92,8 +91,8 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     e.level().addParticle(ParticleTypes.LAVA, e.getX() - (double)f3, e.getY() + (double)f5, e.getZ() - (double)f4, 0.0, 0.0, 0.0);
                 }
             });
-    public static Supplier<AbstractMonster.Builder> SPORE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(15).setAttackDamage(7);
-    public static Supplier<AbstractMonster.Builder> ICE_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(15).setAttackDamage(7)
+    public static Supplier<AttributeBuilder> SPORE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(15).setAttackDamage(7);
+    public static Supplier<AttributeBuilder> ICE_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(15).setAttackDamage(7)
             .setTicker(e->{
                 e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));
                 if(e.level().isClientSide){
@@ -107,7 +106,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             });
 
 
-    public static Supplier<AbstractMonster.Builder> BEE_BUILDER  =
+    public static Supplier<AttributeBuilder> BEE_BUILDER  =
             ()->new AbstractPrefab(23,3,13,32,0,0.55f)
                     .getPrefab()
                     .setHurtSound(TESounds.ROUTINE_HURT)
@@ -118,7 +117,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
 
-    public static final Supplier<AbstractMonster.Builder> WANDERING_EYE_FISH_BUILDER =
+    public static final Supplier<AttributeBuilder> WANDERING_EYE_FISH_BUILDER =
             ()->new FlyMonsterPrefab(156,4,15,60,1f,1f).getPrefab()
                     .setHurtSound(TESounds.ROUTINE_HURT)
                     .setDeathSound(TESounds.ROUTINE_DEATH)
@@ -130,7 +129,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
     //从一个预制体复制参数再调整参数
-    public static Supplier<AbstractMonster.Builder> DO_NOTHING  = ()->copyFrom(CRIMSON_KEMERA_BUILDER)
+    public static Supplier<AttributeBuilder> DO_NOTHING  = ()->copyFrom(CRIMSON_KEMERA_BUILDER)
             .setController((c,e)->c.add(new AnimationController<GeoAnimatable>(e,"move",10,s->PlayState.CONTINUE)));
 
 
@@ -154,7 +153,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
         ;
     }
 
-    public AbstractMonster.Builder getPrefab() {
+    public AttributeBuilder getPrefab() {
         return SIMPLE_MONSTER;
     }
 

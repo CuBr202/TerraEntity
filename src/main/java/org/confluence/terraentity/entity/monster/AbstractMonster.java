@@ -2,12 +2,10 @@ package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -21,17 +19,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
+import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
@@ -39,10 +33,10 @@ import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 public class AbstractMonster extends Monster implements GeoEntity , ICollisionAttackEntity<AbstractMonster> {
 
     protected CollisionProperties collisionProperties = new CollisionProperties(10, 20, 0);
-    public Builder builder;
+    public AttributeBuilder builder;
     protected boolean dirty = true;
 
-    public AbstractMonster(EntityType<? extends Monster> type, Level level,Builder builder) {
+    public AbstractMonster(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level);
         this.builder = builder;
         if (!level.isClientSide) {
@@ -142,7 +136,6 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
                 .add(Attributes.ATTACK_KNOCKBACK)
                 .add(Attributes.ATTACK_SPEED)
                 .add(Attributes.FLYING_SPEED)
-
                 ;
     }
 
@@ -311,163 +304,8 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         return getTarget() != null;
     }
 
-    public static class Builder {
-        public int ATTACK_DAMAGE = 15;
-        public int MAX_HEALTH = 31;
-        public int ARMOR = 2;
-        public int xpReward = 5;
-        public int FOLLOW_RANGE = 32;
-        public float MOVEMENT_SPEED = 0.38f;
-        public float SPAWN_REINFORCEMENTS_CHANCE = 0.01f;
-        public float KNOCKBACK_RESISTANCE = 0.8f;
-        public float ATTACK_KNOCKBACK = 0.5f;
-        public float ATTACK_SPEED = 0.6f;
-        public float FLYING_SPEED = 0.4f;
-        public float SAFE_FALL = 5f;
-        public float JUMP_STRENGTH = 0.41999998688697815f;
-        public float STEP_HEIGHT = 0.6f;
-        public float attackIncrease = 0;
 
-
-        public boolean attachAttack = true;
-        public boolean noGravity = false;
-        public boolean noFriction = false;
-        public boolean pushable = true;
-
-
-        public Supplier<SoundEvent> deathSound;
-        public Supplier<SoundEvent> ambientSound;
-        public Supplier<SoundEvent> hurtSound;
-        public Consumer<AbstractMonster> ticker;
-
-        public BiConsumer<AnimatableManager.ControllerRegistrar,AbstractMonster> controller;
-        public List<BiConsumer<GoalSelector,AbstractMonster>> goals = new ArrayList<>();
-        public List<BiConsumer<GoalSelector,AbstractMonster>> targets = new ArrayList<>();
-        public Function<AbstractMonster,PathNavigation> navigation;
-
-
-        public Builder setXpReward(int xpReward) {
-            this.xpReward = xpReward;
-            return this;
-        }
-
-        public Builder modify(Function<Builder, Builder> modifier){
-            return modifier.apply(this);
-        }
-
-        public Builder setAttachIncrease(float attackIncrease) {
-            this.attackIncrease = attackIncrease;
-            return this;
-
-        }
-        public Builder setAttackDamage(int attackDamage) {
-            this.ATTACK_DAMAGE = attackDamage;
-            return this;
-        }
-
-        public Builder setHealth(int maxHealth) {
-            this.MAX_HEALTH = maxHealth;
-            return this;
-        }
-
-        public Builder setArmor(int defense) {
-            this.ARMOR = defense;
-            return this;
-        }
-        public Builder setMovementSpeed(float movementSpeed) {
-            this.MOVEMENT_SPEED = movementSpeed;
-            return this;
-        }
-
-        public Builder setFollowRange(int followRange) {
-            this.FOLLOW_RANGE = followRange;
-            return this;
-        }
-
-        public Builder setKnockbackResistance(float knockbackResistance) {
-            this.KNOCKBACK_RESISTANCE = knockbackResistance;
-            return this;
-        }
-
-        public Builder setDeathSound(Supplier<SoundEvent> deathSound) {
-            this.deathSound = deathSound;
-            return this;
-        }
-
-        public Builder setAmbientSound(Supplier<SoundEvent> ambientSound) {
-            this.ambientSound = ambientSound;
-            return this;
-        }
-
-        public Builder setHurtSound(Supplier<SoundEvent> hurtSound) {
-            this.hurtSound = hurtSound;
-            return this;
-        }
-
-        public Builder setController(BiConsumer<AnimatableManager.ControllerRegistrar,AbstractMonster> controller) {
-            this.controller = controller;
-            return this;
-        }
-
-
-        public Builder addGoal(BiConsumer<GoalSelector,AbstractMonster> goal) {
-            this.goals.add(goal) ;
-            return this;
-        }
-
-        public Builder addTarget(BiConsumer<GoalSelector,AbstractMonster> target) {
-            this.targets.add(target);
-            return this;
-        }
-
-        public Builder setNavigation(Function<AbstractMonster,PathNavigation> navigation) {
-            this.navigation = navigation;
-            return this;
-        }
-
-        public Builder setNoGravity() {
-            this.noGravity = true;
-            return this;
-        }
-        public Builder setKnockBack(float knockBack) {
-            this.ATTACK_KNOCKBACK = knockBack;
-            return this;
-        }
-
-        public Builder setSafeFall(float value) {
-            this.SAFE_FALL = value;
-            return this;
-        }
-        public Builder setNoAttachAttack() {
-            this.attachAttack = false;
-            return this;
-        }
-        public Builder setNoFriction() {
-            this.noFriction = true;
-            return this;
-        }
-        public Builder setJumpStrength(float jumpStrength) {
-            this.JUMP_STRENGTH = jumpStrength;
-            return this;
-        }
-        public Builder setStepHeight(float stepHeight) {
-            this.STEP_HEIGHT = stepHeight;
-            return this;
-        }
-        public Builder setTicker(Consumer<AbstractMonster> ticker) {
-            this.ticker = ticker;
-            return this;
-        }
-
-        public Builder setPushable(boolean pushable) {
-            this.pushable = pushable;
-            return this;
-        }
-    }
-
-
-
-    public static AbstractMonster.Builder copyFrom(Supplier<AbstractMonster.Builder> supplier) {
+    public static AttributeBuilder copyFrom(Supplier<AttributeBuilder> supplier) {
         return supplier.get();
     }
 

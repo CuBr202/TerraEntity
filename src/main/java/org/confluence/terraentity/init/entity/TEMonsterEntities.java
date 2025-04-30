@@ -19,8 +19,11 @@ import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.monster.*;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
+import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.monster.prefab.LandMonsterPrefab;
+import org.confluence.terraentity.entity.monster.skeleton.Decayeder;
+import org.confluence.terraentity.entity.monster.skeleton.MeleeSkeleton;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
@@ -85,6 +88,13 @@ public class TEMonsterEntities {
     // 抓人草
     public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> SNATCHER = TEEntities.registerEntity("snatcher", (e, l)->new Snatcher(e,l, new AbstractPrefab(31,2,13,20,1,1).getPrefab()),1F,1F);
     public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> MAN_EATER = TEEntities.registerEntity("man_eater", (e, l)->new Snatcher(e,l, new AbstractPrefab(57,2,15,20,1,1).getPrefab()),1F,1F);
+    // 地牢骷髅
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> ANGER_BONES = TEEntities.registerEntity("anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(16,2,5,20,1,1).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> SHORT_BONES = TEEntities.registerEntity("short_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(14,1,4,20,1,1).getPrefab()),0.55F,1.65F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_BONES = TEEntities.registerEntity("big_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(25,1,6,20,1,1).getPrefab()),0.85F,2.25F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_ANGER_BONES = TEEntities.registerEntity("big_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(14,1,6,20,1,1).getPrefab()),0.9F,2.4F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_MUSCLE_ANGER_BONES = TEEntities.registerEntity("big_muscle_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(14,2,5,20,1,1).getPrefab()),0.95F,2.45F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_HELMET_ANGER_BONES = TEEntities.registerEntity("big_helmet_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(70,4,4,20,1,1).getPrefab()),1F,2.6F);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -147,6 +157,14 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.SNATCHER.get(), c->new SnatcherRenderer<>(c, TEMonsterEntities.SNATCHER.getId()));
         event.registerEntityRenderer(TEMonsterEntities.MAN_EATER.get(), c->new SnatcherRenderer<>(c, TEMonsterEntities.MAN_EATER.getId()));
 
+        // 地牢骷髅
+        event.registerEntityRenderer(TEMonsterEntities.ANGER_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.ANGER_BONES.getId(), 0.9f,0));
+        event.registerEntityRenderer(TEMonsterEntities.SHORT_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.SHORT_BONES.getId(), 0.8f,0));
+        event.registerEntityRenderer(TEMonsterEntities.BIG_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.ANGER_BONES.getId(), 1.1f,0));
+        event.registerEntityRenderer(TEMonsterEntities.BIG_ANGER_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BIG_ANGER_BONES.getId(), 1.15f,0));
+        event.registerEntityRenderer(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.getId(), 1.2f,0));
+        event.registerEntityRenderer(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BIG_HELMET_ANGER_BONES.getId(), 1.25f,0));
+
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -207,6 +225,15 @@ public class TEMonsterEntities {
         // bee
         event.put(HORNET.get(), AbstractMonster.createAttributes().build());
         event.put(LITTLE_HORNET.get(), AbstractMonster.createAttributes().build());
+
+        // 地牢骷髅
+        event.put(ANGER_BONES.get(), AbstractMonster.createAttributes().build());
+        event.put(SHORT_BONES.get(), AbstractMonster.createAttributes().build());
+        event.put(BIG_BONES.get(), AbstractMonster.createAttributes().build());
+        event.put(BIG_ANGER_BONES.get(), AbstractMonster.createAttributes().build());
+        event.put(BIG_MUSCLE_ANGER_BONES.get(), AbstractMonster.createAttributes().build());
+        event.put(BIG_HELMET_ANGER_BONES.get(), AbstractMonster.createAttributes().build());
+
     }
 
 
@@ -260,8 +287,13 @@ public class TEMonsterEntities {
         event.register(ICE_BAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(SPORE_BAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
-
-
+         // 地牢骷髅
+        event.register(ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(SHORT_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(BIG_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(BIG_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(BIG_MUSCLE_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(BIG_HELMET_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     private static DeferredHolder<EntityType<?>, EntityType<BaseSlime>> registerSlime(String name, int color, int size) {
@@ -273,11 +305,11 @@ public class TEMonsterEntities {
     }
 
     // 用于调整包围盒
-    public static DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AbstractMonster.Builder> builder, float width, float height) {
+    public static DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AttributeBuilder> builder, float width, float height) {
         return TEEntities.ENTITIES.register(name, () -> EntityType.Builder.<AbstractMonster>of((type, level)->new AbstractMonster(type,level,builder.get()), MobCategory.MONSTER).clientTrackingRange(10).setTrackingRange(50).sized(width,height).build(TEEntities.Key(name)));
     }
 
-    public static DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AbstractMonster.Builder> builder) {
+    public static DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> registerSimpleMonster(String name, Supplier<AttributeBuilder> builder) {
         return registerSimpleMonster(name, builder, 1, 1);
     }
 

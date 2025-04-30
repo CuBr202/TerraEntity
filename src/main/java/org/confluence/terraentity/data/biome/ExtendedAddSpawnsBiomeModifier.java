@@ -36,7 +36,7 @@ public record ExtendedAddSpawnsBiomeModifier(HolderSet<Biome> biomes, HolderSet<
 
     @Override
     public void modify(@NotNull Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.@NotNull Builder builder) {
-        if (this.biomes.contains(biome) && !this.excludedBiomes.contains(biome)) {
+        if (phase == Phase.ADD && this.biomes.contains(biome) && !this.excludedBiomes.contains(biome)) {
             MobSpawnSettingsBuilder spawns = builder.getMobSpawnSettings();
             for (ExtendedSpawnData spawner : this.spawners) {
                 spawns.addSpawn(spawner.category, spawner);

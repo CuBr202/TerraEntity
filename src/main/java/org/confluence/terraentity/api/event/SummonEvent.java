@@ -35,7 +35,7 @@ public class SummonEvent<T extends Mob> extends Event implements IModBusEvent {
         Player player;
         EntityType<T> summonType;
         boolean cancel;
-                public Pre(Player player, ItemStack itemStack, EntityType<T> summonType) {
+        public Pre(Player player, ItemStack itemStack, EntityType<T> summonType) {
             this.itemStack = itemStack;
             this.player = player;
             this.summonType = summonType;

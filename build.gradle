@@ -141,7 +141,7 @@ var dev = true // 在本体中开发为true，单独开发为false
 
 dependencies {
     if (dev) {
-        implementation project(":Confluence-Magic-Lib")
+        implementation jarJar(project(":Confluence-Magic-Lib"))
         implementation("software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}")
     } else {
         implementation files("libs/confluence_magic_lib-1.0.0.jar")

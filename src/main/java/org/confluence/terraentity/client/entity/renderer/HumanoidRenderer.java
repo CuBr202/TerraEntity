@@ -55,8 +55,12 @@ public class HumanoidRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<Bon
 
     }
 
+    public HumanoidRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path, float scale, float offsetY){
+        this(renderManager, new GeoHumanoidModel<>(path), false, scale, offsetY);
+    }
+
     public HumanoidRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
-        this(renderManager, new GeoHumanoidModel<>(path), false, 1.0F, 0.0F);
+        this(renderManager, path, 1.0F, 0.0F);
 
         this.addRenderLayer(new ItemArmorGeoLayer<>(this) {
             @Nullable

@@ -30,6 +30,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.utils.TEUtils;
@@ -45,7 +46,7 @@ import java.util.EnumSet;
 public class Hornet extends AbstractMonster implements FlyingAnimal{
 
     protected  int attackInternal = 20;
-    public Hornet(EntityType<? extends Monster> type, Level level, Builder builder) {
+    public Hornet(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level, builder);
         this.moveControl = new FlyingMoveControl(this, 20, true);
 

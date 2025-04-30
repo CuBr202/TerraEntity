@@ -1,24 +1,16 @@
 package org.confluence.terraentity.entity.monster.prefab;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
-import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
-import org.confluence.terraentity.entity.ai.goal.JumpOverBlockGoal;
-import org.confluence.terraentity.entity.monster.AbstractMonster;
-import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.function.Supplier;
-
-import static software.bernie.geckolib.constant.DefaultAnimations.genericWalkRunIdleController;
 
 public class AbstractPrefab {
 
 
-    public static Supplier<AbstractMonster.Builder> WARM_BUILDER =
+    public static Supplier<AttributeBuilder> WARM_BUILDER =
             ()-> new AbstractPrefab(44,2,1,60,0,0.1f).getPrefab().setNoGravity();
 
 
@@ -31,7 +23,7 @@ public class AbstractPrefab {
      * @param knockbackResistance 击退抗性
      */
     public AbstractPrefab(int health, int armor, int attack, int followRange, float knockBack, float knockbackResistance) {
-        SIMPLE_MONSTER = new AbstractMonster.Builder()
+        SIMPLE_MONSTER = new AttributeBuilder()
                 .setHealth(health)
                 .setArmor(armor)
                 .setAttackDamage(attack)
@@ -46,9 +38,9 @@ public class AbstractPrefab {
     }
 
 
-    protected final AbstractMonster.Builder SIMPLE_MONSTER;
+    protected final AttributeBuilder SIMPLE_MONSTER;
 
-    public AbstractMonster.Builder getPrefab() {
+    public AttributeBuilder getPrefab() {
         return SIMPLE_MONSTER;
     }
 }

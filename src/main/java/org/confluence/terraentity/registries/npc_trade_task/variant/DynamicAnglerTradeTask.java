@@ -154,7 +154,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
         String info = "Day  " + param ;
         guiGraphics.drawString(font,  info, x, y, 0xFFFFFF);
         if(!isReady){
-            guiGraphics.drawString(font, "√", x + font.width(info) + 10, y, 0x00FF00);
+            guiGraphics.drawString(font, "✓", x + font.width(info) + 10, y, 0x00FF00);
 
         }
     }

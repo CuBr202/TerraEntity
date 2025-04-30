@@ -96,7 +96,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                                 .addResult(45, List.of(TEItemUtil.make(Items.EMERALD,20)))
                                 .addResult(50, List.of(TEItemUtil.make(Items.NETHERITE_INGOT,5), TEItemUtil.make(TEBoomerangItems.FLAMARANG.get(), 1, stack->stack.enchant(enchantmentLookup.get(TEEnchantments.MULTI_BOOMERANG).get(),1))))
                                 .addResult(55, List.of(TEItemUtil.make(Items.NETHERITE_INGOT,5)))
-                                .setTitle("title.terra_entity.npc_trade.task.fishman")
+//                                .setTitle("title.terra_entity.npc_trade.task.fishman")
                                 .build()
                 ))
                 .build());
@@ -210,7 +210,8 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                         ItemTradeItemList.builder().addCost(Items.ENDER_EYE, 5).addCost(Items.REDSTONE, 20).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get()).build(),
                         ItemTradeItemList.builder().addCost(Items.OBSIDIAN, 10).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG.get()).build(),
                         ItemTradeItemList.builder().addCost(Items.SPIDER_EYE, 5).addCost(Items.ROTTEN_FLESH,5).addCost(Items.EGG, 1).addResult(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get()).build(),
-                        ItemTradeItemList.builder().addCost(Items.HONEY_BOTTLE, 5).addCost(Items.HONEYCOMB,5).addCost(Items.EGG, 1).addResult(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get()).build()
+                        ItemTradeItemList.builder().addCost(Items.HONEY_BOTTLE, 5).addCost(Items.HONEYCOMB,5).addCost(Items.EGG, 1).addResult(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get()).build(),
+                        ItemTradeItemList.builder().addCost(Items.BONE, 8).addCost(Items.EGG, 1).addResult(TESpawnEggItems.SKELETRON_SPAWN_EGG.get()).build()
 
                 ))))
                 .add(ItemTradeItemList.builder().addCost(Items.DIAMOND, 8).addCost(Items.EGG, 1).addResult(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get()).build())
@@ -218,6 +219,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 .add(ItemTradeItemList.builder().addCost(Items.OBSIDIAN, 15).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.EYE_OF_CTHULHU.get())).build()).build())
                 .add(ItemTradeItemList.builder().addCost(Items.SPIDER_EYE, 8).addCost(Items.ROTTEN_FLESH,8).addCost(Items.EGG, 1).addResult(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.EATER_OF_WORLDS.get())).build()).build())
                 .add(ItemTradeItemList.builder().addCost(Items.HONEY_BOTTLE, 8).addCost(Items.HONEYCOMB,8).addCost(Items.EGG, 1).addResult(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.BRAIN_OF_CTHULHU.get())).build()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.BONE, 10).addCost(Items.EGG, 1).addResult(TESpawnEggItems.SKELETRON_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.BRAIN_OF_CTHULHU.get())).build()).build())
 
                 .add(TradeTask.create(new ProgressTradeTask(List.of(
                         ItemTradeItemList.builder().addCost(ItemTags.PLANKS, 2).addResult(Items.WOODEN_SWORD).build(),

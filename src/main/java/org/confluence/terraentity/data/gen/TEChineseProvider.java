@@ -70,6 +70,12 @@ public class TEChineseProvider extends LanguageProvider {
         add("entity.terra_entity.hell_bat", "地狱蝙蝠");
         add("entity.terra_entity.ice_bat", "冰雪蝙蝠");
         add("entity.terra_entity.spore_bat", "孢子蝙蝠");
+        add(TEMonsterEntities.ANGER_BONES.get(), "愤怒骷髅");
+        add(TEMonsterEntities.SHORT_BONES.get(), "矮骷髅");
+        add(TEMonsterEntities.BIG_BONES.get(), "大骷髅");
+        add(TEMonsterEntities.BIG_ANGER_BONES.get(), "大愤怒骷髅");
+        add(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), "大肌肉愤怒骷髅");
+        add(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), "大头盔愤怒骷髅");
 
 
         add(TEBossEntities.KING_SLIME.get(), "史莱姆王");
@@ -83,6 +89,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.LITTLE_HORNET.get(), "小黄蜂");
         add(TEBossEntities.SKELETRON.get(), "骷髅王");
         add(TEBossEntities.DUNGEON_GUARDIAN.get(), "地牢守卫");
+
 
 
         add(TESummonEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
@@ -140,6 +147,15 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.DECAYEDER_SPAWN_EGG.get(), "腐骴刷怪蛋");
         add(TESpawnEggItems.DEVOURER_SPAWN_EGG.get(), "吞噬怪刷怪蛋");
 
+        // 地牢骷髅
+        add(TESpawnEggItems.ANGER_BONES_SPAWN_EGG.get(), "愤怒骷髅刷怪蛋");
+        add(TESpawnEggItems.SHORT_BONES_SPAWN_EGG.get(), "矮骷髅刷怪蛋");
+        add(TESpawnEggItems.BIG_BONES_SPAWN_EGG.get(), "大骷髅刷怪蛋");
+        add(TESpawnEggItems.BIG_ANGER_BONES_SPAWN_EGG.get(), "大愤怒骷髅刷怪蛋");
+        add(TESpawnEggItems.BIG_MUSCLE_ANGER_BONES_SPAWN_EGG.get(), "大肌肉愤怒骷髅刷怪蛋");
+        add(TESpawnEggItems.BIG_HELMET_ANGER_BONES_SPAWN_EGG.get(), "大头盔愤怒骷髅刷怪蛋");
+
+        // boss
         add(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
         add(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
         add(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG.get(), "世界吞噬怪刷怪蛋");
@@ -394,20 +410,20 @@ public class TEChineseProvider extends LanguageProvider {
         add("dialogs.terra_entity.angler.4", "嘿！当心！我设了许多陷阱，用来实施史上最大的恶作剧！没人会发觉！你敢告诉别人试试！");
         add("dialogs.terra_entity.angler.5", "听说过会叫的鱼吗？！我没听说过，只是想知道你听说过没！");
 
-        add("goblin_tinkerer_like_dye_trader", "染料商知道把东西混在一起是多么有趣，我能理解！");
-        add("guide_hate_painter", "我讨厌油漆工在附近。世界本来挺美好的！");
-        add("arms_dealer_hate_demolitionist", "爆破专家怎么回事啊？难道他没发现我们卖的东西完全不同？");
-        add("arms_dealer_love_nurse", "那啥，你觉得护士对我有意思吗");
-        add("angler_like_demolitionist", "爆破专家其实知道他们在做什么，不像某些其他人！我挺喜欢的！");
-        add("dye_trader_like_arms_dealer", "军火商善于发现鲜艳的颜色和商机，对吧？我喜欢。");
-        add("dye_trader_like_painter", "油漆工善于发现鲜艳的颜色和商机，对吧？我喜欢。”");
-        add("demolitionist_dislike_arms_dealer", "我想把军火商绑到火箭上，看看会发生什么！");
-        add("demolitionist_dislike_goblin_tinkerer", "我想把哥布林工匠绑到火箭上，看看会发生什么！");
-        add("painter_love_dryad", "我真的很想画树妖……当然是因为色彩鲜艳！");
-        add("dryad_dislike_angler", "我不喜欢渔夫不尊重其他生物。");
-        add("merchant_like_nurse", "护士赚了很多钱，我喜欢有钱人。");
-        add("nurse_love_arms_dealer", "什么？军火商？我才没有暗恋他！我没有！闭嘴！");
-        add("nurse_dislike_dryad", "我不太喜欢树妖，这个人有点奇怪。");
+        add("mood.info.goblin_tinkerer_like_dye_trader", "染料商知道把东西混在一起是多么有趣，我能理解！");
+        add("mood.info.guide_hate_painter", "我讨厌油漆工在附近。世界本来挺美好的！");
+        add("mood.info.arms_dealer_hate_demolitionist", "爆破专家怎么回事啊？难道他没发现我们卖的东西完全不同？");
+        add("mood.info.arms_dealer_love_nurse", "那啥，你觉得护士对我有意思吗");
+        add("mood.info.angler_like_demolitionist", "爆破专家其实知道他们在做什么，不像某些其他人！我挺喜欢的！");
+        add("mood.info.dye_trader_like_arms_dealer", "军火商善于发现鲜艳的颜色和商机，对吧？我喜欢。");
+        add("mood.info.dye_trader_like_painter", "油漆工善于发现鲜艳的颜色和商机，对吧？我喜欢。”");
+        add("mood.info.demolitionist_dislike_arms_dealer", "我想把军火商绑到火箭上，看看会发生什么！");
+        add("mood.info.demolitionist_dislike_goblin_tinkerer", "我想把哥布林工匠绑到火箭上，看看会发生什么！");
+        add("mood.info.painter_love_dryad", "我真的很想画树妖……当然是因为色彩鲜艳！");
+        add("mood.info.dryad_dislike_angler", "我不喜欢渔夫不尊重其他生物。");
+        add("mood.info.merchant_like_nurse", "护士赚了很多钱，我喜欢有钱人。");
+        add("mood.info.nurse_love_arms_dealer", "什么？军火商？我才没有暗恋他！我没有！闭嘴！");
+        add("mood.info.nurse_dislike_dryad", "我不太喜欢树妖，这个人有点奇怪。");
 
     }
 }

@@ -78,7 +78,7 @@ public class RightHandGeoBoneAnimator<T extends LivingEntity & IUseItemAnimatabl
 
         @Override
         public boolean shouldTransition(BoneStateMachine<BoneStates> state,  T animatable, AnimatorContext context) {
-            return !animatable.swinging;
+            return animatable.swingTime <= 0;
         }
 
         @Override
@@ -136,12 +136,14 @@ public class RightHandGeoBoneAnimator<T extends LivingEntity & IUseItemAnimatabl
 
         @Override
         public boolean shouldTransition(BoneStateMachine<BoneStates> state,  T animatable, AnimatorContext context) {
-            return animatable.getMainHandItem().isEmpty() || animatable.isUsingItem();
+            return animatable.getMainHandItem().isEmpty() || animatable.isUsingItem() || animatable.swingTime > 0;
         }
 
         @Override
         public void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
-            if(animatable.isUsingItem()){
+            if(animatable.swingTime > 0){
+                state.setState(BoneStates.SWINGING);
+            }else if(animatable.isUsingItem()){
                 state.setState(BoneStates.PROJECTILE_USING);
             }else {
                 state.setState(BoneStates.IDLE);
@@ -157,12 +159,14 @@ public class RightHandGeoBoneAnimator<T extends LivingEntity & IUseItemAnimatabl
 
         @Override
         public boolean shouldTransition(BoneStateMachine<BoneStates> state,  T animatable, AnimatorContext context) {
-            return animatable.isUsingItem() || !animatable.getMainHandItem().isEmpty();
+            return animatable.isUsingItem() || !animatable.getMainHandItem().isEmpty() || animatable.swingTime > 0;
         }
 
         @Override
         public void transitionState(BoneStateMachine<BoneStates> state, T animatable, float partialTick, GeoBone bone, AnimatorContext context) {
-            if (animatable.isUsingItem()) {
+            if(animatable.swingTime > 0){
+                state.setState(BoneStates.SWINGING);
+            } else if (animatable.isUsingItem()) {
                 state.setState(BoneStates.PROJECTILE_USING);
             } else {
                 state.setState(BoneStates.HAND_ITEM_IDLE);
