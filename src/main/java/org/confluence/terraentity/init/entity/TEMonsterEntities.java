@@ -89,12 +89,12 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> SNATCHER = TEEntities.registerEntity("snatcher", (e, l)->new Snatcher(e,l, new AbstractPrefab(31,2,13,20,1,1).getPrefab()),1F,1F);
     public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> MAN_EATER = TEEntities.registerEntity("man_eater", (e, l)->new Snatcher(e,l, new AbstractPrefab(57,2,15,20,1,1).getPrefab()),1F,1F);
     // 地牢骷髅
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> ANGER_BONES = TEEntities.registerEntity("anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(16,2,5,20,1,1).getPrefab()),0.65F,1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> SHORT_BONES = TEEntities.registerEntity("short_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(14,1,4,20,1,1).getPrefab()),0.55F,1.65F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_BONES = TEEntities.registerEntity("big_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(25,1,6,20,1,1).getPrefab()),0.85F,2.25F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_ANGER_BONES = TEEntities.registerEntity("big_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(14,1,6,20,1,1).getPrefab()),0.9F,2.4F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_MUSCLE_ANGER_BONES = TEEntities.registerEntity("big_muscle_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(14,2,5,20,1,1).getPrefab()),0.95F,2.45F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_HELMET_ANGER_BONES = TEEntities.registerEntity("big_helmet_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(70,4,4,20,1,1).getPrefab()),1F,2.6F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> ANGER_BONES = TEEntities.registerEntity("anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(41,2,13,20,1,1).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> SHORT_BONES = TEEntities.registerEntity("short_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(37,2,12,20,1,1).getPrefab()),0.55F,1.65F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_BONES = TEEntities.registerEntity("big_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(52,3,17,20,1,1).getPrefab()),0.85F,2.25F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_ANGER_BONES = TEEntities.registerEntity("big_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(36,2,17,20,1,1).getPrefab()),0.9F,2.4F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_MUSCLE_ANGER_BONES = TEEntities.registerEntity("big_muscle_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(36,4,14,20,1,1).getPrefab()),0.95F,2.45F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_HELMET_ANGER_BONES = TEEntities.registerEntity("big_helmet_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(62,4,12,20,1,1).getPrefab()),1F,2.6F);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

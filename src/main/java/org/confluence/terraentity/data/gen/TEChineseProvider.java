@@ -74,7 +74,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.SHORT_BONES.get(), "矮骷髅");
         add(TEMonsterEntities.BIG_BONES.get(), "大骷髅");
         add(TEMonsterEntities.BIG_ANGER_BONES.get(), "大愤怒骷髅");
-        add(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), "大肌肉愤怒骷髅");
+        add(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), "大块头愤怒骷髅");
         add(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), "大头盔愤怒骷髅");
 
 
