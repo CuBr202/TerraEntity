@@ -117,7 +117,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
 
 
-    public AbstractTerraNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
+    public AbstractTerraNPC(EntityType<? extends AbstractTerraNPC> entityType, Level level) {
         super(entityType, level);
 
         if(level.isClientSide()){
@@ -144,11 +144,12 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     }
 
     protected void initName(){
-        String name = NPCNames.getRandomName(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
-        if(name!= null) {
-            this.setCustomName(Component.literal(name));
+        if(!this.hasCustomName()) {
+            String name = NPCNames.getRandomName(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
+            if (name != null) {
+                this.setCustomName(Component.literal(name));
+            }
         }
-
     }
 
     @Override
@@ -439,9 +440,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             return super.mobInteract(player, hand);
         }
 
-        if(!this.hasCustomName()) {
-            initName();
-        }
+        initName();
 
         if(hand == InteractionHand.OFF_HAND){
             return super.mobInteract(player, hand);

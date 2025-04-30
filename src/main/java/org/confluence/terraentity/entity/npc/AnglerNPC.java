@@ -9,7 +9,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -27,7 +26,7 @@ import java.util.Objects;
  */
 public class AnglerNPC extends AbstractTerraNPC {
 
-    public AnglerNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
+    public AnglerNPC(EntityType<? extends AbstractTerraNPC> entityType, Level level) {
         super(entityType, level);
 
     }
