@@ -84,7 +84,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
             return false;
         } else if (type == TEMonsterEntities.YELLOW_SLIME.get() || type == TEMonsterEntities.RED_SLIME.get()) {
             return pLevel.getBrightness(LightLayer.SKY, pPos) == 0 && pPos.getY() > 30;
-        } else if (type == TEMonsterEntities.BLACK_SLIME.get()) {
+        } else if (type == TEMonsterEntities.BLACK_SLIME.get() || type == TEMonsterEntities.DUNGEON_SLIME.get()) {
             return pLevel.getBrightness(LightLayer.SKY, pPos) == 0 && pPos.getY() <= 30;
         } else if (type == TEMonsterEntities.LAVA_SLIME.get()) {  // 新增岩浆史莱姆的限制条件
             int y = pPos.getY();

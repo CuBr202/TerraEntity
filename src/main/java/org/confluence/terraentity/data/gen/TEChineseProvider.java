@@ -76,6 +76,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.BIG_ANGER_BONES.get(), "大愤怒骷髅");
         add(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), "大块头愤怒骷髅");
         add(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), "大头盔愤怒骷髅");
+        add(TEMonsterEntities.CURSED_SKULL.get(), "诅咒骷髅头");
 
 
         add(TEBossEntities.KING_SLIME.get(), "史莱姆王");
@@ -154,6 +155,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.BIG_ANGER_BONES_SPAWN_EGG.get(), "大愤怒骷髅刷怪蛋");
         add(TESpawnEggItems.BIG_MUSCLE_ANGER_BONES_SPAWN_EGG.get(), "大肌肉愤怒骷髅刷怪蛋");
         add(TESpawnEggItems.BIG_HELMET_ANGER_BONES_SPAWN_EGG.get(), "大头盔愤怒骷髅刷怪蛋");
+        add(TESpawnEggItems.CURSED_SKULL_SPAWN_EGG.get(), "诅咒骷髅头刷怪蛋");
 
         // boss
         add(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
