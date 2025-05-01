@@ -6,6 +6,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
@@ -14,6 +16,7 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.entity.animation.MultiBoneStateMachine;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -146,6 +149,12 @@ public class SkeletronHand extends Skeletron {
         }
         super.tick();
         yBodyRot = yHeadRot;
+    }
+
+    @Override
+    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
+        // confluence mixed here
+        return super.addEffect(effectInstance, entity);
     }
 
     public class StandbyGoal extends Skeletron.FloatGoal {

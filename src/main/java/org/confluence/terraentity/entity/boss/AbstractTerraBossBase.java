@@ -17,6 +17,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -491,4 +492,10 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     protected BossEvent.BossBarColor getBossBarColor(){
         return BossEvent.BossBarColor.RED;
     };
+
+    @Override
+    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
+        // confluence mixed here
+        return super.addEffect(effectInstance, entity);
+    }
 }

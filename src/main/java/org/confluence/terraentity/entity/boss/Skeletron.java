@@ -10,6 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,6 +31,7 @@ import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animation.AnimatableManager;
 
 import java.util.ArrayList;
@@ -210,6 +212,12 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     public void attachHand(SkeletronHand hand) {
         hands.add(hand);
         _hands.add(hand);
+    }
+
+    @Override
+    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
+        // confluence mixed here
+        return super.addEffect(effectInstance, entity);
     }
 
     public class FloatGoal extends Goal {
