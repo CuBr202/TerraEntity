@@ -239,6 +239,7 @@ public class GameEntityEvent {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)  {
         if(event.getEntity() instanceof ServerPlayer player) {
             SyncJsonS2C.syncNpcDialogs(player);
+            SyncJsonS2C.syncNpcMoods(player);
         }
 
 

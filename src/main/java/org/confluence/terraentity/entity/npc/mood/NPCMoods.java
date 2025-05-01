@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.npc.mood;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
@@ -107,7 +108,7 @@ public class NPCMoods {
     }
 
     // 用于给客户端通信
-    public static BiMap<ResourceLocation, MoodInfo> BY_ID;
+    public static BiMap<ResourceLocation, MoodInfo> BY_ID = ImmutableBiMap.of();
 
 
     // 用于从json读取
@@ -177,7 +178,23 @@ public class NPCMoods {
         return BY_ID.inverse().get(moodInfo);
     }
 
-
+    public static void loadFromServer(JsonElement json){
+        BY_ENTITY_TYPE.clear();
+        MAP_LIST_CODEC.decode(JsonOps.INSTANCE, json).result().ifPresent(js->{
+            BY_ENTITY_TYPE.putAll(js.getFirst());
+            Map<ResourceLocation, MoodInfo> tempMap = new HashMap<>();
+            for (Map.Entry<EntityType<?>,EntityMood> entry : BY_ENTITY_TYPE.entrySet()) {
+                EntityType<?> entityType = entry.getKey();
+                EntityMood entityMood = entry.getValue();
+                List<MoodInfoData> moodInfoDataList = entityMood.moodInfos();
+                for (MoodInfoData moodInfoData : moodInfoDataList) {
+                    MoodInfo moodInfo = moodInfoData.moodInfo();
+                    tempMap.put(moodInfoData.moodId(), moodInfo);
+                }
+            }
+            BY_ID = ImmutableBiMap.copyOf(tempMap);
+        });
+    }
 
 
 }

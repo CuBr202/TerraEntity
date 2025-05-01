@@ -10,9 +10,11 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
+import org.confluence.terraentity.entity.npc.mood.NPCMoods;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,7 +59,9 @@ public class SyncJsonS2C implements CustomPacketPayload {
     public static final CodecEnum<Map<ResourceLocation, NPCDialogs>> NPC_DIALOGS_S2C_CODEC = registerHandler(NPCDialogs.MAP_CODEC, (self, json)->{
         NPCDialogs.loadFromServer(json);
     });
-
+    public static final CodecEnum<Map<EntityType<?>, NPCMoods.EntityMood>> NPC_MOODS_S2C_CODEC = registerHandler(NPCMoods.MAP_LIST_CODEC, (self, json)->{
+        NPCMoods.loadFromServer(json);
+    });
 
     // 指定codec对应的枚举
     static <T> CodecEnum<T> registerHandler(Codec<T> codec, BiConsumer<CodecEnum<T>,JsonElement> handle){
@@ -113,5 +117,8 @@ public class SyncJsonS2C implements CustomPacketPayload {
     }
     public static void syncNpcDialogs(ServerPlayer player){
         sync(player, NPC_DIALOGS_S2C_CODEC, NPCDialogs.getDialog_map());
+    }
+    public static void syncNpcMoods(ServerPlayer player){
+        sync(player, NPC_MOODS_S2C_CODEC, NPCMoods.BY_ENTITY_TYPE);
     }
 }
