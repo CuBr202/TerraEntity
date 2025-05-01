@@ -62,7 +62,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> WANDERING_EYE_FISH = registerSimpleMonster("wandering_eye_fish", FlyMonsterPrefab.WANDERING_EYE_FISH_BUILDER,1.4f,1.4f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.9F,0.9F);
     public static final DeferredHolder<EntityType<?>, EntityType<VisualNeuron>> VISUAL_NEURON = TEEntities.registerEntity("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
-    public static final DeferredHolder<EntityType<?>, EntityType<Harpy>> HARPY = TEEntities.registerEntity("harpy", (e,l)->new Harpy(e,l, new AbstractPrefab(41,2,13,20,0.28f,1).getPrefab()), 0.65f, 1.75f);
+    public static final DeferredHolder<EntityType<?>, EntityType<Harpy>> HARPY = TEEntities.registerEntity("harpy", (e,l)->new Harpy(e,l, new FlyMonsterPrefab(41,2,13,20,1f,0.28f).getPrefab()), 1f, 2f);
 
     // 陆行怪
     public static final DeferredHolder<EntityType<?>, EntityType<Decayeder>> DECAYEDER = TEEntities.registerEntity("decayeder", Decayeder::new,1,1.8f);

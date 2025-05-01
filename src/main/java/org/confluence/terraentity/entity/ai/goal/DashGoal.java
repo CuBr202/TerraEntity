@@ -30,7 +30,7 @@ public class DashGoal extends Goal {
     protected float triggerAngle;
     protected float turnAngle;
 
-    enum States{
+    public enum States{
         dashing,
         dashing_back,
         idle,
@@ -81,7 +81,7 @@ public class DashGoal extends Goal {
     }
 
     protected void lookAtTarget(LivingEntity target) {
-        mob.getLookControl().setLookAt(target, 0, 85);
+        mob.getLookControl().setLookAt(target, 5, 85);
         mob.lookAt(target, rootYSpeed, 85);
     }
 
@@ -128,6 +128,7 @@ public class DashGoal extends Goal {
             downSpeed();
 
             mob.addDeltaMovement( new Vec3(0,0.05f,0));
+            dashBackTick();
             if(dashTime <= _dashTime) state = States.idle;
             return;
         }
@@ -176,4 +177,11 @@ public class DashGoal extends Goal {
 
     }
 
+    protected void dashBackTick(){
+
+    }
+
+    public States getState(){
+        return state;
+    }
 }

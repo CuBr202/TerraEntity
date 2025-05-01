@@ -149,10 +149,11 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     g.addGoal(2, new LookForwardWanderFlyGoal(e,0.2f, 0));
                 })
                 .setController((c,e)->c.add(new AnimationController<GeoAnimatable>(e,"move",10,
-                        state->{state.setAnimation(RawAnimation.begin().thenLoop("fly"));return PlayState.CONTINUE;})))
+                        state->{state.setAnimation(FLY_ANIMATION);return PlayState.CONTINUE;})))
         ;
     }
 
+    static final RawAnimation FLY_ANIMATION = RawAnimation.begin().thenLoop("fly");
     public AttributeBuilder getPrefab() {
         return SIMPLE_MONSTER;
     }
