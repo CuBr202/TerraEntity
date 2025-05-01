@@ -7,10 +7,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
@@ -43,6 +40,11 @@ public class MeleeSkeleton extends AbstractSkeleton implements GeoEntity, IUseIt
     @Override
     protected boolean isSunBurnTick() {
         return false;
+    }
+
+    @Override
+    public int getMaxSpawnClusterSize() {
+        return 8;
     }
 
     @Override
