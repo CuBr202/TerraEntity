@@ -203,6 +203,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
             hands.add(hand2);
             _hands.add(hand1);
             _hands.add(hand2);
+            this.playSound(TESounds.ROAR.get());
         }
     }
 

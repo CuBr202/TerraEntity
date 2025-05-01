@@ -52,16 +52,6 @@ public class HumanoidRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<Bon
 
     public HumanoidRenderer(EntityRendererProvider.Context renderManager, GeoHumanoidModel<T> model, boolean ifRotX, float scale, float offsetY) {
         super(renderManager, model, ifRotX, scale, offsetY);
-
-    }
-
-    public HumanoidRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path, float scale, float offsetY){
-        this(renderManager, new GeoHumanoidModel<>(path), false, scale, offsetY);
-    }
-
-    public HumanoidRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
-        this(renderManager, path, 1.0F, 0.0F);
-
         this.addRenderLayer(new ItemArmorGeoLayer<>(this) {
             @Nullable
             @Override
@@ -207,6 +197,14 @@ public class HumanoidRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<Bon
         });
 
 
+    }
+
+    public HumanoidRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
+        this(renderManager, path, 1.0F, 0.0F);
+    }
+
+    public HumanoidRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path, float scale, float offsetY){
+        this(renderManager, new GeoHumanoidModel<>(path), false, scale, offsetY);
     }
 
     @Override

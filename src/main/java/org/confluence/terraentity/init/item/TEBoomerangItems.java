@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.apache.commons.lang3.function.TriFunction;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.SingleBooleanComponent;
+import org.confluence.terraentity.entity.util.trail.BoomerangTrail;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.item.Boomerang;
@@ -39,6 +40,7 @@ public class TEBoomerangItems {
             NORMAL_BOOMERANG_MODIFIER.apply(16,1.6f,1.6f)
                     .setOnHitEffect(TEEffectStrategies.Components.FROST_BURN_BOOMERANG_EFFECT.get())
                     .setDurability(500)
+                    .setTrail(()->new BoomerangTrail(20, 0x2553be, 0x255385))
                     .setParticle(()->ParticleTypes.SNOWFLAKE)
     );   //50% 的几率造成 3 秒的霜冻。
 
@@ -51,6 +53,7 @@ public class TEBoomerangItems {
             NORMAL_BOOMERANG_MODIFIER.apply(18,1.85f,1.85f)
                     .setOnHitEffect(TEEffectStrategies.Components.HELL_FIRE_EFFECT.get())
                     .setDurability(1500)
+                    .setTrail(()->new BoomerangTrail(200, 0xFB6464, 0xbc2525))
                     .setParticle(()->ParticleTypes.LAVA)
     );   //狱炎效果。
 

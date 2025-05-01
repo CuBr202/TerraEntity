@@ -26,6 +26,7 @@ import org.confluence.terraentity.data.component.SingleBooleanComponent;
 import org.confluence.terraentity.data.enchantment.TEEnchantmentHelper;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.entity.proj.BoomerangProjectile;
+import org.confluence.terraentity.entity.util.trail.BoomerangTrail;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TESounds;
@@ -43,6 +44,7 @@ public class Boomerang extends Item {
 
     public final BoomerangModifier boomerangModifier;
     private final IGeneration generation = new ForwardGeneration(0,1.0f);
+    BoomerangTrail trail;
 
     public Boomerang(float damage, BoomerangModifier boomerangModifier, Properties properties) {
         super(boomerangModifier.buildProperties(properties));
@@ -162,6 +164,7 @@ public class Boomerang extends Item {
         List<Function<Properties, Properties>> modifierFunctions = new ArrayList<>();
         public Supplier<ParticleOptions> particle;
         public int particleCount = 1;
+        public Supplier<BoomerangTrail> trail;
         /**
          * 添加击中效果
          *
@@ -277,6 +280,11 @@ public class Boomerang extends Item {
         public BoomerangModifier setParticle(Supplier<ParticleOptions> particle, int particleCount) {
             this.particle = particle;
             this.particleCount = particleCount;
+            return this;
+        }
+
+        public BoomerangModifier setTrail(Supplier<BoomerangTrail> trail) {
+            this.trail = trail;
             return this;
         }
 

@@ -505,17 +505,19 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             return InteractionResult.PASS;
         }
 
-        if(this.tradingPlayer == null) {
+//        if(this.tradingPlayer == null) {
             var event = new NPCEvent.InteractNPCEvent(this, player);
             AdapterUtils.postEvent(event);
             event.execute((npc, player1) -> {
 //            if(trades != null) {
-                this.getTradeManager().reCheckAvailableTrades(player1);
+                if(getTradeManager() != null) {
+                    this.getTradeManager().reCheckAvailableTrades(player1);
+                }
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, player2) ->
                         new SimpleTradeMenu(id, playerInventory, this), Component.translatable("title.terra_entity.npc_trade")));
 //            }
             });
-        }
+//        }
 
 //        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new NPCTradesMenu(id,playerInventory, trades, forge), Component.translatable("confluence.menu.npc_shop")));
         tradingPlayer = player;

@@ -12,6 +12,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * 世吞体节口水
+ */
 public class VileSpitProj extends LineProj {
     public VileSpitProj(EntityType<? extends LineProj> pEntityType, Level pLevel, MobEffectInstance effect) {
         super(pEntityType, pLevel, effect);

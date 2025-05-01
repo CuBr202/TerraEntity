@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;
 import org.confluence.terraentity.client.ModRenderTypes;
@@ -12,6 +13,9 @@ import org.joml.Matrix4f;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import static net.minecraft.client.renderer.RenderStateShard.*;
+import static net.minecraft.client.renderer.RenderStateShard.TRANSLUCENT_TARGET;
 
 public class ShaderUtil {
 
@@ -103,4 +107,20 @@ public class ShaderUtil {
         buffer.addVertex(x, y, z).setColor(r,g,b,a);
         buffer.addVertex(x, y + size, z).setColor(r,g,b,a);
     }
+
+    public static RenderType TRAIL_RENDER_TYPE = RenderType.create(
+            "trail_render_type",
+            DefaultVertexFormat.POSITION_COLOR,
+            VertexFormat.Mode.QUADS,
+            1536,
+            false,
+            true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
+//                    .setWriteMaskState(COLOR_DEPTH_WRITE)
+                    .setTransparencyState(LIGHTNING_TRANSPARENCY)
+                    .setLightmapState(NO_LIGHTMAP)
+                    .setOutputState(TRANSLUCENT_TARGET)
+                    .createCompositeState(false)
+    );
 }

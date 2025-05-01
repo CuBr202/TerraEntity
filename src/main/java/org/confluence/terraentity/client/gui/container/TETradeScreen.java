@@ -65,6 +65,15 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     @Override
     protected void init() {
         super.init();
+        if(triggerOnce) {
+            // 如果没有对话，则不显示对话框
+//            if(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc){
+//                if(NPCDialogs.getDialog_map().get(BuiltInRegistries.ENTITY_TYPE.getKey(npc.getType())) != null) {
+            Minecraft.getInstance().setScreen(new DialogScreen(Component.literal("123"), this));
+//                }
+//            }
+            triggerOnce = false;
+        }
         if (menu.NPCTrades == null) {
             menu.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder();
 
@@ -87,15 +96,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
                 .addKeyframe(40, 60)
                 .build();
 
-        if(triggerOnce) {
-            // 如果没有对话，则不显示对话框
-//            if(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc){
-//                if(NPCDialogs.getDialog_map().get(BuiltInRegistries.ENTITY_TYPE.getKey(npc.getType())) != null) {
-                    Minecraft.getInstance().setScreen(new DialogScreen(Component.literal("123"), this));
-//                }
-//            }
-            triggerOnce = false;
-        }
+
 
     }
 
