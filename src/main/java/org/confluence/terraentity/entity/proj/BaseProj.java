@@ -1,6 +1,5 @@
 package org.confluence.terraentity.entity.proj;
 
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,7 +14,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -23,11 +23,11 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.registries.track.ITrackType;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 
-public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingProjectile {
+public abstract class BaseProj<T extends BaseProj<T>> extends Projectile implements ICollisionAttackEntity<BaseProj<T>> {
     public float damage = 1;
     private List<Integer> hitList = new ArrayList<>();
     public int penetration =1;
@@ -45,18 +45,29 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     public Consumer<BaseProj> clientTickCallback;
     public ITrackType trackType;
     public IGeneration generation;
+    CollisionProperties collisionProperties = new CollisionProperties(3,5,0.5f);
+    protected double accelerationPower = 0.1;
+
+    public CollisionProperties getCollisionProperties(){
+        return collisionProperties;
+    }
+
+
+    public boolean shouldDoCollision(){
+        return true;
+    }
 
     protected Vec3 initSpeed = new Vec3(0, 0, 0);
 
     protected static final EntityDataAccessor<Vector3f> DATA_INIT_SPEED = SynchedEntityData.defineId(BaseProj.class, EntityDataSerializers.VECTOR3);
 
-    public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
+    public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
         super(pEntityType, pLevel);
         if (pEffect != null){
             this.effects.add(pEffect);
         }
     }
-    public BaseProj(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, List<MobEffectInstance> pEffects) {
+    public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel, List<MobEffectInstance> pEffects) {
         super(pEntityType, pLevel);
         this.effects = pEffects;
     }
@@ -95,27 +106,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
     }
 
 
-
-
     public ResourceLocation getTexture(){return texture;}
     public abstract int getLifetime();
     public boolean shouldBeSaved(){
         return false;
-    }
-    public void doAABBHurt(){
-        //包围盒检测造成伤害
-        var entities = level().getEntities(this, this.getBoundingBox());
-        if(!entities.isEmpty() && penetration > 0){
-            for (var e:entities) {
-                int id = e.getId();
-                if(canHitEntity(e)) {
-                    if(e instanceof LivingEntity living) {
-                        doHurt(living);
-                        doKnockBack(living);
-                    }
-                }
-            }
-        }
     }
 
     protected void doKnockBack(LivingEntity entity) {
@@ -128,10 +122,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-
         builder.define(DATA_INIT_SPEED, new Vector3f(0, 0, 0));
-
     }
 
     @Override
@@ -153,13 +144,28 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
 
     @Override
     public void tick() {
-        super.tick();
+        Entity entity = this.getOwner();
+        if (this.level().isClientSide || (entity == null || !entity.isRemoved()) && this.level().hasChunkAt(this.blockPosition())) {
+            super.tick();
+            this.checkInsideBlocks();
+            Vec3 vec3 = this.getDeltaMovement();
+            double d0 = this.getX() + vec3.x;
+            double d1 = this.getY() + vec3.y;
+            double d2 = this.getZ() + vec3.z;
+            ProjectileUtil.rotateTowardsMovement(this, 0.2F);
+            this.setDeltaMovement(vec3.add(vec3.normalize().scale(this.accelerationPower)));
+            this.setPos(d0, d1, d2);
+        } else {
+            this.discard();
+        }
+
         if(!level().isClientSide){
+            this.doCollisionAttack(this::canHitEntity, this::doHurt);
+
             if (tickCount > getLifetime()) {
                 discard();
                 return;
             }
-//            doAABBHurt();
         }else if(clientTickCallback!= null){
             clientTickCallback.accept(this);
         }
@@ -202,21 +208,23 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
         return 0;
     }
 
-    protected void doHurt(LivingEntity hurter){
-        Entity entity = this.getOwner();
-        hitList.add(hurter.getId());
-        for (MobEffectInstance effect : effects) {
-            hurter.addEffect(effect);
-        }
-        if(hitSound != null)
-            level().playSound(this,this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
+    protected void doHurt(Entity hurter){
+        if(hurter instanceof LivingEntity living) {
+            Entity entity = this.getOwner();
+            hitList.add(hurter.getId());
+            for (MobEffectInstance effect : effects) {
+                living.addEffect(effect);
+            }
+            if (hitSound != null)
+                level().playSound(this, this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
 
-        hurter.hurt(getDamageSource(hurter), damage);
+            hurter.hurt(getDamageSource(living), damage);
 
-        if(this.level() instanceof ServerLevel serverlevel){
-            penetration--;
-            if(penetration <= 0) {
-                discard();
+            if (this.level() instanceof ServerLevel serverlevel) {
+                penetration--;
+                if (penetration <= 0) {
+                    discard();
+                }
             }
         }
     }
@@ -226,13 +234,6 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
             return damageSources().mobProjectile(this, living);
         }
         return this.damageSources().generic();
-    }
-
-
-    @Nullable
-    @Override//设置粒子效果
-    protected ParticleOptions getTrailParticle() {
-        return null;
     }
 
     @Override
@@ -255,25 +256,14 @@ public abstract class BaseProj<T extends BaseProj<T>> extends AbstractHurtingPro
         return false;
     }
 
-    @Override//流体阻力
-    protected float getLiquidInertia() {
-        return 1;
-    }
 
-    @Override//火焰效果
-    protected boolean shouldBurn() {
-        return false;
-    }
 
     @Override
     public boolean isPickable() {
         return false;
     }
 
-    @Override//空气阻力
-    protected float getInertia() {
-        return 1;
-    }
+
     @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);

@@ -89,6 +89,8 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> SNATCHER = TEEntities.registerEntity("snatcher", (e, l)->new Snatcher(e,l, new AbstractPrefab(31,2,13,20,1,1).getPrefab()),1F,1F);
     public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> MAN_EATER = TEEntities.registerEntity("man_eater", (e, l)->new Snatcher(e,l, new AbstractPrefab(57,2,15,20,1,1).getPrefab()),1F,1F);
     // 地牢骷髅
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BASE_BONES = TEEntities.registerEntity("base_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(41,2,13,20,1,1).getPrefab().setMovementSpeed(0.3f)),0.65F,1.85F);
+
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> ANGER_BONES = TEEntities.registerEntity("anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(41,2,13,20,0.28f,1).getPrefab()),0.65F,1.85F);
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> SHORT_BONES = TEEntities.registerEntity("short_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(37,2,12,20,0.28f,1).getPrefab()),0.55F,1.65F);
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_BONES = TEEntities.registerEntity("big_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(52,3,17,20,0.28f,1).getPrefab()),0.85F,2.25F);
@@ -97,6 +99,12 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_HELMET_ANGER_BONES = TEEntities.registerEntity("big_helmet_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(62,4,12,20,0.28f,1).getPrefab()),1F,2.6F);
     // 穿墙怪
     public static final DeferredHolder<EntityType<?>, EntityType<CursedSkull>> CURSED_SKULL = TEEntities.registerEntity("cursed_skull", (e, l)->new CursedSkull(e,l, new AbstractPrefab(21,1,18,20,0.82f,1).getPrefab()),1F,1F);
+
+    // 远程法师
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> DARK_CASTER = TEEntities.registerEntity("dark_caster", (e, l)->new RangeShooter(e,l, new AbstractPrefab(62,4,12,20,1,1).getPrefab()),0.65F,1.85F);
+
+
+
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(TEMonsterEntities.BLUE_SLIME.get(), c -> new CustomSlimeRenderer(c, "blue"));
@@ -159,6 +167,8 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.MAN_EATER.get(), c->new SnatcherRenderer<>(c, TEMonsterEntities.MAN_EATER.getId()));
 
         // 地牢骷髅
+        event.registerEntityRenderer(TEMonsterEntities.BASE_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BASE_BONES.getId(), 0.9f,0));
+
         event.registerEntityRenderer(TEMonsterEntities.ANGER_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.ANGER_BONES.getId(), 0.9f,0));
         event.registerEntityRenderer(TEMonsterEntities.SHORT_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.SHORT_BONES.getId(), 0.8f,0));
         event.registerEntityRenderer(TEMonsterEntities.BIG_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.ANGER_BONES.getId(), 1.1f,0));
@@ -168,6 +178,9 @@ public class TEMonsterEntities {
 
         // 穿墙怪
         event.registerEntityRenderer(TEMonsterEntities.CURSED_SKULL.get(), c -> new CursedSkullRenderer<>(c, TEMonsterEntities.CURSED_SKULL.getId(), true, 1f,0));
+
+        // 远程法师
+        event.registerEntityRenderer(TEMonsterEntities.DARK_CASTER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.DARK_CASTER.getId()));
 
     }
 
@@ -231,6 +244,8 @@ public class TEMonsterEntities {
         event.put(LITTLE_HORNET.get(), AbstractMonster.createAttributes().build());
 
         // 地牢骷髅
+        event.put(BASE_BONES.get(), AbstractMonster.createAttributes().build());
+
         event.put(ANGER_BONES.get(), AbstractMonster.createAttributes().build());
         event.put(SHORT_BONES.get(), AbstractMonster.createAttributes().build());
         event.put(BIG_BONES.get(), AbstractMonster.createAttributes().build());
@@ -241,7 +256,8 @@ public class TEMonsterEntities {
         // 穿墙怪
         event.put(CURSED_SKULL.get(), AbstractMonster.createAttributes().build());
 
-
+        // 远程法师
+        event.put(DARK_CASTER.get(), AbstractMonster.createAttributes().build());
     }
 
 
@@ -297,14 +313,20 @@ public class TEMonsterEntities {
         event.register(SPORE_BAT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
          // 地牢骷髅
+        event.register(BASE_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
         event.register(ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(SHORT_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BIG_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BIG_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BIG_MUSCLE_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BIG_HELMET_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
         // 穿墙怪
         event.register(CURSED_SKULL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
+        // 远程法师
+        event.register(DARK_CASTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkFlyingFishSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     private static DeferredHolder<EntityType<?>, EntityType<BaseSlime>> registerSlime(String name, int color, int size) {
