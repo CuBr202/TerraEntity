@@ -53,13 +53,17 @@ public class CursedSkullRenderer<T extends CursedSkull> extends GeoNormalRendere
 
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
         model.getBone("outline").ifPresent(b -> {
             b.setHidden(!isReRender);
         });
         model.getBone("bone").ifPresent(b -> {
             b.setHidden(isReRender);
         });
+        if(isReRender){
+            return;
+        }
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+
     }
 
     @Override
