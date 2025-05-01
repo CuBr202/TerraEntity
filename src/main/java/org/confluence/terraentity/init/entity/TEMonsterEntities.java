@@ -95,7 +95,8 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_ANGER_BONES = TEEntities.registerEntity("big_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(36,2,17,20,1,1).getPrefab()),0.9F,2.4F);
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_MUSCLE_ANGER_BONES = TEEntities.registerEntity("big_muscle_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(36,4,14,20,1,1).getPrefab()),0.95F,2.45F);
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_HELMET_ANGER_BONES = TEEntities.registerEntity("big_helmet_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(62,4,12,20,1,1).getPrefab()),1F,2.6F);
-
+    // 穿墙怪
+    public static final DeferredHolder<EntityType<?>, EntityType<CursedSkull>> CURSED_SKULL = TEEntities.registerEntity("cursed_skull", (e, l)->new CursedSkull(e,l, new AbstractPrefab(62,4,12,20,1,1).getPrefab()),1F,1F);
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(TEMonsterEntities.BLUE_SLIME.get(), c -> new CustomSlimeRenderer(c, "blue"));
@@ -164,6 +165,9 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.BIG_ANGER_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BIG_ANGER_BONES.getId(), 1.15f,0));
         event.registerEntityRenderer(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.getId(), 1.2f,0));
         event.registerEntityRenderer(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BIG_HELMET_ANGER_BONES.getId(), 1.25f,0));
+
+        // 穿墙怪
+        event.registerEntityRenderer(TEMonsterEntities.CURSED_SKULL.get(), c -> new CursedSkullRenderer<>(c, TEMonsterEntities.CURSED_SKULL.getId(), true, 1f,0));
 
     }
 
@@ -234,6 +238,10 @@ public class TEMonsterEntities {
         event.put(BIG_MUSCLE_ANGER_BONES.get(), AbstractMonster.createAttributes().build());
         event.put(BIG_HELMET_ANGER_BONES.get(), AbstractMonster.createAttributes().build());
 
+        // 穿墙怪
+        event.put(CURSED_SKULL.get(), AbstractMonster.createAttributes().build());
+
+
     }
 
 
@@ -294,6 +302,10 @@ public class TEMonsterEntities {
         event.register(BIG_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BIG_MUSCLE_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BIG_HELMET_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
+        // 穿墙怪
+        event.register(CURSED_SKULL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkFlyingFishSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
     }
 
     private static DeferredHolder<EntityType<?>, EntityType<BaseSlime>> registerSlime(String name, int color, int size) {

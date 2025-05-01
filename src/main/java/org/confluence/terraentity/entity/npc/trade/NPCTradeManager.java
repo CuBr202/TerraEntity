@@ -231,7 +231,25 @@ public class NPCTradeManager {
         if(!TRADE_MAP.containsKey(id)){
             return null;
         }
-        return CODEC.decode(ops, CODEC.encodeStart(ops, TRADE_MAP.get(id)).getOrThrow()).result().get().getFirst();
+        NPCTradeManager.ops = registryAccess.createSerializationContext(JsonOps.INSTANCE);
+        var encode = CODEC.encodeStart(ops, TRADE_MAP.get(id));
+        if(encode.result().isPresent()){
+            var result = CODEC.decode(ops, encode.result().get());
+            if(result.result().isPresent()){
+                return result.result().get().getFirst();
+            }else{
+                if(result.error().isPresent()){
+                    TerraEntity.LOGGER.error("Failed to decode trade list " + id + " : " + result.error().get());
+                }
+            }
+            return null;
+        }else{
+            if(encode.error().isPresent()){
+                TerraEntity.LOGGER.error("Failed to encode trade list " + id + " : " + encode.error().get());
+            }
+            return null;
+        }
+
     }
 
     public static void readTradesFromJson(MinecraftServer server) {
