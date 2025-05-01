@@ -231,7 +231,7 @@ public class NPCTradeManager {
         if(!TRADE_MAP.containsKey(id)){
             return null;
         }
-        NPCTradeManager.ops = registryAccess.createSerializationContext(JsonOps.INSTANCE);
+//        NPCTradeManager.ops = registryAccess.createSerializationContext(JsonOps.INSTANCE);
         var encode = CODEC.encodeStart(ops, TRADE_MAP.get(id));
         if(encode.result().isPresent()){
             var result = CODEC.decode(ops, encode.result().get());
