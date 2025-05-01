@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.entity.proj.VileSpitProj;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -40,12 +41,11 @@ public class RangeShooter extends AbstractMonster {
             lookAt(target, 10, 70);
             this.moveControl.strafe(0.01f, 0.01f);
             if(phase == 180 || phase == 130 || phase == 80){
-                VileSpitProj proj = new VileSpitProj(TEProjectileEntities.VILE_SPIT_PROJ.get(), level());
+                LineProj proj = TEProjectileEntities.VILE_SPIT_PROJ.get().create(level());
                 proj.setOwner(this);
                 proj.setPos(this.getEyePosition());
                 proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
                 proj.shoot((float)(target.getX() - this.getX()), (float)(target.getY() - target.getBbHeight() * 0.3f - this.getY()), (float)(target.getZ() - this.getZ()), 0.3f, 0.8f);
-                proj.particleOptions = ParticleTypes.SOUL;
                 level().addFreshEntity(proj);
                 this.swing(InteractionHand.MAIN_HAND, true);
             }

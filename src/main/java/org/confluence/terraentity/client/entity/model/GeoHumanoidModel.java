@@ -16,7 +16,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import static org.confluence.terraentity.client.entity.renderer.HumanoidRenderer.LEFT_HAND;
 import static org.confluence.terraentity.client.entity.renderer.HumanoidRenderer.RIGHT_HAND;
 
-public class GeoHumanoidModel<T extends LivingEntity & GeoEntity & IUseItemAnimatable<BoneStates>> extends GeoNormalModel<T>{
+public class GeoHumanoidModel<T extends LivingEntity & GeoEntity & IUseItemAnimatable<BoneStates>> extends AnimatorModel<T>{
 
     protected GeoBoneAnimator<T> rightArmAnimator;
     protected GeoBoneAnimator<T> leftArmAnimator;
@@ -30,10 +30,8 @@ public class GeoHumanoidModel<T extends LivingEntity & GeoEntity & IUseItemAnima
 
     }
 
-    public void setCustomAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
-        super.setCustomAnimations(animatable, instanceId, animationState);
-
-        float partialTick = animationState.getPartialTick();
+    @Override
+    public void customAnimations(T animatable, long instanceId, AnimationState<T> animationState, float partialTick) {
         float usingTime = animatable.getTicksUsingItem() + partialTick;
 
         AnimatorContext context = new AnimatorContext(usingTime);

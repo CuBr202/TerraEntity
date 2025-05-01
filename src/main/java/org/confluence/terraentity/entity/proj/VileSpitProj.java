@@ -52,6 +52,10 @@ public class VileSpitProj extends LineProj {
         return null;
     }
 
+    public VileSpitProj setParticleOptions(ParticleOptions particleOptions) {
+        this.particleOptions = particleOptions;
+        return this;
+    }
 
 
     @Override

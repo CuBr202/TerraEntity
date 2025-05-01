@@ -49,6 +49,10 @@ public class AttributeBuilder {
     public List<BiConsumer<GoalSelector, AbstractMonster>> targets = new ArrayList<>();
     public Function<AbstractMonster, PathNavigation> navigation;
 
+    public static AttributeBuilder copyFrom(Supplier<AttributeBuilder> supplier) {
+        return supplier.get();
+    }
+
 
     public void modify(Mob mob) {
         mob.setDiscardFriction(noFriction);

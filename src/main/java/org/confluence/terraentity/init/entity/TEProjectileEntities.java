@@ -1,5 +1,6 @@
 package org.confluence.terraentity.init.entity;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +20,7 @@ import org.confluence.terraentity.client.entity.renderer.WhipEntityRenderer;
 import org.confluence.terraentity.client.util.RegisterUtils;
 import org.confluence.terraentity.entity.proj.*;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TEParticles;
 
 public class TEProjectileEntities {
 
@@ -31,8 +33,11 @@ public class TEProjectileEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> SUMMON_BEE_STICK_PROJ = registerProj("summon_bee_stick_proj",(e, l)->
             new SummonBeeStick(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<SkullProjectile>> SKULL = registerProj("skull", SkullProjectile::new,0.5F,0.5F);
-    public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> VILE_SPIT_PROJ = registerProj("vile_spit",(e, l)->
-            new VileSpitProj(e,l).addEffect(new MobEffectInstance(MobEffects.HUNGER, 100)),0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<VileSpitProj>> VILE_SPIT_PROJ = registerProj("vile_spit",(e, l)->
+            (VileSpitProj) new VileSpitProj(e,l).addEffect(new MobEffectInstance(MobEffects.HUNGER, 100)),0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<VileSpitProj>> DARK_CASTER_PROJ = registerProj("dark_caster_spit",(e, l)->
+            new VileSpitProj(e,l).setParticleOptions(ParticleTypes.SOUL),0.5F,0.5F);
+
     // 鞭子
     public static final DeferredHolder<EntityType<?>,EntityType<WhipEntity>> WHIP_PROJECTILE = TEEntities.ENTITIES.register("whip_projectile",() -> EntityType.Builder.<WhipEntity>of((e, l)->
             new WhipEntity(e,l) , MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F,0.5F).build(TEEntities.Key("whip_projectile")));

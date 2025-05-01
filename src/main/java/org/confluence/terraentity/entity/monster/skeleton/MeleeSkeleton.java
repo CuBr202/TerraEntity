@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.monster.skeleton;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
@@ -10,6 +11,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -30,9 +32,12 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class MeleeSkeleton extends AbstractSkeleton implements GeoEntity, IUseItemAnimatable<BoneStates> {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    boolean dirty = false;
 
     BoneStateMachine<BoneStates> leftArmBoneStateMachine;
     BoneStateMachine<BoneStates> rightArmBoneStateMachine;
+
+    AttributeBuilder builder;
 
     public MeleeSkeleton(EntityType<? extends AbstractSkeleton> entityType, Level level, AttributeBuilder builder) {
         super(entityType, level);
@@ -40,7 +45,23 @@ public class MeleeSkeleton extends AbstractSkeleton implements GeoEntity, IUseIt
             leftArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
             rightArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
         }
+        this.builder = builder;
         builder.modify(this);
+    }
+
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
+        if(!dirty && !level().isClientSide) {
+            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.MAX_HEALTH);
+            this.setHealth(getMaxHealth());
+        }
+    }
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        if(compound.contains("Health")){
+            dirty = true;
+        }
+
     }
 
     @Override
@@ -60,12 +81,7 @@ public class MeleeSkeleton extends AbstractSkeleton implements GeoEntity, IUseIt
 
     @Override
     protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
-//        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BONE));
-        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.GOLDEN_SWORD));
-        this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.LEATHER_HELMET));
-        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.LEATHER_CHESTPLATE));
-        this.setItemSlot(EquipmentSlot.LEGS, new ItemStack(Items.LEATHER_LEGGINGS));
-        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(Items.LEATHER_BOOTS));
+
     }
 
     @Override

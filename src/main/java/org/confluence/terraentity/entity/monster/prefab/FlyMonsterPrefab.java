@@ -14,7 +14,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.function.Supplier;
 
-import static org.confluence.terraentity.entity.monster.AbstractMonster.copyFrom;
+import static org.confluence.terraentity.entity.monster.prefab.AttributeBuilder.copyFrom;
 
 /**
  * 飞行怪预制体

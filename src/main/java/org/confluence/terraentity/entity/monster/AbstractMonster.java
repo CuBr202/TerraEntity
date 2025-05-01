@@ -26,8 +26,6 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.function.Supplier;
-
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
 public class AbstractMonster extends Monster implements GeoEntity , ICollisionAttackEntity<AbstractMonster> {
@@ -46,20 +44,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
             this.registerGoals();
         }
         this.navigation = createNavigation(level);
-        this.setDiscardFriction(builder.noFriction);
-
-        this.getAttribute(Attributes.ARMOR).setBaseValue(builder.ARMOR);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(builder.ATTACK_DAMAGE);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(builder.MOVEMENT_SPEED);
-        this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(builder.FOLLOW_RANGE);
-        this.getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE).setBaseValue(builder.SPAWN_REINFORCEMENTS_CHANCE);
-        this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(builder.KNOCKBACK_RESISTANCE);
-        this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(builder.ATTACK_KNOCKBACK);
-        this.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(builder.ATTACK_SPEED);
-        this.getAttribute(Attributes.FLYING_SPEED).setBaseValue(builder.FLYING_SPEED);
-        this.getAttribute(Attributes.SAFE_FALL_DISTANCE).setBaseValue(builder.SAFE_FALL);
-        this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(builder.JUMP_STRENGTH);
-        this.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(builder.STEP_HEIGHT);
+        this.builder.modify(this);
 
         this.xpReward = builder.xpReward;
     }
@@ -318,11 +303,6 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     @Override
     public boolean shouldDoCollision() {
         return getTarget() != null;
-    }
-
-
-    public static AttributeBuilder copyFrom(Supplier<AttributeBuilder> supplier) {
-        return supplier.get();
     }
 
 
