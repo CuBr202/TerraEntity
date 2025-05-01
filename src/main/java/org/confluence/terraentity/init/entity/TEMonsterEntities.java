@@ -91,17 +91,17 @@ public class TEMonsterEntities {
     // 地牢骷髅
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BASE_BONES = TEEntities.registerEntity("base_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(41,2,13,20,1,1).getPrefab().setMovementSpeed(0.3f)),0.65F,1.85F);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> ANGER_BONES = TEEntities.registerEntity("anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(41,2,13,20,0.28f,1).getPrefab()),0.65F,1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> SHORT_BONES = TEEntities.registerEntity("short_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(37,2,12,20,0.28f,1).getPrefab()),0.55F,1.65F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_BONES = TEEntities.registerEntity("big_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(52,3,17,20,0.28f,1).getPrefab()),0.85F,2.25F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_ANGER_BONES = TEEntities.registerEntity("big_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(36,2,17,20,0.28f,1).getPrefab()),0.9F,2.4F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_MUSCLE_ANGER_BONES = TEEntities.registerEntity("big_muscle_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(36,4,14,20,0.28f,1).getPrefab()),0.95F,2.45F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_HELMET_ANGER_BONES = TEEntities.registerEntity("big_helmet_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(62,4,12,20,0.28f,1).getPrefab()),1F,2.6F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> ANGER_BONES = TEEntities.registerEntity("anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(41,2,13,32,0.28f,1).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> SHORT_BONES = TEEntities.registerEntity("short_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(37,2,12,32,0.28f,1).getPrefab()),0.55F,1.65F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_BONES = TEEntities.registerEntity("big_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(52,3,17,32,0.28f,1).getPrefab()),0.85F,2.25F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_ANGER_BONES = TEEntities.registerEntity("big_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(36,2,17,32,0.28f,1).getPrefab()),0.9F,2.4F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_MUSCLE_ANGER_BONES = TEEntities.registerEntity("big_muscle_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(36,4,14,32,0.28f,1).getPrefab()),0.95F,2.45F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_HELMET_ANGER_BONES = TEEntities.registerEntity("big_helmet_anger_bones", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(62,4,12,32,0.28f,1).getPrefab()),1F,2.6F);
     // 穿墙怪
-    public static final DeferredHolder<EntityType<?>, EntityType<CursedSkull>> CURSED_SKULL = TEEntities.registerEntity("cursed_skull", (e, l)->new CursedSkull(e,l, new AbstractPrefab(21,1,18,20,0.82f,1).getPrefab()),1F,1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<CursedSkull>> CURSED_SKULL = TEEntities.registerEntity("cursed_skull", (e, l)->new CursedSkull(e,l, new AbstractPrefab(21,1,18,32,0.82f,1).getPrefab()),1F,1F);
 
     // 远程法师
-    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> DARK_CASTER = TEEntities.registerEntity("dark_caster", (e, l)->new RangeShooter(e,l, new AbstractPrefab(62,4,12,20,1,1).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> DARK_CASTER = TEEntities.registerEntity("dark_caster", (e, l)->new RangeShooter(e,l, new AbstractPrefab(26,1,10,32,1,1).getPrefab()),0.65F,1.85F);
 
 
 
@@ -326,7 +326,7 @@ public class TEMonsterEntities {
         event.register(CURSED_SKULL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
         // 远程法师
-        event.register(DARK_CASTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkFlyingFishSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(DARK_CASTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     private static DeferredHolder<EntityType<?>, EntityType<BaseSlime>> registerSlime(String name, int color, int size) {

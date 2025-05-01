@@ -80,6 +80,7 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> BIG_MUSCLE_ANGER_BONES_SPAWN_EGG = registerEgg("big_muscle_anger_bones_spawn_egg", TEMonsterEntities.BIG_MUSCLE_ANGER_BONES, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> BIG_HELMET_ANGER_BONES_SPAWN_EGG = registerEgg("big_helmet_anger_bones_spawn_egg", TEMonsterEntities.BIG_HELMET_ANGER_BONES, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> CURSED_SKULL_SPAWN_EGG = registerEgg("cursed_skull_spawn_egg", TEMonsterEntities.CURSED_SKULL, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> DARK_CASTER_SPAWN_EGG = registerEgg("dark_caster_spawn_egg", TEMonsterEntities.DARK_CASTER, 0xffffff, 0xffffff);
     // NPC
     public static final DeferredItem<Item> GUILD_SPAWN_EGG = registerEgg("guild_spawn_egg", TENpcEntities.GUIDE, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> DEMOLITIONIST_SPAWN_EGG = registerEgg("demolitionist_spawn_egg", TENpcEntities.DEMOLITIONIST, 0xffffff, 0xffffff);
