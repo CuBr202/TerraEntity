@@ -4,13 +4,17 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
-
+import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEBossEntities;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
+import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -23,27 +27,40 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-//        Stream.of(TETags.EntityTypes.SLIME, EntityTypeTags.)
-//            .forEach(type->tag(type).add(
-//                TEEntities.BLUE_SLIME.get(),
-//                TEEntities.GREEN_SLIME.get(),
-//                TEEntities.PINK_SLIME.get(),
-//                TEEntities.CORRUPTED_SLIME.get(),
-//                TEEntities.DESERT_SLIME.get(),
-//                TEEntities.JUNGLE_SLIME.get(),
-//                TEEntities.EVIL_SLIME.get(),
-//                TEEntities.ICE_SLIME.get(),
-//                TEEntities.LAVA_SLIME.get(),
-//                TEEntities.LUMINOUS_SLIME.get(),
-//                TEEntities.CRIMSON_SLIME.get(),
-//                TEEntities.PURPLE_SLIME.get(),
-//                TEEntities.RED_SLIME.get(),
-//                TEEntities.TROPIC_SLIME.get(),
-//                TEEntities.YELLOW_SLIME.get(),
-//                TEEntities.HONEY_SLIME.get(),
-//                TEEntities.BLACK_SLIME.get(),
-//                EntityType.SLIME)
-//            );
+        tag(TETags.EntityTypes.SLIME)
+                .add(TEMonsterEntities.BLUE_SLIME.get())
+                .add(TEMonsterEntities.GREEN_SLIME.get())
+                .add(TEMonsterEntities.PINK_SLIME.get())
+                .add(TEMonsterEntities.CORRUPTED_SLIME.get())
+                .add(TEMonsterEntities.DESERT_SLIME.get())
+                .add(TEMonsterEntities.JUNGLE_SLIME.get())
+                .add(TEMonsterEntities.EVIL_SLIME.get())
+                .add(TEMonsterEntities.ICE_SLIME.get())
+                .add(TEMonsterEntities.LAVA_SLIME.get())
+                .add(TEMonsterEntities.LUMINOUS_SLIME.get())
+                .add(TEMonsterEntities.CRIMSON_SLIME.get())
+                .add(TEMonsterEntities.PURPLE_SLIME.get())
+                .add(TEMonsterEntities.RED_SLIME.get())
+                .add(TEMonsterEntities.TROPIC_SLIME.get())
+                .add(TEMonsterEntities.YELLOW_SLIME.get())
+                .add(TEMonsterEntities.HONEY_SLIME.get())
+                .add(TEMonsterEntities.BLACK_SLIME.get())
+                .add(EntityType.SLIME);
+        tag(TETags.EntityTypes.NON_CONTROLLING_RIDER).add(TagEntry.tag(TETags.EntityTypes.SLIME.location()));
+
+        tag(TETags.EntityTypes.NPC).add(
+                TENpcEntities.GUIDE.get(),
+                TENpcEntities.DEMOLITIONIST.get(),
+                TENpcEntities.GOBLIN_TINKERER.get(),
+                TENpcEntities.ARMS_DEALER.get(),
+                TENpcEntities.NURSE.get(),
+                TENpcEntities.MERCHANT.get(),
+                TENpcEntities.PAINTER.get(),
+                TENpcEntities.ANGLER.get(),
+                TENpcEntities.DRYAD.get(),
+                TENpcEntities.DYE_TRADER.get(),
+                TENpcEntities.OLD_MAN.get()
+        );
 
         EntityType<?>[] bosses = {
                 TEBossEntities.EYE_OF_CTHULHU.get(),

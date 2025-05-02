@@ -16,6 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.gen.biome.ExtendedAddSpawnsBiomeModifier;
+import org.confluence.terraentity.data.gen.biome.NPCAddSpawnsBiomeModifier;
 
 
 public class TEBiomes {
@@ -23,6 +24,7 @@ public class TEBiomes {
     public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, TerraEntity.MODID);
 
     public static final RegistryObject<Codec<ExtendedAddSpawnsBiomeModifier>> ADD_SPAWNS_BIOME_MODIFIER_TYPE = BIOME_MODIFIER_SERIALIZERS.register("extended_add_spawns", () -> ExtendedAddSpawnsBiomeModifier.CODEC);
+    public static final RegistryObject<Codec<NPCAddSpawnsBiomeModifier>> NPC_SPAWNS_BIOME_MODIFIER_TYPE = BIOME_MODIFIER_SERIALIZERS.register("npc_add_spawns", () -> NPCAddSpawnsBiomeModifier.CODEC);
 
     public static void register(IEventBus bus) {
         BIOME_MODIFIER_SERIALIZERS.register(bus);

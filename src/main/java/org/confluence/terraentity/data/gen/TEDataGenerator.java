@@ -14,6 +14,7 @@ import org.confluence.terraentity.data.gen.recipe.TENPCShopProvider;
 import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 import org.confluence.terraentity.data.gen.tags.TEDamageTypeTagsProvider;
 import org.confluence.terraentity.data.gen.tags.TEBlockTagsProvider;
+import org.confluence.terraentity.data.gen.tags.TEEntityTypeTagsProvider;
 import org.confluence.terraentity.data.gen.tags.TEItemTagsProvider;
 
 import java.util.Map;

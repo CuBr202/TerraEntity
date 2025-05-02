@@ -14,7 +14,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeModifier;
-import net.minecraftforge.common.world.ForgeBiomeModifiers;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.TerraEntity;
@@ -27,37 +26,38 @@ public class TEBiomeModifier {
         HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
         HolderGetter<PlacedFeature> placedFeatureLookup = context.lookup(Registries.PLACED_FEATURE);
 
+        int minute = 20 * 60 * 5;
 
         register(context, TENpcEntities.GUIDE,
                 biomeLookup.getOrThrow(BiomeTags.IS_FOREST),
-                HolderSet.direct(), 2,1,1);
+                HolderSet.direct(), minute * 5,1);
         register(context, TENpcEntities.DEMOLITIONIST,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.DRIPSTONE_CAVES), biomeLookup.getOrThrow(Biomes.LUSH_CAVES),biomeLookup.getOrThrow(Biomes.NETHER_WASTES)),
-                HolderSet.direct(), 2,1,1);
+                HolderSet.direct(),minute * 5,1);
         register(context, TENpcEntities.GOBLIN_TINKERER,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.DRIPSTONE_CAVES), biomeLookup.getOrThrow(Biomes.LUSH_CAVES),biomeLookup.getOrThrow(Biomes.NETHER_WASTES)),
-                HolderSet.direct(), 2,1,1);
+                HolderSet.direct(), minute * 5,1);
         register(context, TENpcEntities.ARMS_DEALER,
                 biomeLookup.getOrThrow(BiomeTags.HAS_VILLAGE_DESERT),
-                HolderSet.direct(), 2,1,1);
+                HolderSet.direct(), minute * 5,1);
         register(context, TENpcEntities.NURSE,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.CHERRY_GROVE)),
-                HolderSet.direct(), 2,1,1);
+                HolderSet.direct(), minute * 5,1);
         register(context, TENpcEntities.MERCHANT,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.FOREST)),
-                HolderSet.direct(), 2,1,1);
+                HolderSet.direct(), minute * 5,1);
         register(context, TENpcEntities.PAINTER,
                 biomeLookup.getOrThrow(BiomeTags.IS_JUNGLE),
-                HolderSet.direct(), 2,1,1);
+                HolderSet.direct(),minute * 5,1);
         register(context, TENpcEntities.ANGLER,
                 biomeLookup.getOrThrow(BiomeTags.IS_RIVER),
-                HolderSet.direct(), 2,1,1);
+                HolderSet.direct(), minute * 5,1);
         register(context, TENpcEntities.DRYAD,
                 biomeLookup.getOrThrow(BiomeTags.IS_JUNGLE),
-                HolderSet.direct(), 2,1,1);
+                HolderSet.direct(), minute * 5,1);
         register(context, TENpcEntities.DYE_TRADER,
                 biomeLookup.getOrThrow(BiomeTags.HAS_VILLAGE_DESERT),
-                HolderSet.direct(), 2,1,1);
+                HolderSet.direct(), minute * 5,1);
 
 
     }
@@ -70,7 +70,10 @@ public class TEBiomeModifier {
     private static <T extends Entity>Holder.Reference<BiomeModifier> register(BootstapContext<BiomeModifier> context, RegistryObject<EntityType<T>> entityType, HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, int weight, int minCount, int maxCount) {
         return register(context, createModifierKey(entityType), ExtendedAddSpawnsBiomeModifier.singleSpawn(biomes, excludedBiomes, new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(entityType.get(), weight, minCount, maxCount, entityType.get().getCategory())));
     }
-    private static <T extends Entity>Holder.Reference<BiomeModifier> register(BootstapContext<BiomeModifier> context, RegistryObject<EntityType<T>> entityType, HolderSet<Biome> biomes, int weight, int minCount, int maxCount) {
-        return register(context, createModifierKey(entityType), ForgeBiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biomes, new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(entityType.get(), weight, minCount, maxCount, entityType.get().getCategory())));
+    private static <T extends Entity>Holder.Reference<BiomeModifier> register(BootstapContext<BiomeModifier> context, RegistryObject<EntityType<T>> entityType, HolderSet<Biome> biomes, HolderSet<Biome> excludedBiomes, int delay, int weight) {
+        return register(context, createModifierKey(entityType), new NPCAddSpawnsBiomeModifier(biomes, excludedBiomes, entityType.get(), delay, weight));
+    }
+    private static <T extends Entity>Holder.Reference<BiomeModifier> register(BootstapContext<BiomeModifier> context, RegistryObject<EntityType<T>> entityType, HolderSet<Biome> biomes, int delay) {
+        return register(context, createModifierKey(entityType), new NPCAddSpawnsBiomeModifier(biomes, HolderSet.direct(), entityType.get(), delay, 1));
     }
 }

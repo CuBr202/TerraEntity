@@ -29,6 +29,8 @@ public class TETags {
 
     public static class EntityTypes {
         public static final TagKey<EntityType<?>> SLIME = registerEntityType("slime");
+        public static final TagKey<EntityType<?>> NPC = registerEntityType("npc"); // 用于控制生成位置必须在玩家附近
+
         /**
          * 拥有这个标签的mob不会控制其他mob的行动
          */

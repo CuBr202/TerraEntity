@@ -12,6 +12,7 @@
     "LivingEntityMixin",
     "MobEffectMixin",
     "MobMixin",
+    "NaturalSpawnerMixin",
     "PlayerMixin",
     "RandomStrollGoalMixin",
     "ServerBossEventMixin",
