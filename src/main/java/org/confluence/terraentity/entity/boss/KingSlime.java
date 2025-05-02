@@ -475,7 +475,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
 
     @Override
     public boolean addEffect(MobEffectInstance effectInstance, @org.jetbrains.annotations.Nullable Entity entity) {
-        // confluence mixed here
+        // confluence mixin here
         return super.addEffect(effectInstance, entity);
     }
 

@@ -495,7 +495,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     @Override
     public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
-        // confluence mixed here
+        // confluence mixin here
         return super.addEffect(effectInstance, entity);
     }
 }

@@ -135,11 +135,12 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(canPerformerAttackTest == null){
             canPerformerAttackTest = npc->npc.getMainHandItem().getItem() instanceof BowItem;
         }
+        // confluence mixin here
     }
 
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        // confluence mixed here
+        // confluence mixin here
         return !this.hasCustomName(); // 交互以后不会被刷走
     }
 
@@ -162,7 +163,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
      * <p>使用前需要使用HouseManager.getInstance().tryAddHouse检查房屋是否可以添加</p>
      */
     public void setHouse(House house){
-        // confluence mixed here
+        // confluence mixin here
         setHouseNoUpdate(house);
     }
 
@@ -362,6 +363,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             });
         }
         setHouseNoUpdate(House.CODEC.parse(NbtOps.INSTANCE, tag.get("House")).getOrThrow());
+        // confluence mixin here
     }
 
     @Override
@@ -379,6 +381,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             }
         }
         tag.put("House", House.CODEC.encodeStart(NbtOps.INSTANCE, house).getOrThrow());
+        // confluence mixin here
     }
 
 

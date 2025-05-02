@@ -64,7 +64,7 @@ public class CursedSkull extends AbstractMonster {
 
     @Override
     public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
-        // confluence mixed here
+        // confluence mixin here
         if (effectInstance.is(MobEffects.POISON)) return false;
         return super.addEffect(effectInstance, entity);
     }

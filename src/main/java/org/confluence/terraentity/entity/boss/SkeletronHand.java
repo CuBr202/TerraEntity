@@ -153,7 +153,7 @@ public class SkeletronHand extends Skeletron {
 
     @Override
     public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
-        // confluence mixed here
+        // confluence mixin here
         return super.addEffect(effectInstance, entity);
     }
 

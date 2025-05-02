@@ -180,7 +180,7 @@ public class AnglerNPC extends AbstractTerraNPC {
             setWakeUp(true);
             this.refreshBrain(serverLevel);
             this.refreshDimensions();
-            // confluence mixed here
+            // confluence mixin here
             return InteractionResult.CONSUME;
         }
         return super.mobInteract(player, hand);
