@@ -393,7 +393,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         AdapterUtils.postEvent(event);
         // 如果是第一次生成
         if (trades == null && !level().isClientSide) {
-            trades = NPCTradeManager.getCopy(event.getOrigin(), this.registryAccess());
+            trades = NPCTradeManager.getCopy(event.getOrigin(), NPCTradeManager.serverOps);
             if (trades != null) {
                 trades.initTrades(this);
                 onInitTrades();

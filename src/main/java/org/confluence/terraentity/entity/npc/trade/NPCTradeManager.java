@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -30,7 +29,7 @@ import java.util.*;
  */
 public class NPCTradeManager {
 
-    public static DynamicOps<JsonElement> ops;
+    public static DynamicOps<JsonElement> serverOps;
 
     private List<ITrade> trades;
     private List<ITrade> availableTrades;
@@ -227,11 +226,11 @@ public class NPCTradeManager {
      * @return 交易列表的拷贝
      */
     @Nullable
-    public static NPCTradeManager getCopy(ResourceLocation id, RegistryAccess registryAccess) {
+    public static NPCTradeManager getCopy(ResourceLocation id, DynamicOps<JsonElement> ops) {
         if(!TRADE_MAP.containsKey(id)){
             return null;
         }
-//        NPCTradeManager.ops = registryAccess.createSerializationContext(JsonOps.INSTANCE);
+//        NPCTradeManager.serverOps = registryAccess.createSerializationContext(JsonOps.INSTANCE);
         var encode = CODEC.encodeStart(ops, TRADE_MAP.get(id));
         if(encode.result().isPresent()){
             var result = CODEC.decode(ops, encode.result().get());
@@ -239,13 +238,13 @@ public class NPCTradeManager {
                 return result.result().get().getFirst();
             }else{
                 if(result.error().isPresent()){
-                    TerraEntity.LOGGER.error("Failed to decode trade list " + id + " : " + result.error().get());
+                    TerraEntity.LOGGER.error("Failed to decode trade list {} : {}", id, result.error().get());
                 }
             }
             return null;
         }else{
             if(encode.error().isPresent()){
-                TerraEntity.LOGGER.error("Failed to encode trade list " + id + " : " + encode.error().get());
+                TerraEntity.LOGGER.error("Failed to encode trade list {} : {}", id, encode.error().get());
             }
             return null;
         }
@@ -254,7 +253,7 @@ public class NPCTradeManager {
 
     public static void readTradesFromJson(MinecraftServer server) {
         ResourceManager manager = server.getResourceManager();
-        NPCTradeManager.ops = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
+        NPCTradeManager.serverOps = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
 
         Map<ResourceLocation, Resource> jsons = manager.listResources(KEY, r -> r.getPath().endsWith(".json"));
         jsons.forEach((k, v) -> {
@@ -263,7 +262,7 @@ public class NPCTradeManager {
                         k.getPath().replace(".json", "").replace(KEY + "/", ""));
                 Reader reader = manager.openAsReader(k);
                 JsonObject jsonobject = GsonHelper.parse(reader);
-                DataResult<Pair<NPCTradeManager, JsonElement>> result = NPCTradeManager.CODEC.decode(ops, jsonobject);
+                DataResult<Pair<NPCTradeManager, JsonElement>> result = NPCTradeManager.CODEC.decode(serverOps, jsonobject);
                 if(result.error().isPresent()){
                     throw new RuntimeException("Failed to read trade list " + k + " :" + result.error().get());
                 }

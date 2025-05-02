@@ -8,6 +8,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
@@ -28,7 +29,7 @@ public class TESummonEntities {
         // sommon
         event.registerEntityRenderer(TESummonEntities.SUMMON_SLIME.get(), c-> new GeoNormalRenderer<>(c, TESummonEntities.SUMMON_SLIME.getId().withPrefix("summon/"),false));
         event.registerEntityRenderer(TESummonEntities.SUMMON_IRON_GOLEM.get(), IronGolemRenderer::new);
-        event.registerEntityRenderer(TESummonEntities.SUMMON_HORNET.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.HORNET.getId(),true, 0.6f, 0.5f));
+        event.registerEntityRenderer(TESummonEntities.SUMMON_HORNET.get(), c->new GeoNormalRenderer<>(c, new GeoNormalModel<>(TEMonsterEntities.HORNET.getId(),false),true, 0.6f, 0.5f));
 
     }
 

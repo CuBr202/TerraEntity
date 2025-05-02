@@ -235,14 +235,9 @@ public class GameEntityEvent {
 
     }
 
-    @SubscribeEvent
-    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)  {
-        if(event.getEntity() instanceof ServerPlayer player) {
-            SyncJsonS2C.syncNpcDialogs(player);
-            SyncJsonS2C.syncNpcMoods(player);
-        }
-
-
-    }
+//    @SubscribeEvent
+//    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)  {
+//
+//    }
 
 }
