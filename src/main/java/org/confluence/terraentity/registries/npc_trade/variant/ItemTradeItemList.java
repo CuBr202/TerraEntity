@@ -23,7 +23,7 @@ public record ItemTradeItemList(List<AmountIngredient> costs, List<ItemStack> re
 
     public static MapCodec<ItemTradeItemList> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             AmountIngredient.CODEC.codec().listOf().fieldOf("costs").forGetter(ItemTradeItemList::costs),
-            ItemStack.CODEC.listOf().fieldOf("result").forGetter(ItemTradeItemList::result),
+            ItemStack.OPTIONAL_CODEC.listOf().fieldOf("result").forGetter(ItemTradeItemList::result),
             TradeProperties.CODEC.optionalFieldOf("properties").forGetter(i-> Optional.ofNullable(i.properties))
     ).apply(instance, (costs, result, properties)->new ItemTradeItemList(
             costs,

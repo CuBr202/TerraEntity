@@ -32,12 +32,12 @@ public class DynamicPoolTradeTask implements ITradeTask {
 
     public static final MapCodec<DynamicPoolTradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ITrade.TYPED_CODEC.fieldOf("default_trade").forGetter(DynamicPoolTradeTask::getDefaultTrade),
-            Codec.unboundedMap(Codec.STRING, ItemStack.CODEC.listOf()).fieldOf("result_pool").forGetter(
+            Codec.unboundedMap(Codec.STRING, ItemStack.OPTIONAL_CODEC.listOf()).fieldOf("result_pool").forGetter(
                     task -> task.resultPool.entrySet().stream()
                             .map(entry->new AbstractMap.SimpleEntry<>(entry.getKey().toString(), entry.getValue()))
                             .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue))
             ),
-            ItemStack.CODEC.listOf().fieldOf("cost_pool").forGetter(DynamicPoolTradeTask::getCostPool),
+            ItemStack.OPTIONAL_CODEC.listOf().fieldOf("cost_pool").forGetter(DynamicPoolTradeTask::getCostPool),
             ITrade.TYPED_CODEC.optionalFieldOf("dynamic_trade").forGetter(DynamicPoolTradeTask::getDynamicTrade)
     ).apply(instance, (defaultTrade, solid_rewards, costPool, dynamicTrade)->{
         return new DynamicPoolTradeTask(
