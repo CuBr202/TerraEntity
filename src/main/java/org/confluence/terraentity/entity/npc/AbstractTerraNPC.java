@@ -163,6 +163,10 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
      */
     public void setHouse(House house){
         // confluence mixed here
+        setHouseNoUpdate(house);
+    }
+
+    public void setHouseNoUpdate(House house) {
         this.house = house;
         this.entityData.set(DATA_HOUSE_DATA, house);
     }
@@ -357,6 +361,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
                 });
             });
         }
+        setHouseNoUpdate(House.CODEC.parse(NbtOps.INSTANCE, tag.get("House")).getOrThrow());
     }
 
     @Override
@@ -373,8 +378,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
                 });
             }
         }
-
-
+        tag.put("House", House.CODEC.encodeStart(NbtOps.INSTANCE, house).getOrThrow());
     }
 
 

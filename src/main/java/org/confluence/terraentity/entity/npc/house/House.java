@@ -27,14 +27,14 @@ public record House(String uuid, BlockPos min, BlockPos max, BlockPos center) {
         return pos.getX() >= min.getX() && pos.getX() <= max.getX() && pos.getZ() >= min.getZ() && pos.getZ() <= max.getZ();
     }
 
-    public static Codec<House> CODEC = RecordCodecBuilder.create((builder) -> builder.group(
+    public static final Codec<House> CODEC = RecordCodecBuilder.create((builder) -> builder.group(
             Codec.STRING.fieldOf("uuid").forGetter(House::uuid),
             BlockPos.CODEC.fieldOf("min").forGetter(House::min),
             BlockPos.CODEC.fieldOf("max").forGetter(House::max),
             BlockPos.CODEC.fieldOf("center").forGetter(House::center)
     ).apply(builder, House::new));
 
-    public static StreamCodec<RegistryFriendlyByteBuf, House> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, House> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, House::uuid,
             BlockPos.STREAM_CODEC, House::min,
             BlockPos.STREAM_CODEC, House::max,
