@@ -21,6 +21,7 @@ import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.network.NetworkHandler;
+import org.confluence.terraentity.utils.AdapterUtils;
 
 import java.util.List;
 @SuppressWarnings("all")
@@ -32,6 +33,7 @@ public class ModEvent {
         event.enqueueWork(() -> {
             ModChecker.check();
             NetworkHandler.register();
+
         });
     }
 
@@ -93,4 +95,5 @@ public class ModEvent {
             runnable.run();
         }
     }
+
 }

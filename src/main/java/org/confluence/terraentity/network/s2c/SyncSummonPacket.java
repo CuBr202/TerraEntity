@@ -46,6 +46,7 @@ public class SyncSummonPacket{
             data.setCurrentCapacity(packet.currentCapability);
 //            data.setIds(packet.indexList);
         });
+        ctx.get().setPacketHandled(true);
     }
 
 

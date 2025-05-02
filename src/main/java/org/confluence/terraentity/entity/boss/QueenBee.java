@@ -151,9 +151,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                             Math.abs(target.getY() - e.getY()) > 2 ||
                             Math.abs(this.getXRot()) > 10
                     ){
-
-                    }else{
-                        if(difficult || random.nextBoolean())
+                        if(difficult && random.nextBoolean())
                             skills.tick--;
                     }
 

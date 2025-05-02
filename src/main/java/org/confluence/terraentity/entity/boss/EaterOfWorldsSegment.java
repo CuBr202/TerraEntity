@@ -67,7 +67,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     }
 
     public EaterOfWorldsSegment(EaterOfWorlds head, Level level) {
-        this(TEBossEntities.EATER_OF_WORLD_SEGMENT.get(), level);
+        this(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), level);
         this.head = head;
         this._discardTimer = random.nextInt(25) + 100;
     }

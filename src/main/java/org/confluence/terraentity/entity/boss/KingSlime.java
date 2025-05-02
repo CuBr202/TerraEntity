@@ -98,10 +98,22 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                 }
                 // 跳跃
                 else {
+                    // 血量降低，跳跃加速
+                    int reduce = (int) ((1 - boss.getSize() / 127.0f) * 3) ;
+                    if(boss.indexAI > 20 - reduce && boss.indexAI <= 20){
+                        boss.indexAI = 20;
+                    }else if(boss.indexAI > 40 - reduce && boss.indexAI <= 40){
+                        boss.indexAI = 40;
+                    }else if(boss.indexAI > 60 - reduce && boss.indexAI <= 60){
+                        boss.indexAI = 60;
+                    }else{
+                        boss.indexAI += reduce;
+                    }
                     switch (boss.indexAI) {
                         case 20, 40, 60 -> {
                             horizontalSpd = JUMP_SPEED_HORIZONTAL[boss.difficultyIdx];
-                            verticalAcc = (boss.indexAI == 60 ? JUMP_SPEED_VERTICAL_THIRD : JUMP_SPEED_VERTICAL)[boss.difficultyIdx];
+                            verticalAcc = (boss.indexAI == 60 ? JUMP_SPEED_VERTICAL_THIRD : JUMP_SPEED_VERTICAL)[boss.difficultyIdx]
+                                    * (boss.getSize() + 127) / 256; // 血量降低，跳跃高度减少
                         }
                         default -> {
                             horizontalSpd = 0;
@@ -254,6 +266,11 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         Vec3 vel = getDeltaMovement();
         vel = vel.with(Direction.Axis.X, newDir.x()).with(Direction.Axis.Z, newDir.z());
         setDeltaMovement(vel);
+    }
+
+    @Override
+    protected float getJumpPower() {
+        return super.getJumpPower() * (this.getSize() + 30) / 157;
     }
 
     // 原版跳跃依旧会略微顿一下，给调整到几乎不会触发的间隔

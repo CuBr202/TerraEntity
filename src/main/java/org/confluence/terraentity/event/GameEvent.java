@@ -3,7 +3,9 @@ package org.confluence.terraentity.event;
 import net.minecraft.server.level.ServerPlayer;
 
 import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -14,6 +16,7 @@ import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.NPCMoods;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
+import org.confluence.terraentity.network.s2c.SyncJsonS2C;
 import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
 import org.confluence.terraentity.utils.AdapterUtils;
 
@@ -25,21 +28,25 @@ public class GameEvent {
         ServerPlayer serverPlayer = event.getPlayer();
         if (serverPlayer != null) {
             SyncNPCTradesPacketS2C.sync(serverPlayer);
+            SyncJsonS2C.syncNpcDialogs(serverPlayer);
         }
     }
 
     @SubscribeEvent
-    public static void serverStarted(ServerStartedEvent event) {
+    public static void serverStarted(ServerAboutToStartEvent event) {
         NPCTradeManager.readTradesFromJson(event.getServer().getResourceManager());
-        HouseStoreSaver.get(event.getServer().overworld());
         NPCNames.loadNPCNames(event.getServer().getResourceManager());
         NPCDialogs.loadNPCDialogs(event.getServer().getResourceManager());
         NPCMoods.loadMoods(event.getServer().getResourceManager());
         ModEvent.onCollectBrains(new NPCEvent.NPCBrainCollectionEvent()); // 本模组优先注册
         AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
 
-    }
 
+    }
+    @SubscribeEvent
+    public static void serverStarted(ServerStartedEvent event) {
+        HouseStoreSaver.get(event.getServer().overworld());
+    }
     @SubscribeEvent
     public static void serverStarted(ServerStoppedEvent event) {
         HouseStoreSaver.get(event.getServer().overworld());

@@ -53,6 +53,7 @@ public class ServerBoundVehicleExtensionPacket{
                 }
             }
         });
+        context.setPacketHandled(true);
     }
 
     public static void sendAction(Action action){

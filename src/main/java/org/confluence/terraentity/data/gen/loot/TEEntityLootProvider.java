@@ -110,31 +110,31 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
     }
 
 
-    private LootPool.Builder singleItemPool(ItemLike item, int count, float chance){
+    public static LootPool.Builder singleItemPool(ItemLike item, int count, float chance){
         return weightLootPool(singleItem(item, count), chance);
     }
 
-    private LootPool.Builder singleItemPool(ItemLike item, float chance){
+    public static LootPool.Builder singleItemPool(ItemLike item, float chance){
         return weightLootPool(singleItem(item, 1), chance);
     }
 
-    private LootPool.Builder singleItemPool(ItemLike item){
+    public static LootPool.Builder singleItemPool(ItemLike item){
         return weightLootPool(singleItem(item, 1), 1);
     }
 
-    private LootPool.Builder singleItemPool(RegistryObject<? extends Item> item, int count, float chance){
+    public static LootPool.Builder singleItemPool(RegistryObject<? extends Item> item, int count, float chance){
         return singleItemPool(item.get(), count, chance);
     }
 
-    private LootPool.Builder singleItemPool(RegistryObject<? extends Item> item, float chance){
+    public static LootPool.Builder singleItemPool(RegistryObject<? extends Item> item, float chance){
         return singleItemPool(item.get(), chance);
     }
 
-    private LootPool.Builder singleItemPool(RegistryObject<? extends Item> item){
+    public static LootPool.Builder singleItemPool(RegistryObject<? extends Item> item){
         return singleItemPool(item.get());
     }
 
-    private LootPool.Builder weightLootPool(LootPoolSingletonContainer.Builder<?> builder, float chance){
+    public static LootPool.Builder weightLootPool(LootPoolSingletonContainer.Builder<?> builder, float chance){
         if(chance >= 1){
             return LootPool.lootPool().add(builder);
         }
@@ -144,13 +144,13 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
     }
 
 
-    private LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int count){
+    public static LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int count){
         if(count == 1)
             return LootItem.lootTableItem(item);
         return LootItem.lootTableItem(item).apply(SetItemCountFunction.setCount(ConstantValue.exactly(count)));
     }
 
-    private LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int countMin, int countMax){
+    public static LootPoolSingletonContainer.Builder<?> singleItem(ItemLike item, int countMin, int countMax){
         return LootItem.lootTableItem(item).apply(SetItemCountFunction.setCount(UniformGenerator.between(countMin, countMax)));
     }
 

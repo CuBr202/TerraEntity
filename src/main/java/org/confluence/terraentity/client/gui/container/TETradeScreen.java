@@ -72,6 +72,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         if (menu.NPCTrades == null || menu.NPCTrades.getTradeManager() == null){
             return;
         }
+        menu.NPCTrades.getTradeManager().refreshAvailableTrades();
         this.row = menu.NPCTrades.trades().size() / 3;
         if (menu.NPCTrades.trades().size() % 3 != 0)
             this.row++;

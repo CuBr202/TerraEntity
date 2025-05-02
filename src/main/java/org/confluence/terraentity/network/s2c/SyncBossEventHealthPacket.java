@@ -6,6 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 import org.confluence.terraentity.mixed.IBossHealthOverlay;
 import org.confluence.terraentity.mixed.IBossEvent;
+import software.bernie.geckolib.network.GeckoLibNetwork;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -52,6 +53,7 @@ public class SyncBossEventHealthPacket {
             } catch (Exception ignored) {
             }
         });
+        ctx.get().setPacketHandled(true);
     }
 
 }

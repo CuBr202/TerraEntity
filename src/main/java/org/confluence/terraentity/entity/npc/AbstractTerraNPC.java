@@ -2,11 +2,11 @@ package org.confluence.terraentity.entity.npc;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Dynamic;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
@@ -16,7 +16,10 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -24,6 +27,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -39,13 +43,18 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
+import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
@@ -71,6 +80,7 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.Nullable;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -121,11 +131,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public AbstractTerraNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
 
-        if(!level.isClientSide()){
-            if(shouldInitName()){
-                initName();
-            }
-        }else{
+        if(level.isClientSide()){
             leftArm = new BoneStateMachine<>(BoneStates.IDLE);
             rightArm = new BoneStateMachine<>(BoneStates.IDLE);
         }
@@ -142,17 +148,14 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
     }
 
-    protected boolean shouldInitName(){
-        return true;
-    }
-
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return false; // 防止被刷走
+        // confluence mixed here
+        return !this.hasCustomName(); // 交互以后不会被刷走
     }
 
     protected void initName(){
-        String name = NPCNames.getRandomName(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
+        String name = NPCNames.getRandomName(ForgeRegistries.ENTITY_TYPES.getKey(this.getType()));
         if(name!= null) {
             this.setCustomName(Component.literal(name));
         }
@@ -202,17 +205,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         setAttackRange(8); // 初始化晚于父类，手动提前初始化
         setCooldownTicks(20);
 
-        // 初始化心情系统
-        this.mood = new NPCMood();
-        var info = NPCMoods.BY_ENTITY_TYPE.get(getType());
-        if(info != null){
-            EnumMap<Mood, Integer> map = info.getSetting().createEnumMap();
-            this.mood.setMoodValueTable(map);
-            for (var info1 : info.moodInfos()) {
-                this.mood.addMoodInfo(info1.moodInfo());
-            }
-        }
-
 //        AdapterUtils.postEvent(event);
         // 使用预先注册的事件处理器
         var consumer = NPCEvent.NPCBrainCollectionEvent.getConsumer(getType());
@@ -226,6 +218,34 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             ai = new NPCAi(this);
         }
         return ai;
+    }
+
+    protected void initData(){
+        // 初始化心情系统
+        this.mood = new NPCMood();
+        var info = NPCMoods.BY_ENTITY_TYPE.get(getType());
+        if(info != null){
+            EnumMap<Mood, Integer> map = info.getSetting().createEnumMap();
+            this.mood.setMoodValueTable(map);
+            for (var info1 : info.moodInfos()) {
+                this.mood.addMoodInfo(info1.moodInfo());
+            }
+        }
+
+        for(Player p :((ServerLevel)level()).players()){
+            p.sendSystemMessage(Component.literal(position().toString()));
+        }
+        NPCEvent.InitNPCTradeEvent event = new NPCEvent.InitNPCTradeEvent(this, ForgeRegistries.ENTITY_TYPES.getKey(this.getType()));
+        AdapterUtils.postEvent(event);
+        // 如果是第一次生成
+        if (trades == null && !level().isClientSide) {
+            trades = NPCTradeManager.getCopy(event.getOrigin());
+            if (trades != null) {
+                trades.initTrades(this);
+                onInitTrades();
+                syncTrades();
+            }
+        }
     }
 
     /**
@@ -384,22 +404,10 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        NPCEvent.InitNPCTradeEvent event = new NPCEvent.InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
-        AdapterUtils.postEvent(event);
-        // 如果是第一次生成
-        if (trades == null) {
-            trades = NPCTradeManager.getCopy(event.getOrigin());
-            if (trades != null) {
-                trades.initTrades(this);
-                onInitTrades();
-                syncTrades();
-            }
-        }
     }
 
     protected void onInitTrades(){
     }
-
 
     @Override
     public void tick(){
@@ -418,7 +426,14 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }else{
             this.cooldownTick = 0;
         }
+
+        if(!level().isClientSide && tickCount == 20){
+            initData();
+
+        }
     }
+
+
 
     @Override
     public void aiStep() {
@@ -441,6 +456,11 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(level().isClientSide()){
             return super.mobInteract(player, hand);
         }
+
+        if(!this.hasCustomName()) {
+            initName();
+        }
+
         if(hand == InteractionHand.OFF_HAND){
             return super.mobInteract(player, hand);
         }
@@ -518,7 +538,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
 //        player.openMenu(new SimpleMenuProvider((id, playerInventory, player1) -> new NPCTradesMenu(id,playerInventory, trades, forge), Component.translatable("confluence.menu.npc_shop")));
         tradingPlayer = player;
-        return InteractionResult.PASS;
+        return InteractionResult.SUCCESS;
     }
 
     private void dropEquipmentToHand(EquipmentSlot slot, Player player, InteractionHand hand){
@@ -640,6 +660,28 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
     }
 
+    public static boolean checkRoutineMonsterSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+//        if (!(pLevel instanceof Level level)) {
+//            return false; // 如果 pLevel 不是 Level 的实例，返回 false
+//        }
+
+        if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
+            return false;
+        }
+
+        int y = pPos.getY();
+        if (y >= 260) {
+            return false; // 不能生成在 y = 260 或更高的位置
+        }
+
+        if(pLevel.getEntities(null, new AABB(pPos.offset(-40,-40,-40), pPos.offset(40,40,40))).stream().anyMatch(
+                entity -> entity instanceof Player
+        )){
+            return true; // 如果周围有玩家，则生成
+        }
+
+        return true;
+    }
     @Override
     protected @NotNull Vec3 getLeashOffset() {
         return new Vec3(-0.3, this.getEyeHeight() * 0.5f, this.getBbWidth() * 0.1F);
@@ -661,7 +703,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     }
 
     @Override
-    public void shootCrossbowProjectile(LivingEntity target, ItemStack itemStack, Projectile projectile, float angle) {
+    public void shootCrossbowProjectile(@NotNull LivingEntity target, @NotNull ItemStack itemStack, @NotNull Projectile projectile, float angle) {
 
          if (projectile instanceof AbstractArrow arrow) {
             AttributeInstance attackDamage = this.getAttribute(Attributes.ATTACK_DAMAGE);
@@ -677,7 +719,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
          this.shootCrossbowProjectile(this, target, projectile, angle, 1.6F);
     }
 
-    public void shootCrossbowProjectile(LivingEntity shooter, LivingEntity target, Projectile projectile, float angle, float velocityIn) {
+    public void shootCrossbowProjectile(@NotNull LivingEntity shooter, @NotNull LivingEntity target, @NotNull Projectile projectile, float angle, float velocityIn) {
         CrossbowAttackMob.super.shootCrossbowProjectile(shooter, target, projectile, angle, velocityIn);
     }
 
@@ -686,7 +728,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
     }
     @Override
-    public void performRangedAttack(LivingEntity livingEntity, float v) {
+    public void performRangedAttack(@NotNull LivingEntity livingEntity, float v) {
 
     }
 

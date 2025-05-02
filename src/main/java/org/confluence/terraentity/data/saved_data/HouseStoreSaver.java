@@ -8,6 +8,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
 
 
@@ -43,7 +44,7 @@ public class HouseStoreSaver extends SavedData {
 
     public static HouseStoreSaver get(Level worldIn) {
         if (!(worldIn instanceof ServerLevel)) {
-            throw new RuntimeException("Attempted to get the data from a client world. This is wrong.");
+            return null;
         }
         ServerLevel world = worldIn.getServer().getLevel(ServerLevel.OVERWORLD);
         DimensionDataStorage dataStorage = world.getDataStorage();

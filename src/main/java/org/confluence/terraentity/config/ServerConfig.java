@@ -1,6 +1,5 @@
 package org.confluence.terraentity.config;
 
-
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ServerConfig {

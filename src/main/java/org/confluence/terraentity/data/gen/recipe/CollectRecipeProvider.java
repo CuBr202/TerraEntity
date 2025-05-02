@@ -1,5 +1,6 @@
 package org.confluence.terraentity.data.gen.recipe;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -13,9 +14,9 @@ import java.util.function.Consumer;
 public class CollectRecipeProvider extends RecipeProvider {
     private final List<AbstractRecipeProvider> subProviders;
 
-    public CollectRecipeProvider(PackOutput output, Factory... factories) {
+    public CollectRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup, Factory... factories) {
         super(output);
-        this.subProviders = Arrays.stream(factories).map(factory -> factory.create(output)).toList();
+        this.subProviders = Arrays.stream(factories).map(factory -> factory.create(output, lookup)).toList();
     }
 
     @Override
@@ -33,6 +34,6 @@ public class CollectRecipeProvider extends RecipeProvider {
 
     @FunctionalInterface
     public interface Factory {
-        AbstractRecipeProvider create(PackOutput output);
+        AbstractRecipeProvider create(PackOutput output,CompletableFuture<HolderLookup.Provider> lookup);
     }
 }

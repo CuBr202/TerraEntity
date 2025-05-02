@@ -33,5 +33,5 @@ public class DefaultBoneBoundIdents {
     public static final String RIGHT_ARM_ARMOR_BONE_IDENT = "Body1";
     public static final String LEFT_ARM_ARMOR_BONE_IDENT = "Body2";
 
-    public static final String HEAD_ARMOR_BONE_IDENT = "head";
+    public static final String HEAD_ARMOR_BONE_IDENT = "Head";
 }

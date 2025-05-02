@@ -11,17 +11,10 @@ import org.confluence.terraentity.network.s2c.*;
 
 public final class NetworkHandler {
     public static final String PROTOCOL_VERSION = "1";
-    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-        TerraEntity.space("main"),
-        () -> PROTOCOL_VERSION,
-        PROTOCOL_VERSION::equals,
-        PROTOCOL_VERSION::equals
-    );
-
-    private static int packetId = 0;
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(TerraEntity.space("main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     public static void register() {
-
+        int packetId = 0;
         CHANNEL.registerMessage(packetId++,  SyncCameraShakePacket.class,  SyncCameraShakePacket::encode,  SyncCameraShakePacket::decode,  SyncCameraShakePacket::handle);
         CHANNEL.registerMessage(packetId++,  SyncSummonPacket.class,  SyncSummonPacket::encode,  SyncSummonPacket::decode,  SyncSummonPacket::handle);
         CHANNEL.registerMessage(packetId++,  SyncBossEventHealthPacket.class,  SyncBossEventHealthPacket::encode,  SyncBossEventHealthPacket::decode,  SyncBossEventHealthPacket::handle);

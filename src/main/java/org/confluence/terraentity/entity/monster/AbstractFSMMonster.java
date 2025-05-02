@@ -53,11 +53,6 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
 
 
 
-    public void onAddedToLevel(){
-        super.onAddedToWorld();
-        addToLevel();
-    }
-
     @Override
     public CircleMobSkills<T> getSkills() {
         return skills;

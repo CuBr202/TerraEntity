@@ -139,7 +139,7 @@ dependencies {
 
     // 车万女仆
     compileOnly fg.deobf("curse.maven:touhou-little-maid-355044:6302618")
-    runtimeOnly fg.deobf("curse.maven:touhou-little-maid-355044:6302618")
+//    runtimeOnly fg.deobf("curse.maven:touhou-little-maid-355044:6302618")
 
     // jade
     compileOnly fg.deobf("curse.maven:jade-324717:6271651")

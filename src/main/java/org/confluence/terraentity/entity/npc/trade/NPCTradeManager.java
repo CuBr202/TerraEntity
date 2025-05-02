@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
@@ -28,6 +29,8 @@ import java.util.*;
  * 交易清单
  */
 public class NPCTradeManager {
+
+    public static DynamicOps<JsonElement> ops;
 
     private List<ITrade> trades;
     private List<ITrade> availableTrades;
@@ -80,7 +83,7 @@ public class NPCTradeManager {
      */
     public void initTrades(ITradeHolder holder){
         if(tradeList!= null){
-            this.trades = tradeList.generateTrades();
+            this.trades = new ArrayList<>(tradeList.generateTrades());
             this.tradeList = null;
         }
         this.setOwner(holder);
@@ -232,11 +235,29 @@ public class NPCTradeManager {
         if(!TRADE_MAP.containsKey(id)){
             return null;
         }
-        return CODEC.decode(JsonOps.INSTANCE, CODEC.encodeStart(JsonOps.INSTANCE, TRADE_MAP.get(id)).get().left().get()).result().get().getFirst();
+        var encode = CODEC.encodeStart(ops, TRADE_MAP.get(id));
+        if(encode.result().isPresent()){
+            var result = CODEC.decode(ops, encode.result().get());
+            if(result.result().isPresent()){
+                return result.result().get().getFirst();
+            }else{
+                if(result.error().isPresent()){
+                    TerraEntity.LOGGER.error("Failed to decode trade list {} : {}", id, result.error().get());
+                }
+            }
+            return null;
+        }else{
+            if(encode.error().isPresent()){
+                TerraEntity.LOGGER.error("Failed to encode trade list {} : {}", id, encode.error().get());
+            }
+            return null;
+        }
     }
 
     public static void readTradesFromJson(ResourceManager manager) {
         Map<ResourceLocation, Resource> jsons = manager.listResources(KEY, r -> r.getPath().endsWith(".json"));
+        ops = JsonOps.INSTANCE;
+
         jsons.forEach((k, v) -> {
             try {
                 ResourceLocation id = TerraEntity.fromSpaceAndPath(k.getNamespace(),

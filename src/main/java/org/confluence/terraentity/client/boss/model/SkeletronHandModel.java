@@ -1,6 +1,7 @@
 package org.confluence.terraentity.client.boss.model;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.profiling.jfr.stats.NetworkPacketSummary;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.boss.SkeletronHand;
 import org.jetbrains.annotations.Nullable;

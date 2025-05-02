@@ -108,7 +108,6 @@ public class Boomerang extends Item implements IItemExtension{
             BoomerangProjectile projectile = new BoomerangProjectile(owner, boomerangModifier, stack);
             return projectile;
         });
-
     }
 
     @Override

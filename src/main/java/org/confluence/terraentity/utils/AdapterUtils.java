@@ -1,15 +1,27 @@
 package org.confluence.terraentity.utils;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.confluence.terraentity.network.NetworkHandler;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 
 public class AdapterUtils {
@@ -42,5 +54,21 @@ public class AdapterUtils {
 
     public static <T> FriendlyByteBuf.Reader<T> CodecReader(Codec<T> CODEC){
         return buffer -> buffer.readJsonWithCodec(CODEC);
+    }
+
+    public static void enchant(ItemStack stack, Enchantment enchantment, int level){
+        stack.enchant(enchantment,level);
+    }
+
+    public static void enchant(ItemStack stack, Enchantment enchantment, int level, @Nullable HolderLookup.RegistryLookup<Enchantment> enchantLookup){
+        stack.enchant(enchantment,level);
+    }
+
+    public static void setPotion(ItemStack stack, Holder<Potion> potion){
+        PotionUtils.setPotion(stack, Potions.STRONG_HEALING);
+    }
+
+    public static void setFirework(ItemStack stack, int duration){
+        FireworkRocketItem.setDuration(stack, (byte)duration);
     }
 }

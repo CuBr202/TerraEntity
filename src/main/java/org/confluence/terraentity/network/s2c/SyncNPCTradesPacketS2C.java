@@ -35,6 +35,8 @@ public class SyncNPCTradesPacketS2C {
         ctx.get().enqueueWork(() -> {
             NPCTradeManager.reset(packet.tradesMap);
         }).exceptionally(e -> null);
+        ctx.get().setPacketHandled(true);
+
     }
 
     public static void sync(ServerPlayer player){

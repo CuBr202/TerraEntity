@@ -10,18 +10,29 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class TELootTableProvider extends LootTableProvider {
 
-    public TELootTableProvider(PackOutput pOutput, Set<ResourceLocation> pRequiredTables, List<SubProviderEntry> pSubProviders) {
-        super(pOutput, pRequiredTables, pSubProviders);
+    public TELootTableProvider(PackOutput pOutput, Set<ResourceLocation> pRequiredTables, List<SubProviderEntry> subProviders, CompletableFuture<HolderLookup.Provider> registries) {
+        super(pOutput, pRequiredTables, subProviders);
     }
 
     public static LootTableProvider getProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProviderFuture) {
         return new LootTableProvider(output, Collections.emptySet(),
                 List.of(
                         new LootTableProvider.SubProviderEntry(TEBlockLootProvider::new, LootContextParamSets.BLOCK),
-                        new LootTableProvider.SubProviderEntry(TEEntityLootProvider::new, LootContextParamSets.ENTITY))
+                        new LootTableProvider.SubProviderEntry(TEEntityLootProvider::new, LootContextParamSets.ENTITY),
+                        new SubProviderEntry(()-> {
+                            try {
+                                return new TENPCLoot(lookupProviderFuture.get());
+                            } catch (InterruptedException | ExecutionException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }, LootContextParamSets.EMPTY)
+
+                )
+
         );
     }
 }

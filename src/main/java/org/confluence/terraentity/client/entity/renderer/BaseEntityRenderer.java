@@ -21,16 +21,16 @@ public abstract class BaseEntityRenderer<T extends Entity, S extends Entity, M e
     protected final M model;
     protected float size;
     protected float offsetY;
-    public BaseEntityRenderer(EntityRendererProvider.Context context, M pModel, float size, float offsetY) {
+    public BaseEntityRenderer(EntityRendererProvider.Context context, M model, float size, float offsetY) {
         super(context);
-        model = pModel;
+        this.model = model;
         this.size = size;
         this.offsetY = offsetY;
     }
 
-    public BaseEntityRenderer(EntityRendererProvider.Context context, M pModel) {
+    public BaseEntityRenderer(EntityRendererProvider.Context context, M model) {
         super(context);
-        model = pModel;
+        this.model = model;
     }
 
     @Override

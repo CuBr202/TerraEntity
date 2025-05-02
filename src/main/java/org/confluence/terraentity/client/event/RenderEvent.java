@@ -2,6 +2,10 @@ package org.confluence.terraentity.client.event;
 
 
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
@@ -13,6 +17,7 @@ import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.client.post.BrainTranslucent;
 import org.confluence.terraentity.config.ClientConfig;
+import org.confluence.terraentity.item.BaseWhipItem;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -49,10 +54,24 @@ public class RenderEvent {
 
     @SubscribeEvent
     public static void renderHand(RenderHandEvent event) {
-//        if(HotSwap.consume > 0){
-//            event.setCanceled(true);
-//            return;
-//        }
-//        HotSwap.consume --;
+        ItemStack stack = event.getItemStack();
+        if (event.getHand() == InteractionHand.MAIN_HAND && stack.getItem() instanceof BaseWhipItem item) {
+            // 右手使用鞭子时取消渲染
+            Player player = Minecraft.getInstance().player;
+            if (player != null && player.getCooldowns().isOnCooldown(item)) {
+//                ci.cancel();
+                float progress = (player.tickCount - BaseWhipItem.clickTime + event.getPartialTick());
+                int cooldown = BaseWhipItem.cooldownTime;
+                progress = Math.min(progress, cooldown) / cooldown;
+
+                progress = progress > 0.5? 2 - progress * 2 : progress * 2;
+                event.getPoseStack().translate(0, -progress  ,0);
+            }
+        }
+
+
     }
+
+
+
 }

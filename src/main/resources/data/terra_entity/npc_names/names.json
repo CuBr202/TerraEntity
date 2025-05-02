@@ -117,36 +117,36 @@
       "Walter": 1.0,
       "Wilbur": 1.0
     }
-    },
-    "terra_entity:goblin_tinkerer": {
-      "names_weights": {
-        "Arback": 1.0,
-        "Dalek": 1.0,
-        "Darz": 1.0,
-        "Durnok": 1.0,
-        "Fahd": 1.0,
-        "Fjell": 1.0,
-        "Gnudar": 1.0,
-        "Grodax": 1.0,
-        "Knogs": 1.0,
-        "Knub": 1.0,
-        "Mobart": 1.0,
-        "Mrunok": 1.0,
-        "Negurk": 1.0,
-        "Nort": 1.0,
-        "Nuxatk": 1.0,
-        "Ragz": 1.0,
-        "Sarx": 1.0,
-        "Smador": 1.0,
-        "Stazen": 1.0,
-        "Stezom": 1.0,
-        "Tgerd": 1.0,
-        "Tkanus": 1.0,
-        "Trogem": 1.0,
-        "Xanos": 1.0,
-        "Xon": 1.0
-      }
-    },
+  },
+  "terra_entity:goblin_tinkerer": {
+    "names_weights": {
+      "Arback": 1.0,
+      "Dalek": 1.0,
+      "Darz": 1.0,
+      "Durnok": 1.0,
+      "Fahd": 1.0,
+      "Fjell": 1.0,
+      "Gnudar": 1.0,
+      "Grodax": 1.0,
+      "Knogs": 1.0,
+      "Knub": 1.0,
+      "Mobart": 1.0,
+      "Mrunok": 1.0,
+      "Negurk": 1.0,
+      "Nort": 1.0,
+      "Nuxatk": 1.0,
+      "Ragz": 1.0,
+      "Sarx": 1.0,
+      "Smador": 1.0,
+      "Stazen": 1.0,
+      "Stezom": 1.0,
+      "Tgerd": 1.0,
+      "Tkanus": 1.0,
+      "Trogem": 1.0,
+      "Xanos": 1.0,
+      "Xon": 1.0
+    }
+  },
   "terra_entity:demolitionist": {
     "names_weights": {
       "Bazdin": 1.0,

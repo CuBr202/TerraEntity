@@ -5,20 +5,39 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.confluence.terraentity.TerraEntity;
 
 public record AmountIngredient(Ingredient ingredient, int amount) {
 
     public static Codec<Ingredient> INGREDIENT_CODEC = new Codec<>() {
         @Override
         public <T> DataResult<Pair<Ingredient, T>> decode(DynamicOps<T> dynamicOps, T t) {
+            MapLike<T> map = dynamicOps.getMap(t).result().get();
+            T i = map.get("item");
+            Ingredient ing = null;
+            if (i!= null) {
+                var item = dynamicOps.getStringValue(i).result().get();
+                ing = Ingredient.of(ForgeRegistries.ITEMS.getValue(TerraEntity.parse(item)));
+            }else{
+                T i2 = map.get("tag");
+                if (i2!= null) {
+                    var tag = TagKey.codec(Registries.ITEM).decode(dynamicOps, i2).result().get().getFirst();
+                    ing = Ingredient.of(tag);
+                }
+            }
+            if(ing != null){
+                return DataResult.success(Pair.of(ing, t));
+            }
 
-            return DataResult.success(Pair.of(Ingredient.fromJson((JsonObject)t),t));
+            return DataResult.error(()-> t + " is not a valid ingredient");
         }
 
         @Override

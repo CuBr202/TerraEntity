@@ -81,9 +81,6 @@ public class BitMask {
     public boolean contains(int index){
         if(index < 0){
             throw new IllegalArgumentException("Index must be between 0 and 63");
-        }else if(index <= 63){
-            long mask = 1L << index;
-            return bitMask.contains(mask);
         }else{
             int indexToCheck = index % 64;
             int indexToCheckInArray = index / 64;

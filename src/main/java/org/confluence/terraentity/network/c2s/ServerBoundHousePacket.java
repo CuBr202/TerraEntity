@@ -104,6 +104,7 @@ public class ServerBoundHousePacket {
                 player.sendSystemMessage(Component.translatable("tooltip.terra_entity.house_detect.mode.delete.success"));
             }
         });
+        context.setPacketHandled(true);
     }
 
 

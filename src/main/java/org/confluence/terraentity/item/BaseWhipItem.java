@@ -41,6 +41,8 @@ public class BaseWhipItem extends Item implements IItemExtension {
 
     public final Supplier<? extends ParticleOptions> particleOptions;
     public final float chance;
+    public static int clickTime;
+    public static int cooldownTime;
 
     public final float markDamage;
     public final float attackSpeed;

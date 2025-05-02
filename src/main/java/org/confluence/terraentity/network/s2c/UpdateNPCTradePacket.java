@@ -1,9 +1,11 @@
 package org.confluence.terraentity.network.s2c;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
 
@@ -46,7 +48,7 @@ public class UpdateNPCTradePacket {
     public static void handle(UpdateNPCTradePacket packet, Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
         var player = context.getSender();
-        UUID npcId = player.getUUID();
+        UUID npcId = packet.npcId;
         int index = packet.index;
         ITrade trade = packet.trade;
 
@@ -63,11 +65,16 @@ public class UpdateNPCTradePacket {
             }
 
         }).exceptionally(e -> null);
+        context.setPacketHandled(true);
     }
 
 
 
-    public static void syncNpcTrade(int index, AbstractTerraNPC npc){
+    public static <T extends Entity & ITradeHolder> void syncNpcTrade(int index, T npc){
         AdapterUtils.sendToAllPlayers(new UpdateNPCTradePacket(index, npc.getUUID(), npc.getTradeManager().trades().get(index)));
+    }
+
+    public static <T extends ITradeHolder> void syncNpcTrade(int index, UUID npcId, T npc){
+        AdapterUtils.sendToAllPlayers(new UpdateNPCTradePacket(index, npcId, npc.getTradeManager().trades().get(index)));
     }
 }

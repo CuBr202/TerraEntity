@@ -38,6 +38,8 @@ public class SyncCameraShakePacket{
         ctx.get().enqueueWork(() -> {
             CameraShakeManager.clientCameraShakeData = packet.cameraShakeData;
         });
+        ctx.get().setPacketHandled(true);
+
     }
 
 }

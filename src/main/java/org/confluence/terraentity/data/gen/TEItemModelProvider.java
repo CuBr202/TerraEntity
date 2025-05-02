@@ -9,6 +9,7 @@ import net.minecraftforge.registries.DeferredRegister;
 
 import org.apache.logging.log4j.util.TriConsumer;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.item.*;
 
 import java.util.Arrays;
@@ -62,19 +63,20 @@ public class TEItemModelProvider extends ItemModelProvider {
                 withExistingParent(path, parent).texture("layer0", TerraEntity.space("item/" + resourcePath + path));
             } catch (Exception e) {
                 withExistingParent(path, MISSING_ITEM);
-                System.out.println("Failed to generate model for " + path + " in " + resourcePath);
+                TerraEntity.LOGGER.info("Failed to generate model for {} in {}", path, resourcePath);
             }
         });
 
         // general
         genModels(List.of(
-                createDir(TERideableItems.ITEMS,"rideable/")
+                createDir(TERideableItems.ITEMS,"rideable/"),
+                createDir(TEItems.TOOLS,"tool/")
         ),"item/generated", (parent, resourcePath, path) -> {
             try {
                 withExistingParent(path, parent).texture("layer0", TerraEntity.space("item/" + resourcePath + path));
             } catch (Exception e) {
                 withExistingParent(path, MISSING_ITEM);
-                System.out.println("Failed to generate model for " + path + " in " + resourcePath);
+                TerraEntity.LOGGER.info("Failed to generate model for {} in {}", path, resourcePath);
             }
         });
     }

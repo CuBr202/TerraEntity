@@ -40,6 +40,7 @@ import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
+import org.confluence.terraentity.network.s2c.SyncJsonS2C;
 import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -209,7 +210,6 @@ public class GameEntityEvent {
         Mob mob = event.getEntity();
         RandomSource randomSource = mob.getRandom();
         Level level = mob.level();
-
         if (mob instanceof DemonEye demonEye) {
             demonEye.setVariant(DemonEyeVariant.random(randomSource));
         } else if (mob instanceof BlackSlime blackSlime) {
@@ -224,14 +224,19 @@ public class GameEntityEvent {
                 slime.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(zombie.blockPosition()), MobSpawnType.JOCKEY, null,null);
                 slime.startRiding(zombie);
                 TEUtils.monsterEnhance(slime);
-
             }
         }
-
         if(event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
             TEUtils.monsterEnhance(living);
         else if(event.getEntity() instanceof Slime slime)
             TEUtils.monsterEnhance(slime);
 
     }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)  {
+
+
+    }
+
 }

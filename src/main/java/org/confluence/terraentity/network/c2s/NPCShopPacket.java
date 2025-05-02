@@ -68,5 +68,6 @@ public class NPCShopPacket {
 
 
         }).exceptionally(e -> null);
+        context.setPacketHandled(true);
     }
 }

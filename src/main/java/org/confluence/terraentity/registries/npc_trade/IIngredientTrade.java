@@ -152,6 +152,10 @@ public interface IIngredientTrade extends ITrade{
             return addCost(new AmountIngredient(Ingredient.of(item), count));
         }
 
+        public B addCost(ItemLike item) {
+            return addCost(new AmountIngredient(Ingredient.of(item), 1));
+        }
+
         public B addCost(ItemStack itemStack) {
             return addCost(new AmountIngredient(Ingredient.of(itemStack), itemStack.getCount()));
         }

@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.confluence.terraentity.config.ConfigRegistry;
+import org.confluence.terraentity.data.biome.TEBiomes;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.event.ModEvent;
 import org.confluence.terraentity.init.*;
@@ -45,8 +46,8 @@ public class TerraEntity {
         TEBlocks.register(modEventBus);
         TEAi.register(modEventBus);
         TEMenus.TYPES.register(modEventBus);
+        TEBiomes.register(modEventBus);
 
-//        TEBiomes.register(modEventBus);
         TEEnchantments.ENCHANTMENTS.register(modEventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigRegistry.register());

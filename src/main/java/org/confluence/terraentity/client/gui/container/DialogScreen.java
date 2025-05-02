@@ -18,9 +18,8 @@ import org.confluence.terraentity.mixed.IPlayer;
 public class DialogScreen extends Screen {
     Button button;
     Screen parent;
-    ITradeHolder entity;
+    ITradeHolder holder;
     Component dialogText;
-
     protected DialogScreen(Component title, Screen parent) {
         super(title);
         this.parent = parent;
@@ -30,9 +29,9 @@ public class DialogScreen extends Screen {
     protected void init() {
         super.init();
 
-        entity = ((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder();
+        holder = ((IPlayer)Minecraft.getInstance().player).terra_entity$getTradeHolder();
         String dialog = null;
-        if(entity instanceof Entity e){
+        if(holder instanceof Entity e){
             dialog = NPCDialogs.getRandomDialog(BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()));
         }
 
@@ -40,17 +39,19 @@ public class DialogScreen extends Screen {
             dialogText = Component.translatable(dialog);
         }
 
-        button = Button.builder(Component.literal("Trade"), p -> {
-            minecraft.setScreen(parent);
-        }).pos(width / 2 - 80, height / 2 + 25).build();
+        button = Button.builder(Component.literal("Trade"), p->{
+            if (minecraft != null) {
+                minecraft.setScreen(parent);
+            }
+        }).pos(width/2 - 80, height / 2 + 25).build();
 
         addRenderableWidget(button);
     }
 
     @Override
     public void onClose() {
-//        super.onClose();
-        minecraft.setScreen(parent);
+        super.onClose();
+
     }
 
     @Override
@@ -62,10 +63,10 @@ public class DialogScreen extends Screen {
         }
 
         // todo draw
-        if(entity.getMood() == null){
+        if(holder.getMood() == null){
             return;
         }
-        var list = entity.getMood().getMoodInfoList();
+        var list = holder.getMood().getMoodInfoList();
         for(int i = 0; i < list.size(); i++){
             ResourceLocation location = list.get(i);
 
@@ -80,7 +81,9 @@ public class DialogScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == 69) { // E
-            this.onClose();
+            if (minecraft != null) {
+                minecraft.setScreen(parent);
+            }
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);

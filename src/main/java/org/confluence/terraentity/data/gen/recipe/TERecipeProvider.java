@@ -1,6 +1,6 @@
 package org.confluence.terraentity.data.gen.recipe;
 
-
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
@@ -9,17 +9,19 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESummonItems;
 import org.confluence.terraentity.init.item.TEWhipItems;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 
 public class TERecipeProvider extends AbstractRecipeProvider {
 
-    public TERecipeProvider(PackOutput output) {
-        super(output);
+    public TERecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
+        super(output, lookup);
     }
 
     @Override
@@ -66,6 +68,15 @@ public class TERecipeProvider extends AbstractRecipeProvider {
 
         netheriteSmithing(recipeOutput, TEBoomerangItems.TRIMARANG.get(), RecipeCategory.COMBAT, TEBoomerangItems.FLAMARANG.get());
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, TEItems.HOUSE_DETECTOR.get())
+                .pattern(" A ")
+                .pattern("ABA")
+                .pattern("C C")
+                .define('A', ItemTags.PLANKS)
+                .define('B', Items.REDSTONE)
+                .define('C', Items.STICK)
+                .unlockedBy("has_red_stone",has(Items.REDSTONE))
+                .save(recipeOutput);
 
     }
 

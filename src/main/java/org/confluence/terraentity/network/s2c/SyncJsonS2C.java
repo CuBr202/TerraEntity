@@ -98,6 +98,8 @@ public class SyncJsonS2C{
             var handle = handler.handle;
             handle.accept(handler, json);
         }).exceptionally(e -> null);
+        ctx.get().setPacketHandled(true);
+
     }
 
 

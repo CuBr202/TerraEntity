@@ -1,7 +1,6 @@
 package org.confluence.terraentity.entity.ai.brain.sensor;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -9,6 +8,7 @@ import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.phys.AABB;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.init.TEAi;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Set;
@@ -23,15 +23,18 @@ public class NPCNearbyOthersSensor extends Sensor<AbstractTerraNPC> {
         this.range = range;
     }
 
-    public Set<MemoryModuleType<?>> requires() {
+    public @NotNull Set<MemoryModuleType<?>> requires() {
         return ImmutableSet.of(MemoryModuleType.HOME, TEAi.MemoryModules.NEARBY_NPC.get());
     }
 
-    protected void doTick(ServerLevel level, AbstractTerraNPC entity) {
+    protected void doTick(@NotNull ServerLevel level, @NotNull AbstractTerraNPC entity) {
         List<AbstractTerraNPC> nearbyEntities = this.getNearestEntity(entity, level);
         entity.getBrain().setMemory(TEAi.MemoryModules.NEARBY_NPC.get(), nearbyEntities);
-        entity.getMood().evaluate(nearbyEntities);
-        entity.syncMood();
+        if (entity.getMood() != null) {
+            entity.getMood().evaluate(nearbyEntities);
+            entity.syncMood();
+        }
+
     }
 
     protected List<AbstractTerraNPC> getNearestEntity(AbstractTerraNPC entity, ServerLevel level) {

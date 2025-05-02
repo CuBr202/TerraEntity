@@ -10,8 +10,6 @@ import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.entity.boss.Skeletron;
 import org.joml.Vector3f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 

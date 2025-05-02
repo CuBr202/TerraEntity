@@ -87,10 +87,6 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
 
     @Override
     public void onAddedToWorld() {
-        this.onAddedToLevel();
-    }
-
-    public void onAddedToLevel() {
         super.onAddedToWorld();
         summon_onAddedToLevel();
     }

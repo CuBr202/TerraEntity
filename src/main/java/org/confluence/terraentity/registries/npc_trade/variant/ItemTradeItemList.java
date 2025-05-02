@@ -39,6 +39,10 @@ public record ItemTradeItemList(List<AmountIngredient> costs, List<ItemStack> re
     public static class Builder extends IIngredientTrade.Builder<ItemTradeItemList, Builder> {
         private final List<ItemStack> result = new ArrayList<>();
 
+        public Builder addResult(ItemLike item) {
+            return addResult(new ItemStack(item));
+        }
+
         public Builder addResult(ItemLike item, int count) {
             return addResult(new ItemStack(item, count));
         }

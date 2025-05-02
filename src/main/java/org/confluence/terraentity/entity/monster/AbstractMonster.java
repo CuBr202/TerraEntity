@@ -112,10 +112,6 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
 
     @Override
     public void onAddedToWorld(){
-        this.onAddedToLevel();
-    }
-
-    public void onAddedToLevel(){
         super.onAddedToWorld();
         if(!level().isClientSide && !ignoreAttributeModify()){
             if(dirty){

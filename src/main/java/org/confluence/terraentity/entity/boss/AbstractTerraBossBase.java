@@ -104,10 +104,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     @Override
     public void onAddedToWorld(){
-        this.onAddedToLevel();
-    }
-
-    public void onAddedToLevel(){
+        super.onAddedToWorld();
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.baseHealth);
         this.getAttribute(Attributes.ARMOR).setBaseValue(baseArmor);
 
@@ -155,8 +152,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
 
-        if(!ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get() && !(this instanceof EaterOfWorldsSegment))
-            this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f, 0));
+
+        this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f, 0));
 
     }
 
