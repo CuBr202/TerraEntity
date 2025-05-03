@@ -1,8 +1,10 @@
 package org.confluence.terraentity.entity.monster.skeleton;
 
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -10,6 +12,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.init.TESounds;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -44,6 +48,15 @@ public class MeleeSkeleton extends RangeSkeleton {
     public boolean doHurtTarget(Entity entity) {
         this.swing(InteractionHand.MAIN_HAND, true);
         return super.doHurtTarget(entity);
+    }
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return TESounds.TR_SKELETON_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.TR_ZOMBIE_DEATH.get();
     }
 
     @Override

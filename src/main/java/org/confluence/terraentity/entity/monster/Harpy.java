@@ -1,5 +1,7 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
@@ -10,7 +12,9 @@ import net.minecraft.world.level.LevelAccessor;
 import org.confluence.terraentity.entity.ai.goal.DashGoal;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.proj.LineProj;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -56,6 +60,16 @@ public class Harpy extends AbstractMonster {
 
             }
         }
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return TESounds.ROUTINE_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.ROUTINE_DEATH.get();
     }
 
     protected void shoot(LivingEntity living){
