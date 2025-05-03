@@ -17,6 +17,7 @@ import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.entity.npc.brain.ArmDealerNPCAi;
 import org.confluence.terraentity.entity.npc.brain.DemolitionistNPCAi;
 import org.confluence.terraentity.entity.npc.brain.NurseAi;
+import org.confluence.terraentity.entity.npc.brain.OldManAi;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TENpcEntities;
@@ -98,6 +99,8 @@ public class ModEvent {
                 collector.getNPC().setCanPerformerAttackTest(e->e.getMainHandItem().getItem() instanceof BowItem);
             });
         }
+
+        event.register(TENpcEntities.OLD_MAN.get(), collector -> collector.setReplace(new OldManAi(collector.getNPC())));
     }
 
 }
