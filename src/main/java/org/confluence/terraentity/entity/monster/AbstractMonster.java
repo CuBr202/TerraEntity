@@ -235,7 +235,23 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
 
         int y = pPos.getY();
         if (y < -35 || y > 40) {
-            return false; // 只能生成在 y = 35 到 y = 40 之间
+            return false; // 只能生成在 y = -35 到 y = 40 之间
+        }
+
+        return true;
+    }
+    public static boolean checkHighLevelMonsterSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+        if (!(pLevel instanceof Level level)) {
+            return false; // 如果 pLevel 不是 Level 的实例，返回 false
+        }
+
+        if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
+            return false;
+        }
+
+        int y = pPos.getY();
+        if (y < 280 || y > 320) {
+            return false; // 只能生成在 y = 280 到 y = 320 之间
         }
 
         return true;
