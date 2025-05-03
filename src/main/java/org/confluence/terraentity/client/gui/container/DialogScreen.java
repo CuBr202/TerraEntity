@@ -56,7 +56,7 @@ public class DialogScreen extends Screen {
 //        if(holder.getTradeManager() != null) {
             addRenderableWidget(button);
 //        }
-        if(holder instanceof AbstractTerraNPC npc && npc.level().isNight() && npc.getType() == TENpcEntities.OLD_MAN.get()){
+        if(holder instanceof AbstractTerraNPC npc && npc.level().getDayTime()%24000>12000 && npc.getType() == TENpcEntities.OLD_MAN.get()){
             summonButton = Button.builder(Component.literal("Summon"), p->{
                 ServerBoundEventPacket.summonSkeletron();
                 minecraft.setScreen(null); // 关闭对话框
