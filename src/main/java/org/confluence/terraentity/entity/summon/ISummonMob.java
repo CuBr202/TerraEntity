@@ -43,11 +43,15 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
+public interface ISummonMob<T extends Mob> {
 
     int getCost();
 
     void setCost(int cost);
+    
+    default T asEntity(){
+        return (T) this;
+    }
 
     /*Tamed Animals**/
 
@@ -55,15 +59,15 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
 
     default LivingEntity summon_getOwner(){
         UUID uuid = this.summon_getOwnerUUID();
-        return uuid == null ? null : confluence$self().level().getPlayerByUUID(uuid);
+        return uuid == null ? null : asEntity().level().getPlayerByUUID(uuid);
     }
 
     default void summon_setOwnerUUID(@Nullable UUID uuid){
-        confluence$self().getEntityData().set(get_DATA_OWNERUUID_ID(), Optional.ofNullable(uuid));
+        asEntity().getEntityData().set(get_DATA_OWNERUUID_ID(), Optional.ofNullable(uuid));
     }
 
     default UUID summon_getOwnerUUID(){
-        return (UUID)((Optional) confluence$self().getEntityData().get(get_DATA_OWNERUUID_ID())).orElse(null);
+        return (UUID)((Optional) asEntity().getEntityData().get(get_DATA_OWNERUUID_ID())).orElse(null);
     }
 
     default boolean summon_unableToMoveToOwner(){
@@ -72,7 +76,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
 
     default boolean summon_shouldTryTeleportToOwner(){
         LivingEntity livingentity = summon_getOwner();
-        return livingentity != null && confluence$self().distanceToSqr(summon_getOwner()) >= summon_getDistanceToTeleportToOwner();
+        return livingentity != null && asEntity().distanceToSqr(summon_getOwner()) >= summon_getDistanceToTeleportToOwner();
     }
 
     default void summon_tryToTeleportToOwner(){
@@ -108,7 +112,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
             uuid = compound.getUUID("Owner");
         } else {
             String s = compound.getString("Owner");
-            MinecraftServer server = confluence$self().getServer();
+            MinecraftServer server = asEntity().getServer();
             if(server!=null) {
                 uuid = OldUsersConverter.convertMobOwnerIfNecessary(server, s);
             }
@@ -127,10 +131,10 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
 
     default void summon_teleportToAroundBlockPos(BlockPos pos) {
         for(int i = 0; i < 10; ++i) {
-            int j = confluence$self().getRandom().nextIntBetweenInclusive(-3, 3);
-            int k = confluence$self().getRandom().nextIntBetweenInclusive(-3, 3);
+            int j = asEntity().getRandom().nextIntBetweenInclusive(-3, 3);
+            int k = asEntity().getRandom().nextIntBetweenInclusive(-3, 3);
             if (Math.abs(j) >= 2 || Math.abs(k) >= 2) {
-                int l = confluence$self().getRandom().nextIntBetweenInclusive(-1, 1);
+                int l = asEntity().getRandom().nextIntBetweenInclusive(-1, 1);
                 if (this.summon_maybeTeleportTo(pos.getX() + j, pos.getY() + l, pos.getZ() + k)) {
                     return;
                 }
@@ -142,23 +146,23 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
         if (!this.summon_canTeleportTo(new BlockPos(x, y, z))) {
             return false;
         } else {
-            confluence$self().moveTo((double)x + 0.5, y, (double)z + 0.5, confluence$self().getYRot(), confluence$self().getXRot());
-            confluence$self().getNavigation().stop();
+            asEntity().moveTo((double)x + 0.5, y, (double)z + 0.5, asEntity().getYRot(), asEntity().getXRot());
+            asEntity().getNavigation().stop();
             return true;
         }
     }
 
     default boolean summon_canTeleportTo(BlockPos pos) {
-        PathType pathtype = WalkNodeEvaluator.getPathTypeStatic(confluence$self(), pos);
+        PathType pathtype = WalkNodeEvaluator.getPathTypeStatic(asEntity(), pos);
         if (pathtype != PathType.WALKABLE && !summon_canFlyToOwner()) {
             return false;
         } else {
-            BlockState blockstate = confluence$self().level().getBlockState(pos.below());
+            BlockState blockstate = asEntity().level().getBlockState(pos.below());
             if (!this.summon_canFlyToOwner() && blockstate.getBlock() instanceof LeavesBlock) {
                 return false;
             } else {
-                BlockPos blockpos = pos.subtract(confluence$self().blockPosition());
-                return confluence$self().level().noCollision(confluence$self(), confluence$self().getBoundingBox().move(blockpos));
+                BlockPos blockpos = pos.subtract(asEntity().blockPosition());
+                return asEntity().level().noCollision(asEntity(), asEntity().getBoundingBox().move(blockpos));
             }
         }
     }
@@ -173,18 +177,18 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
         summon_setOwnerUUID(player.getUUID());
         summon_setTame(true, true);
         if(stack.getItem() instanceof SummonItem<?> summonItem)
-            confluence$self().getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(summonItem.baseAttackDamage);
+            asEntity().getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(summonItem.baseAttackDamage);
         ModLoader.postEvent(new SummonEvent<>(player, stack, this));
     }
 
     /* Attack API */
     /**简单攻击*/
     default boolean summon_doHurtTarget(Entity entity) {
-        float f = (float)confluence$self().getAttributeValue(Attributes.ATTACK_DAMAGE);
-        DamageSource damagesource = confluence$self().damageSources().source(TETags.DamageTypes.SUMMONER, summon_getOwner());
-        Level var5 = confluence$self().level();
+        float f = (float)asEntity().getAttributeValue(Attributes.ATTACK_DAMAGE);
+        DamageSource damagesource = asEntity().damageSources().source(TETags.DamageTypes.SUMMONER, summon_getOwner());
+        Level var5 = asEntity().level();
         if (var5 instanceof ServerLevel serverlevel) {
-            f = EnchantmentHelper.modifyDamage(serverlevel, confluence$self().getWeaponItem(), entity, damagesource, f);
+            f = EnchantmentHelper.modifyDamage(serverlevel, asEntity().getWeaponItem(), entity, damagesource, f);
         }
         // 事件统一处理
 //        f += (float) summon_getOwner().getAttributeValue(TEAttributes.MARK_DAMAGE);
@@ -193,29 +197,29 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
             float f1 = summon_getKnockback(entity, damagesource);
             if (f1 > 0.0F && entity instanceof LivingEntity) {
                 LivingEntity livingentity = (LivingEntity)entity;
-                livingentity.knockback(f1 * 0.5F, Mth.sin(confluence$self().getYRot() * 0.017453292F), -Mth.cos(confluence$self().getYRot() * 0.017453292F));
-                confluence$self().setDeltaMovement(confluence$self().getDeltaMovement().multiply(0.6, 1.0, 0.6));
+                livingentity.knockback(f1 * 0.5F, Mth.sin(asEntity().getYRot() * 0.017453292F), -Mth.cos(asEntity().getYRot() * 0.017453292F));
+                asEntity().setDeltaMovement(asEntity().getDeltaMovement().multiply(0.6, 1.0, 0.6));
             }
 
-            Level var7 = confluence$self().level();
+            Level var7 = asEntity().level();
             if (var7 instanceof ServerLevel) {
                 ServerLevel serverlevel1 = (ServerLevel)var7;
                 EnchantmentHelper.doPostAttackEffects(serverlevel1, entity, damagesource);
             }
 
-            confluence$self().setLastHurtMob(entity);
-//            confluence$self().playAttackSound();
+            asEntity().setLastHurtMob(entity);
+//            asEntity().playAttackSound();
         }
 
         return flag;
     }
 
     default float summon_getKnockback(Entity attacker, DamageSource damageSource) {
-        float f = (float)confluence$self().getAttributeValue(Attributes.ATTACK_KNOCKBACK);
-        Level var5 = confluence$self().level();
+        float f = (float)asEntity().getAttributeValue(Attributes.ATTACK_KNOCKBACK);
+        Level var5 = asEntity().level();
         float var10000;
         if (var5 instanceof ServerLevel serverlevel) {
-            var10000 = EnchantmentHelper.modifyKnockback(serverlevel, confluence$self().getWeaponItem(), attacker, damageSource, f);
+            var10000 = EnchantmentHelper.modifyKnockback(serverlevel, asEntity().getWeaponItem(), attacker, damageSource, f);
         } else {
             var10000 = f;
         }
@@ -230,28 +234,28 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
 
     default void summon_registerCommonGoals(){
         summon_registerMoveGoal();
-        confluence$self().goalSelector.addGoal(10, new LookAtPlayerGoal(confluence$self(), Player.class, 8.0F));
-        confluence$self().goalSelector.addGoal(10, new RandomLookAroundGoal(confluence$self()));
+        asEntity().goalSelector.addGoal(10, new LookAtPlayerGoal(asEntity(), Player.class, 8.0F));
+        asEntity().goalSelector.addGoal(10, new RandomLookAroundGoal(asEntity()));
 
-        confluence$self().targetSelector.addGoal(1, new SummonPriorAttackGoal<>(confluence$self(), false));
-        confluence$self().targetSelector.addGoal(2, new SummonOwnerHurtByTargetGoal(confluence$self()));
-        confluence$self().targetSelector.addGoal(3, new SummonOwnerHurtTargetGoal(confluence$self()));
-        confluence$self().targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(confluence$self(), Monster.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
-        confluence$self().targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(confluence$self(), Slime.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
+        asEntity().targetSelector.addGoal(1, new SummonPriorAttackGoal<>(asEntity(), false));
+        asEntity().targetSelector.addGoal(2, new SummonOwnerHurtByTargetGoal(asEntity()));
+        asEntity().targetSelector.addGoal(3, new SummonOwnerHurtTargetGoal(asEntity()));
+        asEntity().targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(asEntity(), Monster.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
+        asEntity().targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(asEntity(), Slime.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
     }
 
     default void summon_registerMoveGoal(){
-        confluence$self().goalSelector.addGoal(6, new SummonFollowOwnerGoal(confluence$self(), 1.0, 10.0F, 2.0F));
+        asEntity().goalSelector.addGoal(6, new SummonFollowOwnerGoal(asEntity(), 1.0, 10.0F, 2.0F));
     }
 
     default void summon_onAddedToLevel() {
-        if(!confluence$self().level().isClientSide){
+        if(!asEntity().level().isClientSide){
             if(summon_getOwner()== null) {
-                confluence$self().discard();
+                asEntity().discard();
                 return;
             }
             var data = summon_getOwner().getData(TEAttachments.SUMMONER_STORAGE.get());
-            data.getIds().add(confluence$self().getId());
+            data.getIds().add(asEntity().getId());
         }
     }
 
@@ -260,7 +264,7 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
         if(summon_getOwner() instanceof ServerPlayer owner){
             var data = summon_getOwner().getData(TEAttachments.SUMMONER_STORAGE.get());
             if(data.canRemove(getCost())){
-                data.remove(owner, getCost(), confluence$self().getId());
+                data.remove(owner, getCost(), asEntity().getId());
                 if(summon_getOwner() instanceof ServerPlayer serverPlayer)
                     data.sync(serverPlayer);
             }
@@ -268,11 +272,11 @@ public interface ISummonMob<T extends Mob> extends SelfGetter<T> {
     }
 
     default boolean summon_discardWhenOwnerDie(){
-        if(confluence$self().level().isClientSide) return false;
+        if(asEntity().level().isClientSide) return false;
         if(summon_getOwner() != null) {
-            Entity entity = confluence$self().level().getEntity(summon_getOwner().getId());
+            Entity entity = asEntity().level().getEntity(summon_getOwner().getId());
             if(entity == null || !entity.isAlive()) {
-                confluence$self().discard();
+                asEntity().discard();
                 return true;
             }
         }

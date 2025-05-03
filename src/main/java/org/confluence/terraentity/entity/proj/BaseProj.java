@@ -45,7 +45,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     public Consumer<BaseProj> clientTickCallback;
     public ITrackType trackType;
     public IGeneration generation;
-    CollisionProperties collisionProperties = new CollisionProperties(3,5,0.5f);
+    CollisionProperties collisionProperties = new CollisionProperties(1,1,0.5f);
     protected double accelerationPower = 0.1;
 
     public CollisionProperties getCollisionProperties(){

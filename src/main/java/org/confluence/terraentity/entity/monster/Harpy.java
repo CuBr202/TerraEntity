@@ -10,11 +10,11 @@ import net.minecraft.world.level.LevelAccessor;
 import org.confluence.terraentity.entity.ai.goal.DashGoal;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.proj.LineProj;
-import org.confluence.terraentity.entity.proj.VileSpitProj;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.constant.DefaultAnimations;
 
 public class Harpy extends AbstractMonster {
 
@@ -59,12 +59,14 @@ public class Harpy extends AbstractMonster {
     }
 
     protected void shoot(LivingEntity living){
-        LineProj proj = new VileSpitProj(TEProjectileEntities.VILE_SPIT_PROJ.get(), level());
-        proj.setPos(this.getEyePosition());
-        proj.setOwner(this);
-        proj.shoot(living.getX() - this.getX(), living.getY() - this.getY(), living.getZ() - this.getZ(), 0.5f, 2f);
-        proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
-        level().addFreshEntity(proj);
+        LineProj proj = TEProjectileEntities.HARPY_FEATURE_PROJ.get().create(level());
+        if(proj != null) {
+            proj.setPos(this.getEyePosition());
+            proj.setOwner(this);
+            proj.shoot(living.getX() - this.getX(), living.getY() - this.getY(), living.getZ() - this.getZ(), 0.5f, 2f);
+            proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+            level().addFreshEntity(proj);
+        }
     }
 
     @Override
@@ -87,12 +89,9 @@ public class Harpy extends AbstractMonster {
         });
     }
 
-    RawAnimation fly = RawAnimation.begin().thenLoop("fly");
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "Walk/Idle/Attack", 5, state ->{
-            return state.setAndContinue(fly);
-        }));
+        controllers.add(DefaultAnimations.genericFlyController(this));
     }
+
 }

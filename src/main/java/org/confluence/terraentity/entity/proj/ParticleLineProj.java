@@ -1,7 +1,6 @@
 package org.confluence.terraentity.entity.proj;
 
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -14,22 +13,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-/**
- * 世吞体节口水
- */
-public class VileSpitProj extends LineProj {
+
+public class ParticleLineProj extends LineProj {
 
     public ParticleOptions particleOptions = TEParticles.SPIT_GLOW.get();
 
-    public VileSpitProj(EntityType<? extends LineProj> pEntityType, Level pLevel, MobEffectInstance effect) {
+    public ParticleLineProj(EntityType<? extends LineProj> pEntityType, Level pLevel, MobEffectInstance effect) {
         super(pEntityType, pLevel, effect);
     }
 
-    public VileSpitProj(EntityType<? extends LineProj> pEntityType, Level pLevel, List<MobEffectInstance> effects) {
+    public ParticleLineProj(EntityType<? extends LineProj> pEntityType, Level pLevel, List<MobEffectInstance> effects) {
         super(pEntityType, pLevel, effects);
     }
 
-    public VileSpitProj(EntityType<? extends LineProj> pEntityType, Level pLevel) {
+    public ParticleLineProj(EntityType<? extends LineProj> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
@@ -52,7 +49,7 @@ public class VileSpitProj extends LineProj {
         return null;
     }
 
-    public VileSpitProj setParticleOptions(ParticleOptions particleOptions) {
+    public ParticleLineProj setParticleOptions(ParticleOptions particleOptions) {
         this.particleOptions = particleOptions;
         return this;
     }

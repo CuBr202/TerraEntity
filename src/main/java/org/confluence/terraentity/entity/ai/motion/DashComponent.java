@@ -22,6 +22,10 @@ public class DashComponent {
         this.direction = direction;
     }
 
+    public void setTargetPos(Vec3 targetPos) {
+        this.targetPos = targetPos;
+    }
+
     /**
      * 悬挂在目标实体目标位置
      * @param target 目标实体

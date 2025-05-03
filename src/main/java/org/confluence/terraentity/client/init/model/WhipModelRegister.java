@@ -1,4 +1,4 @@
-package org.confluence.terraentity.client.entity.model;
+package org.confluence.terraentity.client.init.model;
 
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;

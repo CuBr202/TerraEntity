@@ -43,6 +43,7 @@ public class TETags {
         // 召唤物召唤伤害 用于标记伤害增伤
         public static final ResourceKey<DamageType> SUMMONER = registerDamageType("summoner");
         public static final ResourceKey<DamageType> FROST_BURN = registerDamageType("frost_burn");
+        public static final ResourceKey<DamageType> PASS_ARMOR = registerDamageType("pass_armor");
 
 
 
@@ -62,6 +63,7 @@ public class TETags {
             context.register(SUMMON, new DamageType("summon_damage_type", 0.1F));
             context.register(SUMMONER, new DamageType("summoner_damage_type", 0.1F));
             context.register(FROST_BURN, new DamageType("frost_burn_damage_type", 0.1F));
+            context.register(PASS_ARMOR, new DamageType("pass_armor_damage_type", 0.1F));
         }
     }
 

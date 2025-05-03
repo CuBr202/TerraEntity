@@ -1,13 +1,11 @@
-package org.confluence.terraentity.client.entity.model;
+package org.confluence.terraentity.client.init.model;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.init.item.TEWhipItems;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;

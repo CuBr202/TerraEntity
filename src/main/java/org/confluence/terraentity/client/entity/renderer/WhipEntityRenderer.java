@@ -21,7 +21,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.client.entity.model.WhipModelRegister;
+import org.confluence.terraentity.client.init.model.WhipModelRegister;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.entity.ai.keyframe.FrameUtil;

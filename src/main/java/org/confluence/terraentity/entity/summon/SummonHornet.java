@@ -28,7 +28,7 @@ import java.util.UUID;
 public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
 
     public SummonHornet(EntityType<? extends Monster> type, Level level) {
-        super(type, level, FlyMonsterPrefab.BEE_BUILDER.get().setMovementSpeed(1));
+        super(type, level, FlyMonsterPrefab.BEE_BUILDER.get().setFollowRange(20).setMovementSpeed(1));
         this.attackInternal = 20;
     }
 
@@ -45,6 +45,13 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
         this.goalSelector.addGoal(9, new FloatGoal(this));
 
         registerTargetGoal(this.targetSelector);
+    }
+
+    public void tick() {
+        super.tick();
+        if(getTarget() != null){
+            this.lookAt(getTarget(), 10, 85);
+        }
     }
 
     protected void registerTargetGoal(GoalSelector targetSelector){

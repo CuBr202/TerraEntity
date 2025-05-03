@@ -214,6 +214,7 @@ public class TEChineseProvider extends LanguageProvider {
 
 
         // 召唤杖
+        add(TESummonItems.FINCH_STAFF.get(), "雀杖");
         add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
         add(TESummonItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
         add(TESummonItems.HORNET_STAFF.get(), "黄蜂法杖");

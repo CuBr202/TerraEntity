@@ -264,7 +264,7 @@ public final class TEUtils {
     }
 
     public static void monsterEnhance(LivingEntity entity) {
-        if(entity instanceof Boss || entity instanceof AbstractTerraBossBase<?>) return;
+        if(entity instanceof Boss || entity instanceof AbstractTerraBossBase<?> || entity instanceof ISummonMob<?> ) return;
         if(!ServerConfig.ENHANCE_ALL_MONSTER.get() && !BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getNamespace().equals(TerraEntity.MODID)) return;
         if(!entity.level().isClientSide) {
             float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);

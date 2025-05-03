@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.client.entity.model.EntityBlockModelRegister;
+import org.confluence.terraentity.client.init.model.EntityBlockModelRegister;
 import org.confluence.terraentity.entity.monster.Snatcher;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.utils.TEUtils;

@@ -15,6 +15,9 @@ import org.confluence.terraentity.client.block.renderer.FigureBlockRenderer;
 import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.entity.renderer.ReplacedSpiderRenderer;
 import org.confluence.terraentity.client.gui.container.SimpleTradeScreen;
+import org.confluence.terraentity.client.init.model.AdditionalItemRegister;
+import org.confluence.terraentity.client.init.model.EntityBlockModelRegister;
+import org.confluence.terraentity.client.init.model.WhipModelRegister;
 import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.client.particle.SpitParticle;
 import org.confluence.terraentity.config.ClientConfig;
@@ -69,7 +72,7 @@ public final class ModClientEvent {
         registerModel(event, CrownOfKingSlimeModel.class);
         registerModel(event, CabbageProjModel.class);
         registerModel(event, Stinger.class);
-
+        registerModel(event, HarpyFeatherProjectileModel.class);
 
     }
 
@@ -100,6 +103,7 @@ public final class ModClientEvent {
     public static void registerAdditionalModel(ModelEvent.RegisterAdditional event) {
         WhipModelRegister.getInstance().register(event);
         EntityBlockModelRegister.getInstance().register(event);
+        AdditionalItemRegister.getInstance().register(event);
     }
 
     @SubscribeEvent
