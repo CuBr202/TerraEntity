@@ -36,7 +36,9 @@ public class AbstractPrefab {
                 })
         ;
     }
-
+    public AbstractPrefab(int health, int armor, int attack) {
+        this(health, armor, attack, 20, 1f, 0.28f);
+    }
 
     protected final AttributeBuilder SIMPLE_MONSTER;
 

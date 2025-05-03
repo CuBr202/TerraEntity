@@ -23,6 +23,7 @@ import net.minecraft.world.level.LevelAccessor;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -31,7 +32,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
-public class AbstractMonster extends Monster implements GeoEntity , ICollisionAttackEntity<AbstractMonster> {
+public class AbstractMonster extends Monster implements GeoEntity , ICollisionAttackEntity<AbstractMonster>, IAttributeHolder {
 
     protected CollisionProperties collisionProperties = new CollisionProperties(10, 20, 0);
     public AttributeBuilder builder;
@@ -52,10 +53,10 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         this.xpReward = builder.xpReward;
     }
 
-    @Override
-    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType spawnReason) {
-        return spawnReason == MobSpawnType.NATURAL; // 无视光照
-    }
+//    @Override
+//    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType spawnReason) {
+//        return spawnReason == MobSpawnType.NATURAL; // 无视光照
+//    }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
@@ -330,4 +331,8 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     }
 
 
+    @Override
+    public AttributeBuilder getAttributeBuilder() {
+        return builder;
+    }
 }

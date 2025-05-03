@@ -1,10 +1,6 @@
 package org.confluence.terraentity.entity.util.trail;
 
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.proj.BoomerangProjectile;
-import org.confluence.terraentity.entity.util.ITrail;
-
-import java.util.Queue;
 
 public class BoomerangTrail implements ITrail<BoomerangProjectile> {
     TrailProperties properties;

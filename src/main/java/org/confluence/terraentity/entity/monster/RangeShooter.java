@@ -1,6 +1,5 @@
 package org.confluence.terraentity.entity.monster;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,22 +11,25 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.entity.proj.LineProj;
-import org.confluence.terraentity.entity.proj.VileSpitProj;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
+import java.util.function.Supplier;
+
 public class RangeShooter extends AbstractMonster {
 
     int _phase = 200;
     int phase = _phase;
+    Supplier<? extends EntityType<? extends BaseProj<?>>> projType;
 
-    public RangeShooter(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
+    public RangeShooter(EntityType<? extends Monster> type, Level level, Supplier<? extends EntityType<? extends BaseProj<?>>> projType, AttributeBuilder builder) {
         super(type, level, builder);
-
+        this.projType = projType;
     }
 
     public void tick() {
@@ -41,7 +43,7 @@ public class RangeShooter extends AbstractMonster {
             lookAt(target, 10, 70);
             this.moveControl.strafe(0.01f, 0.01f);
             if(phase == 180 || phase == 130 || phase == 80){
-                LineProj proj = TEProjectileEntities.VILE_SPIT_PROJ.get().create(level());
+                BaseProj proj = projType.get().create(level());
                 proj.setOwner(this);
                 proj.setPos(this.getEyePosition());
                 proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));

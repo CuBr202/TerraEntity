@@ -26,11 +26,11 @@ import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
-import org.confluence.terraentity.entity.monster.skeleton.Decayeder;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
@@ -38,13 +38,13 @@ import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
-import org.confluence.terraentity.network.s2c.SyncJsonS2C;
 import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -98,12 +98,13 @@ public class GameEntityEvent {
         // Caused by: java.lang.ClassCastException: class net.minecraft.world.entity.projectile.Arrow cannot be cast to class net.minecraft.world.entity.LivingEntity
         LivingEntity e1 = event.getEntity();
         Level level = event.getEntity().level();
+        Entity attacker = event.getSource().getEntity();
         if (!(level instanceof ServerLevel serverLevel)) return;
-        if (event.getSource().getEntity() instanceof Decayeder dp) {
+        if (attacker != null && attacker.getType() == TEMonsterEntities.DECAYEDER.get()) {
             if (!e1.hasEffect(TEEffects.DEMONIC_THOUGHTS)) {
                 e1.addEffect(new MobEffectInstance(
                         TEEffects.DEMONIC_THOUGHTS, 200
-                ), dp);
+                ), attacker);
             } else {
                 e1.removeEffect(TEEffects.DEMONIC_THOUGHTS);
                 e1.hurt(event.getSource(), 6);
@@ -234,7 +235,15 @@ public class GameEntityEvent {
             TEUtils.monsterEnhance(slime);
 
     }
+    @SubscribeEvent
+    public static void onCheckSpawnPosition(MobSpawnEvent.PositionCheck event)  {
+        if(event.getEntity() instanceof IAttributeHolder holder){
+            if(holder.getAttributeBuilder().spawnWithoutLight && event.getSpawnType() == MobSpawnType.NATURAL){
+                event.setResult(MobSpawnEvent.PositionCheck.Result.SUCCEED);
+            }
 
+        }
+    }
 //    @SubscribeEvent
 //    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)  {
 //

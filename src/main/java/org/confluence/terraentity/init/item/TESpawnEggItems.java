@@ -7,8 +7,10 @@ import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.confluence.terraentity.entity.monster.RangeShooter;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.monster.skeleton.MeleeSkeleton;
+import org.confluence.terraentity.entity.monster.skeleton.RangeSkeleton;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
@@ -74,31 +76,44 @@ public class TESpawnEggItems {
 
     // 地牢骷髅
 
-    public static final DeferredItem<Item> ANGER_BONES_SPAWN_EGG = registerEgg("anger_bones_spawn_egg", TEMonsterEntities.ANGER_BONES, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> SHORT_BONES_SPAWN_EGG = registerEgg("short_bones_spawn_egg", TEMonsterEntities.SHORT_BONES, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> BIG_BONES_SPAWN_EGG = registerEgg("big_bones_spawn_egg", TEMonsterEntities.BIG_BONES, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> BIG_ANGER_BONES_SPAWN_EGG = registerEgg("big_anger_bones_spawn_egg", TEMonsterEntities.BIG_ANGER_BONES, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> BIG_MUSCLE_ANGER_BONES_SPAWN_EGG = registerEgg("big_muscle_anger_bones_spawn_egg", TEMonsterEntities.BIG_MUSCLE_ANGER_BONES, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> BIG_HELMET_ANGER_BONES_SPAWN_EGG = registerEgg("big_helmet_anger_bones_spawn_egg", TEMonsterEntities.BIG_HELMET_ANGER_BONES, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> CURSED_SKULL_SPAWN_EGG = registerEgg("cursed_skull_spawn_egg", TEMonsterEntities.CURSED_SKULL, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> DARK_CASTER_SPAWN_EGG = registerEgg("dark_caster_spawn_egg", TEMonsterEntities.DARK_CASTER, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> ANGER_BONES_SPAWN_EGG = registerEgg("anger_bones_spawn_egg", TEMonsterEntities.ANGER_BONES, 0xbcbcbc);
+    public static final DeferredItem<Item> SHORT_BONES_SPAWN_EGG = registerEgg("short_bones_spawn_egg", TEMonsterEntities.SHORT_BONES, 0xbcbcbc);
+    public static final DeferredItem<Item> BIG_BONES_SPAWN_EGG = registerEgg("big_bones_spawn_egg", TEMonsterEntities.BIG_BONES, 0xbcbcbc);
+    public static final DeferredItem<Item> BIG_ANGER_BONES_SPAWN_EGG = registerEgg("big_anger_bones_spawn_egg", TEMonsterEntities.BIG_ANGER_BONES, 0xbcbcbc);
+    public static final DeferredItem<Item> BIG_MUSCLE_ANGER_BONES_SPAWN_EGG = registerEgg("big_muscle_anger_bones_spawn_egg", TEMonsterEntities.BIG_MUSCLE_ANGER_BONES, 0xbcbcbc);
+    public static final DeferredItem<Item> BIG_HELMET_ANGER_BONES_SPAWN_EGG = registerEgg("big_helmet_anger_bones_spawn_egg", TEMonsterEntities.BIG_HELMET_ANGER_BONES, 0xbcbcbc);
+    public static final DeferredItem<Item> CURSED_SKULL_SPAWN_EGG = registerEgg("cursed_skull_spawn_egg", TEMonsterEntities.CURSED_SKULL, 0xbcbcbc);
+    public static final DeferredItem<Item> DARK_CASTER_SPAWN_EGG = registerEgg("dark_caster_spawn_egg", TEMonsterEntities.DARK_CASTER, 0xbcbcbc);
+
+    // 哥布林军队
+
+    public static final DeferredItem<Item> GOBLIN_SORCERER_SPAWN_EGG = registerEgg("goblin_sorcerer_spawn_egg", TEMonsterEntities.GOBLIN_SORCERER, 0x12bc12);
+    public static final DeferredItem<Item> GOBLIN_ARCHER_SPAWN_EGG = registerEgg("goblin_archer_spawn_egg", TEMonsterEntities.GOBLIN_ARCHER, 0x12bc12);
+    public static final DeferredItem<Item> GOBLIN_PEON_SPAWN_EGG = registerEgg("goblin_peon_spawn_egg", TEMonsterEntities.GOBLIN_PEON, 0x12bc12);
+    public static final DeferredItem<Item> GOBLIN_WARRIOR_SPAWN_EGG = registerEgg("goblin_warrior_spawn_egg", TEMonsterEntities.GOBLIN_WARRIOR, 0x12bc12);
+    public static final DeferredItem<Item> GOBLIN_THIEF_SPAWN_EGG = registerEgg("goblin_thief_spawn_egg", TEMonsterEntities.GOBLIN_THIEF, 0x12bc12);
+    public static final DeferredItem<Item> GOBLIN_SCOUT_SPAWN_EGG = registerEgg("goblin_scout_spawn_egg", TEMonsterEntities.GOBLIN_SCOUT, 0x12bc12);
+
     // NPC
-    public static final DeferredItem<Item> GUILD_SPAWN_EGG = registerEgg("guild_spawn_egg", TENpcEntities.GUIDE, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> DEMOLITIONIST_SPAWN_EGG = registerEgg("demolitionist_spawn_egg", TENpcEntities.DEMOLITIONIST, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> GOBLIN_TINKERER_SPAWN_EGG = registerEgg("goblin_tinkerer_spawn_egg", TENpcEntities.GOBLIN_TINKERER, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> ARMS_DEALER_SPAWN_EGG = registerEgg("arms_dealer_spawn_egg", TENpcEntities.ARMS_DEALER, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> NURSE_SPAWN_EGG = registerEgg("nurse_spawn_egg", TENpcEntities.NURSE, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> MERCHANT_SPAWN_EGG = registerEgg("merchant_spawn_egg", TENpcEntities.MERCHANT, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> PAINTER_SPAWN_EGG = registerEgg("painter_spawn_egg", TENpcEntities.PAINTER, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> DRYAD_SPAWN_EGG = registerEgg("dryad_spawn_egg", TENpcEntities.DRYAD, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> DYE_TRADER_SPAWN_EGG = registerEgg("dye_trader_spawn_egg", TENpcEntities.DYE_TRADER, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> ANGLER_SPAWN_EGG = registerEgg("angler_spawn_egg", TENpcEntities.ANGLER, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> OLD_MAN_SPAWN_EGG = registerEgg("old_man_spawn_egg", TENpcEntities.OLD_MAN, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> GUILD_SPAWN_EGG = registerEgg("guild_spawn_egg", TENpcEntities.GUIDE, 0xcdb326);
+    public static final DeferredItem<Item> DEMOLITIONIST_SPAWN_EGG = registerEgg("demolitionist_spawn_egg", TENpcEntities.DEMOLITIONIST, 0xcdb326);
+    public static final DeferredItem<Item> GOBLIN_TINKERER_SPAWN_EGG = registerEgg("goblin_tinkerer_spawn_egg", TENpcEntities.GOBLIN_TINKERER, 0xcdb326);
+    public static final DeferredItem<Item> ARMS_DEALER_SPAWN_EGG = registerEgg("arms_dealer_spawn_egg", TENpcEntities.ARMS_DEALER, 0xcdb326);
+    public static final DeferredItem<Item> NURSE_SPAWN_EGG = registerEgg("nurse_spawn_egg", TENpcEntities.NURSE, 0xcdb326);
+    public static final DeferredItem<Item> MERCHANT_SPAWN_EGG = registerEgg("merchant_spawn_egg", TENpcEntities.MERCHANT, 0xcdb326);
+    public static final DeferredItem<Item> PAINTER_SPAWN_EGG = registerEgg("painter_spawn_egg", TENpcEntities.PAINTER, 0xcdb326);
+    public static final DeferredItem<Item> DRYAD_SPAWN_EGG = registerEgg("dryad_spawn_egg", TENpcEntities.DRYAD, 0xcdb326);
+    public static final DeferredItem<Item> DYE_TRADER_SPAWN_EGG = registerEgg("dye_trader_spawn_egg", TENpcEntities.DYE_TRADER, 0xcdb326);
+    public static final DeferredItem<Item> ANGLER_SPAWN_EGG = registerEgg("angler_spawn_egg", TENpcEntities.ANGLER, 0xcdb326);
+    public static final DeferredItem<Item> OLD_MAN_SPAWN_EGG = registerEgg("old_man_spawn_egg", TENpcEntities.OLD_MAN, 0xcdb326);
 
 
 
 
     public static DeferredItem<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryColor, int secondaryColor){
         return ITEMS.register(name, () -> new DeferredSpawnEggItem(entityType, primaryColor, secondaryColor,new Item.Properties()));
+    }
+    public static DeferredItem<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryColor){
+        return ITEMS.register(name, () -> new DeferredSpawnEggItem(entityType, primaryColor, 0xffffff,new Item.Properties()));
     }
 }

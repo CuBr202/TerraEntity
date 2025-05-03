@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.util;
+package org.confluence.terraentity.entity.util.trail;
 
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;

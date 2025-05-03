@@ -161,6 +161,15 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.CURSED_SKULL_SPAWN_EGG.get(), "诅咒骷髅头刷怪蛋");
         add(TESpawnEggItems.DARK_CASTER_SPAWN_EGG.get(), "暗黑法师刷怪蛋");
 
+
+        add(TEMonsterEntities.GOBLIN_SORCERER.get(), "哥布林术士");
+        add(TEMonsterEntities.GOBLIN_ARCHER.get(), "哥布林弓箭手");
+        add(TEMonsterEntities.GOBLIN_PEON.get(), "哥布林苦力");
+        add(TEMonsterEntities.GOBLIN_WARRIOR.get(), "哥布林战士");
+        add(TEMonsterEntities.GOBLIN_THIEF.get(), "哥布林盗贼");
+        add(TEMonsterEntities.GOBLIN_SCOUT.get(), "哥布林侦察兵");
+
+
         // boss
         add(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
         add(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
@@ -184,7 +193,12 @@ public class TEChineseProvider extends LanguageProvider {
         add(TENpcEntities.ANGLER.get(), "渔夫");
         add(TENpcEntities.OLD_MAN.get(), "老人");
 
-
+        add(TESpawnEggItems.GOBLIN_SORCERER_SPAWN_EGG.get(), "哥布林术士刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_ARCHER_SPAWN_EGG.get(), "哥布林弓箭手刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_PEON_SPAWN_EGG.get(), "哥布林苦力刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_WARRIOR_SPAWN_EGG.get(), "哥布林战士刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_THIEF_SPAWN_EGG.get(), "哥布林盗贼刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_SCOUT_SPAWN_EGG.get(), "哥布林侦察兵刷怪蛋");
 
         add(TESpawnEggItems.GUILD_SPAWN_EGG.get(), "向导刷怪蛋");
         add(TESpawnEggItems.DEMOLITIONIST_SPAWN_EGG.get(), "爆破专家刷怪蛋");

@@ -50,6 +50,7 @@ public class TEProjectileEntities {
         event.registerEntityRenderer(TEProjectileEntities.BOOMERANG_PROJECTILE.get(), BoomerangProjRenderer::new);
         event.registerEntityRenderer(TEProjectileEntities.SKULL.get(), SkullProjectileRenderer::new);
         RegisterUtils.registerBaseProjRenderer(event, TEProjectileEntities.VILE_SPIT_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
+        RegisterUtils.registerBaseProjRenderer(event, TEProjectileEntities.DARK_CASTER_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
 
         // 鞭子
         event.registerEntityRenderer(TEProjectileEntities.WHIP_PROJECTILE.get(), WhipEntityRenderer::new);

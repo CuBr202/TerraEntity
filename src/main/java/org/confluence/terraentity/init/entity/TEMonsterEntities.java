@@ -23,7 +23,7 @@ import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.monster.prefab.LandMonsterPrefab;
-import org.confluence.terraentity.entity.monster.skeleton.Decayeder;
+import org.confluence.terraentity.entity.monster.skeleton.RangeSkeleton;
 import org.confluence.terraentity.entity.monster.skeleton.MeleeSkeleton;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
@@ -65,7 +65,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Harpy>> HARPY = TEEntities.registerEntity("harpy", (e,l)->new Harpy(e,l, new FlyMonsterPrefab(41,2,13,20,1f,0.28f).getPrefab()), 1f, 2f);
 
     // 陆行怪
-    public static final DeferredHolder<EntityType<?>, EntityType<Decayeder>> DECAYEDER = TEEntities.registerEntity("decayeder", Decayeder::new,1,1.8f);
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeSkeleton>> DECAYEDER = TEEntities.registerEntity("decayeder", (e,l)->new RangeSkeleton(e,l, new AbstractPrefab(10,0,6).getPrefab()),1,1.8f);
     public static final DeferredHolder<EntityType<?>, EntityType<BloodySpore>> BLOODY_SPORE = TEEntities.registerEntity("bloody_spore", BloodySpore::new, 1,1.5f);
     public static final DeferredHolder<EntityType<?>, EntityType<BloodCrawler>> BLOOD_CRAWLER = TEEntities.registerEntity("blood_crawler", BloodCrawler::new, 1.8F, 1.2F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FACE_MONSTER = registerSimpleMonster("face_monster", LandMonsterPrefab.FACE_MONSTER_BUILDER,0.75F,1.95F);
@@ -104,8 +104,15 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<CursedSkull>> CURSED_SKULL = TEEntities.registerEntity("cursed_skull", (e, l)->new CursedSkull(e,l, new AbstractPrefab(21,1,18,32,1,0.82f).getPrefab()),1F,1F);
 
     // 远程法师
-    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> DARK_CASTER = TEEntities.registerEntity("dark_caster", (e, l)->new RangeShooter(e,l, new AbstractPrefab(26,1,10,32,1,0.82f).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> DARK_CASTER = TEEntities.registerEntity("dark_caster", (e, l)->new RangeShooter(e,l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(26,1,10,32,1,0.82f).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> GOBLIN_SORCERER = TEEntities.registerEntity("goblin_sorcerer", (e, l)->new RangeShooter(e,l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(26,1,10,32,1,0.82f).getPrefab()),0.65F,1.85F);
 
+    // 哥布林军队
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeSkeleton>> GOBLIN_ARCHER = TEEntities.registerEntity("goblin_archer", (e, l)->new RangeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.28f).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> GOBLIN_PEON = TEEntities.registerEntity("goblin_peon", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.5f).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> GOBLIN_WARRIOR = TEEntities.registerEntity("goblin_warrior", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.6f).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> GOBLIN_THIEF = TEEntities.registerEntity("goblin_thief", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.5f).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> GOBLIN_SCOUT = TEEntities.registerEntity("goblin_scout", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.28f).getPrefab()),0.65F,1.85F);
 
 
     @OnlyIn(Dist.CLIENT)
@@ -186,6 +193,12 @@ public class TEMonsterEntities {
         // 远程法师
         event.registerEntityRenderer(TEMonsterEntities.DARK_CASTER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.DARK_CASTER.getId()));
 
+        event.registerEntityRenderer(TEMonsterEntities.GOBLIN_SORCERER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.GOBLIN_SORCERER.getId().withPrefix("goblin/")));
+        event.registerEntityRenderer(TEMonsterEntities.GOBLIN_PEON.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.GOBLIN_PEON.getId().withPrefix("goblin/")));
+        event.registerEntityRenderer(TEMonsterEntities.GOBLIN_ARCHER.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.GOBLIN_ARCHER.getId().withPrefix("goblin/")));
+        event.registerEntityRenderer(TEMonsterEntities.GOBLIN_WARRIOR.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.GOBLIN_WARRIOR.getId().withPrefix("goblin/")));
+        event.registerEntityRenderer(TEMonsterEntities.GOBLIN_THIEF.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.GOBLIN_THIEF.getId().withPrefix("goblin/")));
+        event.registerEntityRenderer(TEMonsterEntities.GOBLIN_SCOUT.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.GOBLIN_SCOUT.getId().withPrefix("goblin/")));
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -213,7 +226,7 @@ public class TEMonsterEntities {
         event.put(BLACK_SLIME.get(), Monster.createMonsterAttributes().build()); // 由finalizeSpawn设置
         // land
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
-        event.put(DECAYEDER.get(), Decayeder.createAttributes().build());
+        event.put(DECAYEDER.get(), RangeSkeleton.createAttributes().build());
         event.put(BLOODY_SPORE.get(), BloodySpore.createAttributes().build());
         event.put(FACE_MONSTER.get(), AbstractMonster.createAttributes().build());
         event.put(BLOOD_TUMORS.get(), AbstractMonster.createAttributes().build());
@@ -263,6 +276,16 @@ public class TEMonsterEntities {
 
         // 远程法师
         event.put(DARK_CASTER.get(), AbstractMonster.createAttributes().build());
+
+        // 哥布林军队
+        event.put(GOBLIN_SORCERER.get(), AbstractMonster.createAttributes().build());
+        event.put(GOBLIN_PEON.get(), AbstractMonster.createAttributes().build());
+        event.put(GOBLIN_ARCHER.get(), AbstractMonster.createAttributes().build());
+        event.put(GOBLIN_WARRIOR.get(), AbstractMonster.createAttributes().build());
+        event.put(GOBLIN_THIEF.get(), AbstractMonster.createAttributes().build());
+        event.put(GOBLIN_SCOUT.get(), AbstractMonster.createAttributes().build());
+
+
     }
 
 
@@ -333,6 +356,15 @@ public class TEMonsterEntities {
 
         // 远程法师
         event.register(DARK_CASTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
+
+        // 哥布林军队
+        event.register(GOBLIN_SORCERER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_PEON.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_ARCHER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_WARRIOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_THIEF.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_SCOUT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     private static DeferredHolder<EntityType<?>, EntityType<BaseSlime>> registerSlime(String name, int color, int size) {

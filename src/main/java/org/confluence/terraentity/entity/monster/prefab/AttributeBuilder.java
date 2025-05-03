@@ -31,6 +31,7 @@ public class AttributeBuilder {
     public float JUMP_STRENGTH = 0.41999998688697815f;
     public float STEP_HEIGHT = 0.6f;
     public float attackIncrease = 0;
+    public boolean spawnWithoutLight = false;
 
 
     public boolean attachAttack = true;
@@ -189,6 +190,11 @@ public class AttributeBuilder {
 
     public AttributeBuilder setTicker(Consumer<AbstractMonster> ticker) {
         this.ticker = ticker;
+        return this;
+    }
+
+    public AttributeBuilder setSpawnWithoutLight() {
+        this.spawnWithoutLight = true;
         return this;
     }
 
