@@ -36,6 +36,7 @@ public class Harpy extends AbstractMonster {
     public boolean checkSpawnRules(LevelAccessor level, MobSpawnType spawnReason) {
         return spawnReason == MobSpawnType.NATURAL; // 无视光照
     }
+
     public void tick(){
         super.tick();
         if(getTarget() != null) {

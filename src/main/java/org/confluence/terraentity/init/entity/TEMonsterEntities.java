@@ -62,10 +62,10 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> WANDERING_EYE_FISH = registerSimpleMonster("wandering_eye_fish", FlyMonsterPrefab.WANDERING_EYE_FISH_BUILDER,1.4f,1.4f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.9F,0.9F);
     public static final DeferredHolder<EntityType<?>, EntityType<VisualNeuron>> VISUAL_NEURON = TEEntities.registerEntity("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
-    public static final DeferredHolder<EntityType<?>, EntityType<Harpy>> HARPY = TEEntities.registerEntity("harpy", (e,l)->new Harpy(e,l, new FlyMonsterPrefab(41,2,13,20,1f,0.28f).getPrefab()), 1f, 2f);
+    public static final DeferredHolder<EntityType<?>, EntityType<Harpy>> HARPY = TEEntities.registerEntity("harpy", (e,l)->new Harpy(e,l, new FlyMonsterPrefab(41,2,13,20,1f,0.28f).getPrefab().setSpawnWithoutLight()), 1f, 2f);
 
     // 陆行怪
-    public static final DeferredHolder<EntityType<?>, EntityType<RangeSkeleton>> DECAYEDER = TEEntities.registerEntity("decayeder", (e,l)->new RangeSkeleton(e,l, new AbstractPrefab(10,0,6).getPrefab()),1,1.8f);
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeSkeleton>> DECAYEDER = TEEntities.registerEntity("decayeder", (e,l)->new RangeSkeleton(e,l, new AbstractPrefab(10,0,6).getPrefab().setSpawnWithoutLight()),1,1.8f);
     public static final DeferredHolder<EntityType<?>, EntityType<BloodySpore>> BLOODY_SPORE = TEEntities.registerEntity("bloody_spore", BloodySpore::new, 1,1.5f);
     public static final DeferredHolder<EntityType<?>, EntityType<BloodCrawler>> BLOOD_CRAWLER = TEEntities.registerEntity("blood_crawler", BloodCrawler::new, 1.8F, 1.2F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FACE_MONSTER = registerSimpleMonster("face_monster", LandMonsterPrefab.FACE_MONSTER_BUILDER,0.75F,1.95F);
@@ -81,7 +81,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> ICE_BAT = registerSimpleMonster("ice_bat", FlyMonsterPrefab.ICE_BAT_BUILDER,1.6f,1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> SPORE_BAT = registerSimpleMonster("spore_bat", FlyMonsterPrefab.SPORE_BAT_BUILDER,1.6f,1.6f);
    // 蠕虫
-    public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> DEVOURER = TEEntities.registerEntity("devourer", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(52).setAttackDamage(8).setArmor(2)),2F,2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> DEVOURER = TEEntities.registerEntity("devourer", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(52).setAttackDamage(8).setArmor(2).setSpawnWithoutLight()),2F,2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> TOMB_CRAWLER = TEEntities.registerEntity("tomb_crawler", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(16).setAttackDamage(4).setArmor(2)),2F,2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> GIANT_WORM = TEEntities.registerEntity("giant_worm", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(31).setAttackDamage(9).setArmor(3)),2F,2F);
     // 卷壳怪
@@ -324,7 +324,7 @@ public class TEMonsterEntities {
         event.register(FLYING_FISH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkFlyingFishSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(CRIMSON_KEMERA.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(EATER_OF_SOULS.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(HARPY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(HARPY.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkHighLevelMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
         // worm
         event.register(DEVOURER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractMonster::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);

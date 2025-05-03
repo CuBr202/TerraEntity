@@ -26,6 +26,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
                     .setHurtSound(TESounds.ROUTINE_HURT)
                     .setDeathSound(TESounds.ROUTINE_DEATH)
+                    .setSpawnWithoutLight()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
 
@@ -36,6 +37,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
                     .setHurtSound(TESounds.ROUTINE_HURT)
                     .setDeathSound(TESounds.ROUTINE_DEATH)
+                    .setSpawnWithoutLight()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
 
@@ -76,7 +78,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                         e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));
                     })
             ;
-    public static Supplier<AttributeBuilder> JUNGLE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(17).setAttackDamage(8);
+    public static Supplier<AttributeBuilder> JUNGLE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(17).setAttackDamage(8).setSpawnWithoutLight();
     public static Supplier<AttributeBuilder> HELL_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(23).setArmor(2).setAttackDamage(15)
             .setTicker(e->{
                 e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));

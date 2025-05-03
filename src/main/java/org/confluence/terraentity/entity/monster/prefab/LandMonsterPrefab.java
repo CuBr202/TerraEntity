@@ -32,6 +32,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
     public static Supplier<AttributeBuilder> FACE_MONSTER_BUILDER =
             ()->new LandMonsterPrefab(36,2,13,64,0.7f,0.1f).getPrefab()
                     .setStepHeight(3.2f)
+                    .setSpawnWithoutLight()
                     .setAmbientSound(TESounds.FACE_HOOT)
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .setHurtSound(TESounds.ROUTINE_HURT)
