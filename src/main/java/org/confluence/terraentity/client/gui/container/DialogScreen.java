@@ -23,13 +23,15 @@ public class DialogScreen extends Screen {
     Button button;
     Button summonButton; // 仅老人有效
     Screen parent;
+    private final boolean trade;
     ITradeHolder holder;
     Component dialogText;
 
 
-    protected DialogScreen(Component title, Screen parent) {
+    protected DialogScreen(Component title, Screen parent, boolean trade) {
         super(title);
         this.parent = parent;
+        this.trade = trade;
     }
 
     @Override
@@ -46,16 +48,18 @@ public class DialogScreen extends Screen {
             dialogText = Component.translatable(dialog);
         }
 
-        button = Button.builder(Component.literal("Trade"), p->{
-            if (minecraft != null) {
-                minecraft.setScreen(parent);
-            }
-        }).width(50).pos(width/2 - 80, height / 2 + 25).build();
+        if(trade) {
+            button = Button.builder(Component.literal("Trade"), p -> {
+                if (minecraft != null) {
+                    minecraft.setScreen(parent);
+                }
+            }).width(50).pos(width / 2 - 80, height / 2 + 25).build();
 
 
 //        if(holder.getTradeManager() != null) {
             addRenderableWidget(button);
 //        }
+        }
         if(holder instanceof AbstractTerraNPC npc && npc.level().getDayTime()%24000>12000 && npc.getType() == TENpcEntities.OLD_MAN.get()){
             summonButton = Button.builder(Component.literal("Summon"), p->{
                 ServerBoundEventPacket.summonSkeletron();

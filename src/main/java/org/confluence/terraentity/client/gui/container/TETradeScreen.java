@@ -16,7 +16,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
@@ -65,22 +64,21 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     @Override
     protected void init() {
         super.init();
-        if(triggerOnce) {
-            // 如果没有对话，则不显示对话框
-//            if(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc){
-//                if(NPCDialogs.getDialog_map().get(BuiltInRegistries.ENTITY_TYPE.getKey(npc.getType())) != null) {
-            Minecraft.getInstance().setScreen(new DialogScreen(Component.literal("123"), this));
-//                }
-//            }
-            triggerOnce = false;
-        }
         if (menu.NPCTrades == null) {
             menu.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder();
 
         }
-        if (menu.NPCTrades == null || menu.NPCTrades.getTradeManager() == null){
-            return;
+        boolean trade = menu.NPCTrades != null && menu.NPCTrades.getTradeManager() != null;
+        if(triggerOnce) {
+            // 如果没有对话，则不显示对话框
+//            if(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc){
+//                if(NPCDialogs.getDialog_map().get(BuiltInRegistries.ENTITY_TYPE.getKey(npc.getType())) != null) {
+            Minecraft.getInstance().setScreen(new DialogScreen(Component.literal("123"), this, trade && !menu.NPCTrades.trades().isEmpty()));
+//                }
+//            }
+            triggerOnce = false;
         }
+        if (!trade) return;
         menu.NPCTrades.getTradeManager().refreshAvailableTrades();
         this.row = menu.NPCTrades.trades().size() / 3;
         if (menu.NPCTrades.trades().size() % 3 != 0)
