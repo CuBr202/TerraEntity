@@ -1,11 +1,13 @@
 package org.confluence.terraentity.entity.monster.skeleton;
 
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
@@ -31,6 +33,11 @@ public class Decayeder extends Skeleton implements GeoEntity, IUseItemAnimatable
             leftArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
             rightArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
         }
+    }
+
+    @Override
+    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType spawnReason) {
+        return spawnReason == MobSpawnType.NATURAL; // 无视光照
     }
 
     public static AttributeSupplier.Builder createAttributes() {

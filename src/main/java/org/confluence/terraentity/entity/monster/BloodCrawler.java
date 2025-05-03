@@ -40,6 +40,11 @@ public class BloodCrawler extends Spider implements GeoEntity {
         this.setHealth(MAX_HEALTH);
     }
 
+    @Override
+    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType spawnReason) {
+        return spawnReason == MobSpawnType.NATURAL; // 无视光照
+    }
+
     protected void registerGoals() {
         super.registerGoals();
 

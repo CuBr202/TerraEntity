@@ -36,6 +36,11 @@ public class BloodySpore extends Creeper implements GeoEntity {
         this.xpReward = 20;
     }
 
+    @Override
+    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType spawnReason) {
+        return spawnReason == MobSpawnType.NATURAL; // 无视光照
+    }
+
     public static AttributeSupplier.@NotNull Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE, 0.0)
