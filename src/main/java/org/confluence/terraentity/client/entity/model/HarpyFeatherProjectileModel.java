@@ -2,6 +2,7 @@ package org.confluence.terraentity.client.entity.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -39,6 +40,9 @@ public class HarpyFeatherProjectileModel<T extends Entity> extends EntityModel<T
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+		poseStack.mulPose(Axis.ZN.rotationDegrees(180));
+
+		poseStack.translate(0,-1.8,0);
 		bone.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
 	}
 }

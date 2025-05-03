@@ -116,6 +116,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> GOBLIN_WARRIOR = TEEntities.registerEntity("goblin_warrior", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.6f).getPrefab()),0.65F,1.85F);
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> GOBLIN_THIEF = TEEntities.registerEntity("goblin_thief", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.5f).getPrefab()),0.65F,1.85F);
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> GOBLIN_SCOUT = TEEntities.registerEntity("goblin_scout", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.28f).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> ANGER_GOBLIN = TEEntities.registerEntity("anger_goblin", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(100,1,10,32,1,0.28f).getPrefab()),0.65F,1.85F);
 
 
     @OnlyIn(Dist.CLIENT)
@@ -204,6 +205,8 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.GOBLIN_WARRIOR.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.GOBLIN_WARRIOR.getId().withPrefix("goblin/")));
         event.registerEntityRenderer(TEMonsterEntities.GOBLIN_THIEF.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.GOBLIN_THIEF.getId().withPrefix("goblin/")));
         event.registerEntityRenderer(TEMonsterEntities.GOBLIN_SCOUT.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.GOBLIN_SCOUT.getId().withPrefix("goblin/")));
+        event.registerEntityRenderer(TEMonsterEntities.ANGER_GOBLIN.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.ANGER_GOBLIN.getId().withPrefix("goblin/")));
+
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -291,6 +294,7 @@ public class TEMonsterEntities {
         event.put(GOBLIN_WARRIOR.get(), AbstractMonster.createAttributes().build());
         event.put(GOBLIN_THIEF.get(), AbstractMonster.createAttributes().build());
         event.put(GOBLIN_SCOUT.get(), AbstractMonster.createAttributes().build());
+        event.put(ANGER_GOBLIN.get(), AbstractMonster.createAttributes().build());
 
 
     }
@@ -374,6 +378,8 @@ public class TEMonsterEntities {
         event.register(GOBLIN_WARRIOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(GOBLIN_THIEF.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(GOBLIN_SCOUT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ANGER_GOBLIN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
     }
 
     private static DeferredHolder<EntityType<?>, EntityType<BaseSlime>> registerSlime(String name, int color, int size) {

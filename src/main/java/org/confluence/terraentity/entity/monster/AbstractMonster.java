@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
@@ -36,7 +38,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
 
     public AbstractMonster(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level);
-        this.builder = builder;
+        this.builder = builder.setSpawnWithoutLight();
         if (!level.isClientSide) {
             // 防止重复注册ai
             this.goalSelector.removeAllGoals(g->true);
@@ -180,6 +182,13 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     public boolean isNoGravity() {
         if(builder == null)return true;
         return builder.noGravity;
+    }
+
+    public float getWalkTargetValue(BlockPos pos, LevelReader level) {
+        if(builder.spawnWithoutLight){
+            return 0;
+        }
+        return super.getWalkTargetValue(pos, level);
     }
 
     public void tick(){

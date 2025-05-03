@@ -1,6 +1,6 @@
 {
     "type": "neoforge:add_spawns",
-    "biomes":"minecraft:nether_wastes",
+    "biomes":"#minecraft:is_mountain",
     "spawners": {
         "type": "terra_entity:face_monster",
         "weight": 40,

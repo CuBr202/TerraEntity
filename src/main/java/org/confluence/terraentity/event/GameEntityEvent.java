@@ -235,14 +235,21 @@ public class GameEntityEvent {
             TEUtils.monsterEnhance(slime);
 
     }
-    @SubscribeEvent
-    public static void onCheckSpawnPosition(MobSpawnEvent.PositionCheck event)  {
-        if(event.getEntity() instanceof IAttributeHolder holder){
-            if(holder.getAttributeBuilder().spawnWithoutLight && event.getSpawnType() == MobSpawnType.NATURAL){
-                event.setResult(MobSpawnEvent.PositionCheck.Result.SUCCEED);
-            }
+    // 貌似没必要使用这个，重写monster的方法就行
+//    @SubscribeEvent
+//    public static void onCheckSpawnPosition(MobSpawnEvent.PositionCheck event)  {
+//        if(event.getEntity() instanceof IAttributeHolder holder){
+//            if(holder.getAttributeBuilder().spawnWithoutLight && event.getSpawnType() == MobSpawnType.NATURAL){
+//                event.setResult(MobSpawnEvent.PositionCheck.Result.SUCCEED);
+//            }
+//
+//        }
+//    }
 
-        }
+    @SubscribeEvent
+    public static void onCheckSpawnPosition(MobSpawnEvent.SpawnPlacementCheck event)  {
+
+
     }
 //    @SubscribeEvent
 //    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)  {

@@ -10,7 +10,6 @@ import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.entity.monster.CursedSkull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
@@ -31,21 +30,9 @@ public class CursedSkullRenderer<T extends CursedSkull> extends GeoNormalRendere
         super(renderManager, model, ifRotX, scale, offsetY);
 
         this.addRenderLayer(new AutoGlowingGeoLayer<>(this){
-            public void preRender(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, @Nullable RenderType renderType,
-                                  MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, float partialTick,
-                                  int packedLight, int packedOverlay) {
-                super.preRender(poseStack, animatable, bakedModel, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
 
-            }
-
-
-            @Override
-            protected ResourceLocation getTextureResource(T animatable) {
-                return super.getTextureResource(animatable);
-            }
             @Override
             protected RenderType getRenderType(T animatable, @Nullable MultiBufferSource bufferSource) {
-
                 return RenderType.eyes(getTextureResource(animatable));
             }
         });
@@ -62,7 +49,7 @@ public class CursedSkullRenderer<T extends CursedSkull> extends GeoNormalRendere
         if(isReRender){
             return;
         }
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, false, partialTick, packedLight, packedOverlay, colour);
 
     }
 
@@ -70,19 +57,7 @@ public class CursedSkullRenderer<T extends CursedSkull> extends GeoNormalRendere
     public  void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable RenderType renderType,
                                 MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
                                 int packedLight, int packedOverlay, int colour) {
-        if(isReRender) {
-            if (buffer == null) {
-                if (renderType == null)
-                    return;
-                buffer = bufferSource.getBuffer(renderType);
-            }
-            updateAnimatedTextureFrame(animatable);
-            for (GeoBone group : model.topLevelBones()) {
-                renderRecursively(poseStack, animatable, group, renderType, bufferSource, buffer, true, partialTick, 0x00F000F0,
-                        packedOverlay, colour);
-            }
-        }else{
-            super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight | 0x00000080, packedOverlay, colour);
-        }
+
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight | 0x00000080, packedOverlay, colour);
     }
 }

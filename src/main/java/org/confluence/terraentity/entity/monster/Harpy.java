@@ -5,15 +5,18 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.goal.DashGoal;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
+import org.confluence.terraentity.mixin.accessor.EntityAccessor;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -60,6 +63,26 @@ public class Harpy extends AbstractMonster {
 
             }
         }
+
+    }
+
+    public void move(@NotNull MoverType pType, @NotNull Vec3 motion) {
+        if (dead) {
+            super.move(pType, motion);
+            return;
+        }
+
+        Vec3 collide = ((EntityAccessor) this).callCollide(motion);
+        if (collide.x != motion.x) {
+            motion = new Vec3(-motion.x*0.8F, motion.y, motion.z).add(0,0.2f,0);
+        }
+        if (collide.z != motion.z) {
+            motion = new Vec3(motion.x, motion.y, -motion.z*0.8F).add(0,0.2f,0);
+
+        }
+
+        setDeltaMovement(motion);
+        super.move(pType, motion);
     }
 
     @Override
