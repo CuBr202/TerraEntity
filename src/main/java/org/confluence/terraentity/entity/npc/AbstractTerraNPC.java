@@ -9,6 +9,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -362,7 +363,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
                 });
             });
         }
-        setHouseNoUpdate(House.CODEC.parse(NbtOps.INSTANCE, tag.get("House")).getOrThrow());
+        if (tag.contains("House", Tag.TAG_COMPOUND)) {
+            setHouseNoUpdate(House.CODEC.parse(NbtOps.INSTANCE, tag.get("House")).result().orElse(House.EMPTY));
+        }
         // confluence mixin here
     }
 
@@ -380,7 +383,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
                 });
             }
         }
-        tag.put("House", House.CODEC.encodeStart(NbtOps.INSTANCE, house).getOrThrow());
+        if (house!=null) {
+            House.CODEC.encodeStart(NbtOps.INSTANCE, house).ifSuccess(tag1 -> tag.put("House", tag1));
+        }
         // confluence mixin here
     }
 
