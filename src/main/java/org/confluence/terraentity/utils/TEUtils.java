@@ -256,9 +256,9 @@ public final class TEUtils {
             var damageAttribute = entity.getAttribute(Attributes.ATTACK_DAMAGE);
             if (damageAttribute != null) {
                 if (!damageAttribute.hasModifier(difficultyDamageKey))
-                    damageAttribute.addTransientModifier(new AttributeModifier(difficultyDamageKey, multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+                    damageAttribute.addPermanentModifier(new AttributeModifier(difficultyDamageKey, multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
                 if (!damageAttribute.hasModifier(damageKey))
-                    damageAttribute.addTransientModifier(new AttributeModifier(damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+                    damageAttribute.addPermanentModifier(new AttributeModifier(damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
         }
     }
@@ -278,9 +278,9 @@ public final class TEUtils {
             var damageAttribute = entity.getAttribute(Attributes.ATTACK_DAMAGE);
             if (damageAttribute != null) {
                 if (!damageAttribute.hasModifier(damageKey))
-                    damageAttribute.addTransientModifier(new AttributeModifier(damageKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+                    damageAttribute.addPermanentModifier(new AttributeModifier(damageKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
                 if (!damageAttribute.hasModifier(difficultyDamageKey))
-                    damageAttribute.addTransientModifier(new AttributeModifier(difficultyDamageKey, multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+                    damageAttribute.addPermanentModifier(new AttributeModifier(difficultyDamageKey, multiplier - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
             }
         }
     }

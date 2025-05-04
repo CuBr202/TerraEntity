@@ -58,6 +58,11 @@ public class GameEntityEvent {
 //        if(event.getEntity() instanceof ServerPlayer player){
 //            player.addItem(new ItemStack(TERiddenItems.HONEYED_GOGGLES.get()));
 //        }
+        if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
+            TEUtils.monsterEnhance(living);
+        else if (event.getEntity() instanceof Slime slime)
+            TEUtils.monsterEnhance(slime);
+
     }
 
     @SubscribeEvent
@@ -229,10 +234,6 @@ public class GameEntityEvent {
 //                level.addFreshEntity(slime);
             }
         }
-        if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
-            TEUtils.monsterEnhance(living);
-        else if (event.getEntity() instanceof Slime slime)
-            TEUtils.monsterEnhance(slime);
 
     }
     // 貌似没必要使用这个，重写monster的方法就行

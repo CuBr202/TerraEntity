@@ -58,18 +58,44 @@ public class AttributeBuilder {
     public void modify(Mob mob) {
         mob.setDiscardFriction(noFriction);
 
-        mob.getAttribute(Attributes.ARMOR).setBaseValue(ARMOR);
-        mob.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(ATTACK_DAMAGE);
-        mob.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(MOVEMENT_SPEED);
-        mob.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(FOLLOW_RANGE);
-        mob.getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE).setBaseValue(SPAWN_REINFORCEMENTS_CHANCE);
-        mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(KNOCKBACK_RESISTANCE);
-        mob.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(ATTACK_KNOCKBACK);
-        mob.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(ATTACK_SPEED);
-        mob.getAttribute(Attributes.FLYING_SPEED).setBaseValue(FLYING_SPEED);
-        mob.getAttribute(Attributes.SAFE_FALL_DISTANCE).setBaseValue(SAFE_FALL);
-        mob.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(JUMP_STRENGTH);
-        mob.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(STEP_HEIGHT);
+
+        if(mob.getAttribute(Attributes.ARMOR) != null){
+            mob.getAttribute(Attributes.ARMOR).setBaseValue(ARMOR);
+        }
+        if(mob.getAttribute(Attributes.ATTACK_DAMAGE) != null){
+            mob.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(ATTACK_DAMAGE);
+        }
+        if(mob.getAttribute(Attributes.MOVEMENT_SPEED) != null){
+            mob.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(MOVEMENT_SPEED);
+        }
+        if(mob.getAttribute(Attributes.FOLLOW_RANGE) != null){
+            mob.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(FOLLOW_RANGE);
+        }
+        if(mob.getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE) != null){
+            mob.getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE).setBaseValue(SPAWN_REINFORCEMENTS_CHANCE);
+        }
+        if(mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE) != null){
+            mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(KNOCKBACK_RESISTANCE);
+        }
+        if(mob.getAttribute(Attributes.ATTACK_KNOCKBACK) != null){
+            mob.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(ATTACK_KNOCKBACK);
+        }
+        if(mob.getAttribute(Attributes.ATTACK_SPEED) != null){
+            mob.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(ATTACK_SPEED);
+        }
+        if(mob.getAttribute(Attributes.FLYING_SPEED) != null){
+            mob.getAttribute(Attributes.FLYING_SPEED).setBaseValue(FLYING_SPEED);
+        }
+        if(mob.getAttribute(Attributes.SAFE_FALL_DISTANCE) != null){
+            mob.getAttribute(Attributes.SAFE_FALL_DISTANCE).setBaseValue(SAFE_FALL);
+        }
+        if(mob.getAttribute(Attributes.JUMP_STRENGTH) != null){
+            mob.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(JUMP_STRENGTH);
+        }
+        if(mob.getAttribute(Attributes.STEP_HEIGHT) != null){
+            mob.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(STEP_HEIGHT);
+        }
+
     }
 
     public AttributeBuilder setXpReward(int xpReward) {
