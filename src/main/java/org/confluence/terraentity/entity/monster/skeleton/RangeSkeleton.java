@@ -44,11 +44,6 @@ public class RangeSkeleton extends AbstractSkeleton implements GeoEntity, IUseIt
         builder.modify(this);
     }
 
-    @Override
-    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType spawnReason) {
-        return spawnReason == MobSpawnType.NATURAL; // 无视光照
-    }
-
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.25)
