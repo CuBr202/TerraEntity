@@ -1,23 +1,12 @@
 package org.confluence.terraentity.menu;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.JavaOps;
-import com.mojang.serialization.JsonOps;
-import net.minecraft.client.Minecraft;
-import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
 
-import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
-import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.network.c2s.NPCShopPacket;
@@ -127,6 +116,13 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
 
     public void playTradeSound() {
 
+    }
+
+    public void removed(Player player) {
+        super.removed(player);
+        if(player instanceof ServerPlayer){
+            player.getInventory().placeItemBackInInventory(slots.get(0).getItem().copy());
+        }
     }
 
     public void clicked(int slotId, int button, ClickType clickType, Player player) {
