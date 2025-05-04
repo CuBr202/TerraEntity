@@ -40,6 +40,7 @@ public class BaseWhipItem extends Item {
 //    public final float attackSpeed;
     public final Supplier<? extends ParticleOptions> particleOptions;
     public final float chance;
+    public boolean canPenetrate;
     public static int clickTime;
     public static int cooldownTime;
 
@@ -92,6 +93,7 @@ public class BaseWhipItem extends Item {
             this.particleOptions = whipProperties.particleOptions;
             this.chance = whipProperties.chance;
             this.blockStateSupplier = whipProperties.blockStateSupplier;
+            this.canPenetrate = whipProperties.canPenetrate;
         }
         else {
             this.particleOptions = null;
@@ -161,6 +163,7 @@ public class BaseWhipItem extends Item {
 
         List<Function<WhipProperties, Properties>> modifiers = new ArrayList<>();
         boolean hasDamage = false;
+        boolean canPenetrate = false;
 
         /**
          * 当没有注册模型时，使用方块状态代替模型渲染
@@ -193,6 +196,11 @@ public class BaseWhipItem extends Item {
         public WhipProperties setDurability(int durability) {
             modifiers.add(p-> p.durability(durability));
             hasDamage = true;
+            return this;
+        }
+
+        public WhipProperties setCanPenetrate() {
+            this.canPenetrate = true;
             return this;
         }
 
