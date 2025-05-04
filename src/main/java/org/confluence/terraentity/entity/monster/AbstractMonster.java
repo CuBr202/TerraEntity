@@ -140,7 +140,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
 
     @Override
     protected SoundEvent getDeathSound() {
-        if(builder.deathSound == null) return super.getDeathSound();
+        if(builder.deathSound == null) return TESounds.ROUTINE_DEATH.get();
         return builder.deathSound.get();
     }
     @Override

@@ -39,8 +39,8 @@ public class TEItems {
                         TESummonItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEWhipItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEBoomerangItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                        TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEItems.TOOLS.getEntries().forEach(item -> output.accept(item.get()));
+                        TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
                     })
                     .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("terra_moment", "tab")))
                     .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("confluence", "summoners")))

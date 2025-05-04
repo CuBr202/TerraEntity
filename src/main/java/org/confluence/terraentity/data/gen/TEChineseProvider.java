@@ -168,6 +168,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.GOBLIN_WARRIOR.get(), "哥布林战士");
         add(TEMonsterEntities.GOBLIN_THIEF.get(), "哥布林盗贼");
         add(TEMonsterEntities.GOBLIN_SCOUT.get(), "哥布林侦察兵");
+        add(TEMonsterEntities.ANGER_GOBLIN.get(), "愤怒哥布林");
 
 
         // boss
@@ -199,6 +200,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.GOBLIN_WARRIOR_SPAWN_EGG.get(), "哥布林战士刷怪蛋");
         add(TESpawnEggItems.GOBLIN_THIEF_SPAWN_EGG.get(), "哥布林盗贼刷怪蛋");
         add(TESpawnEggItems.GOBLIN_SCOUT_SPAWN_EGG.get(), "哥布林侦察兵刷怪蛋");
+        add(TESpawnEggItems.ANGER_GOBLIN_SPAWN_EGG.get(), "愤怒哥布林刷怪蛋");
 
         add(TESpawnEggItems.GUILD_SPAWN_EGG.get(), "向导刷怪蛋");
         add(TESpawnEggItems.DEMOLITIONIST_SPAWN_EGG.get(), "爆破专家刷怪蛋");

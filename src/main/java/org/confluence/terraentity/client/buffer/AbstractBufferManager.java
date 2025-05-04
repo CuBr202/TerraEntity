@@ -13,8 +13,8 @@ import org.joml.Matrix4f;
  */
 public abstract class AbstractBufferManager {
     private VertexBuffer vertexBuffer;
-    long lastRefreshTime = 0;
-    final int refreshInterval;
+    protected long lastRefreshTime = 0;
+    protected final int refreshInterval;
 
     /**
      * @param refreshTime 刷新间隔，单位毫秒
@@ -24,7 +24,7 @@ public abstract class AbstractBufferManager {
         this.refreshInterval = refreshTime;
     }
 
-    boolean shouldRefresh() {
+    protected boolean shouldRefresh() {
         return System.currentTimeMillis() - lastRefreshTime > refreshInterval;
     }
 
@@ -64,8 +64,8 @@ public abstract class AbstractBufferManager {
 
         if (vertexBuffer != null) {
 
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
             beforeRender();
+            RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
             poseStack.pushPose();
             poseStack.mulPose(modelMatrix);

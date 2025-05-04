@@ -93,6 +93,7 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> GOBLIN_WARRIOR_SPAWN_EGG = registerEgg("goblin_warrior_spawn_egg", TEMonsterEntities.GOBLIN_WARRIOR, 0x12bc12);
     public static final DeferredItem<Item> GOBLIN_THIEF_SPAWN_EGG = registerEgg("goblin_thief_spawn_egg", TEMonsterEntities.GOBLIN_THIEF, 0x12bc12);
     public static final DeferredItem<Item> GOBLIN_SCOUT_SPAWN_EGG = registerEgg("goblin_scout_spawn_egg", TEMonsterEntities.GOBLIN_SCOUT, 0x12bc12);
+    public static final DeferredItem<Item> ANGER_GOBLIN_SPAWN_EGG = registerEgg("anger_goblin_spawn_egg", TEMonsterEntities.ANGER_GOBLIN, 0x12bc12);
 
     // NPC
     public static final DeferredItem<Item> GUILD_SPAWN_EGG = registerEgg("guild_spawn_egg", TENpcEntities.GUIDE, 0xcdb326);

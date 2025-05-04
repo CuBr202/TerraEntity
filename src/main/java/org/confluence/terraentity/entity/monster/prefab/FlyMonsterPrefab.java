@@ -6,6 +6,7 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.goal.DashGoal;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
+import org.confluence.terraentity.init.TESounds;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
@@ -42,10 +43,12 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     public static final Supplier<AttributeBuilder> DRIPPLER_BUILDER  =
             ()->new FlyMonsterPrefab(26,3,14,64,0.5f,0.2f).getPrefab()
-                .addGoal((g,e)->{
-                    g.addGoal(0, new DashGoal(e,0.8f,0.2f,10));
+                    .setHurtSound(TESounds.DRIPPLER_HURT)
+                    .setDeathSound(TESounds.DRIPPLER_DEATH)
+                    .addGoal((g,e)->{
+                        g.addGoal(0, new DashGoal(e,0.8f,0.2f,10));
 
-                })
+                    })
             ;
 
     public static Supplier<AttributeBuilder> FLYING_FISH_BUILDER  =
