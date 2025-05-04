@@ -83,6 +83,12 @@ public class AnglerNPC extends AbstractTerraNPC {
     }
 
     @Override
+    public void checkDespawn() {
+        super.checkDespawn();
+        // confluence mixin here
+    }
+
+    @Override
     public void onAddedToLevel() {
         super.onAddedToLevel();
 
