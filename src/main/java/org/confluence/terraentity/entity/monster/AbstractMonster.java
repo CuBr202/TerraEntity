@@ -22,6 +22,7 @@ import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
+import org.confluence.terraentity.init.TESounds;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -149,7 +150,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     }
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
-        if(builder.hurtSound == null) return super.getHurtSound(pDamageSource);
+        if(builder.hurtSound == null) return TESounds.ROUTINE_HURT.get();
         return builder.hurtSound.get();
     }
 

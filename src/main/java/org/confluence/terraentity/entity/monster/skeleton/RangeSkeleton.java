@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.monster.skeleton;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -73,6 +74,14 @@ public class RangeSkeleton extends AbstractSkeleton implements GeoEntity, IUseIt
         }
 
     }
+
+    public float getWalkTargetValue(BlockPos pos) {
+        if(this.builder.spawnWithoutLight){
+            return 0;
+        }
+        return super.getWalkTargetValue(pos);
+    }
+
 
     @Override
     protected boolean isSunBurnTick() {

@@ -4,6 +4,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -23,6 +24,7 @@ import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.monster.prefab.LandMonsterPrefab;
+import org.confluence.terraentity.entity.monster.humanoid.HumanoidMonster;
 import org.confluence.terraentity.entity.monster.skeleton.RangeSkeleton;
 import org.confluence.terraentity.entity.monster.skeleton.MeleeSkeleton;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
@@ -111,12 +113,12 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> GOBLIN_SORCERER = TEEntities.registerEntity("goblin_sorcerer", (e, l)->new RangeShooter(e,l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(26,1,10,32,1,0.82f).getPrefab()),0.65F,1.85F);
 
     // 哥布林军队
-    public static final DeferredHolder<EntityType<?>, EntityType<RangeSkeleton>> GOBLIN_ARCHER = TEEntities.registerEntity("goblin_archer", (e, l)->new RangeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.28f).getPrefab()),0.65F,1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> GOBLIN_PEON = TEEntities.registerEntity("goblin_peon", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.5f).getPrefab()),0.65F,1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> GOBLIN_WARRIOR = TEEntities.registerEntity("goblin_warrior", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.6f).getPrefab()),0.65F,1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> GOBLIN_THIEF = TEEntities.registerEntity("goblin_thief", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.5f).getPrefab()),0.65F,1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> GOBLIN_SCOUT = TEEntities.registerEntity("goblin_scout", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(26,1,10,32,1,0.28f).getPrefab()),0.65F,1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> ANGER_GOBLIN = TEEntities.registerEntity("anger_goblin", (e, l)->new MeleeSkeleton(e,l, new AbstractPrefab(100,1,10,32,1,0.28f).getPrefab()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_ARCHER = TEEntities.registerEntity("goblin_archer", (e, l)->new HumanoidMonster(e,l, new AbstractPrefab(26,1,10,32,1,0.28f).asHumanoid().setMainHand(Items.BOW.getDefaultInstance()).setSpawnWithoutLight()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_PEON = TEEntities.registerEntity("goblin_peon", (e, l)->new HumanoidMonster(e,l, new AbstractPrefab(26,1,10,32,1,0.5f).asHumanoid().setSpawnWithoutLight()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_WARRIOR = TEEntities.registerEntity("goblin_warrior", (e, l)->new HumanoidMonster(e,l, new AbstractPrefab(26,1,10,32,1,0.6f).asHumanoid().setMainHand(Items.STONE_SWORD.getDefaultInstance()).setSpawnWithoutLight()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_THIEF = TEEntities.registerEntity("goblin_thief", (e, l)->new HumanoidMonster(e,l, new AbstractPrefab(26,1,10,32,1,0.5f).asHumanoid().setSpawnWithoutLight()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_SCOUT = TEEntities.registerEntity("goblin_scout", (e, l)->new HumanoidMonster(e,l, new AbstractPrefab(26,1,10,32,1,0.28f).asHumanoid().setSpawnWithoutLight()),0.65F,1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> ANGER_GOBLIN = TEEntities.registerEntity("anger_goblin", (e, l)->new HumanoidMonster(e,l, new AbstractPrefab(100,1,10,32,1,0.28f).asHumanoid().setMainHand(Items.GOLDEN_SWORD.getDefaultInstance()).setSpawnWithoutLight()),0.65F,1.85F);
 
 
     @OnlyIn(Dist.CLIENT)
@@ -372,13 +374,13 @@ public class TEMonsterEntities {
 
 
         // 哥布林军队
-        event.register(GOBLIN_SORCERER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(GOBLIN_PEON.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(GOBLIN_ARCHER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(GOBLIN_WARRIOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(GOBLIN_THIEF.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(GOBLIN_SCOUT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(ANGER_GOBLIN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_SORCERER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_PEON.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_ARCHER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_WARRIOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_THIEF.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GOBLIN_SCOUT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ANGER_GOBLIN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
     }
 

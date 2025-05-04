@@ -6,12 +6,12 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.goal.DashGoal;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
-import org.confluence.terraentity.init.TESounds;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.confluence.terraentity.entity.monster.prefab.AttributeBuilder.copyFrom;
@@ -24,8 +24,6 @@ public class FlyMonsterPrefab extends AbstractPrefab {
     //在预制体上修改参数
     public static Supplier<AttributeBuilder> CRIMSON_KEMERA_BUILDER =
             ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
-                    .setHurtSound(TESounds.ROUTINE_HURT)
-                    .setDeathSound(TESounds.ROUTINE_DEATH)
                     .setSpawnWithoutLight()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
@@ -35,8 +33,6 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     public static final Supplier<AttributeBuilder> EATER_OF_SOULS_BUILDER =
             ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
-                    .setHurtSound(TESounds.ROUTINE_HURT)
-                    .setDeathSound(TESounds.ROUTINE_DEATH)
                     .setSpawnWithoutLight()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
@@ -46,8 +42,6 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     public static final Supplier<AttributeBuilder> DRIPPLER_BUILDER  =
             ()->new FlyMonsterPrefab(26,3,14,64,0.5f,0.2f).getPrefab()
-                .setHurtSound(TESounds.DRIPPLER_HURT)
-                .setDeathSound(TESounds.DRIPPLER_DEATH)
                 .addGoal((g,e)->{
                     g.addGoal(0, new DashGoal(e,0.8f,0.2f,10));
 
@@ -56,8 +50,6 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     public static Supplier<AttributeBuilder> FLYING_FISH_BUILDER  =
             ()->new FlyMonsterPrefab(10,1,2,30,0.5f,0.3f).getPrefab()
-                .setHurtSound(TESounds.ROUTINE_HURT)
-                .setDeathSound(TESounds.ROUTINE_DEATH)
                 .addGoal((g,e)->{
                     g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
                             0.02f,5,10,45));
@@ -67,8 +59,6 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     public static Supplier<AttributeBuilder> CAVE_BAT_BUILDER  =
             ()->new FlyMonsterPrefab(8,1,4,60,0.2f,0.5f).getPrefab()
-                    .setHurtSound(TESounds.ROUTINE_HURT)
-                    .setDeathSound(TESounds.ROUTINE_DEATH)
                     .setFollowRange(16) // 蝙蝠是瞎子，检测距离近点
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,1f,0.5f,30,
@@ -111,8 +101,6 @@ public class FlyMonsterPrefab extends AbstractPrefab {
     public static Supplier<AttributeBuilder> BEE_BUILDER  =
             ()->new AbstractPrefab(23,3,13,32,0,0.55f)
                     .getPrefab()
-                    .setHurtSound(TESounds.ROUTINE_HURT)
-                    .setDeathSound(TESounds.ROUTINE_DEATH)
                     .setNoAttachAttack()
                     .setMovementSpeed(0.5f)
                     .setNoGravity()
@@ -121,8 +109,6 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     public static final Supplier<AttributeBuilder> WANDERING_EYE_FISH_BUILDER =
             ()->new FlyMonsterPrefab(156,4,15,60,1f,1f).getPrefab()
-                    .setHurtSound(TESounds.ROUTINE_HURT)
-                    .setDeathSound(TESounds.ROUTINE_DEATH)
                     .setMovementSpeed(2.2f)
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,2.2f,15));
@@ -136,11 +122,9 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
 
 
-
-
     public FlyMonsterPrefab(int health,int armor,int attack,int followRange,float knockBack,float knockbackResistance) {
         super(health,armor,attack,followRange,knockBack,knockbackResistance);
-        SIMPLE_MONSTER
+        modifier = (b)->b
                 .setNavigation((e)->new FlyingPathNavigation(e,e.level()))
                 .setSafeFall(1000)
                 .setNoGravity()
@@ -156,8 +140,11 @@ public class FlyMonsterPrefab extends AbstractPrefab {
     }
 
     static final RawAnimation FLY_ANIMATION = RawAnimation.begin().thenLoop("fly");
+
+    private final Function<AttributeBuilder, AttributeBuilder> modifier;
+
     public AttributeBuilder getPrefab() {
-        return SIMPLE_MONSTER;
+        return modifier.apply(super.getPrefab());
     }
 
 }

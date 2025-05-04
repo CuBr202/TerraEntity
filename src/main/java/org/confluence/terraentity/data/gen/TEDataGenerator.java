@@ -40,6 +40,8 @@ public class TEDataGenerator {
         generator.addProvider(server, provider);
         generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TEDamageTypeTagsProvider(output, lookup, helper));
+        generator.addProvider(server, new TEBiomeTagsProvider(output, lookup, helper));
+
         TEBlockTagsProvider blockTagsProvider = new TEBlockTagsProvider(output, lookup, helper);
         generator.addProvider(server, blockTagsProvider);
         generator.addProvider(server, new TEItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));

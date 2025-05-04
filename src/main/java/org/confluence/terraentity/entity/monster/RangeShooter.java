@@ -5,15 +5,16 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.proj.BaseProj;
-import org.confluence.terraentity.entity.proj.LineProj;
-import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -21,6 +22,9 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.function.Supplier;
 
+/**
+ * 远程法师
+ */
 public class RangeShooter extends AbstractMonster {
 
     int _phase = 200;
@@ -30,6 +34,13 @@ public class RangeShooter extends AbstractMonster {
     public RangeShooter(EntityType<? extends Monster> type, Level level, Supplier<? extends EntityType<? extends BaseProj<?>>> projType, AttributeBuilder builder) {
         super(type, level, builder);
         this.projType = projType;
+    }
+
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        super.registerGoals();
     }
 
     public void tick() {

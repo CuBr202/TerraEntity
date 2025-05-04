@@ -25,7 +25,6 @@ public class MeleeSkeleton extends RangeSkeleton {
     public MeleeSkeleton(EntityType<? extends AbstractSkeleton> entityType, Level level, AttributeBuilder builder) {
         super(entityType, level, builder);
 
-
     }
 
     @Override

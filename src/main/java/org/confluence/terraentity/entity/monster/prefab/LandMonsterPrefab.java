@@ -23,6 +23,7 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static software.bernie.geckolib.constant.DefaultAnimations.genericWalkRunIdleController;
@@ -35,7 +36,6 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     .setSpawnWithoutLight()
                     .setAmbientSound(TESounds.FACE_HOOT)
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
-                    .setHurtSound(TESounds.ROUTINE_HURT)
                     .setJumpStrength(0.8f)
                     .addTarget((t,e)-> t.addGoal(1, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy)))
                     .addGoal((g,e)-> {
@@ -107,7 +107,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
 
     public LandMonsterPrefab(int health,int armor,int attack,float moveSpeed,int followRange,float knockBack,float knockbackResistance) {
         super(health,armor,attack,followRange,knockBack,knockbackResistance);
-        SIMPLE_MONSTER
+        modifier = b->b
                 .setNavigation((e)->new GroundPathNavigation(e,e.level()))
                 .setSafeFall(8)
                 .setNoAttachAttack()
@@ -121,9 +121,10 @@ public class LandMonsterPrefab extends AbstractPrefab {
         ;
     }
 
+    private final Function<AttributeBuilder, AttributeBuilder> modifier;
 
     public AttributeBuilder getPrefab() {
-        return SIMPLE_MONSTER;
+        return modifier.apply(super.getPrefab());
     }
 
 }

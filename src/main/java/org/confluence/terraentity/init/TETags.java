@@ -12,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import org.confluence.terraentity.TerraEntity;
 
 public class TETags {
@@ -35,6 +36,11 @@ public class TETags {
     public static class EntityTypes {
         public static final TagKey<EntityType<?>> SLIME = registerEntityType("slime");
         public static final TagKey<EntityType<?>> CORRUPT = registerEntityType("corrupt");
+    }
+
+    public static class Biomes{
+        public static final TagKey<Biome> IS_GOBLIN_SPAWN = registerBiome("is_goblin_spawn");
+
     }
 
     public static class DamageTypes {
@@ -72,6 +78,9 @@ public class TETags {
     }
     private static TagKey<EntityType<?>> registerEntityType(String id) {
         return TagKey.create(Registries.ENTITY_TYPE, TerraEntity.space(id));
+    }
+    private static TagKey<Biome> registerBiome(String id) {
+        return TagKey.create(Registries.BIOME, TerraEntity.space(id));
     }
     private static ResourceKey<DamageType> registerDamageType(String id) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, TerraEntity.space(id));
