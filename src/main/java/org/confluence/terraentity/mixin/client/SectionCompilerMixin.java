@@ -1,6 +1,8 @@
 package org.confluence.terraentity.mixin.client;
 
 import com.mojang.blaze3d.vertex.VertexSorting;
+import net.caffeinemc.mods.sodium.client.render.chunk.compile.tasks.ChunkBuilderMeshingTask;
+import net.irisshaders.iris.uniforms.CommonUniforms;
 import net.minecraft.client.renderer.SectionBufferBuilderPack;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.renderer.chunk.SectionCompiler;
@@ -21,10 +23,10 @@ public class SectionCompilerMixin {
     @Inject(method = "compile(Lnet/minecraft/core/SectionPos;Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;Lcom/mojang/blaze3d/vertex/VertexSorting;Lnet/minecraft/client/renderer/SectionBufferBuilderPack;Ljava/util/List;)Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;", at = @At(value = "HEAD"))
     private void compileMixin(SectionPos sectionPos, RenderChunkRegion region, VertexSorting vertexSorting, SectionBufferBuilderPack sectionBufferBuilderPack, List<AddSectionGeometryEvent.AdditionalSectionRenderer> additionalRenderers, CallbackInfoReturnable<SectionCompiler.Results> cir) {
         BlockPos blockpos = sectionPos.origin();
-        BlockPos blockpos1 = blockpos.offset(15, 15, 15);
-
+        BlockPos blockpos1 = blockpos.offset(16, 16, 16);
         for (BlockPos pos : BlockPos.betweenClosed(blockpos, blockpos1)) {
             LightManager.getInstance().addLight(pos, region.getBlockState(pos).getBlock());
+
         }
 
     }

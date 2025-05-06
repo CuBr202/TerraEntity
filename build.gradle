@@ -174,8 +174,12 @@ dependencies {
 
     // iris
 
-//    compileOnly "curse.maven:irisshaders-455508:5957827"
+    compileOnly "curse.maven:irisshaders-455508:5957827"
 //    runtimeOnly "curse.maven:irisshaders-455508:5957827"
+//
+//    // sodium
+    compileOnly "curse.maven:sodium-394468:6382651"
+//    runtimeOnly "curse.maven:sodium-394468:6382651"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -3,6 +3,7 @@ package org.confluence.terraentity.mixin.client;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.core.Direction;
 import org.confluence.terraentity.mixed.LightManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,15 +14,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class BufferBuilderMixin implements VertexConsumer {
     @Inject(method = "addVertex(FFFIFFIIFFF)V", at = @At("HEAD"), cancellable = true)
     public void addVertexMixin(float x, float y, float z, int color, float u, float v, int packedOverlay, int packedLight, float normalX, float normalY, float normalZ, CallbackInfo ci) {
-        if (LightManager.tempPos.get() != null && LightManager.quad.get() != null) {
+        if (LightManager.tempPos.get() != null && LightManager.quadDirection.get() != null) {
             // 读取当前线程的独立副本
             float localR = LightManager.r.get();
             float localG = LightManager.g.get();
             float localB = LightManager.b.get();
-            BakedQuad localQuad = LightManager.quad.get();
+            Direction localQuad = LightManager.quadDirection.get();
 
             int newColor = LightManager.getVertexLightColor(
-                    localR, localG, localB,
+//                    localR, localG, localB,
                     localQuad,
                     LightManager.tempPos.get(),
                     color

@@ -2,6 +2,7 @@ package org.confluence.terraentity.mixed;
 
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.caffeinemc.mods.sodium.api.util.ColorARGB;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -27,5 +28,14 @@ public class HotSwap {
         RenderSystem.defaultBlendFunc();
         target.blitToScreen(Minecraft.getInstance().getMainRenderTarget().width,Minecraft.getInstance().getMainRenderTarget().height,false);
 
+    }
+
+    public static int  changeColor(int color){
+        int r = (color >> 16) & 255;
+        int g = (color >> 8) & 255;
+        int b = color & 255;
+        int a = (color >> 24) & 255;
+
+        return ColorARGB.pack(r, g, b,a);
     }
 }

@@ -10,7 +10,11 @@
     "ServerBossEventMixin",
     "accessor.EntityAccessor",
     "accessor.ProjectileWeaponAccessor",
-    "accessor.SlimeAccessor"
+    "accessor.SlimeAccessor",
+    "sodium.AbstractBlockRenderContextAccessor",
+    "sodium.BlockRendererMixin",
+    "sodium.ChunkBuilderMeshingTaskMixin",
+    "sodium.ChunkBuilderTaskAccessor"
   ],
   "client": [
     "accessor.GameRendererAccessor",
