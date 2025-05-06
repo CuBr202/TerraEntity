@@ -15,9 +15,12 @@
   "client": [
     "accessor.GameRendererAccessor",
     "client.BossHealthOverlayMixin",
+    "client.BufferBuilderMixin",
     "client.GameRendererMixin",
     "client.ItemRendererMixin",
     "client.LocalPlayerMixin",
+    "client.ModelBlockRendererMixin",
+    "client.SectionCompilerMixin",
     "client.ShaderInstanceMixin"
   ],
   "injectors": {

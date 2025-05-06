@@ -1,11 +1,10 @@
 package org.confluence.terraentity.client.event;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
@@ -53,9 +52,10 @@ public class RenderEvent {
     @SubscribeEvent
     public static void renderHand(RenderHandEvent event) {
         ItemStack stack = event.getItemStack();
+        LocalPlayer player = Minecraft.getInstance().player;
         if (event.getHand() == InteractionHand.MAIN_HAND && stack.getItem() instanceof BaseWhipItem item) {
             // 右手使用鞭子时取消渲染
-            Player player = Minecraft.getInstance().player;
+
             if (player != null && player.getCooldowns().isOnCooldown(item)) {
 //                ci.cancel();
                 float progress = (player.tickCount - BaseWhipItem.clickTime + event.getPartialTick());
@@ -66,10 +66,39 @@ public class RenderEvent {
                 event.getPoseStack().translate(0, -progress  ,0);
             }
         }
+//        Minecraft.getInstance().getBlockRenderer().renderBatched();
+//        if (event.getHand() == InteractionHand.MAIN_HAND && !player.getMainHandItem().isEmpty()) {
+//            var itemRenderer= Minecraft.getInstance().gameRenderer.itemInHandRenderer;
+//
+//            PlayerRenderer playerrenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(player);
+//            PoseStack poseStack = event.getPoseStack();
+//
+//            poseStack.translate(0,0,-0.5);
+//
+//            poseStack.pushPose();
+////            poseStack.translate(0.5,-0.2,-1.2);
+//            var buffer = event.getMultiBufferSource();
+//            int packedLight = event.getPackedLight();
+//            float f = 1.0F ;
+//            poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
+//            poseStack.mulPose(Axis.XP.rotationDegrees(20.0F));
+//            poseStack.mulPose(Axis.ZP.rotationDegrees(f * -60.0F));
+//            poseStack.translate(f * 0.3F, -1.1F, 0.45F);
+//            poseStack.translate(0.8,1.0,0.3);
+//
+//            playerrenderer.renderRightHand(poseStack, buffer, packedLight, player);
+//
+//            poseStack.popPose();
+//        }
 
 
     }
 
 
+    @SubscribeEvent
+    public static void renderHand(RenderArmEvent event) {
+//        PoseStack stack = event.getPoseStack();
+//        stack.translate(0, 0.5, 0);
 
+    }
 }
