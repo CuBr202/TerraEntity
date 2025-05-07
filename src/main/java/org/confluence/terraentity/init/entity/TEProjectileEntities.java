@@ -15,6 +15,7 @@ import org.confluence.terraentity.client.entity.model.CabbageProjModel;
 import org.confluence.terraentity.client.entity.model.HarpyFeatherProjectileModel;
 import org.confluence.terraentity.client.entity.model.Stinger;
 import org.confluence.terraentity.client.entity.renderer.BoomerangProjRenderer;
+import org.confluence.terraentity.client.entity.renderer.TrailProjectileRenderer;
 import org.confluence.terraentity.client.entity.renderer.SkullProjectileRenderer;
 import org.confluence.terraentity.client.entity.renderer.WhipEntityRenderer;
 import org.confluence.terraentity.client.util.RegisterUtils;
@@ -43,6 +44,11 @@ public class TEProjectileEntities {
     public static final DeferredHolder<EntityType<?>,EntityType<WhipEntity>> WHIP_PROJECTILE = TEEntities.ENTITIES.register("whip_projectile",() -> EntityType.Builder.<WhipEntity>of((e, l)->
             new WhipEntity(e,l) , MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F,0.5F).build(TEEntities.Key("whip_projectile")));
 
+    //子弹
+    public static final DeferredHolder<EntityType<?>, EntityType<TrailProjectile>> TRAIL_PROJECTILE = TEEntities.ENTITIES.register("trail_projectile", () -> EntityType.Builder.<TrailProjectile>of(TrailProjectile::new, MobCategory.MISC)
+            .sized(0.25F, 0.25F).setUpdateInterval(2).setTrackingRange(64).setShouldReceiveVelocityUpdates(true)
+            .build(TEEntities.Key("trail_projectile")));
+
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         RegisterUtils.registerBaseProjRenderer(event, CABBAGE_PROJ.get(), c->new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION)));
@@ -54,6 +60,8 @@ public class TEProjectileEntities {
         RegisterUtils.registerBaseProjRenderer(event, DARK_CASTER_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         RegisterUtils.registerBaseProjRenderer(event, HARPY_FEATURE_PROJ.get(), c->new HarpyFeatherProjectileModel<>(c.bakeLayer(HarpyFeatherProjectileModel.LAYER_LOCATION)));
 
+        // 子弹
+        event.registerEntityRenderer(TEProjectileEntities.TRAIL_PROJECTILE.get(), TrailProjectileRenderer::new);
         // 鞭子
         event.registerEntityRenderer(WHIP_PROJECTILE.get(), WhipEntityRenderer::new);
     }
