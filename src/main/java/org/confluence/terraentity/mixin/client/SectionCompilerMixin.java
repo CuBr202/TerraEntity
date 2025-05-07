@@ -1,15 +1,13 @@
 package org.confluence.terraentity.mixin.client;
 
 import com.mojang.blaze3d.vertex.VertexSorting;
-import net.caffeinemc.mods.sodium.client.render.chunk.compile.tasks.ChunkBuilderMeshingTask;
-import net.irisshaders.iris.uniforms.CommonUniforms;
 import net.minecraft.client.renderer.SectionBufferBuilderPack;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.renderer.chunk.SectionCompiler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
-import org.confluence.terraentity.mixed.LightManager;
+import org.confluence.terraentity.mixed.colorful_light.LightManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -180,6 +180,10 @@ dependencies {
 //    // sodium
     compileOnly "curse.maven:sodium-394468:6382651"
 //    runtimeOnly "curse.maven:sodium-394468:6382651"
+
+    compileOnly "net.fabricmc.fabric-api:fabric-renderer-api-v1:6.0.2+75fa737a29"
+
+
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

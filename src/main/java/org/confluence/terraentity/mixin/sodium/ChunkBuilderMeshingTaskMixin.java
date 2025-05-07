@@ -8,7 +8,7 @@ import net.caffeinemc.mods.sodium.client.util.task.CancellationToken;
 import net.caffeinemc.mods.sodium.client.world.LevelSlice;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import org.confluence.terraentity.mixed.LightManager;
+import org.confluence.terraentity.mixed.colorful_light.LightManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
