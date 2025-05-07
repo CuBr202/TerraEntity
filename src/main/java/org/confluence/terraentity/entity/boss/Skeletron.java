@@ -233,6 +233,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
         }
 
         public Vec3 getTargetPosition() {
+            if(getTarget() == null){
+                return position();
+            }
             return getTarget().position().add(0, 5, 0);
         }
 
@@ -252,7 +255,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
             }
             setDeltaMovement(resultVelocity);
             if(crazy){
-                addDeltaMovement(getTarget().position().subtract(position()).scale(0.01f));
+                if(getTarget() != null) {
+                    addDeltaMovement(getTarget().position().subtract(position()).scale(0.01f));
+                }
             }
             lookAt(90);
         }
@@ -277,6 +282,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
 
         @Override
         public void tick() {
+            if(getTarget() == null){
+                return;
+            }
             Vec3 vec = getTarget().position().subtract(position());
             if (enraged) { // 白天最快
                 setDeltaMovement(vec.normalize().scale(1));
@@ -317,6 +325,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
 
         @Override
         public void tick() {
+            if(getTarget() == null){
+                return;
+            }
             int interval = hands.isEmpty() ? 7 : 13;
             if (ftw) {
                 interval = (int) (interval * 0.8);

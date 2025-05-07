@@ -29,11 +29,17 @@ public class RangeShooter extends AbstractMonster {
 
     int _phase = 200;
     int phase = _phase;
+    int _delay = 8;
+    int delay = -1;
     Supplier<? extends EntityType<? extends BaseProj<?>>> projType;
 
     public RangeShooter(EntityType<? extends Monster> type, Level level, Supplier<? extends EntityType<? extends BaseProj<?>>> projType, AttributeBuilder builder) {
         super(type, level, builder);
         this.projType = projType;
+    }
+    public RangeShooter(EntityType<? extends Monster> type, Level level,int attackDelay,  Supplier<? extends EntityType<? extends BaseProj<?>>> projType, AttributeBuilder builder) {
+        this(type, level, projType, builder);
+        _delay = attackDelay;
     }
 
     @Override
@@ -54,13 +60,16 @@ public class RangeShooter extends AbstractMonster {
             lookAt(target, 10, 70);
             this.moveControl.strafe(0.01f, 0.01f);
             if(phase == 180 || phase == 130 || phase == 80){
+                delay = _delay;
+                this.swing(InteractionHand.MAIN_HAND, true);
+            }
+            if(--delay == 0){
                 BaseProj proj = projType.get().create(level());
                 proj.setOwner(this);
                 proj.setPos(this.getEyePosition());
                 proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
                 proj.shoot((float)(target.getX() - this.getX()), (float)(target.getY() - target.getBbHeight() * 0.3f - this.getY()), (float)(target.getZ() - this.getZ()), 0.3f, 0.8f);
                 level().addFreshEntity(proj);
-                this.swing(InteractionHand.MAIN_HAND, true);
             }
 
             if(--phase<= 0){
