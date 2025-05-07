@@ -89,6 +89,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> DEVOURER = TEEntities.registerEntity("devourer", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(52).setAttackDamage(8).setArmor(2).setSpawnWithoutLight()),2F,2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> TOMB_CRAWLER = TEEntities.registerEntity("tomb_crawler", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(16).setAttackDamage(4).setArmor(2)),2F,2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> GIANT_WORM = TEEntities.registerEntity("giant_worm", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(31).setAttackDamage(9).setArmor(3)),2F,2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> LEECH = TEEntities.registerEntity("leech", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(36).setAttackDamage(10).setArmor(4)),2F,2F);
     // 卷壳怪
     public static final DeferredHolder<EntityType<?>, EntityType<GiantShelly>> GIANT_SHELLY = TEEntities.registerEntity("giant_shelly", GiantShelly::new,0.8F,0.8F);
     // 宁芙
@@ -120,6 +121,8 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_SCOUT = TEEntities.registerEntity("goblin_scout", (e, l)->new HumanoidMonster(e,l, new AbstractPrefab(26,1,10,32,1,0.28f).asHumanoid().setSpawnWithoutLight()),0.65F,1.85F);
     public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> ANGER_GOBLIN = TEEntities.registerEntity("anger_goblin", (e, l)->new HumanoidMonster(e,l, new AbstractPrefab(100,1,10,32,1,0.28f).asHumanoid().setMainHand(Items.GOLDEN_SWORD.getDefaultInstance()).setSpawnWithoutLight()),0.65F,1.85F);
 
+    //饿鬼
+    public static final DeferredHolder<EntityType<?>, EntityType<TheHungry>> THE_HUNGRY = TEEntities.registerEntity("the_hungry",  (e, l)->new TheHungry(e,l, new AbstractPrefab(60,2,15,32,0.75f,1).getPrefab()),1F,1F);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -168,6 +171,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.BLOOD_ZOMBIE.get(), c-> new GeoNormalRenderer<>(c, TEMonsterEntities.BLOOD_ZOMBIE.getId(),false));
         event.registerEntityRenderer(TEMonsterEntities.DEVOURER.get(), c-> new GeoWormRenderer<>(c, TEMonsterEntities.DEVOURER.getId(),2.0f, 0.0f));
         event.registerEntityRenderer(TEMonsterEntities.GIANT_WORM.get(), c-> new GeoWormRenderer<>(c, TEMonsterEntities.GIANT_WORM.getId(),2.0f, 0.0f));
+        event.registerEntityRenderer(TEMonsterEntities.LEECH.get(), c-> new GeoWormRenderer<>(c, TEMonsterEntities.LEECH.getId(),2.0f, 0.0f));
         event.registerEntityRenderer(TEMonsterEntities.TOMB_CRAWLER.get(), c-> new GeoWormRenderer<>(c, TEMonsterEntities.TOMB_CRAWLER.getId(),2.0f, 0.0f));
         event.registerEntityRenderer(TEMonsterEntities.GIANT_SHELLY.get(), c-> new GeoNormalRenderer<>(c, new GiantShellyModel<>(TEMonsterEntities.GIANT_SHELLY.getId()),false,2,0));
         // bat
@@ -184,6 +188,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.NYMPH.get(), c->new GeoNormalRenderer<>(c, new NymphModel<>(TEMonsterEntities.NYMPH.getId()),false,1,0f));
         event.registerEntityRenderer(TEMonsterEntities.SNATCHER.get(), c->new SnatcherRenderer<>(c, TEMonsterEntities.SNATCHER.getId()));
         event.registerEntityRenderer(TEMonsterEntities.MAN_EATER.get(), c->new SnatcherRenderer<>(c, TEMonsterEntities.MAN_EATER.getId()));
+        event.registerEntityRenderer(TEMonsterEntities.THE_HUNGRY.get(), c->new TheHungryRenderer<>(c, TEMonsterEntities.THE_HUNGRY.getId()));
 
         // 地牢骷髅
         event.registerEntityRenderer(TEMonsterEntities.BASE_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BASE_BONES.getId(), 0.9f,0));
@@ -245,6 +250,7 @@ public class TEMonsterEntities {
         event.put(NYMPH.get(), AbstractMonster.createAttributes().build());
         event.put(SNATCHER.get(), AbstractMonster.createAttributes().build());
         event.put(MAN_EATER.get(), AbstractMonster.createAttributes().build());
+        event.put(THE_HUNGRY.get(), TheHungry.createAttributes().build());
 
         // fly
         event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());
@@ -266,6 +272,7 @@ public class TEMonsterEntities {
         event.put(SPORE_BAT.get(), AbstractMonster.createAttributes().build());
         // worm
         event.put(GIANT_WORM.get(), AbstractMonster.createAttributes().build());
+        event.put(LEECH.get(), AbstractMonster.createAttributes().build());
         event.put(DEVOURER.get(), AbstractMonster.createAttributes().build());
         event.put(TOMB_CRAWLER.get(), AbstractMonster.createAttributes().build());
 

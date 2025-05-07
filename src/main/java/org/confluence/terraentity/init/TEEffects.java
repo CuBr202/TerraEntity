@@ -2,13 +2,12 @@ package org.confluence.terraentity.init;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.effect.harmful.DemonicThoughtsEffect;
-import org.confluence.terraentity.effect.harmful.FrostburnEffect;
-import org.confluence.terraentity.effect.harmful.HellFireEffect;
-import org.confluence.terraentity.effect.harmful.SummonFocusEffect;
+import org.confluence.terraentity.effect.harmful.*;
+import org.confluence.terraentity.entity.boss.WallOfFlesh;
 
 public class TEEffects {
 
@@ -18,6 +17,6 @@ public class TEEffects {
     public static final DeferredHolder<MobEffect, SummonFocusEffect> SUMMON_FOCUS = EFFECTS.register("summon_mark", SummonFocusEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> FROST_BURN = EFFECTS.register("frost_burn", FrostburnEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> HELLFIRE = EFFECTS.register("hellfire", HellFireEffect::new);
-
-
+    public static final DeferredHolder<MobEffect, HorrifiedEffect> HORRIFIED = EFFECTS.register("horrified", HorrifiedEffect::new);
+    public static final DeferredHolder<MobEffect, TheTongueEffect> THE_TONGUE = EFFECTS.register("the_tongue", TheTongueEffect::new);
 }
