@@ -12,22 +12,15 @@
     "accessor.ProjectileWeaponAccessor",
     "accessor.SlimeAccessor",
     "client.ServerChunkLoadingManagerMixin"
-    "sodium.AbstractBlockRenderContextAccessor",
-    "sodium.BlockRendererMixin",
-    "sodium.ChunkBuilderMeshingTaskMixin",
-    "sodium.ChunkBuilderTaskAccessor"
 
   ],
   "client": [
     "accessor.GameRendererAccessor",
     "client.BossHealthOverlayMixin",
-    "client.BufferBuilderMixin",
     "client.GameRendererMixin",
     "client.ItemRendererMixin",
     "client.LevelRendererMixin",
     "client.LocalPlayerMixin",
-    "client.ModelBlockRendererMixin",
-    "client.SectionCompilerMixin",
     "client.ShaderInstanceMixin"
   ],
   "injectors": {

@@ -83,8 +83,7 @@ public class RenderEvent {
         int packedLight = event.getPackedLight();
         if (livingEntity.hasEffect(TEEffects.THE_TONGUE)) {
             MobEffect rawEffect = livingEntity.getEffect(TEEffects.THE_TONGUE).getEffect().value();
-            if (rawEffect instanceof TheTongueEffect) {
-                TheTongueEffect effect = (TheTongueEffect) rawEffect;
+            if (rawEffect instanceof TheTongueEffect effect) {
                 WallOfFleshMouth mouth = effect.getWallOfFleshMouth();
                 if (mouth != null && mouth.isAlive() && livingEntity.isAlive()) {
                     Vec3 init = mouth.position();
