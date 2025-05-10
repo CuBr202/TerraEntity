@@ -31,7 +31,9 @@ import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.color.FloatRGB;
 import org.confluence.terraentity.entity.boss.KingSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
+import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
 import org.confluence.terraentity.utils.TEUtils;
@@ -46,6 +48,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
 
     private final int size;
     private final FloatRGB color;
+    private int honeySoakTime;
 
     public BaseSlime(EntityType<? extends Slime> slime, Level level, int color, int size) {
         super(slime, level);
@@ -53,6 +56,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         // setSize在constructor中调用时size还没更新，再变一遍
         setSize(size, false);
         this.color = FloatRGB.fromInteger(color);
+        this.honeySoakTime = 0;
     }
 
     Predicate<FloatRGB> colorTest = c->c.equals(SlimeColor_Green) || c.equals(SlimeColor_Blue) || c.equals(SlimeColor_Purple);
@@ -118,7 +122,31 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
                 this.hurt(this.level().damageSources().freeze(), 0.8F);
             }
         }
+        if (!level().isClientSide && tickCount % 20 == 0 && (this.getType().equals(TEMonsterEntities.GREEN_SLIME.get()) ||
+                this.getType().equals(TEMonsterEntities.BLUE_SLIME.get()) ||
+                this.getType().equals(TEMonsterEntities.PURPLE_SLIME.get()))) {
+            addHoneySoakTime();
+        }
         super.tick();
+    }
+
+    private void addHoneySoakTime() {
+        if (!level().isClientSide && level().getBlockState(this.blockPosition()).is(TETags.Blocks.HONEY)){
+            honeySoakTime++;
+            if (honeySoakTime >= 120){
+                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level());
+                if (slime != null) {
+                    slime.setSize(2, true);
+                    slime.setPos(this.position());
+                    slime.setXRot(this.getXRot());
+                    slime.setYRot(this.getYRot());
+                    level().addFreshEntity(slime);
+                }
+                this.remove(Entity.RemovalReason.DISCARDED);
+            }
+        } else {
+            honeySoakTime = 0;
+        }
     }
 
     public Vec3 getVehicleAttachmentPoint(Entity entity) {

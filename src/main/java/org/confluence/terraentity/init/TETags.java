@@ -4,6 +4,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
@@ -13,24 +14,20 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
 import org.confluence.terraentity.TerraEntity;
 
 public class TETags {
-    public static class Blocks {
-
-
-
-    }
 
     public static class Items {
-        public static final TagKey<Item> HONEY_TRANSLATION_BUCKET = registerItem("honey_translation_with_bucket");
-        public static final TagKey<Item> HONEY_TRANSLATION = registerItem("honey_translation");
-        public static final TagKey<Item> HONEY_TRANSLATION_NOT_CONSUMED = registerItem("honey_translation_not_consumed");
-
         public static final TagKey<Item> WHIP_ENCHANTABLE = registerItem("whip_enchantable");
         public static final TagKey<Item> BOOMERANG_ENCHANTABLE = registerItem("boomerang_enchantable");
 
         public static final TagKey<Item> WEAPONS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "weapons"));
+    }
+
+    public static class Blocks {
+        public static final TagKey<Block> HONEY = registerBlock("honey");
     }
 
     public static class EntityTypes {
@@ -75,6 +72,9 @@ public class TETags {
 
     private static TagKey<Item> registerItem(String id) {
         return ItemTags.create(TerraEntity.space(id));
+    }
+    private static TagKey<Block> registerBlock(String id) {
+        return BlockTags.create(TerraEntity.space(id));
     }
     private static TagKey<EntityType<?>> registerEntityType(String id) {
         return TagKey.create(Registries.ENTITY_TYPE, TerraEntity.space(id));
