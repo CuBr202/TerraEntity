@@ -58,6 +58,8 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> CAVE_BAT_SPAWN_EGG = registerEgg("cave_bat_spawn_egg", TEMonsterEntities.CAVE_BAT, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> SPORE_BAT_SPAWN_EGG = registerEgg("spore_bat_spawn_egg", TEMonsterEntities.SPORE_BAT, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> TOMB_CRAWLER_SPAWN_EGG = registerEgg("tomb_crawler_spawn_egg", TEMonsterEntities.TOMB_CRAWLER, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> ANTLION_SWARMER_SPAWN_EGG = registerEgg("antlion_swarmer_spawn_egg", TEMonsterEntities.ANTLION_SWARMER, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> GIANT_ANTLION_SWARMER_SPAWN_EGG = registerEgg("giant_antlion_spawn_egg", TEMonsterEntities.GIANT_ANTLION_SWARMER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> FLYING_FISH_SPAWN_EGG = registerEgg("flying_fish_spawn_egg", TEMonsterEntities.FLYING_FISH, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> HARPY_SPAWN_EGG = registerEgg("harpy_spawn_egg", TEMonsterEntities.HARPY, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> DRIPPLER_SPAWN_EGG = registerEgg("drippler_spawn_egg", TEMonsterEntities.DRIPPLER, 0xffffff, 0xffffff);
@@ -73,6 +75,7 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> QUEEN_BEE_SPAWN_EGG = registerEgg("queen_bee_spawn_egg", TEBossEntities.QUEEN_BEE, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> SKELETRON_SPAWN_EGG = registerEgg("skeletron_spawn_egg", TEBossEntities.SKELETRON, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> DUNGEON_GUARDIAN_SPAWN_EGG = registerEgg("dungeon_guardian_spawn_egg", TEBossEntities.DUNGEON_GUARDIAN, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> WALL_OF_FLESH_SPAWN_EGG = registerEgg("wall_of_flesh_spawn_egg", TEBossEntities.WALL_OF_FLESH, 0xffffff, 0xffffff);
 
     // 地牢骷髅
 

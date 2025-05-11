@@ -95,7 +95,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
             return y >= 30 && y <= 100;
         } else if (type == TEMonsterEntities.BLUE_SLIME.get() || type == TEMonsterEntities.GREEN_SLIME.get() || type == TEMonsterEntities.PURPLE_SLIME.get()
                 || type == TEMonsterEntities.ICE_SLIME.get() || type == TEMonsterEntities.DESERT_SLIME.get() || type == TEMonsterEntities.JUNGLE_SLIME.get()
-                || type == TEMonsterEntities.PINK_SLIME.get() || type == TEMonsterEntities.SWAMP_SLIME.get()) {
+                || type == TEMonsterEntities.PINK_SLIME.get() || type == TEMonsterEntities.SWAMP_SLIME.get() || type == TEMonsterEntities.TROPIC_SLIME.get()) {
             int y = pPos.getY();
             return y > 30 && y < 260 && level.isDay() && pLevel.canSeeSky(pPos);
         }

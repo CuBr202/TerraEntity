@@ -79,6 +79,9 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), "大头盔愤怒骷髅");
         add(TEMonsterEntities.CURSED_SKULL.get(), "诅咒骷髅头");
         add(TEMonsterEntities.DARK_CASTER.get(), "暗黑法师");
+        add(TEMonsterEntities.THE_HUNGRY.get(), "饿鬼");
+        add(TEMonsterEntities.ANTLION_SWARMER.get(), "蚁狮蜂");
+        add(TEMonsterEntities.GIANT_ANTLION_SWARMER.get(), "巨型蚁狮蜂");
 
 
         add(TEBossEntities.KING_SLIME.get(), "史莱姆王");
@@ -92,6 +95,9 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.LITTLE_HORNET.get(), "小黄蜂");
         add(TEBossEntities.SKELETRON.get(), "骷髅王");
         add(TEBossEntities.DUNGEON_GUARDIAN.get(), "地牢守卫");
+        add(TEBossEntities.WALL_OF_FLESH.get(), "血肉墙");
+        add(TEBossEntities.WALL_OF_FLESH_EYE.get(), "血肉墙眼");
+        add(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), "血肉墙口");
 
 
 
@@ -130,6 +136,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.GIANT_WORM_SPAWN_EGG.get(), "巨型蠕虫刷怪蛋");
         add(TESpawnEggItems.NYMPH_SPAWN_EGG.get(), "宁芙刷怪蛋");
         add(TESpawnEggItems.TOMB_CRAWLER_SPAWN_EGG.get(), "墓穴爬虫刷怪蛋");
+        add(TESpawnEggItems.ANTLION_SWARMER_SPAWN_EGG.get(), "蚁狮蜂刷怪蛋");
+        add(TESpawnEggItems.GIANT_ANTLION_SWARMER_SPAWN_EGG.get(), "巨型蚁狮蜂刷怪蛋");
         add(TESpawnEggItems.CAVE_BAT_SPAWN_EGG.get(), "洞穴蝙蝠刷怪蛋");
         add(TESpawnEggItems.ICE_BAT_SPAWN_EGG.get(), "冰雪蝙蝠刷怪蛋");
         add(TESpawnEggItems.JUNGLE_BAT_SPAWN_EGG.get(), "丛林蝙蝠刷怪蛋");
@@ -171,6 +179,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.ANGER_GOBLIN.get(), "愤怒哥布林");
 
 
+
         // boss
         add(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
         add(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
@@ -179,6 +188,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
         add(TESpawnEggItems.SKELETRON_SPAWN_EGG.get(), "骷髅王刷怪蛋");
         add(TESpawnEggItems.DUNGEON_GUARDIAN_SPAWN_EGG.get(), "地牢守卫刷怪蛋");
+        add(TESpawnEggItems.WALL_OF_FLESH_SPAWN_EGG.get(), "血肉墙刷怪蛋");
 
 
 

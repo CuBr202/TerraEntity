@@ -66,6 +66,23 @@ public class SpawnPlacementChecks {
         return true;
     }
 
+    public static boolean checkOnlyDayMonsterSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+        if (!(pLevel instanceof Level level)) {
+            return false; // 如果 pLevel 不是 Level 的实例，返回 false
+        }
+
+        if (!Mob.checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
+            return false;
+        }
+
+        int y = pPos.getY();
+        if (y >= 260) {
+            return false; // 不能生成在 y = 260 或更高的位置
+        }
+
+        return level.isDay();
+    }
+
     public static boolean checkUndergroundMonsterSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!(pLevel instanceof Level level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false

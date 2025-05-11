@@ -42,7 +42,7 @@ public class HarpyFeatherProjectileModel<T extends Entity> extends EntityModel<T
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
 		poseStack.mulPose(Axis.ZN.rotationDegrees(180));
 
-		poseStack.translate(0,-1.8,0);
+		poseStack.translate(0,-1.45,0);
 		bone.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
 	}
 }
