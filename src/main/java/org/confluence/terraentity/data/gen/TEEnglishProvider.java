@@ -6,10 +6,7 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.item.TEBoomerangItems;
-import org.confluence.terraentity.init.item.TESpawnEggItems;
-import org.confluence.terraentity.init.item.TESummonItems;
-import org.confluence.terraentity.init.item.TEWhipItems;
+import org.confluence.terraentity.init.item.*;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -35,9 +32,10 @@ public class TEEnglishProvider extends LanguageProvider {
         TESpawnEggItems.ITEMS.getEntries().forEach(itemAction);
         TESummonItems.ITEMS.getEntries().forEach(itemAction);
         TEWhipItems.ITEMS.getEntries().forEach(itemAction);
+        TEBoomerangItems.ITEMS.getEntries().forEach(itemAction);
+        TERideableItems.ITEMS.getEntries().forEach(itemAction);
         TEEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
         TEEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get(), toTitleCase(effect.getId().getPath())));
-        TEBoomerangItems.ITEMS.getEntries().forEach(itemAction);
 
         add("itemGroup.terraentity.title", "Terra Entity");
 
@@ -54,7 +52,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("entity.terra_entity.baby_slime", "Baby Slime");
 
         add("message.terraentity.boss_spawn", "%s Has Awoken!");
-        add("message.terraentity.boss_leave", "%s Have Been Defeated!");
+        add("message.terraentity.boss_leave", "%s Has Been Defeated!");
         add("message.terraentity.boss_discard", "Has Been Discarded！");
         add("message.terra_entity.trade.not_enough_items", "Not Enough Items");
 
