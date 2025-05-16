@@ -29,7 +29,7 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> {
 
     public WallOfFlesh parentMob;
 
-    private static final float DAMAGE = 4f;//一阶段接触伤害
+    private static final float DAMAGE = 10f;//一阶段接触伤害
 
     //定义技能参数
     private int summonCDAll = 60; //仆从召唤cd
@@ -37,7 +37,7 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> {
 
 
     public WallOfFleshEye(EntityType<WallOfFleshEye> entityType, Level level) {
-        super(entityType, level,WallOfFlesh.MAX_HEALTHS,6);
+        super(entityType, level,WallOfFlesh.MAX_HEALTHS,2);
         //初始属性
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);

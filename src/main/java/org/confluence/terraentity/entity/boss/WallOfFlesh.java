@@ -35,8 +35,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements Boss {
-    public static final float MAX_HEALTHS = 1024f;
-    private static final float DAMAGE = 5f;//接触伤害
+    public static final float MAX_HEALTHS = 3068f;
+    private static final float DAMAGE = 39f;//接触伤害
 
     static float moveSpeedBase = 0.15f;//移动速度
 

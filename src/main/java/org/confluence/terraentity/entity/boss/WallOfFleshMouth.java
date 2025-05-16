@@ -32,7 +32,7 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> {
 
     public WallOfFlesh parentMob;
 
-    private static final float DAMAGE = 4f;//一阶段接触伤害
+    private static final float DAMAGE = 39f;//一阶段接触伤害
     private int pendingSpawns = 0; // 待生成数量
     private int spawnInterval = 0; // 间隔计时器
 
@@ -41,7 +41,7 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> {
 
 
     public WallOfFleshMouth(EntityType<WallOfFleshMouth> entityType, Level level) {
-        super(entityType, level,WallOfFlesh.MAX_HEALTHS,12);
+        super(entityType, level,WallOfFlesh.MAX_HEALTHS,4);
         //初始属性
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
         getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32f);
