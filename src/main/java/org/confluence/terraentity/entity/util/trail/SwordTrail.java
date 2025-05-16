@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
@@ -12,26 +11,44 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.client.util.ShaderUtil;
+import org.confluence.terraentity.entity.proj.TrailSwordProj;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.Iterator;
 import java.util.Queue;
 
-/**
- * 拖尾效果接口
- * @param <T> 拖尾容器持有者
- */
-public interface ITrail<T> {
+public class SwordTrail implements ITrail<TrailSwordProj> {
+    TrailProperties properties;
 
-    record TrailProperties(int size, float widthScale, float fadeWidthFactor, int colorFrom, int colorTo) {
+    public SwordTrail(int size, float widthScale, int color) {
+        this.properties = new TrailProperties(size, widthScale, 5, color, color);
+
     }
 
-    void generateTrail(T holder, int ticks);
+    @Override
+    public void generateTrail(TrailSwordProj holder, int ticks) {
+        if(holder.trailQueue.size() >= 8){
+            holder.trailQueue.poll();
+        }
 
-    TrailProperties getTrailProperties();
+        if(holder.getLifetime() - ticks < 4){
+            holder.trailQueue.poll();
+        }
+
+        if(ticks > 1) {
+            holder.trailQueue.add(holder.position().subtract(holder.getOwner().position()));
+        }
+    }
+
+    @Override
+    public TrailProperties getTrailProperties() {
+        return properties;
+    }
 
     @OnlyIn(Dist.CLIENT)
-    default void renderTrail(T holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource) {
+    public void renderTrail(TrailSwordProj holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource) {
         Iterator<Vec3> trails = trailsQueue.iterator();
         int size = trailsQueue.size();
 
@@ -42,14 +59,12 @@ public interface ITrail<T> {
         Matrix4f matrix4f = poseStack.last().pose();
         VertexConsumer buffer = bufferSource.getBuffer(ShaderUtil.TRAIL_RENDER_TYPE);
 
-        Minecraft mc = Minecraft.getInstance();
-        Vec3 camDir =  new Vec3(mc.gameRenderer.getMainCamera().getLookVector());
 
-        int color = getTrailProperties().colorTo;
+        int color = getTrailProperties().colorTo();
         int red = FastColor.ARGB32.red(color);
         int green = FastColor.ARGB32.green(color);
         int blue = FastColor.ARGB32.blue(color);
-        int colorFrom = getTrailProperties().colorFrom;
+        int colorFrom = getTrailProperties().colorFrom();
         int redFrom = FastColor.ARGB32.red(colorFrom);
         int greenFrom = FastColor.ARGB32.green(colorFrom);
         int blueFrom = FastColor.ARGB32.blue(colorFrom);
@@ -61,6 +76,7 @@ public interface ITrail<T> {
         Vec3 o1 = null;
         Vec3 o2 = null;
         Vec3 o3 = null;
+
         Vec3 lastPos = trails.next().subtract(entityPos);
         int i = 0;
 
@@ -68,24 +84,31 @@ public interface ITrail<T> {
             Vec3 pos0 = lastPos;
             Vec3 pos1 = trails.next().subtract(entityPos);
 
-            Vec3 dir = pos1.subtract(pos0).normalize();
-
-            float progress = i / (float) size;
-            float width = properties.widthScale * progress;
+            float progress = i / (float) size * 0.6f + 0.4f;
+            float width = properties.widthScale() * progress;
             int alpha = (int) (200 * progress);
+            if(!trails.hasNext()){
+                alpha = 20;
+            }
             int lerpRed = (int) Mth.lerp(progress, red, redFrom);
             int lerpGreen = (int) Mth.lerp(progress, green, greenFrom);
             int lerpBlue = (int) Mth.lerp(progress, blue, blueFrom);
             int argb = FastColor.ARGB32.color(alpha, lerpRed, lerpGreen, lerpBlue);
 
 //            Vec3 side = dir.cross(camDir).normalize();
-            Vec3 side = dir.cross(camDir).normalize().scale(width);
+            float rotx = holder.getXRot() * 0.017453292F;
+            float roty = -holder.getYRot() * 0.017453292F;
+            Vector3f d = new Vector3f(0,0,1);
+            new Quaternionf().rotateY(roty).rotateX(rotx).transform(d);
+
+            Vec3 side = new Vec3(d.normalize());
+
             Vec3 left0 ;
             Vec3 left00;
             Vec3 right0 ;
             Vec3 right00;
-            Vec3 left11 = pos1.add(side.scale(+width * properties.fadeWidthFactor));
-                Vec3 right11 = pos1.add(side.scale(-width * properties.fadeWidthFactor));
+            Vec3 left11 = pos1.add(side.scale(+width * properties.fadeWidthFactor()));
+            Vec3 right11 = pos1.add(side.scale(-width * properties.fadeWidthFactor()));
             Vec3 left1 = pos1.add(side.scale(+width));
             Vec3 right1 = pos1.add(side.scale(-width));
             if(o0 != null) {
@@ -100,20 +123,20 @@ public interface ITrail<T> {
                 right00 = pos0.add(side.scale(-width));
             }
 
-            addVertex(buffer, matrix4f, left0, lastColor);
-            addVertex(buffer, matrix4f, right0, lastColor);
-            addVertex(buffer, matrix4f, right1, argb);
-            addVertex(buffer, matrix4f, left1, argb);
+            ITrail.addVertex(buffer, matrix4f, left0, lastColor);
+            ITrail.addVertex(buffer, matrix4f, right0, lastColor);
+            ITrail.addVertex(buffer, matrix4f, right1, argb);
+            ITrail.addVertex(buffer, matrix4f, left1, argb);
 
-            addVertex(buffer, matrix4f, left00, lastColor & 0x00FFFFFF);
-            addVertex(buffer, matrix4f, left0, lastColor);
-            addVertex(buffer, matrix4f, left1, argb);
-            addVertex(buffer, matrix4f, left11, argb& 0x00FFFFFF);
+            ITrail.addVertex(buffer, matrix4f, left00, lastColor & 0x00FFFFFF);
+            ITrail.addVertex(buffer, matrix4f, left0, lastColor);
+            ITrail.addVertex(buffer, matrix4f, left1, argb);
+            ITrail.addVertex(buffer, matrix4f, left11, argb& 0x00FFFFFF);
 
-            addVertex(buffer, matrix4f, right0, lastColor);
-            addVertex(buffer, matrix4f, right00, lastColor& 0x00FFFFFF);
-            addVertex(buffer, matrix4f, right11, argb& 0x00FFFFFF);
-            addVertex(buffer, matrix4f, right1, argb);
+            ITrail.addVertex(buffer, matrix4f, right0, lastColor);
+            ITrail.addVertex(buffer, matrix4f, right00, lastColor& 0x00FFFFFF);
+            ITrail.addVertex(buffer, matrix4f, right11, argb& 0x00FFFFFF);
+            ITrail.addVertex(buffer, matrix4f, right1, argb);
 
 
             o0 = left1;
@@ -124,15 +147,9 @@ public interface ITrail<T> {
             i++;
             lastColor = argb;
         }
+
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
         poseStack.popPose();
     }
-
-    @OnlyIn(Dist.CLIENT)
-    static void addVertex(VertexConsumer buffer, Matrix4f matrix, Vec3 pos, int argb) {
-        buffer.addVertex(matrix, (float) pos.x, (float) pos.y, (float) pos.z)
-                .setColor(argb);
-    }
-
 }

@@ -12,11 +12,12 @@
     "accessor.ProjectileWeaponAccessor",
     "accessor.SlimeAccessor",
     "client.ServerChunkLoadingManagerMixin"
-
   ],
   "client": [
     "accessor.GameRendererAccessor",
+    "accessor.LevelRendererAccessor",
     "client.BossHealthOverlayMixin",
+    "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.ItemRendererMixin",
     "client.LevelRendererMixin",

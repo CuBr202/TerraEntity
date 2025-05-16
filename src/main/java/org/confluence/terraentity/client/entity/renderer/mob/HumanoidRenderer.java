@@ -1,4 +1,4 @@
-package org.confluence.terraentity.client.entity.renderer;
+package org.confluence.terraentity.client.entity.renderer.mob;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.*;
 import org.confluence.terraentity.client.entity.model.GeoHumanoidModel;
+import org.confluence.terraentity.client.entity.renderer.AnimatorRenderer;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.client.util.DefaultBoneBoundIdents;
 import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
@@ -28,7 +29,7 @@ import javax.annotation.Nullable;
  * 人形怪渲染器，渲染手持物品、盔甲、使用弓、弩的硬编码动画和插值。需要骨骼符合命名要求{@link DefaultBoneBoundIdents 预定义骨骼名表}。
  * @param <T> 实体类型
  */
-public class HumanoidRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<BoneStates>> extends AnimatorRenderer<T>{
+public class HumanoidRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<BoneStates>> extends AnimatorRenderer<T> {
     public static final String LEFT_HAND = DefaultBoneBoundIdents.LEFT_HAND_BONE_IDENT;
     public static final String RIGHT_HAND = DefaultBoneBoundIdents.RIGHT_HAND_BONE_IDENT;
 

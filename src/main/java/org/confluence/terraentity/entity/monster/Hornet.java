@@ -162,10 +162,12 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         public void tick() {
-            bee.lookControl.setLookAt(bee.getTarget());
-            bee.lookAt(bee.getTarget(), 360, 360);
-            if(bee.distanceTo(bee.getTarget()) < 10){
-
+            if(bee.getTarget() != null && bee.getTarget().isAlive()) {
+                bee.lookControl.setLookAt(bee.getTarget());
+                bee.lookAt(bee.getTarget(), 360, 360);
+//                if (bee.distanceTo(bee.getTarget()) < 10) {
+//
+//                }
             }
         }
     }

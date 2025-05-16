@@ -36,7 +36,9 @@ public abstract class AbstractBufferManager {
 
     public void refresh() {
         lastRefreshTime = System.currentTimeMillis();
-
+        if(vertexBuffer!= null){
+            vertexBuffer.close();
+        }
         vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);

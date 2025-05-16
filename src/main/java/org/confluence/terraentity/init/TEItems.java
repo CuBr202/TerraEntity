@@ -7,9 +7,11 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.item.*;
+import org.confluence.terraentity.item.DebugItem;
 import org.confluence.terraentity.item.HouseDetectItem;
 
 import java.util.function.Supplier;
@@ -26,7 +28,7 @@ public class TEItems {
 
     // Sentry Items
 //    public static final DeferredItem<Item> SENTRY_STAFF = SENTRY_ITEMS.register("sentry_staff", () -> new SentryItem<>(new Item.Properties(), TEEntities.SUMMON_HORNET, 1, 5));
-//    public static final DeferredItem<Item> DEBUG_ITEM = SUMMON_ITEMS.register("debug_item", () -> new DebugItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<Item> DEBUG_ITEM = TOOLS.register("debug_item", () -> new DebugItem(new Item.Properties().stacksTo(1)));
 
 
     public static final DeferredHolder<CreativeModeTab,CreativeModeTab> NEO_TERRA =

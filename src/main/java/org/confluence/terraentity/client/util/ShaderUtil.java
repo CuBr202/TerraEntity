@@ -108,19 +108,35 @@ public class ShaderUtil {
         buffer.addVertex(x, y + size, z).setColor(r,g,b,a);
     }
 
+//    public static RenderType TRAIL_RENDER_TYPE = RenderType.create(
+//            "trail_render_type",
+//            DefaultVertexFormat.POSITION_COLOR,
+//            VertexFormat.Mode.QUADS,
+//            1536,
+//            false,
+//            true,
+//            RenderType.CompositeState.builder()
+//                    .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
+////                    .setWriteMaskState(COLOR_DEPTH_WRITE)
+//                    .setTransparencyState(LIGHTNING_TRANSPARENCY)
+//                    .setLightmapState(NO_LIGHTMAP)
+//                    .setOutputState(TRANSLUCENT_TARGET)
+//                    .createCompositeState(false)
+//    );
+
     public static RenderType TRAIL_RENDER_TYPE = RenderType.create(
             "trail_render_type",
             DefaultVertexFormat.POSITION_COLOR,
             VertexFormat.Mode.QUADS,
-            1536,
-            false,
-            true,
-            RenderType.CompositeState.builder()
+                    1536,
+                    false,
+                    true,
+                    RenderType.CompositeState.builder()
                     .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
-//                    .setWriteMaskState(COLOR_DEPTH_WRITE)
-                    .setTransparencyState(LIGHTNING_TRANSPARENCY)
-                    .setLightmapState(NO_LIGHTMAP)
-                    .setOutputState(TRANSLUCENT_TARGET)
-                    .createCompositeState(false)
+                                .setWriteMaskState(COLOR_DEPTH_WRITE)
+                                .setTransparencyState(LIGHTNING_TRANSPARENCY)
+                                .setOutputState(TRANSLUCENT_TARGET)
+                                .setCullState(NO_CULL)
+                                .createCompositeState(true)
     );
 }

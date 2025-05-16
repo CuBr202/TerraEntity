@@ -1,4 +1,4 @@
-package org.confluence.terraentity.client.entity.renderer;
+package org.confluence.terraentity.client.entity.renderer.proj;
 
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -22,7 +22,6 @@ import org.confluence.terraentity.entity.proj.BoomerangProjectile;
 import org.joml.Matrix4f;
 
 import java.util.Iterator;
-import java.util.List;
 
 import static net.minecraft.client.renderer.RenderStateShard.*;
 
@@ -32,6 +31,7 @@ public class BoomerangProjRenderer extends EntityRenderer<BoomerangProjectile> {
         super(pContext);
     }
 
+    @Override
     public void render(BoomerangProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
 //        int pack = OverlayTexture.pack((int) (partialTick*Math.sin(partialTick/10)), (int) (partialTick*Math.cos(partialTick/10)));
 
@@ -48,8 +48,8 @@ public class BoomerangProjRenderer extends EntityRenderer<BoomerangProjectile> {
 //        renderTrail(entity.trailQueue.iterator(), pos , poseStack, bufferSource, color, entity.trailQueue.size());
 //        renderTrail(entity.trailQueue2.iterator(), pos , poseStack, bufferSource, color, entity.trailQueue2.size());
 
-            entity.trail.renderTrail(entity.trailQueue, pos, poseStack, bufferSource);
-            entity.trail.renderTrail(entity.trailQueue2, pos, poseStack, bufferSource);
+            entity.trail.renderTrail(entity, entity.trailQueue, pos, poseStack, bufferSource);
+            entity.trail.renderTrail(entity, entity.trailQueue2, pos, poseStack, bufferSource);
         }
 
         float yaw = (float) Math.atan2(v.z, v.x);

@@ -1,4 +1,4 @@
-package org.confluence.terraentity.client.entity.renderer;
+package org.confluence.terraentity.client.entity.renderer.mob;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -8,7 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.Slime;
 
 import org.confluence.terraentity.client.entity.model.CrownOfKingSlimeModel;
-import org.confluence.terraentity.entity.boss.KingSlime;
+import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.joml.Quaternionf;
 
 public class KingSlimeRenderer extends CustomSlimeRenderer {

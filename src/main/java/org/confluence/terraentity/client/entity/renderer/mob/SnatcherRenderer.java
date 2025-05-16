@@ -1,4 +1,4 @@
-package org.confluence.terraentity.client.entity.renderer;
+package org.confluence.terraentity.client.entity.renderer.mob;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.init.model.EntityBlockModelRegister;
 import org.confluence.terraentity.entity.monster.Snatcher;
 import org.confluence.terraentity.init.item.TEBoomerangItems;

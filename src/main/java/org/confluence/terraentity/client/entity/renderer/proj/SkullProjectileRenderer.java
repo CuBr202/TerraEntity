@@ -1,4 +1,4 @@
-package org.confluence.terraentity.client.entity.renderer;
+package org.confluence.terraentity.client.entity.renderer.proj;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.proj.SkullProjectile;
 import org.jetbrains.annotations.NotNull;
 

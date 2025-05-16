@@ -14,8 +14,8 @@ import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 
-import static org.confluence.terraentity.client.entity.renderer.HumanoidRenderer.LEFT_HAND;
-import static org.confluence.terraentity.client.entity.renderer.HumanoidRenderer.RIGHT_HAND;
+import static org.confluence.terraentity.client.entity.renderer.mob.HumanoidRenderer.LEFT_HAND;
+import static org.confluence.terraentity.client.entity.renderer.mob.HumanoidRenderer.RIGHT_HAND;
 
 public class GeoHumanoidModel<T extends LivingEntity & GeoEntity & IUseItemAnimatable<BoneStates>> extends AnimatorModel<T>{
 

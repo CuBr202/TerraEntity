@@ -17,6 +17,7 @@ import org.confluence.terraentity.client.entity.model.GiantShellyModel;
 import org.confluence.terraentity.client.entity.model.HarpyModel;
 import org.confluence.terraentity.client.entity.model.NymphModel;
 import org.confluence.terraentity.client.entity.renderer.*;
+import org.confluence.terraentity.client.entity.renderer.mob.*;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.monster.*;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;

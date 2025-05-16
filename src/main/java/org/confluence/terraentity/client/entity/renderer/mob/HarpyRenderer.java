@@ -1,7 +1,8 @@
-package org.confluence.terraentity.client.entity.renderer;
+package org.confluence.terraentity.client.entity.renderer.mob;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import org.confluence.terraentity.client.entity.model.AnimatorModel;
+import org.confluence.terraentity.client.entity.renderer.AnimatorRenderer;
 import org.confluence.terraentity.entity.monster.Harpy;
 
 public class HarpyRenderer extends AnimatorRenderer<Harpy> {

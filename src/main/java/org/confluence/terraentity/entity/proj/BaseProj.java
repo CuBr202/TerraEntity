@@ -15,7 +15,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -40,7 +39,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     public float damage = 1;
     private List<Integer> hitList = new ArrayList<>();
     public int penetration =1;
-    protected List<MobEffectInstance> effects = new ArrayList<>();
+    protected List<MobEffectInstance> effects;
     public ResourceLocation texture = TerraEntity.space("textures/entity/projectile/default.png");
     protected DeferredHolder<SoundEvent,SoundEvent> hitSound;
     public Consumer<BaseProj> clientTickCallback;
@@ -62,12 +61,14 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
 
     protected static final EntityDataAccessor<Vector3f> DATA_INIT_SPEED = SynchedEntityData.defineId(BaseProj.class, EntityDataSerializers.VECTOR3);
 
-    public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
-        super(pEntityType, pLevel);
-        if (pEffect != null){
-            this.effects.add(pEffect);
-        }
+    public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel) {
+        this(pEntityType, pLevel, List.of());
     }
+
+    public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
+        this(pEntityType, pLevel, List.of(pEffect));
+    }
+
     public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel, List<MobEffectInstance> pEffects) {
         super(pEntityType, pLevel);
         this.effects = pEffects;
@@ -115,9 +116,16 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
 
     protected void doKnockBack(LivingEntity entity) {
         double d1 = Math.max(0.0, 1.0 - entity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
-        Vec3 vec3 = this.getDeltaMovement().multiply(1.0, 0.0, 1.0).normalize().scale(((LivingEntity)getOwner()).getAttributeBaseValue(Attributes.ATTACK_KNOCKBACK) * 0.6 * d1);
+        Vec3 vec3;
+        entity.setDeltaMovement(getDeltaMovement().scale(0.3f));
+        float power = 4f;
+        if(getOwner() != null) {
+            vec3 = entity.position().subtract(getOwner().position()).multiply(1.0, 0.0, 1.0).normalize().scale((((LivingEntity) getOwner()).getAttributeBaseValue(Attributes.ATTACK_KNOCKBACK) + 0.1f)  * power * d1);
+        }else{
+            vec3 = getDeltaMovement().multiply(1.0, 0.0, 1.0).normalize().scale(power * d1);
+        }
         if (vec3.lengthSqr() > 0.0) {
-            entity.push(vec3.x, 0.1, vec3.z);
+            entity.push(vec3.x, 0.3, vec3.z);
         }
     }
 
@@ -223,7 +231,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
             if (hitSound != null)
                 level().playSound(this, this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
 
-            hurter.hurt(getDamageSource(living), damage);
+            if(hurter.hurt(getDamageSource(living), damage)){
+                doKnockBack(living);
+            }
 
             if (this.level() instanceof ServerLevel serverlevel) {
                 penetration--;

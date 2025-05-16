@@ -13,7 +13,7 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.block.renderer.FigureBlockRenderer;
 import org.confluence.terraentity.client.entity.model.*;
-import org.confluence.terraentity.client.entity.renderer.ReplacedSpiderRenderer;
+import org.confluence.terraentity.client.entity.renderer.mob.ReplacedSpiderRenderer;
 import org.confluence.terraentity.client.gui.container.SimpleTradeScreen;
 import org.confluence.terraentity.client.init.model.AdditionalItemRegister;
 import org.confluence.terraentity.client.init.model.EntityBlockModelRegister;

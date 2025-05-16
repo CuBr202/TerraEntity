@@ -12,7 +12,7 @@ import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
 import org.confluence.terraentity.client.boss.renderer.*;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
-import org.confluence.terraentity.client.entity.renderer.KingSlimeRenderer;
+import org.confluence.terraentity.client.entity.renderer.mob.KingSlimeRenderer;
 import org.confluence.terraentity.entity.boss.*;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
