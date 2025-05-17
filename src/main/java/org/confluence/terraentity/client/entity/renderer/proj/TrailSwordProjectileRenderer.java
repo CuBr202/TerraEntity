@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.proj.TrailSwordProj;
+import org.jetbrains.annotations.NotNull;
 
 public class TrailSwordProjectileRenderer extends EntityRenderer<TrailSwordProj> {
 
@@ -46,7 +47,7 @@ public class TrailSwordProjectileRenderer extends EntityRenderer<TrailSwordProj>
 
         // 旋转到正前方pitch
         poseStack.mulPose(Axis.ZN.rotationDegrees(-pitch));
-        poseStack.mulPose(Axis.XP.rotationDegrees(entity.updateZRot(entity.tickCount)));
+        poseStack.mulPose(Axis.XP.rotationDegrees(entity.updateZRot(entity.tickCount + partialTick)));
         poseStack.mulPose(Axis.ZN.rotationDegrees(-45));
 
 
@@ -58,7 +59,7 @@ public class TrailSwordProjectileRenderer extends EntityRenderer<TrailSwordProj>
     }
 
     @Override
-    public ResourceLocation getTextureLocation(TrailSwordProj trailSwordProj) {
+    public ResourceLocation getTextureLocation(@NotNull TrailSwordProj trailSwordProj) {
         return null;
     }
 }

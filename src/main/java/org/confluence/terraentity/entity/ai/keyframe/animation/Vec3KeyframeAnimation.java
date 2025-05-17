@@ -4,27 +4,29 @@ import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Vec3KeyframeAnimation implements IKeyframeAnimation<Vec3> {
 
+    private final double length;
     KeyframeAnimation xInterpolator;
     KeyframeAnimation yInterpolator;
     KeyframeAnimation zInterpolator;
-    private double length;
+
+    Map<Double, Vec3> cache;
+
     public Vec3KeyframeAnimation(List<Keyframe> x, List<Keyframe> y, List<Keyframe> z){
         xInterpolator = new KeyframeAnimation(x);
         yInterpolator = new KeyframeAnimation(y);
         zInterpolator = new KeyframeAnimation(z);
         length = Math.min(xInterpolator.getLength(), Math.min(yInterpolator.getLength(), zInterpolator.getLength()));
+        cache = new HashMap<>();
     }
 
 
     @Override
     public Vec3 cal(double t) {
-        return new Vec3(xInterpolator.cal(t),yInterpolator.cal(t),zInterpolator.cal(t));
+        return cache.computeIfAbsent(t, k -> new Vec3(xInterpolator.cal(t),yInterpolator.cal(t),zInterpolator.cal(t)));
     }
 
     @Override

@@ -93,6 +93,10 @@ neoForge {
                     // 启用 JetBrain Runtime 热重载功能
                     "-XX:+AllowEnhancedClassRedefinition"
             ])
+
+            if (isRunningInIdea()) {
+                systemProperty "terminal.jline", "true"
+            }
         }
     }
 
@@ -236,3 +240,47 @@ tasks.withType(JavaCompile) {
 }
 
 tasks.withType(Copy).configureEach { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
+
+
+tasks.register("genVoilaRun") {
+    dependsOn("prepareClientRun")
+    inputs.files(sourceSets.main.output)
+    inputs.files(configurations.runtimeClasspath)
+    def runtimeClasspath = files({
+        sourceSets.main.output + configurations.runtimeClasspath
+    })
+    def projectDir = project.projectDir
+    def runConfigDir = new File(project.rootDir, ".idea/runConfigurations")
+    def programParam = new File(projectDir, "build/moddev/clientRunProgramArgs.txt").toString().replace("\\", "\\\\")
+    def workingDir = new File(projectDir, "run")
+    def vmArgs = new File(projectDir, "build/moddev/clientRunVmArgs.txt").toString().replace("\\", "\\\\")
+    def moduleName = "${project.rootProject.name}.${project.name}.${sourceSets.main.name}" // 写死了自身必定在第二层
+    def classesDir = new File(projectDir, "build/classes/java/main").toString().replace("\\", "\\\\")
+    def resDir = new File(projectDir, "build/resources/main").toString().replace("\\", "\\\\")
+    def modId = mod_id
+    def ideaRt = "D:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.3\\lib\\idea_rt.jar"
+//    return;
+
+    def runConfig = """
+            <component name="ProjectRunConfigurationManager">
+                <configuration default="false" name="Confluence" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="false">
+                    <option name="MAIN_CLASS_NAME" value="net.neoforged.devlaunch.Main" />
+                    <option name="SPRING_BOOT_MAIN_CLASS" value="net.neoforged.devlaunch.Main" />
+                    <module name="${moduleName}" />
+                    <option name="VM_PARAMETERS" value="@${vmArgs} -Dfml.modFolders=${modId}%%${classesDir};${modId}%%${resDir} -cp &quot;${runtimeClasspath.asPath};${ideaRt}&quot;" />
+                    <option name="PROGRAM_PARAMETERS" value="@${programParam}" />
+                    <option name="WORKING_DIRECTORY" value="${workingDir}" />
+                    <method v="2">
+                        <option name="Make" enabled="true" />
+                    </method>
+                </configuration>
+            </component>"""
+    if (!runConfigDir.exists()) {
+        runConfigDir.mkdirs()
+    }
+    new File(runConfigDir, "GeneratedRunConfig.xml").text = runConfig
+}
+
+def isRunningInIdea() {
+    return System.getProperty("idea.active") == "true"
+}

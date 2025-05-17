@@ -25,6 +25,7 @@ import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.registries.track.ITrackType;
 import org.confluence.terraentity.utils.TEUtils;
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 
-public abstract class BaseProj<T extends BaseProj<T>> extends Projectile implements ICollisionAttackEntity<BaseProj<T>> {
+public abstract class BaseProj<T extends BaseProj<T>> extends Projectile implements ICollisionAttackEntity<T> {
     public float damage = 1;
     private List<Integer> hitList = new ArrayList<>();
     public int penetration =1;
