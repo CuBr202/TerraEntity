@@ -28,6 +28,7 @@ import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.registries.track.ITrackType;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -65,8 +66,8 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         this(pEntityType, pLevel, List.of());
     }
 
-    public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel, MobEffectInstance pEffect) {
-        this(pEntityType, pLevel, List.of(pEffect));
+    public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel,@Nullable MobEffectInstance pEffect) {
+        this(pEntityType, pLevel, pEffect==null?List.of() : List.of(pEffect));
     }
 
     public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel, List<MobEffectInstance> pEffects) {
