@@ -6,6 +6,7 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.item.*;
 
 import java.util.Arrays;
@@ -34,6 +35,7 @@ public class TEEnglishProvider extends LanguageProvider {
         TEWhipItems.ITEMS.getEntries().forEach(itemAction);
         TEBoomerangItems.ITEMS.getEntries().forEach(itemAction);
         TERideableItems.ITEMS.getEntries().forEach(itemAction);
+        add(TEItems.HOUSE_DETECTOR.get(), "House Detector");
         TEEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get(), toTitleCase(entity.getId().getPath())));
         TEEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get(), toTitleCase(effect.getId().getPath())));
 

@@ -45,7 +45,7 @@ public record HouseDetectInfo(BlockPos min, BlockPos max, BlockPos center, List<
         boolean test1 = false;
         for(var blockPos : list){
             // TODO: 桌子 椅子
-            if(level.getBlockState(blockPos).getBlock() instanceof TorchBlock)
+            if(level.getLightEmission(blockPos) > 10)
                 test1 = true;
             minx = Math.min(minx, blockPos.getX());
             miny = Math.min(miny, blockPos.getY());
