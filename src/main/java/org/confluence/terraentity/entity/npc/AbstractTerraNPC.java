@@ -469,26 +469,25 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(stack.getItem() instanceof ArmorItem armorItem){
             // 如果是装备，则穿上
             if(armorItem.getEquipmentSlot() == EquipmentSlot.BODY){
-                this.setItemSlot(EquipmentSlot.BODY, stack.copy());
+                this.setItemSlot(EquipmentSlot.BODY, stack);
             }else if(armorItem.getEquipmentSlot() == EquipmentSlot.LEGS){
-                this.setItemSlot(EquipmentSlot.LEGS, stack.copy());
+                this.setItemSlot(EquipmentSlot.LEGS, stack);
             }else if(armorItem.getEquipmentSlot() == EquipmentSlot.FEET){
-                this.setItemSlot(EquipmentSlot.FEET, stack.copy());
+                this.setItemSlot(EquipmentSlot.FEET, stack);
             }else if(armorItem.getEquipmentSlot() == EquipmentSlot.CHEST){
-                this.setItemSlot(EquipmentSlot.CHEST, stack.copy());
+                this.setItemSlot(EquipmentSlot.CHEST, stack);
             }else if(armorItem.getEquipmentSlot() == EquipmentSlot.HEAD){
-                this.setItemSlot(EquipmentSlot.HEAD, stack.copy());
+                this.setItemSlot(EquipmentSlot.HEAD, stack);
             }
-            stack.shrink(1);
+            player.setItemInHand(hand, ItemStack.EMPTY);
             return InteractionResult.SUCCESS;
         }else if(player.isShiftKeyDown()){
             // 如果按下shift
             if(!stack.isEmpty()){
                 // 如果是物品，则交换物品
-                ItemStack stack1 = stack.copy();
                 this.dropEquipmentToHand(EquipmentSlot.MAINHAND, player, hand);
-                this.setItemSlot(EquipmentSlot.MAINHAND, stack1.copy());
-                stack.shrink(1);
+                this.setItemSlot(EquipmentSlot.MAINHAND, stack);
+                player.setItemInHand(hand, ItemStack.EMPTY);
                 return InteractionResult.SUCCESS;
             }
             // 如果是空手，则取下装备
@@ -539,7 +538,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     private void dropEquipmentToHand(EquipmentSlot slot, Player player, InteractionHand hand){
         ItemStack drop = this.getItemBySlot(slot);
         if(!drop.isEmpty()){
-            player.setItemInHand(hand, drop.copy());
+            player.setItemInHand(hand, drop);
             this.setItemSlot(slot, ItemStack.EMPTY);
         }
     }
