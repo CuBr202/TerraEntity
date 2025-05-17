@@ -71,7 +71,19 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                         e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));
                     })
             ;
-    public static Supplier<AttributeBuilder> JUNGLE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(17).setAttackDamage(8).setSpawnWithoutLight();
+
+    public static Supplier<AttributeBuilder> JUNGLE_BAT_BUILDER  =
+            ()->new FlyMonsterPrefab(17,1,8,60,0.2f,0.5f).getPrefab()
+                    .setFollowRange(16) // 蝙蝠是瞎子，检测距离近点
+                    .setSpawnWithoutLight()
+                    .addGoal((g,e)->{
+                        g.addGoal(0, new DashGoal(e,1f,0.5f,30,
+                                0.02f,20,20,45));
+                    })
+                    .setTicker(e->{
+                        e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));
+                    })
+            ;
     public static Supplier<AttributeBuilder> HELL_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(23).setArmor(2).setAttackDamage(15)
             .setTicker(e->{
                 e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));
