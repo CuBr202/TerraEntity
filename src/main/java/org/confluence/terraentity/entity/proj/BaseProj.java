@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.proj;
 
+import com.google.common.collect.Lists;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -63,11 +64,11 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     protected static final EntityDataAccessor<Vector3f> DATA_INIT_SPEED = SynchedEntityData.defineId(BaseProj.class, EntityDataSerializers.VECTOR3);
 
     public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel) {
-        this(pEntityType, pLevel, List.of());
+        this(pEntityType, pLevel, Lists.newArrayList());
     }
 
     public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel,@Nullable MobEffectInstance pEffect) {
-        this(pEntityType, pLevel, pEffect==null?List.of() : List.of(pEffect));
+        this(pEntityType, pLevel, pEffect == null ? Lists.newArrayList() : Lists.newArrayList(pEffect));
     }
 
     public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel, List<MobEffectInstance> pEffects) {
