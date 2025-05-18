@@ -33,14 +33,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 
 public abstract class BaseProj<T extends BaseProj<T>> extends Projectile implements ICollisionAttackEntity<T> {
     public float damage = 1;
-    private List<Integer> hitList = new ArrayList<>();
+    private final Set<UUID> hitList = new HashSet<>();
     public int penetration =1;
     protected List<MobEffectInstance> effects;
     public ResourceLocation texture = TerraEntity.space("textures/entity/projectile/default.png");
@@ -227,9 +229,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     protected void doHurt(Entity hurter){
         if(hurter instanceof LivingEntity living) {
             Entity entity = this.getOwner();
-            hitList.add(hurter.getId());
+            hitList.add(hurter.getUUID());
             for (MobEffectInstance effect : effects) {
-                living.addEffect(effect);
+                living.addEffect(new MobEffectInstance(effect)); // 需要复制，不然duration会减为0
             }
             if (hitSound != null)
                 level().playSound(this, this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
@@ -261,7 +263,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
             return false;
         }
         // 不能攻击已经被弹幕攻击过的实体
-        if(hitList.contains(target.getId()))
+        if(hitList.contains(target.getUUID()))
             return false;
         // 召唤物不能攻击主人的仆从
         if(!TEUtils.attackTamableTest.test(getOwner(), target)
