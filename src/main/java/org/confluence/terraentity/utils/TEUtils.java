@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.ToDoubleFunction;
 
@@ -641,7 +640,12 @@ public final class TEUtils {
 
         if(!hits.isEmpty()){
             //射线命中的目标 按距离排序
-            hits.sort((o1,o2)->o1.getLocation().distanceToSqr(ori) < o2.getLocation().distanceToSqr(ori)?-1:1);
+            hits.sort((o1,o2)-> {
+                double v1 = o1.getLocation().distanceToSqr(ori);
+                double v2 = o2.getLocation().distanceToSqr(ori);
+                if (v1==v2)return 0;
+                return v1 < v2 ? -1 : 1;
+            });
             for(HitResult hitResult : hits) {
                 if (hitResult instanceof EntityHitResult entityHitResult &&
                         (
@@ -654,8 +658,13 @@ public final class TEUtils {
             }
         }else if(!subHits.isEmpty()){
             //未命中的目标 按角度排序
-            subHits.sort((o1,o2)-> TEUtils.angleBetween(o1.getLocation().subtract(ori),direction) < TEUtils.angleBetween(o2.getLocation().subtract(ori),direction)?-1:1);
-            HitResult hitResult = subHits.get(0);
+            subHits.sort((o1,o2)-> {
+                double v1 = TEUtils.angleBetween(o1.getLocation().subtract(ori), direction);
+                double v2 = TEUtils.angleBetween(o2.getLocation().subtract(ori), direction);
+                if (v1 == v2)return 0;
+                return v1 < v2 ?-1:1;
+            });
+            HitResult hitResult = subHits.getFirst();
             if(hitResult instanceof  EntityHitResult entityHitResult &&
                     entityHitResult.getEntity() instanceof LivingEntity livingEntity){
                 return livingEntity;
