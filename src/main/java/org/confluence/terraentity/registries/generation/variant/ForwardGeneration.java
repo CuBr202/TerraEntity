@@ -9,9 +9,8 @@ import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.generation.IGeneration;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -29,8 +28,9 @@ public record ForwardGeneration(float offsetY, float inaccuracy) implements IGen
     }
 
     @Override
-    public void genProjectile(@NotNull LivingEntity owner, @Nullable ItemStack weapon, float velocity, @NotNull Supplier<? extends Projectile> proj) {
+    public void genProjectile(LivingEntity owner, @Nullable ItemStack weapon, float velocity, Supplier<? extends @Nullable Projectile> proj) {
         Projectile projectile = proj.get();
+        if (projectile == null) return;
         projectile.setOwner(owner);
         // todo 计算yaw
         projectile.setPos(owner.getX(), owner.getY() + owner.getEyeHeight() + offsetY, owner.getZ());

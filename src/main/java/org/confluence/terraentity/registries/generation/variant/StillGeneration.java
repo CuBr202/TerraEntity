@@ -11,9 +11,8 @@ import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.utils.TEUtils;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public record StillGeneration(Vec3 offset) implements IGeneration {
@@ -27,8 +26,9 @@ public record StillGeneration(Vec3 offset) implements IGeneration {
     }
 
     @Override
-    public void genProjectile(@NotNull LivingEntity owner, @Nullable ItemStack weapon, float velocity, @NotNull Supplier<? extends Projectile> proj) {
+    public void genProjectile(LivingEntity owner, @Nullable ItemStack weapon, float velocity, Supplier<? extends @Nullable Projectile> proj) {
         Projectile projectile = proj.get();
+        if (projectile == null) return;
         projectile.setOwner(owner);
         // todo 计算yaw
         Vec3 pos = owner.position().add(0,1,0);

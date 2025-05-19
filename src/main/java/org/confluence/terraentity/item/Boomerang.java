@@ -19,7 +19,6 @@ import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.data.component.SingleBooleanComponent;
@@ -107,10 +106,7 @@ public class Boomerang extends Item {
 
     private void shoot(LivingEntity owner, ItemStack stack){
 //        owner.level().playSound(owner, owner.blockPosition(), ModSoundEvents.WAVING.get(), SoundSource.AMBIENT, 1.0F, 1.0F);
-        generation.genProjectile(owner, stack, 2f, ()->{
-            BoomerangProjectile projectile = new BoomerangProjectile(owner, boomerangModifier, stack);
-            return projectile;
-        });
+        generation.genProjectile(owner, stack, 2f, ()-> new BoomerangProjectile(owner, boomerangModifier, stack));
     }
 
 

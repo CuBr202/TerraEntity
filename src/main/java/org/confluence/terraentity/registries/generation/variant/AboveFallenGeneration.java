@@ -8,13 +8,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.utils.AimUtils;
 import org.confluence.terraentity.utils.TEUtils;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -39,8 +40,9 @@ public record AboveFallenGeneration(float maxAngle, float range, float predict, 
     ).apply(instance, AboveFallenGeneration::new));
 
     @Override
-    public void genProjectile(@NotNull LivingEntity owner, ItemStack weapon, float speed, @NotNull Supplier<? extends Projectile> proj) {
+    public void genProjectile(LivingEntity owner, @Nullable ItemStack weapon, float speed, Supplier<? extends @Nullable Projectile> proj) {
         var projectile = proj.get();
+        if (projectile == null) return;
         Vec3 eye = owner.getEyePosition();
         LivingEntity target = TEUtils.getAABBAngleTarget(eye, eye.add(owner.getForward().normalize().scale(range)), owner.level(), owner, range, maxAngle, e->TEUtils.projectileCanHurtEntityTest.test(projectile,e));
         float actualInaccuracy;
