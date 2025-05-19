@@ -7,6 +7,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.SliceShape;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Vector3f;
@@ -113,7 +114,9 @@ public class OBB extends SliceShape {
     }
 
     public OBB updateVertex(){
-        Minecraft.getInstance().getProfiler().push("ObbUpdateVertex");
+        if (FMLEnvironment.dist.isClient()) {
+            Minecraft.getInstance().getProfiler().push("ObbUpdateVertex");
+        }
         this.rotation.set(0, 0, (float) this.axisX.x);
         this.rotation.set(0, 1, (float) this.axisX.y);
         this.rotation.set(0, 2, (float) this.axisX.z);
@@ -153,7 +156,9 @@ public class OBB extends SliceShape {
         min = new Vec3(minX, minY, minZ);
         max = new Vec3(maxX, maxY, maxZ);
         border = new AABB(min, max);
-        Minecraft.getInstance().getProfiler().pop();
+        if (FMLEnvironment.dist.isClient()) {
+            Minecraft.getInstance().getProfiler().pop();
+        }
         return this;
     }
 
