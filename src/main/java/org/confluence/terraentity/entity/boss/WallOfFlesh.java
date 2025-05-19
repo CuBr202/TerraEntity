@@ -328,9 +328,9 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
             genGridWall();
             genSegments = false;
 
-            CameraShakeManager.addCameraShake(new CameraShakeData(
-                    600,
-                    this.position(), 90));
+            if (!level().isClientSide) {
+                CameraShakeManager.addCameraShake(new CameraShakeData(600, this.position(), 90));
+            }
         }
 
         if (shouldMove && this.isAlive()) {
