@@ -3,7 +3,10 @@ package org.confluence.terraentity.entity.npc.trade;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.*;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -184,13 +187,7 @@ public class NPCTradeManager {
             ITrade.TYPED_CODEC.listOf().optionalFieldOf("trades").forGetter(i-> Optional.ofNullable(i.trades)),
             ITradeGenerator.TYPED_CODEC.optionalFieldOf("trades_generator").forGetter(i-> Optional.ofNullable(i.tradeList))
     ).apply(instance, (trades, tradeList)->{
-        if(trades.isPresent()){
-            return new NPCTradeManager(trades.get());
-        }else if(tradeList.isPresent()){
-            return new NPCTradeManager(tradeList.get());
-        }else{
-            return new NPCTradeManager(List.of());
-        }
+        return trades.map(NPCTradeManager::new).orElseGet(() -> tradeList.map(NPCTradeManager::new).orElseGet(() -> new NPCTradeManager(List.of())));
     }));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, NPCTradeManager> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
