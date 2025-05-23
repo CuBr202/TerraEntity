@@ -14,16 +14,14 @@ import org.confluence.terraentity.init.item.*;
 import org.confluence.terraentity.item.DebugItem;
 import org.confluence.terraentity.item.HouseDetectItem;
 
-import java.util.function.Supplier;
-
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 public class TEItems {
-    public static DeferredRegister.Items TOOLS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Items TOOLS = DeferredRegister.createItems(MODID);
 
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    public static final Supplier<Item> HOUSE_DETECTOR = TOOLS.register("house_detector", () -> new HouseDetectItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<Item> HOUSE_DETECTOR = TOOLS.register("house_detector", () -> new HouseDetectItem(new Item.Properties().stacksTo(1)));
 
 
     // Sentry Items
