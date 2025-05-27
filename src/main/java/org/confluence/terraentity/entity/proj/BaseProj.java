@@ -25,7 +25,6 @@ import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.registries.track.ITrackType;
 import org.confluence.terraentity.utils.TEUtils;
@@ -52,6 +51,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     public IGeneration generation;
     CollisionProperties collisionProperties = new CollisionProperties(1,1,0.5f);
     protected double accelerationPower = 0.1;
+    protected float power = 0.4f;
 
     public CollisionProperties getCollisionProperties(){
         return collisionProperties;
@@ -123,7 +123,6 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         double d1 = Math.max(0.0, 1.0 - entity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
         Vec3 vec3;
         entity.setDeltaMovement(getDeltaMovement().scale(0.3f));
-        float power = 4f;
         if(getOwner() != null) {
             vec3 = entity.position().subtract(getOwner().position()).multiply(1.0, 0.0, 1.0).normalize().scale((((LivingEntity) getOwner()).getAttributeBaseValue(Attributes.ATTACK_KNOCKBACK) + 0.1f)  * power * d1);
         }else{
