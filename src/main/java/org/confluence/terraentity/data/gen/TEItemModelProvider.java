@@ -10,7 +10,9 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.item.*;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -59,7 +61,7 @@ public class TEItemModelProvider extends ItemModelProvider {
                 withExistingParent(path, parent).texture("layer0", TerraEntity.space("item/" + resourcePath + path));
             } catch (Exception e) {
                 withExistingParent(path, MISSING_ITEM);
-                System.out.println("Failed to generate model for " + path + " in " + resourcePath);
+                TerraEntity.LOGGER.warn("Failed to generate model for {} in {}", path, resourcePath);
             }
         });
 
@@ -72,7 +74,7 @@ public class TEItemModelProvider extends ItemModelProvider {
                 withExistingParent(path, parent).texture("layer0", TerraEntity.space("item/" + resourcePath + path));
             } catch (Exception e) {
                 withExistingParent(path, MISSING_ITEM);
-                System.out.println("Failed to generate model for " + path + " in " + resourcePath);
+                TerraEntity.LOGGER.warn("Failed to generate model for {} in {}", path, resourcePath);
             }
         });
     }
