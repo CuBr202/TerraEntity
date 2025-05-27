@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.boss;
 
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -16,9 +17,9 @@ public class DungeonGuardian extends Skeletron {
     int attackDelay = _attackDelay;
     public DungeonGuardian(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
-        this.setAttactDamage(999);
-        this.baseArmor = 999;
-        this.baseHealth = 10000;
+        this.setAttactDamage(9999);
+        this.baseArmor = 9999;
+        this.baseHealth = 9999;
 
     }
 
@@ -60,5 +61,20 @@ public class DungeonGuardian extends Skeletron {
     @Override
     public void firstSpawn() {
 
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return super.hurt(pSource, pAmount); // confluence mixin here
+    }
+
+    @Override
+    public boolean shouldShowMessage() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldShowBossBar() {
+        return false;
     }
 }
