@@ -26,17 +26,17 @@ public class TEBoomerangItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(TerraEntity.MODID);
 
 
-    public static final DeferredItem<Boomerang> WOOD_BOOMERANG = register("wood_boomerang",3,
+    public static final DeferredItem<Boomerang> WOOD_BOOMERANG = register("wood_boomerang",1.5F,
             new Boomerang.BoomerangModifier().setDurability(100)
     );
-    public static final DeferredItem<Boomerang> ENCHANTED_BOOMERANG = register("enchanted_boomerang",4.4f,
+    public static final DeferredItem<Boomerang> ENCHANTED_BOOMERANG = register("enchanted_boomerang",2.2F,
             NORMAL_BOOMERANG_MODIFIER.apply(15,1.55f,1.55f).setDurability(300)
 
     );
-    public static final DeferredItem<Boomerang> SHROOMERANG = register("shroomerang",4.4f,
+    public static final DeferredItem<Boomerang> SHROOMERANG = register("shroomerang",2.2F,
             NORMAL_BOOMERANG_MODIFIER.apply(15,1.55f,1.55f).setDurability(500)
     );
-    public static final DeferredItem<Boomerang> ICE_BOOMERANG = register("ice_boomerang",5.5f,
+    public static final DeferredItem<Boomerang> ICE_BOOMERANG = register("ice_boomerang",2.75F,
             NORMAL_BOOMERANG_MODIFIER.apply(16,1.6f,1.6f)
                     .setOnHitEffect(TEEffectStrategies.Components.FROST_BURN_BOOMERANG_EFFECT.get())
                     .setDurability(500)
@@ -44,12 +44,12 @@ public class TEBoomerangItems {
                     .setParticle(()->ParticleTypes.SNOWFLAKE)
     );   //50% 的几率造成 3 秒的霜冻。
 
-    public static final DeferredItem<Boomerang> TRIMARANG = register("trimarang",5.5f,
+    public static final DeferredItem<Boomerang> TRIMARANG = register("trimarang",2.75F,
             MULTI_BOOMERANG_MODIFIER.apply(10,3,
                     NORMAL_BOOMERANG_MODIFIER.apply(17,1.85f,1.85f)).setDurability(1000)
     );   // 使用三次
 
-    public static final DeferredItem<Boomerang> FLAMARANG = register("flamarang",12.5f,
+    public static final DeferredItem<Boomerang> FLAMARANG = register("flamarang",6.25F,
             NORMAL_BOOMERANG_MODIFIER.apply(18,1.85f,1.85f)
                     .setOnHitEffect(TEEffectStrategies.Components.HELL_FIRE_EFFECT.get())
                     .setDurability(1500)
@@ -58,15 +58,17 @@ public class TEBoomerangItems {
     );   //狱炎效果。
 
 
-    public static final DeferredItem<Boomerang> DEVELOPER_BOOMERANG = register("developer_boomerang",20,
-            new Boomerang.BoomerangModifier().setNotWaitForBack().setCd(10) // 不需要等待返回，设置cd
+    public static final DeferredItem<Boomerang> DEVELOPER_BOOMERANG = register("developer_boomerang",9999,
+            new Boomerang.BoomerangModifier().setNotWaitForBack().setCd(0) // 不需要等待返回，设置cd
                     .setForwardTick(50)
-                    .setFlySpeedFactor(1.5f) // 设置向前飞行速度
+                    .setFlySpeedFactor(2) // 设置向前飞行速度
                     .setBackSpeedFactor(2f) // 设置后退速度
+                    .setCanPenetrate()
+                    .setMaxCount(10)
     );
 
 
-    public static final DeferredItem<Boomerang> BeiDou_BOOMERANG = register("bei_dou_boomerang",10,
+    public static final DeferredItem<Boomerang> BeiDou_BOOMERANG = register("bei_dou_boomerang",5,
             MULTI_BOOMERANG_MODIFIER.apply(5, 4,
                     NORMAL_BOOMERANG_MODIFIER.apply(40, 3.0f, 3.0f)
                             .setMaxPenetration(7)

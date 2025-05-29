@@ -48,7 +48,7 @@ public class Boomerang extends Item {
     public Boomerang(float damage, BoomerangModifier boomerangModifier, Properties properties) {
         super(boomerangModifier.buildProperties(properties));
         this.boomerangModifier = boomerangModifier;
-        this.boomerangModifier.damage = damage*0.5f;
+        this.boomerangModifier.damage = damage;
     }
 
     /**
