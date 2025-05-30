@@ -1,17 +1,4 @@
 {
-    "coins": {
-        "sounds": [
-            "terra_entity:coins"
-        ]
-    },
-    "alpha": {
-        "sounds": [
-            {
-                "name": "minecraft:music/game/end/credits",
-                "stream": true
-            }
-        ]
-    },
     "routine_hurt": {
         "sounds": [
             "terra_entity:mob/routine_hurt"
@@ -20,21 +7,6 @@
     "routine_death": {
         "sounds": [
             "terra_entity:mob/routine_death"
-        ]
-    },
-    "regular_staff_shoot_2": {
-        "sounds": [
-            "terra_entity:regular_staff_shoot_2"
-        ]
-    },
-    "terra_operation": {
-        "sounds": [
-            "terra_entity:terra_operation"
-        ]
-    },
-    "use_mounts": {
-        "sounds": [
-            "terra_entity:use_mounts"
         ]
     },
     "roar": {
@@ -134,7 +106,12 @@
     },
     "waving": {
         "sounds": [
-            "confluence:waving"
+            "terra_entity:waving"
+        ]
+    },
+    "use_mounts": {
+        "sounds": [
+            "terra_entity:use_mounts"
         ]
     }
 }

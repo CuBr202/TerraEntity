@@ -1,5 +1,6 @@
 package org.confluence.terraentity.item;
 
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
@@ -8,6 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.rideable.AbstractRideableEntity;
+import org.confluence.terraentity.init.TESounds;
 
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -46,6 +48,8 @@ public class RideableItem<T extends AbstractRideableEntity> extends Item {
 
                         level.addFreshEntity(slime);
                         slime.onInit(player);
+                        level.playSound(null, player.blockPosition(), TESounds.USE_MOUNTS.get(), SoundSource.PLAYERS, 0.4F, 1.0F);
+                        player.swing(InteractionHand.MAIN_HAND, true);
                     }
                 }
             }
