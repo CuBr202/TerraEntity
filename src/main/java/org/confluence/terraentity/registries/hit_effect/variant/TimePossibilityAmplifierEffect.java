@@ -5,9 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
@@ -60,7 +58,7 @@ public record TimePossibilityAmplifierEffect(String name, Holder<MobEffect> effe
     }
 
     @Override
-    public DeferredHolder<EffectStrategyProvider, EffectStrategyProvider> getCodec() {
-        return EffectStrategyProviderTypes.TIME_POSSIBILITY_AMPLIFIER_EFFECT_PROVIDER;
+    public EffectStrategyProvider codec() {
+        return EffectStrategyProviderTypes.TIME_POSSIBILITY_AMPLIFIER_EFFECT_PROVIDER.get();
     }
 }

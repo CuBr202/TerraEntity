@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
@@ -52,8 +51,8 @@ public class PrefabEffect implements IEffectStrategy {
     }
 
     @Override
-    public DeferredHolder<EffectStrategyProvider, EffectStrategyProvider> getCodec() {
-        return EffectStrategyProviderTypes.PREFAB_EFFECT_PROVIDER;
+    public EffectStrategyProvider codec() {
+        return EffectStrategyProviderTypes.PREFAB_EFFECT_PROVIDER.get();
     }
 
     public EffectStrategy getEffectStrategy() {

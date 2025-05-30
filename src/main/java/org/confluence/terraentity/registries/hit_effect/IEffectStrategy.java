@@ -1,10 +1,13 @@
 package org.confluence.terraentity.registries.hit_effect;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JavaOps;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.registries.TERegistries;
@@ -42,21 +45,22 @@ public interface IEffectStrategy {
      */
     static void appendDescription(List<Component> tooltipComponents, List<? extends IEffectStrategy> effectStrategy, Component title) {
         int size = effectStrategy.size();
-        if(size == 0) return;
+        if (size == 0) return;
         tooltipComponents.add(title);
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             IEffectStrategy effect = effectStrategy.get(i);
             tooltipComponents.add(Component.literal(" - ").append(effect.getDescription()).withColor(0xFF00FF));
         }
     }
+
     /**
      * 效果描述
      */
     static void appendDescription(List<Component> tooltipComponents, List<? extends IEffectStrategy> effectStrategy, Component title, int textColor) {
         int size = effectStrategy.size();
-        if(size == 0) return;
+        if (size == 0) return;
         tooltipComponents.add(title);
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             IEffectStrategy effect = effectStrategy.get(i);
             tooltipComponents.add(Component.literal(" - ").append(effect.getDescription()).withColor(textColor));
         }
@@ -66,11 +70,11 @@ public interface IEffectStrategy {
      * 多组件复合效果描述
      */
     static void appendDescriptions(List<Component> tooltipComponents, List<EffectStrategyComponent> components, Component title) {
-        List<IEffectStrategy> effectStrategy = components.stream().flatMap(e->e.effects().stream()).toList();
+        List<IEffectStrategy> effectStrategy = components.stream().flatMap(e -> e.effects().stream()).toList();
         int size = effectStrategy.size();
-        if(size == 0) return;
+        if (size == 0) return;
         tooltipComponents.add(title);
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             IEffectStrategy effect = effectStrategy.get(i);
             tooltipComponents.add(Component.literal(" - ").append(effect.getDescription()).withColor(0xFF00FF));
         }
@@ -78,11 +82,22 @@ public interface IEffectStrategy {
 
     /**
      * 获取编解码器
+     *
      * @return 编解码器
      */
-    DeferredHolder<EffectStrategyProvider,EffectStrategyProvider> getCodec();
+    EffectStrategyProvider codec();
 
-    Codec<IEffectStrategy> TYPED_CODEC = TERegistries.EffectStrategyProviders.REGISTRY
-            .byNameCodec()
-            .dispatch(p->p.getCodec().get(), EffectStrategyProvider::codec);
+    Codec<IEffectStrategy> TYPED_CODEC = TERegistries.EffectStrategyProviders.REGISTRY.byNameCodec().dispatch(IEffectStrategy::codec, EffectStrategyProvider::codec);
+
+    StreamCodec<FriendlyByteBuf, IEffectStrategy> STREAM_CODEC = new StreamCodec<>() {
+        @Override
+        public IEffectStrategy decode(FriendlyByteBuf buffer) {
+            return TYPED_CODEC.parse(JavaOps.INSTANCE, ResourceLocation.parse(buffer.readUtf())).getOrThrow();
+        }
+
+        @Override
+        public void encode(FriendlyByteBuf buffer, IEffectStrategy value) {
+            buffer.writeUtf(((ResourceLocation) TYPED_CODEC.encodeStart(JavaOps.INSTANCE, value).getOrThrow()).toString());
+        }
+    };
 }

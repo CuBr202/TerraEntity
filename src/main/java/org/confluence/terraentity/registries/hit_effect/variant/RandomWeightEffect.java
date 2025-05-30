@@ -3,13 +3,7 @@ package org.confluence.terraentity.registries.hit_effect.variant;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import org.confluence.terraentity.init.TEEffects;
-import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
@@ -18,7 +12,6 @@ import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class RandomWeightEffect implements IEffectStrategy {
@@ -52,7 +45,7 @@ public class RandomWeightEffect implements IEffectStrategy {
     }
 
     @Override
-    public DeferredHolder<EffectStrategyProvider, EffectStrategyProvider> getCodec() {
-        return EffectStrategyProviderTypes.RANDOM_EFFECT_PROVIDER;
+    public EffectStrategyProvider codec() {
+        return EffectStrategyProviderTypes.RANDOM_EFFECT_PROVIDER.get();
     }
 }

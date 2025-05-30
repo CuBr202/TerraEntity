@@ -1,8 +1,8 @@
 package org.confluence.terraentity.data.component;
 
 import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -18,19 +18,19 @@ import java.util.List;
 
 /**
  * 命中效果的数据生成器组件
+ *
  * @param effects 命中效果
  */
 public record EffectStrategyComponent(List<IEffectStrategy> effects) implements DataComponentType<EffectStrategyComponent> {
-    public static final EffectStrategyComponent EMPTY = new EffectStrategyComponent(List.of());
     public static final Codec<EffectStrategyComponent> CODEC = IEffectStrategy.TYPED_CODEC.listOf().xmap(EffectStrategyComponent::new, EffectStrategyComponent::effects);
-    public static final StreamCodec<ByteBuf, EffectStrategyComponent> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
+    public static final StreamCodec<FriendlyByteBuf, EffectStrategyComponent> STREAM_CODEC = IEffectStrategy.STREAM_CODEC.apply(ByteBufCodecs.list()).map(EffectStrategyComponent::new, EffectStrategyComponent::effects);
 
-
-    public void applyAll(LivingEntity owner, LivingEntity target){
+    public void applyAll(LivingEntity owner, LivingEntity target) {
         for (IEffectStrategy effect : effects) {
             effect.getEffect().accept(owner, target);
         }
     }
+
     public static EffectStrategyComponent of(IEffectStrategy effect) {
         return new EffectStrategyComponent(List.of(effect));
     }
@@ -38,11 +38,6 @@ public record EffectStrategyComponent(List<IEffectStrategy> effects) implements 
     public static EffectStrategyComponent ofPrefab(String name, DeferredHolder<EffectStrategy, EffectStrategy> effect) {
         return of(PrefabEffect.of(name, effect));
     }
-
-//    public static EffectStrategyComponent of(EffectStrategy effect) {
-//        return new EffectStrategyComponent(List.of(effect.getProvider()));
-//    }
-
 
     @Override
     public @Nullable Codec<EffectStrategyComponent> codec() {
