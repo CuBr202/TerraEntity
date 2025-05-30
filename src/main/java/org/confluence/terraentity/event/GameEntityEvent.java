@@ -15,7 +15,6 @@ import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
@@ -35,10 +34,8 @@ import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
-import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.summon.ISummonMob;
-import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEffects;
@@ -90,7 +87,6 @@ public class GameEntityEvent {
 
     @SubscribeEvent
     public static void entityDeathLevel(LivingDeathEvent event) {
-        Level level = event.getEntity().level();
         Boss.sendBossDeathMessage(event.getEntity());
         if (event.getEntity() instanceof ServerPlayer player) {
             player.getData(TEAttachments.SUMMONER_STORAGE.get()).clear(player);
