@@ -21,6 +21,7 @@ import java.util.List;
  * @param effects 命中效果
  */
 public record EffectStrategyComponent(List<IEffectStrategy> effects) implements DataComponentType<EffectStrategyComponent> {
+    public static final EffectStrategyComponent EMPTY = new EffectStrategyComponent(List.of());
     public static final Codec<EffectStrategyComponent> CODEC = IEffectStrategy.TYPED_CODEC.listOf().xmap(EffectStrategyComponent::new, EffectStrategyComponent::effects);
     public static final StreamCodec<ByteBuf, EffectStrategyComponent> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
