@@ -7,6 +7,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
 import org.confluence.terraentity.client.boss.renderer.*;
@@ -67,9 +68,9 @@ public class TEBossEntities {
         event.put(TEBossEntities.BRAIN_OF_CTHULHU.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(TEMonsterEntities.VISUAL_NEURON.get(), AbstractMonster.createAttributes().build());
         event.put(TEBossEntities.BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.QUEEN_BEE.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.SKELETRON.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.SKELETRON_HAND.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(TEBossEntities.QUEEN_BEE.get(), LibUtils.forMixin$ModifyExpression(AbstractTerraBossBase.createAttributes()).build());
+        event.put(TEBossEntities.SKELETRON.get(), LibUtils.forMixin$ModifyExpression(AbstractTerraBossBase.createAttributes()).build());
+        event.put(TEBossEntities.SKELETRON_HAND.get(), LibUtils.forMixin$ModifyExpression(AbstractTerraBossBase.createAttributes()).build());
 
         event.put(TEBossEntities.WALL_OF_FLESH.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(TEBossEntities.WALL_OF_FLESH_EYE.get(), AbstractTerraBossBase.createAttributes().build());

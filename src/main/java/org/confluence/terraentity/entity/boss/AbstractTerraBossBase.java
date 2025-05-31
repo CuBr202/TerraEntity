@@ -34,6 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.CircleMobSkills;
@@ -497,5 +498,16 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
         // confluence mixin here
         return super.addEffect(effectInstance, entity);
+    }
+
+    @Override
+    public void lavaHurt() {
+        if (!this.fireImmune()) {
+            float v = LibUtils.switchByDifficulty(level(), blockPosition(), 0.25F, 0.15F, 0.05F);
+            this.igniteForSeconds(15.0F * v);
+            if (this.hurt(this.damageSources().lava(), 4.0F * v)) {
+                this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
+            }
+        }
     }
 }

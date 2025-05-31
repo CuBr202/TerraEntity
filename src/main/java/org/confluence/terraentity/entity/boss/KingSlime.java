@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.color.FloatRGB;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.ai.IBossFSM;
@@ -477,6 +479,17 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     public boolean addEffect(MobEffectInstance effectInstance, @org.jetbrains.annotations.Nullable Entity entity) {
         // confluence mixin here
         return super.addEffect(effectInstance, entity);
+    }
+
+    @Override
+    public void lavaHurt() {
+        if (!this.fireImmune()) {
+            float v = LibUtils.switchByDifficulty(level(), blockPosition(), 0.25F, 0.15F, 0.05F);
+            this.igniteForSeconds(15.0F * v);
+            if (this.hurt(this.damageSources().lava(), 4.0F * v)) {
+                this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
+            }
+        }
     }
 
     public static class HurtByTargetGoal extends TargetGoal {
