@@ -237,7 +237,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEWhipItems.RUBY_WHIP.get(), "红玉鞭");
         add(TEWhipItems.AMBER_WHIP.get(), "琥珀鞭");
         add(TEWhipItems.TOPAZ_WHIP.get(), "黄玉鞭");
-        add(TEWhipItems.EMERALD_WHIP.get(), "翡翠鞭");
+        add(TEWhipItems.JADE_WHIP.get(), "翡翠鞭");
         add(TEWhipItems.DIAMOND_WHIP.get(), "钻石鞭");
         add(TEWhipItems.SAPPHIRE_WHIP.get(), "蓝玉鞭");
         add(TEWhipItems.AMETHYST_WHIP.get(), "紫晶鞭");

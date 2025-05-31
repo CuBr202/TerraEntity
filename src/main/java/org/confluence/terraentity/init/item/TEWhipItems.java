@@ -39,7 +39,7 @@ public class TEWhipItems {
     public static final DeferredItem<BaseWhipItem> TOPAZ_WHIP = registerWhip("topaz_whip", 14.5f, 2, 0.5f, 15,0.8f, p->p
             .setDurability(700)
     );
-    public static final DeferredItem<BaseWhipItem> EMERALD_WHIP = registerWhip("emerald_whip",14.6f, 2, 0.5f, 15,0.8f, p->p
+    public static final DeferredItem<BaseWhipItem> JADE_WHIP = registerWhip("jade_whip",14.6f, 2, 0.5f, 15,0.8f, p->p
             .setDurability(900)
     );
     public static final DeferredItem<BaseWhipItem> DIAMOND_WHIP = registerWhip("diamond_whip", 14.7f, 2, 0.5f, 15,0.8f, p->p

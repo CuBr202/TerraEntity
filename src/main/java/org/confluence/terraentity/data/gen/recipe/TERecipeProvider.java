@@ -45,7 +45,7 @@ public class TERecipeProvider extends AbstractRecipeProvider {
         registerWhip(recipeOutput, TEWhipItems.AMBER_WHIP.get(), Items.HONEY_BLOCK, "has_honey_block");
         registerWhip(recipeOutput, TEWhipItems.AMETHYST_WHIP.get(), Items.AMETHYST_CLUSTER, "has_amethyst_cluster");
         registerWhip(recipeOutput, TEWhipItems.DIAMOND_WHIP.get(), Items.DIAMOND, "has_diamond");
-        registerWhip(recipeOutput, TEWhipItems.EMERALD_WHIP.get(), Items.EMERALD, "has_emerald");
+        registerWhip(recipeOutput, TEWhipItems.JADE_WHIP.get(), Items.EMERALD, "has_emerald");
         registerWhip(recipeOutput, TEWhipItems.RUBY_WHIP.get(), Items.REDSTONE_BLOCK, "has_redstone_block");
         registerWhip(recipeOutput, TEWhipItems.SAPPHIRE_WHIP.get(), Items.LAPIS_BLOCK, "has_lapis_block");
         registerWhip(recipeOutput, TEWhipItems.TOPAZ_WHIP.get(), Items.GOLD_INGOT, "has_gold_ingot");

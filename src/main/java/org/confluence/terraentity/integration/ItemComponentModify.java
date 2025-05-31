@@ -26,7 +26,7 @@ public class ItemComponentModify {
         event.modify(TEWhipItems.RUBY_WHIP.get(), blue);
         event.modify(TEWhipItems.AMBER_WHIP.get(), blue);
         event.modify(TEWhipItems.TOPAZ_WHIP.get(), blue);
-        event.modify(TEWhipItems.EMERALD_WHIP.get(), blue);
+        event.modify(TEWhipItems.JADE_WHIP.get(), blue);
         event.modify(TEWhipItems.DIAMOND_WHIP.get(), blue);
         event.modify(TEWhipItems.SAPPHIRE_WHIP.get(), blue);
         event.modify(TEWhipItems.AMETHYST_WHIP.get(), blue);
