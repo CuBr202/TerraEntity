@@ -16,18 +16,20 @@ import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.client.entity.model.GiantShellyModel;
 import org.confluence.terraentity.client.entity.model.HarpyModel;
 import org.confluence.terraentity.client.entity.model.NymphModel;
-import org.confluence.terraentity.client.entity.renderer.*;
+import org.confluence.terraentity.client.entity.renderer.AnimatorRenderer;
+import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
+import org.confluence.terraentity.client.entity.renderer.TheHungryRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.*;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.monster.*;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
+import org.confluence.terraentity.entity.monster.humanoid.HumanoidMonster;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.monster.prefab.LandMonsterPrefab;
-import org.confluence.terraentity.entity.monster.humanoid.HumanoidMonster;
-import org.confluence.terraentity.entity.monster.skeleton.RangeSkeleton;
 import org.confluence.terraentity.entity.monster.skeleton.MeleeSkeleton;
+import org.confluence.terraentity.entity.monster.skeleton.RangeSkeleton;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
@@ -86,7 +88,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> HELL_BAT = registerSimpleMonster("hell_bat", FlyMonsterPrefab.HELL_BAT_BUILDER,1.6f,1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> ICE_BAT = registerSimpleMonster("ice_bat", FlyMonsterPrefab.ICE_BAT_BUILDER,1.6f,1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> SPORE_BAT = registerSimpleMonster("spore_bat", FlyMonsterPrefab.SPORE_BAT_BUILDER,1.6f,1.6f);
-   // 蠕虫
+    // 蠕虫
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> DEVOURER = TEEntities.registerEntity("devourer", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(52).setAttackDamage(8).setArmor(2).setSpawnWithoutLight()),2F,2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> TOMB_CRAWLER = TEEntities.registerEntity("tomb_crawler", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(16).setAttackDamage(4).setArmor(2)),2F,2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> GIANT_WORM = TEEntities.registerEntity("giant_worm", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(31).setAttackDamage(9).setArmor(3)),2F,2F);

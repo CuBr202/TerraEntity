@@ -13,6 +13,8 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
+import org.confluence.terraentity.init.entity.TERideableEntities;
+import org.confluence.terraentity.init.entity.TESummonEntities;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -66,6 +68,14 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
         };
         tag(Tags.EntityTypes.BOSSES).add(bosses);
         tag(TagKey.create(Registries.ENTITY_TYPE, TerraEntity.fromSpaceAndPath("ars_nouveau", "jar_blacklist"))).add(bosses);
+        tag(EntityTypeTags.ARTHROPOD).add(
+                TERideableEntities.RIDEABLE_BEE.get(),
+                TESummonEntities.SUMMON_HORNET.get(),
+                TEBossEntities.QUEEN_BEE.get(),
+                TEMonsterEntities.HORNET.get(),
+                TEMonsterEntities.LITTLE_HORNET.get(),
+                TEMonsterEntities.GIANT_SHELLY.get()
+        );
     }
 
 }
