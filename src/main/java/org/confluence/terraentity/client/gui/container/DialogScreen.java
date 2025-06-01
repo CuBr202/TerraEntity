@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.Entity;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
@@ -17,6 +18,8 @@ import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.network.c2s.ServerBoundEventPacket;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class DialogScreen extends Screen {
 
@@ -70,6 +73,16 @@ public class DialogScreen extends Screen {
     }
 
     @Override
+    protected void rebuildWidgets() {
+        if (button != null) {
+            button.setPosition(width / 2 - 80, height / 2 + 25);
+        }
+        if (summonButton != null) {
+            summonButton.setPosition(width/2 - 160, height / 2 + 25);
+        }
+    }
+
+    @Override
     public void onClose() {
         super.onClose();
 
@@ -79,7 +92,16 @@ public class DialogScreen extends Screen {
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         if(dialogText != null){
-            guiGraphics.drawString(font, dialogText, 20, height / 2 -10, 0xFFFFFF);
+            if (font.width(dialogText) > 128) {
+                List<FormattedCharSequence> list = font.split(dialogText, 128);
+                int l = height / 2 - list.size() * 9 / 2;
+                for (FormattedCharSequence formattedcharsequence : list) {
+                    guiGraphics.drawString(font, formattedcharsequence, 20, l, 0xFFFFFF);
+                    l += 9;
+                }
+            } else {
+                guiGraphics.drawString(font, dialogText, 20, height / 2 - 10, 0xFFFFFF);
+            }
         }
 
         // todo draw
