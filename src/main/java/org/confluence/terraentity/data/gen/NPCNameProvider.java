@@ -1,5 +1,6 @@
 package org.confluence.terraentity.data.gen;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -19,138 +20,140 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
 
     @Override
     protected void run(HolderLookup.Provider provider) {
-        gen(TerraEntity.space(NPCNames.FILE_NAME),Map.of(
-                TENpcEntities.GUIDE.getId(),
-                NPCNames.of(Map.of(
-                        "Andrew", 1f,
-                        "Asher", 1f,
-                        "Bradley", 1f,
-                        "Brandon", 1f,
-                        "Brett", 1f,
-                        "Brian", 1f,
-                        "Cody", 1f,
-                        "Cole", 1f,
-                        "Colin", 1f,
-                        "Connor", 1f
-                )),
-                TENpcEntities.NURSE.getId(),
-                NPCNames.of(Map.of(
-                        "Abigail", 1f,
-                "Allison", 1f,
-                "Amy", 1f,
-                "Caitlin", 1f,
-                "Carly", 1f,
-                "Claire", 1f,
-                "Emily", 1f,
-                "Emma", 1f,
-                "Hannah", 1f,
-                "Heather", 1f
-                )),
-                TENpcEntities.PAINTER.getId(),
-                NPCNames.of(Map.of(
-                "Bruno", 1f,
-                "Carlo", 1f,
-                "Darren", 1f,
-                "Enzo", 1f,
-                "Esreadel", 1f,
-                "Guido", 1f,
-                "Jim", 1f,
-                "Leonardo", 1f,
-                "Lorenzo", 1f,
-                "Luca", 1f
-                )),
-                TENpcEntities.MERCHANT.getId(),
-                NPCNames.of(Map.of(
-                "Alfred", 1f,
-                "Barney", 1f,
-                "Calvin", 1f,
-                "Edmund", 1f,
-                "Edwin", 1f,
-                "Eugene", 1f,
-                "Frank", 1f,
-                "Frederick", 1f,
-                "Gilbert", 1f,
-                "Gus", 1f
-                )),
-                TENpcEntities.GOBLIN_TINKERER.getId(),
-                NPCNames.of(Map.of(
-                "Arback", 1f,
-                "Dalek", 1f,
-                "Darz", 1f,
-                "Durnok", 1f,
-                "Fahd", 1f,
-                "Fjell", 1f,
-                "Gnudar", 1f,
-                "Grodax", 1f,
-                "Knogs", 1f,
-                "Knub", 1f
-                )),
-                TENpcEntities.DEMOLITIONIST.getId(),
-                NPCNames.of(Map.of(
-                "Bazdin", 1f,
-                "Beldin", 1f,
-                "Boften", 1f,
-                "Darur", 1f,
-                "Dias", 1f,
-                "Dolbere", 1f,
-                "Dolgen", 1f,
-                "Dolgrim", 1f,
-                "Duerthen", 1f,
-                "Durim", 1f
-                )),
-                TENpcEntities.DRYAD.getId(),
-                NPCNames.of(Map.of(
-                "Alalia", 1f,
-                "Alura", 1f,
-                "Ariella", 1f,
-                "Caelia", 1f,
-                "Calista", 1f,
-                "Celestia", 1f,
-                "Chryseis", 1f,
-                "Elysia", 1f,
-                "Emerenta", 1f,
-                "Evvie", 1f
-                )),
-                TENpcEntities.DYE_TRADER.getId(),
-                NPCNames.of(Map.of(
-                "Abdosir", 1f,
-                "Ahinadab", 1f,
-                "Ahirom", 1f,
-                "Akbar", 1f,
-                "Batnoam", 1f,
-                "Bodashtart", 1f,
-                "Danel", 1f,
-                "Hannibal", 1f,
-                "Hanno", 1f,
-                "Hiram", 1f
-                )),
-                TENpcEntities.ANGLER.getId(),
-                NPCNames.of(Map.of(
-                "Adam", 1f,
-                "Bart", 1f,
-                "Billy", 1f,
-                "Bobby", 1f,
-                "Charles", 1f,
-                "Danny", 1f,
-                "Grayson", 1f,
-                "Ivan", 1f,
-                "Izzy", 1f,
-                "Jey", 1f
-                )),
-                TENpcEntities.ARMS_DEALER.getId(),
-                NPCNames.of(Map.of(
-                "Andre", 1f,
-                "Brimst", 1f,
-                "Bronson", 1f,
-                "Dante", 1f,
-                "Darius", 1f,
-                "Darnell", 1f,
-                "Darryl", 1f,
-                "DeAndre", 1f,
-                "DeShawn", 1f,
-                "Demetrius", 1f
-                ))
-        ));
+        gen(TerraEntity.space(NPCNames.FILE_NAME), ImmutableMap.<ResourceLocation, NPCNames>builder()
+                .put(TENpcEntities.GUIDE.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Andrew", 1f)
+                        .put("Asher", 1f)
+                        .put("Bradley", 1f)
+                        .put("Brandon", 1f)
+                        .put("Brett", 1f)
+                        .put("Brian", 1f)
+                        .put("Cody", 1f)
+                        .put("Cole", 1f)
+                        .put("Colin", 1f)
+                        .put("Connor", 1f)
+                        .build()))
+                .put(TENpcEntities.NURSE.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Abigail", 1f)
+                        .put("Allison", 1f)
+                        .put("Amy", 1f)
+                        .put("Caitlin", 1f)
+                        .put("Carly", 1f)
+                        .put("Claire", 1f)
+                        .put("Emily", 1f)
+                        .put("Emma", 1f)
+                        .put("Hannah", 1f)
+                        .put("Heather", 1f)
+                        .build()))
+                .put(TENpcEntities.PAINTER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Bruno", 1f)
+                        .put("Carlo", 1f)
+                        .put("Darren", 1f)
+                        .put("Enzo", 1f)
+                        .put("Esreadel", 1f)
+                        .put("Guido", 1f)
+                        .put("Jim", 1f)
+                        .put("Leonardo", 1f)
+                        .put("Lorenzo", 1f)
+                        .put("Luca", 1f)
+                        .build()))
+                .put(TENpcEntities.MERCHANT.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Alfred", 1f)
+                        .put("Barney", 1f)
+                        .put("Calvin", 1f)
+                        .put("Edmund", 1f)
+                        .put("Edwin", 1f)
+                        .put("Eugene", 1f)
+                        .put("Frank", 1f)
+                        .put("Frederick", 1f)
+                        .put("Gilbert", 1f)
+                        .put("Gus", 1f)
+                        .build()))
+                .put(TENpcEntities.GOBLIN_TINKERER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Arback", 1f)
+                        .put("Dalek", 1f)
+                        .put("Darz", 1f)
+                        .put("Durnok", 1f)
+                        .put("Fahd", 1f)
+                        .put("Fjell", 1f)
+                        .put("Gnudar", 1f)
+                        .put("Grodax", 1f)
+                        .put("Knogs", 1f)
+                        .put("Knub", 1f)
+                        .build()))
+                .put(TENpcEntities.DEMOLITIONIST.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Bazdin", 1f)
+                        .put("Beldin", 1f)
+                        .put("Boften", 1f)
+                        .put("Darur", 1f)
+                        .put("Dias", 1f)
+                        .put("Dolbere", 1f)
+                        .put("Dolgen", 1f)
+                        .put("Dolgrim", 1f)
+                        .put("Duerthen", 1f)
+                        .put("Durim", 1f)
+                        .build()))
+                .put(TENpcEntities.DRYAD.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Alalia", 1f)
+                        .put("Alura", 1f)
+                        .put("Ariella", 1f)
+                        .put("Caelia", 1f)
+                        .put("Calista", 1f)
+                        .put("Celestia", 1f)
+                        .put("Chryseis", 1f)
+                        .put("Elysia", 1f)
+                        .put("Emerenta", 1f)
+                        .put("Evvie", 1f)
+                        .build()))
+                .put(TENpcEntities.DYE_TRADER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Abdosir", 1f)
+                        .put("Ahinadab", 1f)
+                        .put("Ahirom", 1f)
+                        .put("Akbar", 1f)
+                        .put("Batnoam", 1f)
+                        .put("Bodashtart", 1f)
+                        .put("Danel", 1f)
+                        .put("Hannibal", 1f)
+                        .put("Hanno", 1f)
+                        .put("Hiram", 1f)
+                        .build()))
+                .put(TENpcEntities.ANGLER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Adam", 1f)
+                        .put("Bart", 1f)
+                        .put("Billy", 1f)
+                        .put("Bobby", 1f)
+                        .put("Charles", 1f)
+                        .put("Danny", 1f)
+                        .put("Grayson", 1f)
+                        .put("Ivan", 1f)
+                        .put("Izzy", 1f)
+                        .put("Jey", 1f)
+                        .build()))
+                .put(TENpcEntities.FEMALE_ANGLER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Emma", 1f)
+                        .put("Olivia", 1f)
+                        .put("Sophia", 1f)
+                        .put("Ava", 1f)
+                        .put("Isabella", 1f)
+                        .put("Mia", 1f)
+                        .put("Charlotte", 1f)
+                        .put("Amelia", 1f)
+                        .put("Harper", 1f)
+                        .put("Luna", 1f)
+                        .build()))
+                .put(TENpcEntities.ARMS_DEALER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Andre", 1f)
+                        .put("Brimst", 1f)
+                        .put("Bronson", 1f)
+                        .put("Dante", 1f)
+                        .put("Darius", 1f)
+                        .put("Darnell", 1f)
+                        .put("Darryl", 1f)
+                        .put("DeAndre", 1f)
+                        .put("DeShawn", 1f)
+                        .put("Demetrius", 1f)
+                        .build()))
+                .build());
     }
 
     @Override

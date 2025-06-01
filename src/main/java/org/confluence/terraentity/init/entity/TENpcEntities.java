@@ -18,15 +18,25 @@ import org.confluence.terraentity.init.TEEntities;
 
 public class TENpcEntities {
 
-    /** 向导*/
+    /**
+     * 向导
+     */
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> GUIDE = TEEntities.registerEntity("guide", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
-    /** 爆破专家*/
+    /**
+     * 爆破专家
+     */
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> DEMOLITIONIST = TEEntities.registerEntity("demolitionist", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
-    /** 哥布林*/
+    /**
+     * 哥布林
+     */
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> GOBLIN_TINKERER = TEEntities.registerEntity("goblin_tinkerer", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
-    /** 武器商*/
+    /**
+     * 武器商
+     */
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ARMS_DEALER = TEEntities.registerEntity("arms_dealer", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
-    /** 护士*/
+    /**
+     * 护士
+     */
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> NURSE = TEEntities.registerEntity("nurse", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
      * 商人
@@ -39,8 +49,8 @@ public class TENpcEntities {
     /**
      * 渔夫
      */
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ANGLER = TEEntities.registerEntity("angler", AnglerNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
-//    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> FEMALE_ANGLER = TEEntities.registerEntity("", AbstractTerraNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ANGLER = TEEntities.registerEntity("angler", AnglerNPC::new, MobCategory.CREATURE, 0.6f, 1.65f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> FEMALE_ANGLER = TEEntities.registerEntity("female_angler", AnglerNPC::new, MobCategory.CREATURE, 0.45f, 1.45F);
     /**
      * 树妖
      */
@@ -64,7 +74,8 @@ public class TENpcEntities {
         event.registerEntityRenderer(NURSE.get(), c -> new NPCRenderer<>(c, NURSE.getId()));
         event.registerEntityRenderer(MERCHANT.get(), c -> new NPCRenderer<>(c, MERCHANT.getId()));
         event.registerEntityRenderer(PAINTER.get(), c -> new NPCRenderer<>(c, PAINTER.getId()));
-        event.registerEntityRenderer(ANGLER.get(), c -> new NPCRenderer<>(c, ANGLER.getId()));
+        event.registerEntityRenderer(ANGLER.get(), c -> new NPCRenderer<>(c, ANGLER.getId()).withScale(0.89F));
+        event.registerEntityRenderer(FEMALE_ANGLER.get(), c -> new NPCRenderer<>(c, FEMALE_ANGLER.getId()).withScale(0.78F));
         event.registerEntityRenderer(DRYAD.get(), c -> new NPCRenderer<>(c, DRYAD.getId()));
         event.registerEntityRenderer(DYE_TRADER.get(), c -> new NPCRenderer<>(c, DYE_TRADER.getId()));
         event.registerEntityRenderer(OLD_MAN.get(), c -> new NPCRenderer<>(c, OLD_MAN.getId()));
@@ -79,6 +90,7 @@ public class TENpcEntities {
         event.put(MERCHANT.get(), AbstractTerraNPC.createAttributes().build());
         event.put(PAINTER.get(), AbstractTerraNPC.createAttributes().build());
         event.put(ANGLER.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(FEMALE_ANGLER.get(), AbstractTerraNPC.createAttributes().build());
         event.put(DRYAD.get(), AbstractTerraNPC.createAttributes().build());
         event.put(DYE_TRADER.get(), AbstractTerraNPC.createAttributes().build());
         event.put(OLD_MAN.get(), AbstractTerraNPC.createAttributes().build());
@@ -101,7 +113,7 @@ public class TENpcEntities {
 
     }
 
-    public static void register(){
+    public static void register() {
 
     }
 }

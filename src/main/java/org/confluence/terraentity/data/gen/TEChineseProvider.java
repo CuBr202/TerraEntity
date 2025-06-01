@@ -202,6 +202,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TENpcEntities.DRYAD.get(), "树妖");
         add(TENpcEntities.DYE_TRADER.get(), "染料商");
         add(TENpcEntities.ANGLER.get(), "渔夫");
+        add(TENpcEntities.FEMALE_ANGLER.get(), "渔女");
         add(TENpcEntities.OLD_MAN.get(), "老人");
 
         add(TESpawnEggItems.GOBLIN_SORCERER_SPAWN_EGG.get(), "哥布林术士刷怪蛋");

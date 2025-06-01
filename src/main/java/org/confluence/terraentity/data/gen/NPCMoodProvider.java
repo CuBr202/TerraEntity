@@ -43,6 +43,9 @@ public class NPCMoodProvider extends AbstractExistCodecProvider<Map<EntityType<?
         map.put(TENpcEntities.ANGLER.get(), new NPCMoods.EntityMood.Builder()
                 .addMoodInfo(TerraEntity.space("angler1"), MoodInfo.of(TENpcEntities.DEMOLITIONIST.get(), "mood.terra_entity.angler.like.demolitionist", Mood.LIKE))
                 .build());
+        map.put(TENpcEntities.FEMALE_ANGLER.get(), new NPCMoods.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("female_angler1"), MoodInfo.of(TENpcEntities.DEMOLITIONIST.get(), "mood.terra_entity.female_angler.dislike.demolitionist", Mood.DISLIKE))
+                .build());
 
         // dye_trader
         map.put(TENpcEntities.DYE_TRADER.get(), new NPCMoods.EntityMood.Builder()
@@ -64,6 +67,7 @@ public class NPCMoodProvider extends AbstractExistCodecProvider<Map<EntityType<?
         // dryad
         map.put(TENpcEntities.DRYAD.get(), new NPCMoods.EntityMood.Builder()
                 .addMoodInfo(TerraEntity.space("dryad1"), MoodInfo.of(TENpcEntities.ANGLER.get(), "mood.terra_entity.dryad.dislike.angler", Mood.DISLIKE))
+                .addMoodInfo(TerraEntity.space("dryad2"), MoodInfo.of(TENpcEntities.FEMALE_ANGLER.get(), "mood.terra_entity.dryad.like.female_angler", Mood.LIKE))
                 .build());
 
         // merchant
