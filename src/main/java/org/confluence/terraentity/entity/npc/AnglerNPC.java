@@ -151,7 +151,7 @@ public class AnglerNPC extends AbstractTerraNPC {
         super.tick();
         if(!level().isClientSide){
             if(timeToTradeFish()){
-                this.resetFishTask();
+                this.resetFishTask(); // todo玩家跳过时间时没法刷新
             }
             if(!this.isWakeUp()){
                 if(this.isInWater() ){

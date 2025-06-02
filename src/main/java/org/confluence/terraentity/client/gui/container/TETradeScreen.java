@@ -270,7 +270,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     }
 
     protected void renderResultSlot(ITradeHolder holder, GuiGraphics guiGraphics,Font font, int x, int y, int startx,int starty,int mouseX, int mouseY, ITrade trade, boolean canBuy){
-        trade.renderResultSlot(holder,guiGraphics,font, x, y, startx, starty, mouseX, mouseY, canBuy, menu.slots.get(0));
+        trade.renderResultSlot(holder,guiGraphics,font, x, y, startx, starty, mouseX, mouseY, canBuy, menu.slots.getFirst());
     }
 
 
@@ -320,7 +320,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     }
 
     protected void onClick(double mouseX, double mouseY, int button, int index){
-        this.menu.NPCTrades.trades().get(index).onClick(mouseX, mouseY, button, index, this.menu.slots.get(0));
+        this.menu.NPCTrades.trades().get(index).onClick(mouseX, mouseY, button, index, this.menu.slots.getFirst());
     }
 
     @Override
