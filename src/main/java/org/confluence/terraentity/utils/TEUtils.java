@@ -238,17 +238,16 @@ public final class TEUtils {
     static ResourceLocation difficultyHealthKey = TerraEntity.space("difficulty_modifier_max_health");
     static ResourceLocation difficultyDamageKey = TerraEntity.space("difficulty_modifier_attack_damage");
 
-    public static void multiplePlayerEnhance(LivingEntity entity, boolean dirty) {
+    public static void multiplePlayerEnhance(LivingEntity entity) {
         if(!entity.level().isClientSide) {
             float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
-            if (dirty) {
-                int size = Math.min(entity.level().players().size(), 8);
-                var healthAttribute = entity.getAttribute(Attributes.MAX_HEALTH);
-                if (healthAttribute != null) {
-                    if (!healthAttribute.hasModifier(difficultyHealthKey))
-                        healthAttribute.addPermanentModifier(new AttributeModifier(difficultyHealthKey, multiplier * size - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-                    if (!healthAttribute.hasModifier(healthKey))
-                        healthAttribute.addPermanentModifier(new AttributeModifier(healthKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            int size = Math.min(entity.level().players().size(), 8);
+            var healthAttribute = entity.getAttribute(Attributes.MAX_HEALTH);
+            if (healthAttribute != null) {
+                if (!healthAttribute.hasModifier(difficultyHealthKey))
+                    healthAttribute.addPermanentModifier(new AttributeModifier(difficultyHealthKey, multiplier * size - 1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+                if (!healthAttribute.hasModifier(healthKey)) {
+                    healthAttribute.addPermanentModifier(new AttributeModifier(healthKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
                     entity.setHealth(entity.getMaxHealth());
                 }
             }
