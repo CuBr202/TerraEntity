@@ -26,17 +26,32 @@
     },
     "blood_crawler_free": {
         "sounds": [
-            "terra_entity:mob/blood_crawler_free"
-        ]
-    },
-    "blood_crawler_free_2": {
-        "sounds": [
-            "terra_entity:mob/blood_crawler_free_2"
+            "terra_entity:mob/blood_crawler_free_0",
+            "terra_entity:mob/blood_crawler_free_1"
         ]
     },
     "blood_crawler_hurt": {
         "sounds": [
             "terra_entity:mob/blood_crawler_hurt"
+        ]
+    },
+    "bloody_spore_death": {
+        "sounds": [
+            "terra_entity:mob/bloody_spore_death"
+        ]
+    },
+    "bloody_spore_fuse": {
+        "sounds": [
+            "terra_entity:mob/bloody_spore_fuse_0",
+            "terra_entity:mob/bloody_spore_fuse_1"
+        ]
+    },
+    "bloody_spore_hit": {
+        "sounds": [
+            "terra_entity:mob/bloody_spore_hit_0",
+            "terra_entity:mob/bloody_spore_hit_1",
+            "terra_entity:mob/bloody_spore_hit_2",
+            "terra_entity:mob/bloody_spore_hit_3"
         ]
     },
     "drippler_death": {

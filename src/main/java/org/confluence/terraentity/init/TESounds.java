@@ -23,7 +23,6 @@ public final class TESounds {
     // 血爬虫
     public static final DeferredHolder<SoundEvent,SoundEvent> BLOOD_CRAWLER_DEATH = register("blood_crawler_death");
     public static final DeferredHolder<SoundEvent,SoundEvent> BLOOD_CRAWLER_FREE = register("blood_crawler_free");
-    public static final DeferredHolder<SoundEvent,SoundEvent> BLOOD_CRAWLER_FREE_2 = register("blood_crawler_free_2");
     public static final DeferredHolder<SoundEvent,SoundEvent> BLOOD_CRAWLER_HURT = register("blood_crawler_hurt");
     // 巨型卷壳怪
     public static final DeferredHolder<SoundEvent,SoundEvent> GIANT_SHELLY_DEATH = register("giant_shelly_death");
@@ -37,6 +36,10 @@ public final class TESounds {
     public static final DeferredHolder<SoundEvent,SoundEvent> FACE_HOOT = register("face_hoot");
     public static final DeferredHolder<SoundEvent,SoundEvent> TR_ZOMBIE_DEATH = register("tr_zombie_death");
     public static final DeferredHolder<SoundEvent,SoundEvent> TR_SKELETON_HURT = register("tr_skeleton_hurt");
+    // 血腥芽孢
+    public static final DeferredHolder<SoundEvent,SoundEvent> BLOODY_SPORE_DEATH = register("bloody_spore_death");
+    public static final DeferredHolder<SoundEvent,SoundEvent> BLOODY_SPORE_FUSE = register("bloody_spore_fuse");
+    public static final DeferredHolder<SoundEvent,SoundEvent> BLOODY_SPORE_HIT = register("bloody_spore_hit");
 
         // 泰拉挥动
     public static final DeferredHolder<SoundEvent, SoundEvent> WAVING = register("waving");

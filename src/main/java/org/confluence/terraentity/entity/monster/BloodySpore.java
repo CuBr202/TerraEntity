@@ -1,9 +1,11 @@
 package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -15,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -52,6 +55,24 @@ public class BloodySpore extends Creeper implements GeoEntity {
     }
 
     @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.BLOODY_SPORE_DEATH.get();
+    }
+
+    @Override
+    public void playSound(SoundEvent sound, float volume, float pitch) {
+        if (SoundEvents.CREEPER_PRIMED == sound) {
+            sound = TESounds.BLOODY_SPORE_FUSE.get();
+        }
+        super.playSound(sound, volume, pitch);
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return TESounds.BLOODY_SPORE_HIT.get();
+    }
+
+    @Override
     public void tick() {
         if (this.isAlive()) {
             this.oldSwell = this.swell;
@@ -84,11 +105,11 @@ public class BloodySpore extends Creeper implements GeoEntity {
             this.dead = true;
             this.level().explode(this, this.getX(), this.getY(), this.getZ(), 4.2F * $$0, Level.ExplosionInteraction.NONE);
             int number = (random.nextInt(2, 4)) * $$0;
-            float f = this.random.nextFloat()*2;
-            for (int i = 0; i < number; i++){
+            float f = this.random.nextFloat() * 2;
+            for (int i = 0; i < number; i++) {
                 //summon
                 Entity summon = TEMonsterEntities.BLOOD_TUMORS.get().create(level());
-                if (summon!=null) {
+                if (summon != null) {
                     summon.setPos(this.getX(), this.getY(), this.getZ());
 
                     Vec3 dir = new Vec3(Math.sin((f * +i * 1) * 3.14159) * 0.3, random.nextDouble() * 0.5 + 0.2f, Math.cos((f * +i * 1) * 3.14159) * 0.3);
@@ -99,6 +120,7 @@ public class BloodySpore extends Creeper implements GeoEntity {
             this.discard();
         }
     }
+
     public static boolean checkBloodySporeSpawn(EntityType<? extends BloodySpore> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!(pLevel instanceof Level level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
@@ -114,9 +136,11 @@ public class BloodySpore extends Creeper implements GeoEntity {
 
     @Override
     public float getSwelling(float pPartialTicks) {
-        return Mth.lerp(pPartialTicks, (float)this.oldSwell, (float)this.swell) / (float)(this.maxSwell - 2);
+        return Mth.lerp(pPartialTicks, (float) this.oldSwell, (float) this.swell) / (float) (this.maxSwell - 2);
     }
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
