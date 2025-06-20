@@ -29,9 +29,11 @@ import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.utils.TEUtils;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.function.Supplier;
 
+@ParametersAreNonnullByDefault
 public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
     public final DeferredHolder<EntityType<?>, EntityType<T>> entityType;
     public final int consume;
@@ -61,7 +63,7 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
 
             EntityHitResult hit = TEUtils.getEyeTraceHitResult(player, player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE));
             if (hit != null) {
-                if (hit.getEntity() instanceof ISummonMob) {
+                if (hit.getEntity() instanceof ISummonMob summonMob && summonMob.summon_getOwner() == player) {
                     hit.getEntity().discard();
                     return InteractionResultHolder.success(player.getItemInHand(hand));
                 }
@@ -130,14 +132,12 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
             livingEntity.swing(livingEntity.getUsedItemHand());
             if (livingEntity instanceof ServerPlayer player) {
                 var data = player.getData(summonType.get());
-                    // 创造
-                if (!player.canBeSeenAsEnemy()) {
-                    summon(player, stack);
-                    return;
+                if (!data.canSummon(consume)){
+                    // 如果没有足够的召唤栏位，就移除最后一个仆从，再尝试生成。
+                    data.removeLast(player, consume);
                 }
-                if (data.canSummon(consume)) {
+                if (player.isCreative() || data.canSummon(consume)) {
                     summon(player, stack);
-                    return;
                 }
             }
         }

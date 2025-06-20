@@ -29,7 +29,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.neoforged.fml.ModLoader;
-import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonFollowOwnerGoal;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonOwnerHurtByTargetGoal;
@@ -265,8 +264,7 @@ public interface ISummonMob<T extends Mob> {
             var data = summon_getOwner().getData(TEAttachments.SUMMONER_STORAGE.get());
             if(data.canRemove(getCost())){
                 data.remove(owner, getCost(), asEntity().getId());
-                if(summon_getOwner() instanceof ServerPlayer serverPlayer)
-                    data.sync(serverPlayer);
+                data.sync(owner);
             }
         }
     }

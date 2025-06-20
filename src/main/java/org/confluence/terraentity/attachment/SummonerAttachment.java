@@ -108,6 +108,13 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
         }
     }
 
+    public void removeLast(Player player, int cost){
+        var entity = player.level().getEntity(ids.getLast());
+        if(entity!= null && entity.isAlive()){
+            entity.discard();
+        }
+    }
+
 
     public boolean canSummon(int cost) {
         return getCurrentCapacity() >= cost;
