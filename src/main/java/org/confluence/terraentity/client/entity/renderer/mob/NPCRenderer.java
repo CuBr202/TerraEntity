@@ -8,4 +8,9 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
     public NPCRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
         super(renderManager, path.withPrefix("npc/"));
     }
+
+    @Override
+    public float getMotionAnimThreshold(T animatable) {
+        return 0.01F;
+    }
 }
