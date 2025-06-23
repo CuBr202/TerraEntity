@@ -246,14 +246,6 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                         ItemTradeItemList.builder().addCost(Items.DIAMOND_PICKAXE).addCost(Items.NETHERITE_INGOT).addResult(Items.NETHERITE_PICKAXE).build()
                 ))))
                 .add(TradeTask.create(new ProgressTradeTask(List.of(
-                        ItemTradeItemList.builder().addCost(ItemTags.PLANKS, 2).addResult(Items.WOODEN_SWORD).build(),
-                        ItemTradeItemList.builder().addCost(Items.WOODEN_SWORD).addCost(Items.COBBLESTONE).addResult(Items.STONE_SWORD).build(),
-                        ItemTradeItemList.builder().addCost(Items.STONE_SWORD).addCost(Items.IRON_INGOT).addResult(Items.IRON_SWORD).build(),
-                        ItemTradeItemList.builder().addCost(Items.IRON_SWORD).addCost(Items.GOLD_INGOT).addResult(Items.GOLDEN_SWORD).build(),
-                        ItemTradeItemList.builder().addCost(Items.GOLDEN_SWORD).addCost(Items.DIAMOND).addResult(Items.DIAMOND_SWORD).build(),
-                        ItemTradeItemList.builder().addCost(Items.DIAMOND_SWORD).addCost(Items.NETHERITE_INGOT).addResult(Items.NETHERITE_SWORD).build()
-                ))))
-                .add(TradeTask.create(new ProgressTradeTask(List.of(
                         ItemTradeItemList.builder().addCost(Items.LEATHER, 3).addResult(Items.LEATHER_HELMET).build(),
                         ItemTradeItemList.builder().addCost(Items.LEATHER_HELMET).addCost(Items.IRON_INGOT, 2).addResult(Items.IRON_HELMET).build(),
                         ItemTradeItemList.builder().addCost(Items.IRON_HELMET).addCost(Items.GOLD_INGOT, 2).addResult(Items.GOLDEN_HELMET).build(),

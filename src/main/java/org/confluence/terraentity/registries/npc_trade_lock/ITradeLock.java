@@ -7,6 +7,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.TERegistries;
+import org.confluence.terraentity.registries.npc_trade_lock.variant.AndLock;
+import org.confluence.terraentity.registries.npc_trade_lock.variant.NotLock;
+import org.confluence.terraentity.registries.npc_trade_lock.variant.OrLock;
+
+import java.util.Arrays;
 
 /**
  * <h1>npc交易锁接口</h1>
@@ -31,4 +36,14 @@ public interface ITradeLock {
             .dispatch(ITradeLock::getCodec, TradeLockProvider::codec);
 
     StreamCodec<ByteBuf, ITradeLock> STREAM_CODEC = ByteBufCodecs.fromCodec(TYPED_CODEC);
+
+    static ITradeLock and(ITradeLock... locks){
+        return new AndLock(Arrays.asList(locks));
+    }
+    static ITradeLock or(ITradeLock... locks){
+        return new OrLock(Arrays.asList(locks));
+    }
+    static ITradeLock not(ITradeLock lock){
+        return new NotLock(lock);
+    }
 }
