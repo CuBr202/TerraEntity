@@ -80,7 +80,7 @@ public class TEEnglishProvider extends LanguageProvider {
 
 
         add("terra_entity.configuration.enableNonSpiderModel", "Spider Harmonization");
-        add("terra_entity.configuration.enableNonSpiderModel.tooltip", "Enable this option if you dislike spiders or want to beautify them.");
+        add("terra_entity.configuration.enableNonSpiderModel.tooltip", "Enable this option if you dislike spiders or want to beautify them.(This configuration change requires a game restart!)");
 
 
         // Tooltip

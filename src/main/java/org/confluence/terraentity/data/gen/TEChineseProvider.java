@@ -290,7 +290,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.boss_bar_number_offset_x", "BOSS血条数字偏移-X");
         add("terra_entity.configuration.boss_bar_number_offset_y", "BOSS血条数字偏移-Y");
         add("terra_entity.configuration.enableNonSpiderModel", "蜘蛛和谐");
-        add("terra_entity.configuration.enableNonSpiderModel.tooltip", "如果你对蜘蛛反感或想美化他们，请开启这个选项");
+        add("terra_entity.configuration.enableNonSpiderModel.tooltip", "如果你对蜘蛛反感或想美化他们，请开启这个选项（该配置更换需要重启游戏！）");
 
         add("terra_entity.configuration.generate_projectile_particle", "生成弹幕粒子");
 
