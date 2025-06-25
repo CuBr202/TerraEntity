@@ -128,5 +128,32 @@
         "sounds": [
             "terra_entity:use_mounts"
         ]
+    },
+    "decayeder_ambient": {
+        "sounds": [
+            "terra_entity:mob/decayeder_ambient_0",
+            "terra_entity:mob/decayeder_ambient_1",
+            "terra_entity:mob/decayeder_ambient_2"
+        ]
+    },
+    "decayeder_death": {
+        "sounds": [
+            "terra_entity:mob/decayeder_death"
+        ]
+    },
+    "decayeder_hurt": {
+        "sounds": [
+            "terra_entity:mob/decayeder_hurt_0",
+            "terra_entity:mob/decayeder_hurt_1",
+            "terra_entity:mob/decayeder_hurt_2",
+            "terra_entity:mob/decayeder_hurt_3"
+        ]
+    },
+    "decayeder_step": {
+        "sounds": [
+            "terra_entity:mob/decayeder_step_0",
+            "terra_entity:mob/decayeder_step_1",
+            "terra_entity:mob/decayeder_step_2"
+        ]
     }
 }
