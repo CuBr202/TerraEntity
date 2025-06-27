@@ -13,7 +13,6 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.item.crafting.Ingredient;
-
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import org.confluence.lib.common.recipe.AmountIngredient;
@@ -28,7 +27,10 @@ import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.TradeProperties;
-import org.confluence.terraentity.registries.npc_trade.variant.*;
+import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
+import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
+import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeLootTable;
+import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
 import org.confluence.terraentity.registries.npc_trade_list.ITradeGenerator;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.KillEntityLock;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
@@ -285,7 +287,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
 
     @Override
     public String getName() {
-        return "npc_shop";
+        return "NPC Shop";
     }
 
 
@@ -294,7 +296,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
 //    }
 
     protected void shop(ResourceLocation id, NPCTradeManager manager) {
-        this.gen(id, manager);
+        this.gen(id.withPrefix("npc/shop/"), manager);
     }
     protected Builder builder() {
         return new Builder();

@@ -1,0 +1,67 @@
+package org.confluence.terraentity.network.s2c;
+
+import com.mojang.serialization.Codec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
+import org.confluence.terraentity.entity.npc.mood.NPCMood;
+import org.confluence.terraentity.utils.AdapterUtils;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
+public record SyncDataS2C(int dataId, Object data) implements CustomPacketPayload {
+    private static final Map<Integer, Handler<Object>> handlers = new HashMap<>();
+    public static final int NPC_DIALOGS = register(NPCDialogs.Loader.CODEC, NPCDialogs.Loader::handle);
+    public static final int NPC_MOODS = register(NPCMood.Loader.CODEC, NPCMood.Loader::handle);
+    public static final Type<SyncDataS2C> TYPE = new Type<>(TerraEntity.space("sync_data"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, SyncDataS2C> STREAM_CODEC = new StreamCodec<>() {
+        @Override
+        public SyncDataS2C decode(RegistryFriendlyByteBuf buffer) {
+            int dataId = buffer.readVarInt();
+            return new SyncDataS2C(dataId, buffer.readJsonWithCodec(handlers.get(dataId).codec));
+        }
+
+        @Override
+        public void encode(RegistryFriendlyByteBuf buffer, SyncDataS2C value) {
+            buffer.writeVarInt(value.dataId);
+            buffer.writeJsonWithCodec(handlers.get(value.dataId).codec, value.data);
+        }
+    };
+
+    @SuppressWarnings("unchecked")
+    private static <T> int register(Codec<T> codec, Consumer<T> consumer) {
+        int id = handlers.size();
+        handlers.put(id, (Handler<Object>) new Handler<>(codec, consumer));
+        return id;
+    }
+
+    @Override
+    public @NotNull Type<SyncDataS2C> type() {
+        return TYPE;
+    }
+
+    public void handle(IPayloadContext context) {
+        context.enqueueWork(() -> handlers.get(dataId).consumer.accept(data)).exceptionally(e -> null);
+    }
+
+    public static <T> void sync(ServerPlayer player, int dataId, T value) {
+        AdapterUtils.sendToPlayer(player, new SyncDataS2C(dataId, value));
+    }
+
+    public static void syncNpcDialogs(ServerPlayer player) {
+        sync(player, NPC_DIALOGS, NPCDialogs.Loader.getInstance().getDialogs());
+    }
+
+    public static void syncNpcMoods(ServerPlayer player) {
+        sync(player, NPC_MOODS, NPCMood.Loader.getInstance().getByType());
+    }
+
+    public record Handler<T>(Codec<T> codec, Consumer<T> consumer) {}
+}

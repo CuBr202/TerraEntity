@@ -51,7 +51,7 @@ public abstract class AbstractExistCodecProvider<T> implements DataProvider {
     }
 
     protected Path getPath(ResourceLocation loc) {
-        return this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(loc.getNamespace()).resolve(getName()).resolve(loc.getPath() + ".json");
+        return this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(loc.getNamespace()).resolve(loc.getPath() + ".json");
     }
 
     protected JsonElement parseCodec(DataResult<?> result){

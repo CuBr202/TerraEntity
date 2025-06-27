@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -12,7 +11,7 @@ import net.minecraft.world.entity.Entity;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.mood.MoodInfo;
-import org.confluence.terraentity.entity.npc.mood.NPCMoods;
+import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.mixed.IPlayer;
@@ -44,7 +43,7 @@ public class DialogScreen extends Screen {
         holder = ((IPlayer)Minecraft.getInstance().player).terra_entity$getTradeHolder();
         String dialog = null;
         if(holder instanceof Entity e){
-            dialog = NPCDialogs.getRandomDialog(BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()));
+            dialog = NPCDialogs.Loader.getInstance().getRandomDialog(e.getRandom(), e.getType());
         }
 
         if(dialog!= null) {
@@ -112,7 +111,7 @@ public class DialogScreen extends Screen {
         for(int i = 0; i < list.size(); i++){
             ResourceLocation location = list.get(i);
 
-            MoodInfo moodInfo = NPCMoods.getMoodInfo(location);
+            MoodInfo moodInfo = NPCMood.Loader.getInstance().getMoodInfo(location);
 
             if(moodInfo == null) continue;
             guiGraphics.drawString(font, Component.translatable(moodInfo.info()), 20, height / 2 - 100 + i * 10, 0xFFFFFF);

@@ -52,7 +52,6 @@ import org.confluence.terraentity.entity.npc.house.HouseManager;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.Mood;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
-import org.confluence.terraentity.entity.npc.mood.NPCMoods;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.entity.npc.trade.TradeParams;
@@ -79,7 +78,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
- * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
+ * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMood.Loader 心情系统}
  */
 public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc , ITradeHolder, IUseItemAnimatable<BoneStates>, CrossbowAttackMob  {
 
@@ -208,7 +207,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
         // 初始化心情系统
         this.mood = new NPCMood();
-        var info = NPCMoods.BY_ENTITY_TYPE.get(getType());
+        NPCMood.EntityMood info = NPCMood.Loader.getInstance().getMood(getType());
         if(info != null){
             EnumMap<Mood, Integer> map = info.getSetting().createEnumMap();
             this.mood.setMoodValueTable(map);

@@ -3,9 +3,9 @@ package org.confluence.terraentity.network;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.confluence.terraentity.network.c2s.NPCShopPacket;
+import org.confluence.terraentity.network.c2s.ServerBoundEventPacket;
 import org.confluence.terraentity.network.c2s.ServerBoundHousePacket;
 import org.confluence.terraentity.network.c2s.ServerBoundVehicleExtensionPacket;
-import org.confluence.terraentity.network.c2s.ServerBoundEventPacket;
 import org.confluence.terraentity.network.s2c.*;
 
 public final class NetworkHandler {
@@ -16,7 +16,7 @@ public final class NetworkHandler {
         registrar.playToClient(SyncSummonPacket.TYPE, SyncSummonPacket.STREAM_CODEC, SyncSummonPacket::handle);
         registrar.playToClient(SyncBossEventHealthPacket.TYPE, SyncBossEventHealthPacket.STREAM_CODEC, SyncBossEventHealthPacket::handle);
         registrar.playToClient(SyncNPCTradesPacketS2C.TYPE, SyncNPCTradesPacketS2C.STREAM_CODEC, SyncNPCTradesPacketS2C::handle);
-        registrar.playToClient(SyncJsonS2C.TYPE, SyncJsonS2C.STREAM_CODEC, SyncJsonS2C::handle);
+        registrar.playToClient(SyncDataS2C.TYPE, SyncDataS2C.STREAM_CODEC, SyncDataS2C::handle);
         registrar.playToClient(UpdateNPCTradePacket.TYPE, UpdateNPCTradePacket.STREAM_CODEC, UpdateNPCTradePacket::handle);
 
         registrar.playToServer(ServerBoundVehicleExtensionPacket.TYPE, ServerBoundVehicleExtensionPacket.STREAM_CODEC, ServerBoundVehicleExtensionPacket::handle);

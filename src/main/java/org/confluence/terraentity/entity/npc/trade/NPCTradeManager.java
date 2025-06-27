@@ -173,7 +173,7 @@ public class NPCTradeManager {
     }
 
 
-    public static final String KEY = "npc_shop";
+    public static final String KEY = "npc/shop";
 //    public static final Codec<NPCTradeManager> CODEC =Codec.withAlternative(
 //            RecordCodecBuilder.create(instance -> instance.group(
 //            ITrade.TYPED_CODEC.listOf().fieldOf("trades").forGetter(NPCTradeManager::trades)

@@ -20,7 +20,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<EntityType<?
 
     @Override
     protected void run(HolderLookup.Provider provider) {
-        gen(TerraEntity.space("names"), ImmutableMap.<EntityType<?>, NPCNames>builder()
+        gen(TerraEntity.space("npc/names"), ImmutableMap.<EntityType<?>, NPCNames>builder()
                 .put(TENpcEntities.GUIDE.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Andrew", 1f)
                         .put("Asher", 1f)
@@ -289,11 +289,11 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<EntityType<?
     }
     @Override
     protected Codec<Map<EntityType<?>, NPCNames>> getCodec() {
-        return NPCNames.Loader.CODEC;
+        return NPCNames.Loader.DATA_GEN_CODEC;
     }
 
     @Override
     public String getName() {
-        return "npc";
+        return "NPC Name";
     }
 }
