@@ -23,6 +23,7 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
     public ITradeHolder NPCTrades;
     public int selectedMerchantIndex = -1;
 
+
     public TETradesMenu(MenuType<?> menuType, int containerId, Inventory playerInventory) {
         this(menuType, containerId, playerInventory, null);
     }
