@@ -147,7 +147,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
     public void initName(){
         if(!this.hasCustomName()) {
-            String name = NPCNames.getRandomName(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
+            String name = NPCNames.Loader.getInstance().getRandomName(getType());
             if (name != null) {
                 this.setCustomName(Component.literal(name));
             }

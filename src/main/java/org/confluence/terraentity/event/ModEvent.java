@@ -32,10 +32,7 @@ public class ModEvent {
 
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            ModChecker.check();
-
-        });
+        event.enqueueWork(ModChecker::check);
     }
 
     @SubscribeEvent

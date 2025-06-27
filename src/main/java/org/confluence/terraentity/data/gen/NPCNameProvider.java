@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.init.entity.TENpcEntities;
@@ -12,7 +12,7 @@ import org.confluence.terraentity.init.entity.TENpcEntities;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLocation, NPCNames>> {
+public class NPCNameProvider extends AbstractExistCodecProvider<Map<EntityType<?>, NPCNames>> {
 
     public NPCNameProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, lookupProvider);
@@ -20,8 +20,8 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
 
     @Override
     protected void run(HolderLookup.Provider provider) {
-        gen(TerraEntity.space(NPCNames.FILE_NAME), ImmutableMap.<ResourceLocation, NPCNames>builder()
-                .put(TENpcEntities.GUIDE.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+        gen(TerraEntity.space("names"), ImmutableMap.<EntityType<?>, NPCNames>builder()
+                .put(TENpcEntities.GUIDE.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Andrew", 1f)
                         .put("Asher", 1f)
                         .put("Bradley", 1f)
@@ -60,7 +60,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
                         .put("Zach", 1f)
                         .put("Wuyan_Lukong", 1f)
                         .build()))
-                .put(TENpcEntities.NURSE.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                .put(TENpcEntities.NURSE.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Abigail", 1f)
                         .put("Allison", 1f)
                         .put("Amy", 1f)
@@ -86,7 +86,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
                         .put("Madeline", 1f)
                         .put("Molly", 1f)
                         .build()))
-                .put(TENpcEntities.PAINTER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                .put(TENpcEntities.PAINTER.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Bruno", 1f)
                         .put("Carlo", 1f)
                         .put("Darren", 1f)
@@ -107,7 +107,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
                         .put("Raphael", 1f)
                         .put("Stefano", 1f)
                         .build()))
-                .put(TENpcEntities.MERCHANT.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                .put(TENpcEntities.MERCHANT.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Alfred", 1f)
                         .put("Barney", 1f)
                         .put("Calvin", 1f)
@@ -132,7 +132,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
                         .put("Walter", 1f)
                         .put("Wilbur", 1f)
                         .build()))
-                .put(TENpcEntities.GOBLIN_TINKERER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                .put(TENpcEntities.GOBLIN_TINKERER.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Arback", 1f)
                         .put("Dalek", 1f)
                         .put("Darz", 1f)
@@ -159,7 +159,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
                         .put("Xanos", 1f)
                         .put("Xon", 1f)
                         .build()))
-                .put(TENpcEntities.DEMOLITIONIST.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                .put(TENpcEntities.DEMOLITIONIST.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Bazdin", 1f)
                         .put("Beldin", 1f)
                         .put("Boften", 1f)
@@ -183,7 +183,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
                         .put("Tordak", 1f)
                         .put("Urist", 1f)
                         .build()))
-                .put(TENpcEntities.DRYAD.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                .put(TENpcEntities.DRYAD.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Alalia", 1f)
                         .put("Alura", 1f)
                         .put("Ariella", 1f)
@@ -206,7 +206,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
                         .put("Tatiana", 1f)
                         .put("Xylia", 1f)
                         .build()))
-                .put(TENpcEntities.DYE_TRADER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                .put(TENpcEntities.DYE_TRADER.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Abdosir", 1f)
                         .put("Ahinadab", 1f)
                         .put("Ahirom", 1f)
@@ -224,7 +224,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
                         .put("Yehomilk", 1f)
                         .put("Yutpan", 1f)
                         .build()))
-                .put(TENpcEntities.ANGLER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                .put(TENpcEntities.ANGLER.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Adam", 1f)
                         .put("Bart", 1f)
                         .put("Billy", 1f)
@@ -247,7 +247,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
                         .put("Timmy", 1f)
                         .put("Tyler", 1f)
                         .build()))
-                .put(TENpcEntities.FEMALE_ANGLER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                .put(TENpcEntities.FEMALE_ANGLER.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Emma", 1f)
                         .put("Olivia", 1f)
                         .put("Sophia", 1f)
@@ -259,7 +259,7 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
                         .put("Harper", 1f)
                         .put("Luna", 1f)
                         .build()))
-                .put(TENpcEntities.ARMS_DEALER.getId(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                .put(TENpcEntities.ARMS_DEALER.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
                         .put("Andre", 1f)
                         .put("Brimst", 1f)
                         .put("Bronson", 1f)
@@ -288,12 +288,12 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<ResourceLoca
                 .build());
     }
     @Override
-    protected Codec<Map<ResourceLocation, NPCNames>> getCodec() {
-        return NPCNames.MAP_CODEC;
+    protected Codec<Map<EntityType<?>, NPCNames>> getCodec() {
+        return NPCNames.Loader.CODEC;
     }
 
     @Override
     public String getName() {
-        return NPCNames.KEY;
+        return "npc";
     }
 }
