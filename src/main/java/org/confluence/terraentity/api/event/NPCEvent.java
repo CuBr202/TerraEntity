@@ -2,6 +2,7 @@ package org.confluence.terraentity.api.event;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
@@ -11,7 +12,6 @@ import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.function.Consumer;
  * NPC事件基类
  */
 public abstract class NPCEvent  extends Event implements IModBusEvent {
-    AbstractTerraNPC npc;
+    protected AbstractTerraNPC npc;
 
     public NPCEvent(AbstractTerraNPC npc) {
         this.npc = npc;
@@ -39,7 +39,8 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
      */
     public static class InteractNPCEvent extends NPCEvent implements ICancellableEvent {
         private Player player;
-        BiConsumer<AbstractTerraNPC, Player> reDirection;
+        private BiConsumer<AbstractTerraNPC, Player> reDirection;
+        private InteractionResult result = InteractionResult.PASS;
 
         public InteractNPCEvent(AbstractTerraNPC npc, Player player) {
             super(npc);
@@ -52,6 +53,14 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
 
         public Player getPlayer() {
             return player;
+        }
+
+        public void setResult(InteractionResult result) {
+            this.result = result;
+        }
+
+        public InteractionResult getResult() {
+            return result;
         }
 
         /**
