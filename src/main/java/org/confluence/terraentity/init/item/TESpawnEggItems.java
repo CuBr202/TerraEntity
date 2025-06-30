@@ -39,7 +39,8 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> ICE_BAT_SPAWN_EGG = registerEgg("ice_bat_spawn_egg", TEMonsterEntities.ICE_BAT, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> LAVA_SLIME_SPAWN_EGG = registerEgg("lava_slime_spawn_egg", TEMonsterEntities.LAVA_SLIME, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> HELL_BAT_SPAWN_EGG = registerEgg("hell_bat_spawn_egg", TEMonsterEntities.HELL_BAT, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> CRIMSON_SLIME_SPAWN_EGG = registerEgg("crimson_slime_spawn_egg", TEMonsterEntities.CRIMSON_SLIME, 0x8B4949, 0x7D1D1D);
+    public static final DeferredItem<Item> CRIMSLIME_SPAWN_EGG = registerEgg("crimslime_spawn_egg", TEMonsterEntities.CRIMSLIME, 0x8B4949, 0x7D1D1D);
+    public static final DeferredItem<Item> CORRUPT_SLIME_SPAWN_EGG = registerEgg("corrupt_slime_spawn_egg", TEMonsterEntities.CORRUPT_SLIME, 0x3f3885, 0x625b9f);
     public static final DeferredItem<Item> TROPIC_SLIME_SPAWN_EGG = registerEgg("tropic_slime_spawn_egg", TEMonsterEntities.TROPIC_SLIME, 0x73bcf4, 0x7374f4);
     public static final DeferredItem<Item> LUMINOUS_SLIME_SPAWN_EGG = registerEgg("evil_slime_spawn_egg", TEMonsterEntities.LUMINOUS_SLIME, 0xFF00FF, 0xEDFFFA);
     public static final DeferredItem<Item> DEMON_EYE_SPAWN_EGG = registerEgg("demon_eye_spawn_egg", TEMonsterEntities.DEMON_EYE, 0xffffff, 0xab0d0d);

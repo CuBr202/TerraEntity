@@ -27,11 +27,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.color.FloatRGB;
 import org.confluence.terraentity.entity.boss.KingSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
-import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
@@ -55,6 +53,9 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         this.size = size;
         // setSize在constructor中调用时size还没更新，再变一遍
         setSize(size, false);
+        if (getType() == TEMonsterEntities.CRIMSLIME.get()) {
+            setSize(getRandom().nextInt(1, 4), false);
+        }
         this.color = FloatRGB.fromInteger(color);
         this.honeySoakTime = 0;
     }

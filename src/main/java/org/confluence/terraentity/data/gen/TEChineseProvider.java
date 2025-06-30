@@ -34,8 +34,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.PINK_SLIME.get(), "粉色史莱姆");
         add(TEMonsterEntities.YELLOW_SLIME.get(), "黄色史莱姆");
         add(TEMonsterEntities.HONEY_SLIME.get(), "蜂蜜史莱姆");
-        add(TEMonsterEntities.CRIMSON_SLIME.get(), "猩红史莱姆");
-        add(TEMonsterEntities.CORRUPTED_SLIME.get(), "腐化史莱姆");
+        add(TEMonsterEntities.CRIMSLIME.get(), "猩红史莱姆");
+        add(TEMonsterEntities.CORRUPT_SLIME.get(), "腐化史莱姆");
         add(TEMonsterEntities.DESERT_SLIME.get(), "沙漠史莱姆");
         add(TEMonsterEntities.TROPIC_SLIME.get(), "热带史莱姆");
         add(TEMonsterEntities.GREEN_SLIME.get(), "绿色史莱姆");
@@ -125,7 +125,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.GREEN_SLIME_SPAWN_EGG.get(), "绿色史莱姆刷怪蛋");
         add(TESpawnEggItems.BLACK_SLIME_SPAWN_EGG.get(), "黑色史莱姆刷怪蛋");
         add(TESpawnEggItems.DUNGEON_SLIME_SPAWN_EGG.get(), "地牢史莱姆刷怪蛋");
-        add(TESpawnEggItems.CRIMSON_SLIME_SPAWN_EGG.get(), "猩红史莱姆刷怪蛋");
+        add(TESpawnEggItems.CRIMSLIME_SPAWN_EGG.get(), "猩红史莱姆刷怪蛋");
+        add(TESpawnEggItems.CORRUPT_SLIME_SPAWN_EGG.get(), "腐化史莱姆刷怪蛋");
         add(TESpawnEggItems.TROPIC_SLIME_SPAWN_EGG.get(), "热带史莱姆刷怪蛋");
         add(TESpawnEggItems.LUMINOUS_SLIME_SPAWN_EGG.get(), "夜明史莱姆刷怪蛋");
         add(TESpawnEggItems.LAVA_SLIME_SPAWN_EGG.get(), "熔岩史莱姆刷怪蛋");
