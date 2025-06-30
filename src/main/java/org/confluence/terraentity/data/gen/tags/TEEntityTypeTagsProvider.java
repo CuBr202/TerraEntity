@@ -48,6 +48,7 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
                         TEMonsterEntities.YELLOW_SLIME.get(),
                         TEMonsterEntities.HONEY_SLIME.get(),
                         TEMonsterEntities.BLACK_SLIME.get(),
+                        TEMonsterEntities.GOLDEN_SLIME.get(),
                         EntityType.SLIME)
                 );
         tag(TETags.EntityTypes.CORRUPT).add(

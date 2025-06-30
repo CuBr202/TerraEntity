@@ -46,6 +46,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.GREEN_DUMPLING_SLIME.get(), "青团史莱姆");
         add(TEMonsterEntities.SWAMP_SLIME.get(), "沼泽史莱姆");
         add(TEMonsterEntities.DUNGEON_SLIME.get(), "地牢史莱姆");
+        add(TEMonsterEntities.GOLDEN_SLIME.get(), "金史莱姆");
         add(TEMonsterEntities.DEMON_EYE.get(), "恶魔眼");
         add(TEMonsterEntities.FLYING_FISH.get(), "飞鱼");
         add(TEMonsterEntities.GIANT_SHELLY.get(), "巨型卷壳怪");
@@ -128,6 +129,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.TROPIC_SLIME_SPAWN_EGG.get(), "热带史莱姆刷怪蛋");
         add(TESpawnEggItems.LUMINOUS_SLIME_SPAWN_EGG.get(), "夜明史莱姆刷怪蛋");
         add(TESpawnEggItems.LAVA_SLIME_SPAWN_EGG.get(), "熔岩史莱姆刷怪蛋");
+        add(TESpawnEggItems.GOLDEN_SLIME_SPAWN_EGG.get(), "金史莱姆刷怪蛋");
 
         add(TESpawnEggItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
         add(TESpawnEggItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");

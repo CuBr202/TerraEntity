@@ -30,6 +30,7 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> GREEN_DUMPLING_SLIME_SPAWN_EGG = registerEgg("green_dumpling_slime_spawn_egg", TEMonsterEntities.GREEN_DUMPLING_SLIME, 0xa2f89f, 0x3de838);
     public static final DeferredItem<Item> SWAMP_SLIME_SPAWN_EGG = registerEgg("swamp_slime_spawn_egg", TEMonsterEntities.SWAMP_SLIME, 0xa2f89f, 0x3de838);
     public static final DeferredItem<Item> JUNGLE_SLIME_SPAWN_EGG = registerEgg("jungle_slime_spawn_egg", TEMonsterEntities.JUNGLE_SLIME, 0x9ae920, 0xC7AB5E);
+    public static final DeferredItem<Item> GOLDEN_SLIME_SPAWN_EGG = registerEgg("golden_slime_spawn_egg", TEMonsterEntities.GOLDEN_SLIME, 0xfcf8bd, 0xf8e234);
     public static final DeferredItem<Item> JUNGLE_BAT_SPAWN_EGG = registerEgg("jungle_bat_spawn_egg", TEMonsterEntities.JUNGLE_BAT, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> SNATCHER_SPAWN_EGG = registerEgg("snatcher_spawn_egg", TEMonsterEntities.SNATCHER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> MAN_EATER_SPAWN_EGG = registerEgg("man_eater_spawn_egg", TEMonsterEntities.MAN_EATER, 0xffffff, 0xffffff);

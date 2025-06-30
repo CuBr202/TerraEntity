@@ -1,5 +1,6 @@
 package org.confluence.terraentity.init.entity;
 
+import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
@@ -32,6 +33,7 @@ import org.confluence.terraentity.entity.monster.skeleton.MeleeSkeleton;
 import org.confluence.terraentity.entity.monster.skeleton.RangeSkeleton;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
+import org.confluence.terraentity.entity.monster.slime.GoldenSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.util.SpawnPlacementChecks;
 import org.confluence.terraentity.init.TEEntities;
@@ -60,6 +62,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<BlackSlime>> BLACK_SLIME = TEEntities.ENTITIES.register("black_slime", () -> EntityType.Builder.of(BlackSlime::new, MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(TEEntities.Key("black_slime")));
     public static final DeferredHolder<EntityType<?>, EntityType<BaseSlime>> GREEN_DUMPLING_SLIME = registerSlime("green_dumpling_slime", 0x32CD32, 2);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseSlime>> SWAMP_SLIME = registerSlime("swamp_slime", 0x556B2F, 2);
+    public static final DeferredHolder<EntityType<?>, EntityType<GoldenSlime>> GOLDEN_SLIME = TEEntities.ENTITIES.register("golden_slime", () -> EntityType.Builder.<GoldenSlime>of(GoldenSlime::new, MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(TEEntities.Key("golden_slime")));
     // 飞行怪
     public static final DeferredHolder<EntityType<?>, EntityType<DemonEye>> DEMON_EYE = TEEntities.registerEntity("demon_eye", DemonEye::new, 1.1F, 1.1F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMSON_KEMERA = registerSimpleMonster("crimson_kemera", FlyMonsterPrefab.CRIMSON_KEMERA_BUILDER, 1.2f, 1.2f);
@@ -151,6 +154,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.BLACK_SLIME.get(), c -> new CustomSlimeRenderer(c, "black"));
         event.registerEntityRenderer(TEMonsterEntities.GREEN_DUMPLING_SLIME.get(), c -> new CustomSlimeRenderer(c, "green_dumpling"));
         event.registerEntityRenderer(TEMonsterEntities.SWAMP_SLIME.get(), c -> new CustomSlimeRenderer(c, "swamp"));
+        event.registerEntityRenderer(TEMonsterEntities.GOLDEN_SLIME.get(), c -> new CustomSlimeRenderer(c, "yellow"));
 
 
         event.registerEntityRenderer(TEMonsterEntities.CRIMSON_KEMERA.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.CRIMSON_KEMERA.getId(), true));
@@ -244,6 +248,7 @@ public class TEMonsterEntities {
         event.put(GREEN_DUMPLING_SLIME.get(), BaseSlime.createSlimeAttributes(5.0F, 1, 25.0F).build());
         event.put(SWAMP_SLIME.get(), BaseSlime.createSlimeAttributes(5.0F, 1, 25.0F).build());
         event.put(BLACK_SLIME.get(), Monster.createMonsterAttributes().build()); // 由finalizeSpawn设置
+        event.put(GOLDEN_SLIME.get(), GoldenSlime.createSlimeAttributes().build()); // 由finalizeSpawn设置
         // land
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
         event.put(DECAYEDER.get(), RangeSkeleton.createAttributes().build());
