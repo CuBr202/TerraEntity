@@ -21,10 +21,14 @@ public class ExplosionMixin implements SelfGetter<Explosion> {
 
     @WrapOperation(method = "explode", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     public boolean explode(Entity instance, DamageSource pSource, float pAmount, Operation<Boolean> original) {
-        if(((this.damageCalculator instanceof IExplosionDamageCalculator diy) && diy.shouldDamageEntity(te$getSelf(), instance))){
-            return instance.hurt(pSource, diy.getEntityDamageAmount(te$getSelf(), instance, pAmount));
+        if(((this.damageCalculator instanceof IExplosionDamageCalculator diy))){
+            if(diy.shouldDamageEntity(te$getSelf(), instance)) {
+                return instance.hurt(pSource, diy.getEntityDamageAmount(te$getSelf(), instance, pAmount));
+            } else{
+                return false;
+            }
         }
-        return false;
+        return instance.hurt(pSource, pAmount);
     }
 
 }

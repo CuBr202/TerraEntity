@@ -229,9 +229,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             }
         }
 
-        for(Player p :((ServerLevel)level()).players()){
-            p.sendSystemMessage(Component.literal(position().toString()));
-        }
         NPCEvent.InitNPCTradeEvent event = new NPCEvent.InitNPCTradeEvent(this, ForgeRegistries.ENTITY_TYPES.getKey(this.getType()));
         AdapterUtils.postEvent(event);
         // 如果是第一次生成

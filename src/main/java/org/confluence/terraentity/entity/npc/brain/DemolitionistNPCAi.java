@@ -60,6 +60,7 @@ public class DemolitionistNPCAi extends NPCAi {
                                     if(npc.getTarget() != entity)
                                         return false;
                                 }
+
                                 return true;
                             }
 

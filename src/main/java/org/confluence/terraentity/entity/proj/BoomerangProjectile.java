@@ -1,5 +1,7 @@
 package org.confluence.terraentity.entity.proj;
 
+import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
+import com.github.edg_thexu.cafelib.data.component.SingleBooleanComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -24,13 +26,11 @@ import net.minecraft.world.phys.Vec3;
 
 import net.minecraftforge.entity.PartEntity;
 import org.confluence.terraentity.config.ClientConfig;
-import org.confluence.terraentity.data.component.SingleBooleanComponent;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.item.Boomerang;
 import org.confluence.terraentity.item.Boomerang.BoomerangModifier;
-import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
 import org.confluence.terraentity.utils.TEUtils;
 import java.util.UUID;
 

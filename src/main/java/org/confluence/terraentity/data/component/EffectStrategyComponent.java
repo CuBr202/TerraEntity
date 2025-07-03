@@ -1,10 +1,11 @@
 package org.confluence.terraentity.data.component;
 
+import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
+import com.github.edg_thexu.cafelib.data.codec.DataComponentProvider;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.world.entity.LivingEntity;
 import org.confluence.terraentity.init.TEDataComponentTypes;
-import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
@@ -35,8 +36,8 @@ public record EffectStrategyComponent(List<IEffectStrategy> effects) implements 
     }
 
     @Override
-    public Codec<EffectStrategyComponent> codec() {
-        return CODEC.get();
+    public DataComponentProvider<EffectStrategyComponent> provider() {
+        return TEDataComponentTypes.EFFECT_STRATEGY.get();
     }
 
 

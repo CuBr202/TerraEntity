@@ -1,5 +1,7 @@
 package org.confluence.terraentity.init.item;
 
+import com.github.edg_thexu.cafelib.api.item.CafeItemProperties;
+import com.github.edg_thexu.cafelib.data.component.SingleBooleanComponent;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.world.item.Item;
@@ -8,11 +10,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.function.TriFunction;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.data.component.SingleBooleanComponent;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.item.Boomerang;
-import org.confluence.terraentity.item.TEItemProperties;
 
 
 public class TEBoomerangItems {
@@ -73,7 +73,7 @@ public class TEBoomerangItems {
     );
 
     private static RegistryObject<Boomerang> register(String name, float damage, Boomerang.BoomerangModifier boomerangModifier) {
-        return ITEMS.register(name, () -> new Boomerang(damage,boomerangModifier, (TEItemProperties) new TEItemProperties()
+        return ITEMS.register(name, () -> new Boomerang(damage,boomerangModifier, (CafeItemProperties) new CafeItemProperties()
                 .component(TEDataComponentTypes.BOOMERANG_READY, SingleBooleanComponent.TRUE)
 //                .component(DataComponents.UNBREAKABLE, new Unbreakable(true))
                 .stacksTo(1)));

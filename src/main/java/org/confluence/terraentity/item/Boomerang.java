@@ -1,5 +1,11 @@
 package org.confluence.terraentity.item;
 
+import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
+import com.github.edg_thexu.cafelib.api.item.CafeItemProperties;
+import com.github.edg_thexu.cafelib.api.item.IItemExtension;
+import com.github.edg_thexu.cafelib.data.component.SingleBooleanComponent;
+import com.github.edg_thexu.cafelib.data.component.Unbreakable;
+import com.github.edg_thexu.cafelib.init.CafeDataComponentTypes;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -14,15 +20,13 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
-import org.confluence.terraentity.data.component.SingleBooleanComponent;
-import org.confluence.terraentity.data.component.Unbreakable;
+
 import org.confluence.terraentity.data.enchantment.TEEnchantmentHelper;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.entity.proj.BoomerangProjectile;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TESounds;
-import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
 import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.registries.generation.variant.ForwardGeneration;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
@@ -34,12 +38,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Boomerang extends Item implements IItemExtension{
+public class Boomerang extends Item {
 
     public final BoomerangModifier boomerangModifier;
     private final IGeneration generation = new ForwardGeneration(0,1.0f);
 
-    public Boomerang(float damage, BoomerangModifier boomerangModifier, TEItemProperties properties) {
+    public Boomerang(float damage, BoomerangModifier boomerangModifier, CafeItemProperties properties) {
         super(boomerangModifier.buildProperties(properties));
         this.boomerangModifier = boomerangModifier;
         this.boomerangModifier.damage = damage * 0.5f;
@@ -49,8 +53,8 @@ public class Boomerang extends Item implements IItemExtension{
      * 是否已经准备好射击
      */
     public static boolean isBacked(ItemStack stack){
-        var data = IDataComponentType.getData(stack, TEDataComponentTypes.BOOMERANG_READY);
-        if(stack == null || data == null) return true;
+        var data = IDataComponentType.getData(stack, CafeDataComponentTypes.BOOLEAN_COMPONENT.get());
+        if(data == null) return true;
         return data.value();
     }
 
@@ -59,8 +63,8 @@ public class Boomerang extends Item implements IItemExtension{
      */
     public static void setBacked(ItemStack stack, SingleBooleanComponent value){
         var data = IDataComponentType.getData(stack, TEDataComponentTypes.BOOMERANG_READY);
-        if(stack!= null && data!=null)
-            data.writeToNBT(TEDataComponentTypes.BOOMERANG_READY, stack.getOrCreateTag());
+        if(data != null)
+            data.writeToNBT(stack.getOrCreateTag());
     }
 
 
@@ -137,12 +141,6 @@ public class Boomerang extends Item implements IItemExtension{
         }
     }
 
-    @Override
-    public void onStackInit(ItemStack stack) {
-        if(this.boomerangModifier.properties != null)
-            this.boomerangModifier.properties.init(stack);
-
-    }
 
 //    @Override
 //    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
@@ -169,10 +167,10 @@ public class Boomerang extends Item implements IItemExtension{
 
 //        public ItemAttributeModifiers.Builder attributeModifiersBuilder = ItemAttributeModifiers.builder();
         private int modifyCount = 0;
-        List<Function<TEItemProperties, TEItemProperties>> modifierFunctions = new ArrayList<>();
+        List<Function<CafeItemProperties, CafeItemProperties>> modifierFunctions = new ArrayList<>();
         public Supplier<ParticleOptions> particle;
         public int particleCount = 1;
-        TEItemProperties properties;
+        CafeItemProperties properties;
         /**
          * 添加击中效果
          *
@@ -291,11 +289,11 @@ public class Boomerang extends Item implements IItemExtension{
             return this;
         }
 
-        public TEItemProperties buildProperties(TEItemProperties properties) {
+        public CafeItemProperties buildProperties(CafeItemProperties properties) {
             if(durability > 0){
                 properties.durability(durability);
             }else{
-                properties.component(TEDataComponentTypes.UNBREAKABLE, new Unbreakable(true));
+                properties.component(CafeDataComponentTypes.UNBREAKABLE_COMPONENT, new Unbreakable(true));
             }
             this.properties = modifierFunctions.stream().reduce(properties, (p, f) -> f.apply(p), (p1, p2) -> p1);
             return this.properties;

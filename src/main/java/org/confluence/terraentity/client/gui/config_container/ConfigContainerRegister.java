@@ -1,10 +1,13 @@
 package org.confluence.terraentity.client.gui.config_container;
 
+import com.github.edg_thexu.cafelib.client.gui.config_container.ConfigScreen;
+import com.github.edg_thexu.cafelib.client.gui.config_container.ConfigScreenBuilder;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.config.ServerConfig;
 
@@ -15,7 +18,7 @@ public class ConfigContainerRegister {
         ConfigScreenBuilder builder;
         builder = ConfigScreenBuilder.builder(screen);
 
-        builder.addTab("client",45);
+        builder.addTab(TerraEntity.MODID, "client",45);
 
         builder.addIntSliderEditBox(ClientConfig.BossBarStyle,0 , 2)
                 .comment("0: Default, 1: Still Style, 2: Dynamic Style");
@@ -26,7 +29,7 @@ public class ConfigContainerRegister {
         builder.addCheckBox(ClientConfig.GENERATE_PROJECTILE_PARTICLE)
                 .comment("Generate Whip Particle.");
 
-        builder.addTab("server",98);
+        builder.addTab(TerraEntity.MODID, "server",98);
 
         builder.addDoubleEditBox(ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE)
                 .comment("0.0625 ~ 10.0");
@@ -42,7 +45,7 @@ public class ConfigContainerRegister {
         builder.addCheckBox(ServerConfig.BOSS_LEAVE_ON_DAY);
 
 
-        builder.build();
+        builder.build(TerraEntity.MODID);
         return builder;
     }
 
@@ -51,7 +54,7 @@ public class ConfigContainerRegister {
         event.enqueueWork(() -> {
             if (FMLEnvironment.dist == Dist.CLIENT) {
                 ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () ->
-                        new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> new ConfigScreen(parent)));
+                        new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> new TEConfigScreen(parent, ConfigContainerRegister::init)));
             }
         });
     }

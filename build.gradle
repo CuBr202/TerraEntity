@@ -88,7 +88,10 @@ jarJar.enable()
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-
+    flatDir {
+        dir 'libs'
+    }
+    mavenLocal()
     maven {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
@@ -144,6 +147,11 @@ dependencies {
     // jade
     compileOnly fg.deobf("curse.maven:jade-324717:6271651")
     runtimeOnly fg.deobf("curse.maven:jade-324717:6271651")
+
+    implementation fg.deobf("libs:cafelib:1.0.0-all")
+    jarJar("com.github.edg_thexu:cafelib:1.0.0") {
+        jarJar.ranged(it, "[1.0.0,)")
+    }
 
     //jarJar(implementation(fg.deobf("ignored:defaultresources-forge:1.19.2-0.3.0"))) {
     //    jarJar.ranged(it, "[0.3.0,)")

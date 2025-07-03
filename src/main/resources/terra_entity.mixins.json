@@ -8,7 +8,6 @@
     "BossEventMixin",
     "ExplosionDamageCalculatorMixin",
     "ExplosionMixin",
-    "ItemStackMixin",
     "LivingEntityMixin",
     "MobEffectMixin",
     "MobMixin",

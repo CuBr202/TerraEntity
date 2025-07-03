@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.proj;
 
+import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -23,7 +24,6 @@ import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.item.TEWhipItems;
-import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
 import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;

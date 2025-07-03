@@ -1,5 +1,9 @@
 package org.confluence.terraentity.item;
 
+import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
+import com.github.edg_thexu.cafelib.api.item.CafeItemProperties;
+import com.github.edg_thexu.cafelib.data.component.Unbreakable;
+import com.github.edg_thexu.cafelib.init.CafeDataComponentTypes;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.particles.ParticleOptions;
@@ -20,12 +24,10 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
 import net.minecraft.world.level.block.state.BlockState;
-import org.confluence.terraentity.data.component.Unbreakable;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
-import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.TEUtils;
 
@@ -35,7 +37,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class BaseWhipItem extends Item implements IItemExtension {
+public class BaseWhipItem extends Item {
 
     public final int hitCooldown;
 
@@ -51,7 +53,7 @@ public class BaseWhipItem extends Item implements IItemExtension {
 
     public Supplier<BlockState> blockStateSupplier;
 
-    TEItemProperties properties;
+    CafeItemProperties properties;
     /**
      * <h1>鞭子
      * @param damage - 召唤伤害
@@ -59,7 +61,7 @@ public class BaseWhipItem extends Item implements IItemExtension {
      * @param attackSpeed - 攻击速度
      * @param hitCooldown - 击中同一目标的间隔
      */
-    public BaseWhipItem(TEItemProperties properties,
+    public BaseWhipItem(CafeItemProperties properties,
                         float damage,
                         float markDamage,
                         float attackSpeed,
@@ -132,12 +134,12 @@ public class BaseWhipItem extends Item implements IItemExtension {
         }
     }
 
-    public static class WhipProperties extends TEItemProperties {
+    public static class WhipProperties extends CafeItemProperties {
         Supplier<? extends ParticleOptions> particleOptions;
         float chance;
         Supplier<BlockState> blockStateSupplier;
 
-        List<Function<TEItemProperties, TEItemProperties>> modifiers = new ArrayList<>();
+        List<Function<CafeItemProperties, CafeItemProperties>> modifiers = new ArrayList<>();
         boolean hasDamage = false;
 
         /**
@@ -159,7 +161,7 @@ public class BaseWhipItem extends Item implements IItemExtension {
             return this;
         }
 
-        public WhipProperties addModifier(Function<TEItemProperties, TEItemProperties> modifier) {
+        public WhipProperties addModifier(Function<CafeItemProperties, CafeItemProperties> modifier) {
             modifiers.add(modifier);
             return this;
         }
@@ -169,7 +171,7 @@ public class BaseWhipItem extends Item implements IItemExtension {
          * @param durability 耐久度
          */
         public WhipProperties setDurability(int durability) {
-            modifiers.add(p-> (TEItemProperties)p.durability(durability));
+            modifiers.add(p-> (CafeItemProperties)p.durability(durability));
             hasDamage = true;
             return this;
         }
@@ -177,15 +179,11 @@ public class BaseWhipItem extends Item implements IItemExtension {
         /**
          * 生成Properties
          */
-        public TEItemProperties buildProperties() {
+        public CafeItemProperties buildProperties() {
 
-            if(!hasDamage) this.component(TEDataComponentTypes.UNBREAKABLE, new Unbreakable(true)).stacksTo(1);
+            if(!hasDamage) this.component(CafeDataComponentTypes.UNBREAKABLE_COMPONENT, new Unbreakable(true)).stacksTo(1);
             return modifiers.stream().reduce(this, (p, m)-> (WhipProperties) m.apply(p), (p1, p2)->p1);
         }
-    }
-    @Override
-    public void onStackInit(ItemStack stack) {
-        this.properties.init(stack);
     }
 
     @Override

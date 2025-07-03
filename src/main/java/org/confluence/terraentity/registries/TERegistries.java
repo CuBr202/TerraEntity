@@ -1,14 +1,13 @@
 package org.confluence.terraentity.registries;
 
+import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
+import com.github.edg_thexu.cafelib.data.codec.DataComponentProvider;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.NewRegistryEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TEEffectStrategies;
-import org.confluence.terraentity.registries.datacomponent.DataComponentProvider;
-import org.confluence.terraentity.registries.datacomponent.IDataComponentType;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
