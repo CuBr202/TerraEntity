@@ -6,7 +6,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.confluence.terraentity.TerraEntity;
 import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
 import java.util.function.Supplier;
 

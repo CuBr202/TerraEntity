@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.unknown",
+				"identifier": "geometry.wall_of_flesh_eye",
 				"texture_width": 512,
 				"texture_height": 512,
 				"visible_bounds_width": 8,
@@ -19,7 +19,7 @@
 					]
 				},
 				{
-					"name": "head",
+					"name": "Head",
 					"parent": "bone",
 					"pivot": [0, 8, 16],
 					"cubes": [

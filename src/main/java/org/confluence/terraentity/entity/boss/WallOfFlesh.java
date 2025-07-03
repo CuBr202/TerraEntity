@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.boss;
 
+import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
@@ -93,15 +94,28 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
             boolean[][] eyeMarkers = new boolean[gridSizeX][gridSizeY];
             boolean[][] mouthMarkers = new boolean[gridSizeX][gridSizeY];
             boolean[][] entityMarkers = new boolean[gridSizeX][gridSizeY];
+
             // 眼睛生成逻辑
             Map<Integer, List<Double>> eyeYPositions = new HashMap<>();
             for (int x = 0; x < gridSizeX; x++) {
                 for (int y = 0; y < gridSizeY; y++) {
-                    Vec3 eyeBasePos = new Vec3(
-                            (x - gridSizeX / 2.0) * gridSpacing,
-                            y * gridSpacing,
-                            0
-                    ).add(baseOffset);
+                    double offsetX = (random.nextDouble() - 0.5) * gridSpacing * 0.2; // X轴±20%偏移
+                    double offsetY = (random.nextDouble() - 0.5) * gridSpacing * 0.2; // Y轴±20%偏移
+
+                    Vec3 eyeBasePos;
+                    if (isMovingAlongX()) {
+                        eyeBasePos = new Vec3(
+                                0,  // X位置固定
+                                y * gridSpacing + offsetY,            // Y方向偏移
+                                (x - gridSizeX / 2.0) * gridSpacing                            // Z方向偏移
+                        ).add(baseOffset);
+                    } else {
+                        eyeBasePos = new Vec3(
+                                (x - gridSizeX / 2.0) * gridSpacing + offsetX,  // X方向偏移
+                                y * gridSpacing + offsetY,                      // Y方向偏移
+                                0                                              // Z位置固定
+                        ).add(baseOffset);
+                    }
 
                     if (isValidEyePosition(x, y, eyeMarkers)) {
                         WallOfFleshEye eye = new WallOfFleshEye(level());
@@ -123,11 +137,24 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
                     if (random.nextDouble() < 2.0 / 3) {
                         double midY = (yCoords.get(i) + yCoords.get(i + 1)) / 2.0;
                         int gridY = (int) (midY / gridSpacing);
-                        Vec3 mouthPos = new Vec3(
-                                (gridX - gridSizeX / 2.0) * gridSpacing,
-                                midY,
-                                0
-                        ).add(baseOffset);
+
+                        double offsetX = (random.nextDouble() - 0.5) * gridSpacing * 0.2; // X轴±20%偏移
+                        double offsetY = (random.nextDouble() - 0.5) * gridSpacing * 0.2; // Y轴±20%偏移
+
+                        Vec3 mouthPos;
+                        if (isMovingAlongX()) {
+                            mouthPos = new Vec3(
+                                    0,
+                                    midY,
+                                    (gridX - gridSizeX / 2.0) * gridSpacing                          // Z方向偏移
+                            ).add(baseOffset);
+                        } else {
+                            mouthPos = new Vec3(
+                                    (gridX - gridSizeX / 2.0) * gridSpacing,
+                                    midY,
+                                    0                                           // Z位置固定
+                            ).add(baseOffset);
+                        }
 
                         WallOfFleshMouth mouth = new WallOfFleshMouth(level());
                         addChildSegment(mouth, mouthPos);
@@ -146,13 +173,22 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
             // 饿鬼生成逻辑
             for (int x = 0; x < gridSizeX; x++) {
                 for (int y = 0; y < gridSizeY; y++) {
-                    Vec3 theHungryPos = new Vec3(
-                            (x - gridSizeX / 2.0) * gridSpacing,
-                            y * gridSpacing,
-                            0
-                    ).add(baseOffset);
+                    Vec3 theHungryPos;
+                    if (isMovingAlongX()) {
+                        theHungryPos = new Vec3(
+                                0,
+                                y * gridSpacing,
+                                (x - gridSizeX / 2.0) * gridSpacing
+                        ).add(baseOffset);
+                    } else {
+                        theHungryPos = new Vec3(
+                                (x - gridSizeX / 2.0) * gridSpacing,
+                                y * gridSpacing,
+                                0
+                        ).add(baseOffset);
 
-                    if (!this.level().isClientSide() && !entityMarkers[x][y]) {
+                    }
+                    if (!this.level().isClientSide() && !eyeMarkers[x][y] && !mouthMarkers[x][y]) {
                         TheHungry hungry = new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),new AbstractPrefab(60,2,15,32,0.75f,1).getPrefab()) {
                             @Override
                             protected boolean shouldDropLoot() {
@@ -230,14 +266,20 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
     @Override
     public Vec2 getRotationVector() {
         // 标准化YRot到0°或180°
-        float originalYaw = this.getYRot();
-        float normalizedYaw = (originalYaw + 180) % 360;
-        if (normalizedYaw < 0) normalizedYaw += 360;
-        normalizedYaw -= 180; // 范围[-180, 180)
+       //float originalYaw = this.getYRot();
+       //float normalizedYaw = (originalYaw + 180) % 360;
+       //if (normalizedYaw < 0) normalizedYaw += 360;
+       //normalizedYaw -= 180; // 范围[-180, 180)
+       //
+       //float alignedYaw = (normalizedYaw >= -90 && normalizedYaw < 90) ? 0 : 180;
+       //
+       // return new Vec2(this.getXRot(), alignedYaw);
+        return new Vec2(this.getXRot(), this.getYRot());
+    }
 
-        float alignedYaw = (normalizedYaw >= -90 && normalizedYaw < 90) ? 0 : 180;
-
-        return new Vec2(this.getXRot(), alignedYaw);
+    public boolean isMovingAlongX() {
+        Direction dir = this.getDirection();
+        return dir == Direction.EAST || dir == Direction.WEST;
     }
 
     @Override
@@ -246,8 +288,14 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
         return new Vec3(-Math.sin(yawRad), 0, Math.cos(yawRad));
     }
 
-    public void setForward(boolean minus) {
-        this.setYRot(minus ? 180 : 0);
+    public void setForward(Direction direction) {
+        switch (direction) {
+            case EAST -> this.setYRot(0.0F);    // 东: 0°
+            case SOUTH -> this.setYRot(90.0F);   // 南: 90°
+            case WEST -> this.setYRot(180.0F);   // 西: 180°
+            case NORTH -> this.setYRot(270.0F);  // 北: 270° (或 -90°)
+            default -> throw new IllegalArgumentException("Invalid direction: " + direction);
+        }
     }
 
     private void updateChildPosition(Entity child) {
@@ -269,7 +317,10 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
             } else if (child instanceof WallOfFleshEye || child instanceof WallOfFleshMouth) {
                 child.setPos(childPos.x, childPos.y, childPos.z);
             }
-            if (child instanceof WallOfFleshMouth) child.setYRot(this.getYRot());
+            if (child instanceof WallOfFleshMouth || child instanceof WallOfFleshEye) {
+                child.setYRot(this.getYRot());
+                child.setXRot(this.getXRot());
+            }
         }
     }
 
@@ -280,8 +331,16 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
         this.noCulling = true;
         this.setNoGravity(true);
         double summonDir = 50;
-        this.setForward(this.getZ() <= 0);
-        Vec3 summonPos = this.position().add(getForward().scale(-summonDir).add(0, this.level().getMinBuildHeight(), 0));
+        Direction[] horizontalDirections = {Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH};
+        Direction randomDir = horizontalDirections[this.random.nextInt(horizontalDirections.length)];
+        this.setYRot(randomDir.toYRot());
+        //this.setForward(randomDir);
+        //this.setForward(Direction.SOUTH);
+        //this.setForward(Direction.NORTH);
+        //this.setForward(Direction.EAST);
+        this.setForward(Direction.WEST);
+
+        Vec3 summonPos = new Vec3(this.position().x, this.level().getMinBuildHeight(), this.position().z).add(getForward().scale(-summonDir));
         this.moveTo(summonPos);
         this.InitPos = summonPos;
         for (Entity child : baseSegments) {
@@ -369,23 +428,46 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
     }
 
     public AABB getInsideBox() {
-        double x = gridSizeX * gridSpacing/2;
-        double y = gridSizeY * gridSpacing;
-        double z = 0;
-        insideCollisionBox = new AABB(
-                this.position().subtract(x+gridSpacing/2, 0, z),
-                this.position().add(x-gridSpacing/2, y, z + 150 * this.getForward().z));
-
+        Direction dir = this.getDirection();
+        boolean isReverse = dir == Direction.WEST || dir == Direction.SOUTH;
+        int completion = isReverse?0:5;
+        if(isMovingAlongX()) {
+            double x = completion;
+            double y = gridSizeY * gridSpacing - (double) gridSizeY /2;
+            double z = gridSizeX * gridSpacing / 2;
+            insideCollisionBox = new AABB(
+                    this.position().subtract(x, 0 + (double) gridSizeY /2, z + gridSpacing / 2),
+                    this.position().add(x + 150 * this.getForward().x, y, z + 150 * this.getForward().z - gridSpacing / 2));
+        }else {
+            double x = gridSizeX * gridSpacing / 2;
+            double y = gridSizeY * gridSpacing - (double) gridSizeY /2;
+            double z = completion;
+            insideCollisionBox = new AABB(
+                    this.position().subtract(x + gridSpacing / 2, 0 + (double) gridSizeY /2, z),
+                    this.position().add(x, y, z + 150 * this.getForward().z - gridSpacing / 2));
+        }
         return this.insideCollisionBox;
     }
 
     public AABB getOutsideCollisionBox() {
-        double x = gridSizeX * gridSpacing/2 + 150;
-        double y = gridSizeY * gridSpacing + 150;
-        double z = 200;
-        outsideCollisionBox = new AABB(
-                this.position().subtract(x+gridSpacing/2, 150, z),
-                this.position().add(x-gridSpacing/2, y, z));
+        Direction dir = this.getDirection();
+        boolean isReverse = dir == Direction.WEST || dir == Direction.SOUTH;
+        int completion1 = isReverse?-200:200;
+        if(isMovingAlongX()) {
+            double x = completion1;
+            double y = gridSizeY * gridSpacing + 150;
+            double z = gridSizeX * gridSpacing / 2 + 150;
+            outsideCollisionBox = new AABB(
+                    this.position().subtract(x, 150, z + gridSpacing / 2),
+                    this.position().add(x, y, z - gridSpacing / 2));
+        }else {
+            double x = gridSizeX * gridSpacing / 2 + 150;
+            double y = gridSizeY * gridSpacing + 150;
+            double z = completion1;
+            outsideCollisionBox = new AABB(
+                    this.position().subtract(x + gridSpacing / 2, 150, z),
+                    this.position().add(x - gridSpacing / 2, y, z));
+        }
         return this.outsideCollisionBox;
     }
 
@@ -414,6 +496,7 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
         return super.canAttack(entity);
     }
 
+    @Override
     public boolean isInvulnerableTo(DamageSource source) {
         if(source.is(DamageTypeTags.IS_FIRE)||source.is(DamageTypeTags.IS_DROWNING)){
             return true;

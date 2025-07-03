@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -75,7 +76,7 @@ public class RenderEvent {
 
 
     @SubscribeEvent
-    public static void MobRenderTongue(RenderLivingEvent.Pre<Player, PlayerModel<Player>> event) {
+    public static void MobRenderTongue(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
         LivingEntity livingEntity = event.getEntity();
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
