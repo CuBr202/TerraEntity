@@ -72,6 +72,8 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AntlionSwarmer>> GIANT_ANTLION_SWARMER = TEEntities.registerEntity("giant_antlion_swarmer", (e, l) -> new AntlionSwarmer(e, l, new FlyMonsterPrefab(46, 4, 17, 32, 1f, 0.73f).getPrefab()), 3.5f, 2f);
 
     // 陆行怪
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeSkeleton>> MUSHROOM_SKELETON = TEEntities.registerEntity("mushroom_skeleton", (e, l) -> new RangeSkeleton(e, l, new AbstractPrefab(41, 2, 13).getPrefab().setSpawnWithoutLight()), 1, 1.8f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> MUSHROOM_ZOMBIE = registerSimpleMonster("mushroom_zombie", LandMonsterPrefab.MUSHROOM_ZOMBIE_BUILDER, 0.75F, 1.95F);
     public static final DeferredHolder<EntityType<?>, EntityType<RangeSkeleton>> DECAYEDER = TEEntities.registerEntity("decayeder", (e, l) -> new Decayeder(e, l, new AbstractPrefab(10, 0, 6).getPrefab().setSpawnWithoutLight()), 1, 1.8f);
     public static final DeferredHolder<EntityType<?>, EntityType<BloodySpore>> BLOODY_SPORE = TEEntities.registerEntity("bloody_spore", BloodySpore::new, 1, 1.5f);
     public static final DeferredHolder<EntityType<?>, EntityType<BloodCrawler>> BLOOD_CRAWLER = TEEntities.registerEntity("blood_crawler", BloodCrawler::new, 1.8F, 1.2F);
@@ -110,6 +112,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_ANGER_BONES = TEEntities.registerEntity("big_anger_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(36, 2, 17, 32, 1, 0.28f).getPrefab()), 0.9F, 2.4F);
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_MUSCLE_ANGER_BONES = TEEntities.registerEntity("big_muscle_anger_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(36, 4, 14, 32, 1, 0.28f).getPrefab()), 0.95F, 2.45F);
     public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_HELMET_ANGER_BONES = TEEntities.registerEntity("big_helmet_anger_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(62, 4, 12, 32, 1, 0.28f).getPrefab()), 1F, 2.6F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> UNDEAD_VIKING = TEEntities.registerEntity("undead_viking", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(41, 4, 12, 32, 1, 0.28f).getPrefab()), 1F, 2.6F);
     // 穿墙怪
     public static final DeferredHolder<EntityType<?>, EntityType<CursedSkull>> CURSED_SKULL = TEEntities.registerEntity("cursed_skull", (e, l) -> new CursedSkull(e, l, new AbstractPrefab(21, 1, 18, 32, 1, 0.82f).getPrefab()), 1F, 1F);
 
@@ -171,6 +174,8 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.DECAYEDER.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.DECAYEDER.getId()));
 
 
+        event.registerEntityRenderer(TEMonsterEntities.MUSHROOM_SKELETON.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.MUSHROOM_SKELETON.getId(), false));
+        event.registerEntityRenderer(TEMonsterEntities.MUSHROOM_ZOMBIE.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.MUSHROOM_ZOMBIE.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.FACE_MONSTER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.FACE_MONSTER.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.BLOOD_TUMORS.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.BLOOD_TUMORS.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.BLOOD_ZOMBIE.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.BLOOD_ZOMBIE.getId(), false));
@@ -204,6 +209,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.BIG_ANGER_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BIG_ANGER_BONES.getId(), 1.15f, 0));
         event.registerEntityRenderer(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.getId(), 1.2f, 0));
         event.registerEntityRenderer(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BIG_HELMET_ANGER_BONES.getId(), 1.25f, 0));
+        event.registerEntityRenderer(TEMonsterEntities.UNDEAD_VIKING.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.UNDEAD_VIKING.getId(), false));
 
         // 穿墙怪
         event.registerEntityRenderer(TEMonsterEntities.CURSED_SKULL.get(), c -> new CursedSkullRenderer<>(c, TEMonsterEntities.CURSED_SKULL.getId(), true, 1f, 0));
@@ -247,6 +253,8 @@ public class TEMonsterEntities {
         event.put(GOLDEN_SLIME.get(), GoldenSlime.createSlimeAttributes().build());
         // land
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
+        event.put(MUSHROOM_SKELETON.get(), AbstractMonster.createAttributes().build());
+        event.put(MUSHROOM_ZOMBIE.get(), AbstractMonster.createAttributes().build());
         event.put(DECAYEDER.get(), RangeSkeleton.createAttributes().build());
         event.put(BLOODY_SPORE.get(), BloodySpore.createAttributes().build());
         event.put(FACE_MONSTER.get(), AbstractMonster.createAttributes().build());
@@ -295,6 +303,7 @@ public class TEMonsterEntities {
         event.put(BIG_ANGER_BONES.get(), AbstractMonster.createAttributes().build());
         event.put(BIG_MUSCLE_ANGER_BONES.get(), AbstractMonster.createAttributes().build());
         event.put(BIG_HELMET_ANGER_BONES.get(), AbstractMonster.createAttributes().build());
+        event.put(UNDEAD_VIKING.get(), AbstractMonster.createAttributes().build());
 
         // 穿墙怪
         event.put(CURSED_SKULL.get(), AbstractMonster.createAttributes().build());
@@ -340,6 +349,8 @@ public class TEMonsterEntities {
         event.register(BLOOD_ZOMBIE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BLOODY_SPORE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BloodySpore::checkBloodySporeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(FACE_MONSTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(MUSHROOM_SKELETON.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(MUSHROOM_ZOMBIE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(DECAYEDER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(GIANT_SHELLY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(NYMPH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
@@ -378,6 +389,7 @@ public class TEMonsterEntities {
         event.register(BIG_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BIG_MUSCLE_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BIG_HELMET_ANGER_BONES.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(UNDEAD_VIKING.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
         // 穿墙怪
         event.register(CURSED_SKULL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
