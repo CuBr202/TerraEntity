@@ -302,6 +302,11 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>{
     }
 
     @Override
+    public boolean fireImmune() {
+        return true;
+    }
+
+    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, state -> state.setAndContinue(RawAnimation.begin().thenLoop("bait"))));
     }

@@ -3,8 +3,12 @@ package org.confluence.terraentity.event;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -22,6 +26,8 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
@@ -248,6 +254,16 @@ public class GameEntityEvent {
 //
 //        }
 //    }
+
+    @SubscribeEvent
+    public static void invulnerabilityCheck(EntityInvulnerabilityCheckEvent event) {
+        if (event.isInvulnerable() || !(event.getEntity() instanceof LivingEntity living)) return;
+
+        DamageSource damageSource = event.getSource();
+        if(damageSource.is(DamageTypes.IN_WALL) && living.hasEffect(TEEffects.THE_TONGUE)) {
+            event.setInvulnerable(true);
+        }
+    }
 
     @SubscribeEvent
     public static void onCheckSpawnPosition(MobSpawnEvent.SpawnPlacementCheck event)  {

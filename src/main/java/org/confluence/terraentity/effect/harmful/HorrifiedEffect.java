@@ -25,7 +25,7 @@ public class HorrifiedEffect extends MobEffect {
                 living.kill();
             }else if(living.getBoundingBox().intersects(wall.getOutsideCollisionBox())&&!living.getBoundingBox().intersects(wall.getInsideBox())){
                 Optional<WallOfFleshMouth> nearestMouth = wall.baseSegments.stream()
-                        .filter(segment -> segment instanceof WallOfFleshMouth)
+                        .filter(segment -> segment instanceof WallOfFleshMouth  && segment.getY() > segment.level().getMinBuildHeight())
                         .map(segment -> (WallOfFleshMouth) segment)
                         .min(Comparator.comparingDouble(mouth ->
                                 mouth.distanceToSqr(living)
@@ -34,7 +34,7 @@ public class HorrifiedEffect extends MobEffect {
                 nearestMouth.ifPresent(mouth -> {
                     DeferredHolder<MobEffect, TheTongueEffect> horrifiedHolder = TEEffects.THE_TONGUE;
                     horrifiedHolder.get().setWallOfFleshMouth(mouth);
-                    if(living.tickCount % 20 == 0)living.addEffect(new MobEffectInstance(horrifiedHolder, 60));
+                    if(!living.hasEffect(TEEffects.THE_TONGUE))living.addEffect(new MobEffectInstance(horrifiedHolder, 60));
                 });
             }
         }
