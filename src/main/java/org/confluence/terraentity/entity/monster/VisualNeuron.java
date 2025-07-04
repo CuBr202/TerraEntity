@@ -90,7 +90,7 @@ public class VisualNeuron extends AbstractMonster{
 
     @Override
     public void firstSpawn(){
-        TEUtils.multiplePlayerEnhance(this, dirty);
+        TEUtils.multiplePlayerEnhance(this);
     }
 
     @Override

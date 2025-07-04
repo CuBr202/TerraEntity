@@ -15,12 +15,17 @@ import org.confluence.terraentity.client.block.renderer.FigureBlockRenderer;
 import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.gui.config_container.ConfigContainerRegister;
 import org.confluence.terraentity.client.gui.container.SimpleTradeScreen;
+import org.confluence.terraentity.client.init.model.EntityBlockModelRegister;
+import org.confluence.terraentity.client.init.model.WhipModelRegister;
 import org.confluence.terraentity.client.particle.BiomeColorParticle;
+import org.confluence.terraentity.client.particle.SpitParticle;
 import org.confluence.terraentity.client.util.RegisterUtils;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEMenus;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.block.TEFigureBlocks;
+
+import static org.confluence.terraentity.client.util.RegisterUtils.registerModel;
 
 
 @Mod.EventBusSubscriber(modid = TerraEntity.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -63,7 +68,7 @@ public final class ModClientEvent {
         RegisterUtils.registerModel(event, CrownOfKingSlimeModel.class);
         RegisterUtils.registerModel(event, CabbageProjModel.class);
         RegisterUtils.registerModel(event, Stinger.class);
-
+        registerModel(event, HarpyFeatherProjectileModel.class);
 
     }
 
@@ -85,6 +90,8 @@ public final class ModClientEvent {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(TEParticles.LEAVES.get(), BiomeColorParticle.Provider::new);
+        event.registerSpriteSet(TEParticles.SPIT.get(), SpitParticle.Provider::new);
+        event.registerSpriteSet(TEParticles.SPIT_GLOW.get(), SpitParticle.EmissiveProvider::new);
 
     }
 
@@ -92,6 +99,7 @@ public final class ModClientEvent {
     public static void registerAdditionalModel(ModelEvent.RegisterAdditional event) {
         WhipModelRegister.getInstance().register(event);
         EntityBlockModelRegister.getInstance().register(event);
+//        AdditionalItemRegister.getInstance().register(event);
     }
 
 
@@ -113,7 +121,6 @@ public final class ModClientEvent {
 //            }
 //        });
 //    }
-
 
 
 }

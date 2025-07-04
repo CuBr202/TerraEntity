@@ -1,7 +1,7 @@
 package org.confluence.terraentity.registries.npc_trade_task;
 
+import com.github.edg_thexu.cafelib.data.codec.LazyVarMapCodecProvider;
 import com.mojang.serialization.MapCodec;
-import org.confluence.terraentity.registries.LazyVarMapCodecProvider;
 
 import java.util.function.Supplier;
 

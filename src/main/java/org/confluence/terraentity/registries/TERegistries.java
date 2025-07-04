@@ -113,10 +113,6 @@ public class TERegistries {
      */
     public static class TradeGeneratorProviders {
         public static final ResourceKey<Registry<TradeGeneratorProvider>> KEY = createRegistryKey(TerraEntity.space("trade_generator_provider"));
-    }
-
-    public static class DataComponentProviders{
-        public static final ResourceKey<Registry<DataComponentProvider<? extends IDataComponentType<?>>>> KEY = createRegistryKey(TerraEntity.space("data_component"));
 
     }
 }

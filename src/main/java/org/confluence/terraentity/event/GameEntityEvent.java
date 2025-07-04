@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -95,22 +96,30 @@ public class GameEntityEvent {
         // Caused by: java.lang.ClassCastException: class net.minecraft.world.entity.projectile.Arrow cannot be cast to class net.minecraft.world.entity.LivingEntity
         LivingEntity e1 = event.getEntity();
         Level level = event.getEntity().level();
+        Entity attacker = event.getSource().getEntity();
         if (!(level instanceof ServerLevel serverLevel)) return;
-        if (event.getSource().getEntity() instanceof Decayeder dp){
-            if (!e1.hasEffect(TEEffects.DEMONIC_THOUGHTS.get())){
+        if (attacker != null && attacker.getType() == TEMonsterEntities.DECAYEDER.get()) {
+            if (!e1.hasEffect(TEEffects.DEMONIC_THOUGHTS.get())) {
                 e1.addEffect(new MobEffectInstance(
                         TEEffects.DEMONIC_THOUGHTS.get(), 200
-                ), dp);
+                ), attacker);
             } else {
                 e1.removeEffect(TEEffects.DEMONIC_THOUGHTS.get());
                 e1.hurt(event.getSource(), 6);
                 AbstractMonster soulEater = TEMonsterEntities.EATER_OF_SOULS.get().create(level);
-                if (soulEater!=null) {
+                if (soulEater != null) {
                     soulEater.setPos(e1.getEyePosition());
                     soulEater.setTarget(e1);
                     level.addFreshEntity(soulEater);
                 }
                 e1.removeEffect(TEEffects.DEMONIC_THOUGHTS.get());
+            }
+        }
+        if (attacker != null && (attacker.getType() == TEMonsterEntities.CRIMSLIME.get() || attacker.getType() == TEMonsterEntities.CORRUPT_SLIME.get())) {
+            if (e1.getRandom().nextFloat() <= 0.25f){
+                e1.addEffect(new MobEffectInstance(
+                        MobEffects.DARKNESS, 300
+                ), attacker);
             }
         }
     }
@@ -159,50 +168,50 @@ public class GameEntityEvent {
             return;
         }
         ItemStack item = event.getItemStack();
-        if(!(event.getTarget() instanceof LivingEntity entity)) return;
+        if (!(event.getTarget() instanceof LivingEntity entity)) return;
         Player player = event.getEntity();
         Level level = event.getLevel();
-        if (entity.getType().equals(TEMonsterEntities.BLUE_SLIME.get()) ||
-                entity.getType().equals(TEMonsterEntities.GREEN_SLIME.get()) ||
-                entity.getType().equals(TEMonsterEntities.PURPLE_SLIME.get())){
-            if (item.is(TETags.Items.HONEY_TRANSLATION_BUCKET)){
-                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
-                if (slime!=null) {
-                    item.shrink(1);
-                    player.addItem(new ItemStack(Items.BUCKET));
-                    slime.setSize(2, true);
-                    slime.setPos(entity.position());
-                    slime.setXRot(entity.getXRot());
-                    slime.setYRot(entity.getYRot());
-                    level.addFreshEntity(slime);
-                }
-                entity.remove(Entity.RemovalReason.DISCARDED);
-            } else if (item.is(TETags.Items.HONEY_TRANSLATION)){
-                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
-                if (slime!=null) {
-                    item.shrink(1);
-                    slime.setSize(2, true);
-                    slime.setPos(entity.position());
-                    slime.setXRot(entity.getXRot());
-                    slime.setYRot(entity.getYRot());
-                    level.addFreshEntity(slime);
-                }
-                entity.remove(Entity.RemovalReason.DISCARDED);
-            } else if (item.is(TETags.Items.HONEY_TRANSLATION_NOT_CONSUMED)){
-                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
-                if(slime!=null) {
-                    slime.setSize(2, true);
-                    slime.setPos(entity.position());
-                    slime.setXRot(entity.getXRot());
-                    slime.setYRot(entity.getYRot());
-                    level.addFreshEntity(slime);
-                }
-                entity.remove(Entity.RemovalReason.DISCARDED);
-                event.setCanceled(true);
-                return;
-            }
-            event.setCanceled(true);
-        }
+//        if (entity.getType().equals(TEMonsterEntities.BLUE_SLIME.get()) ||
+//                entity.getType().equals(TEMonsterEntities.GREEN_SLIME.get()) ||
+//                entity.getType().equals(TEMonsterEntities.PURPLE_SLIME.get())) {
+//            if (item.is(TETags.Items.HONEY_TRANSLATION_BUCKET)) {
+//                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
+//                if (slime != null) {
+//                    item.shrink(1);
+//                    player.addItem(new ItemStack(Items.BUCKET));
+//                    slime.setSize(2, true);
+//                    slime.setPos(entity.position());
+//                    slime.setXRot(entity.getXRot());
+//                    slime.setYRot(entity.getYRot());
+//                    level.addFreshEntity(slime);
+//                }
+//                entity.remove(Entity.RemovalReason.DISCARDED);
+//            } else if (item.is(TETags.Items.HONEY_TRANSLATION)) {
+//                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
+//                if (slime != null) {
+//                    item.shrink(1);
+//                    slime.setSize(2, true);
+//                    slime.setPos(entity.position());
+//                    slime.setXRot(entity.getXRot());
+//                    slime.setYRot(entity.getYRot());
+//                    level.addFreshEntity(slime);
+//                }
+//                entity.remove(Entity.RemovalReason.DISCARDED);
+//            } else if (item.is(TETags.Items.HONEY_TRANSLATION_NOT_CONSUMED)) {
+//                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
+//                if (slime != null) {
+//                    slime.setSize(2, true);
+//                    slime.setPos(entity.position());
+//                    slime.setXRot(entity.getXRot());
+//                    slime.setYRot(entity.getYRot());
+//                    level.addFreshEntity(slime);
+//                }
+//                entity.remove(Entity.RemovalReason.DISCARDED);
+//                event.setCanceled(true);
+//                return;
+//            }
+//            event.setCanceled(true);
+//        }
     }
 
     @SubscribeEvent

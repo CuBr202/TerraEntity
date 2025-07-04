@@ -31,6 +31,7 @@ public record ForwardGeneration(float offsetY, float inaccuracy) implements IGen
     @Override
     public void genProjectile(@NotNull LivingEntity owner, @Nullable ItemStack weapon, float velocity, @NotNull Supplier<? extends Projectile> proj) {
         Projectile projectile = proj.get();
+        if (projectile == null) return;
         projectile.setOwner(owner);
         // todo 计算yaw
         projectile.setPos(owner.getX(), owner.getY() + owner.getEyeHeight() + offsetY, owner.getZ());

@@ -50,6 +50,7 @@ public class TEAi {
 
         public static void register(IEventBus bus){
             MEMORY_MODULES.register(bus);
+
         }
     }
 

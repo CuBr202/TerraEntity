@@ -29,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.utils.TEUtils;
@@ -44,7 +45,7 @@ import java.util.EnumSet;
 public class Hornet extends AbstractMonster implements FlyingAnimal{
 
     protected  int attackInternal = 20;
-    public Hornet(EntityType<? extends Monster> type, Level level, Builder builder) {
+    public Hornet(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level, builder);
         this.moveControl = new FlyingMoveControl(this, 20, true);
 
@@ -147,6 +148,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
                 bee.swing(InteractionHand.MAIN_HAND);
                 timeToRepath = FIND_PATH_TIME;
                 bee.navigation.moveTo(bee.navigation.createPath(BlockPos.containing(vec3), 1), 1.5f);
+//                System.out.println("moving");
             }
         }
 
@@ -159,10 +161,12 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         public void tick() {
-            bee.lookControl.setLookAt(bee.getTarget());
-            bee.lookAt(bee.getTarget(), 360, 360);
-            if(bee.distanceTo(bee.getTarget()) < 10){
-
+            if(bee.getTarget() != null && bee.getTarget().isAlive()) {
+                bee.lookControl.setLookAt(bee.getTarget());
+                bee.lookAt(bee.getTarget(), 360, 360);
+//                if (bee.distanceTo(bee.getTarget()) < 10) {
+//
+//                }
             }
         }
     }
@@ -232,7 +236,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         }
 
         protected boolean canShoot(Entity target) {
-            if(TEUtils.angleBetween(bee.getLookAngle(), target.getEyePosition().subtract(bee.getEyePosition())) < 0.1f){
+            if(TEUtils.angleBetween(bee.getForward(), target.getEyePosition().subtract(bee.getEyePosition())) < 0.1f){
                 return true;
             }
             return false;

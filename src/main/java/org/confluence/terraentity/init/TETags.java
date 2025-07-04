@@ -3,6 +3,8 @@ package org.confluence.terraentity.init;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
@@ -11,30 +13,36 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
 import org.confluence.terraentity.TerraEntity;
 
 public class TETags {
-    public static class Blocks {
-
-
-
-    }
 
     public static class Items {
-        public static final TagKey<Item> HONEY_TRANSLATION_BUCKET = registerItem("honey_translation_with_bucket");
-        public static final TagKey<Item> HONEY_TRANSLATION = registerItem("honey_translation");
-        public static final TagKey<Item> HONEY_TRANSLATION_NOT_CONSUMED = registerItem("honey_translation_not_consumed");
+        public static final TagKey<Item> WHIP_ENCHANTABLE = registerItem("whip_enchantable");
+        public static final TagKey<Item> BOOMERANG_ENCHANTABLE = registerItem("boomerang_enchantable");
 
+        public static final TagKey<Item> WEAPONS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "weapons"));
+    }
+
+    public static class Blocks {
+        public static final TagKey<Block> HONEY = registerBlock("honey");
     }
 
     public static class EntityTypes {
         public static final TagKey<EntityType<?>> SLIME = registerEntityType("slime");
+        public static final TagKey<EntityType<?>> CORRUPT = registerEntityType("corrupt");
         public static final TagKey<EntityType<?>> NPC = registerEntityType("npc"); // 用于控制生成位置必须在玩家附近
-
         /**
          * 拥有这个标签的mob不会控制其他mob的行动
          */
         public static final TagKey<EntityType<?>> NON_CONTROLLING_RIDER = registerEntityType("non_controlling_rider");
+
+    }
+
+    public static class Biomes{
+        public static final TagKey<Biome> IS_GOBLIN_SPAWN = registerBiome("is_goblin_spawn");
 
     }
 
@@ -44,6 +52,7 @@ public class TETags {
         // 召唤物召唤伤害 用于标记伤害增伤
         public static final ResourceKey<DamageType> SUMMONER = registerDamageType("summoner");
         public static final ResourceKey<DamageType> FROST_BURN = registerDamageType("frost_burn");
+        public static final ResourceKey<DamageType> PASS_ARMOR = registerDamageType("pass_armor");
 
 
 
@@ -63,14 +72,21 @@ public class TETags {
             context.register(SUMMON, new DamageType("summon_damage_type", 0.1F));
             context.register(SUMMONER, new DamageType("summoner_damage_type", 0.1F));
             context.register(FROST_BURN, new DamageType("frost_burn_damage_type", 0.1F));
+            context.register(PASS_ARMOR, new DamageType("pass_armor_damage_type", 0.1F));
         }
     }
 
     private static TagKey<Item> registerItem(String id) {
         return ItemTags.create(TerraEntity.space(id));
     }
+    private static TagKey<Block> registerBlock(String id) {
+        return BlockTags.create(TerraEntity.space(id));
+    }
     private static TagKey<EntityType<?>> registerEntityType(String id) {
         return TagKey.create(Registries.ENTITY_TYPE, TerraEntity.space(id));
+    }
+    private static TagKey<Biome> registerBiome(String id) {
+        return TagKey.create(Registries.BIOME, TerraEntity.space(id));
     }
     private static ResourceKey<DamageType> registerDamageType(String id) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, TerraEntity.space(id));

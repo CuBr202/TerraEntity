@@ -42,8 +42,7 @@ public interface ITrade{
         return properties.lock();
     }
 
-    @Nullable
-    TradeProperties properties();
+    @Nullable TradeProperties properties();
 
     /**
      * 带交易锁的交易条件，默认使用这个方法
@@ -115,7 +114,6 @@ public interface ITrade{
      * @return 编解码器
      */
     TradeProvider getCodec();
-
 
 
     Codec<ITrade> TYPED_CODEC = TradeProviderTypes.REGISTRY.get()

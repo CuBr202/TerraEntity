@@ -1,0 +1,16 @@
+package org.confluence.terraentity.client.entity.renderer.mob;
+
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+
+public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>{
+    public NPCRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
+        super(renderManager, path.withPrefix("npc/"));
+    }
+
+    @Override
+    public float getMotionAnimThreshold(T animatable) {
+        return 0.01F;
+    }
+}

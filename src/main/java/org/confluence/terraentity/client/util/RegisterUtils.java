@@ -7,7 +7,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import org.confluence.terraentity.client.entity.renderer.ProjRenderer;
+import org.confluence.terraentity.client.entity.renderer.proj.ProjRenderer;
 import org.confluence.terraentity.entity.proj.BaseProj;
 
 import java.lang.reflect.Field;

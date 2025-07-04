@@ -10,7 +10,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
-import org.confluence.terraentity.client.entity.renderer.NPCRenderer;
+import org.confluence.terraentity.client.entity.renderer.mob.NPCRenderer;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.AnglerNPC;
 import org.confluence.terraentity.entity.npc.SimpleNPC;

@@ -17,7 +17,8 @@ public class DashGoal extends Goal {
     protected int dashTime = 0;
     protected int _dashTime;
 
-
+    int cooldown = 0;
+    int _cooldown = 30;
     protected Vec3 lastDir = Vec3.ZERO;
     protected  States state = States.idle;
     protected float friction;
@@ -28,7 +29,7 @@ public class DashGoal extends Goal {
     protected float triggerAngle;
     protected float turnAngle;
 
-    enum States{
+    public enum States{
         dashing,
         dashing_back,
         idle,
@@ -79,7 +80,7 @@ public class DashGoal extends Goal {
     }
 
     protected void lookAtTarget(LivingEntity target) {
-        mob.getLookControl().setLookAt(target, 0, 85);
+        mob.getLookControl().setLookAt(target, 5, 85);
         mob.lookAt(target, rootYSpeed, 85);
     }
 
@@ -98,17 +99,19 @@ public class DashGoal extends Goal {
         LivingEntity target = mob.getTarget();
         if(target == null ||!target.isAlive())
             return;
+        cooldown--;
         if(mob.hurtTime>0) {
             state = States.idle;
 
         }
 
         double distance = mob.position().distanceTo(target.getEyePosition());
-        if(distance < 0.5F && mob.swingTime == 0){
+        if(distance < 0.5F && mob.swingTime == 0 && cooldown <= 0){
             // 距离近攻击玩家
             mob.doHurtTarget(target);
             mob.swing(InteractionHand.MAIN_HAND);
             state = States.away;
+            cooldown = _cooldown;
             return;
         }
         if(state == States.away){
@@ -124,6 +127,7 @@ public class DashGoal extends Goal {
             downSpeed();
 
             mob.addDeltaMovement( new Vec3(0,0.05f,0));
+            dashBackTick();
             if(dashTime <= _dashTime) state = States.idle;
             return;
         }
@@ -172,4 +176,11 @@ public class DashGoal extends Goal {
 
     }
 
+    protected void dashBackTick(){
+
+    }
+
+    public States getState(){
+        return state;
+    }
 }

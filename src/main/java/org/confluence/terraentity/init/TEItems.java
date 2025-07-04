@@ -42,7 +42,8 @@ public class TEItems {
                         TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEItems.TOOLS.getEntries().forEach(item -> output.accept(item.get()));
                     })
-                    .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("terra_moment", "tab")))
+                    //.withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("terra_moment", "tab")))
+                    .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("enemybanner", "enemybanner_tab")))
                     .withTabsBefore(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("confluence", "summoners")))
                     .build());
 

@@ -21,10 +21,10 @@ public class SkullProjectile extends BaseProj<SkullProjectile> {
     public float xHeadRot;
     public float xHeadRotO;
 
-    public SkullProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel) {
+    public SkullProjectile(EntityType<? extends SkullProjectile> pEntityType, Level pLevel) {
         this(pEntityType, pLevel, null);
     }
-    public SkullProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, Entity target) {
+    public SkullProjectile(EntityType<? extends SkullProjectile> pEntityType, Level pLevel, Entity target) {
         super(pEntityType, pLevel, (MobEffectInstance) null);
         this.target = target;
 

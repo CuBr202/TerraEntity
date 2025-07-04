@@ -6,6 +6,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
@@ -15,6 +17,7 @@ import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.entity.animation.MultiBoneStateMachine;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +28,7 @@ public class SkeletronHand extends Skeletron {
 
     private float attackDamage = 10; // 攻击伤害
 
-    public Skeletron owner;
+    public @Nullable Skeletron owner;
     public HandSide handSide;
     protected final int slapInterval;
     protected final double slapSpeed;
@@ -38,14 +41,12 @@ public class SkeletronHand extends Skeletron {
     public SkeletronHand(EntityType<? extends Monster> entityType, Level level) {
         this(entityType, level, null, HandSide.LEFT);
     }
-    public SkeletronHand(EntityType<? extends Monster> entityType, Level level, Skeletron owner, HandSide handSide) {
+    public SkeletronHand(EntityType<? extends Monster> entityType, Level level, @Nullable Skeletron owner, HandSide handSide) {
         super(entityType, level);
         // 重新设置属性
         this.baseHealth = 405;
         this.baseArmor = 4;
-        if(level.isClientSide) {
-            this.stateMachine = new MultiBoneStateMachine<>(BoneStates.IDLE);
-        }
+        this.stateMachine = new MultiBoneStateMachine<>(BoneStates.IDLE);
         this.setAttactDamage(attackDamage);
 
         this.handSide = handSide;
@@ -150,11 +151,17 @@ public class SkeletronHand extends Skeletron {
         yBodyRot = yHeadRot;
     }
 
+    @Override
+    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
+        // confluence mixin here
+        return super.addEffect(effectInstance, entity);
+    }
+
     public class StandbyGoal extends Skeletron.FloatGoal {
         private Vec3 targetPos;
         @Override
         public boolean canUse() {
-            return !(owner.getTarget() != null && slapTick >= slapInterval && !owner.getEntityData().get(Skeletron.DATA_SPINNING));
+            return !(owner != null && owner.getTarget() != null && slapTick >= slapInterval && !owner.getEntityData().get(Skeletron.DATA_SPINNING));
         }
 
         @Override
@@ -167,8 +174,8 @@ public class SkeletronHand extends Skeletron {
             if (this.targetPos != null) {
                 return this.targetPos;  // 每刻只算一次
             }
-            boolean spinning = owner.getEntityData().get(Skeletron.DATA_SPINNING);
-            float yRot = owner.yBodyRot * Mth.DEG_TO_RAD;
+            boolean spinning = owner != null && owner.getEntityData().get(Skeletron.DATA_SPINNING);
+            float yRot = owner == null ? 0 : owner.yBodyRot * Mth.DEG_TO_RAD;
             Vec3 targetPosition;
             if (spinning) {
                 targetPosition = switch (handSide) {
@@ -213,7 +220,7 @@ public class SkeletronHand extends Skeletron {
 
         @Override
         public boolean canUse() {
-            return owner.getTarget() != null && slapTick >= slapInterval && !owner.getEntityData().get(Skeletron.DATA_SPINNING);
+            return owner != null && owner.getTarget() != null && slapTick >= slapInterval && !owner.getEntityData().get(Skeletron.DATA_SPINNING);
         }
 
         @Override
@@ -223,7 +230,11 @@ public class SkeletronHand extends Skeletron {
 
         @Override
         public void start() {
-            startPos = position().subtract(owner.getTarget().position()).normalize().scale(6).add(position());
+            if (owner == null || owner.getTarget() == null) {
+                startPos = position();
+            } else {
+                startPos = position().subtract(owner.getTarget().position()).normalize().scale(6).add(position());
+            }
         }
 
         @Override
@@ -239,7 +250,7 @@ public class SkeletronHand extends Skeletron {
                 if (distanceToSqr(startPos) > 1.5) {
                     setDeltaMovement(startPos.subtract(position()).normalize().scale(slapSpeed));
                 }else{
-                    if(owner.getTarget() != null ) {
+                    if(owner != null && owner.getTarget() != null ) {
                         endPos = owner.getTarget().position().subtract(position()).normalize().scale(4).add(owner.getTarget().position());
                     }
                     phase = 1;
@@ -256,10 +267,11 @@ public class SkeletronHand extends Skeletron {
     }
 
     public Vec3 getRootPos() {
-        float yRot = owner.yBodyRot * Mth.DEG_TO_RAD;
+        float yRot = owner == null ? 0 : owner.yBodyRot * Mth.DEG_TO_RAD;
+        final Vec3 position = owner == null ? position() : owner.position();
         return switch (handSide) {
-            case LEFT -> new Vec3(Mth.cos(yRot), 0, Mth.sin(yRot)).scale(2).add(owner.position());
-            case RIGHT -> new Vec3(-Mth.cos(yRot), 0, -Mth.sin(yRot)).scale(2).add(owner.position());
+            case LEFT -> new Vec3(Mth.cos(yRot), 0, Mth.sin(yRot)).scale(2).add(position);
+            case RIGHT -> new Vec3(-Mth.cos(yRot), 0, -Mth.sin(yRot)).scale(2).add(position);
         };
     }
 

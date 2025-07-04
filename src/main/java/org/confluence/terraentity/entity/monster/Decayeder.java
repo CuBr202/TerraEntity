@@ -1,84 +1,37 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.level.Level;
-import org.confluence.terraentity.entity.animation.BoneStateMachine;
-import org.confluence.terraentity.entity.animation.BoneStates;
-import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.entity.monster.skeleton.RangeSkeleton;
+import org.confluence.terraentity.init.TESounds;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * 腐瘸
- */
-public class Decayeder extends Skeleton implements GeoEntity, IUseItemAnimatable<BoneStates> {
-
-    BoneStateMachine<BoneStates> leftArmBoneStateMachine;
-    BoneStateMachine<BoneStates> rightArmBoneStateMachine;
-
-
-    public Decayeder(EntityType<? extends Skeleton> entityType, Level level) {
-        super(entityType, level);
-        if(level.isClientSide){
-            leftArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
-            rightArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
-        }
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.25)
-                .add(Attributes.MAX_HEALTH, 10)
-                .add(Attributes.ATTACK_DAMAGE, 6);
-    }
-    @Override
-    protected boolean isSunBurnTick() {
-        return false;
+public class Decayeder extends RangeSkeleton {
+    public Decayeder(EntityType<? extends AbstractSkeleton> entityType, Level level, AttributeBuilder builder) {
+        super(entityType, level, builder);
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "Walk/Idle", 5, state ->
-                state.setAndContinue(state.isMoving() ? DefaultAnimations.WALK : DefaultAnimations.IDLE)
-        ));
-    }
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
+    protected @Nullable SoundEvent getAmbientSound() {
+        return TESounds.DECAYEDER_AMBIENT.get();
     }
 
     @Override
-    public boolean isChargingCrossbow() {
-        return false;
+    protected SoundEvent getDeathSound() {
+        return TESounds.DECAYEDER_DEATH.get();
     }
 
     @Override
-    public int getChargingTicks() {
-        return 0;
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return TESounds.DECAYEDER_HURT.get();
     }
 
     @Override
-    public BoneStateMachine<BoneStates> getLeftArmBoneStateMachine() {
-        return leftArmBoneStateMachine;
-    }
-
-    @Override
-    public BoneStateMachine<BoneStates> getRightArmBoneStateMachine() {
-        return rightArmBoneStateMachine;
-    }
-
-    @Override
-    public boolean isLieDown() {
-        return false;
+    protected SoundEvent getStepSound() {
+        return TESounds.DECAYEDER_STEP.get();
     }
 }

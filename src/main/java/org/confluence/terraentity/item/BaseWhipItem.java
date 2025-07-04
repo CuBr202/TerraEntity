@@ -43,6 +43,7 @@ public class BaseWhipItem extends Item {
 
     public final Supplier<? extends ParticleOptions> particleOptions;
     public final float chance;
+    public boolean canPenetrate;
     public static int clickTime;
     public static int cooldownTime;
 
@@ -78,6 +79,7 @@ public class BaseWhipItem extends Item {
             this.particleOptions = whipProperties.particleOptions;
             this.chance = whipProperties.chance;
             this.blockStateSupplier = whipProperties.blockStateSupplier;
+            this.canPenetrate = whipProperties.canPenetrate;
         }
         else {
             this.particleOptions = null;
@@ -92,9 +94,10 @@ public class BaseWhipItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if(usedHand == InteractionHand.OFF_HAND) return super.use(level, player, usedHand);
+        ItemStack stack = player.getItemInHand(usedHand);
+        if(usedHand == InteractionHand.OFF_HAND) return InteractionResultHolder.success(stack);
         if(!level.isClientSide){
-            ItemStack stack = player.getItemInHand(usedHand);
+
             if(stack.getItem() instanceof BaseWhipItem self) {
                 int cooldown = (int) (20 * getCdReduction(player));
                 player.getCooldowns().addCooldown(this, cooldown);
@@ -107,17 +110,17 @@ public class BaseWhipItem extends Item {
                 whipEntity.setOwner(player);
                 whipEntity.setPos(player.position().add(0, 1, 0).add(TEUtils.getPlayerHandPos(player)));
                 whipEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.05f, 1.0F);
-                var data = IDataComponentType.getData(stack, TEDataComponentTypes.EFFECT_STRATEGY.get());
-                if (data != null)
-                    whipEntity.hiteffect = data;
                 whipEntity.hitCooldown = hitCooldown;
                 stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 level.addFreshEntity(whipEntity);
 //                stack.hurtAndBreak(1, player, (Consumer<LivingEntity>) (e -> e.playSound(SoundEvents.)));
             }
+        }else{
+            clickTime = player.tickCount;
+            cooldownTime = (int) (20 * getCdReduction(player));
         }
         player.swing(usedHand);
-        return super.use(level, player, usedHand);
+        return InteractionResultHolder.success(stack);
     }
 
     @Override
@@ -141,6 +144,7 @@ public class BaseWhipItem extends Item {
 
         List<Function<CafeItemProperties, CafeItemProperties>> modifiers = new ArrayList<>();
         boolean hasDamage = false;
+        boolean canPenetrate = false;
 
         /**
          * 当没有注册模型时，使用方块状态代替模型渲染
@@ -173,6 +177,11 @@ public class BaseWhipItem extends Item {
         public WhipProperties setDurability(int durability) {
             modifiers.add(p-> (CafeItemProperties)p.durability(durability));
             hasDamage = true;
+            return this;
+        }
+
+        public WhipProperties setCanPenetrate() {
+            this.canPenetrate = true;
             return this;
         }
 

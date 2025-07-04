@@ -35,9 +35,15 @@ public class BloodCrawler extends Spider implements GeoEntity {
     private static final int MAX_HEALTH = 31;
     private static final int DEFENSE = 2;
 
+
     public BloodCrawler(EntityType<? extends Spider> type, Level level) {
         super(type, level);
         this.setHealth(MAX_HEALTH);
+    }
+
+    @Override
+    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType spawnReason) {
+        return spawnReason == MobSpawnType.NATURAL; // 无视光照
     }
 
     protected void registerGoals() {
@@ -82,12 +88,7 @@ public class BloodCrawler extends Spider implements GeoEntity {
     }
     @Override
     protected SoundEvent getAmbientSound() {
-        Random rand = new Random();
-        SoundEvent sound1 = TESounds.BLOOD_CRAWLER_FREE.get();
-        SoundEvent sound2 = TESounds.BLOOD_CRAWLER_FREE_2.get();
-
-        // 随机选择音效
-        return rand.nextBoolean() ? sound1 : sound2;
+        return TESounds.BLOOD_CRAWLER_FREE.get();
     }
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {

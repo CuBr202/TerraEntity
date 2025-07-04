@@ -1,7 +1,6 @@
 package org.confluence.terraentity.entity.ai;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -25,15 +24,15 @@ public interface ICollisionAttackEntity<T extends Entity>{
 
     boolean shouldDoCollision();
 
-    default void doCollisionAttack(Predicate<LivingEntity> filter, Consumer<Entity> attackCallback){
+    default void doCollisionAttack(Predicate<Entity> filter, Consumer<Entity> attackCallback){
         if(!shouldDoCollision() || collision$getSelf().level().isClientSide) return;
         getCollisionProperties().reduceAttackInterval();
         if (canCollisionHurt() && !collision$getSelf().level().isClientSide && getCollisionProperties().canAttack()) {
             // 包围盒检测造成伤害
-            var entities = collision$getSelf().level().getEntities(collision$getSelf(), collision$getSelf().getBoundingBox().inflate(getCollisionProperties().attackRangeExtent), e-> e instanceof LivingEntity && e!= collision$getSelf());
+            var entities = collision$getSelf().level().getEntities(collision$getSelf(), collision$getSelf().getBoundingBox().inflate(getCollisionProperties().attackRangeExtent), e-> e!= collision$getSelf());
             if (!entities.isEmpty()) {
                 for (var e : entities) {
-                    if ( e instanceof LivingEntity living && filter.test(living) ){
+                    if (filter.test(e) ){
                         attackCallback.accept(e);
                         getCollisionProperties().rewind();
                     }

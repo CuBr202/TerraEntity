@@ -1,0 +1,49 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.wall_of_flesh",
+				"texture_width": 32,
+				"texture_height": 32,
+				"visible_bounds_width": 6,
+				"visible_bounds_height": 6,
+				"visible_bounds_offset": [0, 1, 0]
+			},
+			"bones": [
+				{
+					"name": "bone9",
+					"pivot": [0, 0, 25],
+					"cubes": [
+						{
+							"origin": [-40, -32, -24],
+							"size": [80, 80, 48],
+							"uv": {
+								"north": {"uv": [20.125, 0], "uv_size": [-10, 10]},
+								"east": {"uv": [26.25, 6.125], "uv_size": [-6, 10]},
+								"south": {"uv": [10, 0], "uv_size": [-10, 10]},
+								"west": {"uv": [26.25, 6.125], "uv_size": [-6, 10]},
+								"up": {"uv": [30.25, 0], "uv_size": [-10, 6]},
+								"down": {"uv": [30.25, 0], "uv_size": [-10, 6]}
+							}
+						},
+						{
+							"origin": [-40, -32, -28],
+							"size": [80, 80, 1],
+							"uv": {
+								"north": {"uv": [20.125, 20.25], "uv_size": [-10, 10]}
+							}
+						},
+						{
+							"origin": [-40, -32, -26],
+							"size": [80, 80, 1],
+							"uv": {
+								"north": {"uv": [20.125, 10.125], "uv_size": [-10, 10]}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

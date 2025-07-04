@@ -5,6 +5,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.network.c2s.NPCShopPacket;
+import org.confluence.terraentity.network.c2s.ServerBoundEventPacket;
 import org.confluence.terraentity.network.c2s.ServerBoundHousePacket;
 import org.confluence.terraentity.network.c2s.ServerBoundVehicleExtensionPacket;
 import org.confluence.terraentity.network.s2c.*;
@@ -26,6 +27,7 @@ public final class NetworkHandler {
         CHANNEL.registerMessage(packetId++,  ServerBoundVehicleExtensionPacket.class,  ServerBoundVehicleExtensionPacket::encode,  ServerBoundVehicleExtensionPacket::decode,  ServerBoundVehicleExtensionPacket::handle);
         CHANNEL.registerMessage(packetId++,  ServerBoundHousePacket.class,  ServerBoundHousePacket::encode,  ServerBoundHousePacket::decode,  ServerBoundHousePacket::handle);
         CHANNEL.registerMessage(packetId++,  NPCShopPacket.class,  NPCShopPacket::encode,  NPCShopPacket::decode,  NPCShopPacket::handle);
+        CHANNEL.registerMessage(packetId++,  ServerBoundEventPacket.class,  ServerBoundEventPacket::encode,  ServerBoundEventPacket::decode,  ServerBoundEventPacket::handle);
 
 
 

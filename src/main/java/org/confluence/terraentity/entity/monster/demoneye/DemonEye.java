@@ -179,7 +179,7 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
         // 在super.tick()结束后更新面向方向即可覆盖原版AI
         TEUtils.updateEntityRotation(this, this.getDeltaMovement().multiply(1, -1, 1));
 
-        if(owner!=null)
+        if (owner != null)
             setTarget(owner.getTarget());
     }
 
@@ -217,7 +217,8 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
 
     /* Minion API */
 
-    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(DemonEye.class, EntityDataSerializers.OPTIONAL_UUID);;
+    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(DemonEye.class, EntityDataSerializers.OPTIONAL_UUID);
+
 
 
     @Override

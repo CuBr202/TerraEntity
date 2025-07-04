@@ -1,0 +1,112 @@
+package org.confluence.terraentity.entity.monster;
+
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.util.LandRandomPos;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.entity.proj.BaseProj;
+import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+
+import java.util.function.Supplier;
+
+/**
+ * 远程法师
+ */
+public class RangeShooter extends AbstractMonster {
+
+    int _phase = 200;
+    int phase = _phase;
+    int _delay = 8;
+    int delay = -1;
+
+    static final AttributeModifier modifier = new AttributeModifier("eabc7402-ad87-4567-94e5-253a6cf4e391",1, AttributeModifier.Operation.MULTIPLY_BASE);
+    Supplier<? extends EntityType<? extends BaseProj<?>>> projType;
+
+    public RangeShooter(EntityType<? extends Monster> type, Level level, Supplier<? extends EntityType<? extends BaseProj<?>>> projType, AttributeBuilder builder) {
+        super(type, level, builder);
+        this.projType = projType;
+    }
+    public RangeShooter(EntityType<? extends Monster> type, Level level,int attackDelay,  Supplier<? extends EntityType<? extends BaseProj<?>>> projType, AttributeBuilder builder) {
+        this(type, level, projType, builder);
+        _delay = attackDelay;
+    }
+
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        super.registerGoals();
+    }
+
+    public void tick() {
+        super.tick();
+        var att = this.getAttribute(Attributes.FOLLOW_RANGE);
+        if(getTarget() != null){
+            if (att != null && !att.hasModifier(modifier)) {
+                att.addTransientModifier(modifier);
+            }
+            LivingEntity target = getTarget();
+            lookAt(target, 10, 70);
+            this.moveControl.strafe(0.01f, 0.01f);
+            if(phase == 180 || phase == 130 || phase == 80){
+                delay = _delay;
+                this.swing(InteractionHand.MAIN_HAND, true);
+            }
+            if(--delay == 0){
+                BaseProj proj = projType.get().create(level());
+                proj.setOwner(this);
+                proj.setPos(this.getEyePosition());
+                proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+                proj.shoot((float)(target.getX() - this.getX()), (float)(target.getY() - target.getBbHeight() * 0.3f - this.getY()), (float)(target.getZ() - this.getZ()), 0.3f, 0.8f);
+                level().addFreshEntity(proj);
+            }
+
+            if(--phase<= 0){
+                phase = _phase;
+                Vec3 pos;
+                for(int i = 0; i < 4; i++) {
+                    pos = LandRandomPos.getPosTowards(this, 20, 5, target.position());
+                    if(pos!= null){
+                        this.moveTo(pos);
+                        break;
+                    }
+                }
+            }
+        }else{
+            if(att.hasModifier(modifier)){
+                att.removeModifier(modifier);
+            }
+            phase = _phase;
+        }
+
+    }
+
+    public int getCurrentSwingDuration() {
+        return 20;
+    }
+
+    RawAnimation attack = RawAnimation.begin().thenPlay("attack.range");
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "Walk/Idle/Attack", 5, state ->{
+            if(this.swingTime > 0){
+                return state.setAndContinue(attack);
+            }
+            return state.setAndContinue(DefaultAnimations.IDLE);
+        }
+        ));
+    }
+
+}

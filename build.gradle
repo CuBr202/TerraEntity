@@ -148,8 +148,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:jade-324717:6271651")
     runtimeOnly fg.deobf("curse.maven:jade-324717:6271651")
 
-    implementation fg.deobf("libs:cafelib:1.0.0-all")
-    jarJar("com.github.edg_thexu:cafelib:1.0.0") {
+    jarJar(implementation fg.deobf("libs:cafelib:1.0.0-all")) {
         jarJar.ranged(it, "[1.0.0,)")
     }
 

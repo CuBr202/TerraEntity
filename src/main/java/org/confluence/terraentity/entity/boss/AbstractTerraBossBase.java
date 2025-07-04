@@ -15,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,10 +32,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.ModLoader;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.api.event.BossDeathEvent;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.entity.ai.*;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
@@ -68,7 +67,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     public float ironGlomResistance = 0.4f;
     public float explosionResistance = 0.5f;
-    protected boolean difficult = true;
+    protected boolean difficult = true; // 困难模式
     protected boolean dirty = true;
     protected ServerBossEvent bossEvent;
     protected float baseHealth;
@@ -104,12 +103,12 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     @Override
     public void onAddedToWorld(){
-        super.onAddedToWorld();
+
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.baseHealth);
         this.getAttribute(Attributes.ARMOR).setBaseValue(baseArmor);
 
         if(!level().isClientSide){
-            TEUtils.multiplePlayerEnhance(this,dirty);
+            TEUtils.multiplePlayerEnhance(this);
             if(dirty)
                 firstSpawn();
             if(bossEvent!= null){
@@ -118,10 +117,12 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             }
         }
         super.onAddedToWorld();
-        this.addSkills();
+
         if(skills.count() > 0)
             skills.forceStartIndex(0);
     }
+
+
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
@@ -207,6 +208,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     LivingEntity target;
     protected static final int DISCARD_TICK = 100;
     protected int discardTick = 0;
+    boolean isCreativePlayer; // 如果附近有创造模式玩家，则不清除
 
     @Override
     public void tick() {
@@ -225,20 +227,25 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                     return;
                 }
 
-                discardTick++;
-                if(!level().isClientSide && discardTick > DISCARD_TICK && ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get() && shouldEscape()){
-                    this.bossEvent.getPlayers().forEach(p->p.sendSystemMessage(this.getDisplayName().copy().append(Component.translatable("message.terraentity.boss_discard"))));
-                    this.discard();
+                if(!isCreativePlayer) {
+                    discardTick++;
+                    if (!level().isClientSide && discardTick > DISCARD_TICK && ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET.get() && shouldEscape()) {
+                        this.bossEvent.getPlayers().forEach(p -> p.sendSystemMessage(this.getDisplayName().copy().append(Component.translatable("message.terraentity.boss_discard"))));
+                        this.discard();
+                    }
+                    return;
+                }else{
+                    // 有创造玩家，强行写入目标
+//                    setTarget(this.level().getNearestPlayer(this, this.getAttributeValue(Attributes.FOLLOW_RANGE)));
+
                 }
-                return;
             }
             discardTick = 0;
 
             doCollisionAttack(
-                    e->canAttack(e) && e!= this && e.canBeSeenAsEnemy(),
+                    e-> e instanceof LivingEntity  living && canAttack(living) && e!= this && living.canBeSeenAsEnemy(),
                     this::doHurtTarget
             );
-
             if(shouldOverPlayer() && target!= null && position().y < target.getY()){
                 addDeltaMovement(new Vec3(0,0.02f,0));
             }
@@ -280,9 +287,13 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     protected List<Player> getNearbyPlayers(double range) {
         List<Player> players = new ArrayList<>();
+        isCreativePlayer = false;
         for (Player player : level().players()) {
             if (player.canBeSeenAsEnemy() && this.distanceToSqr(player) < range * range) {
                 players.add(player);
+            }
+            if(!isCreativePlayer && !player.canBeSeenAsEnemy()){
+                isCreativePlayer = true;
             }
         }
         return players;
@@ -290,7 +301,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     @Override
     public boolean doHurtTarget(Entity entity) {
-        return entity.hurt(TETags.DamageTypes.of(level(), DamageTypes.GENERIC, this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+        return super.doHurtTarget(entity);
     }
 
     // 可以给巨鹿用
@@ -480,4 +491,21 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     protected BossEvent.BossBarColor getBossBarColor(){
         return BossEvent.BossBarColor.RED;
     };
+
+    @Override
+    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
+        // confluence mixin here
+        return super.addEffect(effectInstance, entity);
+    }
+
+//    @Override
+//    public void lavaHurt() {
+//        if (!this.fireImmune()) {
+//            float v = LibUtils.switchByDifficulty(level(), blockPosition(), 0.25F, 0.15F, 0.05F);
+//            this.igniteForSeconds(15.0F * v);
+//            if (this.hurt(this.damageSources().lava(), 4.0F * v)) {
+//                this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
+//            }
+//        }
+//    }
 }

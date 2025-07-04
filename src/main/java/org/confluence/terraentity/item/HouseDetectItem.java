@@ -81,7 +81,12 @@ public class HouseDetectItem extends Item {
         final List<BlockPos> list = info.list();
         lastInfo = info;
 //        DebugBlocksHelper.Singleton().addDebugBlock(List.of(min, max));
-        DebugBlocksHelper.Singleton().addDebugBlock(list);
+
+        for(BlockPos blockPos : list){
+            DebugBlocksHelper.Singleton().addDebugBlock(blockPos, new DebugBlocksHelper.DebugInfo(255,255,30, player.getRandom().nextIntBetweenInclusive(20,100)));
+        }
+        DebugBlocksHelper.Singleton().addDebugBlock(pos, new DebugBlocksHelper.DebugInfo(255,0,120, 120));
+
 
         ServerBoundHousePacket.sendAction(ServerBoundHousePacket.Action.CHECK, lastInfo.getHouse(player.getStringUUID()));
 
@@ -119,8 +124,12 @@ public class HouseDetectItem extends Item {
                 ServerBoundHousePacket.sendAction(ServerBoundHousePacket.Action.DELETE, lastInfo.getHouse(entity.getStringUUID()));
             }else{
                 player.sendSystemMessage(Component.translatable("tooltip.terra_entity.house_detect.no_detect"));
-
             }
+            return super.use(level, player, usedHand);
+        }
+        // 未侦测到，则删除当前位置的房屋
+        if (lastInfo != null) {
+            ServerBoundHousePacket.sendAction(ServerBoundHousePacket.Action.DELETE, lastInfo.getHouse(player.getStringUUID()));
         }
         return super.use(level, player, usedHand);
     }

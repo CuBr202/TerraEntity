@@ -16,7 +16,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
 import org.confluence.terraentity.entity.ai.goal.JumpAttack;
 import org.confluence.terraentity.entity.ai.goal.JumpOverBlockGoal;
-import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import software.bernie.geckolib.constant.DefaultAnimations;
@@ -24,18 +23,19 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static software.bernie.geckolib.constant.DefaultAnimations.genericWalkRunIdleController;
 
 public class LandMonsterPrefab extends AbstractPrefab {
 
-    public static Supplier<AbstractMonster.Builder> FACE_MONSTER_BUILDER =
-            ()->new LandMonsterPrefab(20,2,5,30,0.5f,0.1f).getPrefab()
+    public static Supplier<AttributeBuilder> FACE_MONSTER_BUILDER =
+            ()->new LandMonsterPrefab(36,2,13,64,0.7f,0.1f).getPrefab()
                     .setStepHeight(3.2f)
+                    .setSpawnWithoutLight()
                     .setAmbientSound(TESounds.FACE_HOOT)
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
-                    .setHurtSound(TESounds.ROUTINE_HURT)
                     .setJumpStrength(0.6f)
                     .addTarget((t,e)-> t.addGoal(1, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy)))
                     .addGoal((g,e)-> {
@@ -48,7 +48,35 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     })
             ;
 
-    public static Supplier<AbstractMonster.Builder> BLOOD_TUMORS =
+    public static Supplier<AttributeBuilder> MUSHROOM_ZOMBIE_BUILDER =
+            ()->new LandMonsterPrefab(39,2,10,60,0.5f,0.1f).getPrefab()
+                    .setMovementSpeed(0.15f)
+                    .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
+                    .addTarget((t,e)-> {
+                        t.addGoal(1,new AccelerateOnSeeingGoal(e,0.25f));
+                        t.addGoal(2, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
+
+                    })
+                    .setController((c,e)->{
+                        c.add(genericWalkRunIdleController(e));
+                        c.add(new AnimationController<>(e, "Attack", 0, state -> {
+                            if (e.swinging) {
+                                return state.setAndContinue(DefaultAnimations.ATTACK_STRIKE);
+                            }
+
+                            state.getController().forceAnimationReset();
+
+                            return PlayState.STOP;
+                        }));
+                    })
+                    .addGoal((g,e)-> {
+                        g.addGoal(2, new JumpOverBlockGoal(e));
+                        g.addGoal(3, new MeleeAttackGoal(e,  0.8f, true));
+                        g.addGoal(7, new WaterAvoidingRandomStrollGoal(e, 1.0));
+                        g.addGoal(8, new LookAtPlayerGoal(e, Player.class, 6));
+                    });
+
+    public static Supplier<AttributeBuilder> BLOOD_TUMORS =
             ()->new LandMonsterPrefab(1,0,0,0,0,0,0).getPrefab()
                     .setSafeFall(80)
                     .setNoAttachAttack()
@@ -70,7 +98,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     })
             ;
 
-    public static Supplier<AbstractMonster.Builder> BLOOD_ZOMBIE_BUILDER =
+    public static Supplier<AttributeBuilder> BLOOD_ZOMBIE_BUILDER =
             ()->new LandMonsterPrefab(39,2,10,60,0.5f,0.1f).getPrefab()
                     .setMovementSpeed(0.15f)
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
@@ -107,7 +135,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
 
     public LandMonsterPrefab(int health,int armor,int attack,float moveSpeed,int followRange,float knockBack,float knockbackResistance) {
         super(health,armor,attack,followRange,knockBack,knockbackResistance);
-        SIMPLE_MONSTER
+        modifier = b->b
                 .setNavigation((e)->new GroundPathNavigation(e,e.level()))
                 .setSafeFall(8)
                 .setNoAttachAttack()
@@ -121,9 +149,10 @@ public class LandMonsterPrefab extends AbstractPrefab {
         ;
     }
 
+    private final Function<AttributeBuilder, AttributeBuilder> modifier;
 
-    public AbstractMonster.Builder getPrefab() {
-        return SIMPLE_MONSTER;
+    public AttributeBuilder getPrefab() {
+        return modifier.apply(super.getPrefab());
     }
 
 }

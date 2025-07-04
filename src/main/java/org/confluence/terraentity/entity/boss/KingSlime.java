@@ -8,6 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -56,7 +57,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     // 大师 专家 普通
     private static final int[] TOTAL_SPLITS = {30, 50, 75};
     private static final float MAX_HEALTHS = 728f;
-    private static final float DAMAGE = 20f;
+    private static final float DAMAGE = 16.5f;
     private static final float[] JUMP_SPEED_HORIZONTAL = {1.1f, 1.35f, 1.55f};
     private static final float[] JUMP_SPEED_VERTICAL = {1.5f, 1.75f, 2f};
     private static final float[] JUMP_SPEED_VERTICAL_THIRD = {2f, 2.25f, 2.5f};
@@ -223,11 +224,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         if(level().isClientSide){
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
         }
-        if(!level().isClientSide){
-            try {
-                TEUtils.multiplePlayerEnhance(this, true);
-            }catch (Exception e){}
-        }
+
         this.xpReward = 500;
     }
 
@@ -412,6 +409,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     public void onAddedToWorld(){
         super.onAddedToWorld();
         if(!level().isClientSide){
+            TEUtils.multiplePlayerEnhance(this);
             if(bossEvent!= null){
                 bossEvent.getPlayers().forEach(p->syncBossHealthBar(p));
             }
@@ -471,6 +469,22 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         return super.canAttack(target) && !(target instanceof Slime);
     }
 
+    @Override
+    public boolean addEffect(MobEffectInstance effectInstance, @org.jetbrains.annotations.Nullable Entity entity) {
+        // confluence mixin here
+        return super.addEffect(effectInstance, entity);
+    }
+
+//    @Override
+//    public void lavaHurt() {
+//        if (!this.fireImmune()) {
+//            float v = LibUtils.switchByDifficulty(level(), blockPosition(), 0.25F, 0.15F, 0.05F);
+//            this.igniteForSeconds(15.0F * v);
+//            if (this.hurt(this.damageSources().lava(), 4.0F * v)) {
+//                this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
+//            }
+//        }
+//    }
 
     public static class HurtByTargetGoal extends TargetGoal {
         private static final TargetingConditions HURT_BY_TARGETING = TargetingConditions.forCombat().ignoreLineOfSight().ignoreInvisibilityTesting();

@@ -23,8 +23,10 @@
   ],
   "client": [
     "accessor.GameRendererAccessor",
+    "accessor.LevelRendererAccessor",
     "client.BossHealthOverlayMixin",
     "client.ClientLevelMixin",
+    "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.ItemRendererMixin",
     "client.LocalPlayerMixin",

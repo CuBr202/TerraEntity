@@ -26,50 +26,66 @@ public class TEChineseProvider extends LanguageProvider {
         add("title.terra_entity.npc_trade.task.dynamic_reward", "动态奖励任务");
         add("title.terra_entity.npc_trade.task.progress", "进度任务");
 
-        add("entity.terra_entity.ice_slime", "冰冻史莱姆");
-        add("entity.terra_entity.blue_slime", "蓝色史莱姆");
-        add("entity.terra_entity.red_slime", "红色史莱姆");
-        add("entity.terra_entity.purple_slime", "紫色史莱姆");
-        add("entity.terra_entity.jungle_slime", "丛林史莱姆");
-        add("entity.terra_entity.pink_slime", "粉色史莱姆");
-        add("entity.terra_entity.yellow_slime", "黄色史莱姆");
-        add("entity.terra_entity.honey_slime", "蜂蜜史莱姆");
-        add("entity.terra_entity.crimson_slime", "猩红史莱姆");
-        add("entity.terra_entity.corrupted_slime", "腐化史莱姆");
-        add("entity.terra_entity.desert_slime", "沙漠史莱姆");
-        add("entity.terra_entity.tropic_slime", "热带史莱姆");
-        add("entity.terra_entity.green_slime", "绿色史莱姆");
-        add("entity.terra_entity.black_slime", "黑色史莱姆");
+        add(TEMonsterEntities.ICE_SLIME.get(), "冰冻史莱姆");
+        add(TEMonsterEntities.BLUE_SLIME.get(), "蓝色史莱姆");
+        add(TEMonsterEntities.RED_SLIME.get(), "红色史莱姆");
+        add(TEMonsterEntities.PURPLE_SLIME.get(), "紫色史莱姆");
+        add(TEMonsterEntities.JUNGLE_SLIME.get(), "丛林史莱姆");
+        add(TEMonsterEntities.PINK_SLIME.get(), "粉色史莱姆");
+        add(TEMonsterEntities.YELLOW_SLIME.get(), "黄色史莱姆");
+        add(TEMonsterEntities.HONEY_SLIME.get(), "蜂蜜史莱姆");
+        add(TEMonsterEntities.CRIMSLIME.get(), "猩红史莱姆");
+        add(TEMonsterEntities.CORRUPT_SLIME.get(), "腐化史莱姆");
+        add(TEMonsterEntities.DESERT_SLIME.get(), "沙漠史莱姆");
+        add(TEMonsterEntities.TROPIC_SLIME.get(), "热带史莱姆");
+        add(TEMonsterEntities.GREEN_SLIME.get(), "绿色史莱姆");
+        add(TEMonsterEntities.BLACK_SLIME.get(), "黑色史莱姆");
         add("entity.terra_entity.mother_slime", "史莱姆之母");
         add("entity.terra_entity.baby_slime", "史莱姆宝宝");
-        add("entity.terra_entity.lava_slime", "熔岩史莱姆");
-        add("entity.terra_entity.green_dumpling_slime", "青团史莱姆");
-        add("entity.terra_entity.swamp_slime", "沼泽史莱姆");
-        add("entity.terra_entity.dungeon_slime", "地牢史莱姆");
-        add("entity.terra_entity.demon_eye", "恶魔眼");
-        add("entity.terra_entity.flying_fish", "飞鱼");
-        add("entity.terra_entity.giant_shelly", "巨型卷壳怪");
-        add("entity.terra_entity.nymph", "宁芙");
-        add("entity.terra_entity.drippler", "滴滴怪");
-        add("entity.terra_entity.blood_zombie", "血腥僵尸");
-        add("entity.terra_entity.wandering_eye_fish", "游荡眼球怪鱼");
-        add("entity.terra_entity.blood_crawler", "血爬虫");
-        add("entity.terra_entity.bloody_spore", "血腥芽孢");
-        add("entity.terra_entity.face_monster", "脸怪");
-        add("entity.terra_entity.crimson_kemera", "猩红喀迈拉");
-        add("entity.terra_entity.eater_of_souls", "噬魂怪");
-        add("entity.terra_entity.decayeder", "腐骴");
-        add("entity.terra_entity.devourer", "吞噬怪");
-        add("entity.terra_entity.giant_worm", "巨型蠕虫");
-        add("entity.terra_entity.tomb_crawler", "墓穴爬虫");
-        add("entity.terra_entity.cave_bat", "洞穴蝙蝠");
-        add("entity.terra_entity.jungle_bat", "丛林蝙蝠");
-        add("entity.terra_entity.snatcher", "抓人草");
-        add("entity.terra_entity.man_eater", "食人怪");
-        add("entity.terra_entity.hornet", "黄蜂");
-        add("entity.terra_entity.hell_bat", "地狱蝙蝠");
-        add("entity.terra_entity.ice_bat", "冰雪蝙蝠");
-        add("entity.terra_entity.spore_bat", "孢子蝙蝠");
+        add(TEMonsterEntities.LAVA_SLIME.get(), "熔岩史莱姆");
+        add(TEMonsterEntities.GREEN_DUMPLING_SLIME.get(), "青团史莱姆");
+        add(TEMonsterEntities.SWAMP_SLIME.get(), "沼泽史莱姆");
+        add(TEMonsterEntities.DUNGEON_SLIME.get(), "地牢史莱姆");
+        add(TEMonsterEntities.GOLDEN_SLIME.get(), "金史莱姆");
+        add(TEMonsterEntities.DEMON_EYE.get(), "恶魔眼");
+        add(TEMonsterEntities.FLYING_FISH.get(), "飞鱼");
+        add(TEMonsterEntities.GIANT_SHELLY.get(), "巨型卷壳怪");
+        add(TEMonsterEntities.NYMPH.get(), "宁芙");
+        add(TEMonsterEntities.DRIPPLER.get(), "滴滴怪");
+        add(TEMonsterEntities.BLOOD_ZOMBIE.get(), "血腥僵尸");
+        add(TEMonsterEntities.WANDERING_EYE_FISH.get(), "游荡眼球怪鱼");
+        add(TEMonsterEntities.BLOOD_CRAWLER.get(), "血爬虫");
+        add(TEMonsterEntities.BLOODY_SPORE.get(), "血腥芽孢");
+        add(TEMonsterEntities.FACE_MONSTER.get(), "脸怪");
+        add(TEMonsterEntities.CRIMSON_KEMERA.get(), "猩红喀迈拉");
+        add(TEMonsterEntities.EATER_OF_SOULS.get(), "噬魂怪");
+        add(TEMonsterEntities.DECAYEDER.get(), "腐骴");
+        add(TEMonsterEntities.DEVOURER.get(), "吞噬怪");
+        add(TEMonsterEntities.GIANT_WORM.get(), "巨型蠕虫");
+        add(TEMonsterEntities.TOMB_CRAWLER.get(), "墓穴爬虫");
+        add(TEMonsterEntities.CAVE_BAT.get(), "洞穴蝙蝠");
+        add(TEMonsterEntities.JUNGLE_BAT.get(), "丛林蝙蝠");
+        add(TEMonsterEntities.SNATCHER.get(), "抓人草");
+        add(TEMonsterEntities.MAN_EATER.get(), "食人怪");
+        add(TEMonsterEntities.HORNET.get(), "黄蜂");
+        add(TEMonsterEntities.HELL_BAT.get(), "地狱蝙蝠");
+        add(TEMonsterEntities.ICE_BAT.get(), "冰雪蝙蝠");
+        add(TEMonsterEntities.SPORE_BAT.get(), "孢子蝙蝠");
+        add(TEMonsterEntities.MUSHROOM_SKELETON.get(), "孢子骷髅");
+        add(TEMonsterEntities.MUSHROOM_ZOMBIE.get(), "孢子僵尸");
+        add(TEMonsterEntities.HARPY.get(), "鸟妖");
+        add(TEMonsterEntities.ANGER_BONES.get(), "愤怒骷髅");
+        add(TEMonsterEntities.SHORT_BONES.get(), "矮骷髅");
+        add(TEMonsterEntities.BIG_BONES.get(), "大骷髅");
+        add(TEMonsterEntities.BIG_ANGER_BONES.get(), "大愤怒骷髅");
+        add(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), "大块头愤怒骷髅");
+        add(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), "大头盔愤怒骷髅");
+        add(TEMonsterEntities.CURSED_SKULL.get(), "诅咒骷髅头");
+        add(TEMonsterEntities.DARK_CASTER.get(), "暗黑法师");
+        add(TEMonsterEntities.UNDEAD_VIKING.get(), "亡灵维京海盗");
+//        add(TEMonsterEntities.THE_HUNGRY.get(), "饿鬼");
+        add(TEMonsterEntities.ANTLION_SWARMER.get(), "蚁狮蜂");
+        add(TEMonsterEntities.GIANT_ANTLION_SWARMER.get(), "巨型蚁狮蜂");
 
 
         add(TEBossEntities.KING_SLIME.get(), "史莱姆王");
@@ -83,6 +99,10 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.LITTLE_HORNET.get(), "小黄蜂");
         add(TEBossEntities.SKELETRON.get(), "骷髅王");
         add(TEBossEntities.DUNGEON_GUARDIAN.get(), "地牢守卫");
+//        add(TEBossEntities.WALL_OF_FLESH.get(), "血肉墙");
+//        add(TEBossEntities.WALL_OF_FLESH_EYE.get(), "血肉墙眼");
+//        add(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), "血肉墙口");
+
 
 
         add(TESummonEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
@@ -108,17 +128,22 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.GREEN_SLIME_SPAWN_EGG.get(), "绿色史莱姆刷怪蛋");
         add(TESpawnEggItems.BLACK_SLIME_SPAWN_EGG.get(), "黑色史莱姆刷怪蛋");
         add(TESpawnEggItems.DUNGEON_SLIME_SPAWN_EGG.get(), "地牢史莱姆刷怪蛋");
-        add(TESpawnEggItems.CRIMSON_SLIME_SPAWN_EGG.get(), "猩红史莱姆刷怪蛋");
+        add(TESpawnEggItems.CRIMSLIME_SPAWN_EGG.get(), "猩红史莱姆刷怪蛋");
+        add(TESpawnEggItems.CORRUPT_SLIME_SPAWN_EGG.get(), "腐化史莱姆刷怪蛋");
         add(TESpawnEggItems.TROPIC_SLIME_SPAWN_EGG.get(), "热带史莱姆刷怪蛋");
         add(TESpawnEggItems.LUMINOUS_SLIME_SPAWN_EGG.get(), "夜明史莱姆刷怪蛋");
         add(TESpawnEggItems.LAVA_SLIME_SPAWN_EGG.get(), "熔岩史莱姆刷怪蛋");
+        add(TESpawnEggItems.GOLDEN_SLIME_SPAWN_EGG.get(), "金史莱姆刷怪蛋");
 
         add(TESpawnEggItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
         add(TESpawnEggItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
+        add(TESpawnEggItems.HARPY_SPAWN_EGG.get(), "鸟妖刷怪蛋");
         add(TESpawnEggItems.GIANT_SHELLY_SPAWN_EGG.get(), "巨型卷壳怪刷怪蛋");
         add(TESpawnEggItems.GIANT_WORM_SPAWN_EGG.get(), "巨型蠕虫刷怪蛋");
         add(TESpawnEggItems.NYMPH_SPAWN_EGG.get(), "宁芙刷怪蛋");
         add(TESpawnEggItems.TOMB_CRAWLER_SPAWN_EGG.get(), "墓穴爬虫刷怪蛋");
+        add(TESpawnEggItems.ANTLION_SWARMER_SPAWN_EGG.get(), "蚁狮蜂刷怪蛋");
+        add(TESpawnEggItems.GIANT_ANTLION_SWARMER_SPAWN_EGG.get(), "巨型蚁狮蜂刷怪蛋");
         add(TESpawnEggItems.CAVE_BAT_SPAWN_EGG.get(), "洞穴蝙蝠刷怪蛋");
         add(TESpawnEggItems.ICE_BAT_SPAWN_EGG.get(), "冰雪蝙蝠刷怪蛋");
         add(TESpawnEggItems.JUNGLE_BAT_SPAWN_EGG.get(), "丛林蝙蝠刷怪蛋");
@@ -127,6 +152,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.HORNET_SPAWN_EGG.get(), "黄蜂刷怪蛋");
         add(TESpawnEggItems.HELL_BAT_SPAWN_EGG.get(), "地狱蝙蝠刷怪蛋");
         add(TESpawnEggItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");
+        add(TESpawnEggItems.MUSHROOM_SKELETON_SPAWN_EGG.get(), "孢子骷髅刷怪蛋");
+        add(TESpawnEggItems.MUSHROOM_ZOMBIE_SPAWN_EGG.get(), "孢子僵尸刷怪蛋");
         add(TESpawnEggItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
         add(TESpawnEggItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
         add(TESpawnEggItems.WANDERING_EYE_FISH_SPAWN_EGG.get(), "游荡眼球怪鱼刷怪蛋");
@@ -140,6 +167,29 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.DECAYEDER_SPAWN_EGG.get(), "腐骴刷怪蛋");
         add(TESpawnEggItems.DEVOURER_SPAWN_EGG.get(), "吞噬怪刷怪蛋");
 
+        // 地牢骷髅
+        add(TESpawnEggItems.ANGER_BONES_SPAWN_EGG.get(), "愤怒骷髅刷怪蛋");
+        add(TESpawnEggItems.SHORT_BONES_SPAWN_EGG.get(), "矮骷髅刷怪蛋");
+        add(TESpawnEggItems.BIG_BONES_SPAWN_EGG.get(), "大骷髅刷怪蛋");
+        add(TESpawnEggItems.BIG_ANGER_BONES_SPAWN_EGG.get(), "大愤怒骷髅刷怪蛋");
+        add(TESpawnEggItems.BIG_MUSCLE_ANGER_BONES_SPAWN_EGG.get(), "大块头愤怒骷髅刷怪蛋");
+        add(TESpawnEggItems.BIG_HELMET_ANGER_BONES_SPAWN_EGG.get(), "大头盔愤怒骷髅刷怪蛋");
+        add(TESpawnEggItems.CURSED_SKULL_SPAWN_EGG.get(), "诅咒骷髅头刷怪蛋");
+        add(TESpawnEggItems.DARK_CASTER_SPAWN_EGG.get(), "暗黑法师刷怪蛋");
+        add(TESpawnEggItems.UNDEAD_VIKING_SPAWN_EGG.get(), "亡灵维京海盗刷怪蛋");
+
+
+        add(TEMonsterEntities.GOBLIN_SORCERER.get(), "哥布林术士");
+        add(TEMonsterEntities.GOBLIN_ARCHER.get(), "哥布林弓箭手");
+        add(TEMonsterEntities.GOBLIN_PEON.get(), "哥布林苦力");
+        add(TEMonsterEntities.GOBLIN_WARRIOR.get(), "哥布林战士");
+        add(TEMonsterEntities.GOBLIN_THIEF.get(), "哥布林盗贼");
+        add(TEMonsterEntities.GOBLIN_SCOUT.get(), "哥布林侦察兵");
+        add(TEMonsterEntities.ANGER_GOBLIN.get(), "愤怒哥布林");
+
+
+
+        // boss
         add(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
         add(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
         add(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG.get(), "世界吞噬怪刷怪蛋");
@@ -147,6 +197,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
         add(TESpawnEggItems.SKELETRON_SPAWN_EGG.get(), "骷髅王刷怪蛋");
         add(TESpawnEggItems.DUNGEON_GUARDIAN_SPAWN_EGG.get(), "地牢守卫刷怪蛋");
+//        add(TESpawnEggItems.WALL_OF_FLESH_SPAWN_EGG.get(), "血肉墙刷怪蛋");
 
 
 
@@ -160,11 +211,18 @@ public class TEChineseProvider extends LanguageProvider {
         add(TENpcEntities.DRYAD.get(), "树妖");
         add(TENpcEntities.DYE_TRADER.get(), "染料商");
         add(TENpcEntities.ANGLER.get(), "渔夫");
+//        add(TENpcEntities.FEMALE_ANGLER.get(), "渔女");
         add(TENpcEntities.OLD_MAN.get(), "老人");
 
+        add(TESpawnEggItems.GOBLIN_SORCERER_SPAWN_EGG.get(), "哥布林术士刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_ARCHER_SPAWN_EGG.get(), "哥布林弓箭手刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_PEON_SPAWN_EGG.get(), "哥布林苦力刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_WARRIOR_SPAWN_EGG.get(), "哥布林战士刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_THIEF_SPAWN_EGG.get(), "哥布林盗贼刷怪蛋");
+        add(TESpawnEggItems.GOBLIN_SCOUT_SPAWN_EGG.get(), "哥布林侦察兵刷怪蛋");
+        add(TESpawnEggItems.ANGER_GOBLIN_SPAWN_EGG.get(), "愤怒哥布林刷怪蛋");
 
-
-        add(TESpawnEggItems.GUILD_SPAWN_EGG.get(), "向导刷怪蛋");
+        add(TESpawnEggItems.GUIDE_SPAWN_EGG.get(), "向导刷怪蛋");
         add(TESpawnEggItems.DEMOLITIONIST_SPAWN_EGG.get(), "爆破专家刷怪蛋");
         add(TESpawnEggItems.GOBLIN_TINKERER_SPAWN_EGG.get(), "哥布林工匠刷怪蛋");
         add(TESpawnEggItems.ARMS_DEALER_SPAWN_EGG.get(), "军火商刷怪蛋");
@@ -178,6 +236,7 @@ public class TEChineseProvider extends LanguageProvider {
 
 
         // 召唤杖
+//        add(TESummonItems.FINCH_STAFF.get(), "雀杖");
         add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
         add(TESummonItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
         add(TESummonItems.HORNET_STAFF.get(), "黄蜂法杖");
@@ -188,7 +247,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEWhipItems.RUBY_WHIP.get(), "红玉鞭");
         add(TEWhipItems.AMBER_WHIP.get(), "琥珀鞭");
         add(TEWhipItems.TOPAZ_WHIP.get(), "黄玉鞭");
-        add(TEWhipItems.EMERALD_WHIP.get(), "翡翠鞭");
+        add(TEWhipItems.JADE_WHIP.get(), "翡翠鞭");
         add(TEWhipItems.DIAMOND_WHIP.get(), "钻石鞭");
         add(TEWhipItems.SAPPHIRE_WHIP.get(), "蓝玉鞭");
         add(TEWhipItems.AMETHYST_WHIP.get(), "紫晶鞭");

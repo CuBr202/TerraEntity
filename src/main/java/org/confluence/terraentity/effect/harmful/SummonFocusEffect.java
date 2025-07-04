@@ -5,7 +5,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 
 /**
- * 召唤物聚焦
+ * 召唤物标记伤害
  */
 public class SummonFocusEffect extends MobEffect {
     public SummonFocusEffect() {

@@ -6,10 +6,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.TERegistries;
-import org.confluence.terraentity.registries.npc_trade_lock.variant.BiomeLock;
-import org.confluence.terraentity.registries.npc_trade_lock.variant.KillEntityLock;
-import org.confluence.terraentity.registries.npc_trade_lock.variant.MoodLock;
-import org.confluence.terraentity.registries.npc_trade_lock.variant.TimeLock;
+import org.confluence.terraentity.registries.npc_trade_lock.variant.*;
 
 import java.util.function.Supplier;
 
@@ -19,6 +16,10 @@ import java.util.function.Supplier;
 public class TradeLockProviderTypes {
     public static final DeferredRegister<TradeLockProvider> TYPES = DeferredRegister.create(TERegistries.TradeLockProviders.KEY, TerraEntity.MODID);
     public static final Supplier<IForgeRegistry<TradeLockProvider>> REGISTRY = TYPES.makeRegistry(RegistryBuilder::new);
+
+    public static final Supplier<TradeLockProvider> AND_LOCK = register("and_lock", ()->AndLock.CODEC);
+    public static final Supplier<TradeLockProvider> OR_LOCK = register("or_lock", ()->OrLock.CODEC);
+    public static final Supplier<TradeLockProvider> NOT_LOCK = register("not_lock", ()->NotLock.CODEC);
 
     public static final Supplier<TradeLockProvider> BIOME_LOCK = register("biome_lock", ()->BiomeLock.CODEC);
     public static final Supplier<TradeLockProvider> TIME_LOCK = register("time_lock", ()->TimeLock.CODEC);

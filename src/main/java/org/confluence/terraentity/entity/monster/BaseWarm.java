@@ -19,6 +19,7 @@ import net.minecraftforge.entity.PartEntity;
 import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
 import org.confluence.terraentity.entity.ai.goal.ComeAndBackDashAttackGoal;
 import org.confluence.terraentity.entity.ai.goal.RandomWanderGoal;
+import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -30,7 +31,7 @@ public class BaseWarm extends AbstractMonster {
     private float segInternal = 1.6f;
     public BaseWarmPart[] bodySegments;
 
-    public BaseWarm(EntityType<? extends Monster> type, Level level, AbstractMonster.Builder builder) {
+    public BaseWarm(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level, builder);
         this.collisionProperties = new CollisionProperties(3,3,0);
         bodySegments = new BaseWarmPart[currentSegmentCount];
@@ -111,7 +112,7 @@ public class BaseWarm extends AbstractMonster {
             cur.setDeltaMovement(destX - cur.getX(), destY - cur.getY(), destZ - cur.getZ());
             cur.moveTo(destX, destY, destZ, yaw, pitch);
 
-            cur.doCollisionAttack(e->canAttack(e),
+            cur.doCollisionAttack(e->e instanceof LivingEntity living && canAttack(living),
                     e->doHurtTarget(e)
                     );
 

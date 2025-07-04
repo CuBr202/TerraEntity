@@ -10,6 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,6 +33,7 @@ import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -203,12 +205,19 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
             hands.add(hand2);
             _hands.add(hand1);
             _hands.add(hand2);
+            this.playSound(TESounds.ROAR.get());
         }
     }
 
     public void attachHand(SkeletronHand hand) {
         hands.add(hand);
         _hands.add(hand);
+    }
+
+    @Override
+    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
+        // confluence mixin here
+        return super.addEffect(effectInstance, entity);
     }
 
     public class FloatGoal extends Goal {
@@ -224,6 +233,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
         }
 
         public Vec3 getTargetPosition() {
+            if(getTarget() == null){
+                return position();
+            }
             return getTarget().position().add(0, 5, 0);
         }
 
@@ -243,7 +255,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
             }
             setDeltaMovement(resultVelocity);
             if(crazy){
-                addDeltaMovement(getTarget().position().subtract(position()).scale(0.01f));
+                if(getTarget() != null) {
+                    addDeltaMovement(getTarget().position().subtract(position()).scale(0.01f));
+                }
             }
             lookAt(90);
         }
@@ -268,6 +282,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
 
         @Override
         public void tick() {
+            if(getTarget() == null){
+                return;
+            }
             Vec3 vec = getTarget().position().subtract(position());
             if (enraged) { // 白天最快
                 setDeltaMovement(vec.normalize().scale(1));
@@ -308,6 +325,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
 
         @Override
         public void tick() {
+            if(getTarget() == null){
+                return;
+            }
             int interval = hands.isEmpty() ? 7 : 13;
             if (ftw) {
                 interval = (int) (interval * 0.8);

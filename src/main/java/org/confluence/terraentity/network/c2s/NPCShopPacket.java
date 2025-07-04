@@ -1,7 +1,6 @@
 package org.confluence.terraentity.network.c2s;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import org.confluence.terraentity.api.event.NPCEvent;

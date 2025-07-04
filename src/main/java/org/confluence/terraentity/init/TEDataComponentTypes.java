@@ -3,13 +3,10 @@ package org.confluence.terraentity.init;
 import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
 import com.github.edg_thexu.cafelib.data.codec.DataComponentProvider;
 import com.github.edg_thexu.cafelib.data.component.SingleBooleanComponent;
-import com.github.edg_thexu.cafelib.data.component.Unbreakable;
 import com.github.edg_thexu.cafelib.registries.CafeLibRegistries;
 import com.mojang.serialization.Codec;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 

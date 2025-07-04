@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.ai.CircleMobSkills;
 import org.confluence.terraentity.entity.ai.IFSMGeoMob;
+import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 
 public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extends AbstractMonster implements IFSMGeoMob<T> {
@@ -20,7 +21,7 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
 
     public static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractFSMMonster.class, EntityDataSerializers.INT);
 
-    public AbstractFSMMonster(EntityType<? extends Monster> type, Level level, Builder builder) {
+    public AbstractFSMMonster(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level, builder);
 
         skills = new CircleMobSkills(this, DATA_SKILL_INDEX);
@@ -52,6 +53,11 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
     }
 
 
+    @Override
+    public void onAddedToWorld(){
+        super.onAddedToWorld();
+        addToLevel();
+    }
 
     @Override
     public CircleMobSkills<T> getSkills() {

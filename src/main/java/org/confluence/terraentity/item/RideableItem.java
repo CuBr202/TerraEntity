@@ -1,5 +1,6 @@
 package org.confluence.terraentity.item;
 
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
@@ -9,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.entity.rideable.AbstractRideableEntity;
+import org.confluence.terraentity.init.TESounds;
 
 import java.util.function.Predicate;
 
@@ -41,9 +43,13 @@ public class RideableItem<T extends AbstractRideableEntity> extends Item {
                         slime.setXRot(player.getXRot());
                         slime.setYRot(player.getYRot());
                         slime.setPos(player.getX(), player.getY(), player.getZ());
+
                         slime.doPlayerRide(player);
+
                         level.addFreshEntity(slime);
                         slime.onInit(player);
+                        level.playSound(null, player.blockPosition(), TESounds.USE_MOUNTS.get(), SoundSource.PLAYERS, 0.4F, 1.0F);
+                        player.swing(InteractionHand.MAIN_HAND, true);
                     }
                 }
             }

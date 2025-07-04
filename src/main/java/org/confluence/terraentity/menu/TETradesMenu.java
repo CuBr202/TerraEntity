@@ -1,6 +1,7 @@
 package org.confluence.terraentity.menu;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +26,7 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
     protected final SimpleContainer container;
     public ITradeHolder NPCTrades;
     public int selectedMerchantIndex = -1;
+
 
     public TETradesMenu(MenuType<?> menuType, int containerId, Inventory playerInventory) {
         this(menuType, containerId, playerInventory, null);
@@ -119,6 +121,13 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
 
     public void playTradeSound() {
 
+    }
+
+    public void removed(Player player) {
+        super.removed(player);
+        if(player instanceof ServerPlayer){
+            player.getInventory().placeItemBackInInventory(slots.get(0).getItem().copy());
+        }
     }
 
     public void clicked(int slotId, int button, ClickType clickType, Player player) {

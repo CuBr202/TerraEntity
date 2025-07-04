@@ -17,7 +17,7 @@ public class KeyframeAnimation implements IKeyframeAnimation<Double> {
     List<AbstractKeyframeBaker> interpolators;
 
     public KeyframeAnimation(List<Keyframe> keyframes) {
-        if (keyframes == null || keyframes.size() < 3) {
+        if (keyframes == null || keyframes.size() < 2) {
             throw new IllegalArgumentException("Keyframes list must not be null and must contain at least 3 keyframes.");
         }
         // Sort keyframes by time

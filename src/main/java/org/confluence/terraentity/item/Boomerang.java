@@ -24,6 +24,7 @@ import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.data.enchantment.TEEnchantmentHelper;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.entity.proj.BoomerangProjectile;
+import org.confluence.terraentity.entity.util.trail.BoomerangTrail;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TESounds;
@@ -42,6 +43,7 @@ public class Boomerang extends Item {
 
     public final BoomerangModifier boomerangModifier;
     private final IGeneration generation = new ForwardGeneration(0,1.0f);
+    BoomerangTrail trail;
 
     public Boomerang(float damage, BoomerangModifier boomerangModifier, CafeItemProperties properties) {
         super(boomerangModifier.buildProperties(properties));
@@ -108,10 +110,7 @@ public class Boomerang extends Item {
 
     private void shoot(LivingEntity owner, ItemStack stack){
 //        owner.level().playSound(owner, owner.blockPosition(), ModSoundEvents.WAVING.get(), SoundSource.AMBIENT, 1.0F, 1.0F);
-        generation.genProjectile(owner, stack, 2f, ()->{
-            BoomerangProjectile projectile = new BoomerangProjectile(owner, boomerangModifier, stack);
-            return projectile;
-        });
+        generation.genProjectile(owner, stack, 2f, ()-> new BoomerangProjectile(owner, boomerangModifier, stack));
     }
 
     @Override
@@ -170,6 +169,7 @@ public class Boomerang extends Item {
         List<Function<CafeItemProperties, CafeItemProperties>> modifierFunctions = new ArrayList<>();
         public Supplier<ParticleOptions> particle;
         public int particleCount = 1;
+        public Supplier<BoomerangTrail> trail;
         CafeItemProperties properties;
         /**
          * 添加击中效果
@@ -286,6 +286,11 @@ public class Boomerang extends Item {
         public BoomerangModifier setParticle(Supplier<ParticleOptions> particle, int particleCount) {
             this.particle = particle;
             this.particleCount = particleCount;
+            return this;
+        }
+
+        public BoomerangModifier setTrail(Supplier<BoomerangTrail> trail) {
+            this.trail = trail;
             return this;
         }
 

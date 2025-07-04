@@ -26,12 +26,16 @@ import net.minecraft.world.phys.Vec3;
 
 import net.minecraftforge.entity.PartEntity;
 import org.confluence.terraentity.config.ClientConfig;
+import org.confluence.terraentity.entity.util.trail.BoomerangTrail;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.item.Boomerang;
 import org.confluence.terraentity.item.Boomerang.BoomerangModifier;
 import org.confluence.terraentity.utils.TEUtils;
+
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.UUID;
 
 public class BoomerangProjectile extends AbstractHurtingProjectile {
@@ -43,12 +47,19 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
     public boolean isBacking;//正在返回
     private int backTime;//返回时间
     private int penetrationCount;
+    public BoomerangTrail trail;
+
+    public Queue<Vec3> trailQueue;
+    public Queue<Vec3> trailQueue2;
 
     public BoomerangProjectile(EntityType<? extends AbstractHurtingProjectile> entityType, Level level) {
         super(entityType, level);
         this.modifier = new BoomerangModifier();
         this.randomRotation = this.random.nextInt(114514);
         //BoomerangItems.DEVELOPER_BOOMERANG.get().boomerangModifier
+        trailQueue = new LinkedList<>();
+        trailQueue2 = new LinkedList<>();
+
     }
 
     public BoomerangProjectile(LivingEntity owner, BoomerangModifier modifier, ItemStack weapon) {
@@ -82,6 +93,9 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
         }else if(var1 == DATA_WEAPON){
             weapon = this.entityData.get(DATA_WEAPON);
             modifier = ((Boomerang) weapon.getItem()).boomerangModifier;
+            if(this.modifier.trail != null) {
+                trail = this.modifier.trail.get();
+            }
         }
     }
     @Override
@@ -159,6 +173,11 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
     @Override
     public void tick(){
         super.tick();
+        if(level().isClientSide){
+            if(trail != null) {
+                trail.generateTrail(this, tickCount);
+            }
+        }
 
         if(this.getOwner()!= null && this.getOwner() instanceof LivingEntity living){
             if(!isBacking){

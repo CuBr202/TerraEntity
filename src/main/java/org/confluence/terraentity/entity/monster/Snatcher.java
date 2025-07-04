@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import software.bernie.geckolib.constant.DefaultAnimations;
@@ -59,7 +60,7 @@ public class Snatcher extends AbstractMonster{
     private static final EntityDataAccessor<Vector3f> DATA_TRIGGER =  SynchedEntityData.defineId(Snatcher.class, EntityDataSerializers.VECTOR3);
 
 
-    public Snatcher(EntityType<? extends Monster> type, Level level, Builder builder) {
+    public Snatcher(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level, builder.setController((state,e)->{
             state.add(DefaultAnimations.genericIdleController(e));
         }));

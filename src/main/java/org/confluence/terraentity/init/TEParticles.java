@@ -13,6 +13,8 @@ public final class TEParticles {
 
     public static final Supplier<SimpleParticleType> ITEM_GEL = PARTICLES.register("item_gel", () -> new SimpleParticleType(false));
     public static final Supplier<SimpleParticleType> LEAVES = register("leaves", true);
+    public static final Supplier<SimpleParticleType> SPIT = register("spit", true);
+    public static final Supplier<SimpleParticleType> SPIT_GLOW = register("spit_glow", true);
 
 
     private static Supplier<SimpleParticleType> register(String id, boolean overrideLimiter) {
