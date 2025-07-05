@@ -154,7 +154,6 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");
         add(TESpawnEggItems.MUSHROOM_SKELETON_SPAWN_EGG.get(), "孢子骷髅刷怪蛋");
         add(TESpawnEggItems.MUSHROOM_ZOMBIE_SPAWN_EGG.get(), "孢子僵尸刷怪蛋");
-        add(TESpawnEggItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");
         add(TESpawnEggItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
         add(TESpawnEggItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
         add(TESpawnEggItems.WANDERING_EYE_FISH_SPAWN_EGG.get(), "游荡眼球怪鱼刷怪蛋");
