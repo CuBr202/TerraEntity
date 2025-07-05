@@ -204,6 +204,8 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.YELLOW_DYE,wool2dye).build())
                 .build());
 
+        shop(TENpcEntities.MECHANIC.getId(),builder().build());
+
         shop(TENpcEntities.GUIDE.getId(),builder()
                 .add(TradeTask.create(new ProgressTradeTask(List.of(
                         ItemTradeItemList.builder().addCost(ItemTags.PLANKS, 4).addResult(Items.CRAFTING_TABLE).build(),

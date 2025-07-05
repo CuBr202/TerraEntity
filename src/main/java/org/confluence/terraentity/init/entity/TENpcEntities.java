@@ -63,6 +63,10 @@ public class TENpcEntities {
      * 老人
      */
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> OLD_MAN = TEEntities.registerEntity("old_man", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 机械师
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> MECHANIC = TEEntities.registerEntity("mechanic", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -79,6 +83,7 @@ public class TENpcEntities {
         event.registerEntityRenderer(DRYAD.get(), c -> new NPCRenderer<>(c, DRYAD.getId()));
         event.registerEntityRenderer(DYE_TRADER.get(), c -> new NPCRenderer<>(c, DYE_TRADER.getId()));
         event.registerEntityRenderer(OLD_MAN.get(), c -> new NPCRenderer<>(c, OLD_MAN.getId()));
+        event.registerEntityRenderer(MECHANIC.get(), c -> new NPCRenderer<>(c, GUIDE.getId()));
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -94,7 +99,7 @@ public class TENpcEntities {
         event.put(DRYAD.get(), AbstractTerraNPC.createAttributes().build());
         event.put(DYE_TRADER.get(), AbstractTerraNPC.createAttributes().build());
         event.put(OLD_MAN.get(), AbstractTerraNPC.createAttributes().build());
-
+        event.put(MECHANIC.get(), AbstractTerraNPC.createAttributes().build());
     }
 
     public static void spawnPlacementRegister(RegisterSpawnPlacementsEvent event) {
@@ -110,6 +115,7 @@ public class TENpcEntities {
         event.register(DRYAD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(DYE_TRADER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(OLD_MAN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(MECHANIC.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
     }
 

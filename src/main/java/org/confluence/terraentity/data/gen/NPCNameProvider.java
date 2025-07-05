@@ -285,6 +285,9 @@ public class NPCNameProvider extends AbstractExistCodecProvider<Map<EntityType<?
                         .put("Willie", 1f)
                         .put("Xavier", 1f)
                         .build()))
+                .put(TENpcEntities.MECHANIC.get(), NPCNames.of(ImmutableMap.<String, Float>builder()
+                        .put("Name", 1f)
+                        .build()))
                 .build());
     }
     @Override
