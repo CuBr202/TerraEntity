@@ -231,7 +231,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
         if (this.isJumping && !onGround()) {
             jumpCount++;
             setJumping(true);
-        } else {
+        } else if(jumpCount > 3) {
             jumpCount = 0;
             setJumping(false);
             isJumping = false;
@@ -264,8 +264,13 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
         }
     }
 
+    @Override
+    protected float getJumpPower() {
+        return (float) (this.getBlockJumpFactor() * getAttributeValue(Attributes.JUMP_STRENGTH) );
+    }
+
     protected void executeRidersJump(float playerJumpPendingScale, Vec3 travelVector) {
-        double d0 = this.getJumpPower() / 0.42F * getAttributeValue(Attributes.JUMP_STRENGTH) * playerJumpPendingScale;
+        double d0 = this.getJumpPower() * playerJumpPendingScale;
         Vec3 vec3 = this.getDeltaMovement();
         this.setDeltaMovement(vec3.x, d0, vec3.z);
         this.setIsInputtingJumping(true);

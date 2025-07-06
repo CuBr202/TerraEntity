@@ -27,7 +27,9 @@ import java.util.Objects;
  */
 public class AnglerNPC extends AbstractTerraNPC {
 
-    public AnglerNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
+    boolean triggerNight = false;
+
+    public AnglerNPC(EntityType<? extends AbstractTerraNPC> entityType, Level level) {
         super(entityType, level);
 
     }
@@ -74,13 +76,30 @@ public class AnglerNPC extends AbstractTerraNPC {
         syncTradeTasksParams();
     }
 
-    protected boolean timeToTradeFish(){
-        return level().dayTime() % 24000 == 0;
+    // 只要经历过晚上，天一亮就会刷新
+    protected boolean timeToTradeFresh(){
+        if(this.isNight()){
+            triggerNight = true;
+        }
+        if(this.triggerNight){
+            if(this.isDay()){
+                this.triggerNight = false;
+                return true;
+            }
+        }
+        return false;
+//        return level().dayTime() % 24000 == 200;
     }
 
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         return !isWakeUp();
+    }
+
+    @Override
+    public void checkDespawn() {
+        super.checkDespawn();
+        // confluence mixin here
     }
 
     @Override
@@ -112,12 +131,16 @@ public class AnglerNPC extends AbstractTerraNPC {
                 this.refreshDimensions();
             }
         }
+        if(tag.contains("TriggerNight")){
+            triggerNight = tag.getBoolean("TriggerNight");
+        }
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("WakeUp", isWakeUp());
+        tag.putBoolean("TriggerNight", triggerNight);
     }
 
 
@@ -139,13 +162,22 @@ public class AnglerNPC extends AbstractTerraNPC {
         return !isWakeUp();
     }
 
+    private boolean isNight(){
+        return level().dayTime() % 24000 >= 12000 || level().dayTime() < 200;
+    }
+
+    private boolean isDay(){
+        return !isNight();
+    }
+
     Vec3 dir = Vec3.ZERO;
     Vec3 speed = Vec3.ZERO;
     @Override
     public void tick(){
         super.tick();
         if(!level().isClientSide){
-            if(timeToTradeFish()){
+
+            if(timeToTradeFresh()){
                 this.resetFishTask();
             }
             if(!this.isWakeUp()){
@@ -181,8 +213,7 @@ public class AnglerNPC extends AbstractTerraNPC {
             setWakeUp(true);
             this.refreshBrain(serverLevel);
             this.refreshDimensions();
-            initName();
-            // confluence mixed here
+            // confluence mixin here
             return InteractionResult.CONSUME;
         }
         return super.mobInteract(player, hand);
@@ -194,10 +225,6 @@ public class AnglerNPC extends AbstractTerraNPC {
             return super.getDimensions(pose).scale(2F, 0.5f);
         }
         return super.getDimensions(pose);
-    }
-
-    protected boolean shouldInitName(){
-        return false;
     }
 
 }

@@ -39,21 +39,32 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     private static final int NUMBER_OF_LINES = 7;
     private static final Component TRADES_LABEL = Component.translatable("title.terra_entity.npc_trade");
 
-    private int shopItem = -1;
+    // 交易项
+    protected int shopItem = -1;
     private int hoveredItem = -1;
     private int row;
     private final int col = 5;
+
+    // 滑块参数
     private int offsetX;
     private int offsetY;
     private int intervalX = 18;
     private int intervalY = 18;
-
-    int tickCount;
-
     int scrollOff;
 
-    KeyframeAnimation interpolator;
+    // 标题位置曲线插值
+    private KeyframeAnimation interpolator;
+    double v;
+    int tickCount;
+
+    // 只init一次
     boolean triggerOnce = true;
+
+    // 用于长按点击记录参数
+    int clickCount = 0;
+    boolean isClicked = false;
+    int clickBt = 0;
+    long lastClickTime = 0;
 
     public TETradeScreen(M menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -69,9 +80,17 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
             menu.NPCTrades = ((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder();
 
         }
-        if (menu.NPCTrades == null || menu.NPCTrades.getTradeManager() == null){
-            return;
+        boolean trade = menu.NPCTrades != null && menu.NPCTrades.getTradeManager() != null;
+        if(triggerOnce) {
+            // 如果没有对话，则不显示对话框
+//            if(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc){
+//                if(NPCDialogs.getDialog_map().get(BuiltInRegistries.ENTITY_TYPE.getKey(npc.getType())) != null) {
+            Minecraft.getInstance().setScreen(new DialogScreen(Component.literal("123"), this));
+//                }
+//            }
+            triggerOnce = false;
         }
+        if (!trade) return;
         menu.NPCTrades.getTradeManager().refreshAvailableTrades();
         this.row = menu.NPCTrades.trades().size() / 3;
         if (menu.NPCTrades.trades().size() % 3 != 0)
@@ -87,15 +106,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
                 .addKeyframe(40, 60)
                 .build();
 
-        if(triggerOnce) {
-            // 如果没有对话，则不显示对话框
-//            if(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc){
-//                if(NPCDialogs.getDialog_map().get(BuiltInRegistries.ENTITY_TYPE.getKey(npc.getType())) != null) {
-                    Minecraft.getInstance().setScreen(new DialogScreen(Component.literal("123"), this));
-//                }
-//            }
-            triggerOnce = false;
-        }
+
 
     }
 
@@ -170,13 +181,31 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         this.tickCount++;
     }
 
-    double v;
+
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (menu.NPCTrades == null || menu.NPCTrades.getTradeManager() == null ||menu.NPCTrades.trades() == null){
             this.onClose();
             return;
         }
+        if(isClicked){
+            if(clickCount < 2){
+                if(lastClickTime + 500 < System.currentTimeMillis()){
+                    clickCount++;
+                    lastClickTime = System.currentTimeMillis();
+                }
+            }else{
+                double itnl = Math.max(Math.exp(-(clickCount) /20.0) * 200, 30);
+                if(lastClickTime + itnl < System.currentTimeMillis()){
+                    clickCount++;
+//                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1F,0.03f));
+
+                    super.mouseClicked(mouseX, mouseY, clickBt);
+                    lastClickTime = System.currentTimeMillis();
+                }
+            }
+        }
+
         if(interpolator == null) return;
         ITradeHolder holder = ((IPlayer) Minecraft.getInstance().player).terra_entity$getTradeHolder();
 
@@ -303,10 +332,13 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
                 mouseX > (double)(i + 238) && mouseX <= (double)(i + 238 + 16) &&
                 mouseY > (double)(j + 36)&& mouseY <= (double)(j + 36 + 16)
         ) {
+            this.isClicked = true;
             return super.mouseClicked(mouseX, mouseY, button);
         }
         if(canSelect(hoveredItem,mouseX, mouseY, button)) {
             this.shopItem = hoveredItem;
+
+            this.clickCount = button;
             menu.selectedMerchantIndex = shopItem;
             ITradeHolder.setSelectTradeIndex(shopItem);
             if(shopItem >= 0 ){
@@ -346,17 +378,10 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         }
     }
 
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
 
-    @OnlyIn(Dist.CLIENT)
-    static class TradeOfferButton extends Button {
-        final int index;
-        public TradeOfferButton(int x, int y, int index, OnPress onPress) {
-            super(x, y, 88, 20, CommonComponents.EMPTY, onPress, DEFAULT_NARRATION);
-            this.index = index;
-            this.visible = false;
-        }
-        public int getIndex() {
-            return this.index;
-        }
+        this.isClicked = false;
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 }

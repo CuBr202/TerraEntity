@@ -36,7 +36,7 @@ public class GameEvent {
 
     @SubscribeEvent
     public static void serverStarted(ServerAboutToStartEvent event) {
-        NPCTradeManager.readTradesFromJson(event.getServer().getResourceManager());
+        NPCTradeManager.readTradesFromJson(event.getServer());
         NPCNames.loadNPCNames(event.getServer().getResourceManager());
         NPCDialogs.loadNPCDialogs(event.getServer().getResourceManager());
         NPCMoods.loadMoods(event.getServer().getResourceManager());

@@ -124,14 +124,12 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
         if (count > getUseDuration(stack) - 20) {
             livingEntity.swing(livingEntity.getUsedItemHand());
             if (livingEntity instanceof ServerPlayer player) {
-
-                // 创造
-                if (!player.canBeSeenAsEnemy()) {
-                    summon(player, stack);
-                    return;
-                }
                 player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data -> {
-                    if (data.canSummon(consume)) {
+                    if (!data.canSummon(consume)){
+                        // 如果没有足够的召唤栏位，就移除最后一个仆从，再尝试生成。
+                        data.removeLast(player, consume);
+                    }
+                    if (player.isCreative() || data.canSummon(consume)) {
                         summon(player, stack);
                     }
                 });

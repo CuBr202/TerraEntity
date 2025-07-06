@@ -101,7 +101,7 @@ public class AttributeBuilder {
 //            mob.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(STEP_HEIGHT);
 //        }
         if(mob.getAttribute(ForgeMod.ENTITY_GRAVITY.get()) != null){
-            mob.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.01f);
+            mob.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08f);
         }
         if(mob.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()) != null){
             mob.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).setBaseValue(JUMP_STRENGTH);

@@ -22,6 +22,9 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class RideableSlime extends AbstractRideableEntity {
 
@@ -53,7 +56,7 @@ public class RideableSlime extends AbstractRideableEntity {
 
     @Override
     protected void tickRidden(Player player, Vec3 travelVector) {
-        if (this.isJumping && !onGround()) {
+        if (this.isJumping && !onGround() || !level().isClientSide && this.isJumping ) {
             boolean trigger = false;
 //            for (int i = 0; i < 4; i++) {
 //                float offsetX = (i == 1 || i == 2) ? 1 : 0;
@@ -63,14 +66,15 @@ public class RideableSlime extends AbstractRideableEntity {
 //                    break;
 //                }
 //            }
-            Entity hitEntity = getHitResult(0.5F, 0.5F);
+            Entity hitEntity = getHitResult(0.1F, 0.1F);
             if (hitEntity != null && hitEntity.isAttackable()) {
                 trigger = true;
-                if(hitEntity instanceof LivingEntity living){
+                if(hitEntity instanceof LivingEntity living && !level().isClientSide){
                     living.hurt(damageSources().generic(), 5);
                 }
             }
             if (trigger) {
+
                 this.setDeltaMovement(getDeltaMovement().x, getJumpPower(), getDeltaMovement().z);
                 level().playLocalSound(this.blockPosition(), SoundEvents.SLIME_BLOCK_PLACE, getSoundSource(), 0.5f, 2.0f, false);
                 playSound(SoundEvents.SLIME_BLOCK_PLACE);
@@ -85,8 +89,20 @@ public class RideableSlime extends AbstractRideableEntity {
 //            level().getEntities(this, )
 //            return true;
 //        }
-        var entities = TEUtils.getAABBAngleTarget(position(), position().add(offsetX, -1f, offsetZ), this.level(), this.getOwner(), 1, 40, e->e instanceof LivingEntity);
-        return entities;
+        ;
+
+        if(jumpCount < 5){
+            return null;
+        }
+        if(!level().isClientSide){
+            System.out.println("getHitResult" + jumpCount);
+        }
+
+        Vec3 pos = getBoundingBox().getCenter().subtract(0, this.getBbHeight() / 2, 0);
+        Entity entity = TEUtils.getAABBAngleTarget(pos, pos.add(0, level().isClientSide?-1f: -2.5f, offsetZ), this.level(), this.getOwner(), level().isClientSide? 1 : 2f, 40, e -> e instanceof LivingEntity);
+
+
+        return entity;
     }
 
     @Override
@@ -162,7 +178,7 @@ public class RideableSlime extends AbstractRideableEntity {
         if(jumpCount == 0){
             double a = (Math.cos(movingCounter * 0.6f) - 1) * 0.3f;
             double f = Math.sin(a) * 0.6F;
-            return super.getPassengersRidingOffset() + f + 0.2f;
+            return super.getPassengersRidingOffset() + f + 0.1f;
         }else {
             double a = Math.min((jumpCount) * 0.5F, Math.PI);
             double f = Math.sin(a) * 0.5F;
@@ -187,6 +203,14 @@ public class RideableSlime extends AbstractRideableEntity {
         }
         ));
     }
+
+//    @Override
+//    public void onLocalStartInputJump() {
+//        super.onLocalStartInputJump();
+//        isJumping = true;
+//        jumpTick = tickCount;
+//    }
+
 
     public void onInit(Player player){
         super.onInit(player);

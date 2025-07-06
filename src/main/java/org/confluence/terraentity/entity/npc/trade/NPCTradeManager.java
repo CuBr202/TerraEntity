@@ -10,6 +10,7 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
@@ -30,7 +31,7 @@ import java.util.*;
  */
 public class NPCTradeManager {
 
-    public static DynamicOps<JsonElement> ops;
+//    public static DynamicOps<JsonElement> serverOps;
 
     private List<ITrade> trades;
     private List<ITrade> availableTrades;
@@ -231,10 +232,11 @@ public class NPCTradeManager {
      * @return 交易列表的拷贝
      */
     @Nullable
-    public static NPCTradeManager getCopy(ResourceLocation id) {
+    public static NPCTradeManager getCopy(ResourceLocation id, DynamicOps<JsonElement> ops) {
         if(!TRADE_MAP.containsKey(id)){
             return null;
         }
+//        NPCTradeManager.serverOps = registryAccess.createSerializationContext(JsonOps.INSTANCE);
         var encode = CODEC.encodeStart(ops, TRADE_MAP.get(id));
         if(encode.result().isPresent()){
             var result = CODEC.decode(ops, encode.result().get());
@@ -254,17 +256,17 @@ public class NPCTradeManager {
         }
     }
 
-    public static void readTradesFromJson(ResourceManager manager) {
+    public static void readTradesFromJson(MinecraftServer server) {
+        ResourceManager manager = server.getResourceManager();
+        JsonOps ops = JsonOps.INSTANCE;
         Map<ResourceLocation, Resource> jsons = manager.listResources(KEY, r -> r.getPath().endsWith(".json"));
-        ops = JsonOps.INSTANCE;
-
         jsons.forEach((k, v) -> {
             try {
                 ResourceLocation id = TerraEntity.fromSpaceAndPath(k.getNamespace(),
                         k.getPath().replace(".json", "").replace(KEY + "/", ""));
                 Reader reader = manager.openAsReader(k);
                 JsonObject jsonobject = GsonHelper.parse(reader);
-                DataResult<Pair<NPCTradeManager, JsonElement>> result = NPCTradeManager.CODEC.decode(JsonOps.INSTANCE, jsonobject);
+                DataResult<Pair<NPCTradeManager, JsonElement>> result = NPCTradeManager.CODEC.decode(ops, jsonobject);
                 if(result.error().isPresent()){
                     throw new RuntimeException("Failed to read trade list " + k + " :" + result.error().get());
                 }

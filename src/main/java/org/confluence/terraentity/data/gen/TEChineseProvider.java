@@ -4,6 +4,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEItems;
+import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.entity.*;
 import org.confluence.terraentity.init.item.*;
 
