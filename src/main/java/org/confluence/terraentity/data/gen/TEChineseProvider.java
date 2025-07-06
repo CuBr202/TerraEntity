@@ -71,8 +71,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.HELL_BAT.get(), "地狱蝙蝠");
         add(TEMonsterEntities.ICE_BAT.get(), "冰雪蝙蝠");
         add(TEMonsterEntities.SPORE_BAT.get(), "孢子蝙蝠");
-        add(TEMonsterEntities.MUSHROOM_SKELETON.get(), "孢子骷髅");
-        add(TEMonsterEntities.MUSHROOM_ZOMBIE.get(), "孢子僵尸");
+        add(TEMonsterEntities.SPORE_SKELETON.get(), "孢子骷髅");
+        add(TEMonsterEntities.SPORE_ZOMBIE.get(), "孢子僵尸");
         add(TEMonsterEntities.HARPY.get(), "鸟妖");
         add(TEMonsterEntities.ANGER_BONES.get(), "愤怒骷髅");
         add(TEMonsterEntities.SHORT_BONES.get(), "矮骷髅");
@@ -152,8 +152,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.HORNET_SPAWN_EGG.get(), "黄蜂刷怪蛋");
         add(TESpawnEggItems.HELL_BAT_SPAWN_EGG.get(), "地狱蝙蝠刷怪蛋");
         add(TESpawnEggItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");
-        add(TESpawnEggItems.MUSHROOM_SKELETON_SPAWN_EGG.get(), "孢子骷髅刷怪蛋");
-        add(TESpawnEggItems.MUSHROOM_ZOMBIE_SPAWN_EGG.get(), "孢子僵尸刷怪蛋");
+        add(TESpawnEggItems.SPORE_SKELETON_SPAWN_EGG.get(), "孢子骷髅刷怪蛋");
+        add(TESpawnEggItems.SPORE_ZOMBIE_SPAWN_EGG.get(), "孢子僵尸刷怪蛋");
         add(TESpawnEggItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
         add(TESpawnEggItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
         add(TESpawnEggItems.WANDERING_EYE_FISH_SPAWN_EGG.get(), "游荡眼球怪鱼刷怪蛋");

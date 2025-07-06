@@ -48,9 +48,10 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     })
             ;
 
-    public static Supplier<AttributeBuilder> MUSHROOM_ZOMBIE_BUILDER =
-            ()->new LandMonsterPrefab(39,2,10,60,0.5f,0.1f).getPrefab()
-                    .setMovementSpeed(0.15f)
+    public static Supplier<AttributeBuilder> SPORE_ZOMBIE_BUILDER =
+            ()->new LandMonsterPrefab(93,2,20,60,0.6f,0.1f).getPrefab()
+                    .setMovementSpeed(0.08f)
+                    .setSpawnWithoutLight()
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .addTarget((t,e)-> {
                         t.addGoal(1,new AccelerateOnSeeingGoal(e,0.25f));

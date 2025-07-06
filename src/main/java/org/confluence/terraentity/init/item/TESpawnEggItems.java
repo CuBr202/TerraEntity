@@ -46,8 +46,8 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> DEMON_EYE_SPAWN_EGG = registerEgg("demon_eye_spawn_egg", TEMonsterEntities.DEMON_EYE, 0xffffff, 0xab0d0d);
     public static final DeferredItem<Item> BLOOD_CRAWLER_SPAWN_EGG = registerEgg("blood_crawler_spawn_egg", TEMonsterEntities.BLOOD_CRAWLER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> BLOODY_SPORE_SPAWN_EGG = registerEgg("bloody_spore_spawn_egg", TEMonsterEntities.BLOODY_SPORE, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> MUSHROOM_SKELETON_SPAWN_EGG = registerEgg("mushroom_skeleton_spawn_egg", TEMonsterEntities.MUSHROOM_SKELETON, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> MUSHROOM_ZOMBIE_SPAWN_EGG = registerEgg("mushroom_zombie_spawn_egg", TEMonsterEntities.MUSHROOM_ZOMBIE, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> SPORE_SKELETON_SPAWN_EGG = registerEgg("spore_skeleton_spawn_egg", TEMonsterEntities.SPORE_SKELETON, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> SPORE_ZOMBIE_SPAWN_EGG = registerEgg("spore_zombie_spawn_egg", TEMonsterEntities.SPORE_ZOMBIE, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> DECAYEDER_SPAWN_EGG = registerEgg("decayeder_spawn_egg", TEMonsterEntities.DECAYEDER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> DEVOURER_SPAWN_EGG = registerEgg("devourer_spawn_egg", TEMonsterEntities.DEVOURER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> GIANT_SHELLY_SPAWN_EGG = registerEgg("giant_shelly_spawn_egg", TEMonsterEntities.GIANT_SHELLY, 0xffffff, 0xffffff);
