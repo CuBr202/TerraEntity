@@ -21,37 +21,37 @@ public class TEWhipItems {
     //    public static final DeferredRegister.Items SENTRY_ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     // Whip Items
-    public static final DeferredItem<BaseWhipItem> LEATHER_WHIP = registerWhip("leather_whip", 12f, 2, 0.5f, 15,0.9f, p->p
+    public static final DeferredItem<BaseWhipItem> LEATHER_WHIP = registerWhip("leather_whip", 10f, 2, 0.5f, 15,0.9f, p->p
             .setDurability(200)
             .component(TEDataComponentTypes.EFFECT_STRATEGY_BENEFICIAL, EffectStrategyComponent.of(
                     TimePossibilityAmplifierEffect.of("strength", MobEffects.DAMAGE_BOOST, 100)
             )));
-    public static final DeferredItem<BaseWhipItem> SLUB_WHIP = registerWhip("slub_whip", 10f, 3, 0.2f, 15,0.5f, p->p
+    public static final DeferredItem<BaseWhipItem> SLUB_WHIP = registerWhip("slub_whip", 8f, 3, 0.2f, 15,0.5f, p->p
             .setDurability(300)
             .setBlock(Blocks.BAMBOO::defaultBlockState)
     );
-    public static final DeferredItem<BaseWhipItem> RUBY_WHIP = registerWhip("ruby_whip", 14.8f, 2, 0.5f, 15,0.8f, p->p
+    public static final DeferredItem<BaseWhipItem> RUBY_WHIP = registerWhip("ruby_whip", 12.8f, 2, 0.5f, 15,0.8f, p->p
             .setDurability(760)
     );
-    public static final DeferredItem<BaseWhipItem> AMBER_WHIP = registerWhip("amber_whip", 14.7f, 2, 0.5f, 15,0.8f, p->p
+    public static final DeferredItem<BaseWhipItem> AMBER_WHIP = registerWhip("amber_whip", 12.7f, 2, 0.5f, 15,0.8f, p->p
             .setDurability(740)
     );
-    public static final DeferredItem<BaseWhipItem> TOPAZ_WHIP = registerWhip("topaz_whip", 14.5f, 2, 0.5f, 15,0.8f, p->p
+    public static final DeferredItem<BaseWhipItem> TOPAZ_WHIP = registerWhip("topaz_whip", 12.5f, 2, 0.5f, 15,0.8f, p->p
             .setDurability(700)
     );
-    public static final DeferredItem<BaseWhipItem> JADE_WHIP = registerWhip("jade_whip",14.6f, 2, 0.5f, 15,0.8f, p->p
+    public static final DeferredItem<BaseWhipItem> JADE_WHIP = registerWhip("jade_whip",12.6f, 2, 0.5f, 15,0.8f, p->p
             .setDurability(900)
     );
-    public static final DeferredItem<BaseWhipItem> DIAMOND_WHIP = registerWhip("diamond_whip", 14.7f, 2, 0.5f, 15,0.8f, p->p
+    public static final DeferredItem<BaseWhipItem> DIAMOND_WHIP = registerWhip("diamond_whip", 12.7f, 2, 0.5f, 15,0.8f, p->p
             .setDurability(1000)
     );
-    public static final DeferredItem<BaseWhipItem> SAPPHIRE_WHIP = registerWhip("sapphire_whip", 14.6f, 2, 0.5f, 15,0.8f, p->p
+    public static final DeferredItem<BaseWhipItem> SAPPHIRE_WHIP = registerWhip("sapphire_whip", 12.6f, 2, 0.5f, 15,0.8f, p->p
             .setDurability(720)
     );
-    public static final DeferredItem<BaseWhipItem> AMETHYST_WHIP = registerWhip("amethyst_whip", 14.5f, 2, 0.5f, 15,0.8f, p->p
+    public static final DeferredItem<BaseWhipItem> AMETHYST_WHIP = registerWhip("amethyst_whip", 12.5f, 2, 0.5f, 15,0.8f, p->p
             .setDurability(700)
     );
-    public static final DeferredItem<BaseWhipItem> SWAMP_WHIP = registerWhip("swamp_whip", 18f, 5, 1f, 15,1.5f, p->p
+    public static final DeferredItem<BaseWhipItem> SWAMP_WHIP = registerWhip("swamp_whip", 16f, 5, 1f, 15,1.5f, p->p
             .setDurability(1200)
             .setParticle(TEParticles.LEAVES, 0.01f)
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
