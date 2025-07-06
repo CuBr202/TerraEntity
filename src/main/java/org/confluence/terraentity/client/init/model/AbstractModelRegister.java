@@ -38,8 +38,12 @@ public abstract class AbstractModelRegister<T>{
             if(f!= null){
                 event.register(f);
             }else{
-                TerraEntity.LOGGER.warn("Failed to load model: {}", location);
+                outputLog(location);
             }
         });
+    }
+
+    protected void outputLog(ResourceLocation location){
+        TerraEntity.LOGGER.warn("Failed to load model: {}", location);
     }
 }

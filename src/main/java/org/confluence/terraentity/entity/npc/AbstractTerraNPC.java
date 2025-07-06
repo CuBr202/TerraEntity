@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.npc;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -396,7 +397,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         AdapterUtils.postEvent(event);
         // 如果是第一次生成
         if (trades == null && !level().isClientSide) {
-            trades = NPCTradeManager.getCopy(event.getOrigin(), NPCTradeManager.serverOps);
+            trades = NPCTradeManager.getCopy(event.getOrigin(), level().registryAccess().createSerializationContext(JsonOps.INSTANCE));
             if (trades != null) {
                 trades.initTrades(this);
                 onInitTrades();

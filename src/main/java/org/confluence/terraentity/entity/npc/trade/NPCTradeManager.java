@@ -8,9 +8,11 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.Resource;
@@ -32,7 +34,7 @@ import java.util.*;
  */
 public class NPCTradeManager {
 
-    public static DynamicOps<JsonElement> serverOps;
+//    public static DynamicOps<JsonElement> serverOps;
 
     private List<ITrade> trades;
     private List<ITrade> availableTrades;
@@ -248,9 +250,9 @@ public class NPCTradeManager {
 
     }
 
-    public static void readTradesFromJson(MinecraftServer server) {
+    public static void readTradesFromJson(MinecraftServer server, HolderLookup.Provider registries) {
         ResourceManager manager = server.getResourceManager();
-        NPCTradeManager.serverOps = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
+        RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
 
         Map<ResourceLocation, Resource> jsons = manager.listResources(KEY, r -> r.getPath().endsWith(".json"));
         jsons.forEach((k, v) -> {
@@ -259,7 +261,7 @@ public class NPCTradeManager {
                         k.getPath().replace(".json", "").replace(KEY + "/", ""));
                 Reader reader = manager.openAsReader(k);
                 JsonObject jsonobject = GsonHelper.parse(reader);
-                DataResult<Pair<NPCTradeManager, JsonElement>> result = NPCTradeManager.CODEC.decode(serverOps, jsonobject);
+                DataResult<Pair<NPCTradeManager, JsonElement>> result = NPCTradeManager.CODEC.decode(ops, jsonobject);
                 if(result.error().isPresent()){
                     throw new RuntimeException("Failed to read trade list " + k + " :" + result.error().get());
                 }

@@ -41,6 +41,9 @@ public class AnglerNPC extends AbstractTerraNPC {
     public void resetFishTask() {
 //        this.entityData.set(DATA_TIME_TO_TRADE_FISH_DATA, true);
         int c = 0;
+        if(trades() == null){
+            return;
+        }
         for(ITrade trade: trades()){
             if(trade instanceof TradeTask task){
                 if(task.task() instanceof DynamicAnglerTradeTask d){
