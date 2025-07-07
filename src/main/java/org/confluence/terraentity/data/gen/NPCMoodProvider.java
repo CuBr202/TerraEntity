@@ -77,10 +77,45 @@ public class NPCMoodProvider extends AbstractExistCodecProvider<Map<EntityType<?
 
         // nurse
         map.put(TENpcEntities.NURSE.get(), new NPCMood.EntityMood.Builder()
-                .addMoodInfo(TerraEntity.space("nurse1"), MoodInfo.of(TENpcEntities.ARMS_DEALER.get(), "mood.terra_entity.nurse.love.rms_dealer", Mood.LOVER))
+                .addMoodInfo(TerraEntity.space("nurse1"), MoodInfo.of(TENpcEntities.ARMS_DEALER.get(), "mood.terra_entity.nurse.love.arms_dealer", Mood.LOVER))
                 .addMoodInfo(TerraEntity.space("nurse2"), MoodInfo.of(TENpcEntities.DRYAD.get(), "mood.terra_entity.nurse.dislike.dryad", Mood.DISLIKE))
                 .build());
-
+        // mechanic
+        map.put(TENpcEntities.MECHANIC.get(), new NPCMood.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("mechanic1"), MoodInfo.of(TENpcEntities.GOBLIN_TINKERER.get(), "mood.terra_entity.mechanic.love.goblin_tinkerer", Mood.LOVER))
+                .addMoodInfo(TerraEntity.space("mechanic2"), MoodInfo.of(TENpcEntities.ARMS_DEALER.get(), "mood.terra_entity.mechanic.dislike.arms_dealer", Mood.DISLIKE))
+                .addMoodInfo(TerraEntity.space("mechanic3"), MoodInfo.of(TENpcEntities.CLOTHIER.get(), "mood.terra_entity.mechanic.hate.clothier", Mood.HATE))
+                .build());
+                // 喜欢公主,机械侠
+        // witch_doctor
+        map.put(TENpcEntities.WITCH_DOCTOR.get(), new NPCMood.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("witch_doctor1"), MoodInfo.of(TENpcEntities.DRYAD.get(), "mood.terra_entity.witch_doctor.like.dryad", Mood.LIKE))
+                .addMoodInfo(TerraEntity.space("witch_doctor1"), MoodInfo.of(TENpcEntities.GUIDE.get(), "mood.terra_entity.witch_doctor.like.guide", Mood.LIKE))
+                .addMoodInfo(TerraEntity.space("witch_doctor2"), MoodInfo.of(TENpcEntities.NURSE.get(), "mood.terra_entity.witch_doctor.dislike.nurse", Mood.DISLIKE))
+                .addMoodInfo(TerraEntity.space("witch_doctor3"), MoodInfo.of(TENpcEntities.TRUFFLE.get(), "mood.terra_entity.witch_doctor.hate.truffle", Mood.HATE))
+                .build());
+                // 喜欢公主
+        // party_girl
+        map.put(TENpcEntities.PARTY_GIRL.get(), new NPCMood.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("party_girl1"), MoodInfo.of(TENpcEntities.MERCHANT.get(), "mood.terra_entity.party_girl.dislike.merchant", Mood.DISLIKE))
+                .build());
+                // 爱巫师，动物学家
+                // 讨厌税收官
+        // clothier
+        map.put(TENpcEntities.CLOTHIER.get(), new NPCMood.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("clothier1"), MoodInfo.of(TENpcEntities.TRUFFLE.get(), "mood.terra_entity.clothier.love.truffle", Mood.LOVER))
+                .addMoodInfo(TerraEntity.space("clothier2"), MoodInfo.of(TENpcEntities.NURSE.get(), "mood.terra_entity.clothier.dislike.nurse", Mood.DISLIKE))
+                .addMoodInfo(TerraEntity.space("clothier3"), MoodInfo.of(TENpcEntities.MECHANIC.get(), "mood.terra_entity.clothier.hate.mechanic", Mood.HATE))
+                .build());
+                // 喜欢公主,税收官
+        // truffle
+        map.put(TENpcEntities.TRUFFLE.get(), new NPCMood.EntityMood.Builder()
+                .addMoodInfo(TerraEntity.space("truffle1"), MoodInfo.of(TENpcEntities.GUIDE.get(), "mood.terra_entity.truffle.love.guide", Mood.LOVER))
+                .addMoodInfo(TerraEntity.space("truffle2"), MoodInfo.of(TENpcEntities.DYE_TRADER.get(), "mood.terra_entity.truffle.like.dye_trader", Mood.LIKE))
+                .addMoodInfo(TerraEntity.space("truffle3"), MoodInfo.of(TENpcEntities.CLOTHIER.get(), "mood.terra_entity.truffle.dislike.clothier", Mood.DISLIKE))
+                .addMoodInfo(TerraEntity.space("truffle4"), MoodInfo.of(TENpcEntities.WITCH_DOCTOR.get(), "mood.terra_entity.truffle.hate.witch_doctor", Mood.HATE))
+                .build());
+                // 喜欢公主
         gen(TerraEntity.space("npc/moods"), map);
     }
 

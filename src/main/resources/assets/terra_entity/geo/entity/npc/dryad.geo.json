@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.dryad",
+				"identifier": "geometry.unknown",
 				"texture_width": 128,
 				"texture_height": 128,
 				"visible_bounds_width": 3,
@@ -13,7 +13,7 @@
 			"bones": [
 				{
 					"name": "all",
-					"pivot": [0, 0, 0]
+					"pivot": [0, 24, 0]
 				},
 				{
 					"name": "Head",
@@ -21,40 +21,55 @@
 					"pivot": [0, 24, 0],
 					"cubes": [
 						{"origin": [-4, 24, -4], "size": [8, 8, 8], "uv": [0, 0]},
-						{"origin": [-4, 24, -4], "size": [8, 8, 8], "inflate": 0.5, "uv": [0, 16]},
-						{"origin": [1.25, 31.25, 3], "size": [2, 2, 2], "inflate": 0.5, "pivot": [2.25, 31.25, 4], "rotation": [-20.61737, -28.93057, 37.87289], "uv": [56, 12]}
+						{"origin": [-4, 24, -4], "size": [8, 8, 8], "inflate": 0.5, "uv": [0, 16]}
 					]
 				},
 				{
-					"name": "Hair",
+					"name": "fruit",
 					"parent": "Head",
-					"pivot": [0, 31.75, 4],
-					"rotation": [7.5, 0, 0],
+					"pivot": [3.5, 30.5, 3.75],
+					"rotation": [-2.5, 65, 0],
 					"cubes": [
-						{"origin": [-2, 27.75, 4], "size": [4, 5, 4], "pivot": [0, 30.25, 6], "rotation": [22.5, 0, 0], "uv": [56, 32]},
-						{"origin": [-2, 27.75, 4], "size": [4, 5, 4], "inflate": 0.5, "pivot": [0, 30.25, 6], "rotation": [22.5, 0, 0], "uv": [58, 41]},
-						{"origin": [-1, 23, 6.25], "size": [2, 5, 2], "uv": [58, 50]},
-						{"origin": [-1, 23, 6.25], "size": [2, 5, 2], "inflate": 0.5, "uv": [58, 57]},
-						{"origin": [-0.5, 19.5, 6.5], "size": [1, 3, 1], "pivot": [0, 21, 7], "rotation": [-10, 0, 0], "uv": [62, 16]},
-						{"origin": [-0.5, 19.5, 6.5], "size": [1, 3, 1], "inflate": 0.5, "pivot": [0, 21, 7], "rotation": [-10, 0, 0], "uv": [62, 20]}
+						{"origin": [2.5, 30.5, 3], "size": [2, 2, 2], "pivot": [3.5, 31.5, 4], "rotation": [-154.39926, -78.41988, 164.81285], "uv": [56, 9]}
+					]
+				},
+				{
+					"name": "hair",
+					"parent": "fruit",
+					"pivot": [3.5, 30.5, 3.75],
+					"cubes": [
+						{"origin": [1.5, 28.5, 4.75], "size": [4, 6, 4], "pivot": [3.5, 31.5, 6.75], "rotation": [30, 0, 0], "uv": [74, 0]},
+						{"origin": [2, 26, 5.75], "size": [3, 5, 3], "pivot": [3.5, 28.5, 7.25], "rotation": [-5, 0, 0], "uv": [66, 12]},
+						{"origin": [2.5, 22.25, 6.25], "size": [2, 5, 2], "pivot": [3.5, 24.75, 7.25], "rotation": [5, 0, 0], "uv": [58, 13]}
 					]
 				},
 				{
 					"name": "Body",
 					"parent": "all",
-					"pivot": [0, 18, 0],
+					"pivot": [0, 24, 0],
 					"cubes": [
 						{"origin": [-4, 12, -2], "size": [8, 12, 4], "uv": [0, 32]},
-						{"origin": [-4, 12, -2], "size": [8, 12, 4], "inflate": 0.25, "uv": [32, 0]}
+						{"origin": [-4, 12, -2], "size": [8, 12, 4], "inflate": 0.5, "uv": [32, 0]}
 					]
 				},
 				{
-					"name": "Chest",
+					"name": "Chests",
 					"parent": "Body",
-					"pivot": [0, 30.25, 6],
+					"pivot": [1.875, 19.25, -2],
+					"rotation": [10.04446, -1.74747, -3.6282],
 					"cubes": [
-						{"origin": [-4, 19.25, -4], "size": [8, 3, 3], "inflate": 0.01, "pivot": [2, 21.25, -2], "rotation": [45, 0, 0], "uv": [56, 0]},
-						{"origin": [-4, 19.25, -4], "size": [8, 3, 3], "inflate": 0.5, "pivot": [2, 21.25, -2], "rotation": [45, 0, 0], "uv": [56, 6]}
+						{"origin": [0.125, 17.85818, -3.2074], "size": [4, 4, 5], "pivot": [2.125, 19.25, -2], "rotation": [37.52635, -1.98315, -1.52251], "uv": [56, 0]},
+						{"origin": [0.125, 17.85818, -3.2074], "size": [4, 4, 5], "inflate": 0.25, "pivot": [2.125, 19.25, -2], "rotation": [37.52635, -1.98315, -1.52251], "uv": [56, 32]}
+					]
+				},
+				{
+					"name": "Chests2",
+					"parent": "Body",
+					"pivot": [-1.875, 19.25, -2],
+					"rotation": [10.04446, 1.74747, 3.6282],
+					"cubes": [
+						{"origin": [-4.125, 17.85818, -3.2074], "size": [4, 4, 5], "pivot": [-2.125, 19.25, -2], "rotation": [37.52635, 1.98315, 1.52251], "uv": [56, 0], "mirror": true},
+						{"origin": [-4.125, 17.85818, -3.2074], "size": [4, 4, 5], "inflate": 0.25, "pivot": [-2.125, 19.25, -2], "rotation": [37.52635, 1.98315, 1.52251], "uv": [56, 41], "mirror": true}
 					]
 				},
 				{

@@ -67,6 +67,26 @@ public class TENpcEntities {
      * 机械师
      */
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> MECHANIC = TEEntities.registerEntity("mechanic", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 旅商
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> TRAVELING_MERCHANT = TEEntities.registerEntity("traveling_merchant", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 巫医
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> WITCH_DOCTOR = TEEntities.registerEntity("witch_doctor", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 派对女孩
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> PARTY_GIRL = TEEntities.registerEntity("party_girl", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 服装商
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> CLOTHIER = TEEntities.registerEntity("clothier", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
+     * 松露人
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> TRUFFLE = TEEntities.registerEntity("truffle", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -83,7 +103,12 @@ public class TENpcEntities {
         event.registerEntityRenderer(DRYAD.get(), c -> new NPCRenderer<>(c, DRYAD.getId()));
         event.registerEntityRenderer(DYE_TRADER.get(), c -> new NPCRenderer<>(c, DYE_TRADER.getId()));
         event.registerEntityRenderer(OLD_MAN.get(), c -> new NPCRenderer<>(c, OLD_MAN.getId()));
-        event.registerEntityRenderer(MECHANIC.get(), c -> new NPCRenderer<>(c, GUIDE.getId()));
+        event.registerEntityRenderer(MECHANIC.get(), c -> new NPCRenderer<>(c, MECHANIC.getId()));
+        event.registerEntityRenderer(TRAVELING_MERCHANT.get(), c -> new NPCRenderer<>(c, TRAVELING_MERCHANT.getId()));
+        event.registerEntityRenderer(WITCH_DOCTOR.get(), c -> new NPCRenderer<>(c, WITCH_DOCTOR.getId()));
+        event.registerEntityRenderer(PARTY_GIRL.get(), c -> new NPCRenderer<>(c, PARTY_GIRL.getId()));
+        event.registerEntityRenderer(CLOTHIER.get(), c -> new NPCRenderer<>(c, OLD_MAN.getId()));
+        event.registerEntityRenderer(TRUFFLE.get(), c -> new NPCRenderer<>(c, TRUFFLE.getId()));
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -100,6 +125,11 @@ public class TENpcEntities {
         event.put(DYE_TRADER.get(), AbstractTerraNPC.createAttributes().build());
         event.put(OLD_MAN.get(), AbstractTerraNPC.createAttributes().build());
         event.put(MECHANIC.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(TRAVELING_MERCHANT.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(WITCH_DOCTOR.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(PARTY_GIRL.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(CLOTHIER.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(TRUFFLE.get(), AbstractTerraNPC.createAttributes().build());
     }
 
     public static void spawnPlacementRegister(RegisterSpawnPlacementsEvent event) {
@@ -116,7 +146,11 @@ public class TENpcEntities {
         event.register(DYE_TRADER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(OLD_MAN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(MECHANIC.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-
+        event.register(TRAVELING_MERCHANT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(WITCH_DOCTOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(PARTY_GIRL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(CLOTHIER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(TRUFFLE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     public static void register() {
