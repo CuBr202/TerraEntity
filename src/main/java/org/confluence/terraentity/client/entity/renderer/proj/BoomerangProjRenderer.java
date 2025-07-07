@@ -48,8 +48,8 @@ public class BoomerangProjRenderer extends EntityRenderer<BoomerangProjectile> {
 //        renderTrail(entity.trailQueue.iterator(), pos , poseStack, bufferSource, color, entity.trailQueue.size());
 //        renderTrail(entity.trailQueue2.iterator(), pos , poseStack, bufferSource, color, entity.trailQueue2.size());
 
-            entity.trail.renderTrail(entity, entity.trailQueue, pos, poseStack, bufferSource);
-            entity.trail.renderTrail(entity, entity.trailQueue2, pos, poseStack, bufferSource);
+            entity.trail.renderTrail(entity, entity.trailQueue, pos, poseStack, bufferSource, packedLight);
+            entity.trail.renderTrail(entity, entity.trailQueue2, pos, poseStack, bufferSource, packedLight);
         }
 
         float yaw = (float) Math.atan2(v.z, v.x);

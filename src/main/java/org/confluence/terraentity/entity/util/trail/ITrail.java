@@ -31,7 +31,7 @@ public interface ITrail<T> {
     TrailProperties getTrailProperties();
 
     @OnlyIn(Dist.CLIENT)
-    default void renderTrail(T holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource) {
+    default void renderTrail(T holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         Iterator<Vec3> trails = trailsQueue.iterator();
         int size = trailsQueue.size();
 
@@ -130,8 +130,8 @@ public interface ITrail<T> {
     }
 
     @OnlyIn(Dist.CLIENT)
-    static void addVertex(VertexConsumer buffer, Matrix4f matrix, Vec3 pos, int argb) {
-        buffer.addVertex(matrix, (float) pos.x, (float) pos.y, (float) pos.z)
+    static VertexConsumer addVertex(VertexConsumer buffer, Matrix4f matrix, Vec3 pos, int argb) {
+        return buffer.addVertex(matrix, (float) pos.x, (float) pos.y, (float) pos.z)
                 .setColor(argb);
     }
 

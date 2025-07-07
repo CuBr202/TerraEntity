@@ -48,7 +48,7 @@ public interface IOBBProjectile<T extends Projectile> extends ICollisionAttackEn
     @Override
     default OBB getOrientedBoundingBox() {
         Vec3 pos = collision$getSelf().position();
-        return new OBB(pos, 0.5, 0.5, 1.5 * lengthScale(), collision$getSelf().getXRot(), collision$getSelf().getYRot()).offsetAlongAxisZ(0.75 * (lengthScale() - 1)).updateVertex();
+        return new OBB(pos, 0.75, 0.75, 1.5 * lengthScale(), collision$getSelf().getXRot(), collision$getSelf().getYRot()).offsetAlongAxisZ(0.75 * (lengthScale() - 1)).updateVertex();
     }
 
     /**
