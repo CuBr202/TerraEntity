@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,27 +24,40 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
+/**
+ * 类似鸟妖这样的蝙蝠ai，但是可以发射弹幕
+ */
 public class Harpy extends AbstractMonster {
 
     int _shootTick = 20;
-    int shootTick = _shootTick;
+    int shootTick;
 
     int _shootCooldown = 150;
-    int shootCooldown = _shootCooldown;
+    int shootCooldown;
 
-    int _shootCount = 3;
-    int shootCount = 3;
+    protected int _shootCount = 3;
+    int shootCount;
 
 
     public Harpy(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level, builder);
 
+        this.init();
+        this.shootCount = _shootCount;
+        this.shootCooldown = _shootCooldown;
+        this.shootTick = _shootTick;
     }
+
+    protected void init(){
+
+    }
+
     @Override
     public boolean checkSpawnRules(LevelAccessor level, MobSpawnType spawnReason) {
         return spawnReason == MobSpawnType.NATURAL; // 无视光照
     }
 
+    @Override
     public void tick(){
         super.tick();
         if(getTarget() != null) {
@@ -51,9 +65,12 @@ public class Harpy extends AbstractMonster {
             this.lookAt(getTarget(), 5, 80);
             this.setDeltaMovement(getDeltaMovement().scale(0.95f));
             if (--shootCooldown < 0) {
+
+                this.shootTick(getTarget(), _shootTick - shootTick);
                 if (--shootTick < 0) {
                     shootTick = _shootTick;
-                    shoot(getTarget());
+
+                    this.shoot(getTarget());
                     if (--shootCount <= 0) {
                         shootCount = _shootCount;
 
@@ -95,7 +112,9 @@ public class Harpy extends AbstractMonster {
         return TESounds.ROUTINE_DEATH.get();
     }
 
+
     protected void shoot(LivingEntity living){
+        this.swing(InteractionHand.MAIN_HAND);
         LineProj proj = TEProjectileEntities.HARPY_FEATURE_PROJ.get().create(level());
         if(proj != null) {
             proj.setPos(this.getEyePosition());
@@ -104,6 +123,10 @@ public class Harpy extends AbstractMonster {
             proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
             level().addFreshEntity(proj);
         }
+    }
+
+    protected void shootTick(LivingEntity living, int tick){
+
     }
 
     @Override

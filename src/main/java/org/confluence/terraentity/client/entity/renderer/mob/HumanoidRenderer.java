@@ -220,7 +220,6 @@ public class HumanoidRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<Bon
                 rightBoneRotX = b.getRotX();
             });
         }
-
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
 
     }

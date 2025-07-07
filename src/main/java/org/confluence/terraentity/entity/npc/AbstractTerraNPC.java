@@ -703,5 +703,11 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
     public BoneStateMachine<BoneStates> getRightArmBoneStateMachine() {
         return rightArm;
+
+    }
+
+    @Override
+    public Vec3 getVehicleAttachmentPoint(Entity entity) {
+        return super.getVehicleAttachmentPoint(entity).add(0,0.65,0);
     }
 }

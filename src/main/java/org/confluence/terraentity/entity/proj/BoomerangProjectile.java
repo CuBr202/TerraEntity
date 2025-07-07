@@ -8,6 +8,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -157,9 +158,14 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
     }
     @Override
     protected void onHitBlock(BlockHitResult result) {
+        if(!isBacking){
+            this.playSound(SoundEvents.WOOD_PLACE, 0.5f, 1.5f);
+        }
         isBacking = true;
+
         this.noPhysics = true;
         entityData.set(DATA_BACKING, true);
+
         super.onHitBlock(result);
         if(level().isClientSide) {
             BlockPos blockpos = result.getBlockPos();

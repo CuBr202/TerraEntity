@@ -68,6 +68,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER, 0.9F, 0.9F);
     public static final DeferredHolder<EntityType<?>, EntityType<VisualNeuron>> VISUAL_NEURON = TEEntities.registerEntity("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<Harpy>> HARPY = TEEntities.registerEntity("harpy", (e, l) -> new Harpy(e, l, new FlyMonsterPrefab(41, 2, 13, 20, 1f, 0.28f).getPrefab().setSpawnWithoutLight()), 1f, 2f);
+    public static final DeferredHolder<EntityType<?>, EntityType<Harpy>> VOODOO_DEMON = TEEntities.registerEntity("voodoo_demon", (e, l) -> new VooDooDemon(e, l, new FlyMonsterPrefab(41, 2, 13, 20, 1f, 0.28f).getPrefab().setSpawnWithoutLight().setNoFriction()), 1f, 2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AntlionSwarmer>> ANTLION_SWARMER = TEEntities.registerEntity("antlion_swarmer", (e, l) -> new AntlionSwarmer(e, l, new FlyMonsterPrefab(31, 2, 15, 32, 1f, 0.55f).getPrefab()), 3, 1.5f);
     public static final DeferredHolder<EntityType<?>, EntityType<AntlionSwarmer>> GIANT_ANTLION_SWARMER = TEEntities.registerEntity("giant_antlion_swarmer", (e, l) -> new AntlionSwarmer(e, l, new FlyMonsterPrefab(46, 4, 17, 32, 1f, 0.73f).getPrefab()), 3.5f, 2f);
 
@@ -162,6 +163,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.WANDERING_EYE_FISH.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.WANDERING_EYE_FISH.getId(), false, 1.5f, 0));
         event.registerEntityRenderer(TEMonsterEntities.FLYING_FISH.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.FLYING_FISH.getId(), true, 0.75f, 0));
         event.registerEntityRenderer(TEMonsterEntities.HARPY.get(), c -> new AnimatorRenderer<>(c, new HarpyModel(TEMonsterEntities.HARPY.getId()), false, 1f, 0));
+        event.registerEntityRenderer(TEMonsterEntities.VOODOO_DEMON.get(), c -> new AnimatorRenderer<>(c, new HarpyModel(TEMonsterEntities.VOODOO_DEMON.getId()), false, 1f, 0));
         event.registerEntityRenderer(TEMonsterEntities.ANTLION_SWARMER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.ANTLION_SWARMER.getId(), true, 1.0f, 0f));
         event.registerEntityRenderer(TEMonsterEntities.GIANT_ANTLION_SWARMER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.ANTLION_SWARMER.getId(), true, 1.25f, 0f));
 
@@ -274,6 +276,7 @@ public class TEMonsterEntities {
         event.put(WANDERING_EYE_FISH.get(), AbstractMonster.createAttributes().build());
         event.put(EATER_OF_SOULS.get(), AbstractMonster.createAttributes().build());
         event.put(HARPY.get(), AbstractMonster.createAttributes().build());
+        event.put(VOODOO_DEMON.get(), AbstractMonster.createAttributes().build());
         event.put(ANTLION_SWARMER.get(), AbstractMonster.createAttributes().build());
         event.put(GIANT_ANTLION_SWARMER.get(), AbstractMonster.createAttributes().build());
 
@@ -362,6 +365,7 @@ public class TEMonsterEntities {
         event.register(CRIMSON_KEMERA.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(EATER_OF_SOULS.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(HARPY.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkHighLevelMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(VOODOO_DEMON.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkHighLevelMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ANTLION_SWARMER.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(GIANT_ANTLION_SWARMER.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 

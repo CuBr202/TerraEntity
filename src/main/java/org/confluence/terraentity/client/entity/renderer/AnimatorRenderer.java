@@ -23,6 +23,7 @@ public class AnimatorRenderer<T extends Mob & GeoEntity> extends GeoNormalRender
             init = true;
             this.model.initBoneAnimators(animatable, model);
         }
+
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 }

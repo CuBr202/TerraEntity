@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.init.TESounds;
 import org.jetbrains.annotations.NotNull;
@@ -72,4 +73,5 @@ public class MeleeSkeleton extends RangeSkeleton {
         if (effectInstance.is(MobEffects.POISON)) return false;
         return super.addEffect(effectInstance, entity);
     }
+
 }

@@ -21,6 +21,8 @@ public class GeoHumanoidModel<T extends LivingEntity & GeoEntity & IUseItemAnima
 
     protected GeoBoneAnimator<T> rightArmAnimator;
     protected GeoBoneAnimator<T> leftArmAnimator;
+    GeoBone leftLegBone;
+    GeoBone rightLegBone;
 
     public GeoHumanoidModel(ResourceLocation path) {
         super(path);
@@ -41,6 +43,14 @@ public class GeoHumanoidModel<T extends LivingEntity & GeoEntity & IUseItemAnima
         }
         if(leftArmAnimator!= null) {
             handleBone(animatable.getLeftArmBoneStateMachine(), animatable, leftArmAnimator, partialTick, context);
+        }
+        if(animatable.getVehicle() != null) {
+            this.getBone("LeftLeg").ifPresent(bone -> {
+                bone.setRotX(1.5707963F);
+            });
+            this.getBone("RightLeg").ifPresent(bone -> {
+                bone.setRotX(1.5707963F);
+            });
         }
     }
 
