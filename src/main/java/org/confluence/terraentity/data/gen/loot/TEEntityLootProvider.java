@@ -107,6 +107,17 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                 .withPool(singleItemPool(Items.BEE_SPAWN_EGG, 1,1f))
                 .withPool(singleItemPool(TERideableItems.HONEYED_GOGGLES.get(),1, 0.2f))
         );
+
+        Stream.of(TEMonsterEntities.ANGER_BONES, TEMonsterEntities.BIG_ANGER_BONES, TEMonsterEntities.BASE_BONES, TEMonsterEntities.BIG_BONES,
+                TEMonsterEntities.BIG_MUSCLE_ANGER_BONES, TEMonsterEntities.SHORT_BONES, TEMonsterEntities.BIG_HELMET_ANGER_BONES,
+                        TEMonsterEntities.CURSED_SKULL,TEMonsterEntities.DARK_CASTER)
+                .forEach(e->{
+                    this.add(e.get(), LootTable.lootTable()
+                            .withPool(new LootPool.Builder()
+                                    .add(singleItem(Items.BONE, 1, 2,1))
+                            )
+                    );
+                });
     }
 
 

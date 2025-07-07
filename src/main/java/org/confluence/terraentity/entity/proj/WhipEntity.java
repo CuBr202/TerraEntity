@@ -10,8 +10,10 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
@@ -24,6 +26,7 @@ import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.item.TEWhipItems;
+import org.confluence.terraentity.item.BaseWhipItem;
 import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -46,7 +49,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
     protected float _damageDeclineMax = 0.5f; // 最大伤害衰减系数
     protected float damageDecline = 1f; // 伤害衰减
 
-    protected float _rangeFactor = 0.5f; // 基础鞭范围
+    protected float _rangeFactor = 0.1f; // 基础鞭范围
     public int hitCooldown = 5; // 击中冷却时间
     public EffectStrategyComponent hiteffect; // 击中特效
     public EffectStrategyComponent hiteffect_beneficial; // 农场主增益
@@ -69,6 +72,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
     public double speed = 1;
     float weepDamage = 1;
     ItemStack weapon;
+    BaseWhipItem item;
     float serverRandom = -1;
 
     protected static final EntityDataAccessor<Vector3f> DATA_INITIAL_POSITION = SynchedEntityData.defineId(WhipEntity.class, EntityDataSerializers.VECTOR3);
@@ -101,6 +105,9 @@ public class WhipEntity extends AbstractHurtingProjectile {
      */
     public void setWeapon(ItemStack weapon) {
         this.entityData.set(DATA_WEAPON, weapon);
+        if(weapon.getItem() instanceof BaseWhipItem item1){
+            item = item1;
+        }
         var data = IDataComponentType.getData(weapon, TEDataComponentTypes.EFFECT_STRATEGY);
         if (data != null)
             hiteffect = data;
@@ -115,7 +122,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
 
     private void updateWeapon(ItemStack weapon, boolean sweep){
         int sweepLevel = TEEnchantmentHelper.getEnchantmentLevel(TEEnchantments.WHIP_SWEEP.get(), weapon);
-        if(sweepLevel > 0 &&sweep) {
+        if(sweepLevel > 0 && sweep) {
 
             // 横扫之鞭
             parts = List.of(
@@ -254,6 +261,15 @@ public class WhipEntity extends AbstractHurtingProjectile {
                         AABB aabb = new AABB(pos.x - range, pos.y - range, pos.z - range,
                                 pos.x + range, pos.y + range, pos.z + range);
                         for (var entity : level().getEntities(this, aabb, e -> e != getOwner())) {
+
+                            // 某些鞭子禁止穿墙攻击
+                            if (item != null && !item.canPenetrate && level().clip(new ClipContext(owner.getEyePosition(), entity.position().add(0, entity.getBbHeight(), 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner)).getType() != HitResult.Type.MISS
+                                    && level().clip(new ClipContext(owner.getEyePosition(), entity.position(), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner)).getType() != HitResult.Type.MISS
+                                    &&level().clip(new ClipContext(owner.getEyePosition(), entity.position().add(0, entity.getBbHeight() * 0.5f, 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner)).getType() != HitResult.Type.MISS) {
+                                hitEntities.put(entity, hitCooldown);
+                                continue;
+                            }
+
                             if(!hitEntities.containsKey(entity)){
                                 if (entity instanceof LivingEntity hurter) {
                                     // 命中无多体节敌人
@@ -357,6 +373,9 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 this.drawBackTick = (int) (existTick * 0.5F);
             }else if(var1 == DATA_WEAPON){
                 weapon = this.entityData.get(DATA_WEAPON);
+                if(weapon.getItem() instanceof BaseWhipItem whip){
+                    this.item = whip;
+                }
             }else if(var1 == DATA_SERVER_RANDOM){
                 this.serverRandom = this.entityData.get(DATA_SERVER_RANDOM);
             }

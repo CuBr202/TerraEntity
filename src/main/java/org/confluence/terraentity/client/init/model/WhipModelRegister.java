@@ -50,9 +50,13 @@ public class WhipModelRegister extends AbstractModelRegister<Item> {
                 JsonObject jsonobject = GsonHelper.parse(reader);
                 this.additionalModels = CODEC.decode(JsonOps.INSTANCE, jsonobject).result().get().getFirst();
             }catch (IOException e){
-                TerraEntity.LOGGER.error("Can't open config file: {}", location);
+                TerraEntity.LOGGER.error("Can't open config file: {}", location, e);
+                return null;
             }catch (NoSuchElementException e){
-                TerraEntity.LOGGER.error("Failed to load model config: {}", location);
+                TerraEntity.LOGGER.error("Failed to load model config: {}", location, e);
+                return null;
+            }catch (Exception e){
+                TerraEntity.LOGGER.error("Failed to load model config: {}", location, e);
             }
             return null;
         }
@@ -77,6 +81,7 @@ public class WhipModelRegister extends AbstractModelRegister<Item> {
             ModelResourceLocation modelResourceLocation = new ModelResourceLocation(modelLocation, "inventory");
 //                event.register(modelResourceLocation);
             put(item, modelResourceLocation);
+            TerraEntity.LOGGER.info("Registering whip model for {}: {}", item.getDescriptionId(), modelResourceLocation);
         });
 
     }

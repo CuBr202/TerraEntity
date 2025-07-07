@@ -13,8 +13,10 @@ public class ServerConfig {
 
 
     public static ForgeConfigSpec.ConfigValue<Boolean> ENHANCE_ALL_MONSTER;
+
     public static ForgeConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH;
     public static ForgeConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE ;
+    public static ForgeConfigSpec.ConfigValue<Boolean> DISABLE_BUILTIN_MODIFIER;
 
 
     public static ForgeConfigSpec.Builder init(ForgeConfigSpec.Builder BUILDER){
@@ -52,6 +54,10 @@ public class ServerConfig {
         MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE = BUILDER
                 .comment("Multiplier for monster attributes damage.")
                 .defineInRange("monster_attributes_multiplier_damage", 1F, 0.0625f, 100f);
+        DISABLE_BUILTIN_MODIFIER = BUILDER
+                .comment("Should the built-in attributes setting be disabled for monsters?")
+                .comment("For kjs modify")
+                .define("disable_builtin_health_attack_modifier", false);
 
         BUILDER.pop();
         return BUILDER;

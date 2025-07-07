@@ -17,6 +17,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.common.ForgeMod;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
@@ -102,7 +103,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     public void onAddedToWorld(){
         super.onAddedToWorld();
         if(!level().isClientSide && !ignoreAttributeModify()){
-            if(dirty){
+            if(dirty && !ServerConfig.DISABLE_BUILTIN_MODIFIER.get()){
                 this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.MAX_HEALTH);
                 this.setHealth(getMaxHealth());
                 firstSpawn();
@@ -120,7 +121,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.MAX_HEALTH)
                 .add(Attributes.ARMOR)
-                .add(Attributes.MOVEMENT_SPEED)
+                .add(Attributes.MOVEMENT_SPEED, 0.38f)
                 .add(Attributes.FOLLOW_RANGE)
                 .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE)
                 .add(Attributes.KNOCKBACK_RESISTANCE)
@@ -128,8 +129,8 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
                 .add(Attributes.ATTACK_SPEED)
                 .add(Attributes.FLYING_SPEED)
                 .add(ForgeMod.STEP_HEIGHT_ADDITION.get())
-                .add(ForgeMod.ENTITY_GRAVITY.get(),0.01f)
-                .add(Attributes.JUMP_STRENGTH)
+                .add(ForgeMod.ENTITY_GRAVITY.get(),0.08f)
+                .add(Attributes.JUMP_STRENGTH, 0)
                 ;
     }
 

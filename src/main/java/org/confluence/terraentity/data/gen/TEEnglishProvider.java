@@ -75,6 +75,10 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.server.enhance_all_monster", "Enhance All Monster");
         add("terra_entity.configuration.server.monster_attributes_multiplier_health", "Monster Attributes Multiplier-Health");
         add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster Attributes Multiplier-Damage");
+        add("terra_entity.configuration.server.disable_builtin_health_attack_modifier", "Disable Built-in Attributes Settings");
+
+
+
 
         add("terra_entity.configuration.client.boss_bar_style", "Boss Health Bar Style");
         add("terra_entity.configuration.client.boss_bar_number_offset_x", "Boss Health Bar Number Offset-X");
@@ -84,7 +88,6 @@ public class TEEnglishProvider extends LanguageProvider {
 
         add("terra_entity.configuration.client.enableNonSpiderModel", "Spider Harmonization");
         add("terra_entity.configuration.client.enableNonSpiderModel.tooltip", "Enable this option if you dislike spiders or want to beautify them.");
-
 
         // Tooltip
         add("tooltip.terra_entity.summon_item_cost", "Summon Cost: %d");

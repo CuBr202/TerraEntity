@@ -46,7 +46,7 @@ public class NPCShopPacket {
                     if(tradeIndex < 0 ){
                         return;
                     }
-                    trade = npc.getTradeManager().trades().get(tradeIndex);
+                    trade = npc.getTradeManager().availableTrades().get(tradeIndex);
 
                     NPCEvent.NPCTradeEvent event = new NPCEvent.NPCTradeEvent(npc, trade, sp);
                     AdapterUtils.postEvent(event);

@@ -18,7 +18,7 @@ public class ConfigContainerRegister {
         ConfigScreenBuilder builder;
         builder = ConfigScreenBuilder.builder(screen);
 
-        builder.addTab(TerraEntity.MODID, "client",45);
+        builder.addTab(TerraEntity.MODID, "client",40);
 
         builder.addIntSliderEditBox(ClientConfig.BossBarStyle,0 , 2)
                 .comment("0: Default, 1: Still Style, 2: Dynamic Style");
@@ -29,7 +29,7 @@ public class ConfigContainerRegister {
         builder.addCheckBox(ClientConfig.GENERATE_PROJECTILE_PARTICLE)
                 .comment("Generate Whip Particle.");
 
-        builder.addTab(TerraEntity.MODID, "server",98);
+        builder.addTab(TerraEntity.MODID, "server",165);
 
         builder.addDoubleEditBox(ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE)
                 .comment("0.0625 ~ 10.0");
@@ -40,6 +40,8 @@ public class ConfigContainerRegister {
         builder.addDoubleEditBox(ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH)
                 .comment("0.0625 ~ 100.0");
         builder.addCheckBox(ServerConfig.ENHANCE_ALL_MONSTER);
+        builder.addCheckBox(ServerConfig.DISABLE_BUILTIN_MODIFIER)
+                        .comment("For kjs modify");
         builder.addCheckBox(ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET);
         builder.addCheckBox(ServerConfig.BOSS_NO_PHYSICS);
         builder.addCheckBox(ServerConfig.BOSS_LEAVE_ON_DAY);

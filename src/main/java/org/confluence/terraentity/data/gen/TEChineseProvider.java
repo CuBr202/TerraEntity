@@ -299,6 +299,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.server.enhance_all_monster", "增强所有怪物");
         add("terra_entity.configuration.server.monster_attributes_multiplier_health", "Monster属性倍率-生命");
         add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster属性倍率-伤害");
+        add("terra_entity.configuration.server.disable_builtin_health_attack_modifier", "禁用内置的属性设置");
+
 
         add("terra_entity.configuration.client.boss_bar_style", "BOSS血条样式");
         add("terra_entity.configuration.client.boss_bar_number_offset_x", "BOSS血条数字偏移-X");

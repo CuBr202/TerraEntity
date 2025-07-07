@@ -40,7 +40,7 @@ public class RangeSkeleton extends AbstractSkeleton implements GeoEntity, IUseIt
             leftArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
             rightArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
         }
-        this.builder = builder;
+        this.builder = builder.setXpReward(10);
         builder.modify(this);
     }
 

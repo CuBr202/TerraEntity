@@ -6,6 +6,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraftforge.common.ForgeMod;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 
@@ -63,6 +64,9 @@ public class AttributeBuilder {
     public void modify(Mob mob) {
         mob.setDiscardFriction(noFriction);
 
+        if(ServerConfig.DISABLE_BUILTIN_MODIFIER.get()){
+            return;
+        }
 
         if(mob.getAttribute(Attributes.ARMOR) != null){
             mob.getAttribute(Attributes.ARMOR).setBaseValue(ARMOR);
