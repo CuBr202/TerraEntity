@@ -71,10 +71,7 @@ public class SummonSlime extends AbstractSummonMob<SummonSlime> {
 
     }
 
-    @Override
-    public EntityDataAccessor<Optional<UUID>> get_DATA_OWNERUUID_ID() {
-        return DATA_OWNERUUID_ID;
-    }
+
 
 
     static class SlimeMoveControl extends MoveControl {
@@ -100,7 +97,7 @@ public class SummonSlime extends AbstractSummonMob<SummonSlime> {
         }
 
 
-
+        @Override
         public void tick() {
             this.mob.setYRot(this.rotlerp(this.mob.getYRot(), this.yRot, 90.0F));
             this.mob.yHeadRot = this.mob.getYRot();
@@ -319,8 +316,4 @@ public class SummonSlime extends AbstractSummonMob<SummonSlime> {
                 ))));
     }
 
-    @Override
-    public boolean isPickable() {
-        return false;
-    }
 }

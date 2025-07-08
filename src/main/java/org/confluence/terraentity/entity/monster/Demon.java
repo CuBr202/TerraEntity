@@ -7,16 +7,17 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
-import org.confluence.terraentity.entity.proj.LineProj;
+import org.confluence.terraentity.entity.proj.DemonScytheProj;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
-public class VooDooDemon extends Harpy {
+public class Demon extends Harpy {
 
-    public VooDooDemon(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
+    public Demon(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level, builder);
     }
 
@@ -59,7 +60,8 @@ public class VooDooDemon extends Harpy {
 
     @Override
     protected void shoot(LivingEntity living){
-        LineProj proj = TEProjectileEntities.HARPY_FEATURE_PROJ.get().create(level());
+        DemonScytheProj proj = TEProjectileEntities.DEMON_SCYTHE_PROJ.get().create(level());
+        this.playSound(TESounds.WAVING.get());
         if(proj != null) {
             proj.setPos(this.getEyePosition());
             proj.setOwner(this);

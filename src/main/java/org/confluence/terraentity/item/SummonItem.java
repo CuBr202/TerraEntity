@@ -27,6 +27,7 @@ import org.confluence.terraentity.attachment.SummonerAttachment;
 import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
+import org.confluence.terraentity.init.entity.TESummonEntities;
 import org.confluence.terraentity.utils.TEUtils;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -85,7 +86,7 @@ public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
             return;
         }
 
-        var entity = entityType.get().create(level);
+        T entity = entityType.get().create(level);
         if (entity!=null) {
             BlockPos pos = TEUtils.getEyeBlockHitResult(player);
             entity.setPos(pos.getX(), pos.getY(), pos.getZ());

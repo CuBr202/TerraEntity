@@ -11,6 +11,8 @@ import software.bernie.geckolib.model.data.EntityModelData;
 
 public class GeoNormalModel<T extends GeoEntity> extends DefaultedEntityGeoModel<T> {
 
+    GeoBone head;
+
     public GeoNormalModel(ResourceLocation path) {
         super(path, true);
     }
@@ -26,16 +28,22 @@ public class GeoNormalModel<T extends GeoEntity> extends DefaultedEntityGeoModel
 
     public void setCustomAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
         if (this.turnsHead) {
-            GeoBone head = this.getAnimationProcessor().getBone(getHead());
-            if (head != null) {
+            if (this.head == null){
+                this.head = getHead();
+            }
+            if (this.head != null) {
                 EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-                head.setRotX(entityData.headPitch() * 0.017453292F);
-                head.setRotY(entityData.netHeadYaw() * 0.017453292F);
+                this.head.setRotX(entityData.headPitch() * 0.017453292F);
+                this.head.setRotY(entityData.netHeadYaw() * 0.017453292F);
             }
         }
     }
 
-    protected String getHead(){
+    protected GeoBone getHead(){
+        return this.getAnimationProcessor().getBone(getHeadName());
+    }
+
+    protected String getHeadName(){
         return "Head";
     }
 

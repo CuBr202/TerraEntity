@@ -74,6 +74,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.SPORE_SKELETON.get(), "孢子骷髅");
         add(TEMonsterEntities.SPORE_ZOMBIE.get(), "孢子僵尸");
         add(TEMonsterEntities.HARPY.get(), "鸟妖");
+        add(TEMonsterEntities.DEMON.get(), "恶魔");
+        add(TEMonsterEntities.VOODOO_DEMON.get(), "巫毒恶魔");
         add(TEMonsterEntities.ANGER_BONES.get(), "愤怒骷髅");
         add(TEMonsterEntities.SHORT_BONES.get(), "矮骷髅");
         add(TEMonsterEntities.BIG_BONES.get(), "大骷髅");
@@ -105,7 +107,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), "血肉墙口");
 
 
-
+        add(TESummonEntities.SUMMON_FINCH.get(), "雀宝宝");
         add(TESummonEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
         add(TESummonEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
         add(TESummonEntities.SUMMON_HORNET.get(), "仆役黄蜂");
@@ -139,6 +141,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
         add(TESpawnEggItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
         add(TESpawnEggItems.HARPY_SPAWN_EGG.get(), "鸟妖刷怪蛋");
+        add(TESpawnEggItems.DEMON_SPAWN_EGG.get(), "恶魔刷怪蛋");
+        add(TESpawnEggItems.VOODOO_DEMON_SPAWN_EGG.get(), "巫毒恶魔刷怪蛋");
         add(TESpawnEggItems.GIANT_SHELLY_SPAWN_EGG.get(), "巨型卷壳怪刷怪蛋");
         add(TESpawnEggItems.GIANT_WORM_SPAWN_EGG.get(), "巨型蠕虫刷怪蛋");
         add(TESpawnEggItems.NYMPH_SPAWN_EGG.get(), "宁芙刷怪蛋");

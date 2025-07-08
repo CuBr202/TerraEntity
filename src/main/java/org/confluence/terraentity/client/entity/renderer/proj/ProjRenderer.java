@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -15,7 +16,7 @@ import org.confluence.terraentity.entity.proj.BaseProj;
 
 
 public class ProjRenderer<T extends BaseProj> extends EntityRenderer<T> {
-    private final EntityModel<T> bulletModel;
+    protected final EntityModel<T> bulletModel;
     float size;
     float offsetY;
     public ProjRenderer(EntityRendererProvider.Context pContext, EntityModel<T> pModel, float size,float offsetY) {
@@ -39,12 +40,44 @@ public class ProjRenderer<T extends BaseProj> extends EntityRenderer<T> {
         if(entity.getTexture()==null) return;
 
         super.render(entity, pEntityYaw, pPartialTick, poseStack, pBuffer, pPackedLight);
+
+        this.defaultRender(entity, pEntityYaw, pPartialTick, poseStack, pBuffer, pPackedLight);
+    }
+
+    protected void defaultRender(T entity, float pEntityYaw, float pPartialTick, PoseStack poseStack, MultiBufferSource pBuffer, int pPackedLight){
+        this.actualRender(entity, pEntityYaw, pPartialTick, poseStack, pBuffer, pPackedLight, this.getRenderType(entity));
+
+    }
+
+    protected RenderType getRenderType(T entity){
+        return this.bulletModel.renderType(this.getTextureLocation(entity));
+    }
+
+    protected void actualRender(T entity, float pEntityYaw, float pPartialTick, PoseStack poseStack, MultiBufferSource pBuffer, int pPackedLight, RenderType renderType){
         poseStack.pushPose();
         poseStack.scale(size,size,size);
 
         poseStack.translate(0,offsetY,0);
 
+        this.adjustPosePost(poseStack, entity, pPartialTick);
+//        if(rotateZ) {
+//            float pitch = -(float) Math.atan2(v.y, Math.sqrt(v.x * v.x + v.z * v.z));
+//            pPoseStack.mulPose(Axis.XN.rotation(pitch));
+//            pPoseStack.mulPose(Axis.ZN.rotation((pEntity.tickCount + pPartialTick) * rotateZSpeed));
+//        }
 
+        this.renderModel(pBuffer, entity, poseStack, pPackedLight, renderType);
+
+        poseStack.popPose();
+    }
+
+    protected void renderModel(MultiBufferSource pBuffer, T entity, PoseStack poseStack, int pPackedLight, RenderType renderType){
+        VertexConsumer buffer = pBuffer.getBuffer(renderType);
+        this.bulletModel.renderToBuffer(poseStack,buffer,pPackedLight, OverlayTexture.NO_OVERLAY);
+    }
+
+
+    protected void adjustPosePost(PoseStack poseStack, T entity, float partialTick){
         Vec3 v = entity.getDeltaMovement();
 
         float yaw = (float) Math.atan2(v.z, v.x);
@@ -53,16 +86,6 @@ public class ProjRenderer<T extends BaseProj> extends EntityRenderer<T> {
         float pitch = (float) Math.atan2(v.y, Math.sqrt(v.x*v.x + v.z*v.z));
         // 旋转到正前方pitch
         poseStack.mulPose(Axis.ZN.rotation( pitch));
-
-//        if(rotateZ) {
-//            float pitch = -(float) Math.atan2(v.y, Math.sqrt(v.x * v.x + v.z * v.z));
-//            pPoseStack.mulPose(Axis.XN.rotation(pitch));
-//            pPoseStack.mulPose(Axis.ZN.rotation((pEntity.tickCount + pPartialTick) * rotateZSpeed));
-//        }
-
-        VertexConsumer buffer = pBuffer.getBuffer(this.bulletModel.renderType(this.getTextureLocation(entity)));
-        this.bulletModel.renderToBuffer(poseStack,buffer,pPackedLight, OverlayTexture.NO_OVERLAY);
-        poseStack.popPose();
     }
 
 }

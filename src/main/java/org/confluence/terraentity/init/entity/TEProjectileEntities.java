@@ -12,6 +12,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.model.CabbageProjModel;
+import org.confluence.terraentity.client.entity.model.DemonScytheModel;
 import org.confluence.terraentity.client.entity.model.HarpyFeatherProjectileModel;
 import org.confluence.terraentity.client.entity.model.Stinger;
 import org.confluence.terraentity.client.entity.renderer.proj.*;
@@ -34,8 +35,10 @@ public class TEProjectileEntities {
             (ParticleLineProj) new ParticleLineProj(e,l).addEffect(new MobEffectInstance(MobEffects.HUNGER, 100)),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<ParticleLineProj>> DARK_CASTER_PROJ = registerProj("dark_caster_spit",(e, l)->
             new ParticleLineProj(e,l).setParticleOptions(ParticleTypes.SOUL),0.5F,0.5F);
-    public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> HARPY_FEATURE_PROJ = registerProj("harpy_feature_spit",(e, l)->
+    public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> HARPY_FEATURE_PROJ = registerProj("harpy_feature",(e, l)->
             new LineProj(e,l).setTexture(TerraEntity.space("textures/entity/model/harpy_feather_projectile.png")),0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<DemonScytheProj>> DEMON_SCYTHE_PROJ = registerProj("demon_scythe_proj",(e, l)->
+            (DemonScytheProj) new DemonScytheProj(e,l, null).setTexture(TerraEntity.space("textures/entity/model/demon_scythe_projectile.png")),1.2F,1.2F);
 
     // 鞭子
     public static final DeferredHolder<EntityType<?>,EntityType<WhipEntity>> WHIP_PROJECTILE = TEEntities.ENTITIES.register("whip_projectile",() -> EntityType.Builder.<WhipEntity>of((e, l)->
@@ -61,7 +64,9 @@ public class TEProjectileEntities {
         RegisterUtils.registerBaseProjRenderer(event, VILE_SPIT_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         RegisterUtils.registerBaseProjRenderer(event, DARK_CASTER_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         RegisterUtils.registerBaseProjRenderer(event, HARPY_FEATURE_PROJ.get(), c->new HarpyFeatherProjectileModel<>(c.bakeLayer(HarpyFeatherProjectileModel.LAYER_LOCATION)));
+//        RegisterUtils.registerBaseProjRenderer(event, DEMON_SCYTHE_PROJ.get(), c->new DemonScytheModel<>(c.bakeLayer(DemonScytheModel.LAYER_LOCATION)));
 
+        event.registerEntityRenderer(DEMON_SCYTHE_PROJ.get(), c->new DemonScytheProjRenderer(c, new DemonScytheModel<>(c.bakeLayer(DemonScytheModel.LAYER_LOCATION))));
         // 子弹
         event.registerEntityRenderer(TEProjectileEntities.TRAIL_PROJECTILE.get(), TrailProjectileRenderer::new);
         // 鞭子

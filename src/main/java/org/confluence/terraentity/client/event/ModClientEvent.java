@@ -73,6 +73,7 @@ public final class ModClientEvent {
         registerModel(event, CabbageProjModel.class);
         registerModel(event, Stinger.class);
         registerModel(event, HarpyFeatherProjectileModel.class);
+        registerModel(event, DemonScytheModel.class);
 
     }
 

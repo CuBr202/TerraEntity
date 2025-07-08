@@ -20,8 +20,6 @@ import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.mixin.accessor.EntityAccessor;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
 /**
@@ -29,14 +27,14 @@ import software.bernie.geckolib.constant.DefaultAnimations;
  */
 public class Harpy extends AbstractMonster {
 
-    int _shootTick = 20;
-    int shootTick;
+    protected int _shootTick = 20;
+    protected int shootTick;
 
-    int _shootCooldown = 150;
-    int shootCooldown;
+    protected int _shootCooldown = 150;
+    protected int shootCooldown;
 
     protected int _shootCount = 3;
-    int shootCount;
+    protected int shootCount;
 
 
     public Harpy(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
@@ -111,7 +109,6 @@ public class Harpy extends AbstractMonster {
     protected SoundEvent getDeathSound() {
         return TESounds.ROUTINE_DEATH.get();
     }
-
 
     protected void shoot(LivingEntity living){
         this.swing(InteractionHand.MAIN_HAND);

@@ -2,6 +2,7 @@
 package org.confluence.terraentity.entity.summon;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -14,6 +15,9 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.Optional;
+import java.util.UUID;
 
 public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal implements GeoEntity, ISummonMob<T>, ICollisionAttackEntity<T> {
 
@@ -116,6 +120,11 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
     @Override
     public boolean isPickable() {
         return false;
+    }
+
+    @Override
+    public EntityDataAccessor<Optional<UUID>> get_DATA_OWNERUUID_ID() {
+        return DATA_OWNERUUID_ID;
     }
 
 /* Geo API */
