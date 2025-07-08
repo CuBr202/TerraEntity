@@ -6,6 +6,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.confluence.terraentity.init.entity.TEAnimals;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.entity.TENpcEntities;
@@ -60,14 +61,17 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> GIANT_ANTLION_SWARMER_SPAWN_EGG = registerEgg("giant_antlion_spawn_egg", TEMonsterEntities.GIANT_ANTLION_SWARMER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> FLYING_FISH_SPAWN_EGG = registerEgg("flying_fish_spawn_egg", TEMonsterEntities.FLYING_FISH, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> HARPY_SPAWN_EGG = registerEgg("harpy_spawn_egg", TEMonsterEntities.HARPY, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> DEMON_SPAWN_EGG = registerEgg("demon_egg", TEMonsterEntities.DEMON, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> VOODOO_DEMON_SPAWN_EGG = registerEgg("voodoo_demon_egg", TEMonsterEntities.VOODOO_DEMON, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> DEMON_SPAWN_EGG = registerEgg("demon_spawn_egg", TEMonsterEntities.DEMON, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> VOODOO_DEMON_SPAWN_EGG = registerEgg("voodoo_demon_spawn_egg", TEMonsterEntities.VOODOO_DEMON, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> DRIPPLER_SPAWN_EGG = registerEgg("drippler_spawn_egg", TEMonsterEntities.DRIPPLER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> BLOOD_ZOMBIE_SPAWN_EGG = registerEgg("blood_zombie_spawn_egg", TEMonsterEntities.BLOOD_ZOMBIE, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> WANDERING_EYE_FISH_SPAWN_EGG = registerEgg("wandering_eye_fish_spawn_egg", TEMonsterEntities.WANDERING_EYE_FISH, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> CRIMSON_KEMERA_EGG = registerEgg("crimson_kemera_egg", TEMonsterEntities.CRIMSON_KEMERA, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> CRIMSON_KEMERA_SPAWN_EGG = registerEgg("crimson_kemera_spawn_egg", TEMonsterEntities.CRIMSON_KEMERA, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> EATER_OF_SOULS_SPAWN_EGG = registerEgg("eater_of_souls_spawn_egg", TEMonsterEntities.EATER_OF_SOULS, 0xffffff, 0xffffff);
-    public static final DeferredItem<Item> FACE_MONSTER_EGG = registerEgg("face_monster_egg", TEMonsterEntities.FACE_MONSTER, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> FACE_MONSTER_SPAWN_EGG = registerEgg("face_monster_spawn_egg", TEMonsterEntities.FACE_MONSTER, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> FIRE_IMG_SPAWN_EGG = registerEgg("fire_imp_spawn_egg", TEMonsterEntities.FIRE_IMP, 0xffffff, 0xffffff);
+
+    // BOSS
     public static final DeferredItem<Item> KING_SLIME_SPAWN_EGG = registerEgg("king_slime_spawn_egg", TEBossEntities.KING_SLIME, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> EYE_OF_CTHULHU_SPAWN_EGG = registerEgg("cthulhu_eye_spawn_egg", TEBossEntities.EYE_OF_CTHULHU, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> EATER_OF_WORLD_SPAWN_EGG = registerEgg("eater_of_world_spawn_egg", TEBossEntities.EATER_OF_WORLDS, 0xffffff, 0xffffff);
@@ -119,6 +123,11 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> TRUFFLE_SPAWN_EGG = registerEgg("truffle_spawn_egg", TENpcEntities.TRUFFLE, 0xffffff);
 
 
+    // 动物
+    public static final DeferredItem<Item> SQUIRREL_SPAWN_EGG = registerEgg("squirrel_spawn_egg", TEAnimals.SQUIRREL, 0xffffff);
+    public static final DeferredItem<Item> BUNNY_SPAWN_EGG = registerEgg("bunny_spawn_egg", TEAnimals.BUNNY, 0xffffff);
+    public static final DeferredItem<Item> BOOM_BUNNY_SPAWN_EGG = registerEgg("boom_bunny_spawn_egg", TEAnimals.BOOM_BUNNY, 0xffffff);
+    public static final DeferredItem<Item> DUCK_EGG = registerEgg("duck_spawn_egg", TEAnimals.DUCK, 0xffffff);
 
 
     public static DeferredItem<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryColor, int secondaryColor){

@@ -1,17 +1,9 @@
 package org.confluence.terraentity.client.entity.model;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.monster.IVariant;
 import org.confluence.terraentity.entity.monster.Nymph;
-import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.model.DefaultedEntityGeoModel;
-import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.model.data.EntityModelData;
 
 public class NymphModel<T extends Nymph> extends GeoNormalModel<T> {
     private final ResourceLocation animation;

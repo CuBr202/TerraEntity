@@ -18,7 +18,11 @@ import org.confluence.terraentity.client.entity.model.Stinger;
 import org.confluence.terraentity.client.entity.renderer.proj.*;
 import org.confluence.terraentity.client.util.RegisterUtils;
 import org.confluence.terraentity.entity.proj.*;
+import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.registries.TERegistries;
+import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
+import org.confluence.terraentity.registries.hit_effect.variant.TimePossibilityAmplifierEffect;
 
 public class TEProjectileEntities {
 
@@ -30,11 +34,13 @@ public class TEProjectileEntities {
             new LineProj(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> SUMMON_BEE_STICK_PROJ = registerProj("summon_bee_stick_proj",(e, l)->
             new SummonBeeStick(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
-    public static final DeferredHolder<EntityType<?>, EntityType<SkullProjectile>> SKULL = registerProj("skull", SkullProjectile::new,0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<SkullProjectile>> SKULL = registerProj("skull_proj", SkullProjectile::new,0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<ParticleLineProj>> VILE_SPIT_PROJ = registerProj("vile_spit",(e, l)->
             (ParticleLineProj) new ParticleLineProj(e,l).addEffect(new MobEffectInstance(MobEffects.HUNGER, 100)),0.5F,0.5F);
-    public static final DeferredHolder<EntityType<?>, EntityType<ParticleLineProj>> DARK_CASTER_PROJ = registerProj("dark_caster_spit",(e, l)->
+    public static final DeferredHolder<EntityType<?>, EntityType<ParticleLineProj>> DARK_CASTER_PROJ = registerProj("dark_caster_proj",(e, l)->
             new ParticleLineProj(e,l).setParticleOptions(ParticleTypes.SOUL),0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<ParticleLineProj>> FIRE_IMP_PROJ = registerProj("fire_imp_proj",(e, l)->
+            (ParticleLineProj) new ParticleLineProj(e,l).setParticleOptions(ParticleTypes.FLAME).setEffectStrategy(PrefabEffect.of("set_fire", TEEffectStrategies.SET_FIRE_EFFECT)),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> HARPY_FEATURE_PROJ = registerProj("harpy_feature",(e, l)->
             new LineProj(e,l).setTexture(TerraEntity.space("textures/entity/model/harpy_feather_projectile.png")),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<DemonScytheProj>> DEMON_SCYTHE_PROJ = registerProj("demon_scythe_proj",(e, l)->
@@ -63,6 +69,7 @@ public class TEProjectileEntities {
         event.registerEntityRenderer(SKULL.get(), SkullProjectileRenderer::new);
         RegisterUtils.registerBaseProjRenderer(event, VILE_SPIT_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         RegisterUtils.registerBaseProjRenderer(event, DARK_CASTER_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
+        RegisterUtils.registerBaseProjRenderer(event, FIRE_IMP_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         RegisterUtils.registerBaseProjRenderer(event, HARPY_FEATURE_PROJ.get(), c->new HarpyFeatherProjectileModel<>(c.bakeLayer(HarpyFeatherProjectileModel.LAYER_LOCATION)));
 //        RegisterUtils.registerBaseProjRenderer(event, DEMON_SCYTHE_PROJ.get(), c->new DemonScytheModel<>(c.bakeLayer(DemonScytheModel.LAYER_LOCATION)));
 

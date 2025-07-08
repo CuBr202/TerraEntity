@@ -164,8 +164,10 @@ public class TEChineseProvider extends LanguageProvider {
 
         add(TESpawnEggItems.BLOOD_CRAWLER_SPAWN_EGG.get(), "血爬虫刷怪蛋");
         add(TESpawnEggItems.BLOODY_SPORE_SPAWN_EGG.get(), "血腥芽孢刷怪蛋");
-        add(TESpawnEggItems.CRIMSON_KEMERA_EGG.get(), "猩红喀迈拉刷怪蛋");
-        add(TESpawnEggItems.FACE_MONSTER_EGG.get(), "脸怪刷怪蛋");
+        add(TESpawnEggItems.CRIMSON_KEMERA_SPAWN_EGG.get(), "猩红喀迈拉刷怪蛋");
+        add(TESpawnEggItems.FACE_MONSTER_SPAWN_EGG.get(), "脸怪刷怪蛋");
+        add(TESpawnEggItems.FIRE_IMG_SPAWN_EGG.get(), "火焰小鬼刷怪蛋");
+
 
         add(TESpawnEggItems.EATER_OF_SOULS_SPAWN_EGG.get(), "噬魂怪刷怪蛋");
         add(TESpawnEggItems.DECAYEDER_SPAWN_EGG.get(), "腐骴刷怪蛋");
@@ -249,6 +251,14 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.PARTY_GIRL_SPAWN_EGG.get(), "派对女孩刷怪蛋");
         add(TESpawnEggItems.CLOTHIER_SPAWN_EGG.get(), "服装商刷怪蛋");
         add(TESpawnEggItems.TRUFFLE_SPAWN_EGG.get(), "松露人刷怪蛋");
+
+
+        // 动物
+        add(TESpawnEggItems.SQUIRREL_SPAWN_EGG.get(), "松鼠刷怪蛋");
+        add(TESpawnEggItems.BOOM_BUNNY_SPAWN_EGG.get(), "炸弹兔刷怪蛋");
+        add(TESpawnEggItems.BUNNY_SPAWN_EGG.get(), "兔子刷怪蛋");
+        add(TESpawnEggItems.DUCK_EGG.get(), "鸭子刷怪蛋");
+
 
 
         // 召唤杖

@@ -12,6 +12,7 @@ import software.bernie.geckolib.model.data.EntityModelData;
 public class GeoNormalModel<T extends GeoEntity> extends DefaultedEntityGeoModel<T> {
 
     GeoBone head;
+    String headName = "Head";
 
     public GeoNormalModel(ResourceLocation path) {
         super(path, true);
@@ -44,7 +45,12 @@ public class GeoNormalModel<T extends GeoEntity> extends DefaultedEntityGeoModel
     }
 
     protected String getHeadName(){
-        return "Head";
+        return headName;
+    }
+
+    public GeoNormalModel<T> setHeadName(String headName){
+        this.headName = headName;
+        return this;
     }
 
 }

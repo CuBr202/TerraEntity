@@ -26,6 +26,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.registries.generation.IGeneration;
+import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
+import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.registries.track.ITrackType;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +46,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     private final Set<UUID> hitList = new HashSet<>();
     public int penetration =1;
     protected List<MobEffectInstance> effects;
+    protected IEffectStrategy effectStrategy;
     public ResourceLocation texture = TerraEntity.space("textures/entity/projectile/default.png");
     protected DeferredHolder<SoundEvent,SoundEvent> hitSound;
     public Consumer<BaseProj> clientTickCallback;
@@ -109,6 +112,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     }
     public T setTexture(ResourceLocation texture){
         this.texture = texture;
+        return (T) this;
+    }
+    public T setEffectStrategy(IEffectStrategy effectStrategy){
+        this.effectStrategy = effectStrategy;
         return (T) this;
     }
 
@@ -231,6 +238,11 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
             hitList.add(hurter.getUUID());
             for (MobEffectInstance effect : effects) {
                 living.addEffect(new MobEffectInstance(effect)); // 需要复制，不然duration会减为0
+            }
+            if(effectStrategy != null){
+                if(this.getOwner() != null && this.getOwner() instanceof LivingEntity living1) {
+                    this.effectStrategy.getEffect().accept(living1, living);
+                }
             }
             if (hitSound != null)
                 level().playSound(this, this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);

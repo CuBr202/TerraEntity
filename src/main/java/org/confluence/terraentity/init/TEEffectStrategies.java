@@ -48,15 +48,15 @@ public final class TEEffectStrategies {
     }
 
     /**未定义效果*/
-    private static final DeferredHolder<EffectStrategy, EffectStrategy> UNDEFINED = createEffect("undefined",
+    public static final DeferredHolder<EffectStrategy, EffectStrategy> UNDEFINED = createEffect("undefined",
             UNDEFINED_EFFECT);
 
     /**蝙蝠棍*/
-    private static final  DeferredHolder<EffectStrategy, EffectStrategy> BAT_FANG_EFFECT = createEffect("bat",
+    public static final  DeferredHolder<EffectStrategy, EffectStrategy> BAT_FANG_EFFECT = createEffect("bat",
             (owner, entity)-> owner.heal(1));
 
     /**着火*/
-    private static final DeferredHolder<EffectStrategy, EffectStrategy> SET_FIRE_EFFECT = createEffect("set_fire_5_sec",
+    public static final DeferredHolder<EffectStrategy, EffectStrategy> SET_FIRE_EFFECT = createEffect("set_fire_5_sec",
             SET_FIRE.apply(5 * 20, 1f));
 
 //    /** 魔光剑*/

@@ -17,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
+import org.confluence.terraentity.entity.util.IVanillaVariant;
 import org.confluence.terraentity.init.TESounds;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -27,7 +28,7 @@ import java.util.Random;
 /**
  * 巨大卷壳虫
  */
-public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVariant<Integer> {
+public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVanillaVariant<Integer> {
 
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(GiantShelly.class, EntityDataSerializers.INT);
 
@@ -112,7 +113,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVar
     @Override
     public void onAddedToLevel(){
         super.onAddedToLevel();
-        this.setVariant(random.nextInt(2));
+        this.setVariant(random.nextInt(getTexturesMap().size()));
     }
 
     @Override
@@ -166,6 +167,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVar
         0, TerraEntity.space("textures/entity/giant_shelly/purple.png"),
         1, TerraEntity.space("textures/entity/giant_shelly/yellow.png")
     );
+
     @Override
     public Map<Integer, ResourceLocation> getTexturesMap() {
         return textures;

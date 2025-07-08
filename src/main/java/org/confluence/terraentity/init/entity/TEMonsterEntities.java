@@ -118,6 +118,7 @@ public class TEMonsterEntities {
     // 远程法师
     public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> DARK_CASTER = TEEntities.registerEntity("dark_caster", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(26, 1, 10, 32, 1, 0.82f).getPrefab()), 0.65F, 1.85F);
     public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> GOBLIN_SORCERER = TEEntities.registerEntity("goblin_sorcerer", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(20, 1, 10, 32, 1, 0.46f).getPrefab()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> FIRE_IMP = TEEntities.registerEntity("fire_imp", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.FIRE_IMP_PROJ, new AbstractPrefab(20, 1, 10, 32, 1, 0.46f).getPrefab()), 0.65F, 1.85F);
 
     // 哥布林军队
     public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_ARCHER = TEEntities.registerEntity("goblin_archer", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab(41, 1, 11, 32, 1, 0.37f).asHumanoid().setMainHand(Items.BOW.getDefaultInstance()).setSpawnWithoutLight()), 0.65F, 1.85F);
@@ -184,7 +185,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.GIANT_WORM.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.GIANT_WORM.getId(), 2.0f, 0.0f));
         event.registerEntityRenderer(TEMonsterEntities.LEECH.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.LEECH.getId(), 2.0f, 0.0f));
         event.registerEntityRenderer(TEMonsterEntities.TOMB_CRAWLER.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.TOMB_CRAWLER.getId(), 2.0f, 0.0f));
-        event.registerEntityRenderer(TEMonsterEntities.GIANT_SHELLY.get(), c -> new GeoNormalRenderer<>(c, new GiantShellyModel<>(TEMonsterEntities.GIANT_SHELLY.getId()), false, 2, 0));
+        event.registerEntityRenderer(TEMonsterEntities.GIANT_SHELLY.get(), c -> new GeoNormalRenderer<>(c, new VariantTexModel<>(TEMonsterEntities.GIANT_SHELLY.getId()), false, 2, 0));
         // bat
         event.registerEntityRenderer(TEMonsterEntities.CAVE_BAT.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.CAVE_BAT.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.JUNGLE_BAT.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.JUNGLE_BAT.getId(), false));
@@ -217,6 +218,7 @@ public class TEMonsterEntities {
 
         // 远程法师
         event.registerEntityRenderer(TEMonsterEntities.DARK_CASTER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.DARK_CASTER.getId()));
+        event.registerEntityRenderer(TEMonsterEntities.FIRE_IMP.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.FIRE_IMP.getId()));
 
         event.registerEntityRenderer(TEMonsterEntities.GOBLIN_SORCERER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.GOBLIN_SORCERER.getId().withPrefix("goblin/")));
         event.registerEntityRenderer(TEMonsterEntities.GOBLIN_PEON.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.GOBLIN_PEON.getId().withPrefix("goblin/")));
@@ -313,6 +315,7 @@ public class TEMonsterEntities {
 
         // 远程法师
         event.put(DARK_CASTER.get(), AbstractMonster.createAttributes().build());
+        event.put(FIRE_IMP.get(), AbstractMonster.createAttributes().build());
 
         // 哥布林军队
         event.put(GOBLIN_SORCERER.get(), AbstractMonster.createAttributes().build());
@@ -401,6 +404,7 @@ public class TEMonsterEntities {
 
         // 远程法师
         event.register(DARK_CASTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(FIRE_IMP.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
 
         // 哥布林军队
