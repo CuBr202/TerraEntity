@@ -86,7 +86,6 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.DARK_CASTER.get(), "暗黑法师");
         add(TEMonsterEntities.UNDEAD_VIKING.get(), "亡灵维京海盗");
         add(TEMonsterEntities.THE_HUNGRY.get(), "饿鬼");
-        add(TEMonsterEntities.VOODOO_DEMON.get(), "巫毒恶魔");
         add(TEMonsterEntities.ANTLION_SWARMER.get(), "蚁狮蜂");
         add(TEMonsterEntities.GIANT_ANTLION_SWARMER.get(), "巨型蚁狮蜂");
 
