@@ -13,6 +13,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.client.entity.renderer.mob.NPCRenderer;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.AnglerNPC;
+import org.confluence.terraentity.entity.npc.MechanicNPC;
 import org.confluence.terraentity.entity.npc.SimpleNPC;
 import org.confluence.terraentity.init.TEEntities;
 
@@ -66,7 +67,7 @@ public class TENpcEntities {
     /**
      * 机械师
      */
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> MECHANIC = TEEntities.registerEntity("mechanic", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> MECHANIC = TEEntities.registerEntity("mechanic", MechanicNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
      * 旅商
      */

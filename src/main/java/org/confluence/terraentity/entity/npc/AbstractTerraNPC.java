@@ -18,6 +18,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -447,7 +448,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     @SuppressWarnings("all")
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (level().isClientSide) {
+        if (!(player instanceof ServerPlayer serverPlayer)) {
             return InteractionResult.SUCCESS;
         }
 
@@ -515,7 +516,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             return InteractionResult.PASS;
         }
 
-        NPCEvent.InteractNPCEvent event = new NPCEvent.InteractNPCEvent(this, player);
+        NPCEvent.InteractNPCEvent event = new NPCEvent.InteractNPCEvent(this, serverPlayer);
         AdapterUtils.postEvent(event);
         event.execute((npc, player1) -> {
             if (getTradeManager() != null) {

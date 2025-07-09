@@ -38,11 +38,11 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
      * 重定向交互npc事件，用于替换交互时打开的菜单
      */
     public static class InteractNPCEvent extends NPCEvent implements ICancellableEvent {
-        private Player player;
-        private BiConsumer<AbstractTerraNPC, Player> reDirection;
+        private final ServerPlayer player;
+        private BiConsumer<AbstractTerraNPC, ServerPlayer> reDirection;
         private InteractionResult result = InteractionResult.PASS;
 
-        public InteractNPCEvent(AbstractTerraNPC npc, Player player) {
+        public InteractNPCEvent(AbstractTerraNPC npc, ServerPlayer player) {
             super(npc);
             this.player = player;
         }
@@ -66,7 +66,7 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
         /**
          * 设置重定向逻辑，当reDirection不为空时，使用这个逻辑
          */
-        public void setRedirection(@Nonnull BiConsumer<AbstractTerraNPC, Player> reDirection) {
+        public void setRedirection(@Nonnull BiConsumer<AbstractTerraNPC, ServerPlayer> reDirection) {
             this.reDirection = reDirection;
         }
 
