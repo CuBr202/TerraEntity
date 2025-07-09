@@ -4,7 +4,6 @@ import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -16,16 +15,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.attachment.SummonerAttachment;
-import org.confluence.terraentity.entity.ai.IOBBProjectile;
 import org.confluence.terraentity.entity.util.trail.SummonSwordTrail;
-import org.confluence.terraentity.entity.util.trail.SwordTrail;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.utils.IOriented;
 import org.confluence.terraentity.utils.OBB;
 import org.confluence.terraentity.utils.TEUtils;
 import software.bernie.geckolib.animation.AnimatableManager;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -40,10 +36,14 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     int skillCooldown = 0;
     float rotateZTimer;
     int rotateZTick;
-    int sequence;
+    public int sequence;
     public Item modelItem;
+    public int backTicks;
+    public int backTicksMax = 20;
 
     protected static final EntityDataAccessor<Float> DATA_ROTATE_Z_ID = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.FLOAT);
+    protected static final EntityDataAccessor<Boolean> DATA_BACK = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<Integer> DATA_SEQUENCE = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.INT);
 
     public SummonSword(EntityType<? extends TamableAnimal> entityType,  Level level,Supplier<Item> modelItem,  int rgb) {
         this(entityType, level, modelItem, 0.15f, rgb);
@@ -83,6 +83,8 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_ROTATE_Z_ID, 0.0f);
+        builder.define(DATA_BACK, false);
+        builder.define(DATA_SEQUENCE, 0);
 
     }
 
@@ -92,6 +94,16 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         if (key == DATA_ROTATE_Z_ID) {
             this.rotateZTimer = this.entityData.get(DATA_ROTATE_Z_ID) + tickCount;
             this.rotateZTick = tickCount;
+        }else if(key == DATA_BACK){
+            boolean back = this.entityData.get(DATA_BACK);
+            if(!back) {
+                this.backTicks = 20;
+            }else{
+                this.backTicks = 0;
+            }
+
+        }else if(key == DATA_SEQUENCE){
+            this.sequence = this.entityData.get(DATA_SEQUENCE);
         }
 
     }
@@ -113,7 +125,13 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     public void tick() {
         super.tick();
         if(level().isClientSide){
-            this.trail.generateTrail(this, tickCount);
+            if(this.entityData.get(DATA_BACK)){
+                this.backTicks++;
+                this.trailQueue.poll();
+            }else{
+                this.backTicks--;
+                this.trail.generateTrail(this, tickCount);
+            }
         }
 
     }
@@ -266,8 +284,13 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         @Override
         public void start() {
 //            sword.setSharedFlag(6, false);
+            sword.entityData.set(DATA_BACK, true, true);
         }
-
+        @Override
+        public void stop() {
+//            sword.setSharedFlag(6, false);
+            sword.entityData.set(DATA_BACK, false, true);
+        }
 
         @Override
         public void tick(){
@@ -278,11 +301,17 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
             Vec3 d = Vec3.directionFromRotation(new Vec2(owner.getXRot(), owner.yBodyRot));
             Vec3 forward = d.multiply(1,0,1).normalize();
-            Vec3 ownerPos = owner.position().subtract(forward.scale(0.5 + 0.2f * (sword.sequence - 1))).add(0,1 - (sword.sequence - 1) * 0.08f,0);
+            Vec3 right = d.cross(new Vec3(0,1,0)).normalize();
+//            Vec3 ownerPos = owner.position().subtract(forward.scale(0.5 + 0.2f * (sword.sequence - 1))).add(0,1 - (sword.sequence - 1) * 0.08f,0);
+            Vec3 ownerPos = owner.position().subtract(forward.scale(0.5 - 0.05f * (sword.sequence - 1))).add(0,1,0)
+                    .add(right.scale(0.2f * (sword.sequence / 2) * ((sword.sequence & 1) == 0 ? 1 : -1)));
+
             Vec3 swordPos = sword.position();
             Vec3 dir = ownerPos.subtract(swordPos).normalize();
 
-            Vec3 lookPos = swordPos.subtract(forward.scale(5)).add(0,-15 + (sword.sequence - 1) * 2,0);
+//            Vec3 lookPos = swordPos.subtract(forward.scale(5)).add(0,-15 + (sword.sequence - 1) * 2,0);
+            Vec3 lookPos = swordPos.subtract(forward.scale(5)).add(0,-8 - (sword.sequence - 1)/2 ,0);
+
             sword.lookControl.setLookAt(lookPos);
             sword.lookAt(EntityAnchorArgument.Anchor.FEET, lookPos);
             double dist = ownerPos.distanceTo(swordPos) * 0.5;
@@ -336,6 +365,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
                 this.sequence = 1;
                 data.prismaIDs.add(this.sequence);
 //                System.out.println("no sequence found, setting to 1");
+                this.entityData.set(DATA_SEQUENCE, this.sequence, true);
                 return;
             }
             ids.sort(Comparator.naturalOrder());
@@ -345,6 +375,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
                     this.sequence = last + 1;
                     data.prismaIDs.add(this.sequence);
 //                    System.out.println("sequence found, setting to " + this.sequence);
+                    this.entityData.set(DATA_SEQUENCE, this.sequence, true);
                     return;
                 }
                 last = ids.get(i);
@@ -352,6 +383,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
             this.sequence = last + 1;
             data.prismaIDs.add(this.sequence);
 //            System.out.println("sequence found, setting to " + this.sequence);
+            this.entityData.set(DATA_SEQUENCE, this.sequence, true);
         }
     }
 

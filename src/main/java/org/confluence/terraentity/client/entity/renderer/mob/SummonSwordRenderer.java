@@ -46,7 +46,12 @@ public class SummonSwordRenderer<T extends SummonSword> extends EntityRenderer<T
 
         // 旋转到正前方pitch
         poseStack.mulPose(Axis.ZN.rotationDegrees(-pitch));
-//        poseStack.mulPose(Axis.XP.rotationDegrees(entity.updateZRot(entity.tickCount + partialTick)));
+
+        float progress =  Mth.clamp((entity.backTicks + partialTick) / entity.backTicksMax,0,1);
+
+        poseStack.mulPose(Axis.XP.rotationDegrees(90 * progress));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(entity.sequence /2 * ((entity.sequence & 1) == 0? -1 : 1) * 15 * progress));
+
         poseStack.mulPose(Axis.ZN.rotationDegrees(-45 + entity.getRotateZTimer(partialTick) * 30
 //                + (entity.tickCount + partialTick) * 30
                 ));
