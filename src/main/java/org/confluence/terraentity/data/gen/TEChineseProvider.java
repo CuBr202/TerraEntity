@@ -73,6 +73,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.SPORE_BAT.get(), "孢子蝙蝠");
         add(TEMonsterEntities.SPORE_SKELETON.get(), "孢子骷髅");
         add(TEMonsterEntities.SPORE_ZOMBIE.get(), "孢子僵尸");
+        add(TEMonsterEntities.HAT_SPORE_ZOMBIE.get(), "帽子蘑菇僵尸");
         add(TEMonsterEntities.HARPY.get(), "鸟妖");
         add(TEMonsterEntities.DEMON.get(), "恶魔");
         add(TEMonsterEntities.VOODOO_DEMON.get(), "巫毒恶魔");
@@ -158,6 +159,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");
         add(TESpawnEggItems.SPORE_SKELETON_SPAWN_EGG.get(), "孢子骷髅刷怪蛋");
         add(TESpawnEggItems.SPORE_ZOMBIE_SPAWN_EGG.get(), "孢子僵尸刷怪蛋");
+        add(TESpawnEggItems.HAT_SPORE_ZOMBIE_SPAWN_EGG.get(), "帽子蘑菇僵尸刷怪蛋");
         add(TESpawnEggItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
         add(TESpawnEggItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
         add(TESpawnEggItems.WANDERING_EYE_FISH_SPAWN_EGG.get(), "游荡眼球怪鱼刷怪蛋");
@@ -193,6 +195,11 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.GOBLIN_SCOUT.get(), "哥布林侦察兵");
         add(TEMonsterEntities.ANGER_GOBLIN.get(), "愤怒哥布林");
 
+        // 动物
+        add(TEAnimals.SQUIRREL.get(), "松鼠");
+        add(TEAnimals.BUNNY.get(), "兔兔");
+        add(TEAnimals.BOOM_BUNNY.get(), "爆炸兔");
+        add(TEAnimals.DUCK.get(), "鸭子");
 
 
         // boss
@@ -256,7 +263,7 @@ public class TEChineseProvider extends LanguageProvider {
         // 动物
         add(TESpawnEggItems.SQUIRREL_SPAWN_EGG.get(), "松鼠刷怪蛋");
         add(TESpawnEggItems.BOOM_BUNNY_SPAWN_EGG.get(), "炸弹兔刷怪蛋");
-        add(TESpawnEggItems.BUNNY_SPAWN_EGG.get(), "兔子刷怪蛋");
+        add(TESpawnEggItems.BUNNY_SPAWN_EGG.get(), "兔兔刷怪蛋");
         add(TESpawnEggItems.DUCK_EGG.get(), "鸭子刷怪蛋");
 
 

@@ -31,7 +31,6 @@ public class TEBoomerangItems {
     );
     public static final DeferredItem<Boomerang> ENCHANTED_BOOMERANG = register("enchanted_boomerang",2.2F,
             NORMAL_BOOMERANG_MODIFIER.apply(15,1.55f,1.55f).setDurability(300)
-
     );
     public static final DeferredItem<Boomerang> SHROOMERANG = register("shroomerang",2.2F,
             NORMAL_BOOMERANG_MODIFIER.apply(15,1.55f,1.55f).setDurability(500)
@@ -48,6 +47,10 @@ public class TEBoomerangItems {
             MULTI_BOOMERANG_MODIFIER.apply(10,3,
                     NORMAL_BOOMERANG_MODIFIER.apply(17,1.85f,1.85f)).setDurability(1000)
     );   // 使用三次
+
+    public static final DeferredItem<Boomerang> COMBAT_WRENCH = register("combat_wrench",3.1F,
+            NORMAL_BOOMERANG_MODIFIER.apply(10,3f,1.85f).setDurability(1500)
+    );
 
     public static final DeferredItem<Boomerang> FLAMARANG = register("flamarang",6.25F,
             NORMAL_BOOMERANG_MODIFIER.apply(18,1.85f,1.85f)

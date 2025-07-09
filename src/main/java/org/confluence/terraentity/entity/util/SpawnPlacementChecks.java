@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LightLayer;
 
 public class SpawnPlacementChecks {
 
@@ -82,6 +83,26 @@ public class SpawnPlacementChecks {
 
         return level.isDay();
     }
+
+    public static boolean checkNormalAnimalSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+        if (!(pLevel instanceof Level level) || pPos == null) {
+            return false;
+        }
+
+        if (!Mob.checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
+            return false;
+        }
+
+        int y = pPos.getY();
+        if (y >= 260) {
+            return false;
+        }
+
+        return level.isDay()
+                && pLevel.canSeeSky(pPos)
+                && pLevel.getBrightness(LightLayer.SKY, pPos) > 8;
+    }
+
 
     public static boolean checkUndergroundMonsterSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!(pLevel instanceof Level level)) {

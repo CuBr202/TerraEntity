@@ -49,6 +49,7 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> BLOODY_SPORE_SPAWN_EGG = registerEgg("bloody_spore_spawn_egg", TEMonsterEntities.BLOODY_SPORE, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> SPORE_SKELETON_SPAWN_EGG = registerEgg("spore_skeleton_spawn_egg", TEMonsterEntities.SPORE_SKELETON, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> SPORE_ZOMBIE_SPAWN_EGG = registerEgg("spore_zombie_spawn_egg", TEMonsterEntities.SPORE_ZOMBIE, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> HAT_SPORE_ZOMBIE_SPAWN_EGG = registerEgg("hat_spore_zombie_spawn_egg", TEMonsterEntities.HAT_SPORE_ZOMBIE, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> DECAYEDER_SPAWN_EGG = registerEgg("decayeder_spawn_egg", TEMonsterEntities.DECAYEDER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> DEVOURER_SPAWN_EGG = registerEgg("devourer_spawn_egg", TEMonsterEntities.DEVOURER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> GIANT_SHELLY_SPAWN_EGG = registerEgg("giant_shelly_spawn_egg", TEMonsterEntities.GIANT_SHELLY, 0xffffff, 0xffffff);

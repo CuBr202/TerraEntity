@@ -22,6 +22,7 @@ import org.confluence.terraentity.entity.animal.Bunny;
 import org.confluence.terraentity.entity.animal.Duck;
 import org.confluence.terraentity.entity.animal.Squirrel;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
+import org.confluence.terraentity.entity.util.SpawnPlacementChecks;
 import org.confluence.terraentity.init.TEEntities;
 
 public class TEAnimals {
@@ -49,10 +50,10 @@ public class TEAnimals {
     }
 
     public static void spawnPlacementRegister(RegisterSpawnPlacementsEvent event) {
-        event.register(DUCK.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(BUNNY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(BOOM_BUNNY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(SQUIRREL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BaseSlime::checkSlimeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(DUCK.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNormalAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(BUNNY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNormalAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(BOOM_BUNNY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNormalAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(SQUIRREL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNormalAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     public static void register() {

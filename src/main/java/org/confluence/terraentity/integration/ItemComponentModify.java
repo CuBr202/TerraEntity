@@ -37,8 +37,9 @@ public class ItemComponentModify {
         event.modify(TEBoomerangItems.ENCHANTED_BOOMERANG.get(), blue);
         event.modify(TEBoomerangItems.SHROOMERANG.get(), blue);
         event.modify(TEBoomerangItems.ICE_BOOMERANG.get(), blue);
-        event.modify(TEBoomerangItems.TRIMARANG.get(), orange);
+        event.modify(TEBoomerangItems.TRIMARANG.get(), green);
         event.modify(TEBoomerangItems.FLAMARANG.get(), orange);
+        event.modify(TEBoomerangItems.COMBAT_WRENCH.get(), orange);
 
         event.modify(TEBoomerangItems.BeiDou_BOOMERANG.get(), master);
         event.modify(TEBoomerangItems.DEVELOPER_BOOMERANG.get(), master);
