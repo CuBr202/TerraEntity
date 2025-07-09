@@ -107,6 +107,11 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     }
 
     @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return super.hurt(pSource, pAmount);
+    }
+
+    @Override
     protected SoundEvent getDeathSound() {
         return TESounds.TR_ZOMBIE_DEATH.get();
     }
