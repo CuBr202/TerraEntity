@@ -28,6 +28,8 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
      */
     List<Integer> ids = new CopyOnWriteArrayList<>();
 
+    public Set<Integer> prismaIDs = new HashSet<>(); // 存储棱镜的序列，以确定棱镜的位置
+
     public SummonerAttachment(SummonerType type) {
         this.type = type;
     }

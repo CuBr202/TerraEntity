@@ -58,18 +58,21 @@ public class SummonFollowOwnerGoal<T extends Mob & ISummonMob<?>> extends Goal {
         return false;
     }
 
+    @Override
     public void start() {
         this.timeToRecalcPath = 0;
         this.oldWaterCost = this.tamable.getPathfindingMalus(PathType.WATER);
         this.tamable.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
+    @Override
     public void stop() {
         this.owner = null;
         this.navigation.stop();
         this.tamable.setPathfindingMalus(PathType.WATER, this.oldWaterCost);
     }
 
+    @Override
     public void tick() {
         boolean flag = this.tamable.summon_shouldTryTeleportToOwner();
         if (!flag && owner!=null) {

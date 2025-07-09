@@ -11,6 +11,7 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
+import org.confluence.terraentity.entity.monster.Hornet;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -38,6 +39,7 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
     @Override
     public boolean shouldDoCollision(){
         return getTarget() != null;
+
     }
 
     @Override

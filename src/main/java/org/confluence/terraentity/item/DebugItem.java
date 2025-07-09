@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.proj.DemonScytheProj;
@@ -36,11 +37,21 @@ public class DebugItem extends Item {
 //            level.addFreshEntity(proj);
 
 
+
+
             DemonScytheProj proj = TEProjectileEntities.DEMON_SCYTHE_PROJ.get().create(level);
             if (proj != null) {
                 proj.setPos(player.getEyePosition());
                 proj.setOwner(player);
                 Vec3 forward = player.getLookAngle().scale(10);
+
+                for(int i=0;i<100;i++){
+                    for(int j=0;j<100;j++){
+                        level.setBlock(player.blockPosition().offset((int) (i + forward.x), (int) forward.y, (int) (j + forward.z)), Blocks.GLASS.defaultBlockState(), 3);
+                    }
+                }
+
+
                 proj.shoot(forward.x, forward.y, forward.z, 0.5f, 2f);
 //                proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
                 level.addFreshEntity(proj);

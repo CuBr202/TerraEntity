@@ -9,20 +9,19 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.EntityGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,7 +41,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ISummonMob<T extends Mob> {
+public interface ISummonMob<T extends Mob> extends OwnableEntity {
 
     int getCost();
 
@@ -64,6 +63,13 @@ public interface ISummonMob<T extends Mob> {
     default void summon_setOwnerUUID(@Nullable UUID uuid){
         asEntity().getEntityData().set(get_DATA_OWNERUUID_ID(), Optional.ofNullable(uuid));
     }
+
+    @Nullable
+    default UUID getOwnerUUID(){
+        return summon_getOwnerUUID();
+    }
+
+    EntityGetter level();
 
     default UUID summon_getOwnerUUID(){
         return (UUID)((Optional) asEntity().getEntityData().get(get_DATA_OWNERUUID_ID())).orElse(null);
@@ -167,6 +173,9 @@ public interface ISummonMob<T extends Mob> {
     }
 
     default boolean summon_canFlyToOwner(){
+        if(asEntity() instanceof FlyingAnimal){
+            return true;
+        }
         return false;
     }
 
@@ -235,12 +244,17 @@ public interface ISummonMob<T extends Mob> {
         summon_registerMoveGoal();
         asEntity().goalSelector.addGoal(10, new LookAtPlayerGoal(asEntity(), Player.class, 8.0F));
         asEntity().goalSelector.addGoal(10, new RandomLookAroundGoal(asEntity()));
+        summon_registerTargetGoals();
 
+    }
+
+    default void summon_registerTargetGoals(){
         asEntity().targetSelector.addGoal(1, new SummonPriorAttackGoal<>(asEntity(), false));
         asEntity().targetSelector.addGoal(2, new SummonOwnerHurtByTargetGoal(asEntity()));
         asEntity().targetSelector.addGoal(3, new SummonOwnerHurtTargetGoal(asEntity()));
         asEntity().targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(asEntity(), Monster.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
         asEntity().targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(asEntity(), Slime.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
+
     }
 
     default void summon_registerMoveGoal(){

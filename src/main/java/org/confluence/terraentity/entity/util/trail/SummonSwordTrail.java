@@ -12,6 +12,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.client.util.ShaderUtil;
 import org.confluence.terraentity.entity.proj.TrailSwordProj;
+import org.confluence.terraentity.entity.summon.SummonSword;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -19,40 +20,40 @@ import org.joml.Vector3f;
 import java.util.Iterator;
 import java.util.Queue;
 
-public class SwordTrail implements ITrail<TrailSwordProj> {
-    TrailProperties properties;
+public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrail.PositionProperties> {
+    ITrail.TrailProperties properties;
+    Queue<PositionProperties> trailsQueue;
+    public record PositionProperties(Vec3 position, float xrot, float yrot){
 
-    public SwordTrail(int size, float widthScale, int color) {
-        this.properties = new TrailProperties(size, widthScale, 5, color, color);
-
+    }
+    public SummonSwordTrail(int size, float widthScale, int color) {
+        this.properties = new ITrail.TrailProperties(size, widthScale, 5, color, color);
+        this.trailsQueue = new java.util.LinkedList<>();
     }
 
     @Override
-    public void generateTrail(TrailSwordProj holder, int ticks) {
+    public void generateTrail(SummonSword holder, int ticks) {
         if(holder.trailQueue.size() >= 8){
             holder.trailQueue.poll();
         }
 
-        if(holder.getLifetime() - ticks < 4){
-            holder.trailQueue.poll();
-        }
-
-        if(ticks > 1) {
-            holder.trailQueue.add(holder.position().subtract(holder.getOwner().position()));
+        if(holder.getOwner() != null) {
+            holder.trailQueue.add(new PositionProperties(holder.position(), holder.getXRot(), holder.getYRot()));
         }
     }
 
     @Override
-    public TrailProperties getTrailProperties() {
+    public ITrail.TrailProperties getTrailProperties() {
         return properties;
     }
 
+    @Override
     @OnlyIn(Dist.CLIENT)
-    public void renderTrail(TrailSwordProj holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        Iterator<Vec3> trails = trailsQueue.iterator();
+    public void renderTrail(SummonSword holder, Queue<PositionProperties> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        Iterator<PositionProperties> trails = trailsQueue.iterator();
         int size = trailsQueue.size();
 
-        TrailProperties properties = getTrailProperties();
+        ITrail.TrailProperties properties = getTrailProperties();
         if (!trails.hasNext()) return;
 
         poseStack.pushPose();
@@ -76,13 +77,14 @@ public class SwordTrail implements ITrail<TrailSwordProj> {
         Vec3 o1 = null;
         Vec3 o2 = null;
         Vec3 o3 = null;
-
-        Vec3 lastPos = trails.next().subtract(entityPos);
+        PositionProperties p = trails.next();
+        Vec3 lastPos = p.position.subtract(entityPos);
         int i = 0;
 
         while (trails.hasNext()) {
             Vec3 pos0 = lastPos;
-            Vec3 pos1 = trails.next().subtract(entityPos);
+            p = trails.next();
+            Vec3 pos1 = p.position.subtract(entityPos);
 
             float progress = i / (float) size * 0.6f + 0.4f;
             float width = properties.widthScale() * progress;
@@ -96,8 +98,8 @@ public class SwordTrail implements ITrail<TrailSwordProj> {
             int argb = FastColor.ARGB32.color(alpha, lerpRed, lerpGreen, lerpBlue);
 
 //            Vec3 side = dir.cross(camDir).normalize();
-            float rotx = holder.getXRot() * 0.017453292F;
-            float roty = -holder.getYRot() * 0.017453292F;
+            float rotx = p.xrot * 0.017453292F;
+            float roty = -p.yrot * 0.017453292F;
             Vector3f d = new Vector3f(0,0,1);
             new Quaternionf().rotateY(roty).rotateX(rotx).transform(d);
 
@@ -109,7 +111,7 @@ public class SwordTrail implements ITrail<TrailSwordProj> {
             Vec3 right00;
             Vec3 left11 = pos1.add(side.scale(+width * properties.fadeWidthFactor()));
             Vec3 right11 = pos1.add(side.scale(-width * properties.fadeWidthFactor()));
-            Vec3 left1 = pos1.add(side.scale(+width));
+            Vec3 left1 = pos1.add(side.scale(+width* properties.fadeWidthFactor() * 1.05f));
             Vec3 right1 = pos1.add(side.scale(-width));
             if(o0 != null) {
                 left0 = o0;
@@ -124,19 +126,19 @@ public class SwordTrail implements ITrail<TrailSwordProj> {
             }
 
             ITrail.addVertex(buffer, matrix4f, left0, lastColor);
-            ITrail.addVertex(buffer, matrix4f, right0, lastColor);
-            ITrail.addVertex(buffer, matrix4f, right1, argb);
+            ITrail.addVertex(buffer, matrix4f, left00, lastColor);
+            ITrail.addVertex(buffer, matrix4f, left11, argb);
             ITrail.addVertex(buffer, matrix4f, left1, argb);
 
-            ITrail.addVertex(buffer, matrix4f, left00, lastColor & 0x00FFFFFF);
-            ITrail.addVertex(buffer, matrix4f, left0, lastColor);
-            ITrail.addVertex(buffer, matrix4f, left1, argb);
-            ITrail.addVertex(buffer, matrix4f, left11, argb& 0x00FFFFFF);
+//            ITrail.addVertex(buffer, matrix4f, left00, lastColor & 0x00FFFFFF);
+//            ITrail.addVertex(buffer, matrix4f, left0, lastColor);
+//            ITrail.addVertex(buffer, matrix4f, left1, argb);
+//            ITrail.addVertex(buffer, matrix4f, left11, argb& 0x00FFFFFF);
 
-            ITrail.addVertex(buffer, matrix4f, right0, lastColor);
-            ITrail.addVertex(buffer, matrix4f, right00, lastColor& 0x00FFFFFF);
-            ITrail.addVertex(buffer, matrix4f, right11, argb& 0x00FFFFFF);
-            ITrail.addVertex(buffer, matrix4f, right1, argb);
+            ITrail.addVertex(buffer, matrix4f, left00, lastColor& 0xA0FFFFFF);
+            ITrail.addVertex(buffer, matrix4f, right0, lastColor& 0x00FFFFFF);
+            ITrail.addVertex(buffer, matrix4f, right1, argb& 0x00FFFFFF);
+            ITrail.addVertex(buffer, matrix4f, left11, argb& 0xA0FFFFFF);
 
 
             o0 = left1;

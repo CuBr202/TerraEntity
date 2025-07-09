@@ -1,10 +1,16 @@
 package org.confluence.terraentity.network.c2s;
 
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.Decoder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
@@ -20,7 +26,7 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
     private enum TypeEnum {
         SUMMON_SKELETRON
     }
-    private TypeEnum _type;
+    private final TypeEnum _type;
 
     public static final Type<ServerBoundEventPacket> TYPE = new Type<>(TerraEntity.fromSpaceAndPath(TerraEntity.MODID, "server_bound_event_packet"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerBoundEventPacket> STREAM_CODEC = CustomPacketPayload.codec(ServerBoundEventPacket::write, ServerBoundEventPacket::new);
@@ -39,6 +45,7 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
     }
 
     public static void handle(ServerBoundEventPacket packet, IPayloadContext context) {
+
         context.enqueueWork(() -> {
             Player player = context.player();
             TypeEnum type = packet._type;

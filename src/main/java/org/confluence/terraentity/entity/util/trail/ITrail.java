@@ -21,14 +21,10 @@ import java.util.Queue;
  * 拖尾效果接口
  * @param <T> 拖尾容器持有者
  */
-public interface ITrail<T> {
+public interface ITrail<T> extends ITrailKind<T, Vec3> {
 
     record TrailProperties(int size, float widthScale, float fadeWidthFactor, int colorFrom, int colorTo) {
     }
-
-    void generateTrail(T holder, int ticks);
-
-    TrailProperties getTrailProperties();
 
     @OnlyIn(Dist.CLIENT)
     default void renderTrail(T holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
