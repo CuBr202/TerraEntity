@@ -53,6 +53,9 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.NYMPH.get(), "宁芙");
         add(TEMonsterEntities.DRIPPLER.get(), "滴滴怪");
         add(TEMonsterEntities.BLOOD_ZOMBIE.get(), "血腥僵尸");
+
+        add(TEMonsterEntities.PIRANHA.get(), "食人鱼");
+
         add(TEMonsterEntities.WANDERING_EYE_FISH.get(), "游荡眼球怪鱼");
         add(TEMonsterEntities.BLOOD_CRAWLER.get(), "血爬虫");
         add(TEMonsterEntities.BLOODY_SPORE.get(), "血腥芽孢");
@@ -183,6 +186,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.FACE_MONSTER_SPAWN_EGG.get(), "脸怪刷怪蛋");
         add(TESpawnEggItems.FIRE_IMG_SPAWN_EGG.get(), "火焰小鬼刷怪蛋");
 
+        add(TESpawnEggItems.PIRANHA_SPAWN_EGG.get(), "食人鱼刷怪蛋");
+
 
         add(TESpawnEggItems.EATER_OF_SOULS_SPAWN_EGG.get(), "噬魂怪刷怪蛋");
         add(TESpawnEggItems.DECAYEDER_SPAWN_EGG.get(), "腐骴刷怪蛋");
@@ -213,6 +218,9 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEAnimals.BUNNY.get(), "兔兔");
         add(TEAnimals.BOOM_BUNNY.get(), "爆炸兔");
         add(TEAnimals.DUCK.get(), "鸭子");
+        add(TEAnimals.BIRD.get(), "鸟");
+        add(TEAnimals.BLUE_JAY.get(), "冠蓝鹊");
+        add(TEAnimals.CARDINAL.get(), "红鹊");
 
 
         // boss
@@ -278,7 +286,9 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.BOOM_BUNNY_SPAWN_EGG.get(), "炸弹兔刷怪蛋");
         add(TESpawnEggItems.BUNNY_SPAWN_EGG.get(), "兔兔刷怪蛋");
         add(TESpawnEggItems.DUCK_EGG.get(), "鸭子刷怪蛋");
-
+        add(TESpawnEggItems.BIRD_EGG.get(), "鸟刷怪蛋");
+        add(TESpawnEggItems.BLUE_JAY_EGG.get(), "冠蓝鹊刷怪蛋");
+        add(TESpawnEggItems.CARDINAL_EGG.get(), "红鹊刷怪蛋");
 
 
         // 召唤杖

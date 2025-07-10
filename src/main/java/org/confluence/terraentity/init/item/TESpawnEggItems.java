@@ -72,6 +72,8 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> FACE_MONSTER_SPAWN_EGG = registerEgg("face_monster_spawn_egg", TEMonsterEntities.FACE_MONSTER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> FIRE_IMG_SPAWN_EGG = registerEgg("fire_imp_spawn_egg", TEMonsterEntities.FIRE_IMP, 0xffffff, 0xffffff);
 
+    public static final DeferredItem<Item> PIRANHA_SPAWN_EGG = registerEgg("piranha_spawn_egg", TEMonsterEntities.PIRANHA, 0xffffff, 0xffffff);
+
     // BOSS
     public static final DeferredItem<Item> KING_SLIME_SPAWN_EGG = registerEgg("king_slime_spawn_egg", TEBossEntities.KING_SLIME, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> EYE_OF_CTHULHU_SPAWN_EGG = registerEgg("cthulhu_eye_spawn_egg", TEBossEntities.EYE_OF_CTHULHU, 0xffffff, 0xffffff);
@@ -129,6 +131,9 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> BUNNY_SPAWN_EGG = registerEgg("bunny_spawn_egg", TEAnimals.BUNNY, 0xffffff);
     public static final DeferredItem<Item> BOOM_BUNNY_SPAWN_EGG = registerEgg("boom_bunny_spawn_egg", TEAnimals.BOOM_BUNNY, 0xffffff);
     public static final DeferredItem<Item> DUCK_EGG = registerEgg("duck_spawn_egg", TEAnimals.DUCK, 0xffffff);
+    public static final DeferredItem<Item> BIRD_EGG = registerEgg("bird_spawn_egg", TEAnimals.DUCK, 0xffffff);
+    public static final DeferredItem<Item> BLUE_JAY_EGG = registerEgg("blue_jay_spawn_egg", TEAnimals.DUCK, 0xffffff);
+    public static final DeferredItem<Item> CARDINAL_EGG = registerEgg("cardinal_spawn_egg", TEAnimals.DUCK, 0xffffff);
 
 
     public static DeferredItem<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryColor, int secondaryColor){

@@ -17,10 +17,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.client.entity.model.VariantTexModel;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
-import org.confluence.terraentity.entity.animal.BoomBunny;
-import org.confluence.terraentity.entity.animal.Bunny;
-import org.confluence.terraentity.entity.animal.Duck;
-import org.confluence.terraentity.entity.animal.Squirrel;
+import org.confluence.terraentity.entity.animal.*;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.util.SpawnPlacementChecks;
 import org.confluence.terraentity.init.TEEntities;
@@ -31,6 +28,9 @@ public class TEAnimals {
     public static final DeferredHolder<EntityType<?>, EntityType<Bunny>> BUNNY = TEEntities.ENTITIES.register("bunny", () -> EntityType.Builder.of(Bunny::new, MobCategory.CREATURE).sized(0.4F, 0.5F).clientTrackingRange(8).build(TEEntities.Key("bunny")));
     public static final DeferredHolder<EntityType<?>, EntityType<BoomBunny>> BOOM_BUNNY = TEEntities.ENTITIES.register("boom_bunny", () -> EntityType.Builder.of(BoomBunny::new, MobCategory.CREATURE).sized(0.4F, 0.5F).clientTrackingRange(8).build(TEEntities.Key("boom_bunny")));
     public static final DeferredHolder<EntityType<?>, EntityType<Squirrel>> SQUIRREL = TEEntities.ENTITIES.register("squirrel", () -> EntityType.Builder.of(Squirrel::new, MobCategory.CREATURE).sized(0.4F, 0.5F).clientTrackingRange(8).build(TEEntities.Key("squirrel")));
+    public static final DeferredHolder<EntityType<?>, EntityType<Bird>> BIRD = TEEntities.ENTITIES.register("bird", () -> EntityType.Builder.of(Bird::new, MobCategory.CREATURE).sized(0.4F, 0.5F).clientTrackingRange(8).build(TEEntities.Key("squirrel")));
+    public static final DeferredHolder<EntityType<?>, EntityType<Bird>> BLUE_JAY = TEEntities.ENTITIES.register("blue_jay", () -> EntityType.Builder.of(Bird::new, MobCategory.CREATURE).sized(0.4F, 0.5F).clientTrackingRange(8).build(TEEntities.Key("squirrel")));
+    public static final DeferredHolder<EntityType<?>, EntityType<Bird>> CARDINAL = TEEntities.ENTITIES.register("cardinal", () -> EntityType.Builder.of(Bird::new, MobCategory.CREATURE).sized(0.4F, 0.5F).clientTrackingRange(8).build(TEEntities.Key("squirrel")));
 
 
     @OnlyIn(Dist.CLIENT)
@@ -39,6 +39,10 @@ public class TEAnimals {
         event.registerEntityRenderer(BUNNY.get(), c-> new GeoNormalRenderer<>(c, new VariantTexModel<Bunny>(BUNNY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1 ,0));
         event.registerEntityRenderer(BOOM_BUNNY.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<BoomBunny>(BOOM_BUNNY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(SQUIRREL.get(), c-> new GeoNormalRenderer<>(c, new VariantTexModel<Squirrel>(SQUIRREL.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
+        event.registerEntityRenderer(BIRD.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<Bird>(BIRD.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
+        event.registerEntityRenderer(BLUE_JAY.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<Bird>(BLUE_JAY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
+        event.registerEntityRenderer(CARDINAL.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<Bird>(CARDINAL.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
+
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -46,7 +50,9 @@ public class TEAnimals {
         event.put(BUNNY.get(), Rabbit.createAttributes().add(Attributes.SAFE_FALL_DISTANCE, 6).build());
         event.put(BOOM_BUNNY.get(), Rabbit.createAttributes().add(Attributes.SAFE_FALL_DISTANCE, 6).build());
         event.put(SQUIRREL.get(), Squirrel.createAttributes().build());
-
+        event.put(BIRD.get(), Bird.createAttributes().build());
+        event.put(BLUE_JAY.get(), Bird.createAttributes().build());
+        event.put(CARDINAL.get(), Bird.createAttributes().build());
     }
 
     public static void spawnPlacementRegister(RegisterSpawnPlacementsEvent event) {
@@ -54,6 +60,10 @@ public class TEAnimals {
         event.register(BUNNY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNormalAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BOOM_BUNNY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNormalAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(SQUIRREL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNormalAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(BIRD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNormalAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(BLUE_JAY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNormalAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(CARDINAL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNormalAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
     }
 
     public static void register() {

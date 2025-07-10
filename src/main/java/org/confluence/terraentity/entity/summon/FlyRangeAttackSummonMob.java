@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -25,18 +26,15 @@ import java.util.function.Supplier;
 
 public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSummonMob<FlyRangeAttackSummonMob<P>> implements FlyingAnimal, RangedAttackMob {
 
-    int attackTicks;
-    int _attackTicks = 25;
+    int _attackTicks;
     int delayAttackTicks = -1;
-    int _delayAttackTicks = 20;
+    int _delayAttackTicks;
     LivingEntity delayedTarget;
     float delayedVelocity;
     Supplier<EntityType<P>> projectileSupplier;
 
     int attackCooldown;
     int replaceCooldown;
-
-    protected static final EntityDataAccessor<Boolean> DATA_RANGE_ATTACK = SynchedEntityData.defineId(FlyRangeAttackSummonMob.class, EntityDataSerializers.BOOLEAN);
 
     /**
      *
@@ -75,18 +73,13 @@ public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSumm
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_RANGE_ATTACK, false);
-
     }
 
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        if (DATA_RANGE_ATTACK.equals(key) && this.entityData.get(DATA_RANGE_ATTACK)) {
-            this.attackTicks = _attackTicks;
-        }
-
     }
+
     @Override
     public int getMaxHeadXRot() {
         return 85;
@@ -108,7 +101,7 @@ public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSumm
 
     @Override
     public void performRangedAttack(LivingEntity target, float v) {
-        this.entityData.set(DATA_RANGE_ATTACK, true, true);
+        this.swing(InteractionHand.MAIN_HAND);
         this.delayedTarget = target;
         this.delayedVelocity = v;
         this.delayAttackTicks = _delayAttackTicks;
@@ -126,10 +119,10 @@ public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSumm
     @Override
     public void tick() {
         super.tick();
+        this.updateSwingTime();
         if(!level().isClientSide && --this.delayAttackTicks == 0 && this.delayedTarget != null){
             this.actualRangedAttack(this.delayedTarget, this.delayedVelocity);
         }
-        --this.attackTicks;
     }
 
     @Override
@@ -139,7 +132,7 @@ public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSumm
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "Walk/Idle/Attack", 5, state -> {
-            if (this.attackTicks > 0)
+            if (this.swinging)
                 return state.setAndContinue(DefaultAnimations.ATTACK_CAST);
             return state.setAndContinue(state.isMoving() ? DefaultAnimations.WALK : DefaultAnimations.IDLE);
         }));
@@ -147,7 +140,7 @@ public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSumm
 
     @Override
     public int getCurrentSwingDuration() {
-        return super.getCurrentSwingDuration() ;
+        return this._attackTicks;
     }
 
 

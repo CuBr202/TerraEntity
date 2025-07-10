@@ -9,6 +9,8 @@ import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import org.confluence.lib.common.data.gen.CollectRecipeProvider;
+import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.data.gen.loot.TELootModifyProvider;
 import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
 import org.confluence.terraentity.data.gen.recipe.TENPCShopProvider;
 import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
@@ -38,6 +40,8 @@ public class TEDataGenerator {
         boolean server = event.includeServer();
 
         generator.addProvider(server, provider);
+        generator.addProvider(server, new TELootModifyProvider(output, lookup, TerraEntity.MODID));
+
         generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TEDamageTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TEBiomeTagsProvider(output, lookup, helper));

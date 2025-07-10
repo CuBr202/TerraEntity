@@ -93,7 +93,7 @@ public class FlyRangeAttackGoal<T extends Mob & RangedAttackMob> extends Goal {
 
         if (distance > replaceDistance) {
             if (--replaceCooldown <= 0) {
-                mob.getNavigation().moveTo(targetPos.x, targetPos.y, targetPos.z, 1);
+                mob.getNavigation().moveTo(targetPos.x, targetPos.y, targetPos.z, 1.5F);
                 replaceCooldown = 20;
             }
         } else {

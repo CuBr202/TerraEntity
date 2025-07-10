@@ -3,6 +3,8 @@ package org.confluence.terraentity.init.entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.entity.animal.Dolphin;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -80,6 +82,11 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FACE_MONSTER = registerSimpleMonster("face_monster", LandMonsterPrefab.FACE_MONSTER_BUILDER, 0.75F, 1.95F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> BLOOD_TUMORS = registerSimpleMonster("blood_tumors", LandMonsterPrefab.BLOOD_TUMORS, 0.5F, 0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> BLOOD_ZOMBIE = registerSimpleMonster("blood_zombie", LandMonsterPrefab.BLOOD_ZOMBIE_BUILDER, 0.75F, 1.95F);
+
+    // 水怪
+    public static final DeferredHolder<EntityType<?>, EntityType<Piranha>> PIRANHA = TEEntities.registerEntity("piranha", (e,l)->new Piranha(e,l), 0.5F, 0.5F);
+
+
     // 蜜蜂
     public static final DeferredHolder<EntityType<?>, EntityType<Hornet>> HORNET = TEEntities.registerEntity("hornet", (e, l) -> new Hornet(e, l, FlyMonsterPrefab.BEE_BUILDER.get().setHealth(32)), 0.8f, 1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<LittleHornet>> LITTLE_HORNET = TEEntities.registerEntity("little_hornet", LittleHornet::new, MobCategory.CREATURE, 0.8f, 1.2f);
@@ -162,7 +169,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.DRIPPLER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.DRIPPLER.getId(), false, 2f, 0));
         event.registerEntityRenderer(TEMonsterEntities.WANDERING_EYE_FISH.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.WANDERING_EYE_FISH.getId(), false, 1.5f, 0));
         event.registerEntityRenderer(TEMonsterEntities.FLYING_FISH.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.FLYING_FISH.getId(), true, 0.75f, 0));
-        event.registerEntityRenderer(TEMonsterEntities.HARPY.get(), c -> new AnimatorRenderer<>(c, new HarpyModel(TEMonsterEntities.HARPY.getId()), false, 1f, 0));
+        event.registerEntityRenderer(TEMonsterEntities.HARPY.get(), c -> new GeoNormalRenderer<>(c, new GeoNormalModel<>(TEMonsterEntities.HARPY.getId()), false, 1f, 0));
         event.registerEntityRenderer(TEMonsterEntities.DEMON.get(), c -> new DemonRenderer(c, new DemonModel(TEMonsterEntities.DEMON.getId()), false, 1f, 0));
         event.registerEntityRenderer(TEMonsterEntities.VOODOO_DEMON.get(), c -> new DemonRenderer(c, new DemonModel(TEMonsterEntities.VOODOO_DEMON.getId()), false, 1.1f, 0));
         event.registerEntityRenderer(TEMonsterEntities.ANTLION_SWARMER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.ANTLION_SWARMER.getId(), true, 1.0f, 0f));
@@ -183,6 +190,9 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.FACE_MONSTER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.FACE_MONSTER.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.BLOOD_TUMORS.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.BLOOD_TUMORS.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.BLOOD_ZOMBIE.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.BLOOD_ZOMBIE.getId(), false));
+
+        event.registerEntityRenderer(TEMonsterEntities.PIRANHA.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.PIRANHA.getId(), true));
+
         event.registerEntityRenderer(TEMonsterEntities.DEVOURER.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.DEVOURER.getId(), 2.0f, 0.0f));
         event.registerEntityRenderer(TEMonsterEntities.GIANT_WORM.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.GIANT_WORM.getId(), 2.0f, 0.0f));
         event.registerEntityRenderer(TEMonsterEntities.LEECH.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.LEECH.getId(), 2.0f, 0.0f));
@@ -266,6 +276,7 @@ public class TEMonsterEntities {
         event.put(FACE_MONSTER.get(), AbstractMonster.createAttributes().build());
         event.put(BLOOD_TUMORS.get(), AbstractMonster.createAttributes().build());
         event.put(BLOOD_ZOMBIE.get(), AbstractMonster.createAttributes().build());
+
         event.put(GIANT_SHELLY.get(), AbstractMonster.createAttributes().build());
         event.put(NYMPH.get(), AbstractMonster.createAttributes().build());
         event.put(SNATCHER.get(), AbstractMonster.createAttributes().build());
@@ -284,6 +295,9 @@ public class TEMonsterEntities {
         event.put(VOODOO_DEMON.get(), AbstractMonster.createAttributes().build());
         event.put(ANTLION_SWARMER.get(), AbstractMonster.createAttributes().build());
         event.put(GIANT_ANTLION_SWARMER.get(), AbstractMonster.createAttributes().build());
+
+        // swim
+        event.put(PIRANHA.get(), AbstractMonster.createAttributes().build());
 
 
         // bat
@@ -376,6 +390,10 @@ public class TEMonsterEntities {
         event.register(VOODOO_DEMON.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNetherMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ANTLION_SWARMER.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(GIANT_ANTLION_SWARMER.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
+        // swim
+        event.register(PIRANHA.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
 
         // worm
         event.register(DEVOURER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);

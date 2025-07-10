@@ -17,12 +17,14 @@ import software.bernie.geckolib.cache.object.GeoBone;
 import static org.confluence.terraentity.client.entity.renderer.mob.HumanoidRenderer.LEFT_HAND;
 import static org.confluence.terraentity.client.entity.renderer.mob.HumanoidRenderer.RIGHT_HAND;
 
+/**
+ * 人形怪的Geo模型
+ * @param <T>
+ */
 public class GeoHumanoidModel<T extends LivingEntity & GeoEntity & IUseItemAnimatable<BoneStates>> extends AnimatorModel<T>{
 
     protected GeoBoneAnimator<T> rightArmAnimator;
     protected GeoBoneAnimator<T> leftArmAnimator;
-    GeoBone leftLegBone;
-    GeoBone rightLegBone;
 
     public GeoHumanoidModel(ResourceLocation path) {
         super(path);

@@ -9,16 +9,22 @@ import org.confluence.terraentity.client.entity.model.AnimatorModel;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 
+import javax.annotation.Nullable;
+
+/**
+ * 带有硬编码动画的生物骨骼动画渲染器
+ */
 public class AnimatorRenderer<T extends Mob & GeoEntity> extends GeoNormalRenderer<T>{
 
-    AnimatorModel<T> model;
+    protected final AnimatorModel<T> model;
     private boolean init = false;
     public AnimatorRenderer(EntityRendererProvider.Context renderManager, AnimatorModel<T> model, boolean ifRotX, float scale, float offsetY) {
         super(renderManager, model, ifRotX, scale, offsetY);
         this.model = model;
     }
+
     @Override
-    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         if(!isReRender && !init){
             init = true;
             this.model.initBoneAnimators(animatable, model);

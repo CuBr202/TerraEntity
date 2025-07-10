@@ -59,4 +59,9 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
 
     }
 
+    @Override
+    public float getMotionAnimThreshold(T animatable) {
+        return 0.01F;
+    }
+
 }

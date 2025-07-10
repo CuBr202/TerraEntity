@@ -4,7 +4,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
@@ -24,7 +23,8 @@ public class TELootTableProvider extends LootTableProvider {
                 List.of(
                         new SubProviderEntry(TEBlockLootProvider::new, LootContextParamSets.BLOCK),
                         new SubProviderEntry(TEEntityLootProvider::new, LootContextParamSets.ENTITY),
-                        new SubProviderEntry(TENPCLoot::new, LootContextParamSets.EMPTY)
+                        new SubProviderEntry(TENPCLoot::new, LootContextParamSets.EMPTY),
+                        new SubProviderEntry(TESubLoot::new, LootContextParamSets.EMPTY)
                 ),
                 lookupProviderFuture);
     }

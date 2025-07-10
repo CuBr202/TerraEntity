@@ -1,0 +1,55 @@
+package org.confluence.terraentity.data.gen.loot;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.common.loot.AddTableLootModifier;
+import net.neoforged.neoforge.common.loot.LootTableIdCondition;
+import org.confluence.terraentity.TerraEntity;
+
+import javax.annotation.Nullable;
+import java.util.concurrent.CompletableFuture;
+
+public class TELootModifyProvider extends GlobalLootModifierProvider {
+
+    public TELootModifyProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String modId) {
+        super(output, registries, modId);
+    }
+
+    @Override
+    public void start() {
+
+        // 劫掠哨站箱子
+        this.addChestLootModifier("chest/spawn_wooden_staff", BuiltInLootTables.PILLAGER_OUTPOST, TESubLoot.SPAWN_WOODEN_SWORD_STAFF);
+        // 金字塔箱子
+        this.addChestLootModifier("chest/spawn_stone_staff", BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY, TESubLoot.SPAWN_STONE_SWORD_STAFF);
+        // 铁匠村民箱子
+        this.addChestLootModifier("chest/spawn_iron_staff", BuiltInLootTables.VILLAGE_WEAPONSMITH, TESubLoot.SPAWN_IRON_SWORD_STAFF);
+        // 猪灵交易
+        this.addChestLootModifier("gameplay/spawn_golden_staff", BuiltInLootTables.PIGLIN_BARTERING, TESubLoot.SPAWN_GOLDEN_SWORD_STAFF);
+        // 远古守卫者
+        this.addChestLootModifier("entities/spawn_diamond_staff", EntityType.ELDER_GUARDIAN.getDefaultLootTable(), TESubLoot.SPAWN_DIAMOND_SWORD_STAFF);
+        // 堡垒遗迹珍宝
+        this.addChestLootModifier("chest/spawn_netherite_staff", BuiltInLootTables.BASTION_TREASURE, TESubLoot.SPAWN_NETHERITE_SWORD_STAFF);
+        // 远古城市
+        this.addChestLootModifier("chest/spawn_netherite_staff", BuiltInLootTables.ANCIENT_CITY, TESubLoot.SPAWN_SCULK_WISP_STAFF);
+
+    }
+
+    private void addChestLootModifier(String name, @Nullable ResourceKey<LootTable> lootTableId, ResourceKey<LootTable> lootTableAdd) {
+        LootItemCondition condition;
+        if (lootTableId != null) {
+            condition = LootTableIdCondition.builder(lootTableId.location()).build();
+            this.add(name, new AddTableLootModifier(new LootItemCondition[]{condition}, lootTableAdd));
+        }else{
+            TerraEntity.LOGGER.warn("Loot table id is null for " + name);
+        }
+
+    }
+
+}
