@@ -61,11 +61,12 @@ public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrai
         VertexConsumer buffer = bufferSource.getBuffer(ShaderUtil.TRAIL_RENDER_TYPE);
 
 
-        int color = getTrailProperties().colorTo();
+        int color = holder.getRgb();
         int red = FastColor.ARGB32.red(color);
         int green = FastColor.ARGB32.green(color);
         int blue = FastColor.ARGB32.blue(color);
-        int colorFrom = getTrailProperties().colorFrom();
+
+        int colorFrom = holder.getRgb();
         int redFrom = FastColor.ARGB32.red(colorFrom);
         int greenFrom = FastColor.ARGB32.green(colorFrom);
         int blueFrom = FastColor.ARGB32.blue(colorFrom);

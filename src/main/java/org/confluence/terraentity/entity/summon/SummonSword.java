@@ -21,6 +21,7 @@ import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.IOriented;
 import org.confluence.terraentity.utils.OBB;
 import org.confluence.terraentity.utils.TEUtils;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimatableManager;
 
 import java.util.*;
@@ -33,7 +34,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     public SummonSwordTrail trail;
     public Queue<SummonSwordTrail.PositionProperties> trailQueue;
 
-    public boolean timeToSkillAttack = false;
+    protected boolean timeToSkillAttack = false;
     int skillCooldown = 0;
     float rotateZTimer;
     int rotateZTick;
@@ -42,6 +43,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     public int backTicks;
     public int backTicksMax = 20;
     IEffectStrategy effectStrategy;
+    protected int rgb;
 
     protected static final EntityDataAccessor<Float> DATA_ROTATE_Z_ID = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<Boolean> DATA_BACK = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.BOOLEAN);
@@ -57,15 +59,19 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         this.setDiscardFriction(true);
         this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(16);
         this.getAttribute(Attributes.GRAVITY).setBaseValue(0.0);
-        this.modelItem = modelItem.get();
+        if(modelItem!= null) {
+            this.modelItem = modelItem.get();
+        }
 
-//        Color c = new Color(0x8136D2);
-//        this.trail = new SummonSwordTrail(1, 0.15f, c.getRGB());
-
+        this.rgb = rgb;
         this.trail = new SummonSwordTrail(1, width, rgb);
         this.trailQueue = new LinkedList<>();
         this.effectStrategy = effectStrategy;
 
+    }
+
+    public int getRgb() {
+        return rgb;
     }
 
     public float getRotateZTimer(float partialTicks) {
@@ -83,7 +89,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_ROTATE_Z_ID, 0.0f);
         builder.define(DATA_BACK, false);
@@ -160,7 +166,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
         @Override
         public void start() {
-//            sword.setSharedFlag(6, true);
+
         }
 
         @Override
@@ -265,7 +271,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         public void stop(){
             sword.timeToSkillAttack = false;
             ticks = 0;
-            sword.skillCooldown = 80;
+            sword.skillCooldown = 80 + sword.getRandom().nextInt(20);
             triggered = false;
             if(sword.random.nextFloat() < 0.5){
                 sword.addZRot(40);
@@ -302,32 +308,44 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
                 return;
             }
 
+            // 玩家视角方向
             Vec3 d = Vec3.directionFromRotation(new Vec2(owner.getXRot(), owner.yBodyRot));
+            // 玩家视角正前方
             Vec3 forward = d.multiply(1,0,1).normalize();
+            // 玩家视角右侧方向
             Vec3 right = d.cross(new Vec3(0,1,0)).normalize();
-//            Vec3 ownerPos = owner.position().subtract(forward.scale(0.5 + 0.2f * (sword.sequence - 1))).add(0,1 - (sword.sequence - 1) * 0.08f,0);
-            Vec3 ownerPos = owner.position().subtract(forward.scale(0.6 - 0.05f * (sword.sequence - 1))).add(0,1,0)
-                    .add(right.scale(0.2f * (sword.sequence / 2) * ((sword.sequence & 1) == 0 ? 1 : -1)));
+
+            // 将要移动的位置
+            Vec3 targetPos = owner.position().subtract(forward.scale(0.6 - 0.05f * (sword.sequence - 1))).add(0,1,0) // 后方，往上一点
+                    .add(right.scale(0.2f * (sword.sequence / 2) * ((sword.sequence & 1) == 0 ? 1 : -1))); // 根据sequence调整左右移动
 
             Vec3 swordPos = sword.position();
-            Vec3 dir = ownerPos.subtract(swordPos).normalize();
 
-//            Vec3 lookPos = swordPos.subtract(forward.scale(5)).add(0,-15 + (sword.sequence - 1) * 2,0);
-            Vec3 lookPos = swordPos.subtract(forward.scale(5)).add(0,-8 - (sword.sequence - 1)/2 ,0);
+            // 剑视角朝向
+            Vec3 lookPos = swordPos.subtract(forward.scale(5))
+                    .add(0,-8 - (sword.sequence - 1)/2 ,0); // 向下看
 
             sword.lookControl.setLookAt(lookPos);
             sword.lookAt(EntityAnchorArgument.Anchor.FEET, lookPos);
-            double dist = ownerPos.distanceTo(swordPos) * 0.5;
 
+            // 计算距离
+            double dist = targetPos.distanceTo(swordPos) * 0.5;
             dist = Math.min(dist, 1);
             if(dist == 0){
                 return;
             }
-            dist = dist * dist;
 
+            // 缓入
+//            dist = dist * dist;
+
+            // 移动的方向
+            Vec3 dir = targetPos.subtract(swordPos).normalize();
             sword.addDeltaMovement(dir);
+
+            // 限制速度
             sword.setDeltaMovement(sword.getDeltaMovement().normalize().scale(dist));
 
+            // 随机扰动
             Vec3 wiggle = new Vec3(sword.random.nextGaussian() * 0.01, sword.random.nextGaussian() * 0.01, sword.random.nextGaussian() * 0.01);
             sword.addDeltaMovement(wiggle.scale(1));
 

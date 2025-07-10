@@ -13,6 +13,7 @@ import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.SculkWispRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.SummonSwordRenderer;
+import org.confluence.terraentity.client.entity.renderer.mob.TerraprismaRenderer;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.summon.*;
 import org.confluence.terraentity.init.TEEffectStrategies;
@@ -37,6 +38,7 @@ public class TESummonEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<SummonSword>> SUMMON_GOLDEN_SWORD = TEEntities.registerEntity("summon_golden_sword", (e,l)->new SummonSword(e,l, ()->Items.GOLDEN_SWORD, 0xE3D529, TEEffectStrategies.SET_FIRE_EFFECT.get().getProvider(), 0.15f),1F,1F);
     public static final DeferredHolder<EntityType<?>, EntityType<SummonSword>> SUMMON_DIAMOND_SWORD = TEEntities.registerEntity("summon_diamond_sword", (e,l)->new SummonSword(e,l, ()->Items.DIAMOND_SWORD, 0x17CFC1, TEEffectStrategies.FROZEN_EFFECT.get().getProvider(), 0.15f),1F,1F);
     public static final DeferredHolder<EntityType<?>, EntityType<SummonSword>> SUMMON_NETHERITE_SWORD = TEEntities.registerEntity("summon_netherite_sword", (e,l)->new SummonSword(e,l, ()->Items.NETHERITE_SWORD, 0x8136D2, TEEffectStrategies.HELL_FIRE_EFFECT.get().getProvider(), 0.15f),1F,1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Terraprisma>> TERRAPRISMA = TEEntities.registerEntity("terraprisma", (e,l)->new Terraprisma(e,l),1F,1F);
 
 //    Color c = new Color(0xFF714C11, true);  // 删掉注释查看颜色
 
@@ -57,6 +59,7 @@ public class TESummonEntities {
         event.registerEntityRenderer(SUMMON_GOLDEN_SWORD.get(), c->new SummonSwordRenderer<>(c));
         event.registerEntityRenderer(SUMMON_DIAMOND_SWORD.get(), c->new SummonSwordRenderer<>(c));
         event.registerEntityRenderer(SUMMON_NETHERITE_SWORD.get(), c->new SummonSwordRenderer<>(c));
+        event.registerEntityRenderer(TERRAPRISMA.get(), c->new TerraprismaRenderer(c));
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -74,6 +77,7 @@ public class TESummonEntities {
         event.put(SUMMON_GOLDEN_SWORD.get(), AbstractMonster.createAttributes().build());
         event.put(SUMMON_DIAMOND_SWORD.get(), AbstractMonster.createAttributes().build());
         event.put(SUMMON_NETHERITE_SWORD.get(), AbstractMonster.createAttributes().build());
+        event.put(TERRAPRISMA.get(), AbstractMonster.createAttributes().build());
     }
 
     public static void register(){

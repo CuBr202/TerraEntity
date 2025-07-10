@@ -20,12 +20,13 @@ public class TESummonItems {
 
 
     //棱镜系列
-    public static final DeferredItem<Item> SUMMON_WOODEN_SWORD_STAFF = ITEMS.register("summon_wooden_sword_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SUMMON_WOODEN_SWORD, 1, 3));
+    public static final DeferredItem<Item> SUMMON_WOODEN_SWORD_STAFF = ITEMS.register("summon_wooden_sword_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SUMMON_WOODEN_SWORD, 1, 2));
     public static final DeferredItem<Item> SUMMON_STONE_SWORD_STAFF = ITEMS.register("summon_stone_sword_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SUMMON_STONE_SWORD, 1, 3));
     public static final DeferredItem<Item> SUMMON_IRON_SWORD_STAFF = ITEMS.register("summon_iron_sword_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SUMMON_IRON_SWORD, 1, 4));
     public static final DeferredItem<Item> SUMMON_GOLDEN_SWORD_STAFF = ITEMS.register("summon_golden_sword_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SUMMON_GOLDEN_SWORD, 1, 5));
     public static final DeferredItem<Item> SUMMON_DIAMOND_SWORD_STAFF = ITEMS.register("summon_diamond_sword_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SUMMON_DIAMOND_SWORD, 1, 6));
     public static final DeferredItem<Item> SUMMON_NETHERITE_SWORD_STAFF = ITEMS.register("summon_netherite_sword_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SUMMON_NETHERITE_SWORD, 1, 7));
+    public static final DeferredItem<Item> TERRAPRISMA = ITEMS.register("terraprisma", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.TERRAPRISMA, 1, 36));
 
 
 }

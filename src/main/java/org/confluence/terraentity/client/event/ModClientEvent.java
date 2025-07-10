@@ -74,6 +74,8 @@ public final class ModClientEvent {
         registerModel(event, Stinger.class);
         registerModel(event, HarpyFeatherProjectileModel.class);
         registerModel(event, DemonScytheModel.class);
+//        registerModel(event, TerraprismaModel.class);
+        event.registerLayerDefinition(TerraprismaModel.LAYER_LOCATION, TerraprismaModel::createBodyLayer);
 
     }
 
