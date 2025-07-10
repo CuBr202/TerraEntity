@@ -1,6 +1,8 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -9,11 +11,14 @@ import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.proj.DemonScytheProj;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
+
+import javax.annotation.Nullable;
 
 public class Demon extends Harpy {
 
@@ -56,6 +61,13 @@ public class Demon extends Harpy {
         if(tick == 0){
             this.swing(InteractionHand.MAIN_HAND);
         }
+    }
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pSource.is(DamageTypeTags.IS_FIRE)) {
+            return false;
+        }
+        return super.hurt(pSource, pAmount);
     }
 
     @Override

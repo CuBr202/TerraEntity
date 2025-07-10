@@ -6,6 +6,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
@@ -108,7 +109,10 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        return super.hurt(pSource, pAmount);
+        if (pSource.is(DamageTypeTags.IS_DROWNING)) {
+            return false;
+        }
+        return super.hurt(pSource, pAmount); // confluence mixin here
     }
 
     @Override

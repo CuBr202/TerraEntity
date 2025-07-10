@@ -1,19 +1,21 @@
 package org.confluence.terraentity.entity.monster.skeleton;
 
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -38,6 +40,13 @@ public class MeleeSkeleton extends RangeSkeleton {
 
     }
 
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pSource.is(DamageTypeTags.IS_DROWNING)) {
+            return false;
+        }
+        return super.hurt(pSource, pAmount); // confluence mixin here
+    }
 
     @Override
     public int getCurrentSwingDuration() {

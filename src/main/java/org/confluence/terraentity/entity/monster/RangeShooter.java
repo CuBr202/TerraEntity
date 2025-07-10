@@ -1,6 +1,8 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -15,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.proj.BaseProj;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -90,6 +93,13 @@ public class RangeShooter extends AbstractMonster {
             phase = _phase;
         }
 
+    }
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (getType() == TEMonsterEntities.FIRE_IMP.get() && pSource.is(DamageTypeTags.IS_FIRE)) {
+            return false;
+        }
+        return super.hurt(pSource, pAmount);
     }
 
     public int getCurrentSwingDuration() {

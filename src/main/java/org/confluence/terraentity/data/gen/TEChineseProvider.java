@@ -318,6 +318,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBoomerangItems.TRIMARANG.get(), "三尖回旋镖");
         add(TEBoomerangItems.FLAMARANG.get(), "烈焰回旋镖");
         add(TEBoomerangItems.DEVELOPER_BOOMERANG.get(), "开发者回旋镖");
+        add(TEBoomerangItems.COMBAT_WRENCH.get(), "战斗扳手");
         add(TEBoomerangItems.BeiDou_BOOMERANG.get(), "北斗飞镖");
 
         // 骑乘
