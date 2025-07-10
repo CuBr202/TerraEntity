@@ -6,6 +6,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.level.pathfinder.PathType;
 import org.confluence.terraentity.entity.summon.ISummonMob;
 
@@ -91,7 +92,11 @@ public class SummonFollowOwnerGoal<T extends Mob & ISummonMob<?>> extends Goal {
     }
 
     public void createPath(){
-        this.navigation.moveTo(this.owner, this.speedModifier);
+        if(tamable instanceof FlyingAnimal){
+            this.navigation.moveTo(this.owner.position().x, this.owner.position().y + 1.8, this.owner.position().z, this.speedModifier);
+        }else {
+            this.navigation.moveTo(this.owner, this.speedModifier);
+        }
     }
 
     public int getInterval() {

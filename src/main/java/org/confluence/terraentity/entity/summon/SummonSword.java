@@ -17,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.attachment.SummonerAttachment;
 import org.confluence.terraentity.entity.util.trail.SummonSwordTrail;
 import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.IOriented;
 import org.confluence.terraentity.utils.OBB;
 import org.confluence.terraentity.utils.TEUtils;
@@ -40,15 +41,16 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     public Item modelItem;
     public int backTicks;
     public int backTicksMax = 20;
+    IEffectStrategy effectStrategy;
 
     protected static final EntityDataAccessor<Float> DATA_ROTATE_Z_ID = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<Boolean> DATA_BACK = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Integer> DATA_SEQUENCE = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.INT);
 
     public SummonSword(EntityType<? extends TamableAnimal> entityType,  Level level,Supplier<Item> modelItem,  int rgb) {
-        this(entityType, level, modelItem, 0.15f, rgb);
+        this(entityType, level, modelItem, rgb, null, 0.15f);
     }
-    public SummonSword(EntityType<? extends TamableAnimal> entityType, Level level, Supplier<Item> modelItem,  float width, int rgb) {
+    public SummonSword(EntityType<? extends TamableAnimal> entityType, Level level, Supplier<Item> modelItem,  int rgb, IEffectStrategy effectStrategy, float width) {
         super(entityType, level);
         this.noPhysics = true;
 //        this.setNoGravity(true);
@@ -62,6 +64,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
         this.trail = new SummonSwordTrail(1, width, rgb);
         this.trailQueue = new LinkedList<>();
+        this.effectStrategy = effectStrategy;
 
     }
 
@@ -303,7 +306,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
             Vec3 forward = d.multiply(1,0,1).normalize();
             Vec3 right = d.cross(new Vec3(0,1,0)).normalize();
 //            Vec3 ownerPos = owner.position().subtract(forward.scale(0.5 + 0.2f * (sword.sequence - 1))).add(0,1 - (sword.sequence - 1) * 0.08f,0);
-            Vec3 ownerPos = owner.position().subtract(forward.scale(0.5 - 0.05f * (sword.sequence - 1))).add(0,1,0)
+            Vec3 ownerPos = owner.position().subtract(forward.scale(0.6 - 0.05f * (sword.sequence - 1))).add(0,1,0)
                     .add(right.scale(0.2f * (sword.sequence / 2) * ((sword.sequence & 1) == 0 ? 1 : -1)));
 
             Vec3 swordPos = sword.position();
@@ -412,5 +415,13 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
                 getCollisionProperties().rewind();
             }
         }
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity entity) {
+        if(effectStrategy != null && entity instanceof LivingEntity living){
+            effectStrategy.getEffect().accept(this, living);
+        }
+        return super.doHurtTarget(entity);
     }
 }

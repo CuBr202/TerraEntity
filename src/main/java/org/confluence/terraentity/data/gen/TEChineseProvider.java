@@ -91,6 +91,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.GIANT_ANTLION_SWARMER.get(), "巨型蚁狮蜂");
 
 
+        // boss
         add(TEBossEntities.KING_SLIME.get(), "史莱姆王");
         add(TEBossEntities.EYE_OF_CTHULHU.get(), "克苏鲁之眼");
         add(TEBossEntities.EATER_OF_WORLDS.get(), "世界吞噬怪");
@@ -107,11 +108,23 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), "血肉墙口");
 
 
+        // 召唤物
         add(TESummonEntities.SUMMON_FINCH.get(), "雀宝宝");
         add(TESummonEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
         add(TESummonEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
         add(TESummonEntities.SUMMON_HORNET.get(), "仆役黄蜂");
+        add(TESummonEntities.SCULK_WISP.get(), "幽匿游灵");
+        add(TESummonEntities.IMP.get(), "召唤的小鬼");
 
+
+        add(TESummonEntities.SUMMON_WOODEN_SWORD.get(), "青冥");
+        add(TESummonEntities.SUMMON_STONE_SWORD.get(), "破山");
+        add(TESummonEntities.SUMMON_IRON_SWORD.get(), "白虹");
+        add(TESummonEntities.SUMMON_GOLDEN_SWORD.get(), "流星");
+        add(TESummonEntities.SUMMON_DIAMOND_SWORD.get(), "龙渊");
+        add(TESummonEntities.SUMMON_NETHERITE_SWORD.get(), "赤霄");
+
+        // 坐骑
         add(TERideableEntities.RIDEABLE_SLIME.get(), "史莱姆坐骑");
         add(TERideableEntities.RIDEABLE_BEE.get(), "蜜蜂坐骑");
 
@@ -273,6 +286,17 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
         add(TESummonItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
         add(TESummonItems.HORNET_STAFF.get(), "黄蜂法杖");
+        add(TESummonItems.SCULK_WISP_STAFF.get(), "幽匿法杖");
+        add(TESummonItems.IMP_STAFF.get(), "小鬼法杖");
+
+
+        add(TESummonItems.SUMMON_WOODEN_SWORD_STAFF.get(), "青冥");
+        add(TESummonItems.SUMMON_STONE_SWORD_STAFF.get(), "破山");
+        add(TESummonItems.SUMMON_IRON_SWORD_STAFF.get(), "白虹");
+        add(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF.get(), "流星");
+        add(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.get(), "龙渊");
+        add(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF.get(), "赤霄");
+
 
         // 鞭子
         add(TEWhipItems.LEATHER_WHIP.get(), "皮鞭");

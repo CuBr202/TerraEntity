@@ -49,8 +49,13 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
             poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(animatable.xRotO));
 //            poseStack.translate(0, 0, 0);
         }
+        adjustPose(poseStack, animatable, partialTick);
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+
+    }
+
+    protected void adjustPose(PoseStack poseStack, T animatable, float partialTick){
 
     }
 

@@ -96,7 +96,7 @@ public class RangeShooter extends AbstractMonster {
         return 20;
     }
 
-    RawAnimation attack = RawAnimation.begin().thenPlay("attack.range");
+    RawAnimation attack = RawAnimation.begin().thenPlay("attack.cast");
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "Walk/Idle/Attack", 5, state ->{

@@ -1,6 +1,8 @@
 package org.confluence.terraentity.effect.harmful;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -57,9 +59,19 @@ public class HellFireEffect extends MobEffect {
                         if (!(entity instanceof Enemy || entity instanceof AbstractTerraBossBase<?>)) return 0;
                         return 3 + amplifier * 3;
                     }
+
+                    @Override
+                    public float getKnockbackMultiplier(Entity entity) {
+                        if(!entity.isPickable()){
+                            return 0.0F;
+                        }
+                        return 1.0F;
+                    }
                 },
                 livingEntity.getX(), livingEntity.getY(0.0625), livingEntity.getZ(),
-                1, true, Level.ExplosionInteraction.TRIGGER);
+                1, true, Level.ExplosionInteraction.TRIGGER,
+                true, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.GENERIC_EXPLODE
+        );
 
     }
 

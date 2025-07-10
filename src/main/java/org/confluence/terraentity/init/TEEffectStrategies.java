@@ -2,6 +2,7 @@ package org.confluence.terraentity.init;
 
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
@@ -53,11 +54,41 @@ public final class TEEffectStrategies {
 
     /**蝙蝠棍*/
     public static final  DeferredHolder<EffectStrategy, EffectStrategy> BAT_FANG_EFFECT = createEffect("bat",
-            (owner, entity)-> owner.heal(1));
+            (owner, entity)-> {
+                if(owner instanceof OwnableEntity o && o.getOwner() instanceof LivingEntity living){
+                    living.heal(1);
+                }else{
+                    owner.heal(1);
+                }
+            });
+
+    public static final  DeferredHolder<EffectStrategy, EffectStrategy> HEAL_0_5_EFFECT = createEffect("heal_0_5",
+            (owner, entity)-> {
+                if(owner instanceof OwnableEntity o && o.getOwner() instanceof LivingEntity living){
+                    living.heal(0.5f);
+                }else{
+                    owner.heal(0.5f);
+                }
+            });
 
     /**着火*/
     public static final DeferredHolder<EffectStrategy, EffectStrategy> SET_FIRE_EFFECT = createEffect("set_fire_5_sec",
             SET_FIRE.apply(5 * 20, 1f));
+
+    public static final DeferredHolder<EffectStrategy, EffectStrategy> POISON_5_SEC_2_AMP = createEffect("poison_5_sec_2_amp",
+            TimePossibilityAmplifierEffect.of("poison_5_sec_2_amp", MobEffects.POISON, 100,2,2,1f));
+
+    public static final DeferredHolder<EffectStrategy, EffectStrategy> SLOW_5_SEC_2_AMP = createEffect("slow_5_sec_2_amp",
+            TimePossibilityAmplifierEffect.of("slow_5_sec_2_amp", MobEffects.MOVEMENT_SLOWDOWN, 100,2,2,1f));
+
+
+    public static final DeferredHolder<EffectStrategy, EffectStrategy> FROZEN_EFFECT = createEffect("frozen_burn_5_sec_2_amp",
+            TimePossibilityAmplifierEffect.of("frozen_burn_5_sec_2_amp", TEEffects.FROST_BURN,100,2,2,1f));
+
+    public static final DeferredHolder<EffectStrategy, EffectStrategy> HELL_FIRE_EFFECT = createEffect("hell_fire_5_sec_2_amp",
+            TimePossibilityAmplifierEffect.of("hell_fire_5_sec_2_amp", TEEffects.HELLFIRE,5 * 20,2,2,1f));
+
+
 
 //    /** 魔光剑*/
 //    private static final  DeferredHolder<EffectStrategy, EffectStrategy> LIGHTS_BANE_EFFECT = createEffect("lights_bane",
@@ -93,7 +124,7 @@ public final class TEEffectStrategies {
 
         /**霜冻*/
         public static final Supplier<EffectStrategyComponent> FROST_BURN_EFFECT = ()->EffectStrategyComponent.of(
-                TimePossibilityAmplifierEffect.of("set_fire_5_sec", TEEffects.FROST_BURN,10*20));
+                TimePossibilityAmplifierEffect.of("frozen_burn_5_sec", TEEffects.FROST_BURN,10*20));
 
         public static final Supplier<EffectStrategyComponent> FROST_BURN_BOOMERANG_EFFECT = ()->EffectStrategyComponent.of(
                 TimePossibilityAmplifierEffect.of("frozen_burn_3_sec_50_chance", TEEffects.FROST_BURN,3 * 20,0,0.5F));

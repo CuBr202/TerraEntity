@@ -10,8 +10,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.summon.SummonSword;
 
 public class SummonSwordRenderer<T extends SummonSword> extends EntityRenderer<T> {
@@ -47,10 +45,11 @@ public class SummonSwordRenderer<T extends SummonSword> extends EntityRenderer<T
         // 旋转到正前方pitch
         poseStack.mulPose(Axis.ZN.rotationDegrees(-pitch));
 
-        float progress =  Mth.clamp((entity.backTicks + partialTick) / entity.backTicksMax,0,1);
+        float x =  Mth.clamp((entity.backTicks + partialTick) / entity.backTicksMax,0,1);
+        x = x < 0.5 ? 2 * x * x : (float) (1 - Math.pow(-2 * x + 2, 2) / 2);
 
-        poseStack.mulPose(Axis.XP.rotationDegrees(90 * progress));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(entity.sequence /2 * ((entity.sequence & 1) == 0? -1 : 1) * 15 * progress));
+        poseStack.mulPose(Axis.XP.rotationDegrees(90 * x));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(entity.sequence /2 * ((entity.sequence & 1) == 0? -1 : 1) * 15 * x));
 
         poseStack.mulPose(Axis.ZN.rotationDegrees(-45 + entity.getRotateZTimer(partialTick) * 30
 //                + (entity.tickCount + partialTick) * 30

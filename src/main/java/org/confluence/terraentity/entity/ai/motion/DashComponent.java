@@ -42,7 +42,7 @@ public class DashComponent {
     }
 
     public void accelerate(float speed) {
-        owner.addDeltaMovement(direction.scale(speed));
+        owner.addDeltaMovement(direction.normalize().scale(speed));
     }
     public void uniformMove(float speed) {
         owner.setDeltaMovement(direction.normalize().scale(speed));
@@ -63,8 +63,8 @@ public class DashComponent {
      * @param distance xz距离
      * @param height   高度
      */
-    public void setNearestTargetPos(Entity target, float distance, float height){
-        targetPos = owner.position().subtract(target.position()).multiply(1, 0, 1).normalize().scale(distance).add(0, height, 0).add(target.position());
+    public Vec3 setNearestTargetPos(Entity target, float distance, float height){
+        return targetPos = owner.position().subtract(target.position()).multiply(1, 0, 1).normalize().scale(distance).add(0, height, 0).add(target.position());
     }
 
     public void lookAtDirection(){

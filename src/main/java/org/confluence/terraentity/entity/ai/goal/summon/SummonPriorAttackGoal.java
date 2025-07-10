@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.TEEffects;
+import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -22,7 +23,7 @@ public class SummonPriorAttackGoal <T extends Mob & ISummonMob<T>> extends Targe
     public boolean canUse() {
         target = null;
         AtomicInteger remainTick = new AtomicInteger(-0x3f3f3f3f);
-        mob.level().getEntities(mob, mob.getBoundingBox().inflate(mob.getAttributeValue(Attributes.FOLLOW_RANGE)), e -> e instanceof LivingEntity living && mob.canAttack(living))
+        mob.level().getEntities(mob, mob.getBoundingBox().inflate(mob.getAttributeValue(Attributes.FOLLOW_RANGE)), e -> e instanceof LivingEntity living && mob.canAttack(living) && living.isPickable())
                 .forEach(tar -> {
                     if (tar instanceof LivingEntity living && living.isAlive() && living.hasEffect(TEEffects.SUMMON_FOCUS)) {
                         MobEffectInstance effect = living.getEffect(TEEffects.SUMMON_FOCUS);
