@@ -3,9 +3,7 @@ package org.confluence.terraentity.client.gui.container;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -14,8 +12,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
@@ -98,7 +94,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         offsetX = (this.width - this.imageWidth) / 2 + 5;
         offsetY = (this.height - this.imageHeight) / 2 + 16;
 
-        interpolator = KeyframeAnimation.Builder()
+        interpolator = KeyframeAnimation.builder()
                 .addKeyframe(5, 0)
                 .addKeyframe(20, 40)
                 .addKeyframe(30, 55)

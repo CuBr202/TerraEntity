@@ -4,10 +4,12 @@ import net.minecraft.network.syncher.EntityDataSerializer;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
 import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
+import org.confluence.terraentity.entity.util.KeyframeAnimationCounter;
 
 import java.util.function.Supplier;
 
@@ -20,6 +22,7 @@ public final class TEEntityDataSerializers {
     public static final Supplier<EntityDataSerializer<NPCMood>> NPC_MOOD_SERIALIZER = SERIALIZERS.register(NPCMood.KEY, () -> EntityDataSerializer.forValueType(NPCMood.STREAM_CODEC));
     public static final Supplier<EntityDataSerializer<TradeParams>> NPC_TRADE_PARAMS_SERIALIZER = SERIALIZERS.register(TradeParams.KEY, () -> EntityDataSerializer.forValueType(TradeParams.STREAM_CODEC));
 
+    public static final Supplier<EntityDataSerializer<KeyframeAnimationCounter>> KEYFRAME_ANIMATION_SERIALIZER = SERIALIZERS.register("keyframe_animation", () -> EntityDataSerializer.forValueType(KeyframeAnimationCounter.STREAM_CODEC));
 
 
 }

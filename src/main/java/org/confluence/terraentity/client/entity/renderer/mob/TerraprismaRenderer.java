@@ -3,12 +3,9 @@ package org.confluence.terraentity.client.entity.renderer.mob;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.irisshaders.iris.gui.screen.ShaderPackScreen;
 import net.irisshaders.iris.pipeline.programs.ExtendedShader;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +24,8 @@ public class TerraprismaRenderer extends SummonSwordRenderer<Terraprisma> {
         this.model= new TerraprismaModel(context.bakeLayer(TerraprismaModel.LAYER_LOCATION));
     }
 
+
+
     protected void preRender(Terraprisma entity, float yaw,float pitch, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight){
         this.setupPose(entity, yaw, pitch, partialTick, poseStack);
         this.additionPose(entity, yaw, pitch, partialTick, poseStack);
@@ -39,6 +38,7 @@ public class TerraprismaRenderer extends SummonSwordRenderer<Terraprisma> {
         poseStack.mulPose(Axis.XN.rotationDegrees(-pitch+180));
     }
 
+
     protected void additionPose(Terraprisma entity, float yaw, float pitch, float partialTick, PoseStack poseStack){
         float x =  Mth.clamp((entity.backTicks + partialTick) / entity.backTicksMax,0,1);
         x = x < 0.5 ? 2 * x * x : (float) (1 - Math.pow(-2 * x + 2, 2) / 2);
@@ -49,14 +49,20 @@ public class TerraprismaRenderer extends SummonSwordRenderer<Terraprisma> {
 
 
     protected void customPose(Terraprisma entity, float yaw, float pitch, float partialTick, PoseStack poseStack){
-        poseStack.mulPose(Axis.XN.rotationDegrees(entity.getRotateZTimer(partialTick) * 30));
+//        poseStack.mulPose(Axis.XN.rotationDegrees(entity.getRotateZTimer(partialTick) * 30));
+        if(entity.anim_x != null) {
+            poseStack.mulPose(Axis.XN.rotationDegrees((float) entity.anim_x.cal(entity.tickCount, partialTick)));
+        }
+//        poseStack.mulPose(Axis.XN.rotationDegrees((entity.tickCount + partialTick) * 30));
 
 //        poseStack.mulPose(Axis.ZN.rotationDegrees(90));
 //        poseStack.mulPose(Axis.XN.rotationDegrees((entity.tickCount + partialTick) * 15));
 
-
     }
 
+    protected void renderTrail(Terraprisma entity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick){
+        entity.trail.renderTrail(entity, entity.trailQueue, entity.position(), poseStack, bufferSource, packedLight);
+    }
     @Override
     public ResourceLocation getTextureLocation(@NotNull SummonSword summonSword) {
         return TerraEntity.space("textures/entity/model/terraprisma_gray.png");

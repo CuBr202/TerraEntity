@@ -24,7 +24,7 @@ public class Terraprisma extends SummonSword {
     protected static final EntityDataAccessor<Integer> DATA_COLOR = SynchedEntityData.defineId(Terraprisma.class, EntityDataSerializers.INT);
 
     public Terraprisma(EntityType<? extends TamableAnimal> entityType, Level level) {
-        super(entityType, level, null, 0xFFFFFF, null, 0.20f);
+        super(entityType, level, null, 0xFFFFFF, null, 0.25f);
 
         this.rgb = getRandomColor();
         this.entityData.set(DATA_COLOR, this.rgb);
@@ -60,6 +60,36 @@ public class Terraprisma extends SummonSword {
         int b = (int) ((from & 255) + ((to & 255) - (from & 255)) * t);
         return (r << 16) + (g << 8) + b;
     }
+
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+//        TerraprismaSkillAttackGoal skill1 = new TerraprismaSkillAttackGoal(this, 2, 30, 150);
+//        this.cooldownManager.addSkill(skill1);
+//        this.goalSelector.addGoal(0, skill1);
+
+    }
+
+    static class TerraprismaSkillAttackGoal extends AbstactSkillGoal{
+
+        /**
+         * @param skillIndex    技能索引
+         * @param ticks         持续时间
+         * @param skillCooldown 技能冷却时间
+         */
+        protected TerraprismaSkillAttackGoal(SummonSword sword, int skillIndex, int ticks, int skillCooldown) {
+            super(sword, skillIndex, ticks, skillCooldown);
+        }
+
+        @Override
+        public void tick(){
+            super.tick();
+            this.ticks++;
+        }
+
+    }
+
 
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {

@@ -15,8 +15,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.attachment.SummonerAttachment;
+import org.confluence.terraentity.entity.ai.goal.skill.ISkill;
+import org.confluence.terraentity.entity.ai.goal.skill.SkillCooldownManager;
+import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
+import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
+import org.confluence.terraentity.entity.util.KeyframeAnimationCounter;
 import org.confluence.terraentity.entity.util.trail.SummonSwordTrail;
 import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.IOriented;
 import org.confluence.terraentity.utils.OBB;
@@ -31,23 +37,34 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class SummonSword extends AbstractSummonMob<SummonSword> implements IOriented, FlyingAnimal {
+
     public SummonSwordTrail trail;
     public Queue<SummonSwordTrail.PositionProperties> trailQueue;
 
-    protected boolean timeToSkillAttack = false;
-    int skillCooldown = 0;
-    float rotateZTimer;
-    int rotateZTick;
     public int sequence;
     public Item modelItem;
+    IEffectStrategy effectStrategy;
+
     public int backTicks;
     public int backTicksMax = 20;
-    IEffectStrategy effectStrategy;
+
     protected int rgb;
 
-    protected static final EntityDataAccessor<Float> DATA_ROTATE_Z_ID = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.FLOAT);
+//    protected boolean timeToSkillAttack = false;
+    protected int skillIndex;
+
+//    float rotateZTimer;
+//    int rotateZTick;
+
+    public KeyframeAnimationCounter anim_x;
+
+    protected SkillCooldownManager cooldownManager;
+//    protected static final EntityDataAccessor<Float> DATA_ROTATE_Z_ID = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<Boolean> DATA_BACK = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Integer> DATA_SEQUENCE = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.INT);
+
+    protected static final EntityDataAccessor<KeyframeAnimationCounter> DATA_KEYFRAME = SynchedEntityData.defineId(SummonSword.class, TEEntityDataSerializers.KEYFRAME_ANIMATION_SERIALIZER.get());
+
 
     public SummonSword(EntityType<? extends TamableAnimal> entityType,  Level level,Supplier<Item> modelItem,  int rgb) {
         this(entityType, level, modelItem, rgb, null, 0.15f);
@@ -74,36 +91,47 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         return rgb;
     }
 
-    public float getRotateZTimer(float partialTicks) {
-        float ticks = tickCount + partialTicks;
-        if(ticks > rotateZTimer) {
-            return 0;
-        }
-//        System.out.println(ticks - rotateZTick);
-        return ticks - rotateZTick;
+//    public float getRotateZTimer(float partialTicks) {
+//        float ticks = tickCount + partialTicks;
+//        if(ticks > rotateZTimer) {
+//            return 0;
+//        }
+////        System.out.println(ticks - rotateZTick);
+//
+//        return ticks - rotateZTick;
+//    }
+
+//    private void addZRot(float duration){
+//        this.entityData.set(DATA_ROTATE_Z_ID, duration, true);
+//    }
+
+    private void stopSkill(){
+        this.skillIndex = 0;
     }
-
-    private void addZRot(float duration){
-        this.entityData.set(DATA_ROTATE_Z_ID, duration, true);
+    private boolean isSkillAttacking(){
+        return this.skillIndex > 0;
     }
-
-
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_ROTATE_Z_ID, 0.0f);
+//        builder.define(DATA_ROTATE_Z_ID, 0.0f);
         builder.define(DATA_BACK, false);
         builder.define(DATA_SEQUENCE, 0);
+        builder.define(DATA_KEYFRAME, new KeyframeAnimationCounter(0, KeyframeAnimation.builder()
+                .addKeyframe(0,0)
+                .addKeyframe(1,0)
+                .build()));
 
     }
 
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        if (key == DATA_ROTATE_Z_ID) {
-            this.rotateZTimer = this.entityData.get(DATA_ROTATE_Z_ID) + tickCount;
-            this.rotateZTick = tickCount;
-        }else if(key == DATA_BACK){
+//        if (key == DATA_ROTATE_Z_ID) {
+//            this.rotateZTimer = this.entityData.get(DATA_ROTATE_Z_ID) + tickCount;
+//            this.rotateZTick = tickCount;
+//        }else
+            if(key == DATA_BACK){
             boolean back = this.entityData.get(DATA_BACK);
             if(!back) {
                 this.backTicks = 20;
@@ -113,13 +141,20 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
         }else if(key == DATA_SEQUENCE){
             this.sequence = this.entityData.get(DATA_SEQUENCE);
+        }else if(key == DATA_KEYFRAME){
+            this.anim_x = this.entityData.get(DATA_KEYFRAME);
+            this.anim_x.setStartTime(tickCount );
         }
 
     }
 
+
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new SwordSkillAttackGoal(this));
+        this.cooldownManager = new SkillCooldownManager();
+        SwordSkillAttackGoal skill1 = new SwordSkillAttackGoal(this, 1, 10, 80);
+        this.cooldownManager.addSkill(skill1);
+        this.goalSelector.addGoal(0, skill1);
         this.goalSelector.addGoal(1, new SwordAttackGoal(this));
         this.goalSelector.addGoal(2, new SwordFollowOwnerGoal(this));
         this.summon_registerTargetGoals();
@@ -136,11 +171,14 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         if(level().isClientSide){
             if(this.entityData.get(DATA_BACK)){
                 this.backTicks++;
-                this.trailQueue.poll();
+//                this.trailQueue.poll();
+                this.trail.generateTrail(this, tickCount);
             }else{
                 this.backTicks--;
                 this.trail.generateTrail(this, tickCount);
             }
+        }else{
+            this.cooldownManager.update(1);
         }
 
     }
@@ -151,6 +189,9 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     }
 
 
+    /**
+     * 普攻ai
+     */
     static class SwordAttackGoal extends Goal{
 
         SummonSword sword;
@@ -161,7 +202,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         }
         @Override
         public boolean canUse() {
-            return sword.getTarget() != null && !sword.summon_shouldTryTeleportToOwner() && !sword.timeToSkillAttack;
+            return sword.getTarget() != null && !sword.summon_shouldTryTeleportToOwner() && !sword.isSkillAttacking();
         }
 
         @Override
@@ -181,15 +222,16 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
             sword.lookAt(target, 30, 85);
             sword.lookControl.setLookAt(target);
             Vec3 targetPos = target.getEyePosition();
-            double dist = targetPos.distanceTo(sword.position());
-            if(dist < 2f ){
-                if(sword.skillCooldown <= 0) {
-                    sword.timeToSkillAttack = true;
-//                    System.out.println("trigger skill attack");
 
-                    return;
-                }
-            }
+            // 触发技能攻击，应该使用manager实现
+//            double dist = targetPos.distanceTo(sword.position());
+//            if(dist < 2f ){
+//                if(sword.skillCooldown <= 0) {
+//                    sword.timeToSkillAttack = true;
+////                    System.out.println("trigger skill attack");
+//                    return;
+//                }
+//            }
 
             Vec3 dir = targetPos.subtract(sword.getEyePosition()).normalize();
             double angle = TEUtils.angleBetween(sword.getLookAngle(), dir);
@@ -204,33 +246,89 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         }
     }
 
-    static class SwordSkillAttackGoal extends Goal{
-
-        SummonSword sword;
+    /**
+     * 带有冷却时间的技能ai
+     */
+    protected static class AbstactSkillGoal extends Goal implements ISkill {
+        protected SummonSword sword;
+        protected int skillIndex;
         int ticks = 0;
-
-
-        boolean triggered = false;
-        protected SwordSkillAttackGoal(SummonSword sword) {
+        int _ticks = 0;
+        protected int skillCooldown = 0;
+        protected int _skillCooldown = 0;
+        /**
+         *
+         * @param skillIndex 技能索引
+         * @param ticks 持续时间
+         * @param skillCooldown 技能冷却时间
+         */
+        protected AbstactSkillGoal(SummonSword sword, int skillIndex, int ticks, int skillCooldown) {
             this.sword = sword;
+            this.skillIndex = skillIndex;
             this.setFlags(EnumSet.of(Flag.MOVE));
-
+            this._ticks = ticks;
+            this._skillCooldown = skillCooldown;
         }
         @Override
         public boolean canUse() {
-            return --sword.skillCooldown <= 0 && sword.getTarget() != null && sword.timeToSkillAttack;
+            return sword.cooldownManager.canTriggerSkill(this) && sword.getTarget() != null;
         }
-
-
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
         @Override
         public boolean canContinueToUse() {
-            return this.canUse() && ticks < 20;
+            return this.canUse() && ticks < _ticks;
         }
 
+        /**
+         * 技能结束后刷新冷却
+         */
+        @Override
+        public void stop(){
+            sword.stopSkill();
+            ticks = 0;
+            skillCooldown = _skillCooldown + sword.getRandom().nextInt((int) (_skillCooldown * 0.3f));
+            sword.cooldownManager.triggerSkill(this);
+        }
 
         @Override
-        public void start() {
-//            sword.setSharedFlag(6, true);
+        public int getCooldown() {
+            return skillCooldown;
+        }
+
+        @Override
+        public void update(int delta) {
+            this.skillCooldown = Math.max(0, skillCooldown - delta);
+        }
+
+        @Override
+        public int getMaxCooldown() {
+            return _skillCooldown;
+        }
+
+        @Override
+        public int getIndex() {
+            return skillIndex;
+        }
+
+        @Override
+        public void reset() {
+            this.skillCooldown = _skillCooldown;
+        }
+    }
+
+    /**
+     * 移动到目标处，挥剑向下砍
+     */
+    protected static class SwordSkillAttackGoal extends AbstactSkillGoal{
+
+        boolean triggered = false;
+        protected SwordSkillAttackGoal(SummonSword sword, int skillIndex, int ticks, int skillCooldown) {
+            super(sword, skillIndex, ticks, skillCooldown);
+            this.sword = sword;
+            this.setFlags(EnumSet.of(Flag.MOVE));
 
         }
 
@@ -248,33 +346,36 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
             Vec3 targetPos = target.getEyePosition().add(skill);
             Vec3 lookDir = targetPos.subtract(sword.getEyePosition());
-            sword.lookControl.setLookAt(targetPos);
-            sword.lookAt(EntityAnchorArgument.Anchor.EYES, targetPos);
 
 //            sword.setXRot((float) ((10 - ticks) * 4 * 0.0174533));
 
-            if(dist.length() > 0.6 && !triggered){
+            if(dist.length() > 3 && !triggered){
                 sword.setDeltaMovement(dist.normalize().scale(0.5f));
                 return;
             }
+            sword.lookControl.setLookAt(targetPos);
+            sword.lookAt(EntityAnchorArgument.Anchor.EYES, targetPos);
+
             triggered = true;
             ticks++;
             sword.setDeltaMovement(sword.getDeltaMovement().scale(0.7f));
         }
 
         @Override
-        public boolean requiresUpdateEveryTick() {
-            return true;
+        public void stop(){
+            super.stop();
+            triggered = false;
+            this.triggerZRot();
         }
 
-        @Override
-        public void stop(){
-            sword.timeToSkillAttack = false;
-            ticks = 0;
-            sword.skillCooldown = 80 + sword.getRandom().nextInt(20);
-            triggered = false;
-            if(sword.random.nextFloat() < 0.5){
-                sword.addZRot(40);
+        protected void triggerZRot(){
+            if(sword.random.nextFloat() < 1){
+//                sword.addZRot(40);
+                sword.entityData.set(DATA_KEYFRAME, new KeyframeAnimationCounter(KeyframeAnimation.builder()
+                        .addKeyframe(new Keyframe(20, 90, 0, 0.5f, 1, 0.8f))
+                        .addKeyframe(40, 360 * 5)
+                        .build()), true);
+
             }
         }
     }

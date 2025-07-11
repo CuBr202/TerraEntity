@@ -33,17 +33,29 @@ public class SummonSwordRenderer<T extends SummonSword> extends EntityRenderer<T
         }else{
             return;
         }
-        entity.trail.renderTrail(entity, entity.trailQueue, entity.position(), poseStack, bufferSource, packedLight);
+
         poseStack.pushPose();
         this.preRender(entity, yaw, pitch, partialTick, poseStack, bufferSource, packedLight);
         this.renderModel(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+//        System.out.println(poseStack.last().normal());
+        poseStack.popPose();
+
+        poseStack.pushPose();
+
+        this.renderTrail(entity, poseStack, bufferSource, packedLight, partialTick);
+
         poseStack.popPose();
     }
 
     @Override
     public ResourceLocation getTextureLocation(@NotNull SummonSword summonSword) {
         return null;
+    }
+
+    protected void renderTrail(T entity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick){
+        entity.trail.renderTrail(entity, entity.trailQueue, entity.position(), poseStack, bufferSource, packedLight);
+
     }
 
     /**
@@ -75,7 +87,10 @@ public class SummonSwordRenderer<T extends SummonSword> extends EntityRenderer<T
      * 技能动作
      */
     protected void customPose(T entity, float yaw, float pitch, float partialTick, PoseStack poseStack){
-        poseStack.mulPose(Axis.ZN.rotationDegrees(entity.getRotateZTimer(partialTick) * 30));
+//        poseStack.mulPose(Axis.ZN.rotationDegrees(entity.getRotateZTimer(partialTick) * 30));
+        if(entity.anim_x != null) {
+            poseStack.mulPose(Axis.ZN.rotationDegrees((float) entity.anim_x.cal(entity.tickCount, partialTick)));
+        }
         poseStack.mulPose(Axis.ZN.rotationDegrees(-45)); // 贴图需要旋转45度
     }
 

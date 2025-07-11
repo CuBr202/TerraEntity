@@ -1,5 +1,10 @@
 package org.confluence.terraentity.entity.ai.keyframe;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import java.util.Optional;
+
 public class Keyframe {
     public double time;
     public double value;
@@ -9,6 +14,21 @@ public class Keyframe {
     public double tension1 =0.5;
     public boolean isInterpolated = false;
 
+    public static Codec<Keyframe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.DOUBLE.fieldOf("time").forGetter(ins->ins.time),
+            Codec.DOUBLE.fieldOf("value").forGetter(ins->ins.value),
+            Codec.DOUBLE.optionalFieldOf("k0").forGetter(ins->ins.isInterpolated? Optional.of(ins.k0) : Optional.empty()),
+            Codec.DOUBLE.optionalFieldOf("t0").forGetter(ins->ins.isInterpolated? Optional.of(ins.tension0 ): Optional.empty()),
+            Codec.DOUBLE.optionalFieldOf("k1").forGetter(ins->ins.isInterpolated? Optional.of(ins.k1): Optional.empty()),
+            Codec.DOUBLE.optionalFieldOf("t1").forGetter(ins->ins.isInterpolated? Optional.of(ins.tension1):Optional.empty()),
+            Codec.BOOL.optionalFieldOf("isInterpolated", false).forGetter(ins->ins.isInterpolated)
+    ).apply(instance, (t, v, k0, t0, k1, t1, isInterpolated)->{
+        if(isInterpolated) {
+            return new Keyframe(t, v, k0.get(), t0.get(), k1.get(), t1.get());
+        }
+        return new Keyframe(t, v);
+    }));
+
     public Keyframe setValue(double value){
         this.value = value;
         return this;
@@ -16,10 +36,6 @@ public class Keyframe {
 
     public Keyframe copy(){
         return new Keyframe(time, value, k0, tension0, k1, tension1);
-    }
-
-    public Keyframe(double time) {
-        this.time = time;
     }
 
     public Keyframe(double time, double value) {
