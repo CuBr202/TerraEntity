@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
@@ -11,7 +12,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.client.util.ShaderUtil;
-import org.confluence.terraentity.entity.proj.TrailSwordProj;
 import org.confluence.terraentity.entity.summon.SummonSword;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -23,8 +23,18 @@ import java.util.Queue;
 public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrail.PositionProperties> {
     ITrail.TrailProperties properties;
     Queue<PositionProperties> trailsQueue;
-    public record PositionProperties(Vec3 position, float xrot, float yrot){
+    public static class PositionProperties{
+         public Vec3 position;
+         public float xrot;
+         public float yrot;
+         public PoseStack.Pose lastPose;
 
+        public PositionProperties(Vec3 position, float xRot, float yRot) {
+            this.position = position;
+            this.xrot = xRot;
+            this.yrot = yRot;
+            this.lastPose = null;
+        }
     }
     public SummonSwordTrail(int size, float widthScale, int color) {
         this.properties = new ITrail.TrailProperties(size, widthScale, 5, color, color);
@@ -48,7 +58,7 @@ public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrai
     }
 
 
-
+    // 用于泰拉棱镜渲染，由于拖尾要贴合剑身，所以要多传入pose
     @OnlyIn(Dist.CLIENT)
     public void renderTrail(SummonSword holder, Queue<PositionProperties> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, PoseStack.Pose lastPose) {
         Iterator<PositionProperties> trails = trailsQueue.iterator();
@@ -99,12 +109,17 @@ public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrai
             int lerpBlue = (int) Mth.lerp(progress, blue, blueFrom);
             int argb = FastColor.ARGB32.color(alpha, lerpRed, lerpGreen, lerpBlue);
 
-//            Vec3 side = dir.cross(camDir).normalize();
-            float rotx = p.xrot * 0.017453292F;
-            float roty = -p.yrot * 0.017453292F;
-            Vector3f d = new Vector3f(0,0,1);
-            new Quaternionf().rotateY(roty).rotateX(rotx).transform(d);
+            if(p.lastPose == null){
+                p.lastPose = lastPose;
+                p.lastPose.pose().rotate(Axis.XN.rotationDegrees(45));
+            }
 
+            poseStack.pushPose();
+            PoseStack.Pose pose = p.lastPose;
+            poseStack.popPose();
+
+            Vector3f d = new Vector3f();
+            pose.transformNormal(new Vector3f(0,0,-1), d);
             Vec3 side = new Vec3(d.normalize());
 
             Vec3 left0 ;

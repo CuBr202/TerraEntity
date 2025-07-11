@@ -17,7 +17,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.attachment.SummonerAttachment;
 import org.confluence.terraentity.entity.ai.goal.skill.ISkill;
 import org.confluence.terraentity.entity.ai.goal.skill.SkillCooldownManager;
-import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
 import org.confluence.terraentity.entity.util.KeyframeAnimationCounter;
 import org.confluence.terraentity.entity.util.trail.SummonSwordTrail;
@@ -50,20 +49,19 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
     protected int rgb;
 
-//    protected boolean timeToSkillAttack = false;
     protected int skillIndex;
 
-//    float rotateZTimer;
-//    int rotateZTick;
-
+    // 服务端控制客户端的x旋转(对于模型剑和贴图剑，x和z轴是反的)
     public KeyframeAnimationCounter anim_x;
 
+
+
     protected SkillCooldownManager cooldownManager;
-//    protected static final EntityDataAccessor<Float> DATA_ROTATE_Z_ID = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.FLOAT);
+
     protected static final EntityDataAccessor<Boolean> DATA_BACK = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<Integer> DATA_SEQUENCE = SynchedEntityData.defineId(SummonSword.class, EntityDataSerializers.INT);
 
-    protected static final EntityDataAccessor<KeyframeAnimationCounter> DATA_KEYFRAME = SynchedEntityData.defineId(SummonSword.class, TEEntityDataSerializers.KEYFRAME_ANIMATION_SERIALIZER.get());
+    protected static final EntityDataAccessor<KeyframeAnimationCounter> DATA_KEYFRAME_X = SynchedEntityData.defineId(SummonSword.class, TEEntityDataSerializers.KEYFRAME_ANIMATION_SERIALIZER.get());
 
 
     public SummonSword(EntityType<? extends TamableAnimal> entityType,  Level level,Supplier<Item> modelItem,  int rgb) {
@@ -91,20 +89,6 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         return rgb;
     }
 
-//    public float getRotateZTimer(float partialTicks) {
-//        float ticks = tickCount + partialTicks;
-//        if(ticks > rotateZTimer) {
-//            return 0;
-//        }
-////        System.out.println(ticks - rotateZTick);
-//
-//        return ticks - rotateZTick;
-//    }
-
-//    private void addZRot(float duration){
-//        this.entityData.set(DATA_ROTATE_Z_ID, duration, true);
-//    }
-
     private void stopSkill(){
         this.skillIndex = 0;
     }
@@ -117,7 +101,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 //        builder.define(DATA_ROTATE_Z_ID, 0.0f);
         builder.define(DATA_BACK, false);
         builder.define(DATA_SEQUENCE, 0);
-        builder.define(DATA_KEYFRAME, new KeyframeAnimationCounter(0, KeyframeAnimation.builder()
+        builder.define(DATA_KEYFRAME_X, new KeyframeAnimationCounter(0, KeyframeAnimation.builder()
                 .addKeyframe(0,0)
                 .addKeyframe(1,0)
                 .build()));
@@ -127,11 +111,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-//        if (key == DATA_ROTATE_Z_ID) {
-//            this.rotateZTimer = this.entityData.get(DATA_ROTATE_Z_ID) + tickCount;
-//            this.rotateZTick = tickCount;
-//        }else
-            if(key == DATA_BACK){
+        if(key == DATA_BACK){
             boolean back = this.entityData.get(DATA_BACK);
             if(!back) {
                 this.backTicks = 20;
@@ -141,8 +121,8 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
         }else if(key == DATA_SEQUENCE){
             this.sequence = this.entityData.get(DATA_SEQUENCE);
-        }else if(key == DATA_KEYFRAME){
-            this.anim_x = this.entityData.get(DATA_KEYFRAME);
+        }else if(key == DATA_KEYFRAME_X){
+            this.anim_x = this.entityData.get(DATA_KEYFRAME_X);
             this.anim_x.setStartTime(tickCount );
         }
 
@@ -152,9 +132,14 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     @Override
     protected void registerGoals() {
         this.cooldownManager = new SkillCooldownManager();
-        SwordSkillAttackGoal skill1 = new SwordSkillAttackGoal(this, 1, 10, 80);
+        SwordSlashGoal skill1 = new SwordSlashGoal(this, 1, 10, 150);
         this.cooldownManager.addSkill(skill1);
         this.goalSelector.addGoal(0, skill1);
+
+        registerCommonSwordGoals();
+    }
+
+    protected void registerCommonSwordGoals(){
         this.goalSelector.addGoal(1, new SwordAttackGoal(this));
         this.goalSelector.addGoal(2, new SwordFollowOwnerGoal(this));
         this.summon_registerTargetGoals();
@@ -171,8 +156,8 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         if(level().isClientSide){
             if(this.entityData.get(DATA_BACK)){
                 this.backTicks++;
-//                this.trailQueue.poll();
-                this.trail.generateTrail(this, tickCount);
+                this.trailQueue.poll();
+//                this.trail.generateTrail(this, tickCount);
             }else{
                 this.backTicks--;
                 this.trail.generateTrail(this, tickCount);
@@ -289,7 +274,6 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         public void stop(){
             sword.stopSkill();
             ticks = 0;
-            skillCooldown = _skillCooldown + sword.getRandom().nextInt((int) (_skillCooldown * 0.3f));
             sword.cooldownManager.triggerSkill(this);
         }
 
@@ -315,17 +299,17 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
         @Override
         public void reset() {
-            this.skillCooldown = _skillCooldown;
+            this.skillCooldown = _skillCooldown + sword.getRandom().nextInt((int) (_skillCooldown * 0.3f));
         }
     }
 
     /**
      * 移动到目标处，挥剑向下砍
      */
-    protected static class SwordSkillAttackGoal extends AbstactSkillGoal{
+    protected static class SwordSlashGoal extends AbstactSkillGoal{
 
         boolean triggered = false;
-        protected SwordSkillAttackGoal(SummonSword sword, int skillIndex, int ticks, int skillCooldown) {
+        protected SwordSlashGoal(SummonSword sword, int skillIndex, int ticks, int skillCooldown) {
             super(sword, skillIndex, ticks, skillCooldown);
             this.sword = sword;
             this.setFlags(EnumSet.of(Flag.MOVE));
@@ -339,15 +323,11 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
             if(target == null){
                 return;
             }
-//            System.out.println("state: skill attacking" + (10 - ticks));
+
             Vec3 dist = target.getEyePosition().subtract(sword.position());
-
             Vec3 skill = new Vec3(0, 10 - ticks, 0);
-
             Vec3 targetPos = target.getEyePosition().add(skill);
             Vec3 lookDir = targetPos.subtract(sword.getEyePosition());
-
-//            sword.setXRot((float) ((10 - ticks) * 4 * 0.0174533));
 
             if(dist.length() > 3 && !triggered){
                 sword.setDeltaMovement(dist.normalize().scale(0.5f));
@@ -369,11 +349,10 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         }
 
         protected void triggerZRot(){
-            if(sword.random.nextFloat() < 1){
-//                sword.addZRot(40);
-                sword.entityData.set(DATA_KEYFRAME, new KeyframeAnimationCounter(KeyframeAnimation.builder()
-                        .addKeyframe(new Keyframe(20, 90, 0, 0.5f, 1, 0.8f))
-                        .addKeyframe(40, 360 * 5)
+            if(sword.random.nextFloat() < 0.5f){
+                sword.entityData.set(DATA_KEYFRAME_X, new KeyframeAnimationCounter(KeyframeAnimation.builder()
+                        .addKeyframe(0, 0)
+                        .addKeyframe(15, 360)
                         .build()), true);
 
             }

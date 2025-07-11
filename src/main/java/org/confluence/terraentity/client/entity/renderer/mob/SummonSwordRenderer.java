@@ -14,7 +14,7 @@ import org.confluence.terraentity.entity.summon.SummonSword;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * 模型为贴图的召唤剑渲染器
+ * 模型为贴图的召唤剑渲染器（泰拉棱镜）
  */
 public class SummonSwordRenderer<T extends SummonSword> extends EntityRenderer<T> {
 
@@ -34,17 +34,12 @@ public class SummonSwordRenderer<T extends SummonSword> extends EntityRenderer<T
             return;
         }
 
+        this.renderTrail(entity, poseStack, bufferSource, packedLight, partialTick);
+
         poseStack.pushPose();
         this.preRender(entity, yaw, pitch, partialTick, poseStack, bufferSource, packedLight);
         this.renderModel(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-//        System.out.println(poseStack.last().normal());
-        poseStack.popPose();
-
-        poseStack.pushPose();
-
-        this.renderTrail(entity, poseStack, bufferSource, packedLight, partialTick);
-
         poseStack.popPose();
     }
 

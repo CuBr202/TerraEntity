@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import net.irisshaders.iris.pipeline.programs.ExtendedShader;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -13,11 +14,11 @@ import net.minecraft.util.Mth;
 import net.neoforged.fml.ModList;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.model.TerraprismaModel;
-import org.confluence.terraentity.entity.summon.SummonSword;
 import org.confluence.terraentity.entity.summon.Terraprisma;
 import org.jetbrains.annotations.NotNull;
 
-public class TerraprismaRenderer extends SummonSwordRenderer<Terraprisma> {
+public class TerraprismaRenderer extends EntityRenderer<Terraprisma> {
+
     TerraprismaModel model;
     public TerraprismaRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -25,6 +26,32 @@ public class TerraprismaRenderer extends SummonSwordRenderer<Terraprisma> {
     }
 
 
+
+    @Override
+    public void render(Terraprisma entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        float pitch;
+        float yaw;
+        if(entity.getOwner() != null && entity.tickCount > 1){
+            pitch = Mth.lerp(partialTick, entity.xRotO, entity.getXRot());
+            yaw = entityYaw;
+        }else{
+            return;
+        }
+        poseStack.pushPose();
+        this.preRender(entity, yaw, pitch, partialTick, poseStack, bufferSource, packedLight);
+        this.renderModel(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+
+        PoseStack poseStack1 = new PoseStack();
+        this.preRender(entity, yaw, pitch, partialTick, poseStack1, bufferSource, packedLight);
+        PoseStack.Pose pose = poseStack1.last();
+
+        poseStack.popPose();
+
+        poseStack.pushPose();
+        this.renderTrail(entity, poseStack, bufferSource, packedLight, partialTick, pose);
+        poseStack.popPose();
+    }
 
     protected void preRender(Terraprisma entity, float yaw,float pitch, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight){
         this.setupPose(entity, yaw, pitch, partialTick, poseStack);
@@ -47,37 +74,48 @@ public class TerraprismaRenderer extends SummonSwordRenderer<Terraprisma> {
 
     }
 
-
     protected void customPose(Terraprisma entity, float yaw, float pitch, float partialTick, PoseStack poseStack){
-//        poseStack.mulPose(Axis.XN.rotationDegrees(entity.getRotateZTimer(partialTick) * 30));
         if(entity.anim_x != null) {
             poseStack.mulPose(Axis.XN.rotationDegrees((float) entity.anim_x.cal(entity.tickCount, partialTick)));
         }
+        if(entity.anim_y != null) {
+            poseStack.mulPose(Axis.YN.rotationDegrees((float) entity.anim_y.cal(entity.tickCount, partialTick)));
+        }
+        if(entity.anim_z != null) {
+            poseStack.mulPose(Axis.ZN.rotationDegrees((float) entity.anim_z.cal(entity.tickCount, partialTick)));
+        }
 //        poseStack.mulPose(Axis.XN.rotationDegrees((entity.tickCount + partialTick) * 30));
-
+//        poseStack.mulPose(Axis.YN.rotationDegrees((entity.tickCount + partialTick) * 30));
 //        poseStack.mulPose(Axis.ZN.rotationDegrees(90));
-//        poseStack.mulPose(Axis.XN.rotationDegrees((entity.tickCount + partialTick) * 15));
+
 
     }
 
-    protected void renderTrail(Terraprisma entity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick){
-        entity.trail.renderTrail(entity, entity.trailQueue, entity.position(), poseStack, bufferSource, packedLight);
+    protected void renderTrail(Terraprisma entity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick, PoseStack.Pose pose){
+        entity.trail.renderTrail(entity, entity.trailQueue, entity.position(), poseStack, bufferSource, packedLight, pose);
     }
-    @Override
-    public ResourceLocation getTextureLocation(@NotNull SummonSword summonSword) {
+
+    public @NotNull ResourceLocation getTextureLocation(@NotNull Terraprisma summonSword) {
         return TerraEntity.space("textures/entity/model/terraprisma_gray.png");
     }
 
-    @Override
     protected void renderModel(Terraprisma entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight){
+//        RenderSystem.disableDepthTest();
         if(RenderSystem.getShader() == null){
             return;
         }
         if(ModList.get().isLoaded("iris") && RenderSystem.getShader() instanceof ExtendedShader) {
+
+            poseStack.pushPose();
+            poseStack.scale(0.9f,0.9f,0.9f);
+            model.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(entity))), packedLight, OverlayTexture.NO_OVERLAY, entity.getRgb() | 0x2F000000);
+            poseStack.popPose();
+            // 不知道是什么原因，会出现深度始终小于实体
             model.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.entityTranslucentEmissive(getTextureLocation(entity))), packedLight, OverlayTexture.NO_OVERLAY, entity.getRgb() | 0xFF000000);
         }else{
             // 原版这个效果好一点
             model.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.energySwirl(getTextureLocation(entity),0,0)), packedLight, OverlayTexture.NO_OVERLAY, entity.getRgb() | 0xFF000000);
         }
+//        RenderSystem.enableDepthTest();
     }
 }
