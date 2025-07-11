@@ -1,9 +1,11 @@
 package org.confluence.terraentity.network.s2c;
 
-import net.minecraft.network.FriendlyByteBuf;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
@@ -12,6 +14,7 @@ import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
@@ -29,10 +32,11 @@ public class UpdateNPCTradePacket implements CustomPacketPayload {
         this.trade = trade;
     }
 
-    public UpdateNPCTradePacket(FriendlyByteBuf buffer) {
+    public UpdateNPCTradePacket(RegistryFriendlyByteBuf buffer) {
        this.index = buffer.readInt();
        this.npcId = buffer.readUUID();
-       this.trade = buffer.readJsonWithCodec(ITrade.TYPED_CODEC);
+       JsonElement element = GsonHelper.parse(buffer.readBytes(buffer.readVarInt()).toString(StandardCharsets.UTF_8));
+       this.trade = ITrade.TYPED_CODEC.decode(buffer.registryAccess().createSerializationContext(JsonOps.INSTANCE), element).result().get().getFirst();
     }
 
     public static final Type<UpdateNPCTradePacket> TYPE = new Type<>(TerraEntity.space("update_npc_trade_packet_s2c"));
@@ -44,14 +48,18 @@ public class UpdateNPCTradePacket implements CustomPacketPayload {
         return TYPE;
     }
 
-    public static UpdateNPCTradePacket decode(FriendlyByteBuf buffer) {
+    public static UpdateNPCTradePacket decode(RegistryFriendlyByteBuf buffer) {
         return new UpdateNPCTradePacket(buffer);
     }
 
-    public static void encode(UpdateNPCTradePacket packet, FriendlyByteBuf buf) {
+    public static void encode(UpdateNPCTradePacket packet, RegistryFriendlyByteBuf buf) {
         buf.writeInt(packet.index);
         buf.writeUUID(packet.npcId);
-        buf.writeJsonWithCodec(ITrade.TYPED_CODEC, packet.trade);
+        JsonElement element = ITrade.TYPED_CODEC.encodeStart(buf.registryAccess().createSerializationContext(JsonOps.INSTANCE), packet.trade).result().get();
+        byte[] bytes = element.toString().getBytes();
+        buf.writeVarInt(bytes.length);
+        buf.writeBytes(bytes);
+//        buf.writeJsonWithCodec(ITrade.TYPED_CODEC, packet.trade);
         
     }
 
