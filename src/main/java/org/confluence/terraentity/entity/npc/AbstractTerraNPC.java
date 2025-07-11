@@ -353,7 +353,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("te_npc_data", 10)) {
-            NPCTradeManager.CODEC.parse(NbtOps.INSTANCE, tag.get("te_npc_data")).result().ifPresent(npcTrades -> {
+            NPCTradeManager.CODEC.parse(level().registryAccess().createSerializationContext(NbtOps.INSTANCE), tag.get("te_npc_data")).result().ifPresent(npcTrades -> {
                 this.trades = npcTrades;
                 this.trades.initTrades(this);
                 syncTrades();
