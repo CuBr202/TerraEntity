@@ -427,8 +427,9 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.effect.strategy.hunting_4_sec", "狩猎 4秒");
         add("terra_entity.effect.strategy.hell_fire_5_sec", "烈火焚身 5秒");
         add("terra_entity.effect.strategy.set_fire_5_sec", "着火啦 5秒");
+        add("terra_entity.effect.strategy.forzen_burn_5_sec", "霜火 5秒");
         add("terra_entity.effect.strategy.blood_butchered", "血腥屠宰");
-        add("terra_entity.effect.strategy.bei_dou", "随机5种效果:\n     霜冻 Ⅳ 10秒\n     烈火焚身 Ⅳ 10秒\n     凋零 Ⅳ 10秒\n     中毒 Ⅳ 10秒\n     瞬间伤害 Ⅷ");
+        add("terra_entity.effect.strategy.bei_dou", "随机5种效果:\n     霜冻 IV 10秒\n     烈火焚身 IV 10秒\n     凋零 IV 10秒\n     中毒 IV 10秒\n     瞬间伤害 VIII");
 
         add("terra_entity.effect.strategy.strength", "愤怒");
 

@@ -139,7 +139,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.effect.strategy.hell_fire_5_sec", "Hell fire 5 seconds");
         add("terra_entity.effect.strategy.set_fire_5_sec", "Set fire 5 seconds");
         add("terra_entity.effect.strategy.blood_butchered", "Blood Butchered");
-        add("terra_entity.effect.strategy.bei_dou", "Random 5 effects:\\nfrozen burn ⅳ 10 seconds\\nhell fire ⅳ 10 seconds\\nwither ⅳ 10 seconds\\npoison ⅳ 10 seconds\\ninstant harm ⅷ");
+        add("terra_entity.effect.strategy.bei_dou", "Random 5 effects:\\nfrozen burn IV 10 seconds\\nhell fire IV 10 seconds\\nwither IV 10 seconds\\npoison ⅳ 10 seconds\\ninstant harm VIII");
 
         add("terra_entity.effect.strategy.strength", "Anger");
 
