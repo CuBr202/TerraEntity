@@ -21,14 +21,12 @@ public class SummonFollowOwnerGoal<T extends Mob & ISummonMob<?>> extends Goal {
     protected final PathNavigation navigation;
     private int timeToRecalcPath;
     private final float stopDistance;
-    private final float startDistance;
     private float oldWaterCost;
 
-    public SummonFollowOwnerGoal(T tamable, double speedModifier, float startDistance, float stopDistance) {
+    public SummonFollowOwnerGoal(T tamable, double speedModifier, float stopDistance) {
         this.tamable = tamable;
         this.speedModifier = speedModifier;
         this.navigation = tamable.getNavigation();
-        this.startDistance = startDistance;
         this.stopDistance = stopDistance;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         if (!(tamable.getNavigation() instanceof GroundPathNavigation) && !(tamable.getNavigation() instanceof FlyingPathNavigation)) {
@@ -42,7 +40,7 @@ public class SummonFollowOwnerGoal<T extends Mob & ISummonMob<?>> extends Goal {
             return false;
         } else if (this.tamable.summon_unableToMoveToOwner()) {
             return false;
-        } else if (this.tamable.distanceToSqr(livingentity) < (double)(this.startDistance * this.startDistance)) {
+        } else if (this.tamable.distanceToSqr(livingentity) < this.tamable.summon_getStartDistanceToOwner()) {
             return false;
         } else {
             this.owner = livingentity;

@@ -71,6 +71,7 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> EATER_OF_SOULS_SPAWN_EGG = registerEgg("eater_of_souls_spawn_egg", TEMonsterEntities.EATER_OF_SOULS, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> FACE_MONSTER_SPAWN_EGG = registerEgg("face_monster_spawn_egg", TEMonsterEntities.FACE_MONSTER, 0xffffff, 0xffffff);
     public static final DeferredItem<Item> FIRE_IMG_SPAWN_EGG = registerEgg("fire_imp_spawn_egg", TEMonsterEntities.FIRE_IMP, 0xffffff, 0xffffff);
+    public static final DeferredItem<Item> SNOW_FLINX_SPAWN_EGG = registerEgg("snow_flinx_spawn_egg", TEMonsterEntities.SNOW_FLINX, 0xffffff, 0xffffff);
 
     public static final DeferredItem<Item> PIRANHA_SPAWN_EGG = registerEgg("piranha_spawn_egg", TEMonsterEntities.PIRANHA, 0xffffff, 0xffffff);
 

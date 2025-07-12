@@ -1,14 +1,15 @@
 package org.confluence.terraentity.init.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
-import net.minecraft.world.entity.animal.Dolphin;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -16,7 +17,6 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.client.entity.model.*;
-import org.confluence.terraentity.client.entity.renderer.AnimatorRenderer;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.TheHungryRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.*;
@@ -83,6 +83,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FACE_MONSTER = registerSimpleMonster("face_monster", LandMonsterPrefab.FACE_MONSTER_BUILDER, 0.75F, 1.95F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> BLOOD_TUMORS = registerSimpleMonster("blood_tumors", LandMonsterPrefab.BLOOD_TUMORS, 0.5F, 0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> BLOOD_ZOMBIE = registerSimpleMonster("blood_zombie", LandMonsterPrefab.BLOOD_ZOMBIE_BUILDER, 0.75F, 1.95F);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> SNOW_FLINX = registerSimpleMonster("snow_flinx", LandMonsterPrefab.SNOW_FLINX_BUILDER, 1.25F, 1.25F);
 
     // 水怪
     public static final DeferredHolder<EntityType<?>, EntityType<Piranha>> PIRANHA = TEEntities.registerEntity("piranha", (e,l)->new Piranha(e,l), 0.5F, 0.5F);
@@ -191,6 +192,12 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.FACE_MONSTER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.FACE_MONSTER.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.BLOOD_TUMORS.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.BLOOD_TUMORS.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.BLOOD_ZOMBIE.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.BLOOD_ZOMBIE.getId(), false));
+        event.registerEntityRenderer(TEMonsterEntities.SNOW_FLINX.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.SNOW_FLINX.getId(), false){
+            @Override
+            protected void adjustPose(PoseStack poseStack, AbstractMonster animatable, float partialTick){
+                poseStack.mulPose(Axis.YP.rotationDegrees(90+ Mth.lerp(partialTick, animatable.yBodyRotO - animatable.yHeadRotO,animatable.yBodyRot - animatable.yHeadRot)) );
+            }
+        });
 
         event.registerEntityRenderer(TEMonsterEntities.PIRANHA.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.PIRANHA.getId(), true));
 
@@ -277,6 +284,7 @@ public class TEMonsterEntities {
         event.put(FACE_MONSTER.get(), AbstractMonster.createAttributes().build());
         event.put(BLOOD_TUMORS.get(), AbstractMonster.createAttributes().build());
         event.put(BLOOD_ZOMBIE.get(), AbstractMonster.createAttributes().build());
+        event.put(SNOW_FLINX.get(), AbstractMonster.createAttributes().build());
 
         event.put(GIANT_SHELLY.get(), AbstractMonster.createAttributes().build());
         event.put(NYMPH.get(), AbstractMonster.createAttributes().build());
@@ -381,6 +389,8 @@ public class TEMonsterEntities {
         event.register(NYMPH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(SNATCHER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkGroundSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(MAN_EATER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(SNOW_FLINX.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkGroundSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
         // fly
         event.register(DEMON_EYE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DemonEye::checkDemonEyeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(FLYING_FISH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkFlyingFishSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);

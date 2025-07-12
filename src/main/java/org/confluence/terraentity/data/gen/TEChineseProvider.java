@@ -53,6 +53,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.NYMPH.get(), "宁芙");
         add(TEMonsterEntities.DRIPPLER.get(), "滴滴怪");
         add(TEMonsterEntities.BLOOD_ZOMBIE.get(), "血腥僵尸");
+        add(TEMonsterEntities.SNOW_FLINX.get(), "雪怪");
 
         add(TEMonsterEntities.PIRANHA.get(), "食人鱼");
 
@@ -118,6 +119,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESummonEntities.SUMMON_HORNET.get(), "仆役黄蜂");
         add(TESummonEntities.SCULK_WISP.get(), "幽匿游灵");
         add(TESummonEntities.IMP.get(), "召唤的小鬼");
+        add(TESummonEntities.SUMMON_SNOW_FLINX.get(), "小雪怪");
 
 
         add(TESummonEntities.SUMMON_WOODEN_SWORD.get(), "青冥");
@@ -186,6 +188,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.CRIMSON_KEMERA_SPAWN_EGG.get(), "猩红喀迈拉刷怪蛋");
         add(TESpawnEggItems.FACE_MONSTER_SPAWN_EGG.get(), "脸怪刷怪蛋");
         add(TESpawnEggItems.FIRE_IMG_SPAWN_EGG.get(), "火焰小鬼刷怪蛋");
+        add(TESpawnEggItems.SNOW_FLINX_SPAWN_EGG.get(), "雪怪刷怪蛋");
 
         add(TESpawnEggItems.PIRANHA_SPAWN_EGG.get(), "食人鱼刷怪蛋");
 
@@ -299,6 +302,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESummonItems.HORNET_STAFF.get(), "黄蜂法杖");
         add(TESummonItems.SCULK_WISP_STAFF.get(), "幽匿法杖");
         add(TESummonItems.IMP_STAFF.get(), "小鬼法杖");
+        add(TESummonItems.SNOW_FLINX_STAFF.get(), "雪怪法杖");
 
 
         add(TESummonItems.SUMMON_WOODEN_SWORD_STAFF.get(), "青冥");

@@ -130,8 +130,18 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
 
     /* Teleport API */
 
+    /**
+     * 当距离平方超过这个数时，会尝试传送到owner附近
+     */
     default float summon_getDistanceToTeleportToOwner(){
-        return 30 * 30;
+        return 16 * 16;
+    }
+
+    /**
+     * 当距离平方超过这个数时，会尝试移动到owner附近
+     */
+    default float summon_getStartDistanceToOwner(){
+        return 10 * 10;
     }
 
     default void summon_teleportToAroundBlockPos(BlockPos pos) {
@@ -258,7 +268,7 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
     }
 
     default void summon_registerMoveGoal(){
-        asEntity().goalSelector.addGoal(6, new SummonFollowOwnerGoal(asEntity(), 1.0, 10.0F, 2.0F));
+        asEntity().goalSelector.addGoal(6, new SummonFollowOwnerGoal(asEntity(), 1.0,  2.0F));
     }
 
     default void summon_onAddedToLevel() {

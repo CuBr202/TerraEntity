@@ -1,6 +1,9 @@
 package org.confluence.terraentity.init.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.IronGolemRenderer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.item.Items;
@@ -14,13 +17,9 @@ import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.SculkWispRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.SummonSwordRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.TerraprismaRenderer;
-import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.summon.*;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
-
-import java.awt.Color;
 
 public class TESummonEntities {
     // tip 召唤物
@@ -30,6 +29,7 @@ public class TESummonEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<SummonHornet>> SUMMON_HORNET = TEEntities.registerEntity("hornet_baby", SummonHornet::new,0.5F,0.8F);
     public static final DeferredHolder<EntityType<?>, EntityType<SculkWisp>> SCULK_WISP = TEEntities.registerEntity("sculk_wisp", SculkWisp::new,1F,1F);
     public static final DeferredHolder<EntityType<?>, EntityType<FlyRangeAttackSummonMob<?>>> IMP = TEEntities.registerEntity("summon_imp", (e,l)->new FlyRangeAttackSummonMob<>(e,l,20,20,18,15, TEProjectileEntities.FIRE_IMP_PROJ),1F,1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<SummonSnowFlinx>> SUMMON_SNOW_FLINX = TEEntities.registerEntity("summon_snow_flinx", (e,l)->new SummonSnowFlinx(e,l),1F,1F);
 
     // 棱镜系列
     public static final DeferredHolder<EntityType<?>, EntityType<SummonSword>> SUMMON_WOODEN_SWORD = TEEntities.registerEntity("summon_wooden_sword", (e,l)->new SummonSword(e,l, ()->Items.WOODEN_SWORD,0x714C11, TEEffectStrategies.POISON_5_SEC_2_AMP.get().getProvider(), 0.15f),1F,1F);
@@ -52,6 +52,13 @@ public class TESummonEntities {
         event.registerEntityRenderer(SUMMON_HORNET.get(), c->new GeoNormalRenderer<>(c, new GeoNormalModel<>(TEMonsterEntities.HORNET.getId(),false),true, 0.6f, 0.5f));
         event.registerEntityRenderer(SCULK_WISP.get(), c->new SculkWispRenderer(c, SCULK_WISP.getId().withPrefix("summon/")));
         event.registerEntityRenderer(IMP.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.FIRE_IMP.getId(), true, 0.8f,0));
+        event.registerEntityRenderer(SUMMON_SNOW_FLINX.get(), c->new GeoNormalRenderer<>(c, SUMMON_SNOW_FLINX.getId().withPrefix("summon/"),false){
+            @Override
+            protected void adjustPose(PoseStack poseStack, SummonSnowFlinx animatable, float partialTick){
+                poseStack.mulPose(Axis.YP.rotationDegrees(90+ Mth.lerp(partialTick, animatable.yBodyRotO - animatable.yHeadRotO,animatable.yBodyRot - animatable.yHeadRot)) );
+            }
+        });
+
 
         event.registerEntityRenderer(SUMMON_WOODEN_SWORD.get(), c->new SummonSwordRenderer<>(c));
         event.registerEntityRenderer(SUMMON_STONE_SWORD.get(), c->new SummonSwordRenderer<>(c));
@@ -64,20 +71,22 @@ public class TESummonEntities {
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
         // sommon
-        event.put(SUMMON_FINCH.get(), AbstractMonster.createAttributes().build());
-        event.put(SUMMON_SLIME.get(), AbstractMonster.createAttributes().build());
+        event.put(SUMMON_FINCH.get(), AbstractSummonMob.createAttributes().build());
+        event.put(SUMMON_SLIME.get(), AbstractSummonMob.createAttributes().build());
         event.put(SUMMON_IRON_GOLEM.get(), IronGolem.createAttributes().build());
-        event.put(SUMMON_HORNET.get(), AbstractMonster.createAttributes().build());
-        event.put(SCULK_WISP.get(), AbstractMonster.createAttributes().build());
-        event.put(IMP.get(), AbstractMonster.createAttributes().build());
+        event.put(SUMMON_HORNET.get(), AbstractSummonMob.createAttributes().build());
+        event.put(SCULK_WISP.get(), AbstractSummonMob.createAttributes().build());
+        event.put(IMP.get(), AbstractSummonMob.createAttributes().build());
+        event.put(SUMMON_SNOW_FLINX.get(), AbstractSummonMob.createAttributes().build());
 
-        event.put(SUMMON_WOODEN_SWORD.get(), AbstractMonster.createAttributes().build());
-        event.put(SUMMON_STONE_SWORD.get(), AbstractMonster.createAttributes().build());
-        event.put(SUMMON_IRON_SWORD.get(), AbstractMonster.createAttributes().build());
-        event.put(SUMMON_GOLDEN_SWORD.get(), AbstractMonster.createAttributes().build());
-        event.put(SUMMON_DIAMOND_SWORD.get(), AbstractMonster.createAttributes().build());
-        event.put(SUMMON_NETHERITE_SWORD.get(), AbstractMonster.createAttributes().build());
-        event.put(TERRAPRISMA.get(), AbstractMonster.createAttributes().build());
+
+        event.put(SUMMON_WOODEN_SWORD.get(), AbstractSummonMob.createAttributes().build());
+        event.put(SUMMON_STONE_SWORD.get(), AbstractSummonMob.createAttributes().build());
+        event.put(SUMMON_IRON_SWORD.get(), AbstractSummonMob.createAttributes().build());
+        event.put(SUMMON_GOLDEN_SWORD.get(), AbstractSummonMob.createAttributes().build());
+        event.put(SUMMON_DIAMOND_SWORD.get(), AbstractSummonMob.createAttributes().build());
+        event.put(SUMMON_NETHERITE_SWORD.get(), AbstractSummonMob.createAttributes().build());
+        event.put(TERRAPRISMA.get(), AbstractSummonMob.createAttributes().build());
     }
 
     public static void register(){

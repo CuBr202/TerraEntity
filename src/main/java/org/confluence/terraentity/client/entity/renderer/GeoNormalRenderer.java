@@ -40,7 +40,7 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
     }
 
     @Override
-    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
 
         poseStack.scale(scale, scale, scale);
         poseStack.translate(0, offsetY, 0);

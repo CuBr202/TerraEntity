@@ -17,6 +17,7 @@ public class TESummonItems {
     public static final DeferredItem<Item> HORNET_STAFF = ITEMS.register("hornet_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SUMMON_HORNET, 1, 8));
     public static final DeferredItem<Item> SCULK_WISP_STAFF = ITEMS.register("sculk_wisp_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SCULK_WISP, 1, 7));
     public static final DeferredItem<Item> IMP_STAFF = ITEMS.register("imp_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.IMP, 1, 14));
+    public static final DeferredItem<Item> SNOW_FLINX_STAFF = ITEMS.register("snow_flinx_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SUMMON_SNOW_FLINX, 1, 14));
 
 
     //棱镜系列
