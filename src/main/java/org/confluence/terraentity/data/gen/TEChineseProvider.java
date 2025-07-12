@@ -302,7 +302,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESummonItems.HORNET_STAFF.get(), "黄蜂法杖");
         add(TESummonItems.SCULK_WISP_STAFF.get(), "幽匿法杖");
         add(TESummonItems.IMP_STAFF.get(), "小鬼法杖");
-        add(TESummonItems.SNOW_FLINX_STAFF.get(), "雪怪法杖");
+        add(TESummonItems.SNOW_FLINX_STAFF.get(), "小雪怪法杖");
 
 
         add(TESummonItems.SUMMON_WOODEN_SWORD_STAFF.get(), "青冥");
