@@ -53,7 +53,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.NYMPH.get(), "宁芙");
         add(TEMonsterEntities.DRIPPLER.get(), "滴滴怪");
         add(TEMonsterEntities.BLOOD_ZOMBIE.get(), "血腥僵尸");
-        add(TEMonsterEntities.SNOW_FLINX.get(), "雪怪");
+        add(TEMonsterEntities.SNOW_FLINX.get(), "小雪怪");
 
         add(TEMonsterEntities.PIRANHA.get(), "食人鱼");
 

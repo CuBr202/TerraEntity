@@ -157,7 +157,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
                         g.addGoal(8, new LookAtPlayerGoal(e, Player.class, 6));
                     });
     public static Supplier<AttributeBuilder> SNOW_FLINX_BUILDER =
-            ()->new LandMonsterPrefab(39,2,10,60,0.5f,0.1f).getPrefab()
+            ()->new LandMonsterPrefab(36,3,13,60,0.1f,0.1f).getPrefab()
                     .addGoal((g,e)-> {
                         g.addGoal(2, new JumpOverBlockGoal(e));
                         g.addGoal(3, new MeleeAttackGoal(e,  0.8f, true));

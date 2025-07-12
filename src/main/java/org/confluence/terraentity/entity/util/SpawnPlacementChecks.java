@@ -99,8 +99,7 @@ public class SpawnPlacementChecks {
         }
 
         return level.isDay()
-                && pLevel.canSeeSky(pPos)
-                && pLevel.getBrightness(LightLayer.SKY, pPos) > 8;
+                && pLevel.canSeeSky(pPos);
     }
 
 
