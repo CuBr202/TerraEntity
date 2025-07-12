@@ -152,6 +152,10 @@ dependencies {
         jarJar.ranged(it, "[1.0.0,)")
     }
 
+//    implementation fg.deobf("curse.maven:kubejs-238086:5853326")
+//    implementation fg.deobf("curse.maven:architectury-api-419699:5137938")
+//    implementation fg.deobf("curse.maven:rhino-416294:6186971")
+
     //jarJar(implementation(fg.deobf("ignored:defaultresources-forge:1.19.2-0.3.0"))) {
     //    jarJar.ranged(it, "[0.3.0,)")
     //}

@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -38,17 +39,21 @@ public class WhipModelRegister extends AbstractModelRegister<Item> {
         return instance;
     }
 
+    @Override
     public @Nullable ModelResourceLocation process(ResourceLocation location){
         String[] splits = location.getPath().split("[./]");
         int len = splits.length;
         String name = splits[len - 2];
-        if(location.getPath().endsWith("config.json")){
+        if(location.getPath().endsWith("config.json") && location.getNamespace().equals(TerraEntity.MODID)){
             ResourceManager provider = Minecraft.getInstance().getResourceManager();
 
             try{
                 Reader reader = provider.openAsReader(location);
                 JsonObject jsonobject = GsonHelper.parse(reader);
-                this.additionalModels = CODEC.decode(JsonOps.INSTANCE, jsonobject).result().get().getFirst();
+                if(additionalModels == null){
+                    additionalModels = new HashMap<>();
+                }
+                this.additionalModels.putAll(CODEC.decode(JsonOps.INSTANCE, jsonobject).result().get().getFirst());
             }catch (IOException e){
                 TerraEntity.LOGGER.error("Can't open config file: {}", location, e);
                 return null;
@@ -81,6 +86,7 @@ public class WhipModelRegister extends AbstractModelRegister<Item> {
             ModelResourceLocation modelResourceLocation = new ModelResourceLocation(modelLocation, "inventory");
 //                event.register(modelResourceLocation);
             put(item, modelResourceLocation);
+            event.register(modelResourceLocation);
             TerraEntity.LOGGER.info("Registering whip model for {}: {}", item.getDescriptionId(), modelResourceLocation);
         });
 

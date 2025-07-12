@@ -23,7 +23,7 @@ public class TerraEntity {
     public static final String MODID = "terra_entity";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static ResourceLocation space(String path) {return new ResourceLocation(MODID, path);}
-    public static ResourceLocation parse(String path){return ResourceLocation.parse(path);}
+    public static ResourceLocation parse(String path){return new ResourceLocation(path);}
     public static ResourceLocation fromSpaceAndPath(String space, String path){return new ResourceLocation(space, path);}
     public static ResourceLocation defaultPath(String path){return new ResourceLocation("minecraft", path);}
 
