@@ -34,13 +34,13 @@ public class GameEvent {
 
     @SubscribeEvent
     public static void serverStartBefore(ServerAboutToStartEvent event) {
+        NPCTradeManager.readTradesFromJson(event.getServer(), event.getServer().registryAccess());
         AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
     }
 
     @SubscribeEvent
     public static void serverStarted(ServerStartedEvent event) {
         HouseStoreSaver.get(event.getServer().overworld());
-        NPCTradeManager.readTradesFromJson(event.getServer(), event.getServer().registryAccess());
     }
 
     @SubscribeEvent
