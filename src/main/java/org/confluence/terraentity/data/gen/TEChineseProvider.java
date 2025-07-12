@@ -444,7 +444,9 @@ public class TEChineseProvider extends LanguageProvider {
 
         // 附魔
         add("enchantment.terra_entity.multi_boomerang", "影分身");
+        add("enchantment.terra_entity.multi_boomerang.desc", "额外发射一个回旋镖");
         add("enchantment.terra_entity.whip_sweep", "横扫之鞭");
+        add("enchantment.terra_entity.whip_sweep.desc", "概率造成大范围伤害");
 
         // npc对话
         add("dialogs.terra_entity.guide.0", "我的工作是为你接下来的任务提供建议。建议你遇到任何困难时都来和我谈谈。");
