@@ -146,9 +146,8 @@ public class Squirrel extends Animal implements IVanillaVariant<Integer>, GeoEnt
             .put(5, TerraEntity.space("textures/entity/animal/squirrel/golden_squirrel.png"))
             .put(6, TerraEntity.space("textures/entity/animal/squirrel/ruby_squirrel.png"))
             .put(7, TerraEntity.space("textures/entity/animal/squirrel/sapphire_squirrel.png"))
-            .put(8, TerraEntity.space("textures/entity/animal/squirrel/squirrel.squirrel.png"))
-            .put(9, TerraEntity.space("textures/entity/animal/squirrel/topaz_squirrel.png"))
-            .put(10, TerraEntity.space("textures/entity/animal/squirrel/red_squirrel.png"))
+            .put(8, TerraEntity.space("textures/entity/animal/squirrel/topaz_squirrel.png"))
+            .put(9, TerraEntity.space("textures/entity/animal/squirrel/red_squirrel.png"))
             .build()
     );
 

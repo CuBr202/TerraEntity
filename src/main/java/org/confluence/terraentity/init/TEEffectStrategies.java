@@ -55,8 +55,8 @@ public final class TEEffectStrategies {
     /**蝙蝠棍*/
     public static final  DeferredHolder<EffectStrategy, EffectStrategy> BAT_FANG_EFFECT = createEffect("bat",
             (owner, entity)-> {
-                if(owner instanceof OwnableEntity o && o.getOwner() instanceof LivingEntity living){
-                    living.heal(1);
+                if(owner instanceof OwnableEntity o && o.getOwner() != null){
+                    o.getOwner().heal(1);
                 }else{
                     owner.heal(1);
                 }
@@ -64,8 +64,8 @@ public final class TEEffectStrategies {
 
     public static final  DeferredHolder<EffectStrategy, EffectStrategy> HEAL_0_5_EFFECT = createEffect("heal_0_5",
             (owner, entity)-> {
-                if(owner instanceof OwnableEntity o && o.getOwner() instanceof LivingEntity living){
-                    living.heal(0.5f);
+                if(owner instanceof OwnableEntity o && o.getOwner() != null){
+                    o.getOwner().heal(0.5f);
                 }else{
                     owner.heal(0.5f);
                 }

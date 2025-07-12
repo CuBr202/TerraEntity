@@ -131,10 +131,10 @@ public class TESpawnEggItems {
     public static final DeferredItem<Item> SQUIRREL_SPAWN_EGG = registerEgg("squirrel_spawn_egg", TEAnimals.SQUIRREL, 0xffffff);
     public static final DeferredItem<Item> BUNNY_SPAWN_EGG = registerEgg("bunny_spawn_egg", TEAnimals.BUNNY, 0xffffff);
     public static final DeferredItem<Item> BOOM_BUNNY_SPAWN_EGG = registerEgg("boom_bunny_spawn_egg", TEAnimals.BOOM_BUNNY, 0xffffff);
-    public static final DeferredItem<Item> DUCK_EGG = registerEgg("duck_spawn_egg", TEAnimals.DUCK, 0xffffff);
-    public static final DeferredItem<Item> BIRD_EGG = registerEgg("bird_spawn_egg", TEAnimals.DUCK, 0xffffff);
-    public static final DeferredItem<Item> BLUE_JAY_EGG = registerEgg("blue_jay_spawn_egg", TEAnimals.DUCK, 0xffffff);
-    public static final DeferredItem<Item> CARDINAL_EGG = registerEgg("cardinal_spawn_egg", TEAnimals.DUCK, 0xffffff);
+    public static final DeferredItem<Item> DUCK_SPAWN_EGG = registerEgg("duck_spawn_egg", TEAnimals.DUCK, 0xffffff);
+    public static final DeferredItem<Item> BIRD_SPAWN_EGG = registerEgg("bird_spawn_egg", TEAnimals.BIRD, 0xffffff);
+    public static final DeferredItem<Item> BLUE_JAY_SPAWN_EGG = registerEgg("blue_jay_spawn_egg", TEAnimals.BLUE_JAY, 0xffffff);
+    public static final DeferredItem<Item> CARDINAL_SPAWN_EGG = registerEgg("cardinal_spawn_egg", TEAnimals.CARDINAL, 0xffffff);
 
 
     public static DeferredItem<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryColor, int secondaryColor){

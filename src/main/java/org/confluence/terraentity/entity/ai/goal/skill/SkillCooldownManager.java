@@ -41,12 +41,16 @@ public class SkillCooldownManager implements ISkillManager{
                 cooldownQueue.peek().getCooldown() <= 0)) {
             this.availableSkills.add(cooldownQueue.poll());
         }
+
+    }
+
+    @Override
+    public String toString(){
         StringBuilder log = new StringBuilder();
         for (ISkill skill : cooldownQueue) {
             log.append(String.format(skill.getIndex() + ":" + skill.getCooldown() + " ; "));
         }
-        if(!log.isEmpty())
-            System.out.println(log);
+        return log.toString();
     }
 
 

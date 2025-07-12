@@ -289,10 +289,10 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.SQUIRREL_SPAWN_EGG.get(), "松鼠刷怪蛋");
         add(TESpawnEggItems.BOOM_BUNNY_SPAWN_EGG.get(), "炸弹兔刷怪蛋");
         add(TESpawnEggItems.BUNNY_SPAWN_EGG.get(), "兔兔刷怪蛋");
-        add(TESpawnEggItems.DUCK_EGG.get(), "鸭子刷怪蛋");
-        add(TESpawnEggItems.BIRD_EGG.get(), "鸟刷怪蛋");
-        add(TESpawnEggItems.BLUE_JAY_EGG.get(), "冠蓝鹊刷怪蛋");
-        add(TESpawnEggItems.CARDINAL_EGG.get(), "红鹊刷怪蛋");
+        add(TESpawnEggItems.DUCK_SPAWN_EGG.get(), "鸭子刷怪蛋");
+        add(TESpawnEggItems.BIRD_SPAWN_EGG.get(), "鸟刷怪蛋");
+        add(TESpawnEggItems.BLUE_JAY_SPAWN_EGG.get(), "冠蓝鹊刷怪蛋");
+        add(TESpawnEggItems.CARDINAL_SPAWN_EGG.get(), "红鹊刷怪蛋");
 
 
         // 召唤杖
