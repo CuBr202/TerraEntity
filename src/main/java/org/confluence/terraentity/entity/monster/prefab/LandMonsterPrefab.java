@@ -48,9 +48,10 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     })
             ;
 
-    public static Supplier<AttributeBuilder> MUSHROOM_ZOMBIE_BUILDER =
-            ()->new LandMonsterPrefab(39,2,10,60,0.5f,0.1f).getPrefab()
-                    .setMovementSpeed(0.15f)
+    public static Supplier<AttributeBuilder> SPORE_ZOMBIE_BUILDER =
+            ()->new LandMonsterPrefab(93,2,20,60,0.6f,0.1f).getPrefab()
+                    .setMovementSpeed(0.08f)
+                    .setSpawnWithoutLight()
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .addTarget((t,e)-> {
                         t.addGoal(1,new AccelerateOnSeeingGoal(e,0.25f));
@@ -75,6 +76,36 @@ public class LandMonsterPrefab extends AbstractPrefab {
                         g.addGoal(7, new WaterAvoidingRandomStrollGoal(e, 1.0));
                         g.addGoal(8, new LookAtPlayerGoal(e, Player.class, 6));
                     });
+
+    public static Supplier<AttributeBuilder> HAT_SPORE_ZOMBIE_BUILDER =
+            ()->new LandMonsterPrefab(114,4,19,60,0.6f,0.72f).getPrefab()
+                    .setMovementSpeed(0.08f)
+                    .setSpawnWithoutLight()
+                    .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
+                    .addTarget((t,e)-> {
+                        t.addGoal(1,new AccelerateOnSeeingGoal(e,0.25f));
+                        t.addGoal(2, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
+
+                    })
+                    .setController((c,e)->{
+                        c.add(genericWalkRunIdleController(e));
+                        c.add(new AnimationController<>(e, "Attack", 0, state -> {
+                            if (e.swinging) {
+                                return state.setAndContinue(DefaultAnimations.ATTACK_STRIKE);
+                            }
+
+                            state.getController().forceAnimationReset();
+
+                            return PlayState.STOP;
+                        }));
+                    })
+                    .addGoal((g,e)-> {
+                        g.addGoal(2, new JumpOverBlockGoal(e));
+                        g.addGoal(3, new MeleeAttackGoal(e,  0.8f, true));
+                        g.addGoal(7, new WaterAvoidingRandomStrollGoal(e, 1.0));
+                        g.addGoal(8, new LookAtPlayerGoal(e, Player.class, 6));
+                    });
+
 
     public static Supplier<AttributeBuilder> BLOOD_TUMORS =
             ()->new LandMonsterPrefab(1,0,0,0,0,0,0).getPrefab()
@@ -125,7 +156,14 @@ public class LandMonsterPrefab extends AbstractPrefab {
                         g.addGoal(7, new WaterAvoidingRandomStrollGoal(e, 1.0));
                         g.addGoal(8, new LookAtPlayerGoal(e, Player.class, 6));
                     });
-
+    public static Supplier<AttributeBuilder> SNOW_FLINX_BUILDER =
+            ()->new LandMonsterPrefab(39,2,10,60,0.5f,0.1f).getPrefab()
+                    .addGoal((g,e)-> {
+                        g.addGoal(2, new JumpOverBlockGoal(e));
+                        g.addGoal(3, new MeleeAttackGoal(e,  0.8f, true));
+                        g.addGoal(7, new WaterAvoidingRandomStrollGoal(e, 1.0));
+                        g.addGoal(8, new LookAtPlayerGoal(e, Player.class, 6));
+                    });
 
 
 

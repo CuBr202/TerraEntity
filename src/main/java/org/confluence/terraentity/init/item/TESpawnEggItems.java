@@ -8,6 +8,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.init.entity.TEAnimals;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.entity.TENpcEntities;
@@ -48,8 +49,9 @@ public class TESpawnEggItems {
     public static final RegistryObject<Item> DEMON_EYE_SPAWN_EGG = registerEgg("demon_eye_spawn_egg", TEMonsterEntities.DEMON_EYE, 0xffffff, 0xab0d0d);
     public static final RegistryObject<Item> BLOOD_CRAWLER_SPAWN_EGG = registerEgg("blood_crawler_spawn_egg", TEMonsterEntities.BLOOD_CRAWLER, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> BLOODY_SPORE_SPAWN_EGG = registerEgg("bloody_spore_spawn_egg", TEMonsterEntities.BLOODY_SPORE, 0xffffff, 0xffffff);
-    public static final RegistryObject<Item> MUSHROOM_SKELETON_SPAWN_EGG = registerEgg("mushroom_skeleton_spawn_egg", TEMonsterEntities.MUSHROOM_SKELETON, 0xffffff, 0xffffff);
-    public static final RegistryObject<Item> MUSHROOM_ZOMBIE_SPAWN_EGG = registerEgg("mushroom_zombie_spawn_egg", TEMonsterEntities.MUSHROOM_ZOMBIE, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> SPORE_SKELETON_SPAWN_EGG = registerEgg("spore_skeleton_spawn_egg", TEMonsterEntities.SPORE_SKELETON, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> SPORE_ZOMBIE_SPAWN_EGG = registerEgg("spore_zombie_spawn_egg", TEMonsterEntities.SPORE_ZOMBIE, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> HAT_SPORE_ZOMBIE_SPAWN_EGG = registerEgg("hat_spore_zombie_spawn_egg", TEMonsterEntities.HAT_SPORE_ZOMBIE, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> DECAYEDER_SPAWN_EGG = registerEgg("decayeder_spawn_egg", TEMonsterEntities.DECAYEDER, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> DEVOURER_SPAWN_EGG = registerEgg("devourer_spawn_egg", TEMonsterEntities.DEVOURER, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> GIANT_SHELLY_SPAWN_EGG = registerEgg("giant_shelly_spawn_egg", TEMonsterEntities.GIANT_SHELLY, 0xffffff, 0xffffff);
@@ -62,12 +64,20 @@ public class TESpawnEggItems {
     public static final RegistryObject<Item> GIANT_ANTLION_SWARMER_SPAWN_EGG = registerEgg("giant_antlion_spawn_egg", TEMonsterEntities.GIANT_ANTLION_SWARMER, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> FLYING_FISH_SPAWN_EGG = registerEgg("flying_fish_spawn_egg", TEMonsterEntities.FLYING_FISH, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> HARPY_SPAWN_EGG = registerEgg("harpy_spawn_egg", TEMonsterEntities.HARPY, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> DEMON_SPAWN_EGG = registerEgg("demon_spawn_egg", TEMonsterEntities.DEMON, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> VOODOO_DEMON_SPAWN_EGG = registerEgg("voodoo_demon_spawn_egg", TEMonsterEntities.VOODOO_DEMON, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> DRIPPLER_SPAWN_EGG = registerEgg("drippler_spawn_egg", TEMonsterEntities.DRIPPLER, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> BLOOD_ZOMBIE_SPAWN_EGG = registerEgg("blood_zombie_spawn_egg", TEMonsterEntities.BLOOD_ZOMBIE, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> WANDERING_EYE_FISH_SPAWN_EGG = registerEgg("wandering_eye_fish_spawn_egg", TEMonsterEntities.WANDERING_EYE_FISH, 0xffffff, 0xffffff);
-    public static final RegistryObject<Item> CRIMSON_KEMERA_EGG = registerEgg("crimson_kemera_egg", TEMonsterEntities.CRIMSON_KEMERA, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> CRIMSON_KEMERA_SPAWN_EGG = registerEgg("crimson_kemera_spawn_egg", TEMonsterEntities.CRIMSON_KEMERA, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> EATER_OF_SOULS_SPAWN_EGG = registerEgg("eater_of_souls_spawn_egg", TEMonsterEntities.EATER_OF_SOULS, 0xffffff, 0xffffff);
-    public static final RegistryObject<Item> FACE_MONSTER_EGG = registerEgg("face_monster_egg", TEMonsterEntities.FACE_MONSTER, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> FACE_MONSTER_SPAWN_EGG = registerEgg("face_monster_spawn_egg", TEMonsterEntities.FACE_MONSTER, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> FIRE_IMG_SPAWN_EGG = registerEgg("fire_imp_spawn_egg", TEMonsterEntities.FIRE_IMP, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> SNOW_FLINX_SPAWN_EGG = registerEgg("snow_flinx_spawn_egg", TEMonsterEntities.SNOW_FLINX, 0xffffff, 0xffffff);
+
+    public static final RegistryObject<Item> PIRANHA_SPAWN_EGG = registerEgg("piranha_spawn_egg", TEMonsterEntities.PIRANHA, 0xffffff, 0xffffff);
+
+    // BOSS
     public static final RegistryObject<Item> KING_SLIME_SPAWN_EGG = registerEgg("king_slime_spawn_egg", TEBossEntities.KING_SLIME, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> EYE_OF_CTHULHU_SPAWN_EGG = registerEgg("cthulhu_eye_spawn_egg", TEBossEntities.EYE_OF_CTHULHU, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> EATER_OF_WORLD_SPAWN_EGG = registerEgg("eater_of_world_spawn_egg", TEBossEntities.EATER_OF_WORLDS, 0xffffff, 0xffffff);
@@ -75,7 +85,7 @@ public class TESpawnEggItems {
     public static final RegistryObject<Item> QUEEN_BEE_SPAWN_EGG = registerEgg("queen_bee_spawn_egg", TEBossEntities.QUEEN_BEE, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> SKELETRON_SPAWN_EGG = registerEgg("skeletron_spawn_egg", TEBossEntities.SKELETRON, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> DUNGEON_GUARDIAN_SPAWN_EGG = registerEgg("dungeon_guardian_spawn_egg", TEBossEntities.DUNGEON_GUARDIAN, 0xffffff, 0xffffff);
-//    public static final RegistryObject<Item> WALL_OF_FLESH_SPAWN_EGG = registerEgg("wall_of_flesh_spawn_egg", TEBossEntities.WALL_OF_FLESH, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> WALL_OF_FLESH_SPAWN_EGG = registerEgg("wall_of_flesh_spawn_egg", TEBossEntities.WALL_OF_FLESH, 0xffffff, 0xffffff);
 
     // 地牢骷髅
 
@@ -111,8 +121,22 @@ public class TESpawnEggItems {
     public static final RegistryObject<Item> DYE_TRADER_SPAWN_EGG = registerEgg("dye_trader_spawn_egg", TENpcEntities.DYE_TRADER, 0xffffff);
     public static final RegistryObject<Item> ANGLER_SPAWN_EGG = registerEgg("angler_spawn_egg", TENpcEntities.ANGLER, 0xffffff);
     public static final RegistryObject<Item> OLD_MAN_SPAWN_EGG = registerEgg("old_man_spawn_egg", TENpcEntities.OLD_MAN, 0xffffff);
+    public static final RegistryObject<Item> MECHANIC_SPAWN_EGG = registerEgg("mechanic_spawn_egg", TENpcEntities.MECHANIC, 0xffffff);
+    public static final RegistryObject<Item> TRAVELING_MERCHANT_SPAWN_EGG = registerEgg("traveling_merchant_spawn_egg", TENpcEntities.TRAVELING_MERCHANT, 0xffffff);
+    public static final RegistryObject<Item> WITCH_DOCTOR_SPAWN_EGG = registerEgg("witch_doctor_spawn_egg", TENpcEntities.WITCH_DOCTOR, 0xffffff);
+    public static final RegistryObject<Item> PARTY_GIRL_SPAWN_EGG = registerEgg("party_girl_spawn_egg", TENpcEntities.PARTY_GIRL, 0xffffff);
+    public static final RegistryObject<Item> CLOTHIER_SPAWN_EGG = registerEgg("clothier_spawn_egg", TENpcEntities.CLOTHIER, 0xffffff);
+    public static final RegistryObject<Item> TRUFFLE_SPAWN_EGG = registerEgg("truffle_spawn_egg", TENpcEntities.TRUFFLE, 0xffffff);
 
 
+    // 动物
+    public static final RegistryObject<Item> SQUIRREL_SPAWN_EGG = registerEgg("squirrel_spawn_egg", TEAnimals.SQUIRREL, 0xffffff);
+    public static final RegistryObject<Item> BUNNY_SPAWN_EGG = registerEgg("bunny_spawn_egg", TEAnimals.BUNNY, 0xffffff);
+    public static final RegistryObject<Item> BOOM_BUNNY_SPAWN_EGG = registerEgg("boom_bunny_spawn_egg", TEAnimals.BOOM_BUNNY, 0xffffff);
+    public static final RegistryObject<Item> DUCK_EGG = registerEgg("duck_spawn_egg", TEAnimals.DUCK, 0xffffff);
+    public static final RegistryObject<Item> BIRD_EGG = registerEgg("bird_spawn_egg", TEAnimals.DUCK, 0xffffff);
+    public static final RegistryObject<Item> BLUE_JAY_EGG = registerEgg("blue_jay_spawn_egg", TEAnimals.DUCK, 0xffffff);
+    public static final RegistryObject<Item> CARDINAL_EGG = registerEgg("cardinal_spawn_egg", TEAnimals.DUCK, 0xffffff);
 
 
     public static RegistryObject<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryColor, int secondaryColor){

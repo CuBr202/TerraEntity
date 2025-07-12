@@ -4,7 +4,6 @@ import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEItems;
-import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.entity.*;
 import org.confluence.terraentity.init.item.*;
 
@@ -54,6 +53,10 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.NYMPH.get(), "宁芙");
         add(TEMonsterEntities.DRIPPLER.get(), "滴滴怪");
         add(TEMonsterEntities.BLOOD_ZOMBIE.get(), "血腥僵尸");
+        add(TEMonsterEntities.SNOW_FLINX.get(), "雪怪");
+
+        add(TEMonsterEntities.PIRANHA.get(), "食人鱼");
+
         add(TEMonsterEntities.WANDERING_EYE_FISH.get(), "游荡眼球怪鱼");
         add(TEMonsterEntities.BLOOD_CRAWLER.get(), "血爬虫");
         add(TEMonsterEntities.BLOODY_SPORE.get(), "血腥芽孢");
@@ -72,9 +75,12 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.HELL_BAT.get(), "地狱蝙蝠");
         add(TEMonsterEntities.ICE_BAT.get(), "冰雪蝙蝠");
         add(TEMonsterEntities.SPORE_BAT.get(), "孢子蝙蝠");
-        add(TEMonsterEntities.MUSHROOM_SKELETON.get(), "孢子骷髅");
-        add(TEMonsterEntities.MUSHROOM_ZOMBIE.get(), "孢子僵尸");
+        add(TEMonsterEntities.SPORE_SKELETON.get(), "孢子骷髅");
+        add(TEMonsterEntities.SPORE_ZOMBIE.get(), "孢子僵尸");
+        add(TEMonsterEntities.HAT_SPORE_ZOMBIE.get(), "帽子蘑菇僵尸");
         add(TEMonsterEntities.HARPY.get(), "鸟妖");
+        add(TEMonsterEntities.DEMON.get(), "恶魔");
+        add(TEMonsterEntities.VOODOO_DEMON.get(), "巫毒恶魔");
         add(TEMonsterEntities.ANGER_BONES.get(), "愤怒骷髅");
         add(TEMonsterEntities.SHORT_BONES.get(), "矮骷髅");
         add(TEMonsterEntities.BIG_BONES.get(), "大骷髅");
@@ -84,11 +90,12 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.CURSED_SKULL.get(), "诅咒骷髅头");
         add(TEMonsterEntities.DARK_CASTER.get(), "暗黑法师");
         add(TEMonsterEntities.UNDEAD_VIKING.get(), "亡灵维京海盗");
-//        add(TEMonsterEntities.THE_HUNGRY.get(), "饿鬼");
+        add(TEMonsterEntities.THE_HUNGRY.get(), "饿鬼");
         add(TEMonsterEntities.ANTLION_SWARMER.get(), "蚁狮蜂");
         add(TEMonsterEntities.GIANT_ANTLION_SWARMER.get(), "巨型蚁狮蜂");
 
 
+        // boss
         add(TEBossEntities.KING_SLIME.get(), "史莱姆王");
         add(TEBossEntities.EYE_OF_CTHULHU.get(), "克苏鲁之眼");
         add(TEBossEntities.EATER_OF_WORLDS.get(), "世界吞噬怪");
@@ -100,16 +107,30 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.LITTLE_HORNET.get(), "小黄蜂");
         add(TEBossEntities.SKELETRON.get(), "骷髅王");
         add(TEBossEntities.DUNGEON_GUARDIAN.get(), "地牢守卫");
-//        add(TEBossEntities.WALL_OF_FLESH.get(), "血肉墙");
-//        add(TEBossEntities.WALL_OF_FLESH_EYE.get(), "血肉墙眼");
-//        add(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), "血肉墙口");
+        add(TEBossEntities.WALL_OF_FLESH.get(), "血肉墙");
+        add(TEBossEntities.WALL_OF_FLESH_EYE.get(), "血肉墙眼");
+        add(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), "血肉墙口");
 
 
-
+        // 召唤物
+        add(TESummonEntities.SUMMON_FINCH.get(), "雀宝宝");
         add(TESummonEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
         add(TESummonEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
         add(TESummonEntities.SUMMON_HORNET.get(), "仆役黄蜂");
+        add(TESummonEntities.SCULK_WISP.get(), "幽匿游灵");
+        add(TESummonEntities.IMP.get(), "召唤的小鬼");
+        add(TESummonEntities.SUMMON_SNOW_FLINX.get(), "小雪怪");
 
+
+        add(TESummonEntities.SUMMON_WOODEN_SWORD.get(), "青冥");
+        add(TESummonEntities.SUMMON_STONE_SWORD.get(), "破山");
+        add(TESummonEntities.SUMMON_IRON_SWORD.get(), "白虹");
+        add(TESummonEntities.SUMMON_GOLDEN_SWORD.get(), "流星");
+        add(TESummonEntities.SUMMON_DIAMOND_SWORD.get(), "龙渊");
+        add(TESummonEntities.SUMMON_NETHERITE_SWORD.get(), "赤霄");
+        add(TESummonEntities.TERRAPRISMA.get(), "泰拉棱镜");
+
+        // 坐骑
         add(TERideableEntities.RIDEABLE_SLIME.get(), "史莱姆坐骑");
         add(TERideableEntities.RIDEABLE_BEE.get(), "蜜蜂坐骑");
 
@@ -139,6 +160,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.DEMON_EYE_SPAWN_EGG.get(), "恶魔眼刷怪蛋");
         add(TESpawnEggItems.FLYING_FISH_SPAWN_EGG.get(), "飞鱼刷怪蛋");
         add(TESpawnEggItems.HARPY_SPAWN_EGG.get(), "鸟妖刷怪蛋");
+        add(TESpawnEggItems.DEMON_SPAWN_EGG.get(), "恶魔刷怪蛋");
+        add(TESpawnEggItems.VOODOO_DEMON_SPAWN_EGG.get(), "巫毒恶魔刷怪蛋");
         add(TESpawnEggItems.GIANT_SHELLY_SPAWN_EGG.get(), "巨型卷壳怪刷怪蛋");
         add(TESpawnEggItems.GIANT_WORM_SPAWN_EGG.get(), "巨型蠕虫刷怪蛋");
         add(TESpawnEggItems.NYMPH_SPAWN_EGG.get(), "宁芙刷怪蛋");
@@ -153,16 +176,22 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.HORNET_SPAWN_EGG.get(), "黄蜂刷怪蛋");
         add(TESpawnEggItems.HELL_BAT_SPAWN_EGG.get(), "地狱蝙蝠刷怪蛋");
         add(TESpawnEggItems.SPORE_BAT_SPAWN_EGG.get(), "孢子蝙蝠刷怪蛋");
-        add(TESpawnEggItems.MUSHROOM_SKELETON_SPAWN_EGG.get(), "孢子骷髅刷怪蛋");
-        add(TESpawnEggItems.MUSHROOM_ZOMBIE_SPAWN_EGG.get(), "孢子僵尸刷怪蛋");
+        add(TESpawnEggItems.SPORE_SKELETON_SPAWN_EGG.get(), "孢子骷髅刷怪蛋");
+        add(TESpawnEggItems.SPORE_ZOMBIE_SPAWN_EGG.get(), "孢子僵尸刷怪蛋");
+        add(TESpawnEggItems.HAT_SPORE_ZOMBIE_SPAWN_EGG.get(), "帽子蘑菇僵尸刷怪蛋");
         add(TESpawnEggItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
         add(TESpawnEggItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
         add(TESpawnEggItems.WANDERING_EYE_FISH_SPAWN_EGG.get(), "游荡眼球怪鱼刷怪蛋");
 
         add(TESpawnEggItems.BLOOD_CRAWLER_SPAWN_EGG.get(), "血爬虫刷怪蛋");
         add(TESpawnEggItems.BLOODY_SPORE_SPAWN_EGG.get(), "血腥芽孢刷怪蛋");
-        add(TESpawnEggItems.CRIMSON_KEMERA_EGG.get(), "猩红喀迈拉刷怪蛋");
-        add(TESpawnEggItems.FACE_MONSTER_EGG.get(), "脸怪刷怪蛋");
+        add(TESpawnEggItems.CRIMSON_KEMERA_SPAWN_EGG.get(), "猩红喀迈拉刷怪蛋");
+        add(TESpawnEggItems.FACE_MONSTER_SPAWN_EGG.get(), "脸怪刷怪蛋");
+        add(TESpawnEggItems.FIRE_IMG_SPAWN_EGG.get(), "火焰小鬼刷怪蛋");
+        add(TESpawnEggItems.SNOW_FLINX_SPAWN_EGG.get(), "雪怪刷怪蛋");
+
+        add(TESpawnEggItems.PIRANHA_SPAWN_EGG.get(), "食人鱼刷怪蛋");
+
 
         add(TESpawnEggItems.EATER_OF_SOULS_SPAWN_EGG.get(), "噬魂怪刷怪蛋");
         add(TESpawnEggItems.DECAYEDER_SPAWN_EGG.get(), "腐骴刷怪蛋");
@@ -188,6 +217,14 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.GOBLIN_SCOUT.get(), "哥布林侦察兵");
         add(TEMonsterEntities.ANGER_GOBLIN.get(), "愤怒哥布林");
 
+        // 动物
+        add(TEAnimals.SQUIRREL.get(), "松鼠");
+        add(TEAnimals.BUNNY.get(), "兔兔");
+        add(TEAnimals.BOOM_BUNNY.get(), "爆炸兔");
+        add(TEAnimals.DUCK.get(), "鸭子");
+        add(TEAnimals.BIRD.get(), "鸟");
+        add(TEAnimals.BLUE_JAY.get(), "冠蓝鹊");
+        add(TEAnimals.CARDINAL.get(), "红鹊");
 
 
         // boss
@@ -198,7 +235,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get(), "蜂王刷怪蛋");
         add(TESpawnEggItems.SKELETRON_SPAWN_EGG.get(), "骷髅王刷怪蛋");
         add(TESpawnEggItems.DUNGEON_GUARDIAN_SPAWN_EGG.get(), "地牢守卫刷怪蛋");
-//        add(TESpawnEggItems.WALL_OF_FLESH_SPAWN_EGG.get(), "血肉墙刷怪蛋");
+        add(TESpawnEggItems.WALL_OF_FLESH_SPAWN_EGG.get(), "血肉墙刷怪蛋");
 
 
 
@@ -212,8 +249,14 @@ public class TEChineseProvider extends LanguageProvider {
         add(TENpcEntities.DRYAD.get(), "树妖");
         add(TENpcEntities.DYE_TRADER.get(), "染料商");
         add(TENpcEntities.ANGLER.get(), "渔夫");
-//        add(TENpcEntities.FEMALE_ANGLER.get(), "渔女");
+        add(TENpcEntities.FEMALE_ANGLER.get(), "渔女");
         add(TENpcEntities.OLD_MAN.get(), "老人");
+        add(TENpcEntities.MECHANIC.get(), "机械师");
+        add(TENpcEntities.TRAVELING_MERCHANT.get(), "旅商");
+        add(TENpcEntities.WITCH_DOCTOR.get(), "巫医");
+        add(TENpcEntities.PARTY_GIRL.get(), "派对女孩");
+        add(TENpcEntities.CLOTHIER.get(), "服装商");
+        add(TENpcEntities.TRUFFLE.get(), "松露人");
 
         add(TESpawnEggItems.GOBLIN_SORCERER_SPAWN_EGG.get(), "哥布林术士刷怪蛋");
         add(TESpawnEggItems.GOBLIN_ARCHER_SPAWN_EGG.get(), "哥布林弓箭手刷怪蛋");
@@ -234,13 +277,42 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.DYE_TRADER_SPAWN_EGG.get(), "染料商刷怪蛋");
         add(TESpawnEggItems.ANGLER_SPAWN_EGG.get(), "渔夫刷怪蛋");
         add(TESpawnEggItems.OLD_MAN_SPAWN_EGG.get(), "老人刷怪蛋");
+        add(TESpawnEggItems.MECHANIC_SPAWN_EGG.get(), "机械师刷怪蛋");
+        add(TESpawnEggItems.TRAVELING_MERCHANT_SPAWN_EGG.get(), "旅商刷怪蛋");
+        add(TESpawnEggItems.WITCH_DOCTOR_SPAWN_EGG.get(), "巫医刷怪蛋");
+        add(TESpawnEggItems.PARTY_GIRL_SPAWN_EGG.get(), "派对女孩刷怪蛋");
+        add(TESpawnEggItems.CLOTHIER_SPAWN_EGG.get(), "服装商刷怪蛋");
+        add(TESpawnEggItems.TRUFFLE_SPAWN_EGG.get(), "松露人刷怪蛋");
+
+
+        // 动物
+        add(TESpawnEggItems.SQUIRREL_SPAWN_EGG.get(), "松鼠刷怪蛋");
+        add(TESpawnEggItems.BOOM_BUNNY_SPAWN_EGG.get(), "炸弹兔刷怪蛋");
+        add(TESpawnEggItems.BUNNY_SPAWN_EGG.get(), "兔兔刷怪蛋");
+        add(TESpawnEggItems.DUCK_EGG.get(), "鸭子刷怪蛋");
+        add(TESpawnEggItems.BIRD_EGG.get(), "鸟刷怪蛋");
+        add(TESpawnEggItems.BLUE_JAY_EGG.get(), "冠蓝鹊刷怪蛋");
+        add(TESpawnEggItems.CARDINAL_EGG.get(), "红鹊刷怪蛋");
 
 
         // 召唤杖
-//        add(TESummonItems.FINCH_STAFF.get(), "雀杖");
+        add(TESummonItems.FINCH_STAFF.get(), "雀杖");
         add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
         add(TESummonItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
         add(TESummonItems.HORNET_STAFF.get(), "黄蜂法杖");
+        add(TESummonItems.SCULK_WISP_STAFF.get(), "幽匿法杖");
+        add(TESummonItems.IMP_STAFF.get(), "小鬼法杖");
+        add(TESummonItems.SNOW_FLINX_STAFF.get(), "雪怪法杖");
+
+
+        add(TESummonItems.SUMMON_WOODEN_SWORD_STAFF.get(), "青冥");
+        add(TESummonItems.SUMMON_STONE_SWORD_STAFF.get(), "破山");
+        add(TESummonItems.SUMMON_IRON_SWORD_STAFF.get(), "白虹");
+        add(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF.get(), "流星");
+        add(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.get(), "龙渊");
+        add(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF.get(), "赤霄");
+        add(TESummonItems.TERRAPRISMA.get(), "泰拉棱镜");
+
 
         // 鞭子
         add(TEWhipItems.LEATHER_WHIP.get(), "皮鞭");
@@ -262,6 +334,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBoomerangItems.TRIMARANG.get(), "三尖回旋镖");
         add(TEBoomerangItems.FLAMARANG.get(), "烈焰回旋镖");
         add(TEBoomerangItems.DEVELOPER_BOOMERANG.get(), "开发者回旋镖");
+        add(TEBoomerangItems.COMBAT_WRENCH.get(), "战斗扳手");
         add(TEBoomerangItems.BeiDou_BOOMERANG.get(), "北斗飞镖");
 
         // 骑乘
@@ -364,8 +437,9 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.effect.strategy.hunting_4_sec", "狩猎 4秒");
         add("terra_entity.effect.strategy.hell_fire_5_sec", "烈火焚身 5秒");
         add("terra_entity.effect.strategy.set_fire_5_sec", "着火啦 5秒");
+        add("terra_entity.effect.strategy.forzen_burn_5_sec", "霜火 5秒");
         add("terra_entity.effect.strategy.blood_butchered", "血腥屠宰");
-        add("terra_entity.effect.strategy.bei_dou", "随机5种效果:\n     霜冻 Ⅳ 10秒\n     烈火焚身 Ⅳ 10秒\n     凋零 Ⅳ 10秒\n     中毒 Ⅳ 10秒\n     瞬间伤害 Ⅷ");
+        add("terra_entity.effect.strategy.bei_dou", "随机5种效果:\n     霜冻 IV 10秒\n     烈火焚身 IV 10秒\n     凋零 IV 10秒\n     中毒 IV 10秒\n     瞬间伤害 VIII");
 
         add("terra_entity.effect.strategy.strength", "愤怒");
 
@@ -376,7 +450,9 @@ public class TEChineseProvider extends LanguageProvider {
 
         // 附魔
         add("enchantment.terra_entity.multi_boomerang", "影分身");
+        add("enchantment.terra_entity.multi_boomerang.desc", "额外发射一个回旋镖");
         add("enchantment.terra_entity.whip_sweep", "横扫之鞭");
+        add("enchantment.terra_entity.whip_sweep.desc", "概率造成大范围伤害");
 
         // npc对话
         add("dialogs.terra_entity.guide.0", "我的工作是为你接下来的任务提供建议。建议你遇到任何困难时都来和我谈谈。");
@@ -460,20 +536,102 @@ public class TEChineseProvider extends LanguageProvider {
         add("dialogs.terra_entity.angler.4", "嘿！当心！我设了许多陷阱，用来实施史上最大的恶作剧！没人会发觉！你敢告诉别人试试！");
         add("dialogs.terra_entity.angler.5", "听说过会叫的鱼吗？！我没听说过，只是想知道你听说过没！");
 
-        add("mood.info.goblin_tinkerer_like_dye_trader", "染料商知道把东西混在一起是多么有趣，我能理解！");
-        add("mood.info.guide_hate_painter", "我讨厌油漆工在附近。世界本来挺美好的！");
-        add("mood.info.arms_dealer_hate_demolitionist", "爆破专家怎么回事啊？难道他没发现我们卖的东西完全不同？");
-        add("mood.info.arms_dealer_love_nurse", "那啥，你觉得护士对我有意思吗");
-        add("mood.info.angler_like_demolitionist", "爆破专家其实知道他们在做什么，不像某些其他人！我挺喜欢的！");
-        add("mood.info.dye_trader_like_arms_dealer", "军火商善于发现鲜艳的颜色和商机，对吧？我喜欢。");
-        add("mood.info.dye_trader_like_painter", "油漆工善于发现鲜艳的颜色和商机，对吧？我喜欢。”");
-        add("mood.info.demolitionist_dislike_arms_dealer", "我想把军火商绑到火箭上，看看会发生什么！");
-        add("mood.info.demolitionist_dislike_goblin_tinkerer", "我想把哥布林工匠绑到火箭上，看看会发生什么！");
-        add("mood.info.painter_love_dryad", "我真的很想画树妖……当然是因为色彩鲜艳！");
-        add("mood.info.dryad_dislike_angler", "我不喜欢渔夫不尊重其他生物。");
-        add("mood.info.merchant_like_nurse", "护士赚了很多钱，我喜欢有钱人。");
-        add("mood.info.nurse_love_arms_dealer", "什么？军火商？我才没有暗恋他！我没有！闭嘴！");
-        add("mood.info.nurse_dislike_dryad", "我不太喜欢树妖，这个人有点奇怪。");
+        add("dialogs.confluence.old_man.0", "如果你不解除我的诅咒，我是不会让你进的。");
+        add("dialogs.confluence.old_man.1", "陌生人，你是否拥有能打败我主人的力量？");
+        add("dialogs.confluence.old_man.2", "打败我的主人，我就让你进入地牢。");
+        add("dialogs.confluence.old_man.3", "你要想进去的话就晚上再来。");
+
+        add("dialogs.confluence.traveling_merchant.0", "嗯，看上去你会使用天使雕像！他们切片，又切丁，让一切都如此美好！");
+        add("dialogs.confluence.traveling_merchant.1", "我不会因“买家后悔……”或者任何其它原因退款，绝不退。");
+        add("dialogs.confluence.traveling_merchant.2", "现在购买还包邮！");
+        add("dialogs.confluence.traveling_merchant.3", "我卖的商品来自可能根本就不存在的地方！");
+        add("dialogs.confluence.traveling_merchant.4", "你想要两文钱！？一文钱就成交。");
+        add("dialogs.confluence.traveling_merchant.5", "既能抽水烟，也能煮咖啡！还能炸切丝薯条！");
+        add("dialogs.confluence.traveling_merchant.6", "看一看，瞧一瞧！一斤重的鱼！新鲜味美！一斤重的鱼！");
+        add("dialogs.confluence.traveling_merchant.7", "如果你是在找垃圾，那就来错地方了。");
+        add("dialogs.confluence.traveling_merchant.8", "旧货店？不，我只卖市场上的尖货。");
+
+        add("dialogs.confluence.mechanic.0", "你确定你的设备插好电源了？");
+        add("dialogs.confluence.mechanic.1", "哦，你知道这个房屋需要什么？需要更多的闪光信号灯。");
+        add("dialogs.confluence.mechanic.2", "别动。我的隐形眼镜掉了。");
+        add("dialogs.confluence.mechanic.3", "谢谢！迟早有一天，我的结局也会和地牢里的其他骷髅一样。");
+        add("dialogs.confluence.mechanic.4", "我记不太清楚里面发生过什么了，三个还是四个很重要的东西...");
+        add("dialogs.confluence.mechanic.5", "噢是的，信号适配器！它可以很好地把这里的红石和电线连接起来。");
+
+        add("dialogs.confluence.witch_doctor.0", "我是啥医？我是巫医。");
+        add("dialogs.confluence.witch_doctor.1", "认真选，我的商品不稳定，我的黑魔法很神秘。");
+        add("dialogs.confluence.witch_doctor.2", "魔法的心脏是本质。心脏的本质是魔法。");
+        add("dialogs.confluence.witch_doctor.3", "我感觉与埃特尼亚黑暗魔法师志趣相投。可惜他们是我们的敌人，我本来希望向他们学习来着。");
+
+        add("dialogs.confluence.clothier.0", "再次感谢你帮我解了诅咒。感觉像是什么东西跳起来咬了我一口。");
+        add("dialogs.confluence.clothier.1", "妈妈总是说我会成为一位伟大的裁缝。");
+        add("dialogs.confluence.clothier.2", "生活就像一箱衣服；你永远也不知道自己要穿什么！");
+        add("dialogs.confluence.clothier.3", "刺绣当然难了！如果不难，就没人绣了！所以刺绣是件难能可贵的事。");
+        add("dialogs.confluence.clothier.4", "他们想了解服装行业，而我无所不知。");
+        add("dialogs.confluence.clothier.5", "被诅咒后很孤独，于是我用皮革制作了一个朋友。我叫他威尔森。");
+        add("dialogs.confluence.clothier.6", "我依稀记得把一个女人捆了起来，然后扔到了地牢里。");
+
+        add("dialogs.confluence.party_girl.0", "我们得谈谈。这……聚会的事。");
+        add("dialogs.confluence.party_girl.1", "我不知道我是更喜欢派对还是余兴派对。");
+        add("dialogs.confluence.party_girl.2", "我们应该办一个闪耀根派对，而且我们还应该办一个余兴派对。");
+        add("dialogs.confluence.party_girl.3", "装个迪斯科球，我会让你知道怎么开派对。");
+        add("dialogs.confluence.party_girl.4", "我去过一次瑞典，他们经常开派对，你怎么和他们不一样？");
+        add("dialogs.confluence.party_girl.5", "我叫派对女孩，但人们叫我派对扫把星。我也搞不懂为啥这样叫我，但听起来酷酷的。");
+        add("dialogs.confluence.party_girl.6", "你开派对吗？有时开？好吧，那我们谈谈……");
+
+        add("dialogs.confluence.truffle.0", "生活在地下已经够惨的了，像你这样的败类还要趁我睡觉来偷我的孩子。");
+        add("dialogs.confluence.truffle.1", "有一天，我试着舔了舔自己，看看会发生什么大不了的事，然后全身都开始发蓝光。");
+        add("dialogs.confluence.truffle.2", "每次看到蓝色，我都感到郁闷和懒散。");
+        add("dialogs.confluence.truffle.3", "你在这附近看到过猪吗？我弟弟的一条腿被猪叼走了。");
+        add("dialogs.confluence.truffle.4", "我不知道什么是“肚皮波浪”，所以别问了！");
+        add("dialogs.confluence.truffle.5", "有个关于我的谣言正在盛传：“如果打不过他，那就吃掉他！");
+        add("dialogs.confluence.truffle.6", "我感觉这里有更多同类...");
+
+        add("mood.terra_entity.goblin_tinkerer.like.dye_trader", "染料商知道把东西混在一起是多么有趣，我能理解！");
+        add("mood.terra_entity.goblin_tinkerer.love.mechanic", "机械师让我像失了魂似的，心神不宁，不过我喜欢这种感觉！");
+        add("mood.terra_entity.goblin_tinkerer.dislike.clothier", "我从服装商身上发现了怪异之处，仿佛他们掌握了黑暗秘密。我不喜欢这种感觉。");
+        add("mood.terra_entity.guide.hate.painter", "我讨厌油漆工在附近。世界本来挺美好的！");
+        add("mood.terra_entity.guide.like.clothier", "我很喜欢服装商，我们有很多共同点。");
+        add("mood.terra_entity.arms_dealer.hate.demolitionist", "爆破专家怎么回事啊？难道他没发现我们卖的东西完全不同？");
+        add("mood.terra_entity.arms_dealer.love.nurse", "那啥，你觉得护士对我有意思吗");
+        add("mood.terra_entity.angler.like.demolitionist", "爆破专家其实知道他们在做什么，不像某些其他人！我挺喜欢的！");
+        add("mood.terra_entity.angler.like.party_girl", "派对女孩其实知道他们在做什么，不像某些其他人！我挺喜欢的！");
+        add("mood.terra_entity.female_angler.dislike.demolitionist", "爆破专家太吵了！都没人来看我的鱼了！");
+        add("mood.terra_entity.female_angler.dislike.party_girl", "派对女孩在派对上经常抢我的风头，没人看我的鱼！");
+        add("mood.terra_entity.dye_trader.like.arms_dealer", "军火商善于发现鲜艳的颜色和商机，对吧？我喜欢。");
+        add("mood.terra_entity.dye_trader.like.painter", "油漆工善于发现鲜艳的颜色和商机，对吧？我喜欢。”");
+        add("mood.terra_entity.demolitionist.dislike.arms_dealer", "我想把军火商绑到火箭上，看看会发生什么！");
+        add("mood.terra_entity.demolitionist.dislike.goblin_tinkerer", "我想把哥布林工匠绑到火箭上，看看会发生什么！");
+        add("mood.terra_entity.demolitionist.like.mechanic", "机械师是我的好朋友，还帮我装火药！");
+        add("mood.terra_entity.painter.love.dryad", "我真的很想画树妖……当然是因为色彩鲜艳！");
+        add("mood.terra_entity.painter.like.party_girl", "派对女孩和我喜欢同样色度的粉红色！在我这里，这就是朋友！");
+        add("mood.terra_entity.painter.dislike.truffle", "松露人太无趣了，我不喜欢和无趣的人打交道。");
+        add("mood.terra_entity.dryad.dislike.angler", "我不喜欢渔夫不尊重其他生物。");
+        add("mood.terra_entity.dryad.like.female_angler", "她捕捉那些鱼是为了更好地研究自然而且尽力不伤害它们，这是好事");
+        add("mood.terra_entity.dryad.like.witch_doctor", "我喜欢巫医能与我产生强烈共鸣的感觉！");
+        add("mood.terra_entity.dryad.like.truffle", "我喜欢松露人能与我产生强烈共鸣的感觉！");
+        add("mood.terra_entity.merchant.like.nurse", "护士赚了很多钱，我喜欢有钱人。");
+        add("mood.terra_entity.merchant.hate.angler", "渔夫性情乖戾，真讨人厌！");
+        add("mood.terra_entity.merchant.like.female_angler", "这个渔夫只是徒有其表，实际上人挺好！");
+        add("mood.terra_entity.nurse.love.arms_dealer", "什么？军火商？我才没有暗恋他！我没有！闭嘴！");
+        add("mood.terra_entity.nurse.dislike.dryad", "我不太喜欢树妖，这个人有点奇怪。");
+        add("mood.terra_entity.nurse.dislike.party_girl", "我不太喜欢派对女孩，这个人有点奇怪。");
+        add("mood.terra_entity.truffle.love.guide", "我非常喜欢向导，因为能好好和我说话，而不会莫名其妙地就想吃我。");
+        add("mood.terra_entity.truffle.like.dye_trader", "树妖对我很尊重，把我当作大自然的一部分。除了喜欢，我不知道该如何形容这种感觉。");
+        add("mood.terra_entity.truffle.dislike.clothier", "服装商很多次想吃掉我。我发誓，有一次他们甚至毫无人性！很显然，我不喜欢这样。");
+        add("mood.terra_entity.truffle.hate.witch_doctor", "巫医曾试图把我扔进一个锅里，里头装着其他不寻常的原料。我讨厌这样。");
+        add("mood.terra_entity.clothier.love.truffle", "松露人？我从未吃过这么好吃的东西。");
+        add("mood.terra_entity.clothier.dislike.nurse", "不知什么原因，和护士在一起会让我感到不安。");
+        add("mood.terra_entity.clothier.hate.mechanic", "我讨厌机械师，我也不知道为什么。");
+        add("mood.terra_entity.party_girl.dislike.merchant", "我觉得商人在派对上很扫兴。");
+        add("mood.terra_entity.witch_doctor.like.dryad", "树妖是志同道合的大自然精灵，有他们在，我的心灵就能得到安宁。");
+        add("mood.terra_entity.witch_doctor.like.guide", "向导是志同道合的大自然精灵，有他们在，我的心灵就能得到安宁。");
+        add("mood.terra_entity.witch_doctor.dislike.nurse", "我不喜欢护士的做法。用金属和玻璃是做不到真正地治愈的。");
+        add("mood.terra_entity.witch_doctor.hate.truffle", "愤怒侵占了我的身体，就像邪恶的种子从污秽的大地中萌芽——我说的是松露人。");
+        add("mood.terra_entity.mechanic.love.goblin_tinkerer", "嗯……哥布林工匠让我心跳加速，我要去检查一下！");
+        add("mood.terra_entity.mechanic.dislike.arms_dealer", "我真的不喜欢军火商对我的纠缠！");
+        add("mood.terra_entity.mechanic.hate.clothier", "我讨厌服装商，他不懂得该如何对待女人！");
+
 
     }
 }

@@ -1,0 +1,114 @@
+package org.confluence.terraentity.entity.summon;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.animal.FlyingAnimal;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
+import org.confluence.terraentity.utils.TEUtils;
+import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+
+public class SummonFinch  extends AbstractSummonMob<SummonFinch> implements FlyingAnimal {
+
+    int cooledDown;
+
+    public SummonFinch(EntityType<? extends TamableAnimal> entityType, Level level) {
+        super(entityType, level);
+        this.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0);
+        this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(16);
+//        this.getAttribute(Attributes.SAFE_FALL_DISTANCE).setBaseValue(1024);
+        this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(0);
+        this.moveControl = new FlyingMoveControl(this, 20, true);
+
+    }
+
+    protected void checkFallDamage(double pY, boolean pOnGround, BlockState pState, BlockPos pPos) {
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+
+        this.goalSelector.addGoal(1, new FinchAttackGoal(this));
+
+        this.goalSelector.addGoal(9, new FloatGoal(this));
+    }
+
+    @Override
+    public boolean isFlying() {
+        return true;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        this.addDeltaMovement(new Vec3(0, Math.sin(this.tickCount*0.5f) * 0.03f ,0));
+        this.cooledDown--;
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity entity) {
+        if(cooledDown <= -5){
+            cooledDown = 10;
+        }
+        return super.doHurtTarget(entity);
+    }
+
+    protected static class FinchAttackGoal extends Goal{
+
+        SummonFinch mob;
+        int cooledDown;
+        protected FinchAttackGoal(SummonFinch mob) {
+            this.mob = mob;
+        }
+
+        @Override
+        public boolean canUse() {
+            return mob.getTarget() != null;
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            LivingEntity target = mob.getTarget();
+
+            if(target == null){
+                return;
+            }
+            double distance = mob.distanceToSqr(mob.getTarget());
+            if (--this.cooledDown <= 0) {
+
+                mob.lookAt(target, 90, 85);
+                Vec3 dir = target.getEyePosition().subtract(mob.position());
+                if(TEUtils.angleBetween(mob.getLookAngle(), dir) < 0.5){
+                    if(mob.getDeltaMovement().length() < 1f) {
+                        mob.addDeltaMovement(dir.normalize().scale(0.1f));
+                    }
+                }
+                if(distance < 3f && mob.cooledDown < 0){
+                    cooledDown = 20;
+                }
+            }
+            else{
+                mob.addDeltaMovement(new Vec3(0,Math.min( 0.02, 1 / distance),0));
+                mob.addDeltaMovement(mob.getForward().normalize().scale(0.03f));
+                mob.lookAt(target, 10, 85);
+            }
+        }
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(DefaultAnimations.genericFlyController(this));
+    }
+}

@@ -2,6 +2,7 @@ package org.confluence.terraentity.init;
 
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -55,12 +56,42 @@ public final class TEEffectStrategies {
             UNDEFINED_EFFECT);
 
     /**蝙蝠棍*/
-    private static final  RegistryObject<EffectStrategy> BAT_FANG_EFFECT = createEffect("bat",
-            (owner, entity)-> owner.heal(1));
+    public static final  RegistryObject<EffectStrategy> BAT_FANG_EFFECT = createEffect("bat",
+            (owner, entity)-> {
+                if(owner instanceof OwnableEntity o && o.getOwner() != null){
+                    o.getOwner().heal(1);
+                }else{
+                    owner.heal(1);
+                }
+            });
+
+    public static final  RegistryObject<EffectStrategy> HEAL_0_5_EFFECT = createEffect("heal_0_5",
+            (owner, entity)-> {
+                if(owner instanceof OwnableEntity o && o.getOwner() != null){
+                    o.getOwner().heal(0.5f);
+                }else{
+                    owner.heal(0.5f);
+                }
+            });
 
     /**着火*/
-    private static final RegistryObject<EffectStrategy> SET_FIRE_EFFECT = createEffect("set_fire_5_sec",
+    public static final RegistryObject<EffectStrategy> SET_FIRE_EFFECT = createEffect("set_fire_5_sec",
             SET_FIRE.apply(5 * 20, 1f));
+
+    public static final RegistryObject<EffectStrategy> POISON_5_SEC_2_AMP = createEffect("poison_5_sec_2_amp",
+            TimePossibilityAmplifierEffect.of("poison_5_sec_2_amp", ()->MobEffects.POISON, 100,2,2,1f));
+
+    public static final RegistryObject<EffectStrategy> SLOW_5_SEC_2_AMP = createEffect("slow_5_sec_2_amp",
+            TimePossibilityAmplifierEffect.of("slow_5_sec_2_amp", ()->MobEffects.MOVEMENT_SLOWDOWN, 100,2,2,1f));
+
+
+    public static final RegistryObject<EffectStrategy> FROZEN_EFFECT = createEffect("frozen_burn_5_sec_2_amp",
+            TimePossibilityAmplifierEffect.of("frozen_burn_5_sec_2_amp", TEEffects.FROST_BURN,100,2,2,1f));
+
+    public static final RegistryObject<EffectStrategy> HELL_FIRE_EFFECT = createEffect("hell_fire_5_sec_2_amp",
+            TimePossibilityAmplifierEffect.of("hell_fire_5_sec_2_amp", TEEffects.HELLFIRE,5 * 20,2,2,1f));
+
+
 
 //    /** 魔光剑*/
 //    private static final  DeferredHolder<EffectStrategy, EffectStrategy> LIGHTS_BANE_EFFECT = createEffect("lights_bane",

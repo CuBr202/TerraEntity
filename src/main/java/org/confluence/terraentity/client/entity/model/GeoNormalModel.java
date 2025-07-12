@@ -3,10 +3,17 @@ package org.confluence.terraentity.client.entity.model;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
 public class GeoNormalModel<T extends GeoEntity> extends DefaultedEntityGeoModel<T> {
+
+    GeoBone head;
+    String headName = "Head";
+    boolean turnsHead;
 
     public GeoNormalModel(ResourceLocation path) {
         super(path, true);
@@ -22,11 +29,29 @@ public class GeoNormalModel<T extends GeoEntity> extends DefaultedEntityGeoModel
     }
 
     public void setCustomAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
-        super.setCustomAnimations(animatable, instanceId, animationState);
+        if (this.turnsHead) {
+            if (this.head == null){
+                this.head = getHead();
+            }
+            if (this.head != null) {
+                EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+                this.head.setRotX(entityData.headPitch() * 0.017453292F);
+                this.head.setRotY(entityData.netHeadYaw() * 0.017453292F);
+            }
+        }
     }
 
-    protected String getHead(){
-        return "Head";
+    protected GeoBone getHead(){
+        return (GeoBone) this.getAnimationProcessor().getBone(getHeadName());
+    }
+
+    protected String getHeadName(){
+        return headName;
+    }
+
+    public GeoNormalModel<T> setHeadName(String headName){
+        this.headName = headName;
+        return this;
     }
 
 }

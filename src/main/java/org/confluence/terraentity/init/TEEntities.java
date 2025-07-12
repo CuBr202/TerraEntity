@@ -43,6 +43,7 @@ public final class TEEntities {
         TESummonEntities.registerRenderers(event);
         TERideableEntities.registerRenderers(event);
         TENpcEntities.registerRenderers(event);
+        TEAnimals.registerRenderers(event);
 
     }
 
@@ -52,21 +53,24 @@ public final class TEEntities {
         TERideableEntities.registerEntityAttributes(event);
         TESummonEntities.registerEntityAttributes(event);
         TENpcEntities.registerEntityAttributes(event);
+        TEAnimals.registerEntityAttributes(event);
 
     }
 
     public static void spawnPlacementRegister(SpawnPlacementRegisterEvent event) {
         TEMonsterEntities.spawnPlacementRegister(event);
         TENpcEntities.spawnPlacementRegister(event);
+        TEAnimals.spawnPlacementRegister(event);
     }
 
     public static void register(IEventBus bus){
-        TEBossEntities.register(bus);
-        TESummonEntities.register(bus);
+        TEBossEntities.register();
+        TESummonEntities.register();
         TERideableEntities.register(bus);
         TEMonsterEntities.register(bus);
         TEProjectileEntities.register(bus);
         TENpcEntities.register();
+        TEAnimals.register();
         ENTITIES.register(bus);
     }
 }

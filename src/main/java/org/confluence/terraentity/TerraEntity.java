@@ -49,6 +49,7 @@ public class TerraEntity {
         TEBiomes.register(modEventBus);
 
         TEEnchantments.ENCHANTMENTS.register(modEventBus);
+        TELootModifier.GLOBAL_LOOT_MODIFIER_SERIALIZER.register(modEventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigRegistry.register());
 //        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SPEC);

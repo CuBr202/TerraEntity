@@ -2,10 +2,13 @@
 package org.confluence.terraentity.entity.summon;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -14,6 +17,9 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.Optional;
+import java.util.UUID;
 
 public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal implements GeoEntity, ISummonMob<T>, ICollisionAttackEntity<T> {
 
@@ -34,6 +40,7 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
     @Override
     public boolean shouldDoCollision(){
         return getTarget() != null;
+
     }
 
     @Override
@@ -118,6 +125,11 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
         return false;
     }
 
+    @Override
+    public EntityDataAccessor<Optional<UUID>> get_DATA_OWNERUUID_ID() {
+        return DATA_OWNERUUID_ID;
+    }
+
 /* Geo API */
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -137,5 +149,21 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
         return null;
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Mob.createMobAttributes()
+                .add(Attributes.ATTACK_DAMAGE)
+                .add(Attributes.MAX_HEALTH)
+                .add(Attributes.ARMOR)
+                .add(Attributes.MOVEMENT_SPEED, 0.5f)
+                .add(Attributes.FOLLOW_RANGE)
+                .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE)
+                .add(Attributes.KNOCKBACK_RESISTANCE)
+                .add(Attributes.ATTACK_KNOCKBACK)
+                .add(Attributes.ATTACK_SPEED)
+                .add(Attributes.FLYING_SPEED)
+                .add(Attributes.JUMP_STRENGTH, 0.8f)
+                ;
     }
 }

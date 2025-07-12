@@ -54,6 +54,7 @@ public class HellFireEffect extends MobEffect implements IMobEffectExtension {
 
     }
 
+    @Override
     public boolean isDurationEffectTick(int duration, int pAmplifier) {
         return duration % 20 == 0;
     }

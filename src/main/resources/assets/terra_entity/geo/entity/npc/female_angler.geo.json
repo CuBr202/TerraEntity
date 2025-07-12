@@ -3,7 +3,7 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.female_angler",
+				"identifier": "geometry.unknown",
 				"texture_width": 128,
 				"texture_height": 128,
 				"visible_bounds_width": 3,
@@ -12,17 +12,11 @@
 			},
 			"bones": [
 				{
-					"name": "all",
-					"pivot": [0, 0, 0]
-				},
-				{
 					"name": "Head",
-					"parent": "all",
 					"pivot": [0, 20, 0],
 					"cubes": [
 						{"origin": [-4, 20, -4], "size": [8, 8, 8], "uv": [0, 12]},
 						{"origin": [-1.5, 18.8, 5.1], "size": [3, 6, 3], "pivot": [0, 21.8, 6.6], "rotation": [5, 0, 0], "uv": [32, 66]},
-						{"origin": [-1, 19.3, 5.6], "size": [2, 5, 2], "pivot": [-0.5, 21.3, 7.1], "rotation": [5, 0, 0], "uv": [44, 67]},
 						{"origin": [-1, 21.95, 3.75], "size": [2, 2, 2], "pivot": [0, 22.95, 4.75], "rotation": [15, 0, 0], "uv": [0, 72]},
 						{"origin": [-5.5, 25, -5.55], "size": [11, 1, 11], "pivot": [0, 26.55, -0.05], "rotation": [-2.5, 0, 0], "uv": [0, 0]},
 						{"origin": [-4.5, 26.1, -4.55], "size": [9, 3, 9], "inflate": 0.1, "pivot": [0, 26.55, -0.05], "rotation": [-2.5, 0, 0], "uv": [32, 12]},
@@ -31,7 +25,6 @@
 				},
 				{
 					"name": "Body",
-					"parent": "all",
 					"pivot": [0, 20, 0],
 					"cubes": [
 						{"origin": [-4, 10, -2], "size": [8, 10, 4], "uv": [32, 24]},
@@ -40,7 +33,6 @@
 				},
 				{
 					"name": "RightArm",
-					"parent": "all",
 					"pivot": [-5, 18, 0],
 					"cubes": [
 						{"origin": [-7, 10, -2], "size": [3, 10, 4], "uv": [1, 44]},
@@ -49,7 +41,6 @@
 				},
 				{
 					"name": "LeftArm",
-					"parent": "all",
 					"pivot": [5, 18, 0],
 					"cubes": [
 						{"origin": [4, 10, -2], "size": [3, 10, 4], "uv": [32, 52]},
@@ -58,7 +49,6 @@
 				},
 				{
 					"name": "RightLeg",
-					"parent": "all",
 					"pivot": [-1.9, 10, 0],
 					"cubes": [
 						{"origin": [-3.9, 0, -2], "size": [4, 10, 4], "uv": [56, 24]},
@@ -67,7 +57,6 @@
 				},
 				{
 					"name": "LeftLeg",
-					"parent": "all",
 					"pivot": [1.9, 10, 0],
 					"cubes": [
 						{"origin": [-0.1, 0, -2], "size": [4, 10, 4], "uv": [0, 58]},

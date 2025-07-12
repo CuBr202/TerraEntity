@@ -10,6 +10,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
+import org.confluence.terraentity.client.boss.model.WallOfFleshEyeModel;
 import org.confluence.terraentity.client.boss.renderer.*;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
@@ -30,7 +31,10 @@ public class TEBossEntities {
     public static final RegistryObject<EntityType<BrainFake>> BRAIN_FAKE = TEEntities.registerEntity("brain_fake", BrainFake::new, 4F, 4F);
     public static final RegistryObject<EntityType<QueenBee>> QUEEN_BEE = TEEntities.registerEntity("queen_bee", QueenBee::new, 2.5F, 2.5F);
     public static final RegistryObject<EntityType<Skeletron>> SKELETRON = TEEntities.registerEntity("skeletron", Skeletron::new, 2.3F, 2.3F);
-    public static final RegistryObject<EntityType<SkeletronHand>> SKELETRON_HAND = TEEntities.registerEntity("skeletron_hand", SkeletronHand::new, 2F, 1F);
+    public static final RegistryObject<EntityType<SkeletronHand>> SKELETRON_HAND = TEEntities.registerEntity("skeletron_hand", SkeletronHand::new, 2F, 2F);
+    public static final RegistryObject<EntityType<WallOfFlesh>> WALL_OF_FLESH = TEEntities.registerEntity("wall_of_flesh", WallOfFlesh::new, 0.1F,0.1F);
+    public static final RegistryObject<EntityType<WallOfFleshEye>> WALL_OF_FLESH_EYE = TEEntities.registerEntity("wall_of_flesh_eye", WallOfFleshEye::new, 4.15F, 4.15F);
+    public static final RegistryObject<EntityType<WallOfFleshMouth>> WALL_OF_FLESH_MOUTH = TEEntities.registerEntity("wall_of_flesh_mouth", WallOfFleshMouth::new, 4.15F, 4.15F);
     public static final RegistryObject<EntityType<DungeonGuardian>> DUNGEON_GUARDIAN = TEEntities.registerEntity("dungeon_guardian", DungeonGuardian::new, 2.5F, 2.5F);
 
     @OnlyIn(Dist.CLIENT)
@@ -49,6 +53,10 @@ public class TEBossEntities {
         event.registerEntityRenderer(TEBossEntities.SKELETRON_HAND.get(), c->new SkeletronHandRenderer(c,new SkeletronHandModel()));
         event.registerEntityRenderer(TEBossEntities.DUNGEON_GUARDIAN.get(), c->new SkeletronRenderer(c,new GeoBossModel<>(TEBossEntities.SKELETRON)));
 
+        event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH.get(), WallOfFleshRenderer::new);
+        event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH_EYE.get(), c->new GeoBossRenderer<>(c,new WallOfFleshEyeModel(WALL_OF_FLESH_EYE.getId()),2,0.5f, true));
+        event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(WALL_OF_FLESH_MOUTH),2,0.5f, true));
+
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -64,10 +72,14 @@ public class TEBossEntities {
         event.put(TEBossEntities.QUEEN_BEE.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(TEBossEntities.SKELETRON.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(TEBossEntities.SKELETRON_HAND.get(), AbstractTerraBossBase.createAttributes().build());
+
+        event.put(TEBossEntities.WALL_OF_FLESH.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(TEBossEntities.WALL_OF_FLESH_EYE.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(TEBossEntities.DUNGEON_GUARDIAN.get(), AbstractTerraBossBase.createAttributes().build());
     }
 
-    public static void register(IEventBus bus) {
+    public static void register(){
 
     }
 }

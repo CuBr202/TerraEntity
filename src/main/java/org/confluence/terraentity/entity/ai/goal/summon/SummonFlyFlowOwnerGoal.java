@@ -5,8 +5,8 @@ import org.confluence.terraentity.entity.summon.ISummonMob;
 
 public class SummonFlyFlowOwnerGoal<T extends Mob & ISummonMob<?>> extends SummonFollowOwnerGoal<T>{
 
-    public SummonFlyFlowOwnerGoal(T tamable, double speedModifier, float startDistance, float stopDistance) {
-        super(tamable, speedModifier, startDistance, stopDistance, true);
+    public SummonFlyFlowOwnerGoal(T tamable, double speedModifier, float stopDistance) {
+        super(tamable, speedModifier, stopDistance, true);
     }
 
     public int getInterval() {

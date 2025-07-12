@@ -35,6 +35,7 @@ public class FrostburnEffect extends MobEffect { //霜冻：缓慢损失生命 �
         living.hurt(TETags.DamageTypes.of(living.level(), TETags.DamageTypes.FROST_BURN), 2.0F * (amplifier + 1));
     }
 
+    @Override
     public boolean isDurationEffectTick(int duration, int pAmplifier) {
         return duration % 20 == 0;
     }

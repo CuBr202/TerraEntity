@@ -3,21 +3,16 @@
 	"minecraft:geometry": [
 		{
 			"description": {
-				"identifier": "geometry.angler",
+				"identifier": "geometry.unknown",
 				"texture_width": 128,
 				"texture_height": 128,
-				"visible_bounds_width": 3,
+				"visible_bounds_width": 2,
 				"visible_bounds_height": 3.5,
 				"visible_bounds_offset": [0, 1.25, 0]
 			},
 			"bones": [
 				{
-					"name": "all",
-					"pivot": [0, 0, 0]
-				},
-				{
 					"name": "Head",
-					"parent": "all",
 					"pivot": [0, 20, 0],
 					"cubes": [
 						{"origin": [-4, 20, -4], "size": [8, 8, 8], "uv": [0, 12]},
@@ -28,7 +23,6 @@
 				},
 				{
 					"name": "Body",
-					"parent": "all",
 					"pivot": [0, 20, 0],
 					"cubes": [
 						{"origin": [-4, 10, -2], "size": [8, 10, 4], "uv": [32, 24]},
@@ -37,25 +31,22 @@
 				},
 				{
 					"name": "RightArm",
-					"parent": "all",
 					"pivot": [-5, 18, 0],
 					"cubes": [
-						{"origin": [-8, 10, -2], "size": [4, 10, 4], "uv": [0, 44]},
-						{"origin": [-8, 10, -2], "size": [4, 10, 4], "inflate": 0.25, "uv": [16, 44]}
+						{"origin": [-7, 10, -2], "size": [3, 10, 4], "uv": [1, 44]},
+						{"origin": [-7, 10, -2], "size": [3, 10, 4], "inflate": 0.25, "uv": [15, 44]}
 					]
 				},
 				{
 					"name": "LeftArm",
-					"parent": "all",
 					"pivot": [5, 18, 0],
 					"cubes": [
-						{"origin": [4, 10, -2], "size": [4, 10, 4], "uv": [32, 52]},
-						{"origin": [4, 10, -2], "size": [4, 10, 4], "inflate": 0.25, "uv": [48, 52]}
+						{"origin": [4, 10, -2], "size": [3, 10, 4], "uv": [32, 52]},
+						{"origin": [4, 10, -2], "size": [3, 10, 4], "inflate": 0.25, "uv": [46, 52]}
 					]
 				},
 				{
 					"name": "RightLeg",
-					"parent": "all",
 					"pivot": [-1.9, 10, 0],
 					"cubes": [
 						{"origin": [-3.9, 0, -2], "size": [4, 10, 4], "uv": [56, 24]},
@@ -64,7 +55,6 @@
 				},
 				{
 					"name": "LeftLeg",
-					"parent": "all",
 					"pivot": [1.9, 10, 0],
 					"cubes": [
 						{"origin": [-0.1, 0, -2], "size": [4, 10, 4], "uv": [0, 58]},

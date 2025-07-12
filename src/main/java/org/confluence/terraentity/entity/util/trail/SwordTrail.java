@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.confluence.terraentity.client.util.ShaderUtil;
@@ -49,7 +48,7 @@ public class SwordTrail implements ITrail<TrailSwordProj> {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void renderTrail(TrailSwordProj holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource) {
+    public void renderTrail(TrailSwordProj holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         Iterator<Vec3> trails = trailsQueue.iterator();
         int size = trailsQueue.size();
 

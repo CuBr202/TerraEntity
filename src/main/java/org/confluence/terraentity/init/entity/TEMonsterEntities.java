@@ -1,8 +1,12 @@
 package org.confluence.terraentity.init.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -13,12 +17,10 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.RegistryObject;
-import org.confluence.terraentity.client.entity.model.GeoNormalModel;
-import org.confluence.terraentity.client.entity.model.GiantShellyModel;
-import org.confluence.terraentity.client.entity.model.HarpyModel;
-import org.confluence.terraentity.client.entity.model.NymphModel;
+import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.entity.renderer.AnimatorRenderer;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
+import org.confluence.terraentity.client.entity.renderer.TheHungryRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.*;
 import org.confluence.terraentity.entity.monster.*;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
@@ -67,21 +69,30 @@ public class TEMonsterEntities {
     public static final RegistryObject<EntityType<AbstractMonster>> EATER_OF_SOULS = registerSimpleMonster("eater_of_souls", FlyMonsterPrefab.EATER_OF_SOULS_BUILDER,1.2f,1.2f);
     public static final RegistryObject<EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER,1.6f,1.6f);
     public static final RegistryObject<EntityType<AbstractMonster>> WANDERING_EYE_FISH = registerSimpleMonster("wandering_eye_fish", FlyMonsterPrefab.WANDERING_EYE_FISH_BUILDER,1.4f,1.4f);
-    public static final RegistryObject<EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER,0.75F,0.75F);
+    public static final RegistryObject<EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER, 0.9F, 0.9F);
     public static final RegistryObject<EntityType<VisualNeuron>> VISUAL_NEURON = TEEntities.registerEntity("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
-    public static final RegistryObject<EntityType<Harpy>> HARPY = TEEntities.registerEntity("harpy", (e, l) -> new Harpy(e, l, new FlyMonsterPrefab(41, 2, 13, 20, 1f, 0.28f).getPrefab().setSpawnWithoutLight()), 1f, 2f);
+    public static final RegistryObject<EntityType<Harpy>> HARPY = TEEntities.registerEntity("harpy", (e, l) -> new Harpy(e, l, new FlyMonsterPrefab(41, 2, 13, 32, 1f, 0.28f).getPrefab().setSpawnWithoutLight()), 1f, 2f);
+    public static final RegistryObject<EntityType<Demon>> DEMON = TEEntities.registerEntity("demon", (e, l) -> new Demon(e, l, new FlyMonsterPrefab(62, 2, 20, 32, 1f, 0.28f).getPrefab().setSpawnWithoutLight().setNoFriction()), 1f, 2f);
+    public static final RegistryObject<EntityType<Demon>> VOODOO_DEMON = TEEntities.registerEntity("voodoo_demon", (e, l) -> new Demon(e, l, new FlyMonsterPrefab(62, 2, 20, 60, 1f, 0.28f).getPrefab().setSpawnWithoutLight().setNoFriction()), 1f, 2f);
     public static final RegistryObject<EntityType<AntlionSwarmer>> ANTLION_SWARMER = TEEntities.registerEntity("antlion_swarmer", (e, l) -> new AntlionSwarmer(e, l, new FlyMonsterPrefab(31, 2, 15, 32, 1f, 0.55f).getPrefab()), 3, 1.5f);
     public static final RegistryObject<EntityType<AntlionSwarmer>> GIANT_ANTLION_SWARMER = TEEntities.registerEntity("giant_antlion_swarmer", (e, l) -> new AntlionSwarmer(e, l, new FlyMonsterPrefab(46, 4, 17, 32, 1f, 0.73f).getPrefab()), 3.5f, 2f);
 
     // 陆行怪
-    public static final RegistryObject<EntityType<RangeSkeleton>> MUSHROOM_SKELETON = TEEntities.registerEntity("mushroom_skeleton", (e, l) -> new RangeSkeleton(e, l, new AbstractPrefab(41, 2, 13).getPrefab().setSpawnWithoutLight()), 1, 1.8f);
-    public static final RegistryObject<EntityType<AbstractMonster>> MUSHROOM_ZOMBIE = registerSimpleMonster("mushroom_zombie", LandMonsterPrefab.MUSHROOM_ZOMBIE_BUILDER, 0.75F, 1.95F);
+    public static final RegistryObject<EntityType<MeleeSkeleton>> SPORE_SKELETON = TEEntities.registerEntity("spore_skeleton", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(31, 2, 11, 60, 0.5f, 0.28f).getPrefab().setSpawnWithoutLight()), 0.65F, 1.85F);
+    public static final RegistryObject<EntityType<AbstractMonster>> SPORE_ZOMBIE = registerSimpleMonster("spore_zombie", LandMonsterPrefab.SPORE_ZOMBIE_BUILDER, 0.75F, 1.95F);
+    public static final RegistryObject<EntityType<AbstractMonster>> HAT_SPORE_ZOMBIE = registerSimpleMonster("hat_spore_zombie", LandMonsterPrefab.HAT_SPORE_ZOMBIE_BUILDER, 0.75F, 1.95F);
     public static final RegistryObject<EntityType<RangeSkeleton>> DECAYEDER = TEEntities.registerEntity("decayeder", (e, l) -> new Decayeder(e, l, new AbstractPrefab(10, 0, 6).getPrefab().setSpawnWithoutLight()), 1, 1.8f);
     public static final RegistryObject<EntityType<BloodySpore>> BLOODY_SPORE = TEEntities.registerEntity("bloody_spore", BloodySpore::new, 1,1.5f);
     public static final RegistryObject<EntityType<BloodCrawler>> BLOOD_CRAWLER = TEEntities.registerEntity("blood_crawler", BloodCrawler::new, 1.8F, 1.2F);
     public static final RegistryObject<EntityType<AbstractMonster>> FACE_MONSTER = registerSimpleMonster("face_monster", LandMonsterPrefab.FACE_MONSTER_BUILDER,0.75F,1.95F);
     public static final RegistryObject<EntityType<AbstractMonster>> BLOOD_TUMORS = registerSimpleMonster("blood_tumors", LandMonsterPrefab.BLOOD_TUMORS,0.5F,0.5F);
     public static final RegistryObject<EntityType<AbstractMonster>> BLOOD_ZOMBIE = registerSimpleMonster("blood_zombie", LandMonsterPrefab.BLOOD_ZOMBIE_BUILDER,0.75F,1.95F);
+    public static final RegistryObject<EntityType<AbstractMonster>> SNOW_FLINX = registerSimpleMonster("snow_flinx", LandMonsterPrefab.SNOW_FLINX_BUILDER, 1.25F, 1.25F);
+
+    // 水怪
+    public static final RegistryObject<EntityType<Piranha>> PIRANHA = TEEntities.registerEntity("piranha", (e,l)->new Piranha(e,l), 0.5F, 0.5F);
+
+
     // 蜜蜂
     public static final RegistryObject<EntityType<Hornet>> HORNET = TEEntities.registerEntity("hornet", (e, l)->new Hornet(e,l, FlyMonsterPrefab.BEE_BUILDER.get().setHealth(32)), 0.8f, 1.2f);
     public static final RegistryObject<EntityType<LittleHornet>> LITTLE_HORNET = TEEntities.registerEntity("little_hornet", LittleHornet::new,MobCategory.CREATURE, 0.8f, 1.2f);
@@ -94,7 +105,7 @@ public class TEMonsterEntities {
     public static final RegistryObject<EntityType<AbstractMonster>> ICE_BAT = registerSimpleMonster("ice_bat", FlyMonsterPrefab.ICE_BAT_BUILDER,1.6f,1.6f);
     public static final RegistryObject<EntityType<AbstractMonster>> SPORE_BAT = registerSimpleMonster("spore_bat", FlyMonsterPrefab.SPORE_BAT_BUILDER,1.6f,1.6f);
   // 蠕虫
-    public static final RegistryObject<EntityType<BaseWarm>> DEVOURER = TEEntities.registerEntity("devourer", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get()),2F,2F);
+    public static final RegistryObject<EntityType<BaseWarm>> DEVOURER = TEEntities.registerEntity("devourer", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(52).setAttackDamage(8).setArmor(2).setSpawnWithoutLight()), 2F, 2F);
     public static final RegistryObject<EntityType<BaseWarm>> TOMB_CRAWLER = TEEntities.registerEntity("tomb_crawler", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(16).setAttackDamage(4).setArmor(2)),2F,2F);
     public static final RegistryObject<EntityType<BaseWarm>> GIANT_WORM = TEEntities.registerEntity("giant_worm", (e, l)->new BaseWarm(e,l, AbstractPrefab.WARM_BUILDER.get().setHealth(31).setAttackDamage(9).setArmor(3)),2F,2F);
     public static final RegistryObject<EntityType<BaseWarm>> LEECH = TEEntities.registerEntity("leech", (e, l) -> new BaseWarm(e, l, AbstractPrefab.WARM_BUILDER.get().setHealth(36).setAttackDamage(10).setArmor(4)), 2F, 2F);
@@ -121,6 +132,7 @@ public class TEMonsterEntities {
     // 远程法师
     public static final RegistryObject<EntityType<RangeShooter>> DARK_CASTER = TEEntities.registerEntity("dark_caster", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(26, 1, 10, 32, 1, 0.82f).getPrefab()), 0.65F, 1.85F);
     public static final RegistryObject<EntityType<RangeShooter>> GOBLIN_SORCERER = TEEntities.registerEntity("goblin_sorcerer", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(20, 1, 10, 32, 1, 0.46f).getPrefab()), 0.65F, 1.85F);
+    public static final RegistryObject<EntityType<RangeShooter>> FIRE_IMP = TEEntities.registerEntity("fire_imp", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.FIRE_IMP_PROJ, new AbstractPrefab(36, 4, 15, 32, 1, 0.55f).getPrefab()), 0.65F, 1.85F);
 
     // 哥布林军队
     public static final RegistryObject<EntityType<HumanoidMonster>> GOBLIN_ARCHER = TEEntities.registerEntity("goblin_archer", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab(41, 1, 11, 32, 1, 0.37f).asHumanoid().setMainHand(Items.BOW.getDefaultInstance()).setSpawnWithoutLight()), 0.65F, 1.85F);
@@ -130,8 +142,9 @@ public class TEMonsterEntities {
     public static final RegistryObject<EntityType<HumanoidMonster>> GOBLIN_SCOUT = TEEntities.registerEntity("goblin_scout", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab(41, 1, 10, 32, 1, 0.37f).asHumanoid().setSpawnWithoutLight()), 0.65F, 1.85F);
     public static final RegistryObject<EntityType<HumanoidMonster>> ANGER_GOBLIN = TEEntities.registerEntity("anger_goblin", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab(220, 0, 15, 32, 1, 0.88f).asHumanoid().setMainHand(Items.GOLDEN_SWORD.getDefaultInstance()).setSpawnWithoutLight()), 0.65F, 1.85F);
 
-    
-    
+    //饿鬼
+    public static final RegistryObject<EntityType<TheHungry>> THE_HUNGRY = TEEntities.registerEntity("the_hungry", (e, l) -> new TheHungry(e, l, new AbstractPrefab(30, 2, 16, 32, 0.75f, 0.28f).getPrefab()), 1F, 1F);
+
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(TEMonsterEntities.BLUE_SLIME.get(), c -> new CustomSlimeRenderer(c, "blue"));
@@ -162,7 +175,9 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.DRIPPLER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.DRIPPLER.getId(), false, 2f, 0));
         event.registerEntityRenderer(TEMonsterEntities.WANDERING_EYE_FISH.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.WANDERING_EYE_FISH.getId(), false, 1.5f, 0));
         event.registerEntityRenderer(TEMonsterEntities.FLYING_FISH.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.FLYING_FISH.getId(), true, 0.75f, 0));
-        event.registerEntityRenderer(TEMonsterEntities.HARPY.get(), c -> new AnimatorRenderer<>(c, new HarpyModel(TEMonsterEntities.HARPY.getId()), false, 1f, 0));
+        event.registerEntityRenderer(TEMonsterEntities.HARPY.get(), c -> new GeoNormalRenderer<>(c, new GeoNormalModel<>(TEMonsterEntities.HARPY.getId()), false, 1f, 0));
+        event.registerEntityRenderer(TEMonsterEntities.DEMON.get(), c -> new DemonRenderer(c, new DemonModel(TEMonsterEntities.DEMON.getId()), false, 1f, 0));
+        event.registerEntityRenderer(TEMonsterEntities.VOODOO_DEMON.get(), c -> new DemonRenderer(c, new DemonModel(TEMonsterEntities.VOODOO_DEMON.getId()), false, 1.1f, 0));
         event.registerEntityRenderer(TEMonsterEntities.ANTLION_SWARMER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.ANTLION_SWARMER.getId(), true, 1.0f, 0f));
         event.registerEntityRenderer(TEMonsterEntities.GIANT_ANTLION_SWARMER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.ANTLION_SWARMER.getId(), true, 1.25f, 0f));
 
@@ -175,16 +190,26 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.DECAYEDER.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.DECAYEDER.getId()));
 
 
-        event.registerEntityRenderer(TEMonsterEntities.MUSHROOM_SKELETON.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.MUSHROOM_SKELETON.getId(), false));
-        event.registerEntityRenderer(TEMonsterEntities.MUSHROOM_ZOMBIE.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.MUSHROOM_ZOMBIE.getId(), false));
+        event.registerEntityRenderer(TEMonsterEntities.SPORE_SKELETON.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.SPORE_SKELETON.getId(), false));
+        event.registerEntityRenderer(TEMonsterEntities.SPORE_ZOMBIE.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.SPORE_ZOMBIE.getId(), false));
+        event.registerEntityRenderer(TEMonsterEntities.HAT_SPORE_ZOMBIE.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.HAT_SPORE_ZOMBIE.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.FACE_MONSTER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.FACE_MONSTER.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.BLOOD_TUMORS.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.BLOOD_TUMORS.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.BLOOD_ZOMBIE.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.BLOOD_ZOMBIE.getId(), false));
+        event.registerEntityRenderer(TEMonsterEntities.SNOW_FLINX.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.SNOW_FLINX.getId(), false){
+            @Override
+            protected void adjustPose(PoseStack poseStack, AbstractMonster animatable, float partialTick){
+                poseStack.mulPose(Axis.YP.rotationDegrees(90+ Mth.lerp(partialTick, animatable.yBodyRotO - animatable.yHeadRotO,animatable.yBodyRot - animatable.yHeadRot)) );
+            }
+        });
+
+        event.registerEntityRenderer(TEMonsterEntities.PIRANHA.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.PIRANHA.getId(), true));
+
         event.registerEntityRenderer(TEMonsterEntities.DEVOURER.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.DEVOURER.getId(), 2.0f, 0.0f));
         event.registerEntityRenderer(TEMonsterEntities.GIANT_WORM.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.GIANT_WORM.getId(), 2.0f, 0.0f));
         event.registerEntityRenderer(TEMonsterEntities.LEECH.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.LEECH.getId(), 2.0f, 0.0f));
         event.registerEntityRenderer(TEMonsterEntities.TOMB_CRAWLER.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.TOMB_CRAWLER.getId(), 2.0f, 0.0f));
-        event.registerEntityRenderer(TEMonsterEntities.GIANT_SHELLY.get(), c -> new GeoNormalRenderer<>(c, new GiantShellyModel<>(TEMonsterEntities.GIANT_SHELLY.getId()), false, 2, 0));
+        event.registerEntityRenderer(TEMonsterEntities.GIANT_SHELLY.get(), c -> new GeoNormalRenderer<>(c, new VariantTexModel<>(TEMonsterEntities.GIANT_SHELLY.getId()), false, 2, 0));
         // bat
         event.registerEntityRenderer(TEMonsterEntities.CAVE_BAT.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.CAVE_BAT.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.JUNGLE_BAT.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.JUNGLE_BAT.getId(), false));
@@ -199,7 +224,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.NYMPH.get(), c -> new GeoNormalRenderer<>(c, new NymphModel<>(TEMonsterEntities.NYMPH.getId()), false, 1, 0f));
         event.registerEntityRenderer(TEMonsterEntities.SNATCHER.get(), c -> new SnatcherRenderer<>(c, TEMonsterEntities.SNATCHER.getId()));
         event.registerEntityRenderer(TEMonsterEntities.MAN_EATER.get(), c -> new SnatcherRenderer<>(c, TEMonsterEntities.MAN_EATER.getId()));
-//        event.registerEntityRenderer(TEMonsterEntities.THE_HUNGRY.get(), c -> new TheHungryRenderer<>(c, TEMonsterEntities.THE_HUNGRY.getId()));
+        event.registerEntityRenderer(TEMonsterEntities.THE_HUNGRY.get(), c -> new TheHungryRenderer<>(c, TEMonsterEntities.THE_HUNGRY.getId()));
 
         // 地牢骷髅
         event.registerEntityRenderer(TEMonsterEntities.BASE_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BASE_BONES.getId(), 0.9f, 0));
@@ -217,6 +242,7 @@ public class TEMonsterEntities {
 
         // 远程法师
         event.registerEntityRenderer(TEMonsterEntities.DARK_CASTER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.DARK_CASTER.getId()));
+        event.registerEntityRenderer(TEMonsterEntities.FIRE_IMP.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.FIRE_IMP.getId()));
 
         event.registerEntityRenderer(TEMonsterEntities.GOBLIN_SORCERER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.GOBLIN_SORCERER.getId().withPrefix("goblin/")));
         event.registerEntityRenderer(TEMonsterEntities.GOBLIN_PEON.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.GOBLIN_PEON.getId().withPrefix("goblin/")));
@@ -254,18 +280,21 @@ public class TEMonsterEntities {
         event.put(GOLDEN_SLIME.get(), GoldenSlime.createSlimeAttributes().build());
         // land
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
-        event.put(MUSHROOM_SKELETON.get(), AbstractMonster.createAttributes().build());
-        event.put(MUSHROOM_ZOMBIE.get(), AbstractMonster.createAttributes().build());
+        event.put(SPORE_SKELETON.get(), AbstractMonster.createAttributes().build());
+        event.put(SPORE_ZOMBIE.get(), AbstractMonster.createAttributes().build());
+        event.put(HAT_SPORE_ZOMBIE.get(), AbstractMonster.createAttributes().build());
         event.put(DECAYEDER.get(), RangeSkeleton.createAttributes().build());
         event.put(BLOODY_SPORE.get(), BloodySpore.createAttributes().build());
         event.put(FACE_MONSTER.get(), AbstractMonster.createAttributes().build());
         event.put(BLOOD_TUMORS.get(), AbstractMonster.createAttributes().build());
         event.put(BLOOD_ZOMBIE.get(), AbstractMonster.createAttributes().build());
+        event.put(SNOW_FLINX.get(), AbstractMonster.createAttributes().build());
+
         event.put(GIANT_SHELLY.get(), AbstractMonster.createAttributes().build());
         event.put(NYMPH.get(), AbstractMonster.createAttributes().build());
         event.put(SNATCHER.get(), AbstractMonster.createAttributes().build());
         event.put(MAN_EATER.get(), AbstractMonster.createAttributes().build());
-//        event.put(THE_HUNGRY.get(), TheHungry.createAttributes().build());
+        event.put(THE_HUNGRY.get(), TheHungry.createAttributes().build());
 
         // fly
         event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());
@@ -275,8 +304,13 @@ public class TEMonsterEntities {
         event.put(WANDERING_EYE_FISH.get(), AbstractMonster.createAttributes().build());
         event.put(EATER_OF_SOULS.get(), AbstractMonster.createAttributes().build());
         event.put(HARPY.get(), AbstractMonster.createAttributes().build());
+        event.put(DEMON.get(), AbstractMonster.createAttributes().build());
+        event.put(VOODOO_DEMON.get(), AbstractMonster.createAttributes().build());
         event.put(ANTLION_SWARMER.get(), AbstractMonster.createAttributes().build());
         event.put(GIANT_ANTLION_SWARMER.get(), AbstractMonster.createAttributes().build());
+
+        // swim
+        event.put(PIRANHA.get(), AbstractMonster.createAttributes().build());
 
 
         // bat
@@ -311,6 +345,7 @@ public class TEMonsterEntities {
 
         // 远程法师
         event.put(DARK_CASTER.get(), AbstractMonster.createAttributes().build());
+        event.put(FIRE_IMP.get(), AbstractMonster.createAttributes().build());
 
         // 哥布林军队
         event.put(GOBLIN_SORCERER.get(), AbstractMonster.createAttributes().build());
@@ -350,21 +385,30 @@ public class TEMonsterEntities {
         event.register(BLOOD_ZOMBIE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(BLOODY_SPORE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BloodySpore::checkBloodySporeSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(FACE_MONSTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(MUSHROOM_SKELETON.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(MUSHROOM_ZOMBIE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(SPORE_SKELETON.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(SPORE_ZOMBIE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(HAT_SPORE_ZOMBIE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(DECAYEDER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(GIANT_SHELLY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(NYMPH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(SNATCHER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkGroundSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(MAN_EATER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(SNOW_FLINX.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkGroundSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
         // fly
         event.register(DEMON_EYE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DemonEye::checkDemonEyeSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(FLYING_FISH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkFlyingFishSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(CRIMSON_KEMERA.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(EATER_OF_SOULS.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(HARPY.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkHighLevelMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(DEMON.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNetherMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(VOODOO_DEMON.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNetherMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(ANTLION_SWARMER.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(GIANT_ANTLION_SWARMER.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
+        // swim
+        event.register(PIRANHA.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
 
         // worm
         event.register(DEVOURER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
@@ -397,6 +441,7 @@ public class TEMonsterEntities {
 
         // 远程法师
         event.register(DARK_CASTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(FIRE_IMP.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkNetherMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
 
         // 哥布林军队

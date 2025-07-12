@@ -19,7 +19,8 @@
     "accessor.ExplosionAccessor",
     "accessor.LevelAccessor",
     "accessor.ProjectileWeaponAccessor",
-    "accessor.SlimeAccessor"
+    "accessor.SlimeAccessor",
+    "client.ServerChunkLoadingManagerMixin"
   ],
   "client": [
     "accessor.GameRendererAccessor",

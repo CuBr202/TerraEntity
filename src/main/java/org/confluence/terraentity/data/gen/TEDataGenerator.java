@@ -8,6 +8,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.data.gen.loot.TELootModifyProvider;
 import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
 import org.confluence.terraentity.data.gen.recipe.CollectRecipeProvider;
 import org.confluence.terraentity.data.gen.recipe.TENPCShopProvider;
@@ -41,6 +43,8 @@ public class TEDataGenerator {
         boolean server = event.includeServer();
 
         generator.addProvider(server, provider);
+        generator.addProvider(server, new TELootModifyProvider(output, TerraEntity.MODID));
+
         generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TEDamageTypeTagsProvider(output, lookup, helper));
         TEBlockTagsProvider blockTagsProvider = new TEBlockTagsProvider(output, lookup, helper);

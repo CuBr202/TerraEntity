@@ -32,7 +32,7 @@ import org.confluence.terraentity.utils.TEUtils;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SummonItem<T extends Mob & ISummonMob<T>> extends Item {
+public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
     public final RegistryObject<EntityType<T>> entityType;
     public final int consume;
 

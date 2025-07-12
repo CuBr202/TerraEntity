@@ -7,12 +7,14 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-
+import org.confluence.terraentity.entity.boss.WallOfFlesh;
+import org.confluence.terraentity.entity.boss.WallOfFleshMouth;
 import org.confluence.terraentity.init.TEEffects;
+import org.confluence.terraentity.mixed.IMobEffectExtension;
 
 
-public class TheTongueEffect extends MobEffect {
-//    private WallOfFleshMouth mouth;
+public class TheTongueEffect extends MobEffect  implements IMobEffectExtension {
+    private WallOfFleshMouth mouth;
 
     public TheTongueEffect() {
         super(MobEffectCategory.HARMFUL, 0xAB1122);
@@ -20,57 +22,57 @@ public class TheTongueEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity living, int amplifier) {
-//        if(mouth !=null && mouth.isAlive() && mouth.parentMob!=null && mouth.parentMob.isAlive()) {
-//
-//            WallOfFlesh wall = mouth.parentMob;
-//            Vec3 mouthPos = mouth.position();
-//
-//            if(!living.level().isClientSide && living.getBoundingBox().intersects(wall.getOutsideCollisionBox())&&!living.getBoundingBox().intersects(wall.getInsideBox())) {
-//
-//                Vec3 targetPos = mouthPos.add(wall.getForward().scale(45));
-//                Vec3 toTarget = targetPos.subtract(living.position());
-//                double distance = toTarget.length();
-//                Vec3 dragDirection = toTarget.normalize();
-//
-//                double speedFactor = Mth.clamp(distance / 15.0 + wall.getMoveSpeed()+0.35f, wall.getMoveSpeed() + 0.15f, wall.getMoveSpeed() + 0.5); // 距离因子基于固定10格
-//                Vec3 adjustedForce = dragDirection.scale(speedFactor);
-//
-//                if ((distance <= 9.0F || !living.isAlive()) && !living.level().isClientSide && living instanceof ServerPlayer serverPlayer) {
-//                    serverPlayer.connection.send(new ClientboundRemoveMobEffectPacket(living.getId(), TEEffects.HORRIFIED));
-//                    serverPlayer.getActiveEffectsMap().remove(TEEffects.THE_TONGUE).getEffect();
-//                } else {
-//                    living.setDeltaMovement(living.getDeltaMovement().add(adjustedForce));
-//                    living.hurtMarked = true;
-//
-//                    if (living.tickCount % 10 == 0) {
-//                        float damage = 2;
-//                        living.hurt(living.level().damageSources().mobAttack(mouth), damage);
-//                    }
-//                }
-//        }else if(!living.level().isClientSide && living.tickCount % 100 == 0 && living instanceof ServerPlayer serverPlayer){
-//                serverPlayer.connection.send(new ClientboundRemoveMobEffectPacket(living.getId(), TEEffects.HORRIFIED));
-//                serverPlayer.getActiveEffectsMap().remove(TEEffects.THE_TONGUE).getEffect();
-//            }
-//        }
-//       return true;
+        if(mouth !=null && mouth.isAlive() && mouth.parentMob!=null && mouth.parentMob.isAlive()) {
+
+            WallOfFlesh wall = mouth.parentMob;
+            Vec3 mouthPos = mouth.position();
+
+            if(!living.level().isClientSide && living.getBoundingBox().intersects(wall.getOutsideCollisionBox())&&!living.getBoundingBox().intersects(wall.getInsideBox())) {
+
+                Vec3 targetPos = mouthPos.add(wall.getForward().scale(45));
+                Vec3 toTarget = targetPos.subtract(living.position());
+                double distance = toTarget.length();
+                Vec3 dragDirection = toTarget.normalize();
+
+                double speedFactor = Mth.clamp(distance / 15.0 + wall.getMoveSpeed()+0.35f, wall.getMoveSpeed() + 0.15f, wall.getMoveSpeed() + 0.5); // 距离因子基于固定10格
+                Vec3 adjustedForce = dragDirection.scale(speedFactor);
+
+                if ((distance <= 9.0F || !living.isAlive()) && !living.level().isClientSide && living instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.connection.send(new ClientboundRemoveMobEffectPacket(living.getId(), TEEffects.HORRIFIED.get()));
+                    serverPlayer.getActiveEffectsMap().remove(TEEffects.THE_TONGUE.get()).getEffect();
+                } else {
+                    living.setDeltaMovement(living.getDeltaMovement().add(adjustedForce));
+                    living.hurtMarked = true;
+
+                    if (living.tickCount % 10 == 0) {
+                        float damage = 2;
+                        living.hurt(living.level().damageSources().mobAttack(mouth), damage);
+                    }
+                }
+        }else if(!living.level().isClientSide && living.tickCount % 100 == 0 && living instanceof ServerPlayer serverPlayer){
+                serverPlayer.connection.send(new ClientboundRemoveMobEffectPacket(living.getId(), TEEffects.HORRIFIED.get()));
+                serverPlayer.getActiveEffectsMap().remove(TEEffects.THE_TONGUE.get()).getEffect();
+            }
+        }
     }
 
-//    public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
-//        super.onEffectStarted(livingEntity, amplifier);
-//        if(this.getWallOfFleshMouth() == null||!this.getWallOfFleshMouth().isAlive()) {
-//            livingEntity.hurt(livingEntity.level().damageSources().mobAttack(livingEntity), 4);
-//        }else livingEntity.hurt(livingEntity.level().damageSources().mobAttack(mouth), 4);
-//    }
+    @Override
+    public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
+        if(this.getWallOfFleshMouth() == null||!this.getWallOfFleshMouth().isAlive()) {
+            livingEntity.hurt(livingEntity.level().damageSources().mobAttack(livingEntity), 4);
+        }else livingEntity.hurt(livingEntity.level().damageSources().mobAttack(mouth), 4);
+    }
+
+    @Override
+    public boolean isDurationEffectTick(int duration, int amplifier) {
+        return true;
+    }
 //
-//    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
-//        return true;
-//    }
+    public WallOfFleshMouth getWallOfFleshMouth() {
+        return this.mouth;
+    }
 //
-//    public WallOfFleshMouth getWallOfFleshMouth() {
-//        return this.mouth;
-//    }
-//
-//    public void setWallOfFleshMouth(WallOfFleshMouth mouth) {
-//        this.mouth = mouth;
-//    }
+    public void setWallOfFleshMouth(WallOfFleshMouth mouth) {
+        this.mouth = mouth;
+    }
 }

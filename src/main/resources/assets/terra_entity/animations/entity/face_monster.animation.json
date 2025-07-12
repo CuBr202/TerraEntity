@@ -79,7 +79,7 @@
 						}
 					}
 				},
-				"Right Arm": {
+				"RightArm": {
 					"rotation": {
 						"0.0": {
 							"vector": [-100, 0, 0]
@@ -123,7 +123,7 @@
 						}
 					}
 				},
-				"Left Arm": {
+				"LeftArm": {
 					"rotation": {
 						"0.0": {
 							"vector": [-100, 0, 0]
@@ -167,7 +167,7 @@
 						}
 					}
 				},
-				"Right Leg": {
+				"RightLeg": {
 					"rotation": {
 						"0.0": {
 							"vector": [-10, 0, 0]
@@ -199,7 +199,7 @@
 						}
 					}
 				},
-				"Left Leg": {
+				"LeftLeg": {
 					"rotation": {
 						"0.0": {
 							"vector": [25, 0, 0]

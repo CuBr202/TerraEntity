@@ -23,13 +23,13 @@ public class TELootTableProvider extends LootTableProvider {
                 List.of(
                         new LootTableProvider.SubProviderEntry(TEBlockLootProvider::new, LootContextParamSets.BLOCK),
                         new LootTableProvider.SubProviderEntry(TEEntityLootProvider::new, LootContextParamSets.ENTITY),
+                        new LootTableProvider.SubProviderEntry(TESubLoot::new, LootContextParamSets.EMPTY),
                         new SubProviderEntry(()-> {
                             try {
                                 return new TENPCLoot(lookupProviderFuture.get());
                             } catch (InterruptedException | ExecutionException e) {
                                 throw new RuntimeException(e);
-                            }
-                        }, LootContextParamSets.EMPTY)
+                            }}, LootContextParamSets.EMPTY)
 
                 )
 

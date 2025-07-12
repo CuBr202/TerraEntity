@@ -47,7 +47,7 @@ public class NymphModel<T extends Nymph> extends GeoNormalModel<T> {
 
     public void setCustomAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
         if(animatable.isTamed())
-            this.getAnimationProcessor().getBone(getHead()).setRotZ(0);
+            this.getAnimationProcessor().getBone(getHeadName()).setRotZ(0);
         super.setCustomAnimations(animatable, instanceId, animationState);
     }
 

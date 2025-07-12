@@ -99,7 +99,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
         offsetX = (this.width - this.imageWidth) / 2 + 5;
         offsetY = (this.height - this.imageHeight) / 2 + 16;
 
-        interpolator = KeyframeAnimation.Builder()
+        interpolator = KeyframeAnimation.builder()
                 .addKeyframe(5, 0)
                 .addKeyframe(20, 40)
                 .addKeyframe(30, 55)

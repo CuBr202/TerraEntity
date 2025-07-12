@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.monster.skeleton;
 
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -38,6 +39,13 @@ public class MeleeSkeleton extends RangeSkeleton {
 
     }
 
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pSource.is(DamageTypeTags.IS_DROWNING)) {
+            return false;
+        }
+        return super.hurt(pSource, pAmount); // confluence mixin here
+    }
 
     @Override
     public int getCurrentSwingDuration() {
@@ -73,4 +81,5 @@ public class MeleeSkeleton extends RangeSkeleton {
         if (effectInstance.getEffect() == MobEffects.POISON) return false;
         return super.addEffect(effectInstance, entity);
     }
+
 }

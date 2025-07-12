@@ -38,7 +38,7 @@ public class TrailSwordProjectileRenderer extends EntityRenderer<TrailSwordProj>
         double lerpY = Mth.lerp(partialTick, entity.yo - entity.getOwner().yo, entity.getY() - entity.getOwner().getY());
         double lerpZ = Mth.lerp(partialTick, entity.zo - entity.getOwner().zo, entity.getZ() - entity.getOwner().getZ());
 
-        entity.trail.renderTrail(entity, entity.trailQueue, new Vec3(lerpX, lerpY, lerpZ), poseStack, bufferSource);
+        entity.trail.renderTrail(entity, entity.trailQueue, new Vec3(lerpX, lerpY, lerpZ), poseStack, bufferSource, packedLight);
 
         poseStack.pushPose();
 

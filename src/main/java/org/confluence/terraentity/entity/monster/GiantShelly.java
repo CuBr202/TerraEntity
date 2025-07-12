@@ -17,6 +17,8 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
+import org.confluence.terraentity.entity.util.IVanillaVariant;
+import org.confluence.terraentity.entity.util.IVariant;
 import org.confluence.terraentity.init.TESounds;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -27,7 +29,7 @@ import java.util.Random;
 /**
  * 巨大卷壳虫
  */
-public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVariant<Integer> {
+public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVanillaVariant<Integer> {
 
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(GiantShelly.class, EntityDataSerializers.INT);
     AttributeModifier armorAdditionModifier = new AttributeModifier("5a4cc4f4-f848-4af8-9854-abb034b1e8ac", 2, AttributeModifier.Operation.ADDITION);

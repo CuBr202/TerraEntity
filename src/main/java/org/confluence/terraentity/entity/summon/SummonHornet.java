@@ -56,7 +56,7 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
     }
 
     public void summon_registerMoveGoal(){
-        goalSelector.addGoal(6, new SummonFlyFlowOwnerGoal<>(this, 1.0, 10.0F, 2.0F));
+        goalSelector.addGoal(6, new SummonFlyFlowOwnerGoal<>(this, 1.0, 2.0F));
     }
 
 

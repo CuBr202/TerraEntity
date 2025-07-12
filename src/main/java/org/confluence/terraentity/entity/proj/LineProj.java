@@ -35,8 +35,8 @@ public class LineProj extends BaseProj<LineProj> {
 
     @Override
     public void tick(){
-        super.tick();
-        Vec3 vec3 = initSpeed;
+
+        Vec3 vec3 = this.warpSpeed(initSpeed);
         double offX = getX() + vec3.x;
         double offY = getY() + vec3.y;
         double offZ = getZ() + vec3.z;
@@ -45,6 +45,11 @@ public class LineProj extends BaseProj<LineProj> {
 
         setDeltaMovement(vec3.scale(accelerate));
         setPos(offX, offY, offZ);
+        super.tick();
+    }
+
+    protected Vec3 warpSpeed(Vec3 speed) {
+        return speed;
     }
 
     @Override

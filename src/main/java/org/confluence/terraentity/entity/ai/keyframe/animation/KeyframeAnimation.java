@@ -1,5 +1,7 @@
 package org.confluence.terraentity.entity.ai.keyframe.animation;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
 import org.confluence.terraentity.entity.ai.keyframe.baker.AbstractKeyframeBaker;
 
@@ -15,6 +17,16 @@ public class KeyframeAnimation implements IKeyframeAnimation<Double> {
     public List<Keyframe> keyframes;
     private final double length;
     List<AbstractKeyframeBaker> interpolators;
+
+    public static Codec<KeyframeAnimation> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Keyframe.CODEC.listOf().fieldOf("keyframes").forGetter(KeyframeAnimation::getKeyframes)
+    ).apply(instance, KeyframeAnimation::new));
+
+//    public static StreamCodec<ByteBuf, KeyframeAnimation> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
+
+    private List<Keyframe> getKeyframes() {
+        return keyframes;
+    }
 
     public KeyframeAnimation(List<Keyframe> keyframes) {
         if (keyframes == null || keyframes.size() < 2) {
@@ -88,7 +100,7 @@ public class KeyframeAnimation implements IKeyframeAnimation<Double> {
     /**
      * 创建 Builder
      */
-    public static Builder Builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
