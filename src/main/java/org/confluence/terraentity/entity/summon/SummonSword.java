@@ -405,7 +405,8 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
             // 剑视角朝向
             Vec3 lookPos = swordPos.subtract(forward.scale(5))
-                    .add(0,-8 - (sword.sequence - 1)/2 ,0); // 向下看
+                    .add(0,-8 - (sword.sequence - 1)/2 ,0) // 向下看
+                    .add(swordPos.subtract(targetPos).scale(20)); //模拟披风
 
             sword.lookControl.setLookAt(lookPos);
             sword.lookAt(EntityAnchorArgument.Anchor.FEET, lookPos);
