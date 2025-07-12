@@ -11,10 +11,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.client.entity.renderer.mob.NPCRenderer;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.AnglerNPC;
-import org.confluence.terraentity.entity.npc.MechanicNPC;
-import org.confluence.terraentity.entity.npc.SimpleNPC;
+import org.confluence.terraentity.entity.npc.*;
 import org.confluence.terraentity.init.TEEntities;
 
 public class TENpcEntities {
@@ -71,7 +68,7 @@ public class TENpcEntities {
     /**
      * 旅商
      */
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> TRAVELING_MERCHANT = TEEntities.registerEntity("traveling_merchant", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> TRAVELING_MERCHANT = TEEntities.registerEntity("traveling_merchant", TravelingMerchantNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
      * 巫医
      */
