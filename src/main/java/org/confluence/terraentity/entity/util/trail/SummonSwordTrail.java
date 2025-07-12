@@ -69,7 +69,7 @@ public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrai
 
         poseStack.pushPose();
         Matrix4f matrix4f = poseStack.last().pose();
-        VertexConsumer buffer = bufferSource.getBuffer(ShaderUtil.TRAIL_RENDER_TYPE);
+        VertexConsumer buffer = bufferSource.getBuffer(ShaderUtil.TRAIL_RENDER_TYPE.get());
 
 
         int color = holder.getRgb();
@@ -184,7 +184,7 @@ public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrai
 
         poseStack.pushPose();
         Matrix4f matrix4f = poseStack.last().pose();
-        VertexConsumer buffer = bufferSource.getBuffer(ShaderUtil.TRAIL_RENDER_TYPE);
+        VertexConsumer buffer = bufferSource.getBuffer(ShaderUtil.TRAIL_RENDER_TYPE.get());
 
 
         int color = holder.getRgb();

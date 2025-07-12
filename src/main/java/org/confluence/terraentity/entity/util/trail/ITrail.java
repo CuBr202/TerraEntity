@@ -36,7 +36,7 @@ public interface ITrail<T> extends ITrailKind<T, Vec3> {
 
         poseStack.pushPose();
         Matrix4f matrix4f = poseStack.last().pose();
-        VertexConsumer buffer = bufferSource.getBuffer(ShaderUtil.TRAIL_RENDER_TYPE);
+        VertexConsumer buffer = bufferSource.getBuffer(ShaderUtil.TRAIL_RENDER_TYPE.get());
 
         Minecraft mc = Minecraft.getInstance();
         Vec3 camDir =  new Vec3(mc.gameRenderer.getMainCamera().getLookVector());
