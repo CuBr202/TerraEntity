@@ -16,7 +16,10 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.confluence.terraentity.client.entity.model.*;
+import org.confluence.terraentity.client.entity.model.DemonModel;
+import org.confluence.terraentity.client.entity.model.GeoNormalModel;
+import org.confluence.terraentity.client.entity.model.NymphModel;
+import org.confluence.terraentity.client.entity.model.VariantTexModel;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.TheHungryRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.*;
@@ -30,7 +33,10 @@ import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.monster.prefab.LandMonsterPrefab;
 import org.confluence.terraentity.entity.monster.skeleton.MeleeSkeleton;
 import org.confluence.terraentity.entity.monster.skeleton.RangeSkeleton;
-import org.confluence.terraentity.entity.monster.slime.*;
+import org.confluence.terraentity.entity.monster.slime.BaseSlime;
+import org.confluence.terraentity.entity.monster.slime.BlackSlime;
+import org.confluence.terraentity.entity.monster.slime.GoldenSlime;
+import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.util.SpawnPlacementChecks;
 import org.confluence.terraentity.init.TEEntities;
 
@@ -128,7 +134,7 @@ public class TEMonsterEntities {
     // 远程法师
     public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> DARK_CASTER = TEEntities.registerEntity("dark_caster", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(26, 1, 10, 32, 1, 0.82f).getPrefab()), 0.65F, 1.85F);
     public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> GOBLIN_SORCERER = TEEntities.registerEntity("goblin_sorcerer", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(20, 1, 10, 32, 1, 0.46f).getPrefab()), 0.65F, 1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> FIRE_IMP = TEEntities.registerEntity("fire_imp", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.FIRE_IMP_PROJ, new AbstractPrefab(36, 4, 15, 32, 1, 0.55f).getPrefab()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<FireImpEntity>> FIRE_IMP = TEEntities.registerEntity("fire_imp", (e, l) -> new FireImpEntity(e, l, TEProjectileEntities.FIRE_IMP_PROJ, new AbstractPrefab(36, 4, 15, 32, 1, 0.55f).getPrefab()), 0.65F, 1);
 
     // 哥布林军队
     public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_ARCHER = TEEntities.registerEntity("goblin_archer", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab(41, 1, 11, 32, 1, 0.37f).asHumanoid().setMainHand(Items.BOW.getDefaultInstance()).setSpawnWithoutLight()), 0.65F, 1.85F);
