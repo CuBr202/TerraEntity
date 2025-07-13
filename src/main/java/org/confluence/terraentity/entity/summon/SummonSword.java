@@ -22,6 +22,7 @@ import org.confluence.terraentity.entity.ai.goal.skill.ISkill;
 import org.confluence.terraentity.entity.ai.goal.skill.SkillCooldownManager;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
 import org.confluence.terraentity.entity.util.KeyframeAnimationCounter;
+import org.confluence.terraentity.entity.util.trail.PositionPoseProperties;
 import org.confluence.terraentity.entity.util.trail.SummonSwordTrail;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
@@ -41,7 +42,7 @@ import java.util.function.Supplier;
 public class SummonSword extends AbstractSummonMob<SummonSword> implements IOriented, FlyingAnimal {
 
     public SummonSwordTrail trail;
-    public Queue<SummonSwordTrail.PositionProperties> trailQueue;
+    public Queue<PositionPoseProperties> trailQueue;
 
     public int sequence;
     public Item modelItem;
@@ -361,6 +362,9 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         }
     }
 
+    /**
+     * 跟随主人身后
+     */
     static class SwordFollowOwnerGoal extends Goal{
         SummonSword sword;
         protected SwordFollowOwnerGoal(SummonSword sword) {
@@ -390,8 +394,8 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
                 return;
             }
 
-            // 玩家视角方向
-            Vec3 d = Vec3.directionFromRotation(new Vec2(owner.getXRot(), owner.yBodyRot));
+            // 玩家正对方向
+            Vec3 d = Vec3.directionFromRotation(new Vec2(0, owner.yBodyRot));
             // 玩家视角正前方
             Vec3 forward = d.multiply(1,0,1).normalize();
             // 玩家视角右侧方向

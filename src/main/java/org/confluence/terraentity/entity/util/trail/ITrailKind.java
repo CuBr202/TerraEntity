@@ -12,7 +12,7 @@ public interface ITrailKind <T, P> {
 
     void generateTrail(T holder, int ticks);
 
-    ITrail.TrailProperties getTrailProperties();
+    TrailProperties getTrailProperties();
 
     @OnlyIn(Dist.CLIENT)
     void renderTrail(T holder, Queue<P> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight);

@@ -23,6 +23,9 @@ import java.util.function.Predicate;
 public interface IOBBProjectile<T extends Projectile> extends ICollisionAttackEntity<T>, IOriented {
 
 
+    /**
+     * 长度缩放
+     */
     float lengthScale();
 
 

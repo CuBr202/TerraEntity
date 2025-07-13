@@ -20,24 +20,12 @@ import org.joml.Vector3f;
 import java.util.Iterator;
 import java.util.Queue;
 
-public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrail.PositionProperties> {
-    ITrail.TrailProperties properties;
-    Queue<PositionProperties> trailsQueue;
-    public static class PositionProperties{
-         public Vec3 position;
-         public float xrot;
-         public float yrot;
-         public PoseStack.Pose lastPose;
+public class SummonSwordTrail implements ITrailKind<SummonSword, PositionPoseProperties> {
+    TrailProperties properties;
+    Queue<PositionPoseProperties> trailsQueue;
 
-        public PositionProperties(Vec3 position, float xRot, float yRot) {
-            this.position = position;
-            this.xrot = xRot;
-            this.yrot = yRot;
-            this.lastPose = null;
-        }
-    }
     public SummonSwordTrail(int size, float widthScale, int color) {
-        this.properties = new ITrail.TrailProperties(size, widthScale, 5, color, color);
+        this.properties = new TrailProperties(size, widthScale, 5, color, color);
         this.trailsQueue = new java.util.LinkedList<>();
     }
 
@@ -48,23 +36,23 @@ public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrai
         }
 
         if(holder.getOwner() != null) {
-            holder.trailQueue.add(new PositionProperties(holder.position(), holder.getXRot(), holder.getYRot()));
+            holder.trailQueue.add(new PositionPoseProperties(holder.position(), holder.getXRot(), holder.getYRot()));
         }
     }
 
     @Override
-    public ITrail.TrailProperties getTrailProperties() {
+    public TrailProperties getTrailProperties() {
         return properties;
     }
 
 
     // 用于泰拉棱镜渲染，由于拖尾要贴合剑身，所以要多传入pose
     @OnlyIn(Dist.CLIENT)
-    public void renderTrail(SummonSword holder, Queue<PositionProperties> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, PoseStack.Pose lastPose) {
-        Iterator<PositionProperties> trails = trailsQueue.iterator();
+    public void renderTrail(SummonSword holder, Queue<PositionPoseProperties> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, PoseStack.Pose lastPose) {
+        Iterator<PositionPoseProperties> trails = trailsQueue.iterator();
         int size = trailsQueue.size();
 
-        ITrail.TrailProperties properties = getTrailProperties();
+        TrailProperties properties = getTrailProperties();
         if (!trails.hasNext()) return;
 
         poseStack.pushPose();
@@ -89,7 +77,7 @@ public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrai
         Vec3 o1 = null;
         Vec3 o2 = null;
         Vec3 o3 = null;
-        PositionProperties p = trails.next();
+        PositionPoseProperties p = trails.next();
         Vec3 lastPos = p.position.subtract(entityPos);
         int i = 0;
 
@@ -175,11 +163,11 @@ public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrai
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void renderTrail(SummonSword holder, Queue<PositionProperties> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        Iterator<PositionProperties> trails = trailsQueue.iterator();
+    public void renderTrail(SummonSword holder, Queue<PositionPoseProperties> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        Iterator<PositionPoseProperties> trails = trailsQueue.iterator();
         int size = trailsQueue.size();
 
-        ITrail.TrailProperties properties = getTrailProperties();
+        TrailProperties properties = getTrailProperties();
         if (!trails.hasNext()) return;
 
         poseStack.pushPose();
@@ -204,7 +192,7 @@ public class SummonSwordTrail implements ITrailKind<SummonSword, SummonSwordTrai
         Vec3 o1 = null;
         Vec3 o2 = null;
         Vec3 o3 = null;
-        PositionProperties p = trails.next();
+        PositionPoseProperties p = trails.next();
         Vec3 lastPos = p.position.subtract(entityPos);
         int i = 0;
 

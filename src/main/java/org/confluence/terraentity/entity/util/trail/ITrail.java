@@ -23,9 +23,6 @@ import java.util.Queue;
  */
 public interface ITrail<T> extends ITrailKind<T, Vec3> {
 
-    record TrailProperties(int size, float widthScale, float fadeWidthFactor, int colorFrom, int colorTo) {
-    }
-
     @OnlyIn(Dist.CLIENT)
     default void renderTrail(T holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         Iterator<Vec3> trails = trailsQueue.iterator();
@@ -41,11 +38,11 @@ public interface ITrail<T> extends ITrailKind<T, Vec3> {
         Minecraft mc = Minecraft.getInstance();
         Vec3 camDir =  new Vec3(mc.gameRenderer.getMainCamera().getLookVector());
 
-        int color = getTrailProperties().colorTo;
+        int color = getTrailProperties().colorTo();
         int red = FastColor.ARGB32.red(color);
         int green = FastColor.ARGB32.green(color);
         int blue = FastColor.ARGB32.blue(color);
-        int colorFrom = getTrailProperties().colorFrom;
+        int colorFrom = getTrailProperties().colorFrom();
         int redFrom = FastColor.ARGB32.red(colorFrom);
         int greenFrom = FastColor.ARGB32.green(colorFrom);
         int blueFrom = FastColor.ARGB32.blue(colorFrom);
@@ -67,7 +64,7 @@ public interface ITrail<T> extends ITrailKind<T, Vec3> {
             Vec3 dir = pos1.subtract(pos0).normalize();
 
             float progress = i / (float) size;
-            float width = properties.widthScale * progress;
+            float width = properties.widthScale() * progress;
             int alpha = (int) (200 * progress);
             int lerpRed = (int) Mth.lerp(progress, red, redFrom);
             int lerpGreen = (int) Mth.lerp(progress, green, greenFrom);
@@ -80,8 +77,8 @@ public interface ITrail<T> extends ITrailKind<T, Vec3> {
             Vec3 left00;
             Vec3 right0 ;
             Vec3 right00;
-            Vec3 left11 = pos1.add(side.scale(+width * properties.fadeWidthFactor));
-                Vec3 right11 = pos1.add(side.scale(-width * properties.fadeWidthFactor));
+            Vec3 left11 = pos1.add(side.scale(+width * properties.fadeWidthFactor()));
+                Vec3 right11 = pos1.add(side.scale(-width * properties.fadeWidthFactor()));
             Vec3 left1 = pos1.add(side.scale(+width));
             Vec3 right1 = pos1.add(side.scale(-width));
             if(o0 != null) {
