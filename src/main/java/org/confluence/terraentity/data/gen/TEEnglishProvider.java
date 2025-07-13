@@ -105,8 +105,8 @@ public class TEEnglishProvider extends LanguageProvider {
         add("tooltip.terra_entity.house_detect.message.found_house", "Found House");
         add("tooltip.terra_entity.house_detect.info", "Press shift and right click to switch mode.");
 
-
-
+        add("tooltip.terra_entity.chester.desc", "Press shift and right click to switch target container.");
+        add("tooltip.terra_entity.chester.current", "Current Container");
 
             // boomerang
         add("tooltip.terra_entity.boomerang.penetration", "Penetrates Count");

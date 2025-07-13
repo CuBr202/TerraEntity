@@ -18,6 +18,7 @@ public final class NetworkHandler {
         registrar.playToClient(SyncNPCTradesPacketS2C.TYPE, SyncNPCTradesPacketS2C.STREAM_CODEC, SyncNPCTradesPacketS2C::handle);
         registrar.playToClient(SyncDataS2C.TYPE, SyncDataS2C.STREAM_CODEC, SyncDataS2C::handle);
         registrar.playToClient(UpdateNPCTradePacket.TYPE, UpdateNPCTradePacket.STREAM_CODEC, UpdateNPCTradePacket::handle);
+        registrar.playToClient(ChesterAttachmentPacketS2C.TYPE, ChesterAttachmentPacketS2C.STREAM_CODEC, ChesterAttachmentPacketS2C::handle);
 
         registrar.playToServer(ServerBoundVehicleExtensionPacket.TYPE, ServerBoundVehicleExtensionPacket.STREAM_CODEC, ServerBoundVehicleExtensionPacket::handle);
         registrar.playToServer(ServerBoundHousePacket.TYPE, ServerBoundHousePacket.STREAM_CODEC, ServerBoundHousePacket::handle);

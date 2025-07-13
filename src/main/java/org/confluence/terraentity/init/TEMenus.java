@@ -12,7 +12,6 @@ import java.util.function.Supplier;
 public class TEMenus {
     public static final DeferredRegister<MenuType<?>> TYPES = DeferredRegister.create(BuiltInRegistries.MENU, TerraEntity.MODID);
 
-
     public static final Supplier<MenuType<SimpleTradeMenu>> SIMPLE_NPC_TRADES_MENU = TYPES.register("npc_trades", () -> new MenuType<>((id, inv)->new SimpleTradeMenu(id, inv, null), FeatureFlags.VANILLA_SET));
 
 

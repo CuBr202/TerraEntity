@@ -1,12 +1,5 @@
 package org.confluence.terraentity.entity.animal;
 
-import com.google.common.collect.ImmutableMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,11 +13,8 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.util.IVanillaVariant;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEAnimals;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -32,10 +22,8 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.Map;
 
-public class Squirrel extends Animal implements IVanillaVariant<Integer>, GeoEntity {
-    private boolean initializedVariant = false;
+public class Squirrel extends Animal implements  GeoEntity {
 
     public Squirrel(EntityType<? extends Squirrel> entityType, Level level) {
         super(entityType, level);
@@ -82,7 +70,7 @@ public class Squirrel extends Animal implements IVanillaVariant<Integer>, GeoEnt
 
     @Nullable
     public Squirrel getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
-        return TEAnimals.SQUIRREL.get().create(level);
+        return TEAnimals.JEWEL_SQUIRREL.get().create(level);
     }
 
 
@@ -98,65 +86,9 @@ public class Squirrel extends Animal implements IVanillaVariant<Integer>, GeoEnt
         controllers.add(DefaultAnimations.genericWalkIdleController(this));
     }
 
-    private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(Squirrel.class, EntityDataSerializers.INT);
-
-    @Override
-    public void onAddedToLevel(){
-        super.onAddedToLevel();
-        if (!initializedVariant) {
-            this.setVariant(random.nextInt(getTexturesMap().size()));
-            this.initializedVariant = true;
-        }
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_VARIANT_ID, 0);
-    }
-
-    @Override
-    public void setVariant(Integer integer) {
-        this.entityData.set(DATA_VARIANT_ID, integer);
-    }
-
-    @Override
-    public Integer getVariant() {
-        return this.entityData.get(DATA_VARIANT_ID);
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        pCompound.putInt("Variant", this.getVariant());
-        pCompound.putBoolean("InitializedVariant", initializedVariant);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        this.setVariant(pCompound.getInt("Variant"));
-        this.initializedVariant = pCompound.getBoolean("InitializedVariant");
-    }
 
 
-    static Map<Integer, ResourceLocation> textures = new Int2ObjectOpenHashMap<>(ImmutableMap.<Integer, ResourceLocation>builder()
-            .put(0, TerraEntity.space("textures/entity/animal/squirrel/squirrel.png"))
-            .put(1, TerraEntity.space("textures/entity/animal/squirrel/amber_squirrel.png"))
-            .put(2, TerraEntity.space("textures/entity/animal/squirrel/amethyst_squirrel.png"))
-            .put(3, TerraEntity.space("textures/entity/animal/squirrel/diamond_squirrel.png"))
-            .put(4, TerraEntity.space("textures/entity/animal/squirrel/emerald_squirrel.png"))
-            .put(5, TerraEntity.space("textures/entity/animal/squirrel/golden_squirrel.png"))
-            .put(6, TerraEntity.space("textures/entity/animal/squirrel/ruby_squirrel.png"))
-            .put(7, TerraEntity.space("textures/entity/animal/squirrel/sapphire_squirrel.png"))
-            .put(8, TerraEntity.space("textures/entity/animal/squirrel/topaz_squirrel.png"))
-            .put(9, TerraEntity.space("textures/entity/animal/squirrel/red_squirrel.png"))
-            .build()
-    );
 
-    @Override
-    public Map<Integer, ResourceLocation> getTexturesMap() {
-        return textures;
-    }
+
 
 }

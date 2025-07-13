@@ -25,8 +25,6 @@ public class TerraprismaRenderer extends EntityRenderer<Terraprisma> {
         this.model= new TerraprismaModel(context.bakeLayer(TerraprismaModel.LAYER_LOCATION));
     }
 
-
-
     @Override
     public void render(Terraprisma entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         float pitch;
@@ -84,11 +82,6 @@ public class TerraprismaRenderer extends EntityRenderer<Terraprisma> {
         if(entity.anim_z != null) {
             poseStack.mulPose(Axis.ZN.rotationDegrees((float) entity.anim_z.cal(entity.tickCount, partialTick)));
         }
-//        poseStack.mulPose(Axis.XN.rotationDegrees((entity.tickCount + partialTick) * 30));
-//        poseStack.mulPose(Axis.YN.rotationDegrees((entity.tickCount + partialTick) * 30));
-//        poseStack.mulPose(Axis.ZN.rotationDegrees(90));
-
-
     }
 
     protected void renderTrail(Terraprisma entity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick, PoseStack.Pose pose){

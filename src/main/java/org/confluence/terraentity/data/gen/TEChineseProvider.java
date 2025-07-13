@@ -113,6 +113,8 @@ public class TEChineseProvider extends LanguageProvider {
 
 
         // 召唤物
+        add(TESummonEntities.CHESTER.get(), "切斯特");
+
         add(TESummonEntities.SUMMON_FINCH.get(), "雀宝宝");
         add(TESummonEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
         add(TESummonEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
@@ -220,6 +222,8 @@ public class TEChineseProvider extends LanguageProvider {
         // 动物
         add(TEAnimals.SQUIRREL.get(), "松鼠");
         add(TEAnimals.BUNNY.get(), "兔兔");
+        add(TEAnimals.JEWEL_SQUIRREL.get(), "宝石松鼠");
+        add(TEAnimals.JEWEL_BUNNY.get(), "宝石兔");
         add(TEAnimals.BOOM_BUNNY.get(), "爆炸兔");
         add(TEAnimals.DUCK.get(), "鸭子");
         add(TEAnimals.BIRD.get(), "鸟");
@@ -287,8 +291,10 @@ public class TEChineseProvider extends LanguageProvider {
 
         // 动物
         add(TESpawnEggItems.SQUIRREL_SPAWN_EGG.get(), "松鼠刷怪蛋");
+        add(TESpawnEggItems.JEWEL_SQUIRREL_SPAWN_EGG.get(), "宝石松鼠刷怪蛋");
         add(TESpawnEggItems.BOOM_BUNNY_SPAWN_EGG.get(), "炸弹兔刷怪蛋");
         add(TESpawnEggItems.BUNNY_SPAWN_EGG.get(), "兔兔刷怪蛋");
+        add(TESpawnEggItems.JEWEL_BUNNY_SPAWN_EGG.get(), "宝石兔刷怪蛋");
         add(TESpawnEggItems.DUCK_SPAWN_EGG.get(), "鸭子刷怪蛋");
         add(TESpawnEggItems.BIRD_SPAWN_EGG.get(), "鸟刷怪蛋");
         add(TESpawnEggItems.BLUE_JAY_SPAWN_EGG.get(), "冠蓝鹊刷怪蛋");
@@ -296,6 +302,8 @@ public class TEChineseProvider extends LanguageProvider {
 
 
         // 召唤杖
+        add(TESummonItems.CHESTER_STAFF.get(), "眼骨");
+
         add(TESummonItems.FINCH_STAFF.get(), "雀杖");
         add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
         add(TESummonItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
@@ -398,7 +406,10 @@ public class TEChineseProvider extends LanguageProvider {
         add("tooltip.terra_entity.house_detect.message.too_small", "这个房间太小了!");
         add("tooltip.terra_entity.house_detect.message.no_dynamic_light", "房间缺少光源!");
         add("tooltip.terra_entity.house_detect.message.found_house", "这个房间很合适!");
-        add("tooltip.terra_entity.house_detect.info", "按下shift+右键切换模式");
+        add("tooltip.terra_entity.house_detect.info", "按下shift+右键 切换模式");
+        add("tooltip.terra_entity.chester.desc", "按下shift+右键 切换目标容器");
+        add("tooltip.terra_entity.chester.current", "当前容器");
+
 
 
             // boomerang

@@ -1,6 +1,7 @@
 package org.confluence.terraentity.item;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -41,16 +42,20 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
 
     public final float baseAttackDamage;
     Supplier<AttachmentType<SummonerAttachment>> summonType; // 召唤物类型
+
+    List<Component> tooltips;
+
     public SummonItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume, float baseAttackDamage) {
-        this(properties, entityType, consume, baseAttackDamage, TEAttachments.SUMMONER_STORAGE);
+        this(properties, entityType, consume, baseAttackDamage, TEAttachments.SUMMONER_STORAGE, List.of());
     }
 
-    public SummonItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume, float baseAttackDamage, Supplier<AttachmentType<SummonerAttachment>> summonType) {
+    public SummonItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume, float baseAttackDamage, Supplier<AttachmentType<SummonerAttachment>> summonType, List<Component> tooltips) {
         super(properties.stacksTo(1));
         this.entityType = entityType;
         this.consume = consume;
         this.baseAttackDamage = baseAttackDamage;
         this.summonType = summonType;
+        this.tooltips = tooltips;
     }
 
     @Override
@@ -118,6 +123,8 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
         int a = data.getCurrentCapacity();
         int b = SummonerAttachment.getMaxCapacity(localPlayer);
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_info", b - a, b).withColor(a <= 0 ? 0xAB0000 : 0x00ABAC));
+
+        this.tooltips.forEach(tooltipComponents::add);
     }
 
     @Override

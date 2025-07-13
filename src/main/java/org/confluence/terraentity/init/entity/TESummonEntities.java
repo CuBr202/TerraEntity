@@ -40,10 +40,14 @@ public class TESummonEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<SummonSword>> SUMMON_NETHERITE_SWORD = TEEntities.registerEntity("summon_netherite_sword", (e,l)->new SummonSword(e,l, ()->Items.NETHERITE_SWORD, 0x8136D2, TEEffectStrategies.HELL_FIRE_EFFECT.get().getProvider(), 0.15f),1F,1F);
     public static final DeferredHolder<EntityType<?>, EntityType<Terraprisma>> TERRAPRISMA = TEEntities.registerEntity("terraprisma", (e,l)->new Terraprisma(e,l),1F,1F);
 
+
+    public static final DeferredHolder<EntityType<?>, EntityType<Chester>> CHESTER = TEEntities.registerEntity("chester", (e,l)->new Chester(e,l),1F,1F);
+
 //    Color c = new Color(0xFF714C11, true);  // 删掉注释查看颜色
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(CHESTER.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.FIRE_IMP.getId(), false, 1f,0));
 
         // sommon
         event.registerEntityRenderer(SUMMON_FINCH.get(), c-> new GeoNormalRenderer<>(c, SUMMON_FINCH.getId().withPrefix("summon/"),true));
@@ -67,9 +71,13 @@ public class TESummonEntities {
         event.registerEntityRenderer(SUMMON_DIAMOND_SWORD.get(), c->new SummonSwordRenderer<>(c));
         event.registerEntityRenderer(SUMMON_NETHERITE_SWORD.get(), c->new SummonSwordRenderer<>(c));
         event.registerEntityRenderer(TERRAPRISMA.get(), c->new TerraprismaRenderer(c));
+
+
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
+        event.put(CHESTER.get(), AbstractSummonMob.createAttributes().build());
+
         // sommon
         event.put(SUMMON_FINCH.get(), AbstractSummonMob.createAttributes().build());
         event.put(SUMMON_SLIME.get(), AbstractSummonMob.createAttributes().build());
@@ -87,6 +95,8 @@ public class TESummonEntities {
         event.put(SUMMON_DIAMOND_SWORD.get(), AbstractSummonMob.createAttributes().build());
         event.put(SUMMON_NETHERITE_SWORD.get(), AbstractSummonMob.createAttributes().build());
         event.put(TERRAPRISMA.get(), AbstractSummonMob.createAttributes().build());
+
+
     }
 
     public static void register(){

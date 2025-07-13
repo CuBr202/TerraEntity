@@ -1,14 +1,26 @@
 package org.confluence.terraentity.attachment;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.network.s2c.SyncSummonPacket;
+import org.confluence.terraentity.registries.TERegistries;
+import org.confluence.terraentity.registries.chester.ChesterConditionalType;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,6 +41,64 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
     List<Integer> ids = new CopyOnWriteArrayList<>();
 
     public Set<Integer> prismaIDs = new HashSet<>(); // 存储棱镜的序列，以确定棱镜的位置
+
+    /**
+     * 记录切斯特打开全局存储的类型的索引
+     */
+    public int chestType = 0;
+    /**
+     * 记录切斯特绑定块的位置索引
+     */
+    public int chestTypeAdditional;
+    /**
+     * 存储切斯特绑定块
+     */
+    public Map<Key, ChesterConditionalType> boundBlocks = new HashMap<>();
+
+    public boolean canBind(Key pos, Player player){
+        return boundBlocks.isEmpty();
+    }
+
+    public record Key(BlockPos pos, ResourceKey<Level> levelId){
+        public static final Codec<Key> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                BlockPos.CODEC.fieldOf("pos").forGetter(Key::pos),
+                Level.RESOURCE_KEY_CODEC.fieldOf("levelId").forGetter(Key::levelId)
+        ).apply(instance, Key::new));
+
+        @Override
+        public boolean equals(Object o) {
+            if(this == o){
+                return true;
+            }else if(o == null || getClass()!= o.getClass()){
+                return false;
+            }else{
+                Key key = (Key) o;
+                return pos.equals(key.pos) && levelId.equals(key.levelId);
+            }
+        }
+    }
+
+    record BandedBlockEntry (Key pos, ChesterConditionalType type){
+        public static final Codec<BandedBlockEntry> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                Key.CODEC.fieldOf("pos").forGetter(BandedBlockEntry::pos),
+                TERegistries.ChesterConditionalTypesProviders.REGISTRY.byNameCodec().fieldOf("type").forGetter(BandedBlockEntry::type)
+        ).apply(instance, BandedBlockEntry::new));
+    }
+
+    public static final Codec<Map<Key, ChesterConditionalType>> bandedBlocksCodec = BandedBlockEntry.CODEC.listOf().xmap(ins->{
+        Map<Key, ChesterConditionalType> map = new HashMap<>();
+        for(BandedBlockEntry entry : ins){
+            map.put(entry.pos(), entry.type());
+        }
+        return map;
+    }, outs->{
+        List<BandedBlockEntry> list = new ArrayList<>();
+        for(Map.Entry<Key, ChesterConditionalType> entry : outs.entrySet()){
+            list.add(new BandedBlockEntry(entry.getKey(), entry.getValue()));
+        }
+        return list;
+    });
+
 
     public SummonerAttachment(SummonerType type) {
         this.type = type;
@@ -153,7 +223,7 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
         tag.putInt("currentCapacity", currentCapacity);
-
+        tag.put("container", JsonOps.INSTANCE.convertTo(NbtOps.INSTANCE, bandedBlocksCodec.encodeStart(JsonOps.INSTANCE, boundBlocks).getOrThrow()));
 //        tag.putIntArray("ids", ids);
         return tag;
     }
@@ -161,7 +231,9 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
         currentCapacity = tag.getInt("currentCapacity");
-
+        if(tag.contains("container")) {
+            this.boundBlocks = bandedBlocksCodec.decode(NbtOps.INSTANCE, tag.get("container")).getOrThrow().getFirst();
+        }
 //        ids = Arrays.stream(tag.getIntArray("ids")).boxed().toList();
     }
 }
