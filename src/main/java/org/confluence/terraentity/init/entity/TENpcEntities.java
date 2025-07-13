@@ -105,7 +105,7 @@ public class TENpcEntities {
         event.registerEntityRenderer(TRAVELING_MERCHANT.get(), c -> new NPCRenderer<>(c, TRAVELING_MERCHANT.getId()));
         event.registerEntityRenderer(WITCH_DOCTOR.get(), c -> new NPCRenderer<>(c, WITCH_DOCTOR.getId()));
         event.registerEntityRenderer(PARTY_GIRL.get(), c -> new NPCRenderer<>(c, PARTY_GIRL.getId()));
-        event.registerEntityRenderer(CLOTHIER.get(), c -> new NPCRenderer<>(c, OLD_MAN.getId()));
+        event.registerEntityRenderer(CLOTHIER.get(), c -> new NPCRenderer<>(c, CLOTHIER.getId()));
         event.registerEntityRenderer(TRUFFLE.get(), c -> new NPCRenderer<>(c, TRUFFLE.getId()));
     }
 
