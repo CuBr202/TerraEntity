@@ -9,19 +9,16 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.util.IVanillaVariant;
@@ -38,6 +35,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 public class Squirrel extends Animal implements IVanillaVariant<Integer>, GeoEntity {
+    private boolean initializedVariant = false;
 
     public Squirrel(EntityType<? extends Squirrel> entityType, Level level) {
         super(entityType, level);
@@ -105,7 +103,10 @@ public class Squirrel extends Animal implements IVanillaVariant<Integer>, GeoEnt
     @Override
     public void onAddedToLevel(){
         super.onAddedToLevel();
-        this.setVariant(random.nextInt(getTexturesMap().size()));
+        if (!initializedVariant) {
+            this.setVariant(random.nextInt(getTexturesMap().size()));
+            this.initializedVariant = true;
+        }
     }
 
     @Override
@@ -128,12 +129,14 @@ public class Squirrel extends Animal implements IVanillaVariant<Integer>, GeoEnt
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putInt("Variant", this.getVariant());
+        pCompound.putBoolean("InitializedVariant", initializedVariant);
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.setVariant(pCompound.getInt("Variant"));
+        this.initializedVariant = pCompound.getBoolean("InitializedVariant");
     }
 
 
