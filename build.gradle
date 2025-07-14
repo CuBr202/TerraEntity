@@ -174,7 +174,7 @@ dependencies {
 
     // 暮色森林
     compileOnly "curse.maven:the-twilight-forest-227639:6087105"
-    if (!dev) runtimeOnly "curse.maven:the-twilight-forest-227639:6087105"
+    runtimeOnly "curse.maven:the-twilight-forest-227639:6087105"
 
     // iris
 
