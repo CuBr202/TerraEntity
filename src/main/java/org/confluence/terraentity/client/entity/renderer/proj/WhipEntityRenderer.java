@@ -23,8 +23,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.init.model.WhipModelRegister;
 import org.confluence.terraentity.config.ClientConfig;
-import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.entity.ai.keyframe.FrameUtil;
+import org.confluence.terraentity.entity.proj.WhipEntity;
 import org.confluence.terraentity.item.BaseWhipItem;
 
 import java.util.ArrayList;
@@ -54,6 +54,8 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
         if(!(item1 instanceof BaseWhipItem whipItem)) return;
 
         if(entity.getOwner() instanceof Player player) {
+            boolean paused = Minecraft.getInstance().isPaused();
+
             poseStack.pushPose();
 //            poseStack.translate(-0.5, -0.5f, -0.5);
             float f = player.getAttackAnim(partialTick);
@@ -90,7 +92,7 @@ public class WhipEntityRenderer extends EntityRenderer<WhipEntity> {
                 float f3 = (float) (vec3.y - vec.y - lerpy);
                 float f4 = (float) (vec3.z - vec.z - lerpz);
                 // 生成粒子
-                if(ClientConfig.GENERATE_PROJECTILE_PARTICLE.get() && whipItem.particleOptions != null) {
+                if(!paused && ClientConfig.GENERATE_PROJECTILE_PARTICLE.get() && whipItem.particleOptions != null) {
                     if (entity.getRandom().nextFloat() < whipItem.chance) {
                         entity.level().addParticle(whipItem.particleOptions.get(),
                                 entity.getX() - f2, entity.getY() - f3, entity.getZ() - f4,
