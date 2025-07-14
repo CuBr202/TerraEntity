@@ -6,6 +6,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
@@ -28,6 +30,7 @@ import org.confluence.terraentity.attachment.SummonerAttachment;
 import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TESummonEntities;
 import org.confluence.terraentity.utils.TEUtils;
 
@@ -44,6 +47,7 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
     Supplier<AttachmentType<SummonerAttachment>> summonType; // 召唤物类型
 
     List<Component> tooltips;
+    Supplier<SoundEvent> sound;
 
     public SummonItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume, float baseAttackDamage) {
         this(properties, entityType, consume, baseAttackDamage, TEAttachments.SUMMONER_STORAGE, List.of());
@@ -56,12 +60,13 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
         this.baseAttackDamage = baseAttackDamage;
         this.summonType = summonType;
         this.tooltips = tooltips;
+        this.sound = TESounds.ROUTINE_SUMMON;
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-
+        player.playSound(this.sound.get(), 1.0F, 1.0F);
         if (!level.isClientSide) {
 
             var data = player.getData(summonType.get());
@@ -161,5 +166,10 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
                 data.sync(player);
             }
         }
+    }
+
+    public SummonItem<T> setSound(Supplier<SoundEvent> sound) {
+        this.sound = sound;
+        return this;
     }
 }

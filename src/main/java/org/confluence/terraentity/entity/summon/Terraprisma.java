@@ -166,7 +166,7 @@ public class Terraprisma extends SummonSword {
                     .addKeyframe(0,0)
                     .addKeyframe(10,1080)
                     .build()), true);
-            Objects.requireNonNull(this.sword.getAttribute(Attributes.ATTACK_DAMAGE)).addOrUpdateTransientModifier(new AttributeModifier(attackModifierId, 1.3f, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            Objects.requireNonNull(this.sword.getAttribute(Attributes.ATTACK_DAMAGE)).addOrUpdateTransientModifier(new AttributeModifier(attackModifierId, 0.3f, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
         }
 

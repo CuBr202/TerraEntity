@@ -155,5 +155,35 @@
             "terra_entity:mob/decayeder_step_1",
             "terra_entity:mob/decayeder_step_2"
         ]
+    },
+    "whip_attack": {
+        "sounds": [
+            "terra_entity:whip_attack"
+
+        ]
+    },
+    "routine_summon": {
+        "sounds": [
+            "terra_entity:summon/routine_summon"
+
+        ]
+    },
+    "summon_hornet": {
+        "sounds": [
+            "terra_entity:summon/summon_hornet"
+
+        ]
+    },
+    "summon_eye": {
+        "sounds": [
+            "terra_entity:summon/summon_eye"
+
+        ]
+    },
+    "summon_imp": {
+        "sounds": [
+            "terra_entity:summon/summon_imp"
+
+        ]
     }
 }

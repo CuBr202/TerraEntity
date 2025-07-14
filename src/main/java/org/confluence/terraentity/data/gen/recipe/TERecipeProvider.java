@@ -79,6 +79,25 @@ public class TERecipeProvider extends AbstractRecipeProvider {
                 .define('C', Items.STICK)
                 .unlockedBy("has_red_stone",has(Items.REDSTONE))
                 .save(recipeOutput);
+
+        // 棱镜暂用配方
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, TESummonItems.TERRAPRISMA.get())
+                .requires(TESummonItems.SUMMON_WOODEN_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_STONE_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_IRON_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF)
+                .unlockedBy("has_iron_sword_staff", has(TESummonItems.SUMMON_IRON_SWORD_STAFF))
+                .save(recipeOutput);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, TESummonItems.TERRAPRISMA.get())
+                .requires(TESummonItems.SUMMON_WOODEN_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_STONE_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF)
+                .unlockedBy("has_golden_sword_staff", has(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF))
+                .save(recipeOutput);
     }
 
     protected static void netheriteSmithing(RecipeOutput recipeOutput, Item ingredientItem, RecipeCategory category, Item resultItem) {

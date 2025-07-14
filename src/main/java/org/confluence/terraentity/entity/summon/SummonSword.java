@@ -348,7 +348,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         @Override
         public void start(){
             super.start();
-            Objects.requireNonNull(this.sword.getAttribute(Attributes.ATTACK_DAMAGE)).addOrUpdateTransientModifier(new AttributeModifier(attackModifier, 1.3f, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+            Objects.requireNonNull(this.sword.getAttribute(Attributes.ATTACK_DAMAGE)).addOrUpdateTransientModifier(new AttributeModifier(attackModifier, 0.3f, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         }
 
         protected void triggerZRot(){
