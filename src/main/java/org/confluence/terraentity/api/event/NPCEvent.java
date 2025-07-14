@@ -1,5 +1,6 @@
 package org.confluence.terraentity.api.event;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -201,5 +202,33 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
             consumerMap.put(type, consumer);
         }
 
+    }
+
+    public static class NPCDialogEvent extends Event {
+        private final AbstractTerraNPC npc;
+        private final Component original;
+        private Component neoDialog;
+
+        public NPCDialogEvent(AbstractTerraNPC npc, Component original) {
+            this.npc = npc;
+            this.original = original;
+            this.neoDialog = original;
+        }
+
+        public AbstractTerraNPC getNPC() {
+            return npc;
+        }
+
+        public Component getOriginal() {
+            return original;
+        }
+
+        public Component getNeoDialog() {
+            return neoDialog;
+        }
+
+        public void setNeoDialog(Component neoDialog) {
+            this.neoDialog = neoDialog;
+        }
     }
 }

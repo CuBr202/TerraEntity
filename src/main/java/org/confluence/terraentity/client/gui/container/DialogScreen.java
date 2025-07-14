@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.entity.Entity;
+import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.mood.MoodInfo;
@@ -16,6 +16,7 @@ import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.network.c2s.ServerBoundEventPacket;
+import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,14 +42,14 @@ public class DialogScreen extends Screen {
         super.init();
 
         holder = ((IPlayer)Minecraft.getInstance().player).terra_entity$getTradeHolder();
-        String dialog = null;
-        if(holder instanceof Entity e){
-            dialog = NPCDialogs.Loader.getInstance().getRandomDialog(e.getRandom(), e.getType());
+        if(holder instanceof AbstractTerraNPC npc){
+            String s = NPCDialogs.Loader.getInstance().getRandomDialog(npc.getRandom(), npc.getType());
+            if (s !=null) {
+                dialogText= AdapterUtils.postModEvent(new NPCEvent.NPCDialogEvent(npc,Component.translatable( s))).getNeoDialog ();
+
+            }
         }
 
-        if(dialog!= null) {
-            dialogText = Component.translatable(dialog);
-        }
 
         if(trade) {
             button = Button.builder(Component.literal("Trade"), p -> {

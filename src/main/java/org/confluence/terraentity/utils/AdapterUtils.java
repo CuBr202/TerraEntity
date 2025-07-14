@@ -7,12 +7,10 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.fml.event.IModBusEvent;
@@ -34,10 +32,16 @@ public class AdapterUtils {
         PacketDistributor.sendToServer(payload);
     }
 
+    /**
+     * 实际上bus={@link net.neoforged.fml.common.EventBusSubscriber.Bus#GAME}
+     */
     public static <T extends Event> T postModEvent(T event){
         return NeoForge.EVENT_BUS.post(event);
     }
 
+    /**
+     * 实际上bus={@link net.neoforged.fml.common.EventBusSubscriber.Bus#MOD}
+     */
     public static <T extends Event & IModBusEvent> void postEvent(T event){
         ModLoader.postEvent(event);
     }
