@@ -49,11 +49,11 @@
 				{
 					"name": "Chests",
 					"parent": "Body",
-					"pivot": [0, 18.25, -5],
+					"pivot": [0, 18.75, -5.5],
 					"rotation": [10, 0, 0],
 					"cubes": [
-						{"origin": [-4, 15, -3.5], "size": [8, 3, 3], "inflate": 0.1, "pivot": [0, 18.25, -5], "rotation": [45, 0, 0], "uv": [44, 56]},
-						{"origin": [-4, 15, -3.5], "size": [8, 3, 3], "inflate": 0.5, "pivot": [0, 18.25, -5], "rotation": [45, 0, 0], "uv": [58, 16]}
+						{"origin": [-4, 15.5, -4], "size": [8, 3, 3], "inflate": 0.1, "pivot": [0, 18.75, -5.5], "rotation": [45, 0, 0], "uv": [44, 56]},
+						{"origin": [-4, 15.5, -4], "size": [8, 3, 3], "inflate": 0.5, "pivot": [0, 18.75, -5.5], "rotation": [45, 0, 0], "uv": [58, 16]}
 					]
 				},
 				{

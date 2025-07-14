@@ -55,7 +55,7 @@ public class TESummonEntities {
         event.registerEntityRenderer(SUMMON_IRON_GOLEM.get(), IronGolemRenderer::new);
         event.registerEntityRenderer(SUMMON_HORNET.get(), c->new GeoNormalRenderer<>(c, new GeoNormalModel<>(TEMonsterEntities.HORNET.getId(),false),true, 0.6f, 0.5f));
         event.registerEntityRenderer(SCULK_WISP.get(), c->new SculkWispRenderer(c, SCULK_WISP.getId().withPrefix("summon/")));
-        event.registerEntityRenderer(IMP.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.FIRE_IMP.getId(), true, 0.8f,0));
+        event.registerEntityRenderer(IMP.get(), c->new GeoNormalRenderer<>(c, IMP.getId().withPrefix("summon/"), true, 0.8f,0));
         event.registerEntityRenderer(SUMMON_SNOW_FLINX.get(), c->new GeoNormalRenderer<>(c, SUMMON_SNOW_FLINX.getId().withPrefix("summon/"),false){
             @Override
             protected void adjustPose(PoseStack poseStack, SummonSnowFlinx animatable, float partialTick){
