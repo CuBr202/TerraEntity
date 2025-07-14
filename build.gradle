@@ -154,11 +154,11 @@ dependencies {
     }
 
     compileOnly "curse.maven:jade-324717:6011258"
-    runtimeOnly "curse.maven:jade-324717:6011258"
+    if (!dev) runtimeOnly "curse.maven:jade-324717:6011258"
 
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
-    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+    if (!dev) runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
     // 数学库
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
@@ -173,8 +173,8 @@ dependencies {
     runtimeOnly "curse.maven:just-enough-resources-jer-240630:6506298"
 
     // 暮色森林
-    runtimeOnly "curse.maven:the-twilight-forest-227639:6087105"
     compileOnly "curse.maven:the-twilight-forest-227639:6087105"
+    if (!dev) runtimeOnly "curse.maven:the-twilight-forest-227639:6087105"
 
     // iris
 
