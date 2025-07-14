@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.model.TerraprismaModel;
@@ -85,7 +86,7 @@ public class TerraprismaRenderer extends EntityRenderer<Terraprisma> {
     }
 
     protected void renderTrail(Terraprisma entity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick, PoseStack.Pose pose){
-        entity.trail.renderTrail(entity, entity.trailQueue, entity.position(), poseStack, bufferSource, packedLight, pose);
+        entity.trail.renderTrail(entity, entity.position(), poseStack, bufferSource, packedLight, pose, Vec3.ZERO);
     }
 
     public @NotNull ResourceLocation getTextureLocation(@NotNull Terraprisma summonSword) {

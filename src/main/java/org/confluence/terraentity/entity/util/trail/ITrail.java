@@ -21,8 +21,19 @@ import java.util.Queue;
  * 拖尾效果接口
  * @param <T> 拖尾容器持有者
  */
-public interface ITrail<T> extends ITrailKind<T, Vec3> {
+public interface ITrail<T> {
 
+    void generateTrail(T holder, int ticks);
+
+    TrailProperties getTrailProperties();
+
+
+    /**
+     * 默认使用的位置队列，如果需要实现更好的拖尾效果，不应该使用这个方法
+     * @param holder 持有者
+     * @param trailsQueue 位置队列
+     * @param entityPos 持有者位置
+     */
     @OnlyIn(Dist.CLIENT)
     default void renderTrail(T holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         Iterator<Vec3> trails = trailsQueue.iterator();

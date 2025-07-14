@@ -21,6 +21,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.CommonHooks;
 import org.confluence.terraentity.entity.ai.IFlyRideableMob;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -57,14 +58,14 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_ID_FLAGS, (byte)0);
         builder.define(DATA_OWNER, Optional.empty());
     }
 
     @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if(DATA_OWNER == key){
             this.owner = this.entityData.get(DATA_OWNER).orElse(null);
@@ -146,7 +147,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
 
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
 
         this.doPlayerRide(player);
         return InteractionResult.sidedSuccess(this.level().isClientSide);
@@ -158,11 +159,11 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
     }
 
     @Override
-    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
+    protected void checkFallDamage(double y, boolean onGround, @NotNull BlockState state, @NotNull BlockPos pos) {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         if(getOwner() != null){
             getOwner().hurt(source, amount);
         }
@@ -222,7 +223,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
     }
 
     @Override
-    protected void tickRidden(Player player, Vec3 travelVector) {
+    protected void tickRidden(@NotNull Player player, @NotNull Vec3 travelVector) {
         super.tickRidden(player, travelVector);
         Vec2 vec2 = this.getRiddenRotation(player);
 
@@ -286,7 +287,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
 //        }
     }
 
-    protected void playStepSound(BlockPos pos, BlockState state) {
+    protected void playStepSound(@NotNull BlockPos pos, @NotNull BlockState state) {
 
     }
 
@@ -298,7 +299,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
      * 处理运动
      */
     @Override
-    protected Vec3 getRiddenInput(Player player, Vec3 travelVector) {
+    protected @NotNull Vec3 getRiddenInput(Player player, @NotNull Vec3 travelVector) {
         float f = player.xxa * 0.5F;
         float f1 = player.zza;
 
@@ -310,7 +311,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
     }
 
     @Override
-    protected float getRiddenSpeed(Player player) {
+    protected float getRiddenSpeed(@NotNull Player player) {
         return (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
@@ -323,7 +324,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (this.getOwnerUUID() != null) {
             compound.putUUID("Owner", this.getOwnerUUID());
@@ -332,7 +333,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         UUID uuid;
         if (compound.hasUUID("Owner")) {
@@ -386,7 +387,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
     }
 
     @Override
-    protected void positionRider(Entity passenger, Entity.MoveFunction callback) {
+    protected void positionRider(@NotNull Entity passenger, Entity.@NotNull MoveFunction callback) {
         super.positionRider(passenger, callback);
         if (passenger instanceof LivingEntity) {
             ((LivingEntity)passenger).yBodyRot = this.yBodyRot;
@@ -400,7 +401,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
     }
 
     @Override
-    protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
+    protected @NotNull Vec3 getPassengerAttachmentPoint(@NotNull Entity entity, @NotNull EntityDimensions dimensions, float partialTick) {
         return super.getPassengerAttachmentPoint(entity, dimensions, partialTick).add(0,0.2F,0);
     }
 
@@ -436,7 +437,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
 
     }
 
-    public SoundSource getSoundSource() {
+    public @NotNull SoundSource getSoundSource() {
         return SoundSource.PLAYERS;
     }
 }

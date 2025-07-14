@@ -42,7 +42,6 @@ import java.util.function.Supplier;
 public class SummonSword extends AbstractSummonMob<SummonSword> implements IOriented, FlyingAnimal {
 
     public SummonSwordTrail trail;
-    public Queue<PositionPoseProperties> trailQueue;
 
     public int sequence;
     public Item modelItem;
@@ -82,7 +81,6 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
         this.rgb = rgb;
         this.trail = new SummonSwordTrail(1, width, rgb);
-        this.trailQueue = new LinkedList<>();
         this.effectStrategy = effectStrategy;
 
     }
@@ -153,7 +151,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         if(level().isClientSide){
             if(this.entityData.get(DATA_BACK)){
                 this.backTicks++;
-                this.trailQueue.poll();
+                this.trail.trailsQueue.poll();
 //                this.trail.generateTrail(this, tickCount);
             }else{
                 this.backTicks--;

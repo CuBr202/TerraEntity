@@ -11,6 +11,7 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.attachment.ItemInHandTrailAttachment;
 import org.confluence.terraentity.client.block.renderer.FigureBlockRenderer;
 import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.entity.renderer.mob.ReplacedSpiderRenderer;
@@ -21,11 +22,14 @@ import org.confluence.terraentity.client.init.model.WhipModelRegister;
 import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.client.particle.SpitParticle;
 import org.confluence.terraentity.config.ClientConfig;
+import org.confluence.terraentity.entity.util.trail.player.ColorfulItemInHandTrail;
+import org.confluence.terraentity.entity.util.trail.player.ItemInHandTail;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEMenus;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.block.TEFigureBlocks;
 import org.confluence.terraentity.init.entity.*;
+import org.confluence.terraentity.init.item.TESummonItems;
 
 import static org.confluence.terraentity.client.util.RegisterUtils.registerModel;
 
@@ -55,6 +59,8 @@ public final class ModClientEvent {
     public static void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             ClientConfig.load();
+            ItemInHandTrailAttachment.register(TESummonItems.TERRAPRISMA.asItem(), new ColorfulItemInHandTrail(1, 0.15f));
+            ItemInHandTrailAttachment.register(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.asItem(), new ItemInHandTail(1, 0.15f, 0x0000FF));
 
         });
     }

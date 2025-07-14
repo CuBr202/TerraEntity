@@ -36,7 +36,7 @@ public class RideableItem<T extends AbstractRideableEntity> extends Item {
         Level level = player.level();
         if(!level.isClientSide){
             if(player.getVehicle() == null){
-                if(true) {
+                if(canUse.test(player)) {
                     AbstractRideableEntity rideable = entityType.get().create(level);
                     if (rideable != null) {
                         rideable.setOwnerUUID(player.getUUID());

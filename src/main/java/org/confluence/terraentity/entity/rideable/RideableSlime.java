@@ -11,8 +11,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.utils.TEUtils;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -35,13 +35,13 @@ public class RideableSlime extends AbstractRideableEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_INIT_SPEED, new Vector3f(0,0,0));
     }
 
     @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if(key == DATA_INIT_SPEED && level().isClientSide){
             this.initSpeed = this.entityData.get(DATA_INIT_SPEED);
@@ -49,7 +49,7 @@ public class RideableSlime extends AbstractRideableEntity {
     }
 
     @Override
-    protected void tickRidden(Player player, Vec3 travelVector) {
+    protected void tickRidden(@NotNull Player player, @NotNull Vec3 travelVector) {
         if (this.isJumping && !onGround()) {
             boolean trigger = false;
 //            for (int i = 0; i < 4; i++) {
@@ -119,7 +119,7 @@ public class RideableSlime extends AbstractRideableEntity {
      * 处理运动
      */
     @Override
-    protected Vec3 getRiddenInput(Player player, Vec3 travelVector) {
+    protected @NotNull Vec3 getRiddenInput(Player player, @NotNull Vec3 travelVector) {
         float f = player.xxa * 0.5F;
         float f1 = player.zza;
 
@@ -139,7 +139,7 @@ public class RideableSlime extends AbstractRideableEntity {
     }
 
         @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         Entity target = source.getEntity();
 
         if(target != null){
@@ -154,7 +154,7 @@ public class RideableSlime extends AbstractRideableEntity {
         return super.hurt(source, amount);
     }
     @Override
-    protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
+    protected @NotNull Vec3 getPassengerAttachmentPoint(@NotNull Entity entity, @NotNull EntityDimensions dimensions, float partialTick) {
 
         if(jumpCount == 0){
             double a = (Math.cos(movingCounter * 0.6f) - 1) * 0.3f;

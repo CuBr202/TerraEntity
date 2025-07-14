@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.IFlyRideableMob;
 import org.confluence.terraentity.init.TEAttachments;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -65,7 +66,7 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
     }
 
     @Override
-    protected Vec3 getRiddenInput(Player player, Vec3 travelVector) {
+    protected @NotNull Vec3 getRiddenInput(Player player, @NotNull Vec3 travelVector) {
         float f = player.xxa * 0.5F;
         float f1 = Math.max(player.zza, -0.1f);
 
@@ -76,7 +77,7 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
         }
     }
 
-    protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
+    protected @NotNull Vec3 getPassengerAttachmentPoint(@NotNull Entity entity, @NotNull EntityDimensions dimensions, float partialTick) {
 
         float offsetY = this.isMoving && !isInputtingJumping()?
                 Mth.lerp(Math.min((movingCounter + partialTick) / 12f, 1f), 0.4f, 0.1f)

@@ -20,6 +20,7 @@
     "client.BossHealthOverlayMixin",
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
+    "client.ItemInHandLayerMixin",
     "client.ItemRendererMixin",
     "client.LevelRendererMixin",
     "client.LocalPlayerMixin",
