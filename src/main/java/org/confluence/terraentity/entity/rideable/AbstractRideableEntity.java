@@ -27,11 +27,13 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 
 public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRideableMob, GeoEntity {
 
     private static final EntityDataAccessor<Byte> DATA_ID_FLAGS = SynchedEntityData.defineId(AbstractRideableEntity.class, EntityDataSerializers.BYTE);;
+    private static final EntityDataAccessor<Optional<UUID>> DATA_OWNER = SynchedEntityData.defineId(AbstractRideableEntity.class, EntityDataSerializers.OPTIONAL_UUID);;
 
     protected boolean isMoving;
     protected int movingCounter = 0;
@@ -58,12 +60,15 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_ID_FLAGS, (byte)0);
+        builder.define(DATA_OWNER, Optional.empty());
     }
 
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-
+        if(DATA_OWNER == key){
+            this.owner = this.entityData.get(DATA_OWNER).orElse(null);
+        }
     }
 
     protected boolean getFlag(int flagId) {
@@ -91,6 +96,7 @@ public class AbstractRideableEntity extends Mob implements OwnableEntity, IFlyRi
 
     public void setOwnerUUID(@Nullable UUID uuid) {
         this.owner = uuid;
+        this.entityData.set(DATA_OWNER, Optional.ofNullable(uuid));
     }
 
 

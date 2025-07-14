@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.IFlyRideableMob;
+import org.confluence.terraentity.init.TEAttachments;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -20,8 +21,7 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 
 public class RideableBee extends AbstractRideableEntity implements IFlyRideableMob {
 
-    int _flyTick = 100;
-    int flyTick = 100;
+    int _flyTick = 200;
 
     public RideableBee(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
@@ -44,11 +44,15 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
 
     @Override
     protected void tickRiddenLocal(Player player, Vec3 travelVector){
+        if(getOwner() == null){
+            return;
+        }
+        var data = getOwner().getData(TEAttachments.SUMMONER_STORAGE);
         Vec3 speed = getDeltaMovement();
 
         if(this.isInputtingJumping()){
             double vy;
-            if(--flyTick > 0){
+            if(--data.beeFlyTick > 0){
                 vy = Math.min(speed.y + 0.035f, 0.2f);
             }else{
                 vy = Math.min(speed.y + 0.02f, 0.2f);
@@ -56,7 +60,7 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
             this.setDeltaMovement(speed.x, vy, speed.z);
         }
         if(onGround()){
-            flyTick = Math.min(_flyTick, flyTick + 5);
+            data.beeFlyTick = Math.min(_flyTick, data.beeFlyTick + 5);
         }
     }
 
@@ -86,7 +90,11 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
 
     @Override
     public float calJumpingScale(float jumpTick, float orientation) {
-        return (float) (flyTick) / _flyTick;
+        if(getOwner() == null){
+            return 0;
+        }
+        var data = getOwner().getData(TEAttachments.SUMMONER_STORAGE);
+        return (float) (data.beeFlyTick) / _flyTick;
     }
 
     @Override

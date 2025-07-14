@@ -55,6 +55,8 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
      */
     public Map<Key, ChesterConditionalType> boundBlocks = new HashMap<>();
 
+    public int beeFlyTick; // 蜜蜂坐骑飞行时间
+
     public boolean canBind(Key pos, Player player){
         return boundBlocks.isEmpty();
     }

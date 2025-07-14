@@ -66,7 +66,6 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        player.playSound(this.sound.get(), 1.0F, 1.0F);
         if (!level.isClientSide) {
 
             var data = player.getData(summonType.get());
@@ -103,6 +102,7 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
             entity.summon(player, stack);
             entity.setCost(consume);
             level.addFreshEntity(entity);
+            entity.playSound(this.sound.get(), 1.0F, 1.0F);
         }
         var data = player.getData(summonType.get());
         data.summon(consume, entity.getId());

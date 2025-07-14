@@ -170,7 +170,7 @@ dependencies {
     //runtimeOnly "curse.maven:touhou-little-maid-355044:6613831-sources-6613865"
 
     // jer
-    runtimeOnly "curse.maven:just-enough-resources-jer-240630:6506298"
+    if (!dev) runtimeOnly "curse.maven:just-enough-resources-jer-240630:6506298"
 
     // 暮色森林
     compileOnly "curse.maven:the-twilight-forest-227639:6087105"
