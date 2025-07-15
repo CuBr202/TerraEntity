@@ -4,7 +4,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -320,6 +319,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
         double damage = owner.getAttributeValue(TEAttributes.SUMMON_DAMAGE);
         boolean trigger = false;
         if(TEUtils.attackTamableTest.test(owner, hurter)){
+            owner.setLastHurtMob(hurter); // 让召唤物可以攻击敌人
             trigger = true;
             damage *= damageDecline;
             damageDecline = Math.max(_damageDeclineMax, damageDecline - _damageDeclineStep);

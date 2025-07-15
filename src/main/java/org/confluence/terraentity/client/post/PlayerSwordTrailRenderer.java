@@ -72,24 +72,9 @@ public class PlayerSwordTrailRenderer {
                 trail.renderTrail(player, playerPos, poseStack1, buffer, packedLight, poseStack2.last(), Vec3.ZERO );
 
                 // 添加拖尾
-//                if(partialTicks > 0.5f && data.trailTicks < player.tickCount) {
-//                    Vec3 handPos = playerPos.add(new Vec3(dist));
-//                    data.trailTicks = player.tickCount;
-//                    PositionPoseProperties properties = new PositionPoseProperties(handPos, 0, 0);
-//                    properties.color = data.tickColor(player);
-//                    trail.trailsQueue.add(properties);
-//
-//                    if (trail.trailsQueue.size() > 10) {
-//                        trail.trailsQueue.poll();
-//                        trail.trailsQueue.poll();
-//                    }
-//                }
-
-                // 添加拖尾
                 Vec3 handPos = playerPos.add(new Vec3(dist));
 
                 trail.generateTrail(player, player.tickCount, partialTicks, data, handPos);
-
             }
 
         }

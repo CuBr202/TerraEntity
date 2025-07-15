@@ -59,8 +59,8 @@ public final class ModClientEvent {
     public static void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             ClientConfig.load();
-            ItemInHandTrailAttachment.register(TESummonItems.TERRAPRISMA.asItem(), new ColorfulItemInHandTrail(1, 0.15f));
-            ItemInHandTrailAttachment.register(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.asItem(), new ItemInHandTail(1, 0.15f, 0x0000FF));
+            ItemInHandTrailAttachment.register(TESummonItems.TERRAPRISMA.asItem(), new ColorfulItemInHandTrail(1, 0.15f, 8));
+            ItemInHandTrailAttachment.register(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.asItem(), new ItemInHandTail(1, 0.15f, 0x0000FF, 8));
 
         });
     }

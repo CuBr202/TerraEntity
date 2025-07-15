@@ -6,8 +6,8 @@ import org.confluence.terraentity.init.TEAttachments;
 
 public class ColorfulItemInHandTrail extends ItemInHandTail  {
 
-    public ColorfulItemInHandTrail(int size, float widthScale) {
-        super(size, widthScale, 0);
+    public ColorfulItemInHandTrail(int size, float widthScale, int length) {
+        super(size, widthScale, 0, length);
     }
 
     @Override

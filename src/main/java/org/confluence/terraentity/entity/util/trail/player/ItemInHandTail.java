@@ -9,8 +9,11 @@ import org.confluence.terraentity.entity.util.trail.TrailProperties;
 
 public class ItemInHandTail extends PositionPoseTrail<Player> {
 
-    public ItemInHandTail(int size, float widthScale, int color) {
+    int length;
+
+    public ItemInHandTail(int size, float widthScale, int color, int length) {
         super(size, widthScale, color);
+        this.length = length;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class ItemInHandTail extends PositionPoseTrail<Player> {
             properties.color = data.tickColor(player);
             trailsQueue.add(properties);
 
-            if (trailsQueue.size() > 10) {
+            if (trailsQueue.size() > this.length) {
                 trailsQueue.poll();
                 trailsQueue.poll();
             }

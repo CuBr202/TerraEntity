@@ -26,7 +26,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
 import org.confluence.terraentity.registries.generation.IGeneration;
-import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.registries.track.ITrackType;
 import org.confluence.terraentity.utils.TEUtils;
@@ -248,6 +247,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
                 level().playSound(this, this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
 
             if(hurter.hurt(getDamageSource(living), damage)){
+                if(this.getOwner() instanceof LivingEntity owner){
+                    owner.setLastHurtMob(hurter);
+                }
                 doKnockBack(living);
             }
 

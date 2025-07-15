@@ -124,6 +124,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
                     if (data != null) {
                         data.applyAll((LivingEntity) this.getOwner(), living);
                     }
+                    owner.setLastHurtMob(actualHurter);
                     actualHurter.hurt(this.damageSources().mobProjectile(this, owner), damage);
                     //击退
                     doKnockback(living);

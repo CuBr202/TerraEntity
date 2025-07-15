@@ -24,6 +24,12 @@ public abstract class PositionPoseTrail<T> implements ITrail<T> {
     TrailProperties properties;
     public Queue<PositionPoseProperties> trailsQueue;
 
+    /**
+     *
+     * @param size 暂时没用
+     * @param widthScale 宽度
+     * @param color 拖尾颜色
+     */
     public PositionPoseTrail(int size, float widthScale, int color) {
         this.properties = new TrailProperties(size, widthScale, 5, color, color);
         this.trailsQueue = new LinkedList<>();
