@@ -1,5 +1,6 @@
 package org.confluence.terraentity.client.gui.container;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -122,10 +123,8 @@ public class DialogScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == 69) { // E
-            if (minecraft != null) {
-                minecraft.setScreen(parent);
-            }
+        if (minecraft != null && minecraft.options.keyInventory.isActiveAndMatches(InputConstants.getKey(keyCode, scanCode))) {
+            minecraft.setScreen(trade ? parent : null);
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
