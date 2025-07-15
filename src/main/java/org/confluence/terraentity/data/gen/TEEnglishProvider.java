@@ -333,6 +333,40 @@ public class TEEnglishProvider extends LanguageProvider {
         add("mood.terra_entity.mechanic.love.goblin_tinkerer", "Umm...Goblin Tinkerer makes my heart flutter, I need to get that checked!");
         add("mood.terra_entity.mechanic.dislike.arms_dealer", "I don't really like that Arms Dealer won't leave me alone!");
         add("mood.terra_entity.mechanic.hate.clothier", "I hate how Clothier doesn't know how to treat a woman!");
-
+        // sound
+        add("terra_entity.subtitle.routine_hurt", "Mob: Hurt");
+        add("terra_entity.subtitle.routine_death", "Mob: Death");
+        add("terra_entity.subtitle.roar", "Boss: Roar");
+        add("terra_entity.subtitle.hurried_roaring", "Boss: Hurried Roar");
+        add("terra_entity.subtitle.blood_crawler_death", "Blood Crawler: Death");
+        add("terra_entity.subtitle.blood_crawler_free", "Blood Crawler: Blood Flow");
+        add("terra_entity.subtitle.blood_crawler_hurt", "Blood Crawler: Hurt");
+        add("terra_entity.subtitle.bloody_spore_death", "Bloody Spore: Death");
+        add("terra_entity.subtitle.bloody_spore_fuse", "Bloody Spore: Gestation");
+        add("terra_entity.subtitle.bloody_spore_hit", "Bloody Spore: Hit");
+        add("terra_entity.subtitle.drippler_death", "Drippler: Death");
+        add("terra_entity.subtitle.drippler_hurt", "Drippler: Hurt");
+        add("terra_entity.subtitle.metal_death", "Metal Mob: Death");
+        add("terra_entity.subtitle.metal_hurt", "Metal Mob: Hurt");
+        add("terra_entity.subtitle.visual_neuron_death", "Visual Neuron: Death");
+        add("terra_entity.subtitle.visual_neuron_hurt", "Visual Neuron: Hurt");
+        add("terra_entity.subtitle.dig_sound", "Worm Creature: Digging");
+        add("terra_entity.subtitle.giant_shelly_death", "Giant Shelly: Death");
+        add("terra_entity.subtitle.giant_shelly_free_0", "Giant Shelly: Rolling");
+        add("terra_entity.subtitle.giant_shelly_free_1", "Giant Shelly: Crawling");
+        add("terra_entity.subtitle.giant_shelly_hurt", "Giant Shelly: Hurt");
+        add("terra_entity.subtitle.tr_zombie_death", "Zombie: Death");
+        add("terra_entity.subtitle.tr_skeleton_hurt", "Skeleton: Hurt");
+        add("terra_entity.subtitle.waving", "Player: Waving");
+        add("terra_entity.subtitle.use_mounts", "Player: Summon Mount");
+        add("terra_entity.subtitle.decayeder_ambient", "Decayeder: Rubbing Body");
+        add("terra_entity.subtitle.decayeder_death", "Decayeder: Death");
+        add("terra_entity.subtitle.decayeder_hurt", "Decayeder: Hurt");
+        add("terra_entity.subtitle.decayeder_step", "Decayeder: Footsteps");
+        add("terra_entity.subtitle.whip_attack", "Whip: Lash");
+        add("terra_entity.subtitle.routine_summon", "Summon: Summon");
+        add("terra_entity.subtitle.summon_hornet", "Hornet: Summon");
+        add("terra_entity.subtitle.summon_eye", "Flying Summon: Summon");
+        add("terra_entity.subtitle.summon_imp", "Imp: Summon");
     }
 }
