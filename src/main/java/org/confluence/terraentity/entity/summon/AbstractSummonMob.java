@@ -30,7 +30,12 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
         super(entityType, level);
     }
 
-/* Collision Attack API */
+    @Override
+    public boolean fireImmune() {
+        return true;
+    }
+
+    /* Collision Attack API */
 
     CollisionProperties collisionProperties = new CollisionProperties(5,5,0.75f);
 

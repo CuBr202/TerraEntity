@@ -2,7 +2,6 @@ package org.confluence.terraentity.entity.util.trail;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
 
 public class PositionPoseProperties {
     public Vec3 position;

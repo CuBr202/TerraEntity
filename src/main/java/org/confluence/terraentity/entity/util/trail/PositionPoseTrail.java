@@ -214,6 +214,7 @@ public abstract class PositionPoseTrail<T> implements ITrail<T> {
 //            Vec3 side = dir.cross(camDir).normalize();
             float rotx = p.xrot * 0.017453292F;
             float roty = -p.yrot * 0.017453292F;
+
             Vector3f d = new Vector3f(0,0,1);
             new Quaternionf().rotateY(roty).rotateX(rotx).transform(d);
 

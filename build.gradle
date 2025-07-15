@@ -187,7 +187,7 @@ dependencies {
 
     compileOnly "net.fabricmc.fabric-api:fabric-renderer-api-v1:6.0.2+75fa737a29"
 
-
+    runtimeOnly "curse.maven:meowmere-1304066:6771326"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
