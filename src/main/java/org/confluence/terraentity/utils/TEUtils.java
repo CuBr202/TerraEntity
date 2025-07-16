@@ -112,8 +112,8 @@ public final class TEUtils {
      * @return 返回朝向对应角度（yaw、pitch）的单位向量
      */
     public static Vec3 rotToDir(float yaw, float pitch) {
-        float yawRad = (float) Math.toRadians(yaw);
-        float pitchRad = (float) Math.toRadians(pitch);
+        float yawRad = yaw * Mth.DEG_TO_RAD;
+        float pitchRad = pitch * Mth.DEG_TO_RAD;
         // Mth类的三角函数优化较好
         double y = -1 * Mth.sin(pitchRad);
         double div = Mth.cos(pitchRad);
