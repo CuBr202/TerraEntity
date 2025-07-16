@@ -35,7 +35,7 @@ public class AdapterUtils {
     /**
      * 实际上bus={@link net.neoforged.fml.common.EventBusSubscriber.Bus#GAME}
      */
-    public static <T extends Event> T postModEvent(T event){
+    public static <T extends Event> T postGameEvent(T event){
         return NeoForge.EVENT_BUS.post(event);
     }
 

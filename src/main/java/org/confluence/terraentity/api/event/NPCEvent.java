@@ -160,7 +160,7 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
      * <p>用于替换npc的brain
      * <p>因此所有的ai必须继承自{@link NPCAi}
      */
-    public static class NPCBrainCollector implements ICancellableEvent {
+    public static class NPCBrainCollector {
 
         NPCAi replace;
         AbstractTerraNPC npc;

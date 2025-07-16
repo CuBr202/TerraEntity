@@ -46,7 +46,7 @@ public class DialogScreen extends Screen {
         if(holder instanceof AbstractTerraNPC npc){
             String s = NPCDialogs.Loader.getInstance().getRandomDialog(npc.getRandom(), npc.getType());
             if (s !=null) {
-                dialogText= AdapterUtils.postModEvent(new NPCEvent.NPCDialogEvent(npc,Component.translatable( s))).getNeoDialog ();
+                dialogText= AdapterUtils.postGameEvent(new NPCEvent.NPCDialogEvent(npc,Component.translatable( s))).getNeoDialog ();
 
             }
         }
