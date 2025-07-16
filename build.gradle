@@ -185,7 +185,10 @@ dependencies {
     compileOnly "curse.maven:sodium-394468:6382651"
 //    runtimeOnly "curse.maven:sodium-394468:6382651"
 
-    compileOnly "net.fabricmc.fabric-api:fabric-renderer-api-v1:6.0.2+75fa737a29"
+    compileOnly "curse.maven:dynamiclights-reforged-551736:5807536"
+    runtimeOnly "curse.maven:dynamiclights-reforged-551736:5807536"
+
+//    compileOnly "net.fabricmc.fabric-api:fabric-renderer-api-v1:6.0.2+75fa737a29"
 
     runtimeOnly "curse.maven:meowmere-1304066:6771326"
 }

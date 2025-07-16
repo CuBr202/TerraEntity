@@ -9,8 +9,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.confluence.terraentity.entity.util.trail.player.ColorfulItemInHandTrail;
 import org.confluence.terraentity.entity.util.trail.player.ItemInHandTail;
 import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.init.item.TESummonItems;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -71,6 +73,12 @@ public class ItemInHandTrailAttachment implements INBTSerializable<Tag> {
     public static void register(Item item, ItemInHandTail trail){
         registry.put(item, new Operator((player) -> true, trail));
     }
+
+    public static void registerDefault(){
+        ItemInHandTrailAttachment.register(TESummonItems.TERRAPRISMA.asItem(), new ColorfulItemInHandTrail(1, 0.15f, 8));
+        ItemInHandTrailAttachment.register(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.asItem(), new ItemInHandTail(1, 0.15f, 0x0000FF, 8));
+    }
+
 
     @Nullable
     public static ItemInHandTail updateTrails(Player player){

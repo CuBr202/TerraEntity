@@ -22,46 +22,25 @@ import org.confluence.terraentity.client.init.model.WhipModelRegister;
 import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.client.particle.SpitParticle;
 import org.confluence.terraentity.config.ClientConfig;
-import org.confluence.terraentity.entity.util.trail.player.ColorfulItemInHandTrail;
-import org.confluence.terraentity.entity.util.trail.player.ItemInHandTail;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEMenus;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.block.TEFigureBlocks;
 import org.confluence.terraentity.init.entity.*;
-import org.confluence.terraentity.init.item.TESummonItems;
+import org.confluence.terraentity.integration.sodium_dynamic_light.SDHelper;
 
 import static org.confluence.terraentity.client.util.RegisterUtils.registerModel;
 
 
 @EventBusSubscriber(modid = TerraEntity.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ModClientEvent {
-/*
-    public static final BlockColor HALLOW_LEAVES_COLOR = (blockState, getter, pos, tint) -> {
-        if (pos == null) return -1;
-
-        IntegerRGB x = hallowMixture(Math.abs(pos.getX()) % 12);
-        IntegerRGB y = hallowMixture(Math.abs(pos.getY()) % 12);
-        IntegerRGB z = hallowMixture(Math.abs(pos.getZ()) % 12);
-
-        return x.mixture(y, 0.5F).mixture(z, 0.5F).getPrefab();
-    };
-    public static final ItemColor SIMPLE = (pStack, pTintIndex) -> ColoredItem.getColor(pStack);
-
-    private static IntegerRGB hallowMixture(int m) {
-        if (m <= 4) return IntegerRGB.HALLOW_A.mixture(IntegerRGB.HALLOW_B, m * 0.25F);
-        if (m <= 8) return IntegerRGB.HALLOW_B.mixture(IntegerRGB.HALLOW_C, (m - 4) * 0.25F);
-        return IntegerRGB.HALLOW_C.mixture(IntegerRGB.HALLOW_A, (m - 8) * 0.25F);
-    }
-*/
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             ClientConfig.load();
-            ItemInHandTrailAttachment.register(TESummonItems.TERRAPRISMA.asItem(), new ColorfulItemInHandTrail(1, 0.15f, 8));
-            ItemInHandTrailAttachment.register(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.asItem(), new ItemInHandTail(1, 0.15f, 0x0000FF, 8));
-
+            ItemInHandTrailAttachment.registerDefault();
+            SDHelper.registerDynamicLight();
         });
     }
 
