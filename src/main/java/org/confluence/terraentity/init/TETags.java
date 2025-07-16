@@ -36,7 +36,7 @@ public class TETags {
     }
 
     public static class Biomes{
-        public static final TagKey<Biome> IS_GOBLIN_SPAWN = registerBiome("is_goblin_spawn");
+        public static final TagKey<Biome> IS_EVER_WHERE = registerBiome("is_ever_where");
 
     }
 

@@ -200,13 +200,24 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
     }
 
     /* Attack API */
+
+    default float summon_getAttackDamage(Entity entity, ServerLevel serverLevel,  DamageSource damageSource){
+        float f = (float)asEntity().getAttributeValue(Attributes.ATTACK_DAMAGE);
+        f = EnchantmentHelper.modifyDamage(serverLevel, asEntity().getWeaponItem(), entity, damageSource, f);
+        return f;
+    }
+
+    default DamageSource summon_getDamageSource(){
+        return asEntity().damageSources().source(TETags.DamageTypes.SUMMONER, summon_getOwner());
+    }
+
     /**简单攻击*/
     default boolean summon_doHurtTarget(Entity entity) {
-        float f = (float)asEntity().getAttributeValue(Attributes.ATTACK_DAMAGE);
-        DamageSource damagesource = asEntity().damageSources().source(TETags.DamageTypes.SUMMONER, summon_getOwner());
+        float f = 0;
+        DamageSource damagesource = summon_getDamageSource();
         Level var5 = asEntity().level();
         if (var5 instanceof ServerLevel serverlevel) {
-            f = EnchantmentHelper.modifyDamage(serverlevel, asEntity().getWeaponItem(), entity, damagesource, f);
+            f = summon_getAttackDamage(entity, serverlevel, damagesource);
         }
         // 事件统一处理
 //        f += (float) summon_getOwner().getAttributeValue(TEAttributes.MARK_DAMAGE);

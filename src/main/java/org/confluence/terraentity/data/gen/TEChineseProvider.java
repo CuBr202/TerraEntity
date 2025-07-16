@@ -409,7 +409,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("tooltip.terra_entity.house_detect.message.no_dynamic_light", "房间缺少光源!");
         add("tooltip.terra_entity.house_detect.message.found_house", "这个房间很合适!");
         add("tooltip.terra_entity.house_detect.info", "按下shift+右键 切换模式");
-        add("tooltip.terra_entity.chester.desc", "按下shift+右键 切换目标容器");
+        add("tooltip.terra_entity.chester.desc", "按下shift+右键 切换目标容器. 你可以用它绑定一个容器");
         add("tooltip.terra_entity.chester.current", "当前容器");
 
 

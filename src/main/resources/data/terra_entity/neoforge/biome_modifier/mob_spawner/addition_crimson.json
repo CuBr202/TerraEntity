@@ -1,0 +1,33 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "minecraft:nether_wastes",
+    "minecraft:crimson_forest"
+  ],
+  "spawners": [
+    {
+      "type": "terra_entity:blood_crawler",
+      "maxCount": 1,
+      "minCount": 1,
+      "weight": 60
+    },
+    {
+      "type": "terra_entity:bloody_spore",
+      "maxCount": 1,
+      "minCount": 1,
+      "weight": 30
+    },
+    {
+      "type": "terra_entity:crimson_kemera",
+      "maxCount": 1,
+      "minCount": 1,
+      "weight": 60
+    },
+    {
+      "type": "terra_entity:face_monster",
+      "maxCount": 1,
+      "minCount": 1,
+      "weight": 60
+    }
+  ]
+}

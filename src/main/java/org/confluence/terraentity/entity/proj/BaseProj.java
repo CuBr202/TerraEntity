@@ -25,6 +25,8 @@ import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
+import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.registries.track.ITrackType;
@@ -263,6 +265,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     }
 
     public DamageSource getDamageSource(LivingEntity hurter){
+        if(getOwner() instanceof ISummonMob<?> mob) {
+            return TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMONER, mob.summon_getOwner());
+        }
         if(getOwner() != null && getOwner() instanceof LivingEntity living){
             return damageSources().mobProjectile(this, living);
         }

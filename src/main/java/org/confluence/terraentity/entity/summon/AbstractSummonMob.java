@@ -163,7 +163,7 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
                 .add(Attributes.MAX_HEALTH)
                 .add(Attributes.ARMOR)
                 .add(Attributes.MOVEMENT_SPEED, 0.5f)
-                .add(Attributes.FOLLOW_RANGE)
+                .add(Attributes.FOLLOW_RANGE, 16)
                 .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE)
                 .add(Attributes.KNOCKBACK_RESISTANCE)
                 .add(Attributes.ATTACK_KNOCKBACK)

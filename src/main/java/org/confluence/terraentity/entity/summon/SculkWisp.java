@@ -4,6 +4,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
@@ -31,7 +32,8 @@ public class SculkWisp extends FlyRangeAttackSummonMob<BaseProj<?>> {
         }
 
         this.playSound(SoundEvents.WARDEN_SONIC_BOOM, 3.0F, 1.0F);
-        if (target.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE))) {
+        DamageSource damageSource = summon_getDamageSource();
+        if (level() instanceof ServerLevel serverLevel && target.hurt(damageSource, summon_getAttackDamage(target, serverLevel, damageSource))) {
             double d1 = 0.5 * (1.0 - target.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
             double d0 = 2.5 * (1.0 - target.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
             target.push(vec32.x() * d0, vec32.y() * d1, vec32.z() * d0);

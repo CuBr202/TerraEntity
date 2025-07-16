@@ -4,14 +4,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.utils.TEUtils;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
@@ -19,12 +21,9 @@ public class SummonFinch  extends AbstractSummonMob<SummonFinch> implements Flyi
 
     int cooledDown;
 
-    public SummonFinch(EntityType<? extends TamableAnimal> entityType, Level level) {
+    public SummonFinch(EntityType<? extends SummonFinch> entityType, Level level) {
         super(entityType, level);
-        this.getAttribute(Attributes.GRAVITY).setBaseValue(0);
-        this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(16);
-        this.getAttribute(Attributes.SAFE_FALL_DISTANCE).setBaseValue(1024);
-        this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(0);
+
         this.moveControl = new FlyingMoveControl(this, 20, true);
 
     }
@@ -36,6 +35,15 @@ public class SummonFinch  extends AbstractSummonMob<SummonFinch> implements Flyi
         this.goalSelector.addGoal(1, new FinchAttackGoal(this));
 
         this.goalSelector.addGoal(9, new FloatGoal(this));
+    }
+
+    @Override
+    protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
+        FlyingPathNavigation flyingpathnavigation = new FlyingPathNavigation(this, level);
+        flyingpathnavigation.setCanOpenDoors(false);
+        flyingpathnavigation.setCanFloat(true);
+        flyingpathnavigation.setCanPassDoors(true);
+        return flyingpathnavigation;
     }
 
     @Override

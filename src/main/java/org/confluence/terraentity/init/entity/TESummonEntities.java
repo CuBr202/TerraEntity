@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.IronGolemRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.item.Items;
 import net.neoforged.api.distmarker.Dist;
@@ -79,7 +80,7 @@ public class TESummonEntities {
         event.put(CHESTER.get(), AbstractSummonMob.createAttributes().build());
 
         // sommon
-        event.put(SUMMON_FINCH.get(), AbstractSummonMob.createAttributes().build());
+        event.put(SUMMON_FINCH.get(), AbstractSummonMob.createAttributes().add(Attributes.GRAVITY, 0).add(Attributes.SAFE_FALL_DISTANCE, 1024).add(Attributes.ATTACK_KNOCKBACK, 0).build());
         event.put(SUMMON_SLIME.get(), AbstractSummonMob.createAttributes().build());
         event.put(SUMMON_IRON_GOLEM.get(), IronGolem.createAttributes().build());
         event.put(SUMMON_HORNET.get(), AbstractSummonMob.createAttributes().build());
