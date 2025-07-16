@@ -8,6 +8,7 @@ import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import net.neoforged.neoforge.common.loot.AddTableLootModifier;
 import net.neoforged.neoforge.common.loot.LootTableIdCondition;
@@ -47,7 +48,7 @@ public class TELootModifyProvider extends GlobalLootModifierProvider {
         LootItemCondition condition;
         if (lootTableId != null) {
             condition = LootTableIdCondition.builder(lootTableId.location()).build();
-            this.add(name, new AddTableLootModifier(new LootItemCondition[]{condition}, lootTableAdd), new ModLoadedCondition(ConfluenceMagicLib.CONFLUENCE_ID));
+            this.add(name, new AddTableLootModifier(new LootItemCondition[]{condition}, lootTableAdd), new NotCondition(new ModLoadedCondition(ConfluenceMagicLib.CONFLUENCE_ID)));
         }else{
             TerraEntity.LOGGER.warn("Loot table id is null for {}", name);
         }
