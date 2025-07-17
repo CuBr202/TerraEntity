@@ -53,7 +53,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.NYMPH.get(), "宁芙");
         add(TEMonsterEntities.DRIPPLER.get(), "滴滴怪");
         add(TEMonsterEntities.BLOOD_ZOMBIE.get(), "血腥僵尸");
-        add(TEMonsterEntities.SNOW_FLINX.get(), "雪怪");
+        add(TEMonsterEntities.SNOW_FLINX.get(), "小雪怪");
 
         add(TEMonsterEntities.PIRANHA.get(), "食人鱼");
 
@@ -113,6 +113,8 @@ public class TEChineseProvider extends LanguageProvider {
 
 
         // 召唤物
+        add(TESummonEntities.CHESTER.get(), "切斯特");
+
         add(TESummonEntities.SUMMON_FINCH.get(), "雀宝宝");
         add(TESummonEntities.SUMMON_SLIME.get(), "史莱姆宝宝");
         add(TESummonEntities.SUMMON_IRON_GOLEM.get(), "i-32型铁傀儡");
@@ -220,6 +222,8 @@ public class TEChineseProvider extends LanguageProvider {
         // 动物
         add(TEAnimals.SQUIRREL.get(), "松鼠");
         add(TEAnimals.BUNNY.get(), "兔兔");
+        add(TEAnimals.JEWEL_SQUIRREL.get(), "宝石松鼠");
+        add(TEAnimals.JEWEL_BUNNY.get(), "宝石兔");
         add(TEAnimals.BOOM_BUNNY.get(), "爆炸兔");
         add(TEAnimals.DUCK.get(), "鸭子");
         add(TEAnimals.BIRD.get(), "鸟");
@@ -287,22 +291,26 @@ public class TEChineseProvider extends LanguageProvider {
 
         // 动物
         add(TESpawnEggItems.SQUIRREL_SPAWN_EGG.get(), "松鼠刷怪蛋");
+        add(TESpawnEggItems.JEWEL_SQUIRREL_SPAWN_EGG.get(), "宝石松鼠刷怪蛋");
         add(TESpawnEggItems.BOOM_BUNNY_SPAWN_EGG.get(), "炸弹兔刷怪蛋");
         add(TESpawnEggItems.BUNNY_SPAWN_EGG.get(), "兔兔刷怪蛋");
-        add(TESpawnEggItems.DUCK_EGG.get(), "鸭子刷怪蛋");
-        add(TESpawnEggItems.BIRD_EGG.get(), "鸟刷怪蛋");
-        add(TESpawnEggItems.BLUE_JAY_EGG.get(), "冠蓝鹊刷怪蛋");
-        add(TESpawnEggItems.CARDINAL_EGG.get(), "红鹊刷怪蛋");
+        add(TESpawnEggItems.JEWEL_BUNNY_SPAWN_EGG.get(), "宝石兔刷怪蛋");
+        add(TESpawnEggItems.DUCK_SPAWN_EGG.get(), "鸭子刷怪蛋");
+        add(TESpawnEggItems.BIRD_SPAWN_EGG.get(), "鸟刷怪蛋");
+        add(TESpawnEggItems.BLUE_JAY_SPAWN_EGG.get(), "冠蓝鹊刷怪蛋");
+        add(TESpawnEggItems.CARDINAL_SPAWN_EGG.get(), "红鹊刷怪蛋");
 
 
         // 召唤杖
+        add(TESummonItems.CHESTER_STAFF.get(), "眼骨");
+
         add(TESummonItems.FINCH_STAFF.get(), "雀杖");
         add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
         add(TESummonItems.IRON_GOLEM_STAFF.get(), "铁傀儡法杖");
         add(TESummonItems.HORNET_STAFF.get(), "黄蜂法杖");
         add(TESummonItems.SCULK_WISP_STAFF.get(), "幽匿法杖");
         add(TESummonItems.IMP_STAFF.get(), "小鬼法杖");
-        add(TESummonItems.SNOW_FLINX_STAFF.get(), "雪怪法杖");
+        add(TESummonItems.SNOW_FLINX_STAFF.get(), "小雪怪法杖");
 
 
         add(TESummonItems.SUMMON_WOODEN_SWORD_STAFF.get(), "青冥");
@@ -372,6 +380,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.server.enhance_all_monster", "增强所有怪物");
         add("terra_entity.configuration.server.monster_attributes_multiplier_health", "Monster属性倍率-生命");
         add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster属性倍率-伤害");
+        add("terra_entity.configuration.server.spawn_without_light", "无视光照生成怪物");
+
         add("terra_entity.configuration.server.disable_builtin_health_attack_modifier", "禁用内置的属性设置");
 
 
@@ -384,6 +394,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.client.generate_projectile_particle", "生成弹幕粒子");
 
         // Tooltip
+        add("tooltic.terra_entity.summon_item.desc", "长按以解除所有召唤物");
+
         add("tooltip.terra_entity.summon_item_cost", "仆从占用: %s");
         add("tooltip.terra_entity.summon_item_entity", "仆从类型: %s");
         add("tooltip.terra_entity.summon_info", "仆从栏位: %d / %d");
@@ -404,7 +416,10 @@ public class TEChineseProvider extends LanguageProvider {
         add("tooltip.terra_entity.house_detect.message.too_small", "这个房间太小了!");
         add("tooltip.terra_entity.house_detect.message.no_dynamic_light", "房间缺少光源!");
         add("tooltip.terra_entity.house_detect.message.found_house", "这个房间很合适!");
-        add("tooltip.terra_entity.house_detect.info", "按下shift+右键切换模式");
+        add("tooltip.terra_entity.house_detect.info", "按下shift+右键 切换模式");
+        add("tooltip.terra_entity.chester.desc", "按下shift+右键 切换目标容器. 你可以用它绑定一个容器");
+        add("tooltip.terra_entity.chester.current", "当前容器");
+
 
 
             // boomerang
@@ -442,6 +457,42 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.effect.strategy.bei_dou", "随机5种效果:\n     霜冻 IV 10秒\n     烈火焚身 IV 10秒\n     凋零 IV 10秒\n     中毒 IV 10秒\n     瞬间伤害 VIII");
 
         add("terra_entity.effect.strategy.strength", "愤怒");
+
+        // sound
+        add("terra_entity.subtitle.routine_hurt", "怪物：受伤");
+        add("terra_entity.subtitle.routine_death", "怪物：死亡");
+        add("terra_entity.subtitle.roar", "BOSS：吼叫");
+        add("terra_entity.subtitle.hurried_roaring", "BOSS：急促吼叫");
+        add("terra_entity.subtitle.blood_crawler_death", "血爬虫：死亡");
+        add("terra_entity.subtitle.blood_crawler_free", "血爬虫：血液流动");
+        add("terra_entity.subtitle.blood_crawler_hurt", "血爬虫：受伤");
+        add("terra_entity.subtitle.bloody_spore_death", "血腥芽孢：死亡");
+        add("terra_entity.subtitle.bloody_spore_fuse", "血腥芽孢：孕育");
+        add("terra_entity.subtitle.bloody_spore_hit", "血腥芽孢：受伤");
+        add("terra_entity.subtitle.drippler_death", "滴滴怪：死亡");
+        add("terra_entity.subtitle.drippler_hurt", "滴滴怪：受伤");
+        add("terra_entity.subtitle.metal_death", "机械怪物：死亡");
+        add("terra_entity.subtitle.metal_hurt", "机械怪物：受伤");
+        add("terra_entity.subtitle.visual_neuron_death", "视神经元：死亡");
+        add("terra_entity.subtitle.visual_neuron_hurt", "视神经元：受伤");
+        add("terra_entity.subtitle.dig_sound", "蠕虫生物：挖掘");
+        add("terra_entity.subtitle.giant_shelly_death", "巨型卷壳怪：死亡");
+        add("terra_entity.subtitle.giant_shelly_free_0", "巨型卷壳怪：滚动");
+        add("terra_entity.subtitle.giant_shelly_free_1", "巨型卷壳怪：爬行");
+        add("terra_entity.subtitle.giant_shelly_hurt", "巨型卷壳怪：受伤");
+        add("terra_entity.subtitle.tr_zombie_death", "僵尸：死亡");
+        add("terra_entity.subtitle.tr_skeleton_hurt", "骷髅：受伤");
+        add("terra_entity.subtitle.waving", "玩家：挥动");
+        add("terra_entity.subtitle.use_mounts", "玩家：召唤坐骑");
+        add("terra_entity.subtitle.decayeder_ambient", "腐骴：摩擦身体");
+        add("terra_entity.subtitle.decayeder_death", "腐骴：死亡");
+        add("terra_entity.subtitle.decayeder_hurt", "腐骴：受伤");
+        add("terra_entity.subtitle.decayeder_step", "腐骴：脚步声");
+        add("terra_entity.subtitle.whip_attack", "鞭子：抽打");
+        add("terra_entity.subtitle.routine_summon", "召唤物：召唤");
+        add("terra_entity.subtitle.summon_hornet", "黄蜂：召唤");
+        add("terra_entity.subtitle.summon_eye", "飞行召唤物：召唤");
+        add("terra_entity.subtitle.summon_imp", "小鬼：召唤");
 
         // 车万女仆
         add("task.terra_entity.boomerang_attack", "回旋镖攻击");

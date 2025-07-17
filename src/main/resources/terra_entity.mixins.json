@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "terra_entity.refmap.json",
   "mixins": [
+    "container.AbstractContainerMenuMixin",
     "BossEventMixin",
     "ExplosionDamageCalculatorMixin",
     "ExplosionMixin",
@@ -20,7 +21,8 @@
     "accessor.LevelAccessor",
     "accessor.ProjectileWeaponAccessor",
     "accessor.SlimeAccessor",
-    "client.ServerChunkLoadingManagerMixin"
+    "client.ServerChunkLoadingManagerMixin",
+    "container.ChestMenuMixin"
   ],
   "client": [
     "accessor.GameRendererAccessor",
@@ -29,6 +31,7 @@
     "client.ClientLevelMixin",
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
+    "client.ItemInHandLayerMixin",
     "client.ItemRendererMixin",
     "client.LocalPlayerMixin",
     "client.ShaderInstanceMixin"

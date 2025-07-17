@@ -46,5 +46,4 @@ public class BoomBunny extends Bunny{
                 1, true, Level.ExplosionInteraction.MOB);
         this.kill();
     }
-
 }

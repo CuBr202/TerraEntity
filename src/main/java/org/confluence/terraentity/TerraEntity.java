@@ -50,6 +50,7 @@ public class TerraEntity {
 
         TEEnchantments.ENCHANTMENTS.register(modEventBus);
         TELootModifier.GLOBAL_LOOT_MODIFIER_SERIALIZER.register(modEventBus);
+        TELoots.register(modEventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigRegistry.register());
 //        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SPEC);

@@ -10,4 +10,8 @@ public interface IPlayer {
     ITradeHolder terra_entity$getTradeHolder(); //
 
     void terra_entity$setTradeHolder(ITradeHolder  entity); //
+
+    boolean terra_entity$isInfiniteInteractBlock();
+
+    void terra_entity$setInfiniteInteractBlock(boolean flag);
 }

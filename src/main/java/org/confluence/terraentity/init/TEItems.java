@@ -1,16 +1,20 @@
 package org.confluence.terraentity.init;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.init.item.*;
 import org.confluence.terraentity.item.HouseDetectItem;
+import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.function.Supplier;
 
@@ -39,8 +43,11 @@ public class TEItems {
                         TESummonItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEWhipItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEBoomerangItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                        TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEItems.TOOLS.getEntries().forEach(item -> output.accept(item.get()));
+                        TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        HolderLookup.RegistryLookup<Enchantment> registryLookup = itemDisplayParameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
+                        output.accept(TEUtils.enchantedBook(registryLookup, TEEnchantments.MULTI_BOOMERANG.getKey(), 3));
+                        output.accept(TEUtils.enchantedBook(registryLookup, TEEnchantments.WHIP_SWEEP.getKey(), 1));
                     })
                     //.withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("terra_moment", "tab")))
                     .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("enemybanner", "enemybanner_tab")))

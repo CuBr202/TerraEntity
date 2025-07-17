@@ -21,9 +21,9 @@ public class TELootTableProvider extends LootTableProvider {
     public static LootTableProvider getProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProviderFuture) {
         return new LootTableProvider(output, Collections.emptySet(),
                 List.of(
-                        new LootTableProvider.SubProviderEntry(TEBlockLootProvider::new, LootContextParamSets.BLOCK),
-                        new LootTableProvider.SubProviderEntry(TEEntityLootProvider::new, LootContextParamSets.ENTITY),
-                        new LootTableProvider.SubProviderEntry(TESubLoot::new, LootContextParamSets.EMPTY),
+                        new SubProviderEntry(TEBlockLootProvider::new, LootContextParamSets.BLOCK),
+                        new SubProviderEntry(TEEntityLootProvider::new, LootContextParamSets.ENTITY),
+                        new SubProviderEntry(TESubLoot::new, LootContextParamSets.EMPTY),
                         new SubProviderEntry(()-> {
                             try {
                                 return new TENPCLoot(lookupProviderFuture.get());

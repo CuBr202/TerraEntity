@@ -26,7 +26,7 @@ public record House(String uuid, BlockPos min, BlockPos max, BlockPos center) {
         return pos.getX() >= min.getX() && pos.getX() <= max.getX() && pos.getZ() >= min.getZ() && pos.getZ() <= max.getZ();
     }
 
-    public static Codec<House> CODEC = RecordCodecBuilder.create((builder) -> builder.group(
+    public static final Codec<House> CODEC = RecordCodecBuilder.create((builder) -> builder.group(
             Codec.STRING.fieldOf("uuid").forGetter(House::uuid),
             BlockPos.CODEC.fieldOf("min").forGetter(House::min),
             BlockPos.CODEC.fieldOf("max").forGetter(House::max),

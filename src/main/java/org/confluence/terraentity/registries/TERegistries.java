@@ -8,6 +8,10 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TEEffectStrategies;
+import org.confluence.terraentity.registries.chester.ChesterConditionalType;
+import org.confluence.terraentity.registries.chester.ChesterConditionalTypes;
+import org.confluence.terraentity.registries.chester.ChesterType;
+import org.confluence.terraentity.registries.chester.ChesterTypes;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
@@ -49,8 +53,11 @@ public class TERegistries {
         TradeTaskProviderTypes.TYPES.register(bus);
         TradeLockProviderTypes.TYPES.register(bus);
         TradeGeneratorProviderTypes.TYPES.register(bus);
-        TEDataComponentTypes.register(bus);
+        ChesterTypes.TYPES.register(bus);
+        ChesterConditionalTypes.TYPES.register(bus);
 
+
+        TEDataComponentTypes.register(bus);
     }
 
     /**
@@ -113,6 +120,22 @@ public class TERegistries {
      */
     public static class TradeGeneratorProviders {
         public static final ResourceKey<Registry<TradeGeneratorProvider>> KEY = createRegistryKey(TerraEntity.space("trade_generator_provider"));
+
+    }
+
+    /**
+     * 切斯特全局存储器注册表，用来给切斯特添加可以打开的全局菜单
+     */
+    public static class ChesterTypesProviders {
+        public static final ResourceKey<Registry<ChesterType>> KEY = createRegistryKey(TerraEntity.space("chester_type"));
+
+    }
+
+    /**
+     * 切斯特方块容器记录器，给切斯特添加可以打开的方块容器
+     */
+    public static class ChesterConditionalTypesProviders {
+        public static final ResourceKey<Registry<ChesterConditionalType>> KEY = createRegistryKey(TerraEntity.space("chester_conditional_type"));
 
     }
 }

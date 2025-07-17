@@ -18,7 +18,6 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.util.IVanillaVariant;
-import org.confluence.terraentity.entity.util.IVariant;
 import org.confluence.terraentity.init.TESounds;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animation.RawAnimation;

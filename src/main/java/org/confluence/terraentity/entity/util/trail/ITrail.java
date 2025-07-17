@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.confluence.terraentity.client.util.ShaderUtil;
@@ -22,11 +21,19 @@ import java.util.Queue;
  * 拖尾效果接口
  * @param <T> 拖尾容器持有者
  */
-public interface ITrail<T> extends ITrailKind<T, Vec3> {
+public interface ITrail<T> {
 
-    record TrailProperties(int size, float widthScale, float fadeWidthFactor, int colorFrom, int colorTo) {
-    }
+    void generateTrail(T holder, int ticks);
 
+    TrailProperties getTrailProperties();
+
+
+    /**
+     * 默认使用的位置队列，如果需要实现更好的拖尾效果，不应该使用这个方法
+     * @param holder 持有者
+     * @param trailsQueue 位置队列
+     * @param entityPos 持有者位置
+     */
     @OnlyIn(Dist.CLIENT)
     default void renderTrail(T holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         Iterator<Vec3> trails = trailsQueue.iterator();
@@ -37,16 +44,16 @@ public interface ITrail<T> extends ITrailKind<T, Vec3> {
 
         poseStack.pushPose();
         Matrix4f matrix4f = poseStack.last().pose();
-        VertexConsumer buffer = bufferSource.getBuffer(ShaderUtil.TRAIL_RENDER_TYPE);
+        VertexConsumer buffer = bufferSource.getBuffer(ShaderUtil.TRAIL_RENDER_TYPE.get());
 
         Minecraft mc = Minecraft.getInstance();
         Vec3 camDir =  new Vec3(mc.gameRenderer.getMainCamera().getLookVector());
 
-        int color = getTrailProperties().colorTo;
+        int color = getTrailProperties().colorTo();
         int red = FastColor.ARGB32.red(color);
         int green = FastColor.ARGB32.green(color);
         int blue = FastColor.ARGB32.blue(color);
-        int colorFrom = getTrailProperties().colorFrom;
+        int colorFrom = getTrailProperties().colorFrom();
         int redFrom = FastColor.ARGB32.red(colorFrom);
         int greenFrom = FastColor.ARGB32.green(colorFrom);
         int blueFrom = FastColor.ARGB32.blue(colorFrom);
@@ -68,7 +75,7 @@ public interface ITrail<T> extends ITrailKind<T, Vec3> {
             Vec3 dir = pos1.subtract(pos0).normalize();
 
             float progress = i / (float) size;
-            float width = properties.widthScale * progress;
+            float width = properties.widthScale() * progress;
             int alpha = (int) (200 * progress);
             int lerpRed = (int) Mth.lerp(progress, red, redFrom);
             int lerpGreen = (int) Mth.lerp(progress, green, greenFrom);
@@ -81,8 +88,8 @@ public interface ITrail<T> extends ITrailKind<T, Vec3> {
             Vec3 left00;
             Vec3 right0 ;
             Vec3 right00;
-            Vec3 left11 = pos1.add(side.scale(+width * properties.fadeWidthFactor));
-                Vec3 right11 = pos1.add(side.scale(-width * properties.fadeWidthFactor));
+            Vec3 left11 = pos1.add(side.scale(+width * properties.fadeWidthFactor()));
+                Vec3 right11 = pos1.add(side.scale(-width * properties.fadeWidthFactor()));
             Vec3 left1 = pos1.add(side.scale(+width));
             Vec3 right1 = pos1.add(side.scale(-width));
             if(o0 != null) {
@@ -130,6 +137,11 @@ public interface ITrail<T> extends ITrailKind<T, Vec3> {
     static void addVertex(VertexConsumer buffer, Matrix4f matrix, Vec3 pos, int argb) {
         buffer.vertex(matrix, (float) pos.x, (float) pos.y, (float) pos.z)
                 .color(argb).endVertex();
+    }
+
+    static VertexConsumer buildVertex(VertexConsumer buffer, Matrix4f matrix, Vec3 pos, int argb) {
+        return buffer.vertex(matrix, (float) pos.x, (float) pos.y, (float) pos.z)
+                .color(argb);
     }
 
 }

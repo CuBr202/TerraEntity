@@ -14,6 +14,8 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.Blocks;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.data.gen.AbstractExistCodecProvider;
@@ -24,15 +26,18 @@ import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
+import org.confluence.terraentity.init.item.TESummonItems;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.TradeProperties;
 import org.confluence.terraentity.registries.npc_trade.variant.*;
 import org.confluence.terraentity.registries.npc_trade_list.ITradeGenerator;
+import org.confluence.terraentity.registries.npc_trade_list.variant.WeightMapGenerator;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.KillEntityLock;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.ProgressTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.RandomTradeTask;
 import org.confluence.terraentity.utils.TEItemUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,6 +111,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 .add(ItemTradeItemList.builder().addCost(Items.JUNGLE_SAPLING, 2).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build())
                 .add(ItemTradeItemList.builder().addCost(Items.ACACIA_SAPLING, 2).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build())
                 .add(ItemTradeItemList.builder().addCost(Items.DARK_OAK_SAPLING, 2).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 24).addResult(TESummonItems.SUMMON_WOODEN_SWORD_STAFF).build())
                 .build());
 
         shop(TENpcEntities.MERCHANT.getId(),builder()
@@ -132,6 +138,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 .add(ItemTradeItemList.builder().addCost(Items.ARROW, 4).addCost(Items.SPIDER_EYE, 1).addResult(TEItemUtil.make(Items.TIPPED_ARROW, 4, stack -> PotionUtils.setPotion(stack, Potions.POISON))).build())
                 .add(ItemTradeItemList.builder().addCost(Items.ARROW, 4).addCost(Items.SPIDER_EYE, 1).addResult(TEItemUtil.make(Items.TIPPED_ARROW, 4, stack -> PotionUtils.setPotion(stack, Potions.SLOWNESS))).build())
                 .add(ItemTradeItemList.builder().addCost(Items.ARROW, 4).addCost(Items.PHANTOM_MEMBRANE, 1).addResult(TEItemUtil.make(Items.TIPPED_ARROW, 4, stack -> PotionUtils.setPotion(stack, Potions.SLOW_FALLING))).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 48).addResult(TESummonItems.SUMMON_STONE_SWORD_STAFF).build())
                 .build());
 
 
@@ -199,6 +206,8 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.LIME_DYE,wool2dye).build())
                 .add(ItemTradeItemList.builder().addCost(ItemTags.WOOL,1).addResult(Items.YELLOW_DYE,wool2dye).build())
                 .build());
+
+        shop(TENpcEntities.MECHANIC.getId(),builder().build());
 
         shop(TENpcEntities.GUIDE.getId(),builder()
                 .add(TradeTask.create(new ProgressTradeTask(List.of(
@@ -273,7 +282,69 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 ))))
                 .build());
 
+        shop(TENpcEntities.TRAVELING_MERCHANT.getId(), new ComplexBuilder(
+                WeightMapGenerator.builder(6)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.LEATHER,10).build(), 50)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.COAL,10).build(), 50)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.COPPER_INGOT,10).build(), 50)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.IRON_INGOT,8).build(), 40)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.GOLD_INGOT,4).build(), 30)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.DIAMOND,2).build(), 10)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.REDSTONE,10).build(), 30)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.LAPIS_LAZULI,10).build(), 30)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.AMETHYST_CLUSTER, 4).build(), 30)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD, 64).addResult(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF).build(), 5)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD, 10).addResult(TESummonItems.CHESTER_STAFF).build(), 10)
 
+                        .build()
+        ).build());
+        shop(TENpcEntities.MECHANIC.getId(), builder()
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.REDSTONE,10).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Blocks.REPEATER,5).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Blocks.COMPARATOR,5).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Blocks.REDSTONE_LAMP,5).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Blocks.REDSTONE_TORCH,8).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 20).addResult(TEBoomerangItems.COMBAT_WRENCH).build())
+                .build());
+
+        shop(TENpcEntities.TRUFFLE.getId(), builder()
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 10).addResult(TEBoomerangItems.SHROOMERANG).build())
+                .add(ItemTradeItemList.builder().addCost(Items.BROWN_MUSHROOM, 10).addResult(Items.EMERALD).build())
+                .add(ItemTradeItemList.builder().addCost(Items.RED_MUSHROOM, 10).addResult(Items.EMERALD).build())
+                .build());
+
+        shop(TENpcEntities.CLOTHIER.getId(), builder()
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.IRON_HELMET).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.IRON_CHESTPLATE).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.IRON_LEGGINGS).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.IRON_BOOTS).build())
+                .build());
+
+        shop(TENpcEntities.WITCH_DOCTOR.getId(), builder()
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.HONEY_BOTTLE,8).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(TEItemUtil.make(Items.SPLASH_POTION, 1, stack -> PotionUtils.setPotion(stack, Potions.HEALING))).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(TEItemUtil.make(Items.SPLASH_POTION, 1, stack -> PotionUtils.setPotion(stack, Potions.HARMING))).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 64).addResult(TESummonItems.SUMMON_IRON_SWORD_STAFF).build())
+                .build());
+
+        shop(TENpcEntities.PARTY_GIRL.getId(), builder()
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(TEItemUtil.make(Items.FIREWORK_ROCKET, 3, stack ->
+                {
+                    FireworkRocketItem.setDuration(stack, (byte) 1);
+                    FireworkRocketItem.Shape.STAR.save(stack.getOrCreateTag());
+                }
+                )).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(TEItemUtil.make(Items.FIREWORK_ROCKET, 3, stack -> {
+                    FireworkRocketItem.setDuration(stack, (byte) 1);
+                    FireworkRocketItem.Shape.CREEPER.save(stack.getOrCreateTag());
+                })).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(TEItemUtil.make(Items.FIREWORK_ROCKET, 3, stack -> {
+                    FireworkRocketItem.setDuration(stack, (byte) 1);
+                    FireworkRocketItem.Shape.BURST.save(stack.getOrCreateTag());
+                })).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 64).addCost(Items.EMERALD, 32).addResult(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF).build())
+
+                .build());
     }
 
     @Override
@@ -282,8 +353,8 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
     }
 
     @Override
-    public String getName() {
-        return "npc_shop";
+    public @NotNull String getName() {
+        return "NPC Shop";
     }
 
 
@@ -292,7 +363,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
 //    }
 
     protected void shop(ResourceLocation id, NPCTradeManager manager) {
-        this.gen(id, manager);
+        this.gen(id.withPrefix("npc/shop/"), manager);
     }
     protected Builder builder() {
         return new Builder();

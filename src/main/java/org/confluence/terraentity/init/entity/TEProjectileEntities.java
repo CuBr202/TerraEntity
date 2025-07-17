@@ -88,7 +88,7 @@ public class TEProjectileEntities {
         return registerProj(name,entityFactory,1,1);
     }
 
-    public static void register(IEventBus bus) {
+    public static void register() {
 
     }
 }

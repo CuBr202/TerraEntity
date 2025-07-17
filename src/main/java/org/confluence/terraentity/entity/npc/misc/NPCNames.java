@@ -1,99 +1,83 @@
 package org.confluence.terraentity.entity.npc.misc;
 
-import com.google.gson.JsonObject;
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.EntityType;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.api.event.LoadResourceEvent;
-import org.confluence.terraentity.utils.AdapterUtils;
+import org.confluence.terraentity.data.util.SingleJsonFileReloadListener;
 import org.confluence.terraentity.utils.TEUtils;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
 public record NPCNames(Map<String, Float> namesWeights) {
-    public static final String KEY = "npc_names";
-    public static final String FILE_NAME = "names";
-
-    private static final Map<ResourceLocation, NPCNames> names_map = new HashMap<>();
-
     public static final Codec<NPCNames> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.unboundedMap(Codec.STRING, Codec.FLOAT).fieldOf("names_weights").forGetter(NPCNames::namesWeights)
     ).apply(instance, NPCNames::new));
 
-    public static final Codec<Map<ResourceLocation, NPCNames>> MAP_CODEC = Codec.unboundedMap(ResourceLocation.CODEC, CODEC);
-
-    public static NPCNames getNames(ResourceLocation id) {
-        return names_map.get(id);
-    }
-
-    public static @Nullable String getRandomName(ResourceLocation id) {
-        NPCNames names = names_map.get(id);
-        if(names == null || names.namesWeights.isEmpty()){
-            return null;
-        }
-        return TEUtils.getRandomByWeight(names.namesWeights);
-    }
-
-    public static NPCNames of(Map<String, Float> names){
+    public static NPCNames of(Map<String, Float> names) {
         return new NPCNames(names);
     }
 
-    public static void clear(){
-        names_map.clear();
-    }
+    public static class Loader extends SingleJsonFileReloadListener {
+        public static final Codec<Map<EntityType<?>, NPCNames>> DATA_GEN_CODEC = Codec.unboundedMap(BuiltInRegistries.ENTITY_TYPE.byNameCodec(), NPCNames.CODEC);
+        private static Loader INSTANCE;
+        private Map<EntityType<?>, NPCNames> npcNames = ImmutableMap.of();
 
-    public static void loadNPCNames(ResourceManager manager) {
-        clear();
-        LoadResourceEvent event = new LoadResourceEvent(LoadResourceEvent.Type.NPC_NAMES);
-        AdapterUtils.postEvent(event);
-        if(!event.isCanceled()) {
-            if(!event.isReplace()) {
-                ResourceLocation defaultFile = TerraEntity.space(KEY + "/" + FILE_NAME + ".json");
-                readNamesFromJson(manager, defaultFile);
+        @Override
+        protected void apply(Map<ResourceLocation, JsonElement> object) {
+
+            Map<EntityType<?>, NPCNames> map = new IdentityHashMap<>();
+            for (Map.Entry<ResourceLocation, JsonElement> entry : object.entrySet()) {
+                BuiltInRegistries.ENTITY_TYPE.getOptional(entry.getKey()).ifPresent(entityType -> NPCNames.CODEC.parse(JsonOps.INSTANCE, entry.getValue())
+                        .resultOrPartial(errorMsg -> TerraEntity.LOGGER.warn("Could not decode npc names with json id {} - error: {}", entry.getKey(), errorMsg))
+                        .ifPresent(npcNames -> map.computeIfAbsent(entityType, type -> new NPCNames(new HashMap<>())).namesWeights.putAll(npcNames.namesWeights)));
             }
-            for(ResourceLocation file : event.getFiles()) {
-                readNamesFromJson(manager, file);
+            ImmutableMap.Builder<EntityType<?>, NPCNames> builder = ImmutableMap.builder();
+            for (Map.Entry<EntityType<?>, NPCNames> entry : map.entrySet()) {
+                builder.put(entry.getKey(), new NPCNames(ImmutableMap.copyOf(entry.getValue().namesWeights)));
             }
+            this.npcNames = builder.build();
         }
-    }
 
-    public static void readNamesFromJson(ResourceManager manager, ResourceLocation file) {
-        manager.getResource(file).ifPresentOrElse(
-            resource -> {
-                try {
-                    Reader reader = resource.openAsReader();
-                    JsonObject jsonobject = GsonHelper.parse(reader);
-                    Map<ResourceLocation, NPCNames> map = MAP_CODEC.decode(JsonOps.INSTANCE, jsonobject).result().get().getFirst();
-                    for (Map.Entry<ResourceLocation, NPCNames> entry : map.entrySet()) {
-                        ResourceLocation id = entry.getKey();
-                        NPCNames other = entry.getValue();
-                        if(names_map.containsKey(id)){
-                            var has = names_map.get(id).namesWeights;
-                            // 替换已有NPC名称权重
-                            for(String name : other.namesWeights.keySet()){
-                                float weight = other.namesWeights.get(name);
-                                has.put(name, weight);
-                            }
-                        }else{
-                            names_map.put(id, new NPCNames(new HashMap<>(other.namesWeights)));
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            },
-            ()->{
-                TerraEntity.LOGGER.warn("No trade data found for NPCs");
+        @Override
+        protected ResourceLocation resourcePath() {
+            return TerraEntity.space("npc/names.json");
+        }
+
+        @Override
+        protected String identifier() {
+            return "NPC Names";
+        }
+
+        public Map<EntityType<?>, NPCNames> getNpcNames() {
+            return npcNames;
+        }
+
+        public @Nullable NPCNames getNames(EntityType<?> entityType) {
+            return getNpcNames().get(entityType);
+        }
+
+        public @Nullable String getRandomName(EntityType<?> entityType) {
+            NPCNames names = getNames(entityType);
+            if (names == null || names.namesWeights.isEmpty()) {
+                return null;
             }
-        );
-        TerraEntity.LOGGER.info("Loaded {} NPC names", names_map.size());
+            return TEUtils.getRandomByWeight(names.namesWeights);
+        }
+
+        public static Loader getInstance() {
+            if (INSTANCE == null) {
+                INSTANCE = new Loader();
+            }
+            return INSTANCE;
+        }
     }
 }

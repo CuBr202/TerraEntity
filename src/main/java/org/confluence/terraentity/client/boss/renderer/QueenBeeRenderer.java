@@ -17,7 +17,7 @@ import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 public class QueenBeeRenderer extends GeoBossRenderer<QueenBee, GeoBossModel<QueenBee>> {
 
     public QueenBeeRenderer(EntityRendererProvider.Context renderManager, GeoBossModel<QueenBee> model) {
-        super(renderManager, model,1.0f,0.5f,false);
+        super(renderManager, model,1.0f,0.75f,false);
         this.addRenderLayer(new AutoGlowingGeoLayer<>(this){
             @Override
             protected ResourceLocation getTextureResource(QueenBee animatable) {

@@ -7,8 +7,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -16,6 +18,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -42,6 +45,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.confluence.terraentity.api.event.NPCEvent;
@@ -56,7 +60,6 @@ import org.confluence.terraentity.entity.npc.house.HouseManager;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.Mood;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
-import org.confluence.terraentity.entity.npc.mood.NPCMoods;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.entity.npc.trade.TradeParams;
@@ -84,7 +87,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
- * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMoods 心情系统}
+ * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMood.Loader 心情系统}
  */
 public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc, ITradeHolder, IUseItemAnimatable<BoneStates>, CrossbowAttackMob {
 
@@ -97,7 +100,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             );
 
 
-    private final float moveSpeed = 0.18f;
+    private final float moveSpeed = 0.15f;
     private NPCTradeManager trades;
     public Player tradingPlayer;
     public House house = House.EMPTY;
@@ -123,7 +126,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
 
 
-    public AbstractTerraNPC(EntityType<? extends PathfinderMob> entityType, Level level) {
+    public AbstractTerraNPC(EntityType<? extends AbstractTerraNPC> entityType, Level level) {
         super(entityType, level);
 
         if (level.isClientSide()) {
@@ -149,20 +152,27 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         return !this.hasCustomName(); // 交互以后不会被刷走
     }
 
-    protected void initName() {
-        String name = NPCNames.getRandomName(ForgeRegistries.ENTITY_TYPES.getKey(this.getType()));
-        if (name != null) {
-            this.setCustomName(Component.literal(name));
+    public void initName() {
+        if (!this.hasCustomName()) {
+            String name = NPCNames.Loader.getInstance().getRandomName(getType());
+            if (name != null) {
+                this.setCustomName(Component.literal(name));
+            }
         }
-
     }
+
+
 
     /**
      * <p>设置npc的房屋
      * <p>使用前需要使用HouseManager.getInstance().tryAddHouse检查房屋是否可以添加</p>
      */
     public void setHouse(House house) {
-        // confluence mixed here
+        // confluence mixin here
+        setHouseNoUpdate(house);
+    }
+
+    public void setHouseNoUpdate(House house) {
         this.house = house;
         this.entityData.set(DATA_HOUSE_DATA, house);
     }
@@ -200,6 +210,17 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         setAttackRange(8); // 初始化晚于父类，手动提前初始化
         setCooldownTicks(20);
 
+        // 初始化心情系统
+        this.mood = new NPCMood();
+        NPCMood.EntityMood info = NPCMood.Loader.getInstance().getMood(getType());
+        if (info != null) {
+            EnumMap<Mood, Integer> map = info.getSetting().createEnumMap();
+            this.mood.setMoodValueTable(map);
+            for (var info1 : info.moodInfos()) {
+                this.mood.addMoodInfo(info1.moodInfo());
+            }
+        }
+
 //        AdapterUtils.postEvent(event);
         // 使用预先注册的事件处理器
         var consumer = NPCEvent.NPCBrainCollectionEvent.getConsumer(getType());
@@ -213,31 +234,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             ai = new NPCAi(this);
         }
         return ai;
-    }
-
-    protected void initData() {
-        // 初始化心情系统
-        this.mood = new NPCMood();
-        var info = NPCMoods.BY_ENTITY_TYPE.get(getType());
-        if (info != null) {
-            EnumMap<Mood, Integer> map = info.getSetting().createEnumMap();
-            this.mood.setMoodValueTable(map);
-            for (var info1 : info.moodInfos()) {
-                this.mood.addMoodInfo(info1.moodInfo());
-            }
-        }
-
-        NPCEvent.InitNPCTradeEvent event = new NPCEvent.InitNPCTradeEvent(this, ForgeRegistries.ENTITY_TYPES.getKey(this.getType()));
-        AdapterUtils.postEvent(event);
-        // 如果是第一次生成
-        if (trades == null && !level().isClientSide) {
-            trades = NPCTradeManager.getCopy(event.getOrigin(), JsonOps.INSTANCE);
-            if (trades != null) {
-                trades.initTrades(this);
-                onInitTrades();
-                syncTrades();
-            }
-        }
     }
 
     /**
@@ -370,6 +366,10 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
                 });
             });
         }
+        if (tag.contains("House", Tag.TAG_COMPOUND)) {
+            setHouseNoUpdate(House.CODEC.parse(NbtOps.INSTANCE, tag.get("House")).result().orElse(House.EMPTY));
+        }
+        // confluence mixin here
     }
 
     @Override
@@ -379,15 +379,16 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             NPCTradeManager.CODEC.encodeStart(NbtOps.INSTANCE, trades).result().ifPresent(trade -> {
                 tag.put("te_npc_data", trade);
             });
-
             if (!this.trades.trades().isEmpty() && !this.getTradeParams().isEmpty()) {
                 TradeParams.CODEC.encodeStart(NbtOps.INSTANCE, this.getTradeParams()).result().ifPresent(params -> {
                     tag.put("te_npc_trade_params", params);
                 });
             }
         }
-
-
+        if (house != null) {
+            House.CODEC.encodeStart(NbtOps.INSTANCE, house).result().ifPresent(tag1 -> tag.put("House", tag1));
+        }
+        // confluence mixin here
     }
 
 
@@ -395,10 +396,22 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
+        NPCEvent.InitNPCTradeEvent event = new NPCEvent.InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
+        AdapterUtils.postEvent(event);
+        // 如果是第一次生成
+        if (trades == null && !level().isClientSide) {
+            trades = NPCTradeManager.getCopy(event.getOrigin(), NbtOps.INSTANCE);
+            if (trades != null) {
+                trades.initTrades(this);
+                onInitTrades();
+                syncTrades();
+            }
+        }
     }
 
     protected void onInitTrades() {
     }
+
 
     @Override
     public void tick() {
@@ -417,13 +430,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         } else {
             this.cooldownTick = 0;
         }
-
-        if (!level().isClientSide && tickCount == 20) {
-            initData();
-
-        }
     }
-
 
     @Override
     public void aiStep() {
@@ -443,7 +450,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     @SuppressWarnings("all")
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (level().isClientSide) {
+        if (!(player instanceof ServerPlayer serverPlayer)) {
             return InteractionResult.SUCCESS;
         }
 
@@ -640,7 +647,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
     }
 
-    public static boolean checkRoutineNPCSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+    public static boolean checkRoutineNPCSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
 
         if (pLevel instanceof ServerLevel serverLevel) {
             if (!Animal.checkAnimalSpawnRules(null, pLevel, pSpawnType, pPos, pRandom)) {
@@ -654,7 +661,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
             return NPCSpawner.getInstance().trySpawn(type, serverLevel, pPos, pRandom);
         }
-
         return false;
     }
     @Override

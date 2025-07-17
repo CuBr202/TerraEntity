@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.attachment.ItemInHandTrailAttachment;
 import org.confluence.terraentity.client.block.renderer.FigureBlockRenderer;
 import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.gui.config_container.ConfigContainerRegister;
@@ -24,6 +25,7 @@ import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEMenus;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.block.TEFigureBlocks;
+import org.confluence.terraentity.integration.sodium_dynamic_light.SDHelper;
 
 import static org.confluence.terraentity.client.util.RegisterUtils.registerModel;
 
@@ -53,7 +55,8 @@ public final class ModClientEvent {
     public static void onClientSetup(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             MenuScreens.register(TEMenus.SIMPLE_NPC_TRADES_MENU.get(), SimpleTradeScreen::new);
-
+            ItemInHandTrailAttachment.registerDefault();
+            SDHelper.registerDynamicLight();
         });
     }
 

@@ -9,7 +9,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -42,6 +41,9 @@ public class AnglerNPC extends AbstractTerraNPC {
     public void resetFishTask() {
 //        this.entityData.set(DATA_TIME_TO_TRADE_FISH_DATA, true);
         int c = 0;
+        if(trades() == null){
+            return;
+        }
         for(ITrade trade: trades()){
             if(trade instanceof TradeTask task){
                 if(task.task() instanceof DynamicAnglerTradeTask d){

@@ -22,9 +22,7 @@ import java.util.function.Function;
 
 public record TENPCLoot(HolderLookup.Provider registries) implements LootTableSubProvider {
 
-
     public static ResourceLocation Angler = TerraEntity.space("npc/angler");
-
 
     public void generate(BiConsumer<ResourceLocation, LootTable.Builder> output) {
         HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
@@ -67,6 +65,4 @@ public record TENPCLoot(HolderLookup.Provider registries) implements LootTableSu
     public HolderLookup.Provider registries() {
         return this.registries;
     }
-
-
 }

@@ -6,7 +6,6 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.data.worldgen.placement.CavePlacements;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.Entity;
@@ -14,7 +13,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ForgeBiomeModifiers;
@@ -34,14 +32,14 @@ public class TEBiomeModifier {
         HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
         HolderGetter<PlacedFeature> placedFeatureLookup = context.lookup(Registries.PLACED_FEATURE);
 
-        int minute = 20 * 60 * 5;
+        int minute = 20 * 60;
 
         register(context, TENpcEntities.GUIDE,
                 biomeLookup.getOrThrow(BiomeTags.IS_FOREST),
                 HolderSet.direct(), minute * 5,1);
         register(context, TENpcEntities.DEMOLITIONIST,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.DRIPSTONE_CAVES), biomeLookup.getOrThrow(Biomes.LUSH_CAVES),biomeLookup.getOrThrow(Biomes.NETHER_WASTES)),
-                HolderSet.direct(),minute * 5,1);
+                HolderSet.direct(), minute * 5,1);
         register(context, TENpcEntities.GOBLIN_TINKERER,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.DRIPSTONE_CAVES), biomeLookup.getOrThrow(Biomes.LUSH_CAVES),biomeLookup.getOrThrow(Biomes.NETHER_WASTES)),
                 HolderSet.direct(), minute * 5,1);
@@ -56,7 +54,7 @@ public class TEBiomeModifier {
                 HolderSet.direct(), minute * 5,1);
         register(context, TENpcEntities.PAINTER,
                 biomeLookup.getOrThrow(BiomeTags.IS_JUNGLE),
-                HolderSet.direct(),minute * 5,1);
+                HolderSet.direct(), minute * 5,1);
         register(context, TENpcEntities.ANGLER,
                 biomeLookup.getOrThrow(BiomeTags.IS_RIVER),
                 HolderSet.direct(), minute * 5,1);
@@ -66,21 +64,41 @@ public class TEBiomeModifier {
         register(context, TENpcEntities.DYE_TRADER,
                 biomeLookup.getOrThrow(BiomeTags.HAS_VILLAGE_DESERT),
                 HolderSet.direct(), minute * 5,1);
+        register(context, TENpcEntities.WITCH_DOCTOR,
+                biomeLookup.getOrThrow(BiomeTags.IS_JUNGLE),
+                HolderSet.direct(), minute * 5,1);
+        register(context, TENpcEntities.TRUFFLE,
+                HolderSet.direct(biomeLookup.getOrThrow(Biomes.MUSHROOM_FIELDS)),
+                HolderSet.direct(), minute * 5,1);
+        register(context, TENpcEntities.CLOTHIER,
+                biomeLookup.getOrThrow(BiomeTags.HAS_VILLAGE_PLAINS),
+                HolderSet.direct(), minute * 5,1);
+        register(context, TENpcEntities.TRAVELING_MERCHANT,
+                biomeLookup.getOrThrow(TETags.Biomes.IS_EVER_WHERE),
+                HolderSet.direct(), minute * 5,1);
+        register(context, TENpcEntities.PARTY_GIRL,
+                HolderSet.direct(biomeLookup.getOrThrow(Biomes.BEACH)),
+                HolderSet.direct(), minute * 5,1);
 
         register(context, createModifierKey("goblin_arm"), new ForgeBiomeModifiers.AddSpawnsBiomeModifier(
-                biomeLookup.get(TETags.Biomes.IS_GOBLIN_SPAWN).get(), List.of(
+                HolderSet.direct(biomeLookup.get(Biomes.PLAINS).get()), List.of(
                 new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_WARRIOR.get(), 20,1,2),
                 new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_ARCHER.get(), 20,2,3),
                 new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_PEON.get(), 20,2,3),
                 new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_THIEF.get(), 20,1,1),
                 new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_SORCERER.get(), 20,1,1)
         )));
+        register(context, createModifierKey("skeleton_arm"), new ForgeBiomeModifiers.AddSpawnsBiomeModifier(
+                biomeLookup.getOrThrow(BiomeTags.IS_OVERWORLD), List.of(
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), 40,1,1),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), 40,1,1),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_BONES.get(), 90,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.SHORT_BONES.get(), 90,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.ANGER_BONES.get(), 90,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_ANGER_BONES.get(), 70,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.CURSED_SKULL.get(), 30,1,1)
+        )));
 
-        register(context, createModifierKey("goblin_arm_underground"), new ForgeBiomeModifiers.AddFeaturesBiomeModifier(
-                biomeLookup.get(TETags.Biomes.IS_GOBLIN_SPAWN).get(),
-                HolderSet.direct(placedFeatureLookup.get(CavePlacements.CAVE_VINES).get()),
-                GenerationStep.Decoration.UNDERGROUND_DECORATION)
-        );
     }
 
 

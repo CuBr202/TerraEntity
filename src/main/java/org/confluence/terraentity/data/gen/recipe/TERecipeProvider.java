@@ -40,7 +40,7 @@ public class TERecipeProvider extends AbstractRecipeProvider {
         // 鞭子
         registerWhip(recipeOutput, TEWhipItems.LEATHER_WHIP.get(), Items.LEATHER, "has_leather");
         registerWhip(recipeOutput, TEWhipItems.SLUB_WHIP.get(), Items.BAMBOO, "has_bamboo");
-        registerWhip(recipeOutput, TEWhipItems.AMBER_WHIP.get(), Items.HONEY_BLOCK, "has_honey_block");
+        registerWhip(recipeOutput, TEWhipItems.AMBER_WHIP.get(), Items.COPPER_INGOT, "has_copper_ingot");
         registerWhip(recipeOutput, TEWhipItems.AMETHYST_WHIP.get(), Items.AMETHYST_CLUSTER, "has_amethyst_cluster");
         registerWhip(recipeOutput, TEWhipItems.DIAMOND_WHIP.get(), Items.DIAMOND, "has_diamond");
         registerWhip(recipeOutput, TEWhipItems.JADE_WHIP.get(), Items.EMERALD, "has_emerald");
@@ -78,6 +78,25 @@ public class TERecipeProvider extends AbstractRecipeProvider {
                 .unlockedBy("has_red_stone",has(Items.REDSTONE))
                 .save(recipeOutput);
 
+        // 棱镜暂用配方
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, TESummonItems.TERRAPRISMA.get())
+                .requires(TESummonItems.SUMMON_WOODEN_SWORD_STAFF.get())
+                .requires(TESummonItems.SUMMON_STONE_SWORD_STAFF.get())
+                .requires(TESummonItems.SUMMON_IRON_SWORD_STAFF.get())
+                .requires(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.get())
+                .requires(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF.get())
+                .unlockedBy("has_iron_sword_staff", has(TESummonItems.SUMMON_IRON_SWORD_STAFF.get()))
+                .save(recipeOutput);
+        /*
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, TESummonItems.TERRAPRISMA.get())
+                .requires(TESummonItems.SUMMON_WOODEN_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_STONE_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF)
+                .requires(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF)
+                .unlockedBy("has_golden_sword_staff", has(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF))
+                .save(recipeOutput);
+         */
     }
 
     protected static void netheriteSmithing(Consumer<FinishedRecipe> recipeOutput, Item ingredientItem, RecipeCategory category, Item resultItem) {

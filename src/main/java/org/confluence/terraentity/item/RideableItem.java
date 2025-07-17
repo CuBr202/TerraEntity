@@ -18,7 +18,7 @@ public class RideableItem<T extends AbstractRideableEntity> extends Item {
     RegistryObject<EntityType<T>> entityType;
     Predicate<Player> canUse;
     public RideableItem(Properties properties, RegistryObject<EntityType<T>> entityType) {
-        this(properties, entityType, player -> true);
+        this(properties.stacksTo(1), entityType, player -> true);
     }
 
     public RideableItem(Properties properties, RegistryObject<EntityType<T>> entityType, Predicate<Player> canUse) {
@@ -37,17 +37,17 @@ public class RideableItem<T extends AbstractRideableEntity> extends Item {
         if(!level.isClientSide){
             if(player.getVehicle() == null){
                 if(canUse.test(player)) {
-                    AbstractRideableEntity slime = entityType.get().create(level);
-                    if (slime != null) {
-                        slime.setOwnerUUID(player.getUUID());
-                        slime.setXRot(player.getXRot());
-                        slime.setYRot(player.getYRot());
-                        slime.setPos(player.getX(), player.getY(), player.getZ());
+                    AbstractRideableEntity rideable = entityType.get().create(level);
+                    if (rideable != null) {
+                        rideable.setOwnerUUID(player.getUUID());
+                        rideable.setXRot(player.getXRot());
+                        rideable.setYRot(player.getYRot());
+                        rideable.setPos(player.getX(), player.getY(), player.getZ());
 
-                        slime.doPlayerRide(player);
+                        rideable.doPlayerRide(player);
 
-                        level.addFreshEntity(slime);
-                        slime.onInit(player);
+                        level.addFreshEntity(rideable);
+                        rideable.onInit(player);
                         level.playSound(null, player.blockPosition(), TESounds.USE_MOUNTS.get(), SoundSource.PLAYERS, 0.4F, 1.0F);
                         player.swing(InteractionHand.MAIN_HAND, true);
                     }

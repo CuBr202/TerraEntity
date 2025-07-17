@@ -13,11 +13,11 @@ public class ServerConfig {
 
 
     public static ForgeConfigSpec.ConfigValue<Boolean> ENHANCE_ALL_MONSTER;
-
     public static ForgeConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH;
     public static ForgeConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE ;
     public static ForgeConfigSpec.ConfigValue<Boolean> DISABLE_BUILTIN_MODIFIER;
 
+    public static ForgeConfigSpec.ConfigValue<Boolean> SPAWN_WITHOUT_LIGHT;
 
     public static ForgeConfigSpec.Builder init(ForgeConfigSpec.Builder BUILDER){
         BUILDER.push("server");
@@ -58,7 +58,9 @@ public class ServerConfig {
                 .comment("Should the built-in attributes setting be disabled for monsters?")
                 .comment("For kjs modify")
                 .define("disable_builtin_health_attack_modifier", false);
-
+        SPAWN_WITHOUT_LIGHT = BUILDER
+                .comment("Should monsters spawn without light?")
+                .define("spawn_without_light", true);
         BUILDER.pop();
         return BUILDER;
     }

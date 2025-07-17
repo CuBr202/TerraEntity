@@ -49,7 +49,7 @@ public class SummonSwordRenderer<T extends SummonSword> extends EntityRenderer<T
     }
 
     protected void renderTrail(T entity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick){
-        entity.trail.renderTrail(entity, entity.trailQueue, entity.position(), poseStack, bufferSource, packedLight);
+        entity.trail.renderTrail(entity, entity.position(), poseStack, bufferSource, packedLight);
 
     }
 

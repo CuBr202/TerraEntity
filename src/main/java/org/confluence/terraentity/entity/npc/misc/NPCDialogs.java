@@ -1,111 +1,85 @@
 package org.confluence.terraentity.entity.npc.misc;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityType;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.api.event.LoadResourceEvent;
-import org.confluence.terraentity.utils.AdapterUtils;
+import org.confluence.terraentity.data.util.SingleJsonFileReloadListener;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public record NPCDialogs(List<String> dialogs) {
-    public static final String KEY = "npc_dialog";
-    public static final String FILE_NAME = "dialogs";
-
-    private static final Map<ResourceLocation, NPCDialogs> dialog_map = new HashMap<>();
-
     public static final Codec<NPCDialogs> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.listOf().fieldOf("dialogs").forGetter(NPCDialogs::dialogs)
     ).apply(instance, NPCDialogs::new));
 
-    public static final Codec<Map<ResourceLocation, NPCDialogs>> MAP_CODEC = Codec.unboundedMap(ResourceLocation.CODEC, CODEC);
-
-    public static @Nullable String getRandomDialog(ResourceLocation id) {
-        NPCDialogs dialogs1 = dialog_map.get(id);
-        if(dialogs1 == null || dialogs1.dialogs.isEmpty()){
-            return null;
-        }
-        int index = (int) (Math.random() * dialogs1.dialogs.size());
-        return dialogs1.dialogs.get(index);
+    public static NPCDialogs of(String... dialogs) {
+        return new NPCDialogs(Arrays.stream(dialogs).toList());
     }
 
-    public static NPCDialogs of(List<String> dialogs){
-        return new NPCDialogs(dialogs);
-    }
+    public static class Loader extends SingleJsonFileReloadListener {
+        public static final Codec<Map<EntityType<?>, NPCDialogs>> CODEC = Codec.unboundedMap(BuiltInRegistries.ENTITY_TYPE.byNameCodec(), NPCDialogs.CODEC);
+        private static Loader INSTANCE;
+        private Map<EntityType<?>, NPCDialogs> dialogs = ImmutableMap.of();
 
-    public static Map<ResourceLocation, NPCDialogs> getDialog_map(){
-        return dialog_map;
-    }
-
-    public static void clear(){
-        dialog_map.clear();
-    }
-
-    public static void loadNPCDialogs(ResourceManager manager) {
-        clear();
-        LoadResourceEvent event = new LoadResourceEvent(LoadResourceEvent.Type.NPC_DIALOGS);
-        AdapterUtils.postEvent(event);
-        if(!event.isCanceled()) {
-            if(!event.isReplace()) {
-                ResourceLocation defaultFile = TerraEntity.space(KEY + "/" + FILE_NAME + ".json");
-                readNamesFromJson(manager, defaultFile);
-            }
-            for(ResourceLocation file : event.getFiles()) {
-                readNamesFromJson(manager, file);
-            }
-        }
-    }
-
-    public static void readNamesFromJson(ResourceManager manager, ResourceLocation file) {
-        manager.getResource(file).ifPresentOrElse(
-                resource -> {
-                    try {
-                        Reader reader = resource.openAsReader();
-                        JsonObject jsonobject = GsonHelper.parse(reader);
-                        Map<ResourceLocation, NPCDialogs> map = MAP_CODEC.decode(JsonOps.INSTANCE, jsonobject).result().get().getFirst();
-                        for (Map.Entry<ResourceLocation, NPCDialogs> entry : map.entrySet()) {
-                            ResourceLocation id = entry.getKey();
-                            NPCDialogs other = entry.getValue();
-
-                            // 处理对话
-                            if(dialog_map.containsKey(id)){
-                                var has = dialog_map.get(id);
-                                for(String dialog : other.dialogs){
-                                    if(!has.dialogs.contains(dialog)){
-                                        has.dialogs.add(dialog);
-                                    }
+        @Override
+        protected void apply(Map<ResourceLocation, JsonElement> object) {
+//            ConditionalOps<JsonElement> ops = makeConditionalOps();
+            Map<EntityType<?>, NPCDialogs> map = new IdentityHashMap<>();
+            for (Map.Entry<ResourceLocation, JsonElement> entry : object.entrySet()) {
+                BuiltInRegistries.ENTITY_TYPE.getOptional(entry.getKey()).ifPresent(entityType -> NPCDialogs.CODEC.parse(JsonOps.INSTANCE, entry.getValue())
+                        .resultOrPartial(errorMsg -> TerraEntity.LOGGER.warn("Could not decode npc dialogs with json id {} - error: {}", entry.getKey(), errorMsg))
+                        .ifPresent(other -> {
+                            NPCDialogs has = map.computeIfAbsent(entityType, type -> new NPCDialogs(new ArrayList<>()));
+                            for (String dialog : other.dialogs) {
+                                if (!has.dialogs.contains(dialog)) {
+                                    has.dialogs.add(dialog);
                                 }
-                            }else{
-                                dialog_map.put(id, new NPCDialogs(new ArrayList<>(other.dialogs)));
                             }
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                },
-                ()->{
-                    TerraEntity.LOGGER.warn("No trade data found for NPCs");
-                }
-        );
-        TerraEntity.LOGGER.info("Loaded {} NPC names", dialog_map.size());
-    }
+                        }));
+            }
+            this.dialogs = ImmutableMap.copyOf(map);
+        }
 
-    public static void loadFromServer(JsonElement json){
-        dialog_map.clear();
-        MAP_CODEC.decode(JsonOps.INSTANCE, json).result().ifPresent(res->{
-            dialog_map.putAll(res.getFirst());
-        });
+        @Override
+        protected ResourceLocation resourcePath() {
+            return TerraEntity.space("npc/dialogs.json");
+        }
+
+        @Override
+        protected String identifier() {
+            return "NPC Dialogs";
+        }
+
+        public Map<EntityType<?>, NPCDialogs> getDialogs() {
+            return dialogs;
+        }
+
+        public @Nullable String getRandomDialog(RandomSource random, EntityType<?> entityType) {
+            NPCDialogs dialogs1 = getDialogs().get(entityType);
+            if (dialogs1 == null || dialogs1.dialogs.isEmpty()) {
+                return null;
+            }
+            return Util.getRandom(dialogs1.dialogs, random);
+        }
+
+        public static Loader getInstance() {
+            if (INSTANCE == null) {
+                INSTANCE = new Loader();
+            }
+            return INSTANCE;
+        }
+
+        public static void handle(Map<EntityType<?>, NPCDialogs> entityTypeNPCDialogsMap) {
+            getInstance().dialogs = entityTypeNPCDialogsMap;
+        }
     }
 }

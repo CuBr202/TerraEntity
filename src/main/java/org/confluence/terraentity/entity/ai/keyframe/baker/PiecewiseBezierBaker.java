@@ -1,8 +1,5 @@
 package org.confluence.terraentity.entity.ai.keyframe.baker;
 
-
-
-
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
 import org.confluence.terraentity.entity.ai.keyframe.interpolator.IInterpolator;
 

@@ -7,7 +7,6 @@ import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.entity.TEAnimals;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
@@ -131,12 +130,14 @@ public class TESpawnEggItems {
 
     // 动物
     public static final RegistryObject<Item> SQUIRREL_SPAWN_EGG = registerEgg("squirrel_spawn_egg", TEAnimals.SQUIRREL, 0xffffff);
+    public static final RegistryObject<Item> JEWEL_SQUIRREL_SPAWN_EGG = registerEgg("jewel_squirrel_spawn_egg", TEAnimals.JEWEL_SQUIRREL, 0xffffff);
     public static final RegistryObject<Item> BUNNY_SPAWN_EGG = registerEgg("bunny_spawn_egg", TEAnimals.BUNNY, 0xffffff);
+    public static final RegistryObject<Item> JEWEL_BUNNY_SPAWN_EGG = registerEgg("jewel_bunny_spawn_egg", TEAnimals.JEWEL_BUNNY, 0xffffff);
     public static final RegistryObject<Item> BOOM_BUNNY_SPAWN_EGG = registerEgg("boom_bunny_spawn_egg", TEAnimals.BOOM_BUNNY, 0xffffff);
-    public static final RegistryObject<Item> DUCK_EGG = registerEgg("duck_spawn_egg", TEAnimals.DUCK, 0xffffff);
-    public static final RegistryObject<Item> BIRD_EGG = registerEgg("bird_spawn_egg", TEAnimals.DUCK, 0xffffff);
-    public static final RegistryObject<Item> BLUE_JAY_EGG = registerEgg("blue_jay_spawn_egg", TEAnimals.DUCK, 0xffffff);
-    public static final RegistryObject<Item> CARDINAL_EGG = registerEgg("cardinal_spawn_egg", TEAnimals.DUCK, 0xffffff);
+    public static final RegistryObject<Item> DUCK_SPAWN_EGG = registerEgg("duck_spawn_egg", TEAnimals.DUCK, 0xffffff);
+    public static final RegistryObject<Item> BIRD_SPAWN_EGG = registerEgg("bird_spawn_egg", TEAnimals.BIRD, 0xffffff);
+    public static final RegistryObject<Item> BLUE_JAY_SPAWN_EGG = registerEgg("blue_jay_spawn_egg", TEAnimals.BLUE_JAY, 0xffffff);
+    public static final RegistryObject<Item> CARDINAL_SPAWN_EGG = registerEgg("cardinal_spawn_egg", TEAnimals.CARDINAL, 0xffffff);
 
 
     public static RegistryObject<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> entityType, int primaryColor, int secondaryColor){

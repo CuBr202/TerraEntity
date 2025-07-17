@@ -31,7 +31,7 @@ public class TERideableEntities {
         event.put(TERideableEntities.RIDEABLE_BEE.get(), AbstractMonster.createAttributes().build());
 
     }
-    public static void register(IEventBus bus) {
+    public static void register() {
 
     }
 }

@@ -4,7 +4,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.monster.Nymph;
 import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.model.GeoModel;
 
 public class NymphModel<T extends Nymph> extends GeoNormalModel<T> {
     private final ResourceLocation animation;

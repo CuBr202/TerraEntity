@@ -1,0 +1,58 @@
+package org.confluence.terraentity.entity.animal;
+
+import com.google.common.collect.ImmutableMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.data.init.loot.TELootParams;
+
+import java.util.Map;
+
+public class JewelSquirrel extends Squirrel  {
+
+    public JewelSquirrel(EntityType<? extends Squirrel> entityType, Level level) {
+        super(entityType, level);
+    }
+
+    @Override
+    protected void dropFromLootTable(DamageSource damageSource, boolean hitByPlayer) {
+        ResourceLocation resourcelocation = this.getLootTable();
+        LootTable loottable = this.level().getServer().getLootData().getLootTable(resourcelocation);
+        LootParams.Builder lootparams$builder = (new LootParams.Builder((ServerLevel)this.level())).withParameter(LootContextParams.THIS_ENTITY, this).withParameter(LootContextParams.ORIGIN, this.position()).withParameter(LootContextParams.DAMAGE_SOURCE, damageSource).withOptionalParameter(LootContextParams.KILLER_ENTITY, damageSource.getEntity()).withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, damageSource.getDirectEntity());
+        if (hitByPlayer && this.lastHurtByPlayer != null) {
+            lootparams$builder = lootparams$builder.withParameter(TELootParams.VARIANT, this.getTEVariant()).withParameter(LootContextParams.LAST_DAMAGE_PLAYER, this.lastHurtByPlayer).withLuck(this.lastHurtByPlayer.getLuck());
+        }
+
+        LootParams lootparams = lootparams$builder.create(LootContextParamSets.ENTITY);
+        loottable.getRandomItems(lootparams, this.getLootTableSeed(), this::spawnAtLocation);
+
+    }
+
+    static Map<Integer, ResourceLocation> textures = new Int2ObjectOpenHashMap<>(ImmutableMap.<Integer, ResourceLocation>builder()
+            .put(0, TerraEntity.space("textures/entity/animal/squirrel/amber_squirrel.png"))
+            .put(1, TerraEntity.space("textures/entity/animal/squirrel/amethyst_squirrel.png"))
+            .put(2, TerraEntity.space("textures/entity/animal/squirrel/diamond_squirrel.png"))
+            .put(3, TerraEntity.space("textures/entity/animal/squirrel/emerald_squirrel.png"))
+            .put(4, TerraEntity.space("textures/entity/animal/squirrel/golden_squirrel.png"))
+            .put(5, TerraEntity.space("textures/entity/animal/squirrel/ruby_squirrel.png"))
+            .put(6, TerraEntity.space("textures/entity/animal/squirrel/sapphire_squirrel.png"))
+            .put(7, TerraEntity.space("textures/entity/animal/squirrel/topaz_squirrel.png"))
+            .put(8, TerraEntity.space("textures/entity/animal/squirrel/red_squirrel.png"))
+            .build()
+    );
+
+    @Override
+    public Map<Integer, ResourceLocation> getTexturesMap() {
+        return textures;
+    }
+
+}

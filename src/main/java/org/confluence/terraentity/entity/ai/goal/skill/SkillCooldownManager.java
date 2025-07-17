@@ -53,6 +53,7 @@ public class SkillCooldownManager implements ISkillManager{
         return log.toString();
     }
 
+
     @Override
     public boolean canTriggerSkill(ISkill skill) {
         return !this.availableSkills.isEmpty() && this.availableSkills.peek() == skill;

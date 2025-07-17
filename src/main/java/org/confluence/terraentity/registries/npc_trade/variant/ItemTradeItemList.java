@@ -3,8 +3,10 @@ package org.confluence.terraentity.registries.npc_trade.variant;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.data.util.AmountIngredient;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
@@ -38,6 +40,15 @@ public record ItemTradeItemList(List<AmountIngredient> costs, List<ItemStack> re
 
     public static class Builder extends IIngredientTrade.Builder<ItemTradeItemList, Builder> {
         private final List<ItemStack> result = new ArrayList<>();
+
+        public Builder addResult(RegistryObject<? extends Item> item, int count) {
+            return addResult(new ItemStack(item.get(), count));
+        }
+
+
+        public Builder addResult(RegistryObject<? extends Item> item) {
+            return addResult(new ItemStack(item.get()));
+        }
 
         public Builder addResult(ItemLike item) {
             return addResult(new ItemStack(item));

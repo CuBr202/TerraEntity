@@ -47,9 +47,13 @@ public class GameEntityEvent {
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
         // 生成信息
         Boss.sendBossSpawnMessage(event.getEntity());
-        Level level = event.getLevel();
-        if (event.loadedFromDisk() || !(level instanceof ServerLevel serverLevel)) return;
 
+
+
+        if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
+            TEUtils.monsterEnhance(living);
+        else if (event.getEntity() instanceof Slime slime)
+            TEUtils.monsterEnhance(slime);
 
     }
 
@@ -230,10 +234,6 @@ public class GameEntityEvent {
                 TEUtils.monsterEnhance(slime);
             }
         }
-        if(event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
-            TEUtils.monsterEnhance(living);
-        else if(event.getEntity() instanceof Slime slime)
-            TEUtils.monsterEnhance(slime);
 
     }
 

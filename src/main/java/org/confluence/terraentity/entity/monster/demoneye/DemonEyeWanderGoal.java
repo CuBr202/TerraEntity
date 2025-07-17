@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.monster.demoneye;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
 
 /** 周围没有目标的AI，乱逛
@@ -9,11 +10,11 @@ import net.minecraft.world.phys.Vec3;
 public class DemonEyeWanderGoal extends DemonEyeSurroundTargetGoal {
     private double anchorY=Double.NaN;
 
-    public DemonEyeWanderGoal(Mob mob){
+    public DemonEyeWanderGoal(PathfinderMob mob){
         super(mob);
         maxSpeed=0.2;
     }
-    public DemonEyeWanderGoal(Mob mob,float maxSpeed){
+    public DemonEyeWanderGoal(PathfinderMob mob, float maxSpeed){
         super(mob);
         this.maxSpeed = maxSpeed;
     }
@@ -36,10 +37,14 @@ public class DemonEyeWanderGoal extends DemonEyeSurroundTargetGoal {
         if(Double.isNaN(anchorY)){
             anchorY = mob.position().y;
         }
+        targetPos = getTargetPos(anchorY);
+        ticksLeft = 30;
+    }
+
+    protected Vec3 getTargetPos(double anchorY){
         double x = random.nextDouble() * 10 - 5;
         double y = getOffsetY() + 5;
         double z = random.nextDouble() * 10 - 5;
-        targetPos = new Vec3(x, 0, z).normalize().scale(15).add(mob.position()).with(Direction.Axis.Y, y + anchorY);
-        ticksLeft = 30;
+        return new Vec3(x, 0, z).normalize().scale(15).add(mob.position()).with(Direction.Axis.Y, y + anchorY);
     }
 }

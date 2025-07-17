@@ -1,15 +1,20 @@
 package org.confluence.terraentity.client.util;
 
+import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.util.trail.ITrail;
 import org.joml.Matrix4f;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static net.minecraft.client.renderer.RenderStateShard.*;
 
@@ -122,19 +127,61 @@ public class ShaderUtil {
         buffer.vertex(x, y + size, z).color(r,g,b,a).endVertex();
     }
 
-    public static RenderType TRAIL_RENDER_TYPE = RenderType.create(
+
+    public static void renderLightBoundle(MultiBufferSource buffer, Matrix4f matrix4f, float size, float height, int color){
+        VertexConsumer consumer = buffer.getBuffer(LIGHT_BOUNDLE_RENDER_TYPE.get());
+
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(0,0,0), color).normal(0,0,-1);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(0,height,0), 0x00000000).normal(0,0,-1);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(size,height,0), 0x00000000).normal(0,0,-1);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(size,0,0), color).normal(0, 0,-1);
+
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(0,0,0), color).normal(1,0,0);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(0,height,0), 0x00000000).normal(1,0,0);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(0,height,size), 0x00000000).normal(1,0,0);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(0,0,size), color).normal(1,0,0);
+
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(0,0,size), color).normal(0, 0,1);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(0,height,size), 0x00000000).normal(0, 0,1);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(size,height,size), 0x00000000).normal(0, 0,1);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(size,0,size), color).normal(0, 0,1);
+
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(size,0,size), color).normal(-1,0,0);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(size,height,size), 0x00000000).normal(-1,0,0);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(size,height,0), 0x00000000).normal(-1,0,0);
+        ITrail.buildVertex(consumer, matrix4f, new Vec3(size,0,0), color).normal(-1,0,0);
+
+    }
+
+    public static Supplier<RenderType> TRAIL_RENDER_TYPE = Suppliers.memoize(() -> RenderType.create(
             "trail_render_type",
             DefaultVertexFormat.POSITION_COLOR,
+            VertexFormat.Mode.QUADS,
+                    1536,
+                    false,
+                    true,
+                    RenderType.CompositeState.builder()
+                    .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
+                                .setWriteMaskState(COLOR_DEPTH_WRITE)
+                                .setTransparencyState(LIGHTNING_TRANSPARENCY)
+                                .setOutputState(TRANSLUCENT_TARGET)
+                                .setCullState(NO_CULL)
+                                .createCompositeState(true)
+    ));
+
+    public static Supplier<RenderType> LIGHT_BOUNDLE_RENDER_TYPE = Suppliers.memoize(() -> RenderType.create(
+            "trail_render_type",
+            DefaultVertexFormat.POSITION_COLOR_NORMAL,
             VertexFormat.Mode.QUADS,
             1536,
             false,
             true,
             RenderType.CompositeState.builder()
-                    .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
-                    .setWriteMaskState(COLOR_DEPTH_WRITE)
-                    .setTransparencyState(LIGHTNING_TRANSPARENCY)
-                    .setOutputState(TRANSLUCENT_TARGET)
-                    .setCullState(NO_CULL)
-                    .createCompositeState(true)
-    );
+            .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
+                        .setWriteMaskState(COLOR_WRITE)
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setOutputState(TRANSLUCENT_TARGET)
+                        .setCullState(NO_CULL)
+                        .createCompositeState(true)
+        ));
 }

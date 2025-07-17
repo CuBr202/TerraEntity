@@ -15,6 +15,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import org.confluence.terraentity.utils.TEUtils;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -55,7 +56,7 @@ public class RideableSlime extends AbstractRideableEntity {
     }
 
     @Override
-    protected void tickRidden(Player player, Vec3 travelVector) {
+    protected void tickRidden(@NotNull Player player, Vec3 travelVector) {
         if (this.isJumping && !onGround() || !level().isClientSide && this.isJumping ) {
             boolean trigger = false;
 //            for (int i = 0; i < 4; i++) {
@@ -158,7 +159,7 @@ public class RideableSlime extends AbstractRideableEntity {
     }
 
         @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         Entity target = source.getEntity();
 
         if(target != null){

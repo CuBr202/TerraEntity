@@ -112,6 +112,10 @@ public class OBB extends SliceShape {
         this.extent = this.extent.scale(scale);
         return this;
     }
+    public OBB scale(double x, double y, double z){
+        this.extent = this.extent.multiply(x, y, z);
+        return this;
+    }
 
     public OBB updateVertex(){
         if (FMLEnvironment.dist.isClient()) {
@@ -268,8 +272,8 @@ public class OBB extends SliceShape {
     }
 
     public OBB inflate(double x, double y, double z){
-        extent.add(x, y, z);
-        return updateVertex();
+        extent = extent.add(x, y, z);
+        return this;
     }
 
     public OBB inflate(double length){

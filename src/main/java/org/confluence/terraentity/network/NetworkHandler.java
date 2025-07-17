@@ -20,8 +20,9 @@ public final class NetworkHandler {
         CHANNEL.registerMessage(packetId++,  SyncSummonPacket.class,  SyncSummonPacket::encode,  SyncSummonPacket::decode,  SyncSummonPacket::handle);
         CHANNEL.registerMessage(packetId++,  SyncBossEventHealthPacket.class,  SyncBossEventHealthPacket::encode,  SyncBossEventHealthPacket::decode,  SyncBossEventHealthPacket::handle);
         CHANNEL.registerMessage(packetId++,  SyncNPCTradesPacketS2C.class,  SyncNPCTradesPacketS2C::encode,  SyncNPCTradesPacketS2C::decode,  SyncNPCTradesPacketS2C::handle);
-        CHANNEL.registerMessage(packetId++, SyncJsonS2C.class,  SyncJsonS2C::encode,  SyncJsonS2C::decode,  SyncJsonS2C::handle);
+        CHANNEL.registerMessage(packetId++, SyncDataS2C.class,  SyncDataS2C::encode,  SyncDataS2C::decode,  SyncDataS2C::handle);
         CHANNEL.registerMessage(packetId++,  UpdateNPCTradePacket.class,  UpdateNPCTradePacket::encode,  UpdateNPCTradePacket::decode,  UpdateNPCTradePacket::handle);
+        CHANNEL.registerMessage(packetId++,  ChesterAttachmentPacketS2C.class,  ChesterAttachmentPacketS2C::encode,  ChesterAttachmentPacketS2C::decode,  ChesterAttachmentPacketS2C::handle);
 
 
         CHANNEL.registerMessage(packetId++,  ServerBoundVehicleExtensionPacket.class,  ServerBoundVehicleExtensionPacket::encode,  ServerBoundVehicleExtensionPacket::decode,  ServerBoundVehicleExtensionPacket::handle);

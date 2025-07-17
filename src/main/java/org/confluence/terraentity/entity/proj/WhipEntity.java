@@ -24,6 +24,7 @@ import org.confluence.terraentity.entity.ai.keyframe.dynamic_curve.SplineKeyfram
 import org.confluence.terraentity.entity.summon.ISummonMob;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEDataComponentTypes;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.item.TEWhipItems;
 import org.confluence.terraentity.item.BaseWhipItem;
@@ -206,115 +207,120 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 return;
             }
         }
+
+        if(existTick * 0.3f == tickCount){
+            if(this.getOwner() != null) {
+                this.getOwner().playSound(TESounds.WHIP_ATTACK.get(), 0.6F + this.random.nextFloat() * 0.2f, 1.0F);
+            }
+        }
+
         if(parts == null || parts.isEmpty()) return;
         this.speed = (double) _existTick / this.existTick;
-//        this.move(MoverType.SELF, this.getDeltaMovement());
         if (getOwner() instanceof Player owner) {
             if (initialPosition != null && initDirection != null) {
-                // 计算关键点位置
-                float yaw = (float) (Math.PI - Math.atan2(initDirection.z, initDirection.x));
-                float pitch = (float) (-Math.atan2(initDirection.y,
-                        Math.sqrt(initDirection.x * initDirection.x + initDirection.z * initDirection.z)));
-                Quaternionf q = new Quaternionf()
-                        .rotateY(yaw)
-                        .rotateZ(pitch);
-                for (int i = 0; i < parts.size(); i++) {
-                    // 世界坐标变换
-                    Vec3KeyframeAnimation p = parts.get(i);
-                    Vec3 pos = p.cal(tickCount * speed).multiply(getRange(owner), -1, 1);
-                    Vector3f lp = pos.toVector3f();
-                    q.transform(lp);
-                    keyPositionsO.set(i, keyPositions.get(i));
-                    keyPositions.set(i, lp);
-                }
-
-                if(tickCount > drawBackTick){
-                    // 过渡到player位置
-
-                    double delta = (double) (tickCount - drawBackTick) / (existTick - drawBackTick);
-                    double lerpx = Mth.lerp(delta, getX(), getOwner().getEyePosition().x);
-                    double lerpy = Mth.lerp(delta, getY(), getOwner().position().y + getOwner().getEyeHeight() * 0.5f);
-                    double lerpz = Mth.lerp(delta, getZ(), getOwner().getEyePosition().z);
-//                    setDeltaMovement(0,0,0);
-//                    setPos(lerpx, lerpy, lerpz);
-
-                    Vec3 dir = new Vec3(lerpx - getX(), lerpy - getY(), lerpz - getZ());
-                    setDeltaMovement(0,0,0);
-                    move(MoverType.SELF, dir.scale(0.5f));
-
-
-//                    Vec3 dir = getOwner().position().add(0, getOwner().getEyeHeight() * 0.5f, 0).subtract(position()).scale(0.3f);
-//                    setDeltaMovement(0,0,0);
-//                    move(MoverType.SELF, dir);
-
-                }
-//                if(!level().isClientSide){
-                    boolean trigger = false;
-                // 可以插值让攻击更准确
-                    List<Vec3> attackPoints = keyPositions.stream().map(Vec3::new).toList();
-
-                    float additionalRange = serverRandom == 1? 0.5f: 0;
-                    // 攻击
-                    float range = 1.5f + additionalRange;
-                    for (Vec3 attackPoint : attackPoints) {
-                        Vec3 pos = attackPoint.add(initialPosition);
-                        AABB aabb = new AABB(pos.x - range, pos.y - range, pos.z - range,
-                                pos.x + range, pos.y + range, pos.z + range);
-                        for (var entity : level().getEntities(this, aabb, e -> e != getOwner())) {
-
-                            // 某些鞭子禁止穿墙攻击
-                            if (item != null && !item.canPenetrate && level().clip(new ClipContext(owner.getEyePosition(), entity.position().add(0, entity.getBbHeight(), 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner)).getType() != HitResult.Type.MISS
-                                    && level().clip(new ClipContext(owner.getEyePosition(), entity.position(), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner)).getType() != HitResult.Type.MISS
-                                    &&level().clip(new ClipContext(owner.getEyePosition(), entity.position().add(0, entity.getBbHeight() * 0.5f, 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner)).getType() != HitResult.Type.MISS) {
-                                hitEntities.put(entity, hitCooldown);
-                                continue;
-                            }
-
-                            if(!hitEntities.containsKey(entity)){
-                                if (entity instanceof LivingEntity hurter) {
-                                    // 命中无多体节敌人
-                                    if(owner.canAttack(hurter) && TEUtils.projectileCanHurtEntityTest.test(this, hurter)) {
-                                        hitEntities.put(entity, hitCooldown);
-                                        trigger = doHurt(owner, hurter, hurter);
-                                    }
-                                    if(hurter instanceof ISummonMob<?>){
-                                        if(hiteffect_beneficial != null){
-                                            hiteffect_beneficial.applyAll( owner, hurter);
-                                        }
-                                    }
-
-                                }else if(entity instanceof PartEntity<?> partEntity){
-                                    // 名字多体节敌人
-                                    if(partEntity.getParent() instanceof LivingEntity hurter){
-                                        if(owner.canAttack(hurter) && TEUtils.projectileCanHurtEntityTest.test(this, hurter)) {
-                                            hitEntities.put(entity, hitCooldown);
-                                            trigger = doHurt(owner, hurter, partEntity);
-                                        }
-                                    }
-                                }
-                            }else{
-                                hitEntities.put(entity, hitEntities.get(entity) - 1);
-                                if(hitEntities.get(entity) <= 0){
-                                    hitEntities.remove(entity);
-                                }
-                                return;
-                            }
-                        }
-                    }
-                    if(trigger){
-                        // 命中敌人造成伤害才消耗耐久
-                        getWeapon().hurtAndBreak(1, owner, it->{});
-                    }
-//                }
+                this.updatePosition(owner);
+                this.attackDetect(owner);
             }
         }
         super.tick();
+    }
+
+    private void attackDetect(Player owner) {
+        boolean trigger = false;
+        // 可以插值让攻击更准确
+        List<Vec3> attackPoints = keyPositions.stream().map(Vec3::new).toList();
+
+        float additionalRange = serverRandom == 1? 0.5f: 0;
+        // 攻击
+        float range = 1.5f + additionalRange;
+        for (Vec3 attackPoint : attackPoints) {
+            Vec3 pos = attackPoint.add(initialPosition);
+            AABB aabb = new AABB(pos.x - range, pos.y - range, pos.z - range,
+                    pos.x + range, pos.y + range, pos.z + range);
+            for (var entity : level().getEntities(this, aabb, e -> e != getOwner())) {
+
+                // 某些鞭子禁止穿墙攻击
+                if (item != null && !item.canPenetrate && level().clip(new ClipContext(owner.getEyePosition(), entity.position().add(0, entity.getBbHeight(), 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner)).getType() != HitResult.Type.MISS
+                        && level().clip(new ClipContext(owner.getEyePosition(), entity.position(), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner)).getType() != HitResult.Type.MISS
+                        &&level().clip(new ClipContext(owner.getEyePosition(), entity.position().add(0, entity.getBbHeight() * 0.5f, 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner)).getType() != HitResult.Type.MISS) {
+                    hitEntities.put(entity, hitCooldown);
+                    continue;
+                }
+
+                if(!hitEntities.containsKey(entity)){
+                    if (entity instanceof LivingEntity hurter) {
+                        // 命中无多体节敌人
+                        if(owner.canAttack(hurter) && TEUtils.projectileCanHurtEntityTest.test(this, hurter)) {
+                            hitEntities.put(entity, hitCooldown);
+                            trigger = doHurt(owner, hurter, hurter);
+                        }
+                        if(hurter instanceof ISummonMob<?>){
+                            if(hiteffect_beneficial != null){
+                                hiteffect_beneficial.applyAll(owner, hurter);
+                            }
+                        }
+
+                    }else if(entity instanceof PartEntity<?> partEntity){
+                        // 名字多体节敌人
+                        if(partEntity.getParent() instanceof LivingEntity hurter){
+                            if(owner.canAttack(hurter) && TEUtils.projectileCanHurtEntityTest.test(this, hurter)) {
+                                hitEntities.put(entity, hitCooldown);
+                                trigger = doHurt(owner, hurter, partEntity);
+                            }
+                        }
+                    }
+                }else{
+                    hitEntities.put(entity, hitEntities.get(entity) - 1);
+                    if(hitEntities.get(entity) <= 0){
+                        hitEntities.remove(entity);
+                    }
+                    return;
+                }
+            }
+        }
+        if(trigger){
+            // 命中敌人造成伤害才消耗耐久
+            getWeapon().hurtAndBreak(1, owner, (p)->{});
+        }
+    }
+
+    private void updatePosition(Player owner) {
+        // 计算关键点位置
+        float yaw = (float) (Math.PI - Math.atan2(initDirection.z, initDirection.x));
+        float pitch = (float) (-Math.atan2(initDirection.y,
+                Math.sqrt(initDirection.x * initDirection.x + initDirection.z * initDirection.z)));
+        Quaternionf q = new Quaternionf()
+                .rotateY(yaw)
+                .rotateZ(pitch);
+        for (int i = 0; i < parts.size(); i++) {
+            // 世界坐标变换
+            Vec3KeyframeAnimation p = parts.get(i);
+            Vec3 pos = p.cal(tickCount * speed).multiply(getRange(owner), -1, 1);
+            Vector3f lp = pos.toVector3f();
+            q.transform(lp);
+            keyPositionsO.set(i, keyPositions.get(i));
+            keyPositions.set(i, lp);
+        }
+
+        if(tickCount > drawBackTick){
+            // 过渡到player位置
+            double delta = (double) (tickCount - drawBackTick) / (existTick - drawBackTick);
+            double lerpx = Mth.lerp(delta, getX(), getOwner().getEyePosition().x);
+            double lerpy = Mth.lerp(delta, getY(), getOwner().position().y + getOwner().getEyeHeight() * 0.5f);
+            double lerpz = Mth.lerp(delta, getZ(), getOwner().getEyePosition().z);
+
+            Vec3 dir = new Vec3(lerpx - getX(), lerpy - getY(), lerpz - getZ());
+            setDeltaMovement(0,0,0);
+            move(MoverType.SELF, dir.scale(0.5f));
+
+        }
     }
 
     protected boolean doHurt(LivingEntity owner, LivingEntity hurter, Entity actualHurter){
         double damage = owner.getAttributeValue(TEAttributes.SUMMON_DAMAGE.get());
         boolean trigger = false;
         if(TEUtils.attackTamableTest.test(owner, hurter)){
+            owner.setLastHurtMob(hurter); // 让召唤物可以攻击敌人
             trigger = true;
             damage *= damageDecline;
             damageDecline = Math.max(_damageDeclineMax, damageDecline - _damageDeclineStep);

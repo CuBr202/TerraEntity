@@ -152,6 +152,15 @@ dependencies {
         jarJar.ranged(it, "[1.0.0,)")
     }
 
+    compileOnly fg.deobf("curse.maven:dynamiclights-reforged-551736:6044481")
+    runtimeOnly fg.deobf("curse.maven:dynamiclights-reforged-551736:6044481")
+
+    compileOnly fg.deobf("curse.maven:sodium-options-api-1103431:6100812")
+    runtimeOnly fg.deobf("curse.maven:sodium-options-api-1103431:6100812")
+
+    compileOnly fg.deobf("curse.maven:embeddium-908741:5681725")
+    runtimeOnly fg.deobf("curse.maven:embeddium-908741:5681725")
+
 //    implementation fg.deobf("curse.maven:kubejs-238086:5853326")
 //    implementation fg.deobf("curse.maven:architectury-api-419699:5137938")
 //    implementation fg.deobf("curse.maven:rhino-416294:6186971")

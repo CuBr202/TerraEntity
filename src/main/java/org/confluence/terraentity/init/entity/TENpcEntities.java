@@ -11,10 +11,7 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.client.entity.renderer.mob.NPCRenderer;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.AnglerNPC;
-import org.confluence.terraentity.entity.npc.MechanicNPC;
-import org.confluence.terraentity.entity.npc.SimpleNPC;
+import org.confluence.terraentity.entity.npc.*;
 import org.confluence.terraentity.init.TEEntities;
 
 public class TENpcEntities {
@@ -71,7 +68,7 @@ public class TENpcEntities {
     /**
      * 旅商
      */
-    public static final RegistryObject<EntityType<AbstractTerraNPC>> TRAVELING_MERCHANT = TEEntities.registerEntity("traveling_merchant", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    public static final RegistryObject<EntityType<AbstractTerraNPC>> TRAVELING_MERCHANT = TEEntities.registerEntity("traveling_merchant", TravelingMerchantNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
      * 巫医
      */

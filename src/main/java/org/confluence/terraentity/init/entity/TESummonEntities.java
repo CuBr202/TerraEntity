@@ -5,11 +5,13 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.IronGolemRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.RegistryObject;
@@ -41,8 +43,12 @@ public class TESummonEntities {
     public static final RegistryObject<EntityType<SummonSword>> SUMMON_NETHERITE_SWORD = TEEntities.registerEntity("summon_netherite_sword", (e,l)->new SummonSword(e,l, ()->Items.NETHERITE_SWORD, 0x8136D2, TEEffectStrategies.HELL_FIRE_EFFECT.get().getProvider(), 0.15f),1F,1F);
     public static final RegistryObject<EntityType<Terraprisma>> TERRAPRISMA = TEEntities.registerEntity("terraprisma", (e, l)->new Terraprisma(e,l),1F,1F);
 
+
+    public static final RegistryObject<EntityType<Chester>> CHESTER = TEEntities.registerEntity("chester", (e,l)->new Chester(e,l),1F,1F);
+
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(CHESTER.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.FIRE_IMP.getId(), false, 1f,0));
 
         // sommon
         event.registerEntityRenderer(SUMMON_FINCH.get(), c-> new GeoNormalRenderer<>(c, SUMMON_FINCH.getId().withPrefix("summon/"),true));
@@ -50,7 +56,7 @@ public class TESummonEntities {
         event.registerEntityRenderer(SUMMON_IRON_GOLEM.get(), IronGolemRenderer::new);
         event.registerEntityRenderer(SUMMON_HORNET.get(), c->new GeoNormalRenderer<>(c, new GeoNormalModel<>(TEMonsterEntities.HORNET.getId(),false),true, 0.6f, 0.5f));
         event.registerEntityRenderer(SCULK_WISP.get(), c->new SculkWispRenderer(c, SCULK_WISP.getId().withPrefix("summon/")));
-        event.registerEntityRenderer(IMP.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.FIRE_IMP.getId(), true, 0.8f,0));
+        event.registerEntityRenderer(IMP.get(), c->new GeoNormalRenderer<>(c, IMP.getId().withPrefix("summon/"), true, 0.8f,0));
         event.registerEntityRenderer(SUMMON_SNOW_FLINX.get(), c->new GeoNormalRenderer<>(c, SUMMON_SNOW_FLINX.getId().withPrefix("summon/"),false){
             @Override
             protected void adjustPose(PoseStack poseStack, SummonSnowFlinx animatable, float partialTick){
@@ -66,11 +72,15 @@ public class TESummonEntities {
         event.registerEntityRenderer(SUMMON_DIAMOND_SWORD.get(), c->new SummonSwordRenderer<>(c));
         event.registerEntityRenderer(SUMMON_NETHERITE_SWORD.get(), c->new SummonSwordRenderer<>(c));
         event.registerEntityRenderer(TERRAPRISMA.get(), c->new TerraprismaRenderer(c));
+
+
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
+        event.put(CHESTER.get(), AbstractSummonMob.createAttributes().build());
+
         // sommon
-        event.put(SUMMON_FINCH.get(), AbstractSummonMob.createAttributes().build());
+        event.put(SUMMON_FINCH.get(), AbstractSummonMob.createAttributes().add(ForgeMod.ENTITY_GRAVITY.get(), 0).add(Attributes.ATTACK_KNOCKBACK, 0).build());
         event.put(SUMMON_SLIME.get(), AbstractSummonMob.createAttributes().build());
         event.put(SUMMON_IRON_GOLEM.get(), IronGolem.createAttributes().build());
         event.put(SUMMON_HORNET.get(), AbstractSummonMob.createAttributes().build());
@@ -86,6 +96,8 @@ public class TESummonEntities {
         event.put(SUMMON_DIAMOND_SWORD.get(), AbstractSummonMob.createAttributes().build());
         event.put(SUMMON_NETHERITE_SWORD.get(), AbstractSummonMob.createAttributes().build());
         event.put(TERRAPRISMA.get(), AbstractSummonMob.createAttributes().build());
+
+
     }
 
     public static void register(){

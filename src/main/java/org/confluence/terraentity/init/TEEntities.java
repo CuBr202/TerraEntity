@@ -9,7 +9,6 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -66,9 +65,9 @@ public final class TEEntities {
     public static void register(IEventBus bus){
         TEBossEntities.register();
         TESummonEntities.register();
-        TERideableEntities.register(bus);
-        TEMonsterEntities.register(bus);
-        TEProjectileEntities.register(bus);
+        TERideableEntities.register();
+        TEMonsterEntities.register();
+        TEProjectileEntities.register();
         TENpcEntities.register();
         TEAnimals.register();
         ENTITIES.register(bus);

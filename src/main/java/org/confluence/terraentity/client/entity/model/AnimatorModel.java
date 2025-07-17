@@ -5,6 +5,9 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.core.animation.AnimationState;
 
+/**
+ * 用于硬编码骨骼，自动对Geo动画和硬编码动画之间进行插值
+ */
 public abstract class AnimatorModel<T extends GeoEntity> extends GeoNormalModel<T>{
 
     public AnimatorModel(ResourceLocation path) {
@@ -22,6 +25,9 @@ public abstract class AnimatorModel<T extends GeoEntity> extends GeoNormalModel<
         customAnimations(animatable, instanceId, animationState, partialTick);
     }
 
+    /**
+     * 初始化骨骼动画控制器，获取需要的GeoBone骨骼并初始化Animator
+     */
     public abstract void initBoneAnimators(T animatable, BakedGeoModel model);
 
     public abstract void customAnimations(T animatable, long instanceId, AnimationState<T> animationState,  float partialTick);

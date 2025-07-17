@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.ModList;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.model.TerraprismaModel;
@@ -24,8 +25,6 @@ public class TerraprismaRenderer extends EntityRenderer<Terraprisma> {
         super(context);
         this.model= new TerraprismaModel(context.bakeLayer(TerraprismaModel.LAYER_LOCATION));
     }
-
-
 
     @Override
     public void render(Terraprisma entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
@@ -84,15 +83,10 @@ public class TerraprismaRenderer extends EntityRenderer<Terraprisma> {
         if(entity.anim_z != null) {
             poseStack.mulPose(Axis.ZN.rotationDegrees((float) entity.anim_z.cal(entity.tickCount, partialTick)));
         }
-//        poseStack.mulPose(Axis.XN.rotationDegrees((entity.tickCount + partialTick) * 30));
-//        poseStack.mulPose(Axis.YN.rotationDegrees((entity.tickCount + partialTick) * 30));
-//        poseStack.mulPose(Axis.ZN.rotationDegrees(90));
-
-
     }
 
     protected void renderTrail(Terraprisma entity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick, PoseStack.Pose pose){
-        entity.trail.renderTrail(entity, entity.trailQueue, entity.position(), poseStack, bufferSource, packedLight, pose);
+        entity.trail.renderTrail(entity, entity.position(), poseStack, bufferSource, packedLight, pose, Vec3.ZERO);
     }
 
     public @NotNull ResourceLocation getTextureLocation(@NotNull Terraprisma summonSword) {
@@ -111,13 +105,13 @@ public class TerraprismaRenderer extends EntityRenderer<Terraprisma> {
 
             poseStack.pushPose();
             poseStack.scale(0.9f,0.9f,0.9f);
-            model.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(entity))), packedLight, OverlayTexture.NO_OVERLAY, red, blue, green,0x2F / 255f);
+            model.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(entity))), packedLight, OverlayTexture.NO_OVERLAY, red,green, blue, 0x2F / 255f);
             poseStack.popPose();
             // 不知道是什么原因，会出现深度始终小于实体
-            model.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.entityTranslucentEmissive(getTextureLocation(entity))), packedLight, OverlayTexture.NO_OVERLAY, red, blue, green,1);
+            model.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.entityTranslucentEmissive(getTextureLocation(entity))), packedLight, OverlayTexture.NO_OVERLAY, red,green, blue, 1);
         }else{
             // 原版这个效果好一点
-            model.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.energySwirl(getTextureLocation(entity),0,0)), packedLight, OverlayTexture.NO_OVERLAY, red, blue, green,1);
+            model.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.energySwirl(getTextureLocation(entity),0,0)), packedLight, OverlayTexture.NO_OVERLAY, red, green,blue, 1);
         }
 //        RenderSystem.enableDepthTest();
     }

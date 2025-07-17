@@ -15,7 +15,7 @@ public class TERideableItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
     public static final RegistryObject<RideableItem> SLIMY_SADDLE = ITEMS.register("slimy_saddle",()->new RideableItem<>(new Item.Properties(), TERideableEntities.RIDEABLE_SLIME));
-    public static final RegistryObject<RideableItem> HONEYED_GOGGLES = ITEMS.register("honeyed_goggles",()->new RideableItem<>(new Item.Properties(), TERideableEntities.RIDEABLE_BEE, Entity::onGround));
+    public static final RegistryObject<RideableItem> HONEYED_GOGGLES = ITEMS.register("honeyed_goggles",()->new RideableItem<>(new Item.Properties(), TERideableEntities.RIDEABLE_BEE));
 
 
 }

@@ -4,7 +4,9 @@ import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.FlyingAnimal;
@@ -15,11 +17,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.attachment.SummonerAttachment;
 import org.confluence.terraentity.entity.ai.goal.skill.ISkill;
 import org.confluence.terraentity.entity.ai.goal.skill.SkillCooldownManager;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
 import org.confluence.terraentity.entity.util.KeyframeAnimationCounter;
+import org.confluence.terraentity.entity.util.trail.PositionPoseProperties;
 import org.confluence.terraentity.entity.util.trail.SummonSwordTrail;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
@@ -38,7 +42,6 @@ import java.util.function.Supplier;
 public class SummonSword extends AbstractSummonMob<SummonSword> implements IOriented, FlyingAnimal {
 
     public SummonSwordTrail trail;
-    public Queue<SummonSwordTrail.PositionProperties> trailQueue;
 
     public int sequence;
     public Item modelItem;
@@ -48,8 +51,6 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     public int backTicksMax = 20;
 
     protected int rgb;
-
-    protected int skillIndex;
 
     // 服务端控制客户端的x旋转(对于模型剑和贴图剑，x和z轴是反的)
     public KeyframeAnimationCounter anim_x;
@@ -80,7 +81,6 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
         this.rgb = rgb;
         this.trail = new SummonSwordTrail(1, width, rgb);
-        this.trailQueue = new LinkedList<>();
         this.effectStrategy = effectStrategy;
 
     }
@@ -89,12 +89,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         return rgb;
     }
 
-    private void stopSkill(){
-        this.skillIndex = 0;
-    }
-    private boolean isSkillAttacking(){
-        return this.skillIndex > 0;
-    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -156,8 +151,8 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         if(level().isClientSide){
             if(this.entityData.get(DATA_BACK)){
                 this.backTicks++;
-//                this.trailQueue.poll();
-                this.trail.generateTrail(this, tickCount);
+                this.trail.trailsQueue.poll();
+//                this.trail.generateTrail(this, tickCount);
             }else{
                 this.backTicks--;
                 this.trail.generateTrail(this, tickCount);
@@ -187,7 +182,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         }
         @Override
         public boolean canUse() {
-            return sword.getTarget() != null && !sword.summon_shouldTryTeleportToOwner() && !sword.isSkillAttacking();
+            return sword.getTarget() != null && !sword.summon_shouldTryTeleportToOwner();
         }
 
         @Override
@@ -234,8 +229,8 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     /**
      * 带有冷却时间的技能ai
      */
-    protected static class AbstactSkillGoal extends Goal implements ISkill {
-        protected SummonSword sword;
+    protected static class AbstactSkillGoal<T extends SummonSword> extends Goal implements ISkill {
+        protected T sword;
         protected int skillIndex;
         int ticks = 0;
         int _ticks = 0;
@@ -247,7 +242,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
          * @param ticks 持续时间
          * @param skillCooldown 技能冷却时间
          */
-        protected AbstactSkillGoal(SummonSword sword, int skillIndex, int ticks, int skillCooldown) {
+        protected AbstactSkillGoal(T sword, int skillIndex, int ticks, int skillCooldown) {
             this.sword = sword;
             this.skillIndex = skillIndex;
             this.setFlags(EnumSet.of(Flag.MOVE));
@@ -272,7 +267,6 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
          */
         @Override
         public void stop(){
-            sword.stopSkill();
             ticks = 0;
             sword.cooldownManager.triggerSkill(this);
         }
@@ -306,14 +300,13 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
     /**
      * 移动到目标处，挥剑向下砍
      */
-    protected static class SwordSlashGoal extends AbstactSkillGoal{
+    protected static class SwordSlashGoal<T extends SummonSword> extends AbstactSkillGoal<T>{
 
         boolean triggered = false;
-        protected SwordSlashGoal(SummonSword sword, int skillIndex, int ticks, int skillCooldown) {
+        AttributeModifier attackModifier;
+        protected SwordSlashGoal(T sword, int skillIndex, int ticks, int skillCooldown) {
             super(sword, skillIndex, ticks, skillCooldown);
-            this.sword = sword;
-            this.setFlags(EnumSet.of(Flag.MOVE));
-
+            this.attackModifier = new AttributeModifier("ae264581-de91-4659-aefa-e53e1c465595", 0.3f, AttributeModifier.Operation.MULTIPLY_BASE);
         }
 
         @Override
@@ -346,6 +339,14 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
             super.stop();
             triggered = false;
             this.triggerZRot();
+            Objects.requireNonNull(this.sword.getAttribute(Attributes.ATTACK_DAMAGE)).removeModifier(attackModifier);
+
+        }
+
+        @Override
+        public void start(){
+            super.start();
+            Objects.requireNonNull(this.sword.getAttribute(Attributes.ATTACK_DAMAGE)).addTransientModifier(attackModifier);
         }
 
         protected void triggerZRot(){
@@ -359,6 +360,9 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         }
     }
 
+    /**
+     * 跟随主人身后
+     */
     static class SwordFollowOwnerGoal extends Goal{
         SummonSword sword;
         protected SwordFollowOwnerGoal(SummonSword sword) {
@@ -388,8 +392,8 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
                 return;
             }
 
-            // 玩家视角方向
-            Vec3 d = Vec3.directionFromRotation(new Vec2(owner.getXRot(), owner.yBodyRot));
+            // 玩家正对方向
+            Vec3 d = Vec3.directionFromRotation(new Vec2(0, owner.yBodyRot));
             // 玩家视角正前方
             Vec3 forward = d.multiply(1,0,1).normalize();
             // 玩家视角右侧方向
@@ -403,7 +407,8 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
             // 剑视角朝向
             Vec3 lookPos = swordPos.subtract(forward.scale(5))
-                    .add(0,-8 - (sword.sequence - 1)/2 ,0); // 向下看
+                    .add(0,-8 - (sword.sequence - 1)/2 ,0) // 向下看
+                    .add(swordPos.subtract(targetPos).scale(20)); //模拟披风
 
             sword.lookControl.setLookAt(lookPos);
             sword.lookAt(EntityAnchorArgument.Anchor.FEET, lookPos);
@@ -443,6 +448,10 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
 
     @Override
     public OBB getOrientedBoundingBox() {
+        return buildObb().updateVertex();
+    }
+
+    protected OBB buildObb(){
         Vec3 pos = position();
         return new OBB(pos, 0.75, 0.75, 1.5 * lengthScale(), getXRot(), getYRot()).offsetAlongAxisZ(0.75 * (lengthScale() - 1)).updateVertex();
 

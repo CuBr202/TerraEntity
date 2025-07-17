@@ -3,9 +3,7 @@ package org.confluence.terraentity.client.gui.container;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -14,8 +12,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.util.ClientAdapterUtil;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
@@ -85,7 +81,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
             // 如果没有对话，则不显示对话框
 //            if(((IPlayer) Minecraft.getInstance().player).terra_entity$getInteractingEntity() instanceof AbstractTerraNPC npc){
 //                if(NPCDialogs.getDialog_map().get(BuiltInRegistries.ENTITY_TYPE.getKey(npc.getType())) != null) {
-            Minecraft.getInstance().setScreen(new DialogScreen(Component.literal("123"), this));
+            Minecraft.getInstance().setScreen(new DialogScreen(Component.literal("123"), this, trade && !menu.NPCTrades.trades().isEmpty()));
 //                }
 //            }
             triggerOnce = false;

@@ -20,6 +20,8 @@ public final class TESounds {
     public static final RegistryObject<SoundEvent> HURRIED_ROARING = register("hurried_roaring"); //疯狗冲刺
     public static final RegistryObject<SoundEvent> DIG_SOUND = register("dig_sound"); //蠕虫挖掘
     public static final RegistryObject<SoundEvent> USE_MOUNTS = register("use_mounts"); // 召唤坐骑
+    public static final RegistryObject<SoundEvent> WHIP_ATTACK = register("whip_attack"); // 鞭打
+
     // 血爬虫
     public static final RegistryObject<SoundEvent> BLOOD_CRAWLER_DEATH = register("blood_crawler_death");
     public static final RegistryObject<SoundEvent> BLOOD_CRAWLER_FREE = register("blood_crawler_free");
@@ -48,6 +50,12 @@ public final class TESounds {
 
     // 泰拉挥动
     public static final RegistryObject<SoundEvent> WAVING = register("waving");
+
+    // 召唤
+    public static final RegistryObject<SoundEvent> ROUTINE_SUMMON = register("routine_summon"); // 大多数召唤杖
+    public static final RegistryObject<SoundEvent> SUMMON_HORNET = register("summon_hornet"); //黄蜂
+    public static final RegistryObject<SoundEvent> SUMMON_EYE = register("summon_eye"); // 魔眼
+    public static final RegistryObject<SoundEvent> SUMMON_IMP = register("summon_imp"); // 小鬼
 
 
     private static RegistryObject<SoundEvent> register(String id) {

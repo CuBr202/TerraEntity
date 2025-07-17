@@ -102,10 +102,12 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> {
 
     private void spawnLeech(LivingEntity target) {
         if (level() instanceof ServerLevel serverLevel) {
-            BaseWarm warm = new BaseWarm(TEMonsterEntities.LEECH.get(), this.level(), AbstractPrefab.WARM_BUILDER.get());
-            warm.setPos(position().add(getForward().normalize().scale(1)));
-            warm.setTarget(target);
-            serverLevel.addFreshEntity(warm);
+            BaseWarm warm = TEMonsterEntities.LEECH.get().create(level());
+            if (warm != null) {
+                warm.setPos(position().add(getForward().normalize().scale(1)));
+                warm.setTarget(target);
+                serverLevel.addFreshEntity(warm);
+            }
         }
     }
 

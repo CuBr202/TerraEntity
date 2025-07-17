@@ -124,6 +124,11 @@ public class BaseWhipItem extends Item {
     }
 
     @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return enchantment == Enchantments.MOB_LOOTING || super.canApplyAtEnchantingTable(stack,enchantment);
+    }
+
+    @Override
     public void appendHoverText(ItemStack stack, Level context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         var data = IDataComponentType.getData(stack, TEDataComponentTypes.EFFECT_STRATEGY.get());
         if (data != null) {
@@ -195,10 +200,6 @@ public class BaseWhipItem extends Item {
         }
     }
 
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return super.canApplyAtEnchantingTable(stack,enchantment) || enchantment == Enchantments.MOB_LOOTING;
-    }
 
     static UUID uuid1 = UUID.fromString("bb3e0d35-6fff-4448-a899-2c82d4558b44");
     static UUID uuid2 = UUID.fromString("ed5ea748-2b5c-4763-9d7b-4ed7071fa31c");
