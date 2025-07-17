@@ -11,6 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
@@ -377,5 +379,12 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
 
         this.isClicked = false;
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+        if (type != ClickType.PICKUP_ALL) {
+            super.slotClicked(slot, slotId, mouseButton, type);
+        }
     }
 }
