@@ -21,9 +21,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public record TENPCLoot(HolderLookup.Provider registries) implements LootTableSubProvider {
-    public TENPCLoot(HolderLookup.Provider registries) {
-        this.registries = registries;
-    }
 
     public static ResourceKey<LootTable> Angler = ResourceKey.create(Registries.LOOT_TABLE, TerraEntity.space("npc/angler"));
 

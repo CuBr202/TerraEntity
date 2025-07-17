@@ -1,6 +1,7 @@
 package org.confluence.terraentity.data.gen.recipe;
 
 import com.mojang.serialization.Codec;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -11,10 +12,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.component.FireworkExplosion;
 import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Blocks;
 import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
@@ -25,6 +28,7 @@ import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
+import org.confluence.terraentity.init.item.TESummonItems;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.TradeProperties;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
@@ -32,11 +36,13 @@ import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeLootTable;
 import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
 import org.confluence.terraentity.registries.npc_trade_list.ITradeGenerator;
+import org.confluence.terraentity.registries.npc_trade_list.variant.WeightMapGenerator;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.KillEntityLock;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.ProgressTradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.RandomTradeTask;
 import org.confluence.terraentity.utils.TEItemUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +66,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
     @Override
     protected void run(HolderLookup.Provider lookupProvider) {
 
-        HolderLookup.RegistryLookup<Enchantment> enchantmentLookup = lookupProvider.lookup(Registries.ENCHANTMENT).get();
+        HolderLookup.RegistryLookup<Enchantment> enchantmentLookup = lookupProvider.lookupOrThrow(Registries.ENCHANTMENT);
 
 
         shop(TENpcEntities.DEMOLITIONIST.getId(),builder()
@@ -88,15 +94,15 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                                 )
                                 .addResult(1, List.of(Items.FISHING_ROD.getDefaultInstance()))
                                 .addResult(5, List.of(Items.BUCKET.getDefaultInstance()))
-                                .addResult(10, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LURE).get(),1)), TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LUCK_OF_THE_SEA).get(),1))))
+                                .addResult(10, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.getOrThrow(Enchantments.LURE),1)), TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.getOrThrow(Enchantments.LUCK_OF_THE_SEA),1))))
                                 .addResult(15, List.of(TEItemUtil.make(Items.IRON_INGOT,20)))
-                                .addResult(20, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LURE).get(),2)),TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LUCK_OF_THE_SEA).get(),2))))
+                                .addResult(20, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.getOrThrow(Enchantments.LURE),2)),TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.getOrThrow(Enchantments.LUCK_OF_THE_SEA),2))))
                                 .addResult(25, List.of(TEItemUtil.make(Items.GOLD_INGOT,20)))
-                                .addResult(30, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LURE).get(),3)),TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.LUCK_OF_THE_SEA).get(),3))))
+                                .addResult(30, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.getOrThrow(Enchantments.LURE),3)),TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.getOrThrow(Enchantments.LUCK_OF_THE_SEA),3))))
                                 .addResult(35, List.of(TEItemUtil.make(Items.DIAMOND,20)))
-                                .addResult(40, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.get(Enchantments.MENDING).get(),1))))
+                                .addResult(40, List.of(TEItemUtil.make(Items.ENCHANTED_BOOK, 1, stack-> stack.enchant(enchantmentLookup.getOrThrow(Enchantments.MENDING),1))))
                                 .addResult(45, List.of(TEItemUtil.make(Items.EMERALD,20)))
-                                .addResult(50, List.of(TEItemUtil.make(Items.NETHERITE_INGOT,5), TEItemUtil.make(TEBoomerangItems.FLAMARANG.get(), 1, stack->stack.enchant(enchantmentLookup.get(TEEnchantments.MULTI_BOOMERANG).get(),1))))
+                                .addResult(50, List.of(TEItemUtil.make(Items.NETHERITE_INGOT,5), TEItemUtil.make(TEBoomerangItems.FLAMARANG.get(), 1, stack->stack.enchant(enchantmentLookup.getOrThrow(TEEnchantments.MULTI_BOOMERANG),1))))
                                 .addResult(55, List.of(TEItemUtil.make(Items.NETHERITE_INGOT,5)))
 //                                .setTitle("title.terra_entity.npc_trade.task.fishman")
                                 .build()
@@ -110,6 +116,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 .add(ItemTradeItemList.builder().addCost(Items.JUNGLE_SAPLING, 2).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build())
                 .add(ItemTradeItemList.builder().addCost(Items.ACACIA_SAPLING, 2).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build())
                 .add(ItemTradeItemList.builder().addCost(Items.DARK_OAK_SAPLING, 2).addCost(Items.COAL, 1).addResult(Items.EMERALD, 1).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 24).addResult(TESummonItems.SUMMON_WOODEN_SWORD_STAFF).build())
                 .build());
 
         shop(TENpcEntities.MERCHANT.getId(),builder()
@@ -136,6 +143,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 .add(ItemTradeItemList.builder().addCost(Items.ARROW, 4).addCost(Items.SPIDER_EYE, 1).addResult(TEItemUtil.make(Items.TIPPED_ARROW, 4, stack -> stack.set(DataComponents.POTION_CONTENTS, PotionContents.EMPTY.withPotion(Potions.POISON)))).build())
                 .add(ItemTradeItemList.builder().addCost(Items.ARROW, 4).addCost(Items.SPIDER_EYE, 1).addResult(TEItemUtil.make(Items.TIPPED_ARROW, 4, stack -> stack.set(DataComponents.POTION_CONTENTS, PotionContents.EMPTY.withPotion(Potions.SLOWNESS)))).build())
                 .add(ItemTradeItemList.builder().addCost(Items.ARROW, 4).addCost(Items.PHANTOM_MEMBRANE, 1).addResult(TEItemUtil.make(Items.TIPPED_ARROW, 4, stack -> stack.set(DataComponents.POTION_CONTENTS, PotionContents.EMPTY.withPotion(Potions.SLOW_FALLING)))).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 48).addResult(TESummonItems.SUMMON_STONE_SWORD_STAFF).build())
                 .build());
 
 
@@ -279,6 +287,58 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 ))))
                 .build());
 
+        shop(TENpcEntities.TRAVELING_MERCHANT.getId(), new ComplexBuilder(
+                WeightMapGenerator.builder(6)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.LEATHER,10).build(), 50)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.COAL,10).build(), 50)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.COPPER_INGOT,10).build(), 50)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.IRON_INGOT,8).build(), 40)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.GOLD_INGOT,4).build(), 30)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.DIAMOND,2).build(), 10)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.REDSTONE,10).build(), 30)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.LAPIS_LAZULI,10).build(), 30)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.AMETHYST_CLUSTER, 4).build(), 30)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD, 64).addResult(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF).build(), 5)
+                        .addTrade(ItemTradeItemList.builder().addCost(Items.EMERALD, 10).addResult(TESummonItems.CHESTER_STAFF).build(), 10)
+
+                        .build()
+        ).build());
+        shop(TENpcEntities.MECHANIC.getId(), builder()
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.REDSTONE,10).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Blocks.REPEATER,5).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Blocks.COMPARATOR,5).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Blocks.REDSTONE_LAMP,5).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Blocks.REDSTONE_TORCH,8).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 20).addResult(TEBoomerangItems.COMBAT_WRENCH).build())
+                .build());
+
+        shop(TENpcEntities.TRUFFLE.getId(), builder()
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 10).addResult(TEBoomerangItems.SHROOMERANG).build())
+                .add(ItemTradeItemList.builder().addCost(Items.BROWN_MUSHROOM, 10).addResult(Items.EMERALD).build())
+                .add(ItemTradeItemList.builder().addCost(Items.RED_MUSHROOM, 10).addResult(Items.EMERALD).build())
+                .build());
+
+        shop(TENpcEntities.CLOTHIER.getId(), builder()
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.IRON_HELMET).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.IRON_CHESTPLATE).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.IRON_LEGGINGS).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.IRON_BOOTS).build())
+                .build());
+
+        shop(TENpcEntities.WITCH_DOCTOR.getId(), builder()
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(Items.HONEY_BOTTLE,8).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(TEItemUtil.make(Items.SPLASH_POTION, 1, stack -> stack.set(DataComponents.POTION_CONTENTS, PotionContents.EMPTY.withPotion(Potions.HEALING)))).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(TEItemUtil.make(Items.SPLASH_POTION, 1, stack -> stack.set(DataComponents.POTION_CONTENTS, PotionContents.EMPTY.withPotion(Potions.HARMING)))).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 64).addResult(TESummonItems.SUMMON_IRON_SWORD_STAFF).build())
+                .build());
+
+        shop(TENpcEntities.PARTY_GIRL.getId(), builder()
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(TEItemUtil.make(Items.FIREWORK_ROCKET, 3, stack -> stack.set(DataComponents.FIREWORKS, new Fireworks(1, List.of(new FireworkExplosion(FireworkExplosion.Shape.STAR, IntList.of(255,0,0),IntList.of(255,255,255),true,false)))))).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(TEItemUtil.make(Items.FIREWORK_ROCKET, 3, stack -> stack.set(DataComponents.FIREWORKS, new Fireworks(1, List.of(new FireworkExplosion(FireworkExplosion.Shape.CREEPER, IntList.of(255,255,0),IntList.of(255,255,255),true,false)))))).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD).addResult(TEItemUtil.make(Items.FIREWORK_ROCKET, 3, stack -> stack.set(DataComponents.FIREWORKS, new Fireworks(1, List.of(new FireworkExplosion(FireworkExplosion.Shape.BURST, IntList.of(255,0,255),IntList.of(255,255,255),true,false)))))).build())
+                .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 64).addCost(Items.EMERALD, 32).addResult(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF).build())
+
+                .build());
 
     }
 
@@ -288,7 +348,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "NPC Shop";
     }
 

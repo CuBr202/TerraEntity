@@ -21,6 +21,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.color.FloatRGB;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.boss.KingSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
 import org.confluence.terraentity.init.TEParticles;
@@ -38,6 +40,8 @@ import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
+
+import static net.minecraft.world.entity.monster.Monster.isDarkEnoughToSpawn;
 
 public class BaseSlime extends Slime implements DeathAnimOptions {
     static FloatRGB SlimeColor_Green = FloatRGB.fromInteger(0x48E920);
@@ -81,13 +85,22 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
                 .add(Attributes.MAX_HEALTH, maxHealth);
     }
 
-    public static boolean checkSlimeSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+    public static boolean checkSlimeSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!(pLevel instanceof Level level)) {
             return false;
         }
-        if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
-            return false;
-        } else if (type == TEMonsterEntities.YELLOW_SLIME.get() || type == TEMonsterEntities.RED_SLIME.get()) {
+        if(ServerConfig.SPAWN_WITHOUT_LIGHT.get()){
+            if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
+                return false;
+            }
+        }else{
+            if (!isDarkEnoughToSpawn(pLevel, pPos, pRandom) || !checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
+                return false;
+            }
+        }
+
+
+        if (type == TEMonsterEntities.YELLOW_SLIME.get() || type == TEMonsterEntities.RED_SLIME.get()) {
             return pLevel.getBrightness(LightLayer.SKY, pPos) == 0 && pPos.getY() > 30;
         } else if (type == TEMonsterEntities.BLACK_SLIME.get() || type == TEMonsterEntities.DUNGEON_SLIME.get()) {
             return pLevel.getBrightness(LightLayer.SKY, pPos) == 0 && pPos.getY() <= 30;

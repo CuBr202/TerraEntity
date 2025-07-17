@@ -2,65 +2,39 @@ package org.confluence.terraentity.entity.animal;
 
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.util.IVanillaVariant;
-import org.jetbrains.annotations.NotNull;
+import org.confluence.terraentity.data.init.loot.TELootParams;
 
 import java.util.Map;
 
-public class JewelSquirrel extends Squirrel implements IVanillaVariant<Integer> {
-
-    private boolean initializedVariant = false;
-
-    private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(JewelSquirrel.class, EntityDataSerializers.INT);
+public class JewelSquirrel extends Squirrel  {
 
     public JewelSquirrel(EntityType<? extends Squirrel> entityType, Level level) {
         super(entityType, level);
     }
 
     @Override
-    public void onAddedToLevel(){
-        super.onAddedToLevel();
-        if(!level().isClientSide && !initializedVariant){
-            this.setVariant(random.nextInt(getTexturesMap().size()));
+    protected void dropFromLootTable(DamageSource damageSource, boolean hitByPlayer) {
+        ResourceKey<LootTable> resourcekey = this.getLootTable();
+        LootTable loottable = this.level().getServer().reloadableRegistries().getLootTable(resourcekey);
+        LootParams.Builder lootparams$builder = (new LootParams.Builder((ServerLevel)this.level())).withParameter(LootContextParams.THIS_ENTITY, this).withParameter(LootContextParams.ORIGIN, this.position()).withParameter(LootContextParams.DAMAGE_SOURCE, damageSource).withOptionalParameter(LootContextParams.ATTACKING_ENTITY, damageSource.getEntity()).withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, damageSource.getDirectEntity());
+        if (hitByPlayer && this.lastHurtByPlayer != null) {
+            lootparams$builder = lootparams$builder.withParameter(TELootParams.VARIANT, this.getTEVariant()).withParameter(LootContextParams.LAST_DAMAGE_PLAYER, this.lastHurtByPlayer).withLuck(this.lastHurtByPlayer.getLuck());
         }
-    }
 
-    @Override
-    public void setVariant(@NotNull Integer integer) {
-        this.entityData.set(DATA_VARIANT_ID, integer);
-    }
+        LootParams lootparams = lootparams$builder.create(LootContextParamSets.ENTITY);
+        loottable.getRandomItems(lootparams, this.getLootTableSeed(), this::spawnAtLocation);
 
-    @Override
-    public @NotNull Integer getVariant() {
-        return this.entityData.get(DATA_VARIANT_ID);
-    }
-    @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_VARIANT_ID, 0);
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        pCompound.putInt("Variant", this.getVariant());
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        if(pCompound.contains("Variant")) {
-            this.setVariant(pCompound.getInt("Variant"));
-            this.initializedVariant = true;
-        }
     }
 
     static Map<Integer, ResourceLocation> textures = new Int2ObjectOpenHashMap<>(ImmutableMap.<Integer, ResourceLocation>builder()

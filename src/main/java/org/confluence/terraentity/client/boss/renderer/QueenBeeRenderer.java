@@ -17,7 +17,7 @@ import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 public class QueenBeeRenderer extends GeoBossRenderer<QueenBee, GeoBossModel<QueenBee>> {
 
     public QueenBeeRenderer(EntityRendererProvider.Context renderManager, GeoBossModel<QueenBee> model) {
-        super(renderManager, model,1.0f,0.5f,false);
+        super(renderManager, model,1.0f,0.75f,false);
         this.addRenderLayer(new AutoGlowingGeoLayer<>(this){
             @Override
             protected ResourceLocation getTextureResource(QueenBee animatable) {
@@ -33,11 +33,6 @@ public class QueenBeeRenderer extends GeoBossRenderer<QueenBee, GeoBossModel<Que
     @Override
     public void preRender(PoseStack poseStack, QueenBee animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
-    }
-
-    @Override
-    public void render(QueenBee entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 
     public void reRender(BakedGeoModel model, PoseStack poseStack, MultiBufferSource bufferSource, QueenBee animatable,

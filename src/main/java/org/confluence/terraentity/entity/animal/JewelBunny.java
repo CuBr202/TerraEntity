@@ -5,10 +5,18 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.data.init.loot.TELootParams;
 import org.confluence.terraentity.entity.util.IVariant;
 import org.jetbrains.annotations.NotNull;
 
@@ -69,6 +77,20 @@ public class JewelBunny extends Bunny implements IVariant<Integer> {
             7, TerraEntity.space("textures/entity/animal/bunny/topaz_bunny.png")
     ));
 
+
+    @Override
+    protected void dropFromLootTable(DamageSource damageSource, boolean hitByPlayer) {
+        ResourceKey<LootTable> resourcekey = this.getLootTable();
+        LootTable loottable = this.level().getServer().reloadableRegistries().getLootTable(resourcekey);
+        LootParams.Builder lootparams$builder = (new LootParams.Builder((ServerLevel)this.level())).withParameter(LootContextParams.THIS_ENTITY, this).withParameter(LootContextParams.ORIGIN, this.position()).withParameter(LootContextParams.DAMAGE_SOURCE, damageSource).withOptionalParameter(LootContextParams.ATTACKING_ENTITY, damageSource.getEntity()).withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, damageSource.getDirectEntity());
+        if (hitByPlayer && this.lastHurtByPlayer != null) {
+            lootparams$builder = lootparams$builder.withParameter(TELootParams.VARIANT, this.getTEVariant()).withParameter(LootContextParams.LAST_DAMAGE_PLAYER, this.lastHurtByPlayer).withLuck(this.lastHurtByPlayer.getLuck());
+        }
+
+        LootParams lootparams = lootparams$builder.create(LootContextParamSets.ENTITY);
+        loottable.getRandomItems(lootparams, this.getLootTableSeed(), this::spawnAtLocation);
+
+    }
 
     @Override
     public Map<Integer, ResourceLocation> getTexturesMap() {

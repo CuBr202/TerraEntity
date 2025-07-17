@@ -46,6 +46,7 @@ public class TerraEntity {
         TEAi.register(modEventBus);
         TEMenus.TYPES.register(modEventBus);
         TEBiomes.register(modEventBus);
+        TELoots.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);

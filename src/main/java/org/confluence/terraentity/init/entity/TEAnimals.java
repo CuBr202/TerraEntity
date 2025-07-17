@@ -40,7 +40,7 @@ public class TEAnimals {
         event.registerEntityRenderer(BUNNY.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<Bunny>(BUNNY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(JEWEL_BUNNY.get(), c-> new GeoNormalRenderer<>(c, new VariantTexModel<JewelBunny>(BUNNY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1 ,0));
         event.registerEntityRenderer(BOOM_BUNNY.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<BoomBunny>(BOOM_BUNNY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
-        event.registerEntityRenderer(SQUIRREL.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<Squirrel>(SQUIRREL.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
+        event.registerEntityRenderer(SQUIRREL.get(), c-> new GeoNormalRenderer<>(c, new VariantTexModel<Squirrel>(SQUIRREL.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(JEWEL_SQUIRREL.get(), c-> new GeoNormalRenderer<>(c, new VariantTexModel<JewelSquirrel>(SQUIRREL.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(BIRD.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<Bird>(BIRD.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(BLUE_JAY.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<Bird>(BLUE_JAY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));

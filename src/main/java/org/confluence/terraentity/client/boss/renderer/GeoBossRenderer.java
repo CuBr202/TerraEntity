@@ -32,11 +32,12 @@ public class GeoBossRenderer<T extends LivingEntity & GeoAnimatable, M extends G
 
     public void setPoseStack(PoseStack poseStack, T entity, float partialTick){
         poseStack.scale(scale, scale, scale);
+        poseStack.translate(0,yOffset,0);
         float yRot = Mth.lerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
         double rad = yRot*Math.PI/180;
         float xRot = Mth.lerp(partialTick, entity.xRotO, entity.getXRot());
         poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(xRot));
-        poseStack.translate(0,yOffset,0);
+
     }
 
     @Override

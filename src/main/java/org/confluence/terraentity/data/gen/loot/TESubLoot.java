@@ -28,23 +28,23 @@ public record TESubLoot(HolderLookup.Provider registries) implements LootTableSu
     public void generate(@NotNull BiConsumer<ResourceKey<LootTable>, LootTable.Builder> consumer) {
 
         consumer.accept(SPAWN_WOODEN_SWORD_STAFF, LootTable.lootTable()
-                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_WOODEN_SWORD_STAFF.get(), 0.3f))
+                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_WOODEN_SWORD_STAFF.get(), 0.15f))
         );
         //
         consumer.accept(SPAWN_STONE_SWORD_STAFF, LootTable.lootTable()
-                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_STONE_SWORD_STAFF.get(), 0.3f))
+                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_STONE_SWORD_STAFF.get(), 0.15f))
         );
         consumer.accept(SPAWN_IRON_SWORD_STAFF, LootTable.lootTable()
-                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_IRON_SWORD_STAFF.get(), 0.3f))
+                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_IRON_SWORD_STAFF.get(), 0.15f))
         );
         consumer.accept(SPAWN_GOLDEN_SWORD_STAFF, LootTable.lootTable()
-                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF.get(), 0.1f))
+                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF.get(), 0.05f))
         );
         consumer.accept(SPAWN_DIAMOND_SWORD_STAFF, LootTable.lootTable()
                 .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.get(), 0.05f))
         );
         consumer.accept(SPAWN_NETHERITE_SWORD_STAFF, LootTable.lootTable()
-                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF.get(), 0.3f))
+                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF.get(), 0.15f))
         );
 
         consumer.accept(SPAWN_SCULK_WISP_STAFF, LootTable.lootTable()

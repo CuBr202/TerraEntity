@@ -17,6 +17,7 @@ public class ServerConfig {
     public static ModConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH;
     public static ModConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE ;
 
+    public static ModConfigSpec.ConfigValue<Boolean> SPAWN_WITHOUT_LIGHT;
 
     public static ModConfigSpec init(){
         final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
@@ -54,6 +55,9 @@ public class ServerConfig {
                 .comment("Multiplier for monster attributes damage.")
                 .defineInRange("monster_attributes_multiplier_damage", 1F, 0.0625f, 100f);
 
+        SPAWN_WITHOUT_LIGHT = BUILDER
+                .comment("Should monsters spawn without light?")
+                .define("spawn_without_light", true);
         return BUILDER.build();
     }
 }
