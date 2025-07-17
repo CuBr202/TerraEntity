@@ -68,7 +68,7 @@ public class LittleHornet extends Hornet implements IMinion<LittleHornet> {
 
     @Override
     public boolean hurt(DamageSource source, float pAmount) {
-        if(source.getEntity() == this.owner || tickCount <= 1)
+        if(source.getEntity() == this.owner)
             return false;
         return super.hurt(source, pAmount);
     }

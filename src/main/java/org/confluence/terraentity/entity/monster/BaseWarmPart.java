@@ -53,11 +53,12 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICo
         super.tick();
     }
 
+    @Override
     public boolean hurt(DamageSource source, float amount) {
         this.getParent().setHealth(this.getParent().getHealth() - amount);
         SoundEvent hurtSound = this.getParent().getHurtSound(source);
         if(hurtSound!=null) {
-            this.getParent().playSound(hurtSound);
+            playSound(hurtSound);
         }
         if(this.getParent().getHealth() <= 0) {
             return false;

@@ -228,5 +228,10 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
             this.owner = eye;
         }
     }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        return super.hurt(source, amount);
+    }
 }
 
