@@ -116,6 +116,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
 
     public float getAttributeMultiplier(Holder<Attribute> attribute){
         return getMultiple(level(), attribute);
+
     }
 
 

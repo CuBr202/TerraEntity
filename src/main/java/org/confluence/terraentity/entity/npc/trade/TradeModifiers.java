@@ -31,9 +31,11 @@ public class TradeModifiers {
 
     public static void applyModifiers(NPCTradeManager trade, ResourceLocation location) {
         List<ITradeModifier> modifiers = TradeModifiers.modifiersMap.get(location);
-        modifiers.sort(Comparator.comparing(ITradeModifier::priority));
-        for (ITradeModifier modifier : modifiers) {
-            modifier.accept(trade, location);
+        if(modifiers != null) {
+            modifiers.sort(Comparator.comparing(ITradeModifier::priority));
+            for (ITradeModifier modifier : modifiers) {
+                modifier.accept(trade, location);
+            }
         }
     }
 
