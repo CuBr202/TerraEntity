@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -42,7 +41,7 @@ public class ChesterSummonItem<T extends Chester> extends SummonItem<T> {
         }
         if (player.isShiftKeyDown()) {
             // shift 按下时
-            BlockPos pos = TEUtils.getEyeBlockHitResult(player).below();
+            BlockPos pos = TEUtils.getEyeBlockHitResult(player);
             SummonerAttachment data = player.getData(TEAttachments.SUMMONER_STORAGE);
             SummonerAttachment.Key key = new SummonerAttachment.Key(pos, player.level().dimension());
             Level level1 = level.getServer().getLevel(key.levelId());

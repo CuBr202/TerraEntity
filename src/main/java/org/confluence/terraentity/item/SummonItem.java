@@ -103,11 +103,11 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
             entity.setCost(consume);
             level.addFreshEntity(entity);
             entity.playSound(this.sound.get(), 1.0F, 1.0F);
+            var data = player.getData(summonType.get());
+            data.summon(consume, entity.getId());
+            if (player instanceof ServerPlayer serverPlayer)
+                data.sync(serverPlayer);
         }
-        var data = player.getData(summonType.get());
-        data.summon(consume, entity.getId());
-        if (player instanceof ServerPlayer serverPlayer)
-            data.sync(serverPlayer);
     }
 
 

@@ -46,8 +46,8 @@ public abstract class AbstractExistCodecProvider<T> implements DataProvider {
 
     protected abstract Codec<T> getCodec();
 
-    protected void gen(ResourceLocation location, T checkPoint){
-        this.jsons.add(new Pair<>(location, checkPoint));
+    protected void gen(ResourceLocation location, T data){
+        this.jsons.add(new Pair<>(location, data));
     }
 
     protected Path getPath(ResourceLocation loc) {

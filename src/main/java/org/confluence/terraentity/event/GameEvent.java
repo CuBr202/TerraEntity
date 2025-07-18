@@ -15,6 +15,7 @@ import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
+import org.confluence.terraentity.entity.npc.trade.TradeModifiers;
 import org.confluence.terraentity.network.s2c.SyncDataS2C;
 import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
 import org.confluence.terraentity.utils.AdapterUtils;
@@ -35,6 +36,7 @@ public class GameEvent {
     @SubscribeEvent
     public static void serverStartBefore(ServerAboutToStartEvent event) {
         NPCTradeManager.readTradesFromJson(event.getServer(), event.getServer().registryAccess());
+        TradeModifiers.readTradesFromJson(event.getServer(), event.getServer().registryAccess());
         AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
     }
 

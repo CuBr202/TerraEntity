@@ -89,10 +89,14 @@ public class NPCTradeManager {
     /**
      * 初始化交易列表，将未生成的表生成子表，同时设置owner
      */
-    public void initTrades(ITradeHolder holder) {
+    public void initTrades(ITradeHolder holder, ResourceLocation id) {
         if (tradeList != null) {
             this.trades = new ArrayList<>(tradeList.generateTrades());
             this.tradeList = null;
+
+        }
+        if(id != null) { // 正常情况只会在第一次生成时不为null
+            TradeModifiers.applyModifiers(this, id);
         }
         this.setOwner(holder);
     }

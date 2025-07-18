@@ -439,9 +439,7 @@ public final class TEUtils {
      */
     public static BlockPos getEyeBlockHitResult(Player player){
         final BlockHitResult result = getPlayerPOVHitResult(player.level(), player, ClipContext.Fluid.SOURCE_ONLY);
-        final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos().above());
-        final BlockPos pos = raytraceResult.getBlockPos();
-        return pos;
+        return result.getBlockPos();
     }
 
     public static boolean isFTWWorld(ServerLevel level) {
