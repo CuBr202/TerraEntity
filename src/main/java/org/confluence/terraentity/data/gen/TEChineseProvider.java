@@ -190,7 +190,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.CRIMSON_KEMERA_SPAWN_EGG.get(), "猩红喀迈拉刷怪蛋");
         add(TESpawnEggItems.FACE_MONSTER_SPAWN_EGG.get(), "脸怪刷怪蛋");
         add(TESpawnEggItems.FIRE_IMG_SPAWN_EGG.get(), "火焰小鬼刷怪蛋");
-        add(TESpawnEggItems.SNOW_FLINX_SPAWN_EGG.get(), "雪怪刷怪蛋");
+        add(TESpawnEggItems.SNOW_FLINX_SPAWN_EGG.get(), "小雪怪刷怪蛋");
 
         add(TESpawnEggItems.PIRANHA_SPAWN_EGG.get(), "食人鱼刷怪蛋");
 
