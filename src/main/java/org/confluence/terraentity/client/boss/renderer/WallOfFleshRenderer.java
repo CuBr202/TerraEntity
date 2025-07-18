@@ -14,16 +14,17 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
+import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.entity.boss.WallOfFlesh;
 import software.bernie.geckolib.model.GeoModel;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class WallOfFleshRenderer extends GeoBossRenderer<WallOfFlesh,GeoBossModel<WallOfFlesh>> {
+public class WallOfFleshRenderer extends GeoNormalRenderer<WallOfFlesh> {
 
     public WallOfFleshRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new GeoBossModel<>(MODEL_NAMES[0]), 3.0f, 0.5f, false);
+        super(renderManager, new GeoBossModel<>(MODEL_NAMES[0]), false, 3.0f, 0.5f);
     }
 
     GeoBossModel<WallOfFlesh> currentModel;

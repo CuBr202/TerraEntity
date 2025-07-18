@@ -42,9 +42,9 @@ public class TEBossEntities {
         event.registerEntityRenderer(TEBossEntities.CROWN_OF_KING_SLIME_MODEL.get(), CrownOfKingSlimeModelRenderer::new);
 
         event.registerEntityRenderer(TEBossEntities.KING_SLIME.get(), KingSlimeRenderer::new);
-        event.registerEntityRenderer(TEBossEntities.EYE_OF_CTHULHU.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(TEBossEntities.EYE_OF_CTHULHU),1,0.5f, true));
+        event.registerEntityRenderer(TEBossEntities.EYE_OF_CTHULHU.get(), c->new GeoNormalRenderer<>(c,new GeoBossModel<>(TEBossEntities.EYE_OF_CTHULHU), true,1,0.5f));
         event.registerEntityRenderer(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), c-> new EaterOfWorldSegmentRenderer(c,2.2f, 0f));
-        event.registerEntityRenderer(TEBossEntities.EATER_OF_WORLDS.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(TEBossEntities.EATER_OF_WORLDS),2.2f,0, true));
+        event.registerEntityRenderer(TEBossEntities.EATER_OF_WORLDS.get(), c->new GeoNormalRenderer<>(c,new GeoBossModel<>(TEBossEntities.EATER_OF_WORLDS), true,2.2f,0));
         event.registerEntityRenderer(TEBossEntities.BRAIN_OF_CTHULHU.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(TEBossEntities.BRAIN_OF_CTHULHU)));
         event.registerEntityRenderer(TEMonsterEntities.VISUAL_NEURON.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.VISUAL_NEURON.getId(),true));
         event.registerEntityRenderer(TEBossEntities.BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(TEBossEntities.BRAIN_OF_CTHULHU)));
@@ -54,8 +54,8 @@ public class TEBossEntities {
         event.registerEntityRenderer(TEBossEntities.DUNGEON_GUARDIAN.get(), c->new SkeletronRenderer(c,new GeoBossModel<>(TEBossEntities.SKELETRON)));
 
         event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH.get(), WallOfFleshRenderer::new);
-        event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH_EYE.get(), c->new GeoBossRenderer<>(c,new WallOfFleshEyeModel(WALL_OF_FLESH_EYE.getId()),2,0.5f, true));
-        event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(WALL_OF_FLESH_MOUTH),2,0.5f, true));
+        event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH_EYE.get(), c->new GeoNormalRenderer<>(c,new WallOfFleshEyeModel(WALL_OF_FLESH_EYE.getId()), true,2,0.5f));
+        event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), c->new GeoNormalRenderer<>(c,new GeoBossModel<>(WALL_OF_FLESH_MOUTH), true,2,0.5f));
 
     }
 

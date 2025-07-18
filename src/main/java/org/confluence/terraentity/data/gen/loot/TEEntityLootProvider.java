@@ -21,6 +21,9 @@ import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFu
 import net.minecraft.world.level.storage.loot.functions.SetComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.functions.SmeltItemFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWithEnchantedBonusCondition;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
+import org.confluence.terraentity.data.init.loot.TELootParams;
 import org.confluence.terraentity.data.init.loot.conditioin.VariantCondition;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TEAnimals;
@@ -310,6 +314,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                     )
             );
         });
+
 
     }
 

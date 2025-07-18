@@ -8,17 +8,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
+import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.post.BrainTranslucent;
 import org.confluence.terraentity.entity.boss.BrainOfCthulhu;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 
-public class BrainOfCthulhuRenderer extends GeoBossRenderer<BrainOfCthulhu,GeoBossModel<BrainOfCthulhu>> {
+public class BrainOfCthulhuRenderer extends GeoNormalRenderer<BrainOfCthulhu> {
     static RenderBuffers bf = new RenderBuffers(Runtime.getRuntime().availableProcessors());
     public boolean consumeRender = false;
     public BrainOfCthulhuRenderer(EntityRendererProvider.Context renderManager, GeoBossModel<BrainOfCthulhu> model) {
-        super(renderManager, model,1.0f,0.5f,false);
+        super(renderManager, model,false,1.0f,0.5f);
     }
 
     @Override

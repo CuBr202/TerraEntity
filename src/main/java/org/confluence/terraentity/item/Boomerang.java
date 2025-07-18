@@ -33,6 +33,7 @@ import org.confluence.terraentity.registries.generation.IGeneration;
 import org.confluence.terraentity.registries.generation.variant.ForwardGeneration;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class Boomerang extends Item {
 
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
         if(usedHand == InteractionHand.OFF_HAND) return InteractionResultHolder.fail(player.getItemInHand(usedHand));
         ItemStack stack = player.getItemInHand(usedHand);
         // 等待返回且未到达最大等待时间
@@ -111,10 +112,10 @@ public class Boomerang extends Item {
 
 
     @Override
-    public boolean canContinueUsing(ItemStack oldStack, ItemStack newStack) {return false;}
+    public boolean canContinueUsing(@NotNull ItemStack oldStack, @NotNull ItemStack newStack) {return false;}
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("attribute.name.generic.attack_damage").append(": ").append(String.format("%.1f", boomerangModifier.damage)).withColor(0x00FF00));
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.boomerang.fly_speed").append(": ").append(String.format("%.2f", boomerangModifier.flySpeed)).withColor(0xCCCC00));
 
@@ -133,7 +134,7 @@ public class Boomerang extends Item {
     }
 
     @Override
-    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+    public boolean supportsEnchantment(@NotNull ItemStack stack, Holder<Enchantment> enchantment) {
         return enchantment.is(Enchantments.LOOTING) || super.supportsEnchantment(stack, enchantment);
     }
 
@@ -261,17 +262,12 @@ public class Boomerang extends Item {
 
         /**
          * 设置粒子效果
-         * @param particle
-         * @return
          */
         public BoomerangModifier setParticle(Supplier<ParticleOptions> particle) {
             return setParticle(particle, 1);
         }
         /**
          * 设置粒子效果
-         * @param particle
-         * @param particleCount
-         * @return
          */
         public BoomerangModifier setParticle(Supplier<ParticleOptions> particle, int particleCount) {
             this.particle = particle;

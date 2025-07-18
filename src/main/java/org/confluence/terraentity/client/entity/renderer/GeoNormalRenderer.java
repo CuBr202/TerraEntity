@@ -6,6 +6,8 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.jetbrains.annotations.Nullable;
@@ -15,10 +17,10 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRenderer<T> {
-    boolean ifRotX;
-    float scale;
-    float offsetY;
+public class GeoNormalRenderer<T extends LivingEntity & GeoEntity> extends GeoEntityRenderer<T> {
+    protected boolean ifRotX;
+    protected float scale;
+    protected float offsetY;
 
     /**
      * @param path 实体文件位置 path.namespace/textures/entity/{name}.png
@@ -45,8 +47,9 @@ public class GeoNormalRenderer<T extends Mob & GeoEntity> extends GeoEntityRende
         poseStack.scale(scale, scale, scale);
         poseStack.translate(0, offsetY, 0);
         if(ifRotX) {
-            double rad = animatable.yBodyRot * Math.PI / 180;
-            poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(animatable.xRotO));
+            double rad = Mth.lerp(partialTick, animatable.yBodyRotO, animatable.yBodyRot) * Math.PI / 180;
+            poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(
+                    Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
 //            poseStack.translate(0, 0, 0);
         }
         adjustPose(poseStack, animatable, partialTick);

@@ -9,15 +9,16 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
+import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.entity.boss.QueenBee;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
-public class QueenBeeRenderer extends GeoBossRenderer<QueenBee, GeoBossModel<QueenBee>> {
+public class QueenBeeRenderer extends GeoNormalRenderer<QueenBee> {
 
     public QueenBeeRenderer(EntityRendererProvider.Context renderManager, GeoBossModel<QueenBee> model) {
-        super(renderManager, model,1.0f,0.75f,false);
+        super(renderManager, model,false,1.0f,0.75f);
         this.addRenderLayer(new AutoGlowingGeoLayer<>(this){
             @Override
             protected ResourceLocation getTextureResource(QueenBee animatable) {
