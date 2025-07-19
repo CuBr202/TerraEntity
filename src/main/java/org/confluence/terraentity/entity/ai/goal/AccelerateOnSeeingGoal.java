@@ -5,6 +5,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 
+import java.util.UUID;
+
 public class AccelerateOnSeeingGoal extends Goal {
     protected final Mob mob;
     protected float speedModifier;
@@ -12,7 +14,7 @@ public class AccelerateOnSeeingGoal extends Goal {
     public AccelerateOnSeeingGoal(Mob mob,float speedModifier) {
         this.mob = mob;
         this.speedModifier = speedModifier;
-        modifier = new AttributeModifier("accelerate_on_seeing_goal",speedModifier,AttributeModifier.Operation.ADDITION);
+        modifier = new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),"accelerate_on_seeing_goal",speedModifier,AttributeModifier.Operation.ADDITION);
 
     }
 

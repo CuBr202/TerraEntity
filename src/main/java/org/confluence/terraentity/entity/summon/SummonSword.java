@@ -306,7 +306,7 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         AttributeModifier attackModifier;
         protected SwordSlashGoal(T sword, int skillIndex, int ticks, int skillCooldown) {
             super(sword, skillIndex, ticks, skillCooldown);
-            this.attackModifier = new AttributeModifier("ae264581-de91-4659-aefa-e53e1c465595", 0.3f, AttributeModifier.Operation.MULTIPLY_BASE);
+            this.attackModifier = new AttributeModifier(UUID.fromString("ae264581-de91-4659-aefa-e53e1c465595"),"skill_enhance", 0.3f, AttributeModifier.Operation.MULTIPLY_BASE);
         }
 
         @Override

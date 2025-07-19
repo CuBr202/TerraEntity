@@ -9,7 +9,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
@@ -35,15 +37,11 @@ public class TEAttributeModifierConfig extends AbstractJsonConfig {
     String comment;
     Map<EntityType<?>, List<Modifier>> modifiers;
 
-    public Map<EntityType<?>, List<Modifier>> getModifiers() {
-        return modifiers;
-    }
-
-    public static MapCodec<Map<EntityType<?>, List<Modifier>>> CODEC =
+    static MapCodec<Map<EntityType<?>, List<Modifier>>> CODEC =
             Codec.unboundedMap(BuiltInRegistries.ENTITY_TYPE.byNameCodec(), Codec.list(Modifier.CODEC)).fieldOf("settings");
 
 
-    public record Modifier(Attribute attribute, double amount){
+    record Modifier(Attribute attribute, double amount){
         public static Codec<Modifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 BuiltInRegistries.ATTRIBUTE.byNameCodec().fieldOf("attribute").forGetter(Modifier::attribute),
                 Codec.DOUBLE.fieldOf("amount").forGetter(Modifier::amount)
@@ -57,7 +55,7 @@ public class TEAttributeModifierConfig extends AbstractJsonConfig {
     @Override
     protected JsonObject defaultConfig() {
         JsonObject defaultConfig = new JsonObject();
-        defaultConfig.addProperty("comment", "This is extension attribute modifier config file to modify monsters' attribute easily due to kjs may not work on some monsters. This file only works on Server side when server starts and this has maximum priority over kjs and builtin attribute. Default file will be created if this file is not exist. If this is not needed, just delete all content in 'settings'");
+        defaultConfig.addProperty("comment", "This is extension attribute modifier config file to modify monsters' attribute easily due to kjs may not work on some monsters. This file only works on Server side when server starts and this has maximum priority over kjs and builtin attribute. Default file will be created if this file is not exist. To disable, just delete all content in 'settings'");
         Map<EntityType<?>, List<Modifier>> defaultModifiers = new HashMap<>();
         defaultModifiers.put(TEMonsterEntities.BASE_BONES.get(),
                 List.of(
@@ -79,6 +77,21 @@ public class TEAttributeModifierConfig extends AbstractJsonConfig {
         }else{
             modifiers = null;
             TerraEntity.LOGGER.error("Fail to parse attribute_config.json, using empty modifiers. Try delete the file to create default config. Error: {}", either.error());
+        }
+    }
+
+    public void modify(LivingEntity mob){
+        if(modifiers != null && modifiers.containsKey(mob.getType())){
+            List<TEAttributeModifierConfig.Modifier> modifyList = modifiers.get(mob.getType());
+            for(TEAttributeModifierConfig.Modifier modifier : modifyList){
+                AttributeInstance attributeInstance = mob.getAttribute(modifier.attribute());
+                if(attributeInstance != null){
+                    attributeInstance.setBaseValue(modifier.amount());
+                    if(attributeInstance.getAttribute() == Attributes.MAX_HEALTH){
+                        mob.setHealth((float) modifier.amount());
+                    }
+                }
+            }
         }
     }
 }

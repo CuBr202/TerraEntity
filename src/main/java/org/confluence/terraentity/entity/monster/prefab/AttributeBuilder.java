@@ -107,19 +107,7 @@ public class AttributeBuilder {
             }
         }
 
-        Map<EntityType<?>, List<TEAttributeModifierConfig.Modifier>> map = TEAttributeModifierConfig.getInstance().getModifiers();
-        if(map != null && map.containsKey(mob.getType())){
-            List<TEAttributeModifierConfig.Modifier> modifiers = map.get(mob.getType());
-            for(TEAttributeModifierConfig.Modifier modifier : modifiers){
-                AttributeInstance attributeInstance = mob.getAttribute(modifier.attribute());
-                if(attributeInstance != null){
-                    attributeInstance.setBaseValue(modifier.amount());
-                    if(attributeInstance.getAttribute() == Attributes.MAX_HEALTH){
-                        mob.setHealth((float) modifier.amount());
-                    }
-                }
-            }
-        }
+
     }
 
     public AttributeBuilder setXpReward(int xpReward) {

@@ -19,6 +19,7 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
@@ -31,7 +32,7 @@ public class RangeShooter extends AbstractMonster {
     int _delay = 8;
     int delay = -1;
 
-    static final AttributeModifier modifier = new AttributeModifier("eabc7402-ad87-4567-94e5-253a6cf4e391",1, AttributeModifier.Operation.MULTIPLY_BASE);
+    static final AttributeModifier modifier = new AttributeModifier(UUID.fromString("eabc7402-ad87-4567-94e5-253a6cf4e391"),"range",1, AttributeModifier.Operation.MULTIPLY_BASE);
     Supplier<? extends EntityType<? extends BaseProj<?>>> projType;
 
     public RangeShooter(EntityType<? extends Monster> type, Level level, Supplier<? extends EntityType<? extends BaseProj<?>>> projType, AttributeBuilder builder) {

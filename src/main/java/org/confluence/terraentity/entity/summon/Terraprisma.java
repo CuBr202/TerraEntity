@@ -19,6 +19,7 @@ import org.confluence.terraentity.utils.OBB;
 
 import java.awt.*;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * 泰拉棱镜
@@ -140,7 +141,7 @@ public class Terraprisma extends SummonSword {
      */
     static class TerraprismaRotateGoal extends AbstactSkillGoal<Terraprisma> {
 
-        AttributeModifier attackModifierId = new AttributeModifier("8808d0f5-625d-4a20-aeb8-e48779fdfee2", 0.3f, AttributeModifier.Operation.MULTIPLY_BASE);
+        AttributeModifier attackModifierId = new AttributeModifier(UUID.fromString("8808d0f5-625d-4a20-aeb8-e48779fdfee2"),"skill_enhance", 0.3f, AttributeModifier.Operation.MULTIPLY_BASE);
         /**
          * @param skillIndex    技能索引
          * @param ticks         持续时间

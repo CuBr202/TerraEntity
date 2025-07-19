@@ -47,10 +47,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.*;
 
@@ -238,10 +235,10 @@ public final class TEUtils {
     static String difficultyHealthKey = "difficulty_modifier_max_health";
     static String difficultyDamageKey = "difficulty_modifier_attack_damage";
 
-    static Supplier<AttributeModifier> boss_healthModifier = ()->new AttributeModifier(healthKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
-    static Supplier<AttributeModifier> boss_damageModifier = ()->new AttributeModifier(damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
-    static Function<Float,AttributeModifier> difficultyDamageModifier = (f)->new AttributeModifier(difficultyDamageKey, f - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
-    static Function<Float,AttributeModifier> difficultyHealthModifier = (f)->new AttributeModifier(difficultyHealthKey, f - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Supplier<AttributeModifier> boss_healthModifier = ()->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),healthKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Supplier<AttributeModifier> boss_damageModifier = ()->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Function<Float,AttributeModifier> difficultyDamageModifier = (f)->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),difficultyDamageKey, f - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Function<Float,AttributeModifier> difficultyHealthModifier = (f)->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),difficultyHealthKey, f - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
     public static void multiplePlayerEnhance(LivingEntity entity) {
         if(!entity.level().isClientSide) {
             float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
@@ -265,10 +262,11 @@ public final class TEUtils {
         }
     }
 
-    static Supplier<AttributeModifier> monster_healthModifier = ()->new AttributeModifier(healthKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
-    static Supplier<AttributeModifier> monster_damageModifier = ()->new AttributeModifier(damageKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Supplier<AttributeModifier> monster_healthModifier = ()->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),healthKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Supplier<AttributeModifier> monster_damageModifier = ()->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),damageKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     public static void monsterEnhance(LivingEntity entity) {
+
         if(entity instanceof Boss || entity instanceof AbstractTerraBossBase<?> || entity instanceof ISummonMob<?> ) return;
         if(!ServerConfig.ENHANCE_ALL_MONSTER.get() && !BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getNamespace().equals(TerraEntity.MODID)) return;
         if(!entity.level().isClientSide) {

@@ -24,6 +24,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * 巨大卷壳虫
@@ -31,7 +32,7 @@ import java.util.Random;
 public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVanillaVariant<Integer> {
 
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(GiantShelly.class, EntityDataSerializers.INT);
-    AttributeModifier armorAdditionModifier = new AttributeModifier("5a4cc4f4-f848-4af8-9854-abb034b1e8ac", 2, AttributeModifier.Operation.ADDITION);
+    AttributeModifier armorAdditionModifier = new AttributeModifier(UUID.fromString("5a4cc4f4-f848-4af8-9854-abb034b1e8ac"),"armor_enhance", 2, AttributeModifier.Operation.ADDITION);
     Vec3 cachedTarget = null;
     static final ResourceLocation armorAddition = TerraEntity.space("shrink");
     public GiantShelly(EntityType<? extends Monster> type, Level level) {

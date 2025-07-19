@@ -23,7 +23,7 @@ import java.util.UUID;
 
 public class SummonIronGolem extends IronGolem implements ISummonMob<SummonIronGolem> {
 
-    static AttributeModifier moveSpeedModify = new AttributeModifier("452f475f-5b04-41a8-8ba4-deb6279659c5",0.2, AttributeModifier.Operation.MULTIPLY_BASE ) ;
+    static AttributeModifier moveSpeedModify = new AttributeModifier(UUID.fromString("452f475f-5b04-41a8-8ba4-deb6279659c5"),"speed_enhance",0.2, AttributeModifier.Operation.MULTIPLY_BASE ) ;
     public SummonIronGolem(EntityType<? extends IronGolem> entityType, Level level) {
         super(entityType, level);
         if(!this.getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(moveSpeedModify))
