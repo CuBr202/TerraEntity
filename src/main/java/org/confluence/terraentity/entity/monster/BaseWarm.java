@@ -48,7 +48,7 @@ public class BaseWarm extends AbstractMonster {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new ComeAndBackDashAttackGoal(this, 16));
-        this.goalSelector.addGoal(5, new RandomWanderGoal(this, 80));
+        this.goalSelector.addGoal(5, new RandomWanderGoal(this, 30));
 
         this.targetSelector.addGoal(1,new AccelerateOnSeeingGoal(this,0.25f));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class,false, LivingEntity::canBeSeenAsEnemy));

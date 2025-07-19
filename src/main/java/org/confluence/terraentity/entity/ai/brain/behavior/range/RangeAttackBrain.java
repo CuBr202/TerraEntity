@@ -19,8 +19,10 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.utils.TEUtils;
 
+import java.util.List;
+
 /**
- * 执行远程攻击的行为,默认是弓箭远程攻击
+ * 执行远程攻击的行为
  */
 public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
 
@@ -92,7 +94,7 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
     protected boolean canTrigger(T owner, LivingEntity target){
         double angle = TEUtils.angleBetween(owner.getLookAngle(), target.getEyePosition().subtract(owner.getEyePosition()).normalize());
         angle = Mth.wrapDegrees(angle);
-        return angle < 0.2f;
+        return angle < 0.1f;
     }
 
     /**

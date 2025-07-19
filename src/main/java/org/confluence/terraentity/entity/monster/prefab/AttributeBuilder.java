@@ -1,23 +1,17 @@
 package org.confluence.terraentity.entity.monster.prefab;
 
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraftforge.common.ForgeMod;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -71,7 +65,10 @@ public class AttributeBuilder {
         mob.setDiscardFriction(noFriction);
 
         if(!ServerConfig.DISABLE_BUILTIN_MODIFIER.get()) {
-
+            if(mob.getAttribute(Attributes.MAX_HEALTH) != null){
+                mob.getAttribute(Attributes.MAX_HEALTH).setBaseValue(MAX_HEALTH);
+                mob.setHealth(MAX_HEALTH);
+            }
             if (mob.getAttribute(Attributes.ARMOR) != null) {
                 mob.getAttribute(Attributes.ARMOR).setBaseValue(ARMOR);
             }
@@ -106,7 +103,6 @@ public class AttributeBuilder {
                 mob.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08f);
             }
         }
-
 
     }
 

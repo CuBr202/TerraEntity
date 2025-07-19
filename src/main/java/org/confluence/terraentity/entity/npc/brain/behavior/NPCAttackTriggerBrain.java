@@ -8,9 +8,14 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import org.confluence.terraentity.entity.ai.brain.behavior.range.AttackTriggerBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
+import java.util.Map;
 import java.util.function.Function;
 
 public class NPCAttackTriggerBrain<T extends AbstractTerraNPC> extends AttackTriggerBrain<T> {
+
+    public NPCAttackTriggerBrain(Map<MemoryModuleType<?>, MemoryStatus> entryCondition) {
+        super(entryCondition, 0);
+    }
 
     public NPCAttackTriggerBrain(Function<ImmutableMap.Builder<MemoryModuleType<?>, MemoryStatus>, ImmutableMap.Builder<MemoryModuleType<?>, MemoryStatus>> modifier) {
         super(modifier, 0);

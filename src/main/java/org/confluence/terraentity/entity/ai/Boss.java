@@ -23,6 +23,10 @@ public interface Boss extends Enemy {
         return true;
     }
 
+    default boolean shouldEnhanceMultiplayer(){
+        return true;
+    }
+
     static void sendBossSpawnMessage(Entity entity){
         Level level = entity.level();
         if (entity instanceof Boss boss && !level.isClientSide){

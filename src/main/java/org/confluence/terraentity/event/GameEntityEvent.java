@@ -7,8 +7,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Zombie;
@@ -30,6 +28,7 @@ import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
+import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
@@ -39,9 +38,6 @@ import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.utils.TEUtils;
 
-import java.util.List;
-import java.util.Map;
-
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -50,13 +46,9 @@ public class GameEntityEvent {
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
         // 生成信息
         Boss.sendBossSpawnMessage(event.getEntity());
-
-
-
-        if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
-            TEUtils.monsterEnhance(living);
-        else if (event.getEntity() instanceof Slime slime)
-            TEUtils.monsterEnhance(slime);
+//        if(event.getEntity() instanceof ServerPlayer player){
+//            player.addItem(new ItemStack(TERiddenItems.HONEYED_GOGGLES.get()));
+//        }
 
     }
 
@@ -85,7 +77,6 @@ public class GameEntityEvent {
 
     @SubscribeEvent
     public static void entityDeathLevel(LivingDeathEvent event) {
-        Level level = event.getEntity().level();
         Boss.sendBossDeathMessage(event.getEntity());
         if(event.getEntity() instanceof ServerPlayer player){
             player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data->data.clear(player));
@@ -220,25 +211,33 @@ public class GameEntityEvent {
     public static void mobFinalizeSpawn(MobSpawnEvent.FinalizeSpawn event) {
         Mob mob = event.getEntity();
         RandomSource randomSource = mob.getRandom();
-        Level level = mob.level();
         if (mob instanceof DemonEye demonEye) {
             demonEye.setVariant(DemonEyeVariant.random(randomSource));
         } else if (mob instanceof BlackSlime blackSlime) {
             blackSlime.finalizeSpawn(randomSource, event.getDifficulty());
         }
-
+        ServerLevelAccessor level = event.getLevel();
         if (event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < 0.05F) {
             BaseSlime slime = TEMonsterEntities.BLUE_SLIME.get().create(zombie.level());
             if (slime != null) {
-//                level.addFreshEntity(slime);
+
                 slime.moveTo(zombie.getX(), zombie.getY(), zombie.getZ(), zombie.getYRot(), 0.0F);
-                slime.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(zombie.blockPosition()), MobSpawnType.JOCKEY, null,null);
+                slime.finalizeSpawn(level, level.getCurrentDifficultyAt(zombie.blockPosition()), MobSpawnType.JOCKEY, null,null);
                 slime.startRiding(zombie);
-                TEUtils.monsterEnhance(slime);
+
             }
         }
-
+        if(mob instanceof IAttributeHolder holder){
+            holder.getAttributeBuilder().modify(mob);
+        }
         TEAttributeModifierConfig.getInstance().modify(mob);
+        if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
+            TEUtils.monsterEnhance(living);
+        else if (event.getEntity() instanceof Slime slime)
+            TEUtils.monsterEnhance(slime);
+        if(mob instanceof Boss boss && boss.shouldEnhanceMultiplayer()) {
+            TEUtils.multiplePlayerEnhance(mob);
+        }
 
     }
 

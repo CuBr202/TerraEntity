@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import org.confluence.terraentity.init.TEAi;
 
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -17,8 +18,19 @@ import java.util.function.Function;
 public class AttackTriggerBrain<T extends LivingEntity> extends Behavior<T> {
     float detectDistance;
 
+
     /**
      * 用于其他的攻击目标触发条件，比如护士的攻击目标是朋友，而不是敌对生物
+     * @param detectDistance 检测距离
+     */
+    public AttackTriggerBrain(Map<MemoryModuleType<?>, MemoryStatus> entryCondition, float detectDistance) {
+        super(entryCondition);
+
+        this.detectDistance = detectDistance;
+    }
+
+    /**
+     * 用于添加额外条件
      * @param modifier 用于修改MemoryModuleType
      * @param detectDistance 检测距离
      */
@@ -51,8 +63,7 @@ public class AttackTriggerBrain<T extends LivingEntity> extends Behavior<T> {
             LivingEntity target = memory.get();
             boolean shouldAdd = shouldAttack(target, living);
             if (shouldAdd) {
-                brain.setMemory(MemoryModuleType.ATTACK_TARGET, target);
-                brain.setActiveActivityIfPossible(TEAi.Activities.RANGE_ATTACK.get());
+                this.onTrigger(level, living, gameTimeIn, target);
             }
         }
     }
@@ -67,5 +78,12 @@ public class AttackTriggerBrain<T extends LivingEntity> extends Behavior<T> {
 
     protected float getDetectDistanceSqr(T living) {
         return detectDistance * detectDistance;
+    }
+
+    protected void onTrigger(ServerLevel level, T living, long gameTime, LivingEntity target) {
+        Brain<?> brain = living.getBrain();
+        brain.setMemory(MemoryModuleType.ATTACK_TARGET, target);
+        brain.setActiveActivityIfPossible(TEAi.Activities.RANGE_ATTACK.get());
+        brain.setMemory(MemoryModuleType.ATTACK_COOLING_DOWN, false); // 触发攻击时冷却直接完毕，防止冷却memory不存在导致卡在攻击检查状态
     }
 }

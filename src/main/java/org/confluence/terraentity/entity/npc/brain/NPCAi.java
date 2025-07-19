@@ -87,7 +87,7 @@ public class NPCAi {
                 new MoveToTargetSink(),
                 new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
                 new CountDownCooldownTicks(MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS),
-                new NPCPanicTriggerBrain<>(),
+                getPanicTriggerBrain(),
                 getAttackTriggerBrain(),
                 NPCHouseBehaviors.findHouse(MemoryModuleType.HOME) // 寻找家
 
@@ -99,6 +99,13 @@ public class NPCAi {
      */
     protected Behavior<? super AbstractTerraNPC> getAttackTriggerBrain(){
         return new NPCAttackTriggerBrain<>();
+    }
+
+    /**
+     * 替换触发恐慌行为
+     */
+    protected Behavior<? super AbstractTerraNPC> getPanicTriggerBrain(){
+        return new NPCPanicTriggerBrain<>();
     }
 
     /**

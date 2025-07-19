@@ -40,6 +40,7 @@ public class PanicTriggerBrain<T extends LivingEntity> extends Behavior<T> {
     }
 
     protected void tick(ServerLevel level, T owner, long gameTime) {
+        super.tick(level, owner, gameTime);
     }
 
     public boolean hasHostile(T entity) {
@@ -47,7 +48,7 @@ public class PanicTriggerBrain<T extends LivingEntity> extends Behavior<T> {
     }
 
     public boolean isHurt(T owner) {
-        return owner.getBrain().hasMemoryValue(MemoryModuleType.HURT_BY);
+        return owner.getBrain().hasMemoryValue(MemoryModuleType.HURT_BY) || owner.hurtTime > 0;
     }
 
     protected boolean shouldPanic(T entity) {

@@ -108,7 +108,6 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         this.getAttribute(Attributes.ARMOR).setBaseValue(baseArmor);
 
         if(!level().isClientSide){
-            TEUtils.multiplePlayerEnhance(this);
             if(dirty)
                 firstSpawn();
             if(bossEvent!= null){

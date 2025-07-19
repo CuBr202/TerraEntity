@@ -30,7 +30,7 @@ public class ServerConfig {
                 .defineInRange("boss_attributes_multiplier_health", 0.5F, 0.0625f, 10f);
         BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE = BUILDER
                 .comment("Multiplier for boss attributes damage.")
-                .defineInRange("boss_attributes_multiplier_damage", 0.7F, 0.0625f, 10f);
+                .defineInRange("boss_attributes_multiplier_damage", 0.5F, 0.0625f, 10f);
 
         BOSS_NO_PHYSICS = BUILDER
                 .comment("Should the boss have no physics? Only for some bosses.")
@@ -50,17 +50,17 @@ public class ServerConfig {
 
         MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH = BUILDER
                 .comment("Multiplier for monster attributes health.")
-                .defineInRange("monster_attributes_multiplier_health", 1F, 0.0625f, 100f);
+                .defineInRange("monster_attributes_multiplier_health", 0.5F, 0.0625f, 100f);
         MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE = BUILDER
                 .comment("Multiplier for monster attributes damage.")
-                .defineInRange("monster_attributes_multiplier_damage", 1F, 0.0625f, 100f);
+                .defineInRange("monster_attributes_multiplier_damage", 0.5F, 0.0625f, 100f);
         DISABLE_BUILTIN_MODIFIER = BUILDER
                 .comment("Should the built-in attributes setting be disabled for monsters?")
                 .comment("For kjs modify")
                 .define("disable_builtin_health_attack_modifier", false);
         SPAWN_WITHOUT_LIGHT = BUILDER
                 .comment("Should monsters spawn without light?")
-                .define("spawn_without_light", true);
+                .define("spawn_without_light", false);
         BUILDER.pop();
         return BUILDER;
     }

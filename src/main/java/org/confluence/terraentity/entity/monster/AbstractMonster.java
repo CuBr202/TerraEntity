@@ -49,7 +49,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
             this.registerGoals();
         }
         this.navigation = createNavigation(level);
-        this.builder.modify(this);
+//        this.builder.modify(this);
 
         this.xpReward = builder.xpReward;
     }

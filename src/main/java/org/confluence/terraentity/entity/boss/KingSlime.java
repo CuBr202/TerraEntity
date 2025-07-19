@@ -409,7 +409,6 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     public void onAddedToWorld(){
         super.onAddedToWorld();
         if(!level().isClientSide){
-            TEUtils.multiplePlayerEnhance(this);
             if(bossEvent!= null){
                 bossEvent.getPlayers().forEach(p->syncBossHealthBar(p));
             }
