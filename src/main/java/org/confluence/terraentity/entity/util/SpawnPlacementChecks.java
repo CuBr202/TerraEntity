@@ -5,6 +5,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -57,14 +58,10 @@ public class SpawnPlacementChecks {
     }
 
     public static boolean checkGroundSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
-            return false; // 如果 pLevel 不是 Level 的实例，返回 false
-        }
 
-        if (!Mob.checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
+        if(!checkTEMonsterWithConfig(type, pLevel, pSpawnType, pPos, pRandom)){
             return false;
         }
-
         int y = pPos.getY();
         if (y < 60 || y >= 260) {
             return false; // 只能生成在 y = 60 到 y = 260 之间
@@ -74,18 +71,8 @@ public class SpawnPlacementChecks {
     }
 
     public static boolean checkRoutineMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
-            return false; // 如果 pLevel 不是 Level 的实例，返回 false
-        }
-
-        if(ServerConfig.SPAWN_WITHOUT_LIGHT.get()) {
-            if (!Mob.checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
-                return false;
-            }
-        }else{
-            if(!Monster.isDarkEnoughToSpawn(pLevel, pPos, pRandom) || !Mob.checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)){
-                return false;
-            }
+        if(!checkTEMonsterWithConfig(type, pLevel, pSpawnType, pPos, pRandom)){
+            return false;
         }
 
         int y = pPos.getY();
@@ -96,7 +83,7 @@ public class SpawnPlacementChecks {
         return true;
     }
 
-    public static boolean checkOnlyDayMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+    public static boolean  checkOnlyDayMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!(pLevel instanceof Level level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
         }
@@ -114,21 +101,7 @@ public class SpawnPlacementChecks {
     }
 
     public static boolean checkNormalAnimalSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level) || pPos == null) {
-            return false;
-        }
-
-        if (!Mob.checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
-            return false;
-        }
-
-        int y = pPos.getY();
-        if (y >= 260) {
-            return false;
-        }
-
-        return level.isDay()
-                && pLevel.canSeeSky(pPos);
+        return Animal.checkAnimalSpawnRules(null, pLevel, pSpawnType, pPos, pRandom);
     }
 
 

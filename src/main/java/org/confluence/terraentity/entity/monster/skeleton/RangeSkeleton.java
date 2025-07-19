@@ -63,7 +63,7 @@ public class RangeSkeleton extends AbstractSkeleton implements GeoEntity, IUseIt
     public void onAddedToLevel() {
         super.onAddedToLevel();
         if(!dirty && !level().isClientSide) {
-            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.MAX_HEALTH);
+            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.getMaxHealth());
             this.setHealth(getMaxHealth());
         }
     }

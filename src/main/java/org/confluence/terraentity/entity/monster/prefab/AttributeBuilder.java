@@ -21,7 +21,7 @@ public class AttributeBuilder {
     public int ARMOR = 2;
     public int xpReward = 5;
     public int FOLLOW_RANGE = 32;
-    public float MOVEMENT_SPEED = 0.38f;
+    public float MOVEMENT_SPEED = 0.25f;
     public float SPAWN_REINFORCEMENTS_CHANCE = 0.01f;
     public float KNOCKBACK_RESISTANCE = 0.8f;
     public float ATTACK_KNOCKBACK = 0.5f;

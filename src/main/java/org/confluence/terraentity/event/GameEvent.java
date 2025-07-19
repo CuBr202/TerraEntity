@@ -10,6 +10,7 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
+import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
 import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
@@ -38,6 +39,7 @@ public class GameEvent {
         NPCTradeManager.readTradesFromJson(event.getServer(), event.getServer().registryAccess());
         TradeModifiers.readTradesFromJson(event.getServer(), event.getServer().registryAccess());
         AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
+        TEAttributeModifierConfig.getInstance().loadConfig();
     }
 
     @SubscribeEvent

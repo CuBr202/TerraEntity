@@ -58,7 +58,7 @@ public class TEBiomeModifier {
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.FOREST)),
                 HolderSet.direct(), 2,1,1);
         register(context, TENpcEntities.PAINTER,
-                biomeLookup.getOrThrow(BiomeTags.IS_JUNGLE),
+                biomeLookup.getOrThrow(BiomeTags.IS_BADLANDS),
                 HolderSet.direct(), 2,1,1);
         register(context, TENpcEntities.ANGLER,
                 biomeLookup.getOrThrow(BiomeTags.IS_RIVER),
@@ -95,13 +95,14 @@ public class TEBiomeModifier {
         )));
         register(context, createModifierKey("skeleton_arm"), new BiomeModifiers.AddSpawnsBiomeModifier(
                 biomeLookup.getOrThrow(BiomeTags.IS_OVERWORLD), List.of(
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), 40,1,1),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), 40,1,1),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_BONES.get(), 90,1,2),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.SHORT_BONES.get(), 90,1,2),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.ANGER_BONES.get(), 90,1,2),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_ANGER_BONES.get(), 70,1,2),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.CURSED_SKULL.get(), 30,1,1)
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), 20,1,1),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), 20,1,1),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_BONES.get(), 40,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.SHORT_BONES.get(), 40,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.ANGER_BONES.get(), 40,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_ANGER_BONES.get(), 30,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.CURSED_SKULL.get(), 15,1,1),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.DARK_CASTER.get(), 20,1,1)
         )));
 
     }

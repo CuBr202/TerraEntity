@@ -40,6 +40,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
@@ -56,8 +57,10 @@ import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.entity.npc.trade.TradeParams;
+import org.confluence.terraentity.entity.util.SpawnPlacementChecks;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.init.TEItems;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.menu.SimpleTradeMenu;
 import org.confluence.terraentity.network.s2c.UpdateNPCTradePacket;
@@ -415,6 +418,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         super.tick();
         this.updateSwingTime();
 
+
 //        if(level().isClientSide){
 //            if(mood.getValue() != 100){
 //                System.out.println(mood..getValue()); // debug
@@ -631,9 +635,10 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
     }
 
-    public static boolean checkRoutineMonsterSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-//        if (!(pLevel instanceof Level level)) {
-//            return false; // 如果 pLevel 不是 Level 的实例，返回 false
+    public static boolean checkRoutineMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+
+//        if(!(pLevel instanceof Level)){
+//            return false;
 //        }
 
         if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {

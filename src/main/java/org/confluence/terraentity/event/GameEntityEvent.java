@@ -36,6 +36,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
@@ -242,6 +243,7 @@ public class GameEntityEvent {
 //                level.addFreshEntity(slime);
             }
         }
+        TEAttributeModifierConfig.getInstance().modify(mob);
 
     }
     // 貌似没必要使用这个，重写monster的方法就行
