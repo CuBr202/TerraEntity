@@ -7,10 +7,12 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.init.TEAi;
 
+import java.util.Map;
+
 public class NurseAttackTriggerBrain<T extends AbstractTerraNPC> extends NPCAttackTriggerBrain<T> {
 
     public NurseAttackTriggerBrain() {
-        super(m->m.put(TEAi.MemoryModules.NEAREST_VISIBLE_ALLIANCE_NURSE_TARGET.get(), MemoryStatus.VALUE_PRESENT));
+        super(Map.of(TEAi.MemoryModules.NEAREST_VISIBLE_ALLIANCE_NURSE_TARGET.get(), MemoryStatus.VALUE_PRESENT));
     }
 
     @Override

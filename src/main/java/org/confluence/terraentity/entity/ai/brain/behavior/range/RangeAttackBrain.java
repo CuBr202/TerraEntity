@@ -11,7 +11,6 @@ import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.projectile.Arrow;
-import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
@@ -151,7 +150,7 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
         // 调用默认的方法
         Arrow arrow = new Arrow(owner.level(), owner, Items.ARROW.getDefaultInstance(), Items.ARROW.getDefaultInstance());
         arrow.setPos(owner.getX(), owner.getY() + owner.getEyeHeight(), owner.getZ());
-        arrow.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), 0.0F, 1.5F, 1.0F);
+        arrow.shootFromRotation(owner, owner.getXRot(), owner.getYHeadRot(), 0.0F, 1.5F, 1.0F);
         owner.level().addFreshEntity(arrow);
     }
 }

@@ -6,11 +6,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.WalkTarget;
+import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
 public class NurseRangeAttackBrain<T extends AbstractTerraNPC> extends NPCRangeAttackBrain<T> {
@@ -30,7 +33,7 @@ public class NurseRangeAttackBrain<T extends AbstractTerraNPC> extends NPCRangeA
         ItemStack stack = new ItemStack(Items.POTION);
         stack.set(DataComponents.POTION_CONTENTS, PotionContents.EMPTY.withPotion(Potions.HEALING));
         thrownpotion.setItem(stack);
-        thrownpotion.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), -20.0F, 0.5F, 1.0F);
+        thrownpotion.shootFromRotation(owner, owner.getXRot(), owner.getYHeadRot(), -20.0F, 0.5F, 1.0F);
         level.addFreshEntity(thrownpotion);
         return true;
     }
@@ -55,8 +58,11 @@ public class NurseRangeAttackBrain<T extends AbstractTerraNPC> extends NPCRangeA
     @Override
     protected void onPrepare(ServerLevel level, T owner, LivingEntity target, int prepareTime){
         // 可能要停下来瞄准
-        if(owner.getRandom().nextFloat() < 0.1f){
-            owner.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
+//        owner.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
+        owner.lookAt(target, 10.0F, 10.0F);
+        Vec3 toPos = LandRandomPos.getPosTowards(owner, 3, 1, target.position());
+        if (toPos != null) {
+            owner.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(toPos,1.0f,1));
         }
     }
 
