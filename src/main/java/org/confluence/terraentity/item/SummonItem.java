@@ -89,17 +89,19 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
         }
 
         T entity = entityType.get().create(level);
-        BlockPos pos = TEUtils.getEyeBlockHitResult(player);
-        entity.setPos(pos.getX(), pos.getY(), pos.getZ());
-        entity.summon(player, stack);
-        entity.setCost(consume);
-        level.addFreshEntity(entity);
-        entity.playSound(this.sound.get(), 1.0F, 1.0F);
-        player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data->{
-            data.summon(consume, entity.getId());
-            if (player instanceof ServerPlayer serverPlayer)
-                data.sync(serverPlayer);
-        });
+        if (entity!=null) {
+            BlockPos pos = TEUtils.getEyeBlockHitResult(player);
+            entity.setPos(pos.getX(), pos.getY(), pos.getZ());
+            entity.summon(player, stack);
+            entity.setCost(consume);
+            level.addFreshEntity(entity);
+            entity.playSound(this.sound.get(), 1.0F, 1.0F);
+            player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data->{
+                data.summon(consume, entity.getId());
+                if (player instanceof ServerPlayer serverPlayer)
+                    data.sync(serverPlayer);
+            });
+        }
     }
 
 

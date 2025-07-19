@@ -444,9 +444,7 @@ public final class TEUtils {
         Vec3 vec3 = player.getEyePosition();
         Vec3 vec31 = vec3.add(player.getLookAngle().scale(player.getAttributeValue(ForgeMod.BLOCK_REACH.get())));
         BlockHitResult result =  player.level().clip(new ClipContext(vec3, vec31, net.minecraft.world.level.ClipContext.Block.OUTLINE, ClipContext.Fluid.WATER, player));
-        final BlockHitResult raytraceResult = result.withPosition(result.getBlockPos().above());
-        final BlockPos pos = raytraceResult.getBlockPos();
-        return pos;
+        return result.getBlockPos();
     }
 
     public static boolean isFTWWorld(ServerLevel level) {

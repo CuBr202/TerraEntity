@@ -45,6 +45,7 @@ public class ConfigContainerRegister {
         builder.addCheckBox(ServerConfig.BOSS_CLEAR_WHEN_NO_TARGET);
         builder.addCheckBox(ServerConfig.BOSS_NO_PHYSICS);
         builder.addCheckBox(ServerConfig.BOSS_LEAVE_ON_DAY);
+        builder.addCheckBox(ServerConfig.SPAWN_WITHOUT_LIGHT);
 
 
         builder.build(TerraEntity.MODID);

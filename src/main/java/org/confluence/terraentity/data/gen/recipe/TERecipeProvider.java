@@ -87,16 +87,16 @@ public class TERecipeProvider extends AbstractRecipeProvider {
                 .requires(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF.get())
                 .unlockedBy("has_iron_sword_staff", has(TESummonItems.SUMMON_IRON_SWORD_STAFF.get()))
                 .save(recipeOutput);
-        /*
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, TESummonItems.TERRAPRISMA.get())
-                .requires(TESummonItems.SUMMON_WOODEN_SWORD_STAFF)
-                .requires(TESummonItems.SUMMON_STONE_SWORD_STAFF)
-                .requires(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF)
-                .requires(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF)
-                .requires(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF)
-                .unlockedBy("has_golden_sword_staff", has(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF))
-                .save(recipeOutput);
-         */
+                .requires(TESummonItems.SUMMON_WOODEN_SWORD_STAFF.get())
+                .requires(TESummonItems.SUMMON_STONE_SWORD_STAFF.get())
+                .requires(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF.get())
+                .requires(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.get())
+                .requires(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF.get())
+                .unlockedBy("has_golden_sword_staff", has(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF.get()))
+                .save(recipeOutput, "terra_entity:terraprisma_2");
+
     }
 
     protected static void netheriteSmithing(Consumer<FinishedRecipe> recipeOutput, Item ingredientItem, RecipeCategory category, Item resultItem) {

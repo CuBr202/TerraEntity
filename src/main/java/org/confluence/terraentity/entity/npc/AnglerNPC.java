@@ -5,13 +5,13 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
@@ -19,6 +19,7 @@ import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
@@ -110,17 +111,20 @@ public class AnglerNPC extends AbstractTerraNPC {
 
         if(!this.isWakeUp()){
             this.brain = this.brain.copyWithoutBehaviors();
-            this.refreshDimensions();
         }
+    }
+
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData, CompoundTag tag) {
+        this.entityData.set(DATA_WAKE_UP, this.isWakeUp(), true);
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, tag);
     }
 
     @Override
     public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         if(key == DATA_WAKE_UP){
-            if(isWakeUp()){
-                this.refreshDimensions();
-            }
+            this.refreshDimensions();
         }
     }
 
@@ -129,9 +133,9 @@ public class AnglerNPC extends AbstractTerraNPC {
         super.readAdditionalSaveData(tag);
         if(tag.contains("WakeUp")){
             setWakeUp(tag.getBoolean("WakeUp"));
-            if(isWakeUp()){
-                this.refreshDimensions();
-            }
+            this.entityData.set(DATA_WAKE_UP, isWakeUp(), true);
+        }else{
+            this.entityData.set(DATA_WAKE_UP, false, true);
         }
         if(tag.contains("TriggerNight")){
             triggerNight = tag.getBoolean("TriggerNight");
@@ -157,7 +161,7 @@ public class AnglerNPC extends AbstractTerraNPC {
     }
 
     public void setWakeUp(boolean wakeUp) {
-        this.entityData.set(DATA_WAKE_UP, wakeUp);
+        this.entityData.set(DATA_WAKE_UP, wakeUp, true);
     }
 
     public boolean isLieDown(){
@@ -214,7 +218,6 @@ public class AnglerNPC extends AbstractTerraNPC {
         if(!isWakeUp() && player.level() instanceof ServerLevel serverLevel){
             setWakeUp(true);
             this.refreshBrain(serverLevel);
-            this.refreshDimensions();
             // confluence mixin here
             return InteractionResult.CONSUME;
         }

@@ -63,4 +63,9 @@ public class TEConfigScreen extends ConfigScreen {
 
 
     }
+
+    @Override
+    public int getMaxScroll() {
+        return Math.max(0, 250);
+    }
 }

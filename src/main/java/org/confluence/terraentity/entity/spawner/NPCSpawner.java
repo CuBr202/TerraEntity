@@ -40,9 +40,12 @@ public class NPCSpawner {
         if(isTimeToSpawn){
             int range = getRange(entityType);
             if(level.getEntities((Entity) null, new AABB(pos.offset(-range, -range, -range), pos.offset(range, range, range)), e->e.getType() == entityType).isEmpty()){
+                level.players().get(0).sendSystemMessage(Component.literal("spawn a npc"));
+
                 return true;
             }
         }
+//        level.players().get(0).sendSystemMessage(Component.literal(String.valueOf(level.getGameTime() - data.lastSpawnTime)));
         return false;
     }
 

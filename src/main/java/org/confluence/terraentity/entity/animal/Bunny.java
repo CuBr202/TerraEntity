@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.init.entity.TEAnimals;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -29,7 +30,6 @@ public class Bunny extends Rabbit implements GeoEntity {
 
     public Bunny(EntityType<? extends Bunny> entityType, Level level) {
         super(entityType, level);
-
     }
 
 

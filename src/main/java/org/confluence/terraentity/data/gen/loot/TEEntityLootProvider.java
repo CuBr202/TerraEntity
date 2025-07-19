@@ -3,6 +3,7 @@ package org.confluence.terraentity.data.gen.loot;
 
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.data.loot.EntityLootSubProvider;
+import net.minecraft.data.loot.packs.VanillaEntityLoot;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.entries.TagEntry;
 import net.minecraft.world.level.storage.loot.functions.*;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
@@ -30,6 +32,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
+import org.confluence.terraentity.data.init.loot.TELootParams;
 import org.confluence.terraentity.data.init.loot.conditioin.VariantCondition;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TEAnimals;
@@ -306,7 +309,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                             .add(singleItemIncrease(Items.REDSTONE, 1, 2).when(VariantCondition.of(5)))
                             .add(singleItemIncrease(Items.LAPIS_LAZULI, 1, 2).when(VariantCondition.of(6)))
                             .add(singleItemIncrease(Items.RAW_GOLD, 1, 2).when(VariantCondition.of(7)))
-                    )
+                    ).setParamSet(LootContextParamSet.builder().required(TELootParams.VARIANT).build())
             );
         });
 

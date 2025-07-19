@@ -12,12 +12,10 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.gen.loot.TELootModifyProvider;
 import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
 import org.confluence.terraentity.data.gen.recipe.CollectRecipeProvider;
+import org.confluence.terraentity.data.gen.recipe.TENPCShopModifierProvider;
 import org.confluence.terraentity.data.gen.recipe.TENPCShopProvider;
 import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
-import org.confluence.terraentity.data.gen.tags.TEDamageTypeTagsProvider;
-import org.confluence.terraentity.data.gen.tags.TEBlockTagsProvider;
-import org.confluence.terraentity.data.gen.tags.TEEntityTypeTagsProvider;
-import org.confluence.terraentity.data.gen.tags.TEItemTagsProvider;
+import org.confluence.terraentity.data.gen.tags.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -47,16 +45,18 @@ public class TEDataGenerator {
 
         generator.addProvider(server, new TEEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TEDamageTypeTagsProvider(output, lookup, helper));
+        generator.addProvider(server, new TEBiomeTagsProvider(output, lookup, helper));
+
         TEBlockTagsProvider blockTagsProvider = new TEBlockTagsProvider(output, lookup, helper);
         generator.addProvider(server, blockTagsProvider);
         generator.addProvider(server, new TEItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
 
-        generator.addProvider(server, TELootTableProvider.getProvider(output,lookup));
+        generator.addProvider(server, TELootTableProvider.getProvider(output, lookup));
         generator.addProvider(server, new CollectRecipeProvider(output, lookup, TERecipeProvider::new));
+        generator.addProvider(server, new TENPCShopProvider(output, lookup));
         generator.addProvider(server, new NPCNameProvider(output, lookup));
         generator.addProvider(server, new NPCMoodProvider(output, lookup));
-        generator.addProvider(server, new TENPCShopProvider(output, lookup));
-
+        generator.addProvider(server, new TENPCShopModifierProvider(output, lookup));
 
         boolean client = event.includeClient();
         generator.addProvider(client, new TEChineseProvider(output));

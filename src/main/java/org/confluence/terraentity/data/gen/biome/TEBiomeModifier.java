@@ -33,52 +33,54 @@ public class TEBiomeModifier {
         HolderGetter<PlacedFeature> placedFeatureLookup = context.lookup(Registries.PLACED_FEATURE);
 
         int minute = 20 * 60;
+        int base = minute * 5;
+        int longTime = minute * 10;
 
         register(context, TENpcEntities.GUIDE,
                 biomeLookup.getOrThrow(BiomeTags.IS_FOREST),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.DEMOLITIONIST,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.DRIPSTONE_CAVES), biomeLookup.getOrThrow(Biomes.LUSH_CAVES),biomeLookup.getOrThrow(Biomes.NETHER_WASTES)),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.GOBLIN_TINKERER,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.DRIPSTONE_CAVES), biomeLookup.getOrThrow(Biomes.LUSH_CAVES),biomeLookup.getOrThrow(Biomes.NETHER_WASTES)),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.ARMS_DEALER,
                 biomeLookup.getOrThrow(BiomeTags.HAS_VILLAGE_DESERT),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.NURSE,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.CHERRY_GROVE)),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.MERCHANT,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.FOREST)),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.PAINTER,
-                biomeLookup.getOrThrow(BiomeTags.IS_JUNGLE),
-                HolderSet.direct(), minute * 5,1);
+                biomeLookup.getOrThrow(BiomeTags.IS_BADLANDS),
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.ANGLER,
                 biomeLookup.getOrThrow(BiomeTags.IS_RIVER),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.DRYAD,
                 biomeLookup.getOrThrow(BiomeTags.IS_JUNGLE),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.DYE_TRADER,
                 biomeLookup.getOrThrow(BiomeTags.HAS_VILLAGE_DESERT),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.WITCH_DOCTOR,
                 biomeLookup.getOrThrow(BiomeTags.IS_JUNGLE),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.TRUFFLE,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.MUSHROOM_FIELDS)),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.CLOTHIER,
                 biomeLookup.getOrThrow(BiomeTags.HAS_VILLAGE_PLAINS),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
         register(context, TENpcEntities.TRAVELING_MERCHANT,
                 biomeLookup.getOrThrow(TETags.Biomes.IS_EVER_WHERE),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), longTime,1);
         register(context, TENpcEntities.PARTY_GIRL,
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.BEACH)),
-                HolderSet.direct(), minute * 5,1);
+                HolderSet.direct(), base,1);
 
         register(context, createModifierKey("goblin_arm"), new ForgeBiomeModifiers.AddSpawnsBiomeModifier(
                 HolderSet.direct(biomeLookup.get(Biomes.PLAINS).get()), List.of(
@@ -90,13 +92,14 @@ public class TEBiomeModifier {
         )));
         register(context, createModifierKey("skeleton_arm"), new ForgeBiomeModifiers.AddSpawnsBiomeModifier(
                 biomeLookup.getOrThrow(BiomeTags.IS_OVERWORLD), List.of(
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), 40,1,1),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), 40,1,1),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_BONES.get(), 90,1,2),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.SHORT_BONES.get(), 90,1,2),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.ANGER_BONES.get(), 90,1,2),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_ANGER_BONES.get(), 70,1,2),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.CURSED_SKULL.get(), 30,1,1)
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), 20,1,1),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_MUSCLE_ANGER_BONES.get(), 20,1,1),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_BONES.get(), 40,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.SHORT_BONES.get(), 40,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.ANGER_BONES.get(), 40,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_ANGER_BONES.get(), 30,1,2),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.CURSED_SKULL.get(), 15,1,1),
+                new MobSpawnSettings.SpawnerData(TEMonsterEntities.DARK_CASTER.get(), 20,1,1)
         )));
 
     }

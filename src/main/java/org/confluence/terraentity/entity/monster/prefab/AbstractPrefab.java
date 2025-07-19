@@ -36,7 +36,7 @@ public class AbstractPrefab {
                 .setKnockbackResistance(knockbackResistance)
                 .addTarget((t,e)->{
                     t.addGoal(1, new HurtByTargetGoal(e));
-                    t.addGoal(2, new NearestAttackableTargetGoal<>(e, Player.class,false, LivingEntity::canBeSeenAsEnemy));
+                    t.addGoal(2, new NearestAttackableTargetGoal<>(e, Player.class,true, LivingEntity::canBeSeenAsEnemy));
                 });
     }
     public AbstractPrefab(int health, int armor, int attack) {

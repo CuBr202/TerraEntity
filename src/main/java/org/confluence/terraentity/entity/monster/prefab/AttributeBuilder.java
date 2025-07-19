@@ -1,7 +1,10 @@
 package org.confluence.terraentity.entity.monster.prefab;
 
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -18,12 +21,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class AttributeBuilder {
-    public int ATTACK_DAMAGE = 15;
+    public int ATTACK_DAMAGE = 1;
     public int MAX_HEALTH = 31;
     public int ARMOR = 2;
     public int xpReward = 5;
     public int FOLLOW_RANGE = 32;
-    public float MOVEMENT_SPEED = 0.38f;
+    public float MOVEMENT_SPEED = 0.3f;
     public float SPAWN_REINFORCEMENTS_CHANCE = 0.01f;
     public float KNOCKBACK_RESISTANCE = 0.8f;
     public float ATTACK_KNOCKBACK = 0.5f;
@@ -80,9 +83,6 @@ public class AttributeBuilder {
         if(mob.getAttribute(Attributes.FOLLOW_RANGE) != null){
             mob.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(FOLLOW_RANGE);
         }
-        if(mob.getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE) != null){
-            mob.getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE).setBaseValue(SPAWN_REINFORCEMENTS_CHANCE);
-        }
         if(mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE) != null){
             mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(KNOCKBACK_RESISTANCE);
         }
@@ -95,24 +95,16 @@ public class AttributeBuilder {
         if(mob.getAttribute(Attributes.FLYING_SPEED) != null){
             mob.getAttribute(Attributes.FLYING_SPEED).setBaseValue(FLYING_SPEED);
         }
-        if(mob.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()) != null){
-            mob.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).setBaseValue(SAFE_FALL);
-        }
+//        if(mob.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()) != null){
+//            mob.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).setBaseValue(SAFE_FALL);
+//        }
         if(mob.getAttribute(Attributes.JUMP_STRENGTH) != null){
             mob.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(JUMP_STRENGTH);
         }
-//        if(mob.getAttribute(Attributes.STEP_HEIGHT) != null){
-//            mob.getAttribute(Attributes.STEP_HEIGHT).setBaseValue(STEP_HEIGHT);
-//        }
         if(mob.getAttribute(ForgeMod.ENTITY_GRAVITY.get()) != null){
             mob.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08f);
         }
-        if(mob.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()) != null){
-            mob.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).setBaseValue(JUMP_STRENGTH);
-        }
         //        this.setDiscardFriction(builder.noFriction);
-
-
     }
 
     public AttributeBuilder setXpReward(int xpReward) {

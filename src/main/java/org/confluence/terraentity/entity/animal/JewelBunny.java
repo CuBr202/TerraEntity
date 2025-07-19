@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.animal;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

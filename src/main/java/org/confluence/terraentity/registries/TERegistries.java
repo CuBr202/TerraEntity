@@ -23,6 +23,8 @@ import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProvid
 import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProviderTypes;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProvider;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProviderTypes;
+import org.confluence.terraentity.registries.npc_trade_modify.TradeModifierProvider;
+import org.confluence.terraentity.registries.npc_trade_modify.TradeModifierProviderTypes;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTypes;
 import org.confluence.terraentity.registries.track.TrackTypeProvider;
@@ -55,7 +57,7 @@ public class TERegistries {
         TradeGeneratorProviderTypes.TYPES.register(bus);
         ChesterTypes.TYPES.register(bus);
         ChesterConditionalTypes.TYPES.register(bus);
-
+        TradeModifierProviderTypes.TYPES.register(bus);
 
         TEDataComponentTypes.register(bus);
     }
@@ -136,6 +138,11 @@ public class TERegistries {
      */
     public static class ChesterConditionalTypesProviders {
         public static final ResourceKey<Registry<ChesterConditionalType>> KEY = createRegistryKey(TerraEntity.space("chester_conditional_type"));
+
+    }
+
+    public static class TradeModifierProviderRegistry {
+        public static final ResourceKey<Registry<TradeModifierProvider>> KEY = createRegistryKey(TerraEntity.space("trade_modifier_provider"));
 
     }
 }

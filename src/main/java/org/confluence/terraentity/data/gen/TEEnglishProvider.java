@@ -247,57 +247,57 @@ public class TEEnglishProvider extends LanguageProvider {
         add("dialogs.terra_entity.angler.4", "Hey! Watch out! I've set a lot of traps for the greatest prank in history! No one will notice! Try telling anyone and see what happens!");
         add("dialogs.terra_entity.angler.5", "Have you ever heard of a fish that can make noise?! I haven't. I just want to know if you have!");
 
-        add("dialogs.confluence.old_man.0", "I cannot let you enter until you free me of my curse.");
-        add("dialogs.confluence.old_man.1", "Stranger, do you possess the strength to defeat my master?");
-        add("dialogs.confluence.old_man.2", "Defeat my master, and I will grant you passage into the Dungeon.。");
-        add("dialogs.confluence.old_man.3", "Come back at night if you wish to enter.");
+        add("dialogs.terra_entity.old_man.0", "I cannot let you enter until you free me of my curse.");
+        add("dialogs.terra_entity.old_man.1", "Stranger, do you possess the strength to defeat my master?");
+        add("dialogs.terra_entity.old_man.2", "Defeat my master, and I will grant you passage into the Dungeon.。");
+        add("dialogs.terra_entity.old_man.3", "Come back at night if you wish to enter.");
 
-        add("dialogs.confluence.traveling_merchant.0", "Hmm, you look like you could use an Angel Statue! They slice, and dice, and make everything nice!");
-        add("dialogs.confluence.traveling_merchant.1", "I don't refund for \"buyer's remorse...\" Or for any other reason, really.");
-        add("dialogs.confluence.traveling_merchant.2", "Buy now and get free shipping!");
-        add("dialogs.confluence.traveling_merchant.3", "I sell wares from places that might not even exist!");
-        add("dialogs.confluence.traveling_merchant.4", "You want two penny farthings!? Make it one and we have a deal.");
-        add("dialogs.confluence.traveling_merchant.5", "Combination hookah and coffee maker! Also makes julienne fries!");
-        add("dialogs.confluence.traveling_merchant.6", "Come and have a look! One pound fish! Very, very good! One pound fish!");
-        add("dialogs.confluence.traveling_merchant.7", "If you're looking for junk, you've come to the wrong place.");
-        add("dialogs.confluence.traveling_merchant.8", "A thrift shop?  No, I am only selling the highest quality items on the market.");
+        add("dialogs.terra_entity.traveling_merchant.0", "Hmm, you look like you could use an Angel Statue! They slice, and dice, and make everything nice!");
+        add("dialogs.terra_entity.traveling_merchant.1", "I don't refund for \"buyer's remorse...\" Or for any other reason, really.");
+        add("dialogs.terra_entity.traveling_merchant.2", "Buy now and get free shipping!");
+        add("dialogs.terra_entity.traveling_merchant.3", "I sell wares from places that might not even exist!");
+        add("dialogs.terra_entity.traveling_merchant.4", "You want two penny farthings!? Make it one and we have a deal.");
+        add("dialogs.terra_entity.traveling_merchant.5", "Combination hookah and coffee maker! Also makes julienne fries!");
+        add("dialogs.terra_entity.traveling_merchant.6", "Come and have a look! One pound fish! Very, very good! One pound fish!");
+        add("dialogs.terra_entity.traveling_merchant.7", "If you're looking for junk, you've come to the wrong place.");
+        add("dialogs.terra_entity.traveling_merchant.8", "A thrift shop?  No, I am only selling the highest quality items on the market.");
 
-        add("dialogs.confluence.mechanic.0", "Did you make sure your device was plugged in?");
-        add("dialogs.confluence.mechanic.1", "Oh, you know what this house needs? More blinking lights.");
-        add("dialogs.confluence.mechanic.2", "DON'T MOVE. I DROPPED MY CONTACT.");
-        add("dialogs.confluence.mechanic.3", "Thank you! Sooner or later, I'll end up like the other skeletons in the dungeon.");
-        add("dialogs.confluence.mechanic.4", "I don't quite remember what happened in there. Three, maybe four important things...");
-        add("dialogs.confluence.mechanic.5", "Oh yes, the Signal Adapter! It can connect the redstone here to the wires perfectly.");
+        add("dialogs.terra_entity.mechanic.0", "Did you make sure your device was plugged in?");
+        add("dialogs.terra_entity.mechanic.1", "Oh, you know what this house needs? More blinking lights.");
+        add("dialogs.terra_entity.mechanic.2", "DON'T MOVE. I DROPPED MY CONTACT.");
+        add("dialogs.terra_entity.mechanic.3", "Thank you! Sooner or later, I'll end up like the other skeletons in the dungeon.");
+        add("dialogs.terra_entity.mechanic.4", "I don't quite remember what happened in there. Three, maybe four important things...");
+        add("dialogs.terra_entity.mechanic.5", "Oh yes, the Signal Adapter! It can connect the redstone here to the wires perfectly.");
 
-        add("dialogs.confluence.witch_doctor.0", "Which doctor am I? The Witch Doctor am I.");
-        add("dialogs.confluence.witch_doctor.1", "Choose wisely, my commodities are volatile and my dark arts, mysterious.");
-        add("dialogs.confluence.witch_doctor.2", "The heart of magic is nature. The nature of hearts is magic.");
-        add("dialogs.confluence.witch_doctor.3", "I sense a kindred spirit in the Etherian Dark Mages. A pity they are our enemies, I would have liked to learn from them.");
+        add("dialogs.terra_entity.witch_doctor.0", "Which doctor am I? The Witch Doctor am I.");
+        add("dialogs.terra_entity.witch_doctor.1", "Choose wisely, my commodities are volatile and my dark arts, mysterious.");
+        add("dialogs.terra_entity.witch_doctor.2", "The heart of magic is nature. The nature of hearts is magic.");
+        add("dialogs.terra_entity.witch_doctor.3", "I sense a kindred spirit in the Etherian Dark Mages. A pity they are our enemies, I would have liked to learn from them.");
 
 
-        add("dialogs.confluence.clothier.0", "Thanks again for freeing me from my curse. Felt like something jumped up and bit me.");
-        add("dialogs.confluence.clothier.1", "Mama always said I would make a great tailor.");
-        add("dialogs.confluence.clothier.2", "Life's like a box of clothes; you never know what you are gonna wear!");
-        add("dialogs.confluence.clothier.3", "Of course embroidery is hard! If it wasn't hard, no one would do it! That's what makes it great.");
-        add("dialogs.confluence.clothier.4", "I know everything they is to know about the clothierin' business.");
-        add("dialogs.confluence.clothier.5", "Being cursed was lonely, so I once made a friend out of leather. I named him Wilson.");
-        add("dialogs.confluence.clothier.6", "I keep having vague memories of tying up a woman and throwing her in a dungeon.");
+        add("dialogs.terra_entity.clothier.0", "Thanks again for freeing me from my curse. Felt like something jumped up and bit me.");
+        add("dialogs.terra_entity.clothier.1", "Mama always said I would make a great tailor.");
+        add("dialogs.terra_entity.clothier.2", "Life's like a box of clothes; you never know what you are gonna wear!");
+        add("dialogs.terra_entity.clothier.3", "Of course embroidery is hard! If it wasn't hard, no one would do it! That's what makes it great.");
+        add("dialogs.terra_entity.clothier.4", "I know everything they is to know about the clothierin' business.");
+        add("dialogs.terra_entity.clothier.5", "Being cursed was lonely, so I once made a friend out of leather. I named him Wilson.");
+        add("dialogs.terra_entity.clothier.6", "I keep having vague memories of tying up a woman and throwing her in a dungeon.");
 
-        add("dialogs.confluence.party_girl.0", "We have to talk. It's... it's about parties.");
-        add("dialogs.confluence.party_girl.1", "I can't decide what I like more: parties, or after-parties.");
-        add("dialogs.confluence.party_girl.2", "We should set up a blinkroot party, and we should also set up an after-party.");
-        add("dialogs.confluence.party_girl.3", "Put up a disco ball and then I'll show you how to party.");
-        add("dialogs.confluence.party_girl.4", "I went to Sweden once, they party hard, why aren't you like that?");
-        add("dialogs.confluence.party_girl.5", "My name's Party Girl but people call me party pooper. Yeah I don't know, it sounds cool though.");
-        add("dialogs.confluence.party_girl.6", "Do you party? Sometimes? Hm, okay then we can talk...");
+        add("dialogs.terra_entity.party_girl.0", "We have to talk. It's... it's about parties.");
+        add("dialogs.terra_entity.party_girl.1", "I can't decide what I like more: parties, or after-parties.");
+        add("dialogs.terra_entity.party_girl.2", "We should set up a blinkroot party, and we should also set up an after-party.");
+        add("dialogs.terra_entity.party_girl.3", "Put up a disco ball and then I'll show you how to party.");
+        add("dialogs.terra_entity.party_girl.4", "I went to Sweden once, they party hard, why aren't you like that?");
+        add("dialogs.terra_entity.party_girl.5", "My name's Party Girl but people call me party pooper. Yeah I don't know, it sounds cool though.");
+        add("dialogs.terra_entity.party_girl.6", "Do you party? Sometimes? Hm, okay then we can talk...");
 
-        add("dialogs.confluence.truffle.0", "As if living underground wasn't bad enough, jerks like you come in while I'm sleeping and steal my children.");
-        add("dialogs.confluence.truffle.1", "I tried to lick myself the other day to see what the big deal was, everything started glowing blue.");
-        add("dialogs.confluence.truffle.2", "Everytime I see the color blue, it makes me depressed and lazy.");
-        add("dialogs.confluence.truffle.3", "You haven't seen any pigs around here have you? My brother lost his leg to one.");
-        add("dialogs.confluence.truffle.4", "I don't know the 'Truffle Shuffle,' so stop asking!");
-        add("dialogs.confluence.truffle.5", "There's been such a huge rumor that's being spread about me, 'If you can't beat him, eat him!'");
-        add("dialogs.confluence.truffle.6", "I feel there are more of my kind here...");
+        add("dialogs.terra_entity.truffle.0", "As if living underground wasn't bad enough, jerks like you come in while I'm sleeping and steal my children.");
+        add("dialogs.terra_entity.truffle.1", "I tried to lick myself the other day to see what the big deal was, everything started glowing blue.");
+        add("dialogs.terra_entity.truffle.2", "Everytime I see the color blue, it makes me depressed and lazy.");
+        add("dialogs.terra_entity.truffle.3", "You haven't seen any pigs around here have you? My brother lost his leg to one.");
+        add("dialogs.terra_entity.truffle.4", "I don't know the 'Truffle Shuffle,' so stop asking!");
+        add("dialogs.terra_entity.truffle.5", "There's been such a huge rumor that's being spread about me, 'If you can't beat him, eat him!'");
+        add("dialogs.terra_entity.truffle.6", "I feel there are more of my kind here...");
 
         add("mood.terra_entity.goblin_tinkerer.like.dye_trader", "Dye Trader understands how fun it is to mix things together, I can respect that!");
         add("mood.terra_entity.goblin_tinkerer.love.mechanic", "Mechanic makes my cardiac core function improperly, it appears I love how that feels!");

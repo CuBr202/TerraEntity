@@ -5,6 +5,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
@@ -54,7 +56,6 @@ public class Nymph extends AbstractMonster {
         super(type, level, new AbstractPrefab(156,3,15,5,1,0.5f).getPrefab());
         this.xpReward = 20;
         _recoverTime = 75 + getRandom().nextInt(50);
-        refreshDimensions();
     }
 
     @Override
@@ -228,7 +229,6 @@ public class Nymph extends AbstractMonster {
         }
         this.setTamed(true);
         setTrigger( false);
-        refreshDimensions();
         ForgeEventFactory.onLivingConvert(this, this);
     }
 
@@ -266,6 +266,12 @@ public class Nymph extends AbstractMonster {
 
     protected int initConversionTime() {
         return this.random.nextInt(500) + 2000;
+    }
+
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData, CompoundTag tag) {
+        this.entityData.set(DATA_TAMED, false, true);
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, tag);
     }
 
     private void startConverting(@Nullable UUID conversionStarter, int villagerConversionTime) {

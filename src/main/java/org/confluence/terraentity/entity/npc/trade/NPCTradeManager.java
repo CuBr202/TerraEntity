@@ -1,11 +1,8 @@
 package org.confluence.terraentity.entity.npc.trade;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -16,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
@@ -89,10 +85,14 @@ public class NPCTradeManager {
     /**
      * 初始化交易列表，将未生成的表生成子表，同时设置owner
      */
-    public void initTrades(ITradeHolder holder) {
+    public void initTrades(ITradeHolder holder, ResourceLocation id) {
         if (tradeList != null) {
             this.trades = new ArrayList<>(tradeList.generateTrades());
             this.tradeList = null;
+
+        }
+        if(id != null) { // 正常情况只会在第一次生成时不为null
+            TradeModifiers.applyModifiers(this, id);
         }
         this.setOwner(holder);
     }

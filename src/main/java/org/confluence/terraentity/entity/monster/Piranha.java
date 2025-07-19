@@ -206,7 +206,7 @@ public class Piranha extends WaterAnimal implements Enemy, GeoEntity {
             if(this.swinging){
                 return state.setAndContinue(DefaultAnimations.ATTACK_STRIKE);
             }
-            return state.setAndContinue(state.isMoving() ? DefaultAnimations.SWIM : DefaultAnimations.IDLE);
+            return state.setAndContinue(DefaultAnimations.SWIM);
         }));
     }
 

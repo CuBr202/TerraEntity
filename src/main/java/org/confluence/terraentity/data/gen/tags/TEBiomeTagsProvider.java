@@ -28,7 +28,6 @@ public class TEBiomeTagsProvider extends TagsProvider<Biome> {
                 // 出现较大群系内容扩展时更改此标签(当对应群系同时具有专属群系地下宝箱，渔获，敌怪时）
                 BiomeTags.IS_FOREST,
                 Tags.Biomes.IS_PLAINS,
-                Tags.Biomes.IS_MUSHROOM,
                 BiomeTags.IS_TAIGA,
                 BiomeTags.IS_SAVANNA,
                 Tags.Biomes.IS_SWAMP
@@ -45,5 +44,6 @@ public class TEBiomeTagsProvider extends TagsProvider<Biome> {
                 Biomes.STONY_PEAKS,
                 Biomes.STONY_SHORE
         );
+
     }
 }

@@ -6,7 +6,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -25,18 +24,18 @@ public class AdditionLootModifier extends LootModifier {
     public static final Supplier<Codec<AdditionLootModifier>> CODEC = Suppliers.memoize(() ->
             RecordCodecBuilder.create(instance -> codecStart(instance).and(instance.group(
                     ResourceLocation.CODEC.fieldOf("loot_table_add").forGetter(m -> m.lootTableAdd),
-                    ResourceLocation.CODEC.optionalFieldOf("loot_table_type").forGetter(m -> Optional.ofNullable(m.lootTableType)),
+                    ResourceLocation.CODEC.optionalFieldOf("loot_param_set").forGetter(m -> Optional.ofNullable(m.lootParamSet)),
                     ResourceLocation.CODEC.optionalFieldOf("loot_table_id").forGetter(m -> Optional.ofNullable(m.lootTableId))
             )).apply(instance, AdditionLootModifier::new)));
 
-    private final ResourceLocation lootTableType;
+    private final ResourceLocation lootParamSet;
     private final @Nullable ResourceLocation lootTableId;
     private final ResourceLocation lootTableAdd;
 
-    public AdditionLootModifier(LootItemCondition[] conditionsIn, ResourceLocation lootTableAdd, Optional<ResourceLocation> lootTableType,
+    public AdditionLootModifier(LootItemCondition[] conditionsIn, ResourceLocation lootTableAdd, Optional<ResourceLocation> lootParamSet,
                                 Optional<ResourceLocation> lootTableId) {
         super(conditionsIn);
-        this.lootTableType = lootTableType.orElse(null);
+        this.lootParamSet = lootParamSet.orElse(null);
         this.lootTableId = lootTableId.orElse(null);
         this.lootTableAdd = lootTableAdd;
     }
@@ -49,7 +48,7 @@ public class AdditionLootModifier extends LootModifier {
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         ResourceLocation currentLootTable = context.getQueriedLootTableId();
-        if (!currentLootTable.equals(lootTableAdd) && (lootTableType == null || typeAreEquals(context)) && idAreEquals(context)) {
+        if (!currentLootTable.equals(lootTableAdd) && (lootParamSet == null || typeAreEquals(context)) && idAreEquals(context)) {
             LootTable additionTable = context.getResolver().getLootTable(lootTableAdd);
             additionTable.getRandomItemsRaw(context, LootTable.createStackSplitter(context.getLevel(), generatedLoot::add));
         }
@@ -59,7 +58,7 @@ public class AdditionLootModifier extends LootModifier {
     private boolean typeAreEquals(LootContext context) {
         ResourceLocation currentLootTable = context.getQueriedLootTableId();
         LootTable lootTable = context.getResolver().getLootTable(currentLootTable);
-        return Objects.equals(lootTable.getParamSet(), LootContextParamSets.get(lootTableType));
+        return Objects.equals(lootTable.getParamSet(), LootContextParamSets.get(lootParamSet));
     }
 
     private boolean idAreEquals(LootContext context) {

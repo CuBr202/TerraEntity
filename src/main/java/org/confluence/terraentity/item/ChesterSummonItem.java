@@ -42,7 +42,7 @@ public class ChesterSummonItem<T extends Chester> extends SummonItem<T> {
         }
         if (player.isShiftKeyDown()) {
             // shift 按下时
-            BlockPos pos = TEUtils.getEyeBlockHitResult(player).below();
+            BlockPos pos = TEUtils.getEyeBlockHitResult(player);
             SummonerAttachment data = player.getCapability(TEAttachments.SUMMONER_STORAGE).orElseGet(SummonerAttachment::new);
             SummonerAttachment.Key key = new SummonerAttachment.Key(pos, player.level().dimension());
             Level level1 = level.getServer().getLevel(key.levelId());
