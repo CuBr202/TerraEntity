@@ -41,6 +41,7 @@ import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
+import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
@@ -61,10 +62,6 @@ public class GameEntityEvent {
 //        if(event.getEntity() instanceof ServerPlayer player){
 //            player.addItem(new ItemStack(TERiddenItems.HONEYED_GOGGLES.get()));
 //        }
-        if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
-            TEUtils.monsterEnhance(living);
-        else if (event.getEntity() instanceof Slime slime)
-            TEUtils.monsterEnhance(slime);
 
     }
 
@@ -243,7 +240,17 @@ public class GameEntityEvent {
 //                level.addFreshEntity(slime);
             }
         }
+        if(mob instanceof IAttributeHolder holder){
+            holder.getAttributeBuilder().modify(mob);
+        }
         TEAttributeModifierConfig.getInstance().modify(mob);
+        if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
+            TEUtils.monsterEnhance(living);
+        else if (event.getEntity() instanceof Slime slime)
+            TEUtils.monsterEnhance(slime);
+        if(mob instanceof Boss boss && boss.shouldEnhanceMultiplayer()) {
+            TEUtils.multiplePlayerEnhance(mob);
+        }
 
     }
     // 貌似没必要使用这个，重写monster的方法就行

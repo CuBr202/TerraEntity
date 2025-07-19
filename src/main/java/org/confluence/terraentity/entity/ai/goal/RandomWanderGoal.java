@@ -8,6 +8,9 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
 import org.confluence.terraentity.entity.ai.motion.curve.Curve;
 
+/**
+ * 蠕虫游走ai
+ */
 public class RandomWanderGoal extends Goal {
     private Vec3 randomTarget;
     private int tickToChangeTarget;
@@ -33,9 +36,10 @@ public class RandomWanderGoal extends Goal {
             delta++;
         }
         float f0 = (float) (randomTarget.y - delta) + warm.getRandom().nextIntBetweenInclusive(-3,5); // 控制高度起伏
-        float f1 = f0 < -65 ? -130 - f0 : f0;
-        randomTarget = new Vec3(randomTarget.x, f1, randomTarget.y);
+//        float f1 = f0 < -65 ? -130 - f0 : f0;
+        randomTarget = new Vec3(randomTarget.x, f0, randomTarget.z);
 
+        // 此时randomTarget为接触地面的点或者地面以下
         return randomTarget;
     }
 
@@ -53,22 +57,19 @@ public class RandomWanderGoal extends Goal {
         Vec3 mid = warm.position().add(dir.scale(warm.getRandom().nextIntBetweenInclusive(5,10))); // 切线
 
         // 调整控制点落差
-        double dy =  mid.y - randomTarget.y;
+        double dy =  mid.y - warm.position().y;
         mid = mid.add(0, -dy + (dy > 0? 1 : -1) * warm.getRandom().nextIntBetweenInclusive(5,8), 0);
 
         // 调整开口方向
         if(warm.position().y > mid.y){
             // 开口方向向上
-            if(warm.position().y > randomTarget.y){
-                randomTarget = randomTarget.add(0, warm.position().y  -  randomTarget.y, 0) ;
-                mid = mid.add(0, warm.position().y - 2  -  mid.y, 0);
-            }
+            float raiseHeight = warm.getRandom().nextIntBetweenInclusive(9,13); // 上升高度
+            randomTarget = randomTarget.add(0, warm.position().y  -  randomTarget.y + raiseHeight, 0) ;
+            mid = mid.add(0, warm.position().y - 2  -  mid.y, 0);
         }else{
             // 开口方向向下
-            if(warm.position().y < randomTarget.y){
-                randomTarget = randomTarget.add(0, warm.position().y - 1  -  randomTarget.y, 0) ;
-                mid = mid.add(0, warm.getRandom().nextIntBetweenInclusive(5,8), 0);
-            }
+            float landDepth = 5 + warm.getRandom().nextIntBetweenInclusive(1,3); // 着陆深度
+            randomTarget = randomTarget.add(0, - landDepth, 0) ;
         }
 
         this.curve = new Bezier3Curse(warm.position(),
@@ -90,10 +91,11 @@ public class RandomWanderGoal extends Goal {
         --tickToChangeTarget;
         if(curve != null){
             Vec3 target = curve.cal( (_tickToChangeTarget - tickToChangeTarget) * 1.0f / _tickToChangeTarget);
+//            System.out.println((_tickToChangeTarget - tickToChangeTarget) * 1.0f / _tickToChangeTarget);
             Vec3 lookPos = target.subtract(warm.position()).scale(20).add(warm.position());
             warm.lookAt(EntityAnchorArgument.Anchor.EYES, lookPos);
             warm.getLookControl().setLookAt(lookPos.x, lookPos.y, lookPos.z, 10, 10);
-            warm.setDeltaMovement(target.subtract(warm.position()).scale(0.9f)); // * 0.9防止头抽搐
+            warm.setDeltaMovement(target.subtract(warm.position()).scale(0.85f)); // * 0.9防止头抽搐
         }
     }
 }

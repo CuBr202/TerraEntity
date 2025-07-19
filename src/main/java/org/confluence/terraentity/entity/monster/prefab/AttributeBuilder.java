@@ -62,7 +62,10 @@ public class AttributeBuilder {
     public void modify(Mob mob) {
         mob.setDiscardFriction(noFriction);
 
-
+        if(mob.getAttribute(Attributes.MAX_HEALTH) != null){
+            mob.getAttribute(Attributes.MAX_HEALTH).setBaseValue(MAX_HEALTH);
+            mob.setHealth(MAX_HEALTH);
+        }
         if(mob.getAttribute(Attributes.ARMOR) != null){
             mob.getAttribute(Attributes.ARMOR).setBaseValue(ARMOR);
         }
