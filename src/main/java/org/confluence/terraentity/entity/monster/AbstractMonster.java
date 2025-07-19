@@ -104,7 +104,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         super.onAddedToWorld();
         if(!level().isClientSide && !ignoreAttributeModify()){
             if(dirty && !ServerConfig.DISABLE_BUILTIN_MODIFIER.get()){
-                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(builder.MAX_HEALTH);
+                this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.getMaxHealth());
                 this.setHealth(getMaxHealth());
                 firstSpawn();
             }
@@ -122,7 +122,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
                 .add(Attributes.ATTACK_DAMAGE)
                 .add(Attributes.MAX_HEALTH)
                 .add(Attributes.ARMOR)
-                .add(Attributes.MOVEMENT_SPEED, 0.38f)
+                .add(Attributes.MOVEMENT_SPEED, 0.25f)
                 .add(Attributes.FOLLOW_RANGE)
                 .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE)
                 .add(Attributes.KNOCKBACK_RESISTANCE)

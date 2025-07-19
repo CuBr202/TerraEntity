@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.monster.prefab;
 
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -10,11 +11,13 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraftforge.common.ForgeMod;
 import org.confluence.terraentity.config.ServerConfig;
+import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -26,7 +29,7 @@ public class AttributeBuilder {
     public int ARMOR = 2;
     public int xpReward = 5;
     public int FOLLOW_RANGE = 32;
-    public float MOVEMENT_SPEED = 0.3f;
+    public float MOVEMENT_SPEED = 0.25f;
     public float SPAWN_REINFORCEMENTS_CHANCE = 0.01f;
     public float KNOCKBACK_RESISTANCE = 0.8f;
     public float ATTACK_KNOCKBACK = 0.5f;
@@ -67,44 +70,56 @@ public class AttributeBuilder {
     public void modify(Mob mob) {
         mob.setDiscardFriction(noFriction);
 
-        if(ServerConfig.DISABLE_BUILTIN_MODIFIER.get()){
-            return;
-        }
+        if(!ServerConfig.DISABLE_BUILTIN_MODIFIER.get()) {
 
-        if(mob.getAttribute(Attributes.ARMOR) != null){
-            mob.getAttribute(Attributes.ARMOR).setBaseValue(ARMOR);
-        }
-        if(mob.getAttribute(Attributes.ATTACK_DAMAGE) != null){
-            mob.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(ATTACK_DAMAGE);
-        }
-        if(mob.getAttribute(Attributes.MOVEMENT_SPEED) != null){
-            mob.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(MOVEMENT_SPEED);
-        }
-        if(mob.getAttribute(Attributes.FOLLOW_RANGE) != null){
-            mob.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(FOLLOW_RANGE);
-        }
-        if(mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE) != null){
-            mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(KNOCKBACK_RESISTANCE);
-        }
-        if(mob.getAttribute(Attributes.ATTACK_KNOCKBACK) != null){
-            mob.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(ATTACK_KNOCKBACK);
-        }
-        if(mob.getAttribute(Attributes.ATTACK_SPEED) != null){
-            mob.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(ATTACK_SPEED);
-        }
-        if(mob.getAttribute(Attributes.FLYING_SPEED) != null){
-            mob.getAttribute(Attributes.FLYING_SPEED).setBaseValue(FLYING_SPEED);
-        }
+            if (mob.getAttribute(Attributes.ARMOR) != null) {
+                mob.getAttribute(Attributes.ARMOR).setBaseValue(ARMOR);
+            }
+            if (mob.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+                mob.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(ATTACK_DAMAGE);
+            }
+            if (mob.getAttribute(Attributes.MOVEMENT_SPEED) != null) {
+                mob.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(MOVEMENT_SPEED);
+            }
+            if (mob.getAttribute(Attributes.FOLLOW_RANGE) != null) {
+                mob.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(FOLLOW_RANGE);
+            }
+            if (mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE) != null) {
+                mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(KNOCKBACK_RESISTANCE);
+            }
+            if (mob.getAttribute(Attributes.ATTACK_KNOCKBACK) != null) {
+                mob.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(ATTACK_KNOCKBACK);
+            }
+            if (mob.getAttribute(Attributes.ATTACK_SPEED) != null) {
+                mob.getAttribute(Attributes.ATTACK_SPEED).setBaseValue(ATTACK_SPEED);
+            }
+            if (mob.getAttribute(Attributes.FLYING_SPEED) != null) {
+                mob.getAttribute(Attributes.FLYING_SPEED).setBaseValue(FLYING_SPEED);
+            }
 //        if(mob.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()) != null){
 //            mob.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get()).setBaseValue(SAFE_FALL);
 //        }
-        if(mob.getAttribute(Attributes.JUMP_STRENGTH) != null){
-            mob.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(JUMP_STRENGTH);
+            if (mob.getAttribute(Attributes.JUMP_STRENGTH) != null) {
+                mob.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(JUMP_STRENGTH);
+            }
+            if (mob.getAttribute(ForgeMod.ENTITY_GRAVITY.get()) != null) {
+                mob.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08f);
+            }
         }
-        if(mob.getAttribute(ForgeMod.ENTITY_GRAVITY.get()) != null){
-            mob.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.08f);
+
+        Map<EntityType<?>, List<TEAttributeModifierConfig.Modifier>> map = TEAttributeModifierConfig.getInstance().getModifiers();
+        if(map != null && map.containsKey(mob.getType())){
+            List<TEAttributeModifierConfig.Modifier> modifiers = map.get(mob.getType());
+            for(TEAttributeModifierConfig.Modifier modifier : modifiers){
+                AttributeInstance attributeInstance = mob.getAttribute(modifier.attribute());
+                if(attributeInstance != null){
+                    attributeInstance.setBaseValue(modifier.amount());
+                    if(attributeInstance.getAttribute() == Attributes.MAX_HEALTH){
+                        mob.setHealth((float) modifier.amount());
+                    }
+                }
+            }
         }
-        //        this.setDiscardFriction(builder.noFriction);
     }
 
     public AttributeBuilder setXpReward(int xpReward) {

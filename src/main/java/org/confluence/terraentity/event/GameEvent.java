@@ -11,6 +11,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
+import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
 import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
@@ -40,11 +41,13 @@ public class GameEvent {
         TradeModifiers.readTradesFromJson(event.getServer());
         ModEvent.onCollectBrains(new NPCEvent.NPCBrainCollectionEvent()); // 本模组优先注册
         AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
+        TEAttributeModifierConfig.getInstance().loadConfig();
     }
 
     @SubscribeEvent
     public static void serverStarted(ServerStartedEvent event) {
         HouseStoreSaver.get(event.getServer().overworld());
+
     }
 
     @SubscribeEvent
