@@ -19,6 +19,8 @@ public class ServerConfig {
 
     public static ModConfigSpec.ConfigValue<Boolean> SPAWN_WITHOUT_LIGHT;
 
+    public static ModConfigSpec.ConfigValue<Double> CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD;
+
     public static ModConfigSpec init(){
         final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
@@ -58,6 +60,11 @@ public class ServerConfig {
         SPAWN_WITHOUT_LIGHT = BUILDER
                 .comment("Should monsters spawn without light?")
                 .define("spawn_without_light", true);
+
+        CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD = BUILDER
+                .comment("Chance to spawn slime on zombie head.")
+                .defineInRange("chance_to_spawn_slime_on_zombie_head", 0.05, 0, 1);
+
         return BUILDER.build();
     }
 }

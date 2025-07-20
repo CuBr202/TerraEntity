@@ -388,6 +388,8 @@ public class TEChineseProvider extends LanguageProvider {
 
         add("terra_entity.configuration.generate_projectile_particle", "生成弹幕粒子");
 
+        add("terra_entity.configuration.chance_to_spawn_slime_on_zombie_head", "在僵尸头上生成史莱姆的几率");
+
         // Tooltip
         add("tooltic.terra_entity.summon_item.desc", "长按以解除所有召唤物");
 

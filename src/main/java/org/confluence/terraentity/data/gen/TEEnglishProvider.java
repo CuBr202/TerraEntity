@@ -84,6 +84,7 @@ public class TEEnglishProvider extends LanguageProvider {
 
         add("terra_entity.configuration.enableNonSpiderModel", "Spider Harmonization");
         add("terra_entity.configuration.enableNonSpiderModel.tooltip", "Enable this option if you dislike spiders or want to beautify them.(This configuration change requires a game restart!)");
+        add("terra_entity.configuration.chance_to_spawn_slime_on_zombie_head", "Chance to Spawn Slime on Zombie Head");
 
 
         // Tooltip

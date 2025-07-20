@@ -12,7 +12,6 @@ import org.confluence.lib.common.data.gen.CollectRecipeProvider;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.gen.loot.TELootModifyProvider;
 import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
-import org.confluence.terraentity.data.gen.recipe.TENPCShopModifierProvider;
 import org.confluence.terraentity.data.gen.recipe.TENPCShopProvider;
 import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 import org.confluence.terraentity.data.gen.tags.*;

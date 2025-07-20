@@ -37,6 +37,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
@@ -66,7 +67,7 @@ public class GameEntityEvent {
 
         Level level = event.getLevel();
 
-        if (!level.isClientSide && event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < 0.05F) {
+        if (!level.isClientSide && event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < ServerConfig.CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD.get()) {
             BaseSlime slime = (zombie instanceof ZombifiedPiglin ? TEMonsterEntities.LAVA_SLIME.get() : TEMonsterEntities.BLUE_SLIME.get()).create(level);
             if (slime != null) {
                 Vec3 position = zombie.getPassengerRidingPosition(slime);
