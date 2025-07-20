@@ -39,6 +39,9 @@ public class ConfigContainerRegister {
                 .comment("0.0625 ~ 100.0");
         builder.addDoubleEditBox(ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH)
                 .comment("0.0625 ~ 100.0");
+
+        builder.addDoubleEditBox(ServerConfig.CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD)
+                .comment("0.0 ~ 1.0");
         builder.addCheckBox(ServerConfig.ENHANCE_ALL_MONSTER);
         builder.addCheckBox(ServerConfig.DISABLE_BUILTIN_MODIFIER)
                         .comment("For kjs modify");

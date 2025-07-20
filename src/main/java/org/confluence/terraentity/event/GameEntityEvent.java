@@ -10,10 +10,10 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -23,6 +23,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.entity.ai.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
@@ -50,6 +51,18 @@ public class GameEntityEvent {
 //            player.addItem(new ItemStack(TERiddenItems.HONEYED_GOGGLES.get()));
 //        }
 
+        Level level = event.getLevel();
+
+        if (!level.isClientSide && event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < ServerConfig.CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD.get()) {
+            BaseSlime slime = (zombie instanceof ZombifiedPiglin ? TEMonsterEntities.LAVA_SLIME.get() : TEMonsterEntities.BLUE_SLIME.get()).create(level);
+            if (slime != null) {
+                double position = zombie.getMyRidingOffset();
+                slime.moveTo(zombie.position().x, zombie.position().y + position, zombie.position().z, zombie.getYRot(), 0.0F);
+//                slime.finalizeSpawn(level, event.getDifficulty(), MobSpawnType.JOCKEY, null);
+                level.addFreshEntity(slime);
+                slime.startRiding(zombie);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -216,17 +229,7 @@ public class GameEntityEvent {
         } else if (mob instanceof BlackSlime blackSlime) {
             blackSlime.finalizeSpawn(randomSource, event.getDifficulty());
         }
-        ServerLevelAccessor level = event.getLevel();
-        if (event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < 0.05F) {
-            BaseSlime slime = TEMonsterEntities.BLUE_SLIME.get().create(zombie.level());
-            if (slime != null) {
 
-                slime.moveTo(zombie.getX(), zombie.getY(), zombie.getZ(), zombie.getYRot(), 0.0F);
-                slime.finalizeSpawn(level, level.getCurrentDifficultyAt(zombie.blockPosition()), MobSpawnType.JOCKEY, null,null);
-                slime.startRiding(zombie);
-
-            }
-        }
         if(mob instanceof IAttributeHolder holder){
             holder.getAttributeBuilder().modify(mob);
         }

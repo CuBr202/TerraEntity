@@ -384,6 +384,8 @@ public class TEChineseProvider extends LanguageProvider {
 
         add("terra_entity.configuration.server.disable_builtin_health_attack_modifier", "禁用内置的属性设置");
 
+        add("terra_entity.configuration.server.chance_to_spawn_slime_on_zombie_head", "在僵尸头上生成史莱姆的几率");
+
 
         add("terra_entity.configuration.client.boss_bar_style", "BOSS血条样式");
         add("terra_entity.configuration.client.boss_bar_number_offset_x", "BOSS血条数字偏移-X");
@@ -392,6 +394,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.client.enableNonSpiderModel.tooltip", "如果你对蜘蛛反感或想美化他们，请开启这个选项");
 
         add("terra_entity.configuration.client.generate_projectile_particle", "生成弹幕粒子");
+
 
         // Tooltip
         add("tooltic.terra_entity.summon_item.desc", "长按以解除所有召唤物");

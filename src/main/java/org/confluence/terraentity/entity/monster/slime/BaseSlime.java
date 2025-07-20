@@ -140,6 +140,9 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
                 this.getType().equals(TEMonsterEntities.PURPLE_SLIME.get()))) {
             addHoneySoakTime();
         }
+        if(this.getVehicle() != null){
+            this.setYRot(this.getVehicle().getYRot());
+        }
         super.tick();
     }
 

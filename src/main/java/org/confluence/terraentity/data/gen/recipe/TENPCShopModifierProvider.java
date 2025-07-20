@@ -29,23 +29,40 @@ public class TENPCShopModifierProvider extends AbstractExistCodecProvider<List<I
     @Override
     protected void run(HolderLookup.Provider provider) {
 
-        this.gen(TerraEntity.space(TradeModifiers.KEY + "/modify_merchant1"), ImmutableList.<ITradeModifier>builder()
+        this.gen(TerraEntity.space(TradeModifiers.KEY + "/modifies"), ImmutableList.<ITradeModifier>builder()
                 .add(new TradeItemModifier(1, 0, TENpcEntities.MERCHANT.getId(),  ITradeModifier.OperatorType.ADD, ItemTradeItemList.builder()
-                        .addCost(Items.DIAMOND, 10).addResult(Items.EMERALD, 1)
+                        .addCost(Items.DIAMOND, 10).addResult(Items.BLACK_BED, 1)
+                        .build()))
+                .add(new TradeItemModifier(2, 3, TENpcEntities.MERCHANT.getId(),  ITradeModifier.OperatorType.DEL, null))
+                .add(new TradeItemModifier(2, 5, TENpcEntities.GUIDE.getId(),  ITradeModifier.OperatorType.REPLACE, ItemTradeItemList.builder()
+                        .addCost(Items.DIAMOND, 10).addResult(Items.RED_BED, 1)
                         .build()))
                 .build());
 
-        this.gen(TerraEntity.space(TradeModifiers.KEY + "/modify_merchant2"), ImmutableList.<ITradeModifier>builder()
-                .add(new TradeItemModifier(1, 3, TENpcEntities.MERCHANT.getId(),  ITradeModifier.OperatorType.ADD, ItemTradeItemList.builder()
-                        .addCost(Items.DIAMOND, 15).addResult(Items.EMERALD, 2)
-                        .build()))
-                .build());
+//        this.gen(TerraEntity.space(TradeModifiers.KEY + "/modify_merchant2"), ImmutableList.<ITradeModifier>builder()
+//                .add(new TradeItemModifier(1, 3, TENpcEntities.MERCHANT.getId(),  ITradeModifier.OperatorType.ADD, ItemTradeItemList.builder()
+//                        .addCost(Items.DIAMOND, 15).addResult(Items.RED_BED, 2)
+//                        .build()))
+//                .build());
 
-        this.gen(TerraEntity.space(TradeModifiers.KEY + "/del_guide"), ImmutableList.<ITradeModifier>builder()
-                .add(new TradeListModifier(1, TENpcEntities.GUIDE.getId(),  ITradeModifier.OperatorType.DEL,null))
+        this.gen(TerraEntity.space(TradeModifiers.KEY + "/del_nurse"), ImmutableList.<ITradeModifier>builder()
+                .add(new TradeListModifier(1, TENpcEntities.NURSE.getId(),  ITradeModifier.OperatorType.DEL,null))
                 .build()
         );
-
+        this.gen(TerraEntity.space(TradeModifiers.KEY + "/add_dye_trader"), ImmutableList.<ITradeModifier>builder()
+                .add(new TradeListModifier(1, TENpcEntities.DYE_TRADER.getId(),  ITradeModifier.OperatorType.ADD,List.of(
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND, 10).addResult(Items.BLACK_BED, 1).build(),
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND, 10).addResult(Items.RED_BED, 1).build()
+                )))
+                .build()
+        );
+        this.gen(TerraEntity.space(TradeModifiers.KEY + "/replace_painter"), ImmutableList.<ITradeModifier>builder()
+                .add(new TradeListModifier(1, TENpcEntities.PAINTER.getId(),  ITradeModifier.OperatorType.REPLACE,List.of(
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND, 10).addResult(Items.BLACK_BED, 1).build(),
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND, 10).addResult(Items.RED_BED, 1).build()
+                )))
+                .build()
+        );
     }
 
 

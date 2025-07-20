@@ -22,7 +22,7 @@ public record TradeListModifier(int priority, ResourceLocation id, OperatorType 
     public static final Supplier<MapCodec<? extends ITradeModifier>> CODEC = Suppliers.memoize(()->RecordCodecBuilder.<TradeListModifier>mapCodec(instance -> instance.group(
             Codec.INT.fieldOf("priority").forGetter(TradeListModifier::priority),
             ResourceLocation.CODEC.fieldOf("id").forGetter(TradeListModifier::id),
-            OperatorType.CODEC.fieldOf("operator_type").forGetter(TradeListModifier::operatorType),
+            OperatorType.CODEC.fieldOf("operator").forGetter(TradeListModifier::operatorType),
             ITrade.TYPED_CODEC.listOf().optionalFieldOf("trade_list").forGetter(i-> Optional.ofNullable(i.tradeList))
     ).apply(instance, (priority, id, operatorType,tradeList)-> new TradeListModifier(priority, id, operatorType, tradeList.orElse(null)))));
 

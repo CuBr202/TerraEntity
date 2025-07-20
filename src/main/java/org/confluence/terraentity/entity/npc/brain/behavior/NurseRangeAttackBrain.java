@@ -32,7 +32,7 @@ public class NurseRangeAttackBrain<T extends AbstractTerraNPC> extends NPCRangeA
         ItemStack stack = new ItemStack(Items.POTION);
         PotionUtils.setPotion(stack, Potions.HEALING);
         thrownpotion.setItem(stack);
-        thrownpotion.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), -20.0F, 0.5F, 1.0F);
+        thrownpotion.shootFromRotation(owner, owner.getXRot(), owner.yHeadRot, -20.0F, 0.5F, 1.0F);
         level.addFreshEntity(thrownpotion);
         return true;
     }

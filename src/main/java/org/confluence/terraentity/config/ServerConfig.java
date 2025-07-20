@@ -19,6 +19,8 @@ public class ServerConfig {
 
     public static ForgeConfigSpec.ConfigValue<Boolean> SPAWN_WITHOUT_LIGHT;
 
+    public static ForgeConfigSpec.ConfigValue<Double> CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD;
+
     public static ForgeConfigSpec.Builder init(ForgeConfigSpec.Builder BUILDER){
         BUILDER.push("server");
 
@@ -61,6 +63,11 @@ public class ServerConfig {
         SPAWN_WITHOUT_LIGHT = BUILDER
                 .comment("Should monsters spawn without light?")
                 .define("spawn_without_light", false);
+
+        CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD = BUILDER
+                .comment("Chance to spawn slime on zombie head.")
+                .defineInRange("chance_to_spawn_slime_on_zombie_head", 0.05, 0, 1);
+
         BUILDER.pop();
         return BUILDER;
     }

@@ -144,7 +144,7 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
             ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
             AbstractArrow abstractarrow = arrowitem.createArrow(level, itemstack, owner);
             abstractarrow = bow.customArrow(abstractarrow);
-            abstractarrow.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), 0.0F, 1.5f, 1.0F);
+            abstractarrow.shootFromRotation(owner, owner.getXRot(), owner.yHeadRot, 0.0F, 1.5f, 1.0F);
             if (owner.getRandom().nextFloat() < 0.33f) {
                 abstractarrow.setCritArrow(true);
             }
@@ -182,7 +182,7 @@ public class RangeAttackBrain<T extends Mob> extends Behavior<T> {
         // 调用默认的方法
         Arrow arrow = new Arrow(owner.level(), owner);
         arrow.setPos(owner.getX(), owner.getY() + owner.getEyeHeight(), owner.getZ());
-        arrow.shootFromRotation(owner, owner.getXRot(), owner.getYRot(), 0.0F, 1.5F, 1.0F);
+        arrow.shootFromRotation(owner, owner.getXRot(), owner.yHeadRot, 0.0F, 1.5F, 1.0F);
         level.addFreshEntity(arrow);
     }
 

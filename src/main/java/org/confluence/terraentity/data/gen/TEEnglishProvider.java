@@ -77,7 +77,9 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster Attributes Multiplier-Damage");
         add("terra_entity.configuration.server.disable_builtin_health_attack_modifier", "Disable Built-in Attributes Settings");
 
-        add("terra_entity.configuration.spawn_without_light", "Spawn monsters without light");
+        add("terra_entity.configuration.server.spawn_without_light", "Spawn monsters without light");
+
+        add("terra_entity.configuration.server.chance_to_spawn_slime_on_zombie_head", "Chance to Spawn Slime on Zombie Head");
 
 
 
