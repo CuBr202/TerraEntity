@@ -1,5 +1,6 @@
 package org.confluence.terraentity.event;
 
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -63,6 +64,18 @@ public class GameEntityEvent {
 //            player.addItem(new ItemStack(TERiddenItems.HONEYED_GOGGLES.get()));
 //        }
 
+        Level level = event.getLevel();
+
+        if (!level.isClientSide && event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < 0.05F) {
+            BaseSlime slime = (zombie instanceof ZombifiedPiglin ? TEMonsterEntities.LAVA_SLIME.get() : TEMonsterEntities.BLUE_SLIME.get()).create(level);
+            if (slime != null) {
+                Vec3 position = zombie.getPassengerRidingPosition(slime);
+                slime.moveTo(position.x, position.y, position.z, zombie.getYRot(), 0.0F);
+//                slime.finalizeSpawn(level, event.getDifficulty(), MobSpawnType.JOCKEY, null);
+                level.addFreshEntity(slime);
+                slime.startRiding(zombie);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -229,17 +242,7 @@ public class GameEntityEvent {
         } else if (mob instanceof BlackSlime blackSlime) {
             blackSlime.finalizeSpawn(randomSource, event.getDifficulty());
         }
-        ServerLevelAccessor level = event.getLevel();
-        if (event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < 0.05F) {
-            BaseSlime slime = (zombie instanceof ZombifiedPiglin ? TEMonsterEntities.LAVA_SLIME.get() : TEMonsterEntities.BLUE_SLIME.get()).create(mob.level());
-            if (slime != null) {
-                Vec3 position = zombie.getPassengerRidingPosition(slime);
-                slime.moveTo(position.x, position.y, position.z, zombie.getYRot(), 0.0F);
-                slime.finalizeSpawn(level, event.getDifficulty(), MobSpawnType.JOCKEY, null);
-                slime.startRiding(zombie);
-//                level.addFreshEntity(slime);
-            }
-        }
+
         if(mob instanceof IAttributeHolder holder){
             holder.getAttributeBuilder().modify(mob);
         }

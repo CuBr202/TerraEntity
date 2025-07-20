@@ -10,6 +10,7 @@ import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_modify.ITradeModifier;
 import org.confluence.terraentity.registries.npc_trade_modify.TradeModifierProvider;
 import org.confluence.terraentity.registries.npc_trade_modify.TradeModifierProviderTypes;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ import java.util.Optional;
 /**
  * 单个表项修改器
  */
-public record TradeItemModifier(int priority, int target, ResourceLocation id, OperatorType type, ITrade trade) implements ITradeModifier  {
+public record TradeItemModifier(int priority, int target, ResourceLocation id, OperatorType type, @Nullable ITrade trade) implements ITradeModifier  {
 
     public static final MapCodec<TradeItemModifier> CODEC = RecordCodecBuilder.mapCodec(builder -> builder.group(
                 Codec.INT.fieldOf("priority").forGetter(TradeItemModifier::priority),

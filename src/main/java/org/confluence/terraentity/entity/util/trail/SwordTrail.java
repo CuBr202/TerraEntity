@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.entity.PersistentEntitySectionManager;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -51,7 +52,6 @@ public class SwordTrail implements ITrail<TrailSwordProj> {
     public void renderTrail(TrailSwordProj holder, Queue<Vec3> trailsQueue, Vec3 entityPos, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         Iterator<Vec3> trails = trailsQueue.iterator();
         int size = trailsQueue.size();
-
         TrailProperties properties = getTrailProperties();
         if (!trails.hasNext()) return;
 
