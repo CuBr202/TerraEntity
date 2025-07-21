@@ -14,6 +14,8 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 import static org.confluence.terraentity.client.gui.container.TETradeScreen.MENU_LOCATION;
 
 /**
@@ -66,4 +68,7 @@ public interface ITradeHealth extends ITrade {
 
     }
 
+    default List<ItemStack> normalizeResult(){
+        return List.of();
+    }
 }

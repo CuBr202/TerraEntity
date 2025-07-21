@@ -58,7 +58,7 @@ public interface IIngredientTrade extends ITrade{
             Ingredient ingredient = costs().get(k).ingredient();
             var itlist = ingredient.getItems();
             int size = itlist.length;
-            int i = (int) (npc.level().dayTime() / 40 % size);
+            int i = (int) (System.currentTimeMillis() % 1000000L / 1000  % size);
             ItemStack target = itlist[i].copy();
             target.setCount(costs().get(k).amount());
             needs.add(target);
@@ -70,7 +70,7 @@ public interface IIngredientTrade extends ITrade{
         int lineCount = 0;
         if(needs.size() == 1){
             // 只有一个原料时
-            guiGraphics.blit(MENU_LOCATION,startx + 113,starty + 16,434,0,78,57,512,256);
+            guiGraphics.blit(MENU_LOCATION,startx + 113,starty + 16,434,0,78,58,512,256);
             ItemStack cost = needs.get(0);
             x += 30;
             y += 18;
@@ -80,7 +80,7 @@ public interface IIngredientTrade extends ITrade{
         }else {
             // 有多个原料时
             x += 7;
-            guiGraphics.blit(MENU_LOCATION,startx + 113,starty + 16,355,0,78,57,512,256);
+            guiGraphics.blit(MENU_LOCATION,startx + 113,starty + 16,355,0,78,58,512,256);
 
             for (ItemStack need : needs) {
                 lineCount++;
@@ -169,5 +169,10 @@ public interface IIngredientTrade extends ITrade{
 
         public abstract T build();
     }
+
+    default List<Ingredient> normalizeCost(){
+        return costs().stream().map(AmountIngredient::toVanilla).toList();
+    }
+
 
 }

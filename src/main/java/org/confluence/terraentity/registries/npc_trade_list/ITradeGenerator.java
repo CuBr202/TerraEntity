@@ -16,9 +16,14 @@ import java.util.List;
 public interface ITradeGenerator {
 
     /**
-     * <P>获取可以交易的物品列表</P>
+     * <P>初始化可以交易的物品列表</P>
      */
     List<ITrade> generateTrades();
+
+    /**
+     * 用于jei自定义配方显示
+     */
+    List<ITrade> getAllSupportedTrades();
 
     /**
      * 获取编解码器

@@ -119,6 +119,13 @@ public class DynamicPoolTradeTask implements ITradeTask {
         return true;
     }
 
+
+    // todo
+    @Override
+    public List<ITrade> getAllSupportedTrades() {
+        return List.of();
+    }
+
     @Override
     public TradeTaskProvider getCodec() {
         return TradeTaskProviderTypes.DYNAMIC_POOL_MAP_TRADE_TASK.get();

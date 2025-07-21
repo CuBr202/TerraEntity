@@ -142,6 +142,13 @@ public class DynamicAnglerTradeTask implements ITradeTask {
     }
 
     @Override
+    public List<ITrade> getAllSupportedTrades() {
+        return this.costPool.stream().map(s->(ITrade) new ItemTradeLootTable(List.of(new AmountIngredient(Ingredient.of(s), s.getCount())), defaultTrade.lootTable(),
+                defaultTrade.sprite(), defaultTrade.translationKey(),
+                defaultTrade.properties())).toList();
+    }
+
+    @Override
     public TradeTaskProvider getCodec() {
         return TradeTaskProviderTypes.DYNAMIC_ANGLER_TRADE_TASK.get();
     }

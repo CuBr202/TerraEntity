@@ -30,6 +30,11 @@ public class SimpleGenerator implements ITradeGenerator {
     }
 
     @Override
+    public List<ITrade> getAllSupportedTrades() {
+        return trades.stream().flatMap(t->t.getAllSupportedTrades().stream()).toList();
+    }
+
+    @Override
     public TradeGeneratorProvider getCodec() {
         return TradeGeneratorProviderTypes.SIMPLE_LIST.get();
     }

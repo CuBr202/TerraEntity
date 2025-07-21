@@ -29,7 +29,7 @@ public interface ITradeItemList extends ITrade {
     default void renderResult(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY, int index){
 
         int size = result().size();
-        int i = (int) (npc.level().dayTime() / 40 % size);
+        int i = (int) (System.currentTimeMillis() % 1000000L / 1000 % size);
         var it = result().get(i);
 
         guiGraphics.renderItem(it, x , y );
@@ -40,7 +40,7 @@ public interface ITradeItemList extends ITrade {
     @OnlyIn(Dist.CLIENT)
     default void renderResultHover(ITradeHolder npc, GuiGraphics guiGraphics, Font font, int x, int y, int startx, int starty, int mouseX, int mouseY){
         int size = result().size();
-        int i = (int) (npc.level().dayTime() / 40 % size);
+        int i = (int) (System.currentTimeMillis() % 1000000L / 1000 % size);
         var it = result().get(i);
         guiGraphics.renderTooltip(font, it, mouseX, mouseY);
     }
@@ -53,7 +53,7 @@ public interface ITradeItemList extends ITrade {
             guiGraphics.blit(MENU_LOCATION,x,y,276,0,35,17,512,256);
 
             int size = result().size();
-            int i = (int) (npc.level().dayTime() / 40 % size);
+            int i = (int) (System.currentTimeMillis() % 1000000L / 1000 % size);
             var it = result().get(i);
             slot.set(it.copy());
             int w = 16 / size;
@@ -70,5 +70,9 @@ public interface ITradeItemList extends ITrade {
             guiGraphics.blit(MENU_LOCATION,x,y,276,17,35,17,512,256);
         }
         slot.set(ItemStack.EMPTY);
+    }
+
+    default List<ItemStack> normalizeResult(){
+        return result();
     }
 }

@@ -22,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_list.ITradeGenerator;
+import org.confluence.terraentity.registries.npc_trade_list.variant.SimpleGenerator;
 import org.confluence.terraentity.registries.npc_trade_lock.ITradeLock;
 import org.jetbrains.annotations.Nullable;
 
@@ -123,6 +124,13 @@ public class NPCTradeManager {
         return this.availableTrades;
     }
 
+    public ITradeGenerator getRawTrades(){
+        if(tradeList == null){
+            return new SimpleGenerator(trades);
+        }
+        return tradeList;
+    }
+
     /**
      * 设置可用的交易列表，在玩家打开商店时，服务端调用
      *
@@ -208,6 +216,9 @@ public class NPCTradeManager {
     private static final Map<ResourceLocation, NPCTradeManager> TRADE_MAP = new HashMap<>();
     private static final Map<ResourceLocation, Tag> TAG_MAP = new HashMap<>();
 
+    /**
+     * 同步给客户端
+     */
     public static void reset(RegistryAccess registryAccess, Map<ResourceLocation, Tag> tradeMap) {
         TRADE_MAP.clear();
         for (Map.Entry<ResourceLocation, Tag> entry : tradeMap.entrySet()) {
@@ -222,6 +233,10 @@ public class NPCTradeManager {
 
     public static Map<ResourceLocation, Tag> getTagMap() {
         return TAG_MAP;
+    }
+
+    public static Map<ResourceLocation, NPCTradeManager> getTradeMap() {
+        return TRADE_MAP;
     }
 
     /**

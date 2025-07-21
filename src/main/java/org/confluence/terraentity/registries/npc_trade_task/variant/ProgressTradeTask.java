@@ -64,6 +64,11 @@ public class ProgressTradeTask implements ITradeTask {
     }
 
     @Override
+    public List<ITrade> getAllSupportedTrades() {
+        return trades;
+    }
+
+    @Override
     public TradeTaskProvider getCodec() {
         return TradeTaskProviderTypes.PROGRESS_TRADE_TASK.get();
     }

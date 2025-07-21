@@ -12,12 +12,16 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.npc_trade_lock.ITradeLock;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * <h1>npc交易接口</h1>
@@ -33,6 +37,23 @@ public interface ITrade{
      * 当canTrade为true时触发
      */
     void onTrade(ServerPlayer player, ITradeHolder npc, int index);
+
+    /**
+     * 用于gei配方显示
+     */
+    default List<ITrade> getAllSupportedTrades(){
+        return List.of(this);
+    }
+
+    /**
+     * 归一化原料，用于jei显示
+     */
+    List<Ingredient> normalizeCost();
+
+    /**
+     * 归一化产物，用于jei显示
+     */
+    List<ItemStack> normalizeResult();
 
     /**
      * 获取交易锁
