@@ -43,6 +43,7 @@ public class TEItems {
                         TESummonItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEWhipItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEBoomerangItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        TEYoyosItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEItems.TOOLS.getEntries().forEach(item -> output.accept(item.get()));
                         TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         HolderLookup.RegistryLookup<Enchantment> registryLookup = itemDisplayParameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
@@ -61,6 +62,7 @@ public class TEItems {
         TEBoomerangItems.ITEMS.register(bus);
         TERideableItems.ITEMS.register(bus);
         TEItems.TOOLS.register(bus);
+        TEYoyosItems.ITEMS.register(bus);
 //        SENTRY_ITEMS.register(bus);
         TABS.register(bus);
 

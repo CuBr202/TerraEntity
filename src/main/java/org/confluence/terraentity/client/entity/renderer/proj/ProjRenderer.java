@@ -31,7 +31,7 @@ public class ProjRenderer<T extends BaseProj> extends EntityRenderer<T> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(BaseProj entity) {
+    public ResourceLocation getTextureLocation(T entity) {
         return entity.getTexture();
     }
 

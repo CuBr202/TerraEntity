@@ -121,8 +121,22 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     }
 
 
+    /**
+     * 简单弹幕的贴图
+     */
     public ResourceLocation getTexture(){return texture;}
+
+    /**
+     * 生存时间
+     */
     public abstract int getLifetime();
+
+    /**
+     * 无限生存时间
+     */
+    public boolean isInfinite(){
+        return false;
+    }
     public boolean shouldBeSaved(){
         return false;
     }
@@ -184,7 +198,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         if(!level().isClientSide){
             this.doCollisionAttack(this::canHitEntity, this::doHurt);
 
-            if (tickCount > getLifetime()) {
+            if (!this.isInfinite() && tickCount > getLifetime()) {
                 discard();
                 return;
             }
@@ -196,6 +210,8 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         }
 
     }
+
+
 
     //弹幕设置
     @Override//取消射击惯性

@@ -20,9 +20,7 @@ import org.confluence.terraentity.client.util.RegisterUtils;
 import org.confluence.terraentity.entity.proj.*;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
-import org.confluence.terraentity.registries.hit_effect.variant.TimePossibilityAmplifierEffect;
 
 public class TEProjectileEntities {
 
@@ -58,6 +56,7 @@ public class TEProjectileEntities {
     // OBB剑气
     public static final DeferredHolder<EntityType<?>,EntityType<TrailSwordProj>> TRAIL_SWORD_PROJECTILE = TEEntities.ENTITIES.register("trail_sword_projectile",() -> EntityType.Builder.<TrailSwordProj>of((e, l)->
             new TrailSwordProj(e,l) , MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F,0.5F).build(TEEntities.Key("trail_sword_projectile")));
+
 
 
     @OnlyIn(Dist.CLIENT)

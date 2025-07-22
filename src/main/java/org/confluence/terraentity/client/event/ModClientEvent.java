@@ -6,10 +6,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.*;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.attachment.ItemInHandTrailAttachment;
 import org.confluence.terraentity.client.block.renderer.FigureBlockRenderer;
@@ -50,6 +47,8 @@ public final class ModClientEvent {
             ClientConfig.load();
         }
     }
+
+
 
     @SubscribeEvent
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {

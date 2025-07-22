@@ -10,11 +10,12 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.world.entity.Entity;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.proj.BaseProj;
 
 
-public class CabbageProjModel<T extends BaseProj> extends EntityModel<T> {
+public class CabbageProjModel<T extends Entity> extends EntityModel<T> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(TerraEntity.space( "cabbage_proj_model"), "main");
 	private final ModelPart bone4;
@@ -33,7 +34,7 @@ public class CabbageProjModel<T extends BaseProj> extends EntityModel<T> {
 	}
 
 	@Override
-	public void setupAnim(BaseProj entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
 	}
 

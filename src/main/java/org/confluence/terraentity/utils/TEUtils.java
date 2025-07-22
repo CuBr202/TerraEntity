@@ -425,7 +425,7 @@ public final class TEUtils {
      * @param distance
      * @return
      */
-    public static EntityHitResult getEyeTraceHitResult(Entity entity, double distance){
+    public static @Nullable EntityHitResult getEyeTraceHitResult(Entity entity, double distance){
         AABB aabb = entity.getBoundingBox().inflate(distance);
         Vec3 from = entity.getEyePosition();
         Vec3 to = entity.getEyePosition().add(entity.getLookAngle().scale(distance));
