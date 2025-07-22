@@ -8,12 +8,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -73,6 +76,28 @@ public record TradeTask(ITradeTask task, TradeProperties properties) implements 
             task().afterTrade(npc, index);
         }
 
+    }
+
+
+    @Override
+    public List<ITrade> getAllSupportedTrades(){
+        return this.task.getAllSupportedTrades();
+    }
+
+    /**
+     * 不允许委托类添加配方
+     */
+    @Override
+    public List<Ingredient> normalizeCost() {
+        return List.of();
+    }
+
+    /**
+     * 不允许委托类添加配方
+     */
+    @Override
+    public List<ItemStack> normalizeResult() {
+        return List.of();
     }
 
 

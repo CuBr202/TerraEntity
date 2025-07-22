@@ -3,6 +3,7 @@ package org.confluence.terraentity.event;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.CrossbowItem;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
@@ -13,6 +14,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
+import org.confluence.terraentity.data.util.AmountIngredient;
 import org.confluence.terraentity.entity.npc.brain.ArmDealerNPCAi;
 import org.confluence.terraentity.entity.npc.brain.DemolitionistNPCAi;
 import org.confluence.terraentity.entity.npc.brain.NurseAi;
@@ -33,6 +35,7 @@ public class ModEvent {
         event.enqueueWork(() -> {
             ModChecker.check();
             NetworkHandler.register();
+            CraftingHelper.register(AmountIngredient.TYPE(), AmountIngredient.Serializer.INSTANCE);
 
         });
     }

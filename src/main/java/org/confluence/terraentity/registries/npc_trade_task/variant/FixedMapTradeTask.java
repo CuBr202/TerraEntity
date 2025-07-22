@@ -5,16 +5,13 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.chat.Component;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
-import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTypes;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.AbstractMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -81,6 +78,11 @@ public class FixedMapTradeTask implements ITradeTask  {
     @Override
     public boolean canTrade(ITradeHolder npc, int index) {
         return true;
+    }
+
+    @Override
+    public List<ITrade> getAllSupportedTrades() {
+        return new ArrayList<>(fixed_Rewards.values());
     }
 
     @Override

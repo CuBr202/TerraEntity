@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.monster.slime;
 
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -62,6 +63,8 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         this.color = FloatRGB.fromInteger(color);
         this.honeySoakTime = 0;
     }
+
+
 
     Predicate<FloatRGB> colorTest = c->c.equals(SlimeColor_Green) || c.equals(SlimeColor_Blue) || c.equals(SlimeColor_Purple);
 

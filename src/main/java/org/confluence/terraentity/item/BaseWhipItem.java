@@ -108,8 +108,8 @@ public class BaseWhipItem extends Item {
                 whipEntity.setWeapon(stack);
                 whipEntity.setExistTick(cooldown);
                 whipEntity.setOwner(player);
-                whipEntity.setPos(player.position().add(0, 1, 0).add(TEUtils.getPlayerHandPos(player)));
-                whipEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.05f, 1.0F);
+                whipEntity.setPos(player.position().add(0, player.getBbHeight() * 0.5f, 0).add(TEUtils.getPlayerHandPos(player)));
+                whipEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.5f, 1.0F);
                 whipEntity.hitCooldown = hitCooldown;
                 stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 level.addFreshEntity(whipEntity);

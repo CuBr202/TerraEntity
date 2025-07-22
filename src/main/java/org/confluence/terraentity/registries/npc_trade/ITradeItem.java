@@ -9,6 +9,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
 
+import java.util.List;
+
 import static org.confluence.terraentity.client.gui.container.TETradeScreen.MENU_LOCATION;
 
 /**
@@ -53,4 +55,7 @@ public interface ITradeItem extends ITrade{
         }
     }
 
+    default List<ItemStack> normalizeResult(){
+        return List.of(result());
+    }
 }

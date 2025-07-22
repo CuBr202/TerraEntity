@@ -69,6 +69,11 @@ public class WeightMapGenerator implements ITradeGenerator {
     }
 
     @Override
+    public List<ITrade> getAllSupportedTrades() {
+        return new ArrayList<>(this.tradeWeightMap.keySet());
+    }
+
+    @Override
     public TradeGeneratorProvider getCodec() {
         return TradeGeneratorProviderTypes.WEIGHT_MAP.get();
     }

@@ -171,4 +171,9 @@ public interface IIngredientTrade extends ITrade{
         public abstract T build();
     }
 
+    default List<Ingredient> normalizeCost(){
+        return costs().stream().map(a->Ingredient.of(a.getItemStacks())).toList();
+    }
+
+
 }

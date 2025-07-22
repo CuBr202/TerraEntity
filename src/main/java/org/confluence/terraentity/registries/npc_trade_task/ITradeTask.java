@@ -12,6 +12,7 @@ import org.confluence.terraentity.registries.npc_trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * <h1>npc交易任务接口</h1>
@@ -40,6 +41,11 @@ public interface ITradeTask {
      * <P>如：{@link DynamicAnglerTradeTask#canTrade(ITradeHolder, int) 渔夫任务} 要先判断是否准备好
      */
     boolean canTrade(ITradeHolder npc, int index);
+
+    /**
+     * 用于gei配方显示
+     */
+    List<ITrade> getAllSupportedTrades();
 
     /**
      * 这个title不为空时会覆盖重写的getTile()的硬编码标题

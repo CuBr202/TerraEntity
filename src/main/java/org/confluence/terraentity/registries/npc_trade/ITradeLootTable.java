@@ -130,4 +130,10 @@ public interface ITradeLootTable extends ITrade{
         slot.set(ItemStack.EMPTY);
     }
 
+    // todo 加载jei配方的时候无法获取lootTable
+    default List<ItemStack> normalizeResult(){
+
+        return List.of();
+    }
+
 }

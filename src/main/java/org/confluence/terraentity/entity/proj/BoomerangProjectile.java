@@ -9,11 +9,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
@@ -36,7 +36,6 @@ import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.UUID;
 
 public class BoomerangProjectile extends AbstractHurtingProjectile {
 
@@ -106,19 +105,16 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-//        if(!level().isClientSide){
+        if(!level().isClientSide){
             Entity hurter = result.getEntity();
             Entity actualHurter = hurter;
             if(hurter instanceof PartEntity<?> part){
                 hurter = part.getParent();
             }
             if(this.getOwner() instanceof LivingEntity owner && this.getOwner() != actualHurter) {
-                if (hurter instanceof LivingEntity living && actualHurter.isAlive()) {
+                if (hurter instanceof LivingEntity living && actualHurter.isAlive() && TEUtils.projectileCanHurtEntityTest.test(this, living)) {
                     penetrationCount--;
-                    UUID effectionUUID = UUID.fromString("c1adc95b-0ff9-49ca-b7a3-ee087005b7b0");
-                    owner.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(effectionUUID,"temp_boomerang", modifier.damage - 1, AttributeModifier.Operation.ADDITION));
-                    float damage = (float) owner.getAttributeValue(Attributes.ATTACK_DAMAGE);
-                    owner.getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(effectionUUID);
+                    float damage = (float) owner.getAttributeValue(Attributes.ATTACK_DAMAGE) + modifier.damage - 1;
                     var data = IDataComponentType.getData(weapon, TEDataComponentTypes.EFFECT_STRATEGY);
                     if (data != null) {
                         data.applyAll((LivingEntity) this.getOwner(), living);
@@ -138,7 +134,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
                     isBacking = true;
                 }
             }
-//        }
+        }
     }
 
     @Override
@@ -158,9 +154,14 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
     }
     @Override
     protected void onHitBlock(BlockHitResult result) {
+        if(!isBacking){
+            this.playSound(SoundEvents.WOOD_PLACE, 0.5f, 1.5f);
+        }
         isBacking = true;
+
         this.noPhysics = true;
         entityData.set(DATA_BACKING, true);
+
         super.onHitBlock(result);
         if(level().isClientSide) {
             BlockPos blockpos = result.getBlockPos();

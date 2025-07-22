@@ -70,4 +70,8 @@ public interface ITradeItemList extends ITrade {
         }
         slot.set(ItemStack.EMPTY);
     }
+
+    default List<ItemStack> normalizeResult(){
+        return result();
+    }
 }

@@ -33,7 +33,6 @@ public class HellFireEffect extends MobEffect implements IMobEffectExtension {
 
     public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
         livingEntity.setRemainingFireTicks(1);
-
         livingEntity.level().explode(
                 livingEntity,
                 livingEntity.level().damageSources().explosion(livingEntity, livingEntity),
@@ -50,7 +49,8 @@ public class HellFireEffect extends MobEffect implements IMobEffectExtension {
                     }
                 } ,
                 livingEntity.getX(), livingEntity.getY(0.0625),livingEntity.getZ(),
-                1, true, Level.ExplosionInteraction.MOB);
+                1, true, Level.ExplosionInteraction.MOB
+        );
 
     }
 
