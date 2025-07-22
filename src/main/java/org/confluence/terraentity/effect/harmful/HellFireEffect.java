@@ -16,8 +16,8 @@ import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.EffectCure;
-import org.confluence.lib.util.LibUtils;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
+import org.confluence.terraentity.entity.proj.BoomerangProjectile;
 import org.confluence.terraentity.init.TETags;
 
 import java.util.Set;
@@ -47,7 +47,7 @@ public class HellFireEffect extends MobEffect {
         livingEntity.setRemainingFireTicks(1);
         livingEntity.level().explode(
                 livingEntity,
-                Explosion.getDefaultDamageSource(livingEntity.level(), livingEntity),
+                Explosion.getDefaultDamageSource(livingEntity.level(), null),
                 new ExplosionDamageCalculator() {
                     @Override
                     public boolean shouldBlockExplode(Explosion explosion, BlockGetter reader, BlockPos pos, BlockState state, float power) {
@@ -69,8 +69,7 @@ public class HellFireEffect extends MobEffect {
                     }
                 },
                 livingEntity.getX(), livingEntity.getY(0.0625), livingEntity.getZ(),
-                1, true, Level.ExplosionInteraction.TRIGGER,
-                true, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.GENERIC_EXPLODE
+                1, true, Level.ExplosionInteraction.MOB
         );
 
     }

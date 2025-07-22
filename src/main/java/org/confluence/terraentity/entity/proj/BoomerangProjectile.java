@@ -7,13 +7,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
@@ -25,7 +23,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.entity.PartEntity;
-import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.data.component.SingleBooleanComponent;
 import org.confluence.terraentity.entity.util.trail.BoomerangTrail;
@@ -107,7 +104,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-//        if(!level().isClientSide){
+        if(!level().isClientSide){
             Entity hurter = result.getEntity();
             Entity actualHurter = hurter;
             if(hurter instanceof PartEntity<?> part){
@@ -116,10 +113,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
             if(this.getOwner() instanceof LivingEntity owner && this.getOwner() != actualHurter) {
                 if (hurter instanceof LivingEntity living && actualHurter.isAlive() && TEUtils.projectileCanHurtEntityTest.test(this, living)) {
                     penetrationCount--;
-                    ResourceLocation temp = TerraEntity.space("temp_boomerang");
-                    owner.getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(new AttributeModifier(temp, modifier.damage - 1, AttributeModifier.Operation.ADD_VALUE));
-                    float damage = (float) owner.getAttributeValue(Attributes.ATTACK_DAMAGE);
-                    owner.getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(temp);
+                    float damage = (float) owner.getAttributeValue(Attributes.ATTACK_DAMAGE) + modifier.damage - 1;
                     var data = weapon.get(TEDataComponentTypes.EFFECT_STRATEGY);
                     if (data != null) {
                         data.applyAll((LivingEntity) this.getOwner(), living);
@@ -139,7 +133,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
                     isBacking = true;
                 }
             }
-//        }
+        }
     }
 
     @Override
