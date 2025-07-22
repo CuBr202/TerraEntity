@@ -399,7 +399,13 @@ public class WhipEntity extends AbstractHurtingProjectile {
         float f1 = -Mth.sin((x + z) * 0.017453292F);
         float f2 = Mth.cos(y * 0.017453292F) * Mth.cos(x * 0.017453292F);
         this.shoot(f, f1, f2, velocity, inaccuracy);
-//        this.setDeltaMovement(0,0,0);
+        Vec3 vec3 = shooter.getKnownMovement();
+        if(TEUtils.angleBetween(shooter.getLookAngle(), vec3) < 1.5f){
+            this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, vec3.y * 0.2F, vec3.z));
+        }else{
+            this.setDeltaMovement(this.getDeltaMovement().add(vec3.x * 0.23f, vec3.y * 0.2F, vec3.z * 0.23f));
+        }
+
         this.initialPosition = position();
         this.initDirection = new Vec3(f, f1, f2);
         this.entityData.set(DATA_INITIAL_POSITION, initialPosition.toVector3f());
