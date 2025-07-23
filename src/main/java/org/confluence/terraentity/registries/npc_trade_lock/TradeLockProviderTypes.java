@@ -22,6 +22,7 @@ public class TradeLockProviderTypes {
     public static final Supplier<TradeLockProvider> TIME_LOCK = register("time_lock", TimeLock.CODEC);
     public static final Supplier<TradeLockProvider> KILL_ENTITY_LOCK = register("kill_entity_lock", KillEntityLock.CODEC);
     public static final Supplier<TradeLockProvider> MOOD_LOCK = register("mood_lock", MoodLock.CODEC);
+    public static final Supplier<TradeLockProvider> NPC_EXIST_LOCK = register("npc_exist_lock", NPCExistLock.CODEC);
 
 
 
