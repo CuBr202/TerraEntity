@@ -15,7 +15,6 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -29,18 +28,21 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.api.entity.ISummonMob;
+import org.confluence.terraentity.api.trade.ITradeHolder;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
-import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
 import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
-import org.confluence.terraentity.api.trade.ITradeHolder;
-import org.confluence.terraentity.api.entity.ISummonMob;
-import org.confluence.terraentity.init.*;
+import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.init.TEAttributes;
+import org.confluence.terraentity.init.TEEffects;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.utils.TEUtils;
@@ -86,9 +88,7 @@ public class GameEntityEvent {
             player.getData(TEAttachments.SUMMONER_STORAGE.get()).sync(player);
 
             if (player.level().getEntities(player, player.getBoundingBox().inflate(32), e -> e instanceof Player && e != player).isEmpty()) {
-                player.level().getEntities(player, player.getBoundingBox().inflate(32), e -> e instanceof Boss).forEach(e -> {
-                    e.discard();
-                });
+                player.level().getEntities(player, player.getBoundingBox().inflate(32), e -> e instanceof Boss).forEach(Entity::discard);
             }
 
         }
@@ -177,12 +177,12 @@ public class GameEntityEvent {
         if (event.getTarget() instanceof ITradeHolder holder) {
 
             ((IPlayer) event.getEntity()).terra_entity$setTradeHolder(holder);
-            return;
-        }
-        ItemStack item = event.getItemStack();
-        if (!(event.getTarget() instanceof LivingEntity entity)) return;
-        Player player = event.getEntity();
-        Level level = event.getLevel();
+//            return;
+//        }
+//        ItemStack item = event.getItemStack();
+//        if (!(event.getTarget() instanceof LivingEntity entity)) return;
+//        Player player = event.getEntity();
+//        Level level = event.getLevel();
 //        if (entity.getType().equals(TEMonsterEntities.BLUE_SLIME.get()) ||
 //                entity.getType().equals(TEMonsterEntities.GREEN_SLIME.get()) ||
 //                entity.getType().equals(TEMonsterEntities.PURPLE_SLIME.get())) {
@@ -223,7 +223,7 @@ public class GameEntityEvent {
 //                return;
 //            }
 //            event.setCanceled(true);
-//        }
+        }
     }
 
     @SubscribeEvent
