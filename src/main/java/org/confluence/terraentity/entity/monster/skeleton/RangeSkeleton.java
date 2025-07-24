@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -13,9 +14,13 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.ai.goal.TERangedAttackGoal;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
@@ -31,7 +36,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 
 /**
- * 腐瘸
+ * 远程单位
  */
 public class RangeSkeleton extends AbstractSkeleton implements GeoEntity, IUseItemAnimatable<BoneStates>, IAttributeHolder {
 
@@ -39,6 +44,8 @@ public class RangeSkeleton extends AbstractSkeleton implements GeoEntity, IUseIt
     BoneStateMachine<BoneStates> leftArmBoneStateMachine;
     BoneStateMachine<BoneStates> rightArmBoneStateMachine;
     boolean dirty = false;
+
+    TERangedAttackGoal<RangeSkeleton> teBowGoal = new TERangedAttackGoal<>(this, 1.0, 20, 15.0F);
 
     AttributeBuilder builder;
     public RangeSkeleton(EntityType<? extends AbstractSkeleton> entityType, Level level, AttributeBuilder builder) {
@@ -81,6 +88,29 @@ public class RangeSkeleton extends AbstractSkeleton implements GeoEntity, IUseIt
 
     }
 
+    @Override
+    public void reassessWeaponGoal() {
+        if (!this.level().isClientSide) {
+            this.goalSelector.removeGoal(this.meleeGoal);
+            this.goalSelector.removeGoal(this.teBowGoal);
+            ItemStack itemstack = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, (item) -> {
+                return item instanceof BowItem;
+            }));
+            if (itemstack.getItem() instanceof BowItem) {
+                int i = this.getHardAttackInterval();
+                if (this.level().getDifficulty() != Difficulty.HARD) {
+                    i = this.getAttackInterval();
+                }
+
+                this.teBowGoal.setMinAttackInterval(i);
+                this.goalSelector.addGoal(4, this.teBowGoal);
+            } else {
+                this.goalSelector.addGoal(4, this.meleeGoal);
+            }
+        }
+    }
+
+    @Override
     public float getWalkTargetValue(BlockPos pos) {
         if(this.builder.spawnWithoutLight){
             return 0;

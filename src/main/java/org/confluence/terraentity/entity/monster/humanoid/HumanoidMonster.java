@@ -24,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.ai.goal.TERangedAttackGoal;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
@@ -42,12 +43,11 @@ import java.time.temporal.ChronoField;
  * 人形怪，可以远程攻击也可以近战，根据手中物品决定
  */
 public class HumanoidMonster extends AbstractMonster implements RangedAttackMob, IUseItemAnimatable<BoneStates> {
-    private static final int HARD_ATTACK_INTERVAL = 20;
-    private static final int NORMAL_ATTACK_INTERVAL = 40;
+
     BoneStateMachine<BoneStates> leftArmBoneStateMachine;
     BoneStateMachine<BoneStates> rightArmBoneStateMachine;
     AttributeBuilder builder;
-    private final RangedBowAttackGoal<HumanoidMonster> bowGoal = new RangedBowAttackGoal<>(this, 1.0, 20, 15.0F);
+    private final TERangedAttackGoal<HumanoidMonster> bowGoal = new TERangedAttackGoal<>(this, 1.0, 50, 15.0F);
     private final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.2, false) {
         public void stop() {
             super.stop();
