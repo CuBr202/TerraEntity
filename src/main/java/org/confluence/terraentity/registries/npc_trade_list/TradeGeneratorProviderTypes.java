@@ -3,6 +3,7 @@ package org.confluence.terraentity.registries.npc_trade_list;
 import com.mojang.serialization.MapCodec;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.trade.ITradeGenerator;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.npc_trade_list.variant.SimpleGenerator;
 import org.confluence.terraentity.registries.npc_trade_list.variant.WeightMapGenerator;

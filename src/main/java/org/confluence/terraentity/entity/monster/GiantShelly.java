@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
-import org.confluence.terraentity.entity.util.IVanillaVariant;
+import org.confluence.terraentity.api.entity.IVanillaVariant;
 import org.confluence.terraentity.init.TESounds;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.RawAnimation;

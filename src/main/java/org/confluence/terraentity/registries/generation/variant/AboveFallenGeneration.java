@@ -12,7 +12,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
-import org.confluence.terraentity.registries.generation.IGeneration;
+import org.confluence.terraentity.api.entity.IGeneration;
 import org.confluence.terraentity.utils.AimUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.Nullable;

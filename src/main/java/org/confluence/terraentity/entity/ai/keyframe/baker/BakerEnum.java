@@ -1,7 +1,7 @@
 package org.confluence.terraentity.entity.ai.keyframe.baker;
 
 import com.mojang.serialization.Codec;
-import org.confluence.terraentity.entity.ai.keyframe.interpolator.IInterpolator;
+import org.confluence.terraentity.api.entity.animation.IInterpolator;
 
 import java.util.Locale;
 import java.util.function.Supplier;

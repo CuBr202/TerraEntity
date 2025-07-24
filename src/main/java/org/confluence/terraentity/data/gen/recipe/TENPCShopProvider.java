@@ -29,13 +29,13 @@ import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
 import org.confluence.terraentity.init.item.TESummonItems;
-import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.api.trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.TradeProperties;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeLootTable;
 import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
-import org.confluence.terraentity.registries.npc_trade_list.ITradeGenerator;
+import org.confluence.terraentity.api.trade.ITradeGenerator;
 import org.confluence.terraentity.registries.npc_trade_list.variant.WeightMapGenerator;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.KillEntityLock;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
@@ -51,7 +51,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * 生成单个NPC单个配方
  *
- * @see org.confluence.terraentity.registries.npc_trade.ITrade
+ * @see ITrade
  */
 public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManager> {
 

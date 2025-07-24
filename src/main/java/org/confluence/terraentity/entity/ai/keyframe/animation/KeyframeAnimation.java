@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import org.confluence.terraentity.api.entity.animation.IKeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
 import org.confluence.terraentity.entity.ai.keyframe.baker.AbstractKeyframeBaker;
 

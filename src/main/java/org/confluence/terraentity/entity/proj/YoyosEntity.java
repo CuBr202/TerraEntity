@@ -15,7 +15,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.api.ILeftClickReceiver;
+import org.confluence.terraentity.api.item.ILeftClickReceiver;
 import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.entity.summon.AbstractSummonMob;
 import org.confluence.terraentity.init.TEAttachments;

@@ -1,13 +1,11 @@
 package org.confluence.terraentity.item;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
@@ -27,11 +25,10 @@ import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.attachment.SummonerAttachment;
-import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TESounds;
-import org.confluence.terraentity.init.entity.TESummonEntities;
 import org.confluence.terraentity.utils.TEUtils;
 
 import javax.annotation.ParametersAreNonnullByDefault;

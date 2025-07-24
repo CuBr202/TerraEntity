@@ -21,7 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.util.IVanillaVariant;
+import org.confluence.terraentity.api.entity.IVanillaVariant;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEAnimals;
 import org.jetbrains.annotations.NotNull;

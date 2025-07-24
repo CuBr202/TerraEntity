@@ -20,7 +20,7 @@ import org.confluence.terraentity.data.enchantment.TEEnchantmentHelper;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.dynamic_curve.SplineKeyframeDynamicCurve;
-import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TESounds;

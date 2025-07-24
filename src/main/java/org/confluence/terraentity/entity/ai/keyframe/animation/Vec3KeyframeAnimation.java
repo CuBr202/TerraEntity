@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.ai.keyframe.animation;
 
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.api.entity.animation.IKeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
 
 import java.util.*;

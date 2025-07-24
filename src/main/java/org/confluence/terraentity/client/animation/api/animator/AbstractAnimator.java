@@ -1,7 +1,7 @@
 package org.confluence.terraentity.client.animation.api.animator;
 
 import org.confluence.terraentity.client.animation.api.state.BoneState;
-import org.confluence.terraentity.entity.animation.IStateMachine;
+import org.confluence.terraentity.api.entity.animation.IStateMachine;
 
 import java.util.Map;
 

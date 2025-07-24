@@ -1,6 +1,6 @@
 package org.confluence.terraentity.client.animation.api.animator;
 
-import org.confluence.terraentity.entity.animation.IStateMachine;
+import org.confluence.terraentity.api.entity.animation.IStateMachine;
 
 /**
  * 骨骼硬编码动画控制器

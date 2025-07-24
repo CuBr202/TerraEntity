@@ -10,7 +10,9 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.common.recipe.AmountIngredient;
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.trade.IIngredientTrade;
+import org.confluence.terraentity.api.trade.ITradeHealth;
+import org.confluence.terraentity.api.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 
 import java.util.List;

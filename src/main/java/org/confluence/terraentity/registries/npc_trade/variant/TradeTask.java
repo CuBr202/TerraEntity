@@ -12,9 +12,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.trade.ITrade;
+import org.confluence.terraentity.api.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
-import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
+import org.confluence.terraentity.api.trade.ITradeTask;
 
 import javax.annotation.Nullable;
 import java.util.List;

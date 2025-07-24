@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.ai.IFlyRideableMob;
+import org.confluence.terraentity.api.entity.IFlyRideableMob;
 import org.confluence.terraentity.utils.AdapterUtils;
 
 public class ServerBoundVehicleExtensionPacket implements CustomPacketPayload {

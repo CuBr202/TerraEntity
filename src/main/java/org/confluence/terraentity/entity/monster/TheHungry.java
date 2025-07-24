@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.ai.IMinion;
+import org.confluence.terraentity.api.entity.IMinion;
 import org.confluence.terraentity.entity.boss.WallOfFlesh;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeSurroundTargetGoal;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeWanderGoal;

@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
-import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
+import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.jetbrains.annotations.NotNull;

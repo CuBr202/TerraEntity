@@ -11,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.terraentity.api.entity.trail.ITrail;
 import org.confluence.terraentity.client.util.ShaderUtil;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;

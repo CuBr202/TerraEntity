@@ -10,7 +10,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.ai.CircleMobSkills;
-import org.confluence.terraentity.entity.ai.IFSMGeoMob;
+import org.confluence.terraentity.api.entity.ai.IFSMGeoMob;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import software.bernie.geckolib.animation.AnimatableManager;
 

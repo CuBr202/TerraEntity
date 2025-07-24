@@ -1,11 +1,10 @@
 package org.confluence.terraentity.mixin;
 
-import net.minecraft.client.renderer.blockentity.ChestRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.lib.mixed.SelfGetter;
 
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.trade.ITradeHolder;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

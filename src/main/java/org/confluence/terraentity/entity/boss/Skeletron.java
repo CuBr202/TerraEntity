@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.entity.ai.Boss;
+import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.proj.SkullProjectile;
 import org.confluence.terraentity.init.TESounds;

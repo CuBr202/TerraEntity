@@ -1,8 +1,11 @@
 package org.confluence.terraentity.entity.ai.goal.skill;
 
+import org.confluence.terraentity.api.entity.ai.ISkill;
+import org.confluence.terraentity.api.entity.ai.ISkillManager;
+
 import java.util.*;
 
-public class SkillCooldownManager implements ISkillManager{
+public class SkillCooldownManager implements ISkillManager {
 
     private final HashMap<Integer, ISkill> cooldownMap = new HashMap<>(); // 技能名 -> 剩余冷却时间
     private final PriorityQueue<ISkill> cooldownQueue = new PriorityQueue<>(Comparator.comparing(ISkill::getCooldown));

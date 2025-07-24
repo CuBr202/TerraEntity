@@ -6,7 +6,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import org.confluence.lib.common.recipe.AmountIngredient;
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.trade.IIngredientTrade;
+import org.confluence.terraentity.api.trade.ITradeItemList;
+import org.confluence.terraentity.api.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 
 import java.util.ArrayList;

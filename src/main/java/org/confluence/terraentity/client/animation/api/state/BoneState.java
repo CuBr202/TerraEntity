@@ -1,6 +1,6 @@
 package org.confluence.terraentity.client.animation.api.state;
 
-import org.confluence.terraentity.entity.animation.IStateMachine;
+import org.confluence.terraentity.api.entity.animation.IStateMachine;
 
 // 状态接口
 public interface BoneState<T, B, C, S, M extends IStateMachine<B, S>> {

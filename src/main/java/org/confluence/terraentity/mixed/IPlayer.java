@@ -1,6 +1,6 @@
 package org.confluence.terraentity.mixed;
 
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.trade.ITradeHolder;
 
 import javax.annotation.Nullable;
 

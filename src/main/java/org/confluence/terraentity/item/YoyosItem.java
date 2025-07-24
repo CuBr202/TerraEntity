@@ -6,7 +6,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.confluence.terraentity.api.ILeftClickStateItem;
+import org.confluence.terraentity.api.item.ILeftClickStateItem;
 import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.entity.proj.YoyosEntity;
 import org.confluence.terraentity.init.TEAttachments;

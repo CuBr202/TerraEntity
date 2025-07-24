@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.neoforged.neoforge.entity.PartEntity;
-import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
+import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;

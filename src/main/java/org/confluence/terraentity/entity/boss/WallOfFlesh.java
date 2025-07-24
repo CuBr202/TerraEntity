@@ -20,7 +20,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.effect.harmful.HorrifiedEffect;
-import org.confluence.terraentity.entity.ai.Boss;
+import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.entity.monster.TheHungry;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.init.TEEffects;

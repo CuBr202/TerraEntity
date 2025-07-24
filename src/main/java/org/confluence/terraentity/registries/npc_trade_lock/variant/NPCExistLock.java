@@ -5,10 +5,11 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.trade.ITradeHolder;
 import org.confluence.terraentity.init.TEAi;
-import org.confluence.terraentity.registries.npc_trade_lock.ITradeLock;
+import org.confluence.terraentity.api.trade.ITradeLock;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProvider;
+import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProviderTypes;
 
 import java.util.List;
 
@@ -27,6 +28,6 @@ public record NPCExistLock(EntityType<?> entityType) implements ITradeLock {
 
     @Override
     public TradeLockProvider getCodec() {
-        return null;
+        return TradeLockProviderTypes.NPC_EXIST_LOCK.get();
     }
 }

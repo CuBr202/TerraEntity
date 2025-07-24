@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.ai.keyframe.interpolator;
 
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+import org.confluence.terraentity.api.entity.animation.IInterpolator;
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
 
 import java.util.List;

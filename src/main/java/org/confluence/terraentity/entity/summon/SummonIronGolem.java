@@ -19,6 +19,7 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonMeleeAttackGoal;
 
 import java.util.Optional;

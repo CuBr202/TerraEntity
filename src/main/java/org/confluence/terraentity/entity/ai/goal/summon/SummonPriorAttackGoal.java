@@ -5,9 +5,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
-import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.init.TEEffects;
-import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

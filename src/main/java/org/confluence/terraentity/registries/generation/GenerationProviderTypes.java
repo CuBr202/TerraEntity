@@ -3,6 +3,7 @@ package org.confluence.terraentity.registries.generation;
 import com.mojang.serialization.MapCodec;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.entity.IGeneration;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.generation.variant.AboveFallenGeneration;
 import org.confluence.terraentity.registries.generation.variant.ForwardGeneration;

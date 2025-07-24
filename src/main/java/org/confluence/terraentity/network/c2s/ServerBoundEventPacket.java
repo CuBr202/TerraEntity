@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.api.ILeftClickStateItem;
+import org.confluence.terraentity.api.item.ILeftClickStateItem;
 import org.confluence.terraentity.entity.boss.Skeletron;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.init.TEAttachments;

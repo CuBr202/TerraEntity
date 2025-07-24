@@ -5,7 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import org.confluence.terraentity.registries.npc_trade_task.ITradeTask;
+import org.confluence.terraentity.api.trade.ITradeHolder;
+import org.confluence.terraentity.api.trade.ITradeTask;
 
 import java.util.*;
 import java.util.stream.Collectors;

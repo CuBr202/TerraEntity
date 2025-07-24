@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonFlyFlowOwnerGoal;
 import org.confluence.terraentity.entity.monster.Hornet;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
@@ -25,7 +26,7 @@ import org.confluence.terraentity.utils.TEUtils;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SummonHornet extends Hornet implements ISummonMob<SummonHornet>{
+public class SummonHornet extends Hornet implements ISummonMob<SummonHornet> {
 
     public SummonHornet(EntityType<? extends Monster> type, Level level) {
         super(type, level, FlyMonsterPrefab.BEE_BUILDER.get().setFollowRange(20).setMovementSpeed(1));

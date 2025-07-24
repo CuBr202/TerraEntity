@@ -1,6 +1,6 @@
 package org.confluence.terraentity.entity.npc.trade;
 
-import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.api.trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.TradeProperties;
 
 public class TradeElement {

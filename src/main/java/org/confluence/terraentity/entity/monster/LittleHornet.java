@@ -14,7 +14,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import org.confluence.terraentity.entity.ai.IMinion;
+import org.confluence.terraentity.api.entity.IMinion;
 import org.confluence.terraentity.entity.boss.QueenBee;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import software.bernie.geckolib.animatable.GeoAnimatable;

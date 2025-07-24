@@ -29,7 +29,7 @@ import org.confluence.terraentity.entity.util.trail.BoomerangTrail;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TESounds;
-import org.confluence.terraentity.registries.generation.IGeneration;
+import org.confluence.terraentity.api.entity.IGeneration;
 import org.confluence.terraentity.registries.generation.variant.ForwardGeneration;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;

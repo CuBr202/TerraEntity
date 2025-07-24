@@ -21,9 +21,6 @@ import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFu
 import net.minecraft.world.level.storage.loot.functions.SetComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.functions.SmeltItemFunction;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWithEnchantedBonusCondition;
@@ -32,7 +29,6 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
-import org.confluence.terraentity.data.init.loot.TELootParams;
 import org.confluence.terraentity.data.init.loot.conditioin.VariantCondition;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TEAnimals;
@@ -225,8 +221,8 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         Stream.of(TEMonsterEntities.ANTLION_SWARMER, TEMonsterEntities.GIANT_ANTLION_SWARMER, TEMonsterEntities.TOMB_CRAWLER)
                 .forEach(e-> {
                     this.add(e.get(), LootTable.lootTable()
-                            .withPool(singleItemPool(TESummonItems.IMP_STAFF, 1,0.05f))
-                            .withPool(weightLootPool(singleItemIncrease(Items.SNOWBALL, 1, 2), 1f))
+                            .withPool(weightLootPool(singleItemIncrease(Items.ROTTEN_FLESH, 1, 2), 1f))
+                            .withPool(weightLootPool(singleItemIncrease(Items.SAND, 1, 2), 1f))
                     );
                 });
 
@@ -248,7 +244,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                 TEMonsterEntities.SPORE_ZOMBIE
         ).forEach(e->{
             this.add(e.get(), LootTable.lootTable()
-                    .withPool(weightLootPool(singleItemIncrease(Items.ROTTEN_FLESH, 1, 3), 1f))
+                    .withPool(weightLootPool(singleItemIncrease(Items.ROTTEN_FLESH, 1, 2), 1f))
                     .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
                             .add(LootItem.lootTableItem(Items.IRON_INGOT))
                             .add(LootItem.lootTableItem(Items.CARROT))
@@ -257,7 +253,6 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                             .when(LootItemKilledByPlayerCondition.killedByPlayer())
                             .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.025F, 0.01F))));
         });
-
         this.add(TEMonsterEntities.GOBLIN_ARCHER.get(), LootTable.lootTable()
                 .withPool(weightLootPool(singleItemIncrease(Items.ROTTEN_FLESH, 1, 3), 1f))
                 .withPool(weightLootPool(singleItemIncrease(Items.ARROW, 1, 2), 1f))

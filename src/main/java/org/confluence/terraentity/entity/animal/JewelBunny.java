@@ -17,7 +17,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.init.loot.TELootParams;
-import org.confluence.terraentity.entity.util.IVariant;
+import org.confluence.terraentity.api.entity.IVariant;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

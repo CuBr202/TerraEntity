@@ -2,7 +2,7 @@ package org.confluence.terraentity.integration.jei;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.api.trade.ITrade;
 
 public class NPCRecipe {
     ITrade trade;

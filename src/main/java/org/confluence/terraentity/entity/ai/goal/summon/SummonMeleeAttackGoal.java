@@ -10,12 +10,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
-import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.api.entity.ISummonMob;
 
 public class SummonMeleeAttackGoal<T extends Mob & ISummonMob<T>> extends Goal {
     protected final T mob;

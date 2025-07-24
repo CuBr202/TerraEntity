@@ -4,7 +4,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.api.entity.ISummonMob;
 
 import java.util.EnumSet;
 

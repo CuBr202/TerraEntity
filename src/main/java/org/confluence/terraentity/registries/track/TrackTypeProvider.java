@@ -1,6 +1,7 @@
 package org.confluence.terraentity.registries.track;
 
 import com.mojang.serialization.MapCodec;
+import org.confluence.terraentity.api.entity.ITrackType;
 
 /**
  * 用于提供轨迹类型编解码器

@@ -8,7 +8,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
-import org.confluence.terraentity.api.ILeftClickStateItem;
+import org.confluence.terraentity.api.item.ILeftClickStateItem;
 import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.item.BaseWhipItem;

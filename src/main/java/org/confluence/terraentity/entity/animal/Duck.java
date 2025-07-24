@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.util.IVanillaVariant;
+import org.confluence.terraentity.api.entity.IVanillaVariant;
 import org.confluence.terraentity.init.TESounds;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;

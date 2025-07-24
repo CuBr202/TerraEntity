@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.ai.motion.curve;
 
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.api.entity.animation.Curve;
 
 public class Bezier4Curse implements Curve {
     protected double[][] P;

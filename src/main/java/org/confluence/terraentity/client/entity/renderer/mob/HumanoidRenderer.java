@@ -15,7 +15,7 @@ import org.confluence.terraentity.client.entity.model.GeoHumanoidModel;
 import org.confluence.terraentity.client.entity.renderer.AnimatorRenderer;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.client.util.DefaultBoneBoundIdents;
-import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
+import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;

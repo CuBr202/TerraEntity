@@ -3,6 +3,7 @@ package org.confluence.terraentity.registries.track;
 import com.mojang.serialization.MapCodec;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.entity.ITrackType;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.track.variant.BasisTrack;
 import org.confluence.terraentity.registries.track.variant.SimpleTrack;

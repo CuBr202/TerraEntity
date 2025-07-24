@@ -18,8 +18,8 @@ import org.confluence.lib.common.recipe.AmountIngredient;
 
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
-import org.confluence.terraentity.registries.npc_trade.ITrade;
-import org.confluence.terraentity.registries.npc_trade.ITradeHealth;
+import org.confluence.terraentity.api.trade.ITrade;
+import org.confluence.terraentity.api.trade.ITradeHealth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
