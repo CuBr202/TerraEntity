@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.CommonHooks;
+import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.TESounds;
@@ -30,7 +31,7 @@ import org.confluence.terraentity.init.entity.TEProjectileEntities;
 /**
  * 世吞体节
  */
-public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSegment> {
+public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSegment> implements Boss {
     private static final float MAX_HEALTHS = 50f;
     private static final float DAMAGE = 5f;//接触伤害
 
@@ -192,5 +193,10 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
         return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA);
+    }
+
+    @Override
+    public boolean isMainBody(){
+        return false;
     }
 }

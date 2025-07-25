@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.boss;
 
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
@@ -28,6 +29,7 @@ import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.utils.CameraShakeData;
 import org.confluence.terraentity.utils.CameraShakeManager;
+import org.confluence.terraentity.utils.TEUtils;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -118,15 +120,16 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
                     }
 
                     if (isValidEyePosition(x, y, eyeMarkers)) {
-                        WallOfFleshEye eye = new WallOfFleshEye(level());
-                        addChildSegment(eye, eyeBasePos);
-                        eye.setYRot(this.getYRot());
-                        eye.setParent(this);
-                        level().addFreshEntity(eye);
-                        eyeMarkers[x][y] = true;
+                        WallOfFleshEye eye = TEUtils.spawnEntity(()->new WallOfFleshEye(level()), (ServerLevel) level(), eyeBasePos);
+                        if (eye != null) {
+                            addChildSegment(eye, eyeBasePos);
+                            eye.setYRot(this.getYRot());
+                            eye.setParent(this);
+                            eyeMarkers[x][y] = true;
+                            eyeYPositions.computeIfAbsent(x, k -> new ArrayList<>())
+                                    .add(eyeBasePos.y);
+                        }
 
-                        eyeYPositions.computeIfAbsent(x, k -> new ArrayList<>())
-                                .add(eyeBasePos.y);
                     }
                 }
             }
@@ -156,11 +159,12 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
                             ).add(baseOffset);
                         }
 
-                        WallOfFleshMouth mouth = new WallOfFleshMouth(level());
-                        addChildSegment(mouth, mouthPos);
-                        mouth.parentMob = this;
-                        mouth.setYRot(this.getYRot());
-                        level().addFreshEntity(mouth);
+                        WallOfFleshMouth mouth = TEUtils.spawnEntity(()->new WallOfFleshMouth(level()), (ServerLevel)level(), mouthPos);
+                        if (mouth != null) {
+                            addChildSegment(mouth, mouthPos);
+                            mouth.parentMob = this;
+                            mouth.setYRot(this.getYRot());
+                        }
 
                         if (gridY >= 0 && gridY < gridSizeY) {
                             mouthMarkers[gridX][gridY] = true;
@@ -189,18 +193,21 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
 
                     }
                     if (!this.level().isClientSide() && !eyeMarkers[x][y] && !mouthMarkers[x][y]) {
-                        TheHungry hungry = new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),new AbstractPrefab(60,2,15,32,0.75f,1).getPrefab()) {
+                        TheHungry hungry = TEUtils.spawnEntity(()->new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),new AbstractPrefab(60,2,15,32,0.75f,1).getPrefab()) {
                             @Override
                             protected boolean shouldDropLoot() {
                                 return false;
                             }
-                        };
-                        addChildSegment(hungry, theHungryPos);
-                        this.theHungryMap.put(theHungryPos, hungry);
-                        hungry.minion_setOwner(this);
-                        hungry.setYRot(this.getYRot());
-                        hungry.setInitPos(this.position().add(theHungryPos).toVector3f());
-                        level().addFreshEntity(hungry);
+                        }, (ServerLevel) level(), theHungryPos);
+
+                        if (hungry != null) {
+                            addChildSegment(hungry, theHungryPos);
+                            this.theHungryMap.put(theHungryPos, hungry);
+                            hungry.minion_setOwner(this);
+                            hungry.setYRot(this.getYRot());
+                            hungry.setInitPos(this.position().add(theHungryPos).toVector3f());
+                        }
+
                     }
                 }
             }
@@ -367,17 +374,20 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
                 for (Vec3 theHungryPos : theHungryMap.keySet()) {
                     TheHungry hungry = theHungryMap.get(theHungryPos);
                     if (hungry.isAlive()) continue;
-                    TheHungry newHungry = new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),new AbstractPrefab(60,2,15,32,0.75f,1).getPrefab()) {
+                    TheHungry newHungry = TEUtils.spawnEntity(()->new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),new AbstractPrefab(60,2,15,32,0.75f,1).getPrefab()) {
                         @Override
                         protected boolean shouldDropLoot() {
                             return false;
                         }
-                    };
-                    this.theHungryMap.put(theHungryPos, newHungry);
-                    newHungry.minion_setOwner(this);
-                    newHungry.setInitPos(this.position().add(theHungryPos).toVector3f());
-                    addChildSegment(newHungry, theHungryPos);
-                    level().addFreshEntity(newHungry);
+                    }, (ServerLevel)level(), theHungryPos);
+
+                    if (newHungry != null) {
+                        this.theHungryMap.put(theHungryPos, newHungry);
+                        newHungry.minion_setOwner(this);
+                        newHungry.setInitPos(this.position().add(theHungryPos).toVector3f());
+                        addChildSegment(newHungry, theHungryPos);
+                    }
+
                 }
             }
         }

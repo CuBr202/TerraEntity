@@ -12,10 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -29,9 +26,11 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -54,6 +53,7 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
 
 import static net.minecraft.world.item.Item.getPlayerPOVHitResult;
@@ -882,4 +882,40 @@ public final class TEUtils {
         book.enchant(registryLookup.getOrThrow(key), level);
         return book;
     }
+
+    public static<T extends Entity> T spawnEntity(Supplier<? extends T> entitySupplier, ServerLevel serverLevel, Vec3 pos){
+        T entity = entitySupplier.get();
+        if (entity != null) {
+            entity.moveTo(pos);
+            if(internalSpawnEntity(entity, serverLevel)){
+                serverLevel.addFreshEntityWithPassengers(entity);
+            }
+            return entity;
+        }
+        return null;
+    }
+
+    public static<T extends Entity> T spawnEntity(EntityType<? extends T> type, ServerLevel level, Vec3 pos){
+        return spawnEntity(() -> type.create(level), level, pos);
+    }
+
+    /**
+     * 通过finalize事件初始化生物
+     * @return 是否应该生成
+     */
+    public static boolean internalSpawnEntity(Entity entity, ServerLevel serverLevel){
+        if (entity instanceof Mob mob) {
+            mob.yHeadRot = mob.getYRot();
+            mob.yBodyRot = mob.getYRot();
+            // 事件中对生物血量修饰，生物finalizeSpawn中可能设置自身的属性baseValue
+            net.neoforged.neoforge.event.EventHooks.finalizeMobSpawn(mob, serverLevel, serverLevel.getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.SPAWNER, null);
+
+            if (mob.isSpawnCancelled()) {
+                mob.discard();
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

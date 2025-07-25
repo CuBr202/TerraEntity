@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.monster.BaseWarm;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
@@ -28,7 +29,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 
 import javax.annotation.Nullable;
 
-public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> {
+public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> implements Boss{
 
     public WallOfFlesh parentMob;
 
@@ -179,6 +180,11 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> {
 
     @Override
     public boolean shouldShowBossBar(){
+        return false;
+    }
+
+    @Override
+    public boolean isMainBody(){
         return false;
     }
 }

@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.core.jmx.Server;
+import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.proj.TrailProjectile;
@@ -30,7 +31,7 @@ import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 
 import javax.annotation.Nullable;
 
-public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> {
+public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implements Boss {
 
     public WallOfFlesh parentMob;
 
@@ -235,6 +236,10 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> {
 
     @Override
     public boolean shouldShowBossBar(){
+        return false;
+    }
+
+    public boolean isMainBody(){
         return false;
     }
 }

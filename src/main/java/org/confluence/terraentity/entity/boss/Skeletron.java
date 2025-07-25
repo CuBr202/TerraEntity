@@ -204,16 +204,21 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     @Override
     public void firstSpawn() {
         if (isMainBody() && !level().isClientSide) {
-            SkeletronHand hand1 = new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.LEFT);
-            SkeletronHand hand2 = new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.RIGHT);
-            hand1.setPos(position());
-            hand2.setPos(position());
-            level().addFreshEntity(hand1);
-            level().addFreshEntity(hand2);
-            hands.add(hand1);
-            hands.add(hand2);
-            _hands.add(hand1);
-            _hands.add(hand2);
+            SkeletronHand hand1 = TEUtils.spawnEntity(()->new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.LEFT), (ServerLevel) level(), position());
+            SkeletronHand hand2 = TEUtils.spawnEntity(()->new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.RIGHT), (ServerLevel)level(),position());
+//            ;
+//            new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.RIGHT);
+            if (hand1 != null) {
+                hand1.setPos(position());
+                hands.add(hand1);
+                _hands.add(hand1);
+            }
+            if (hand2 != null) {
+                hand2.setPos(position());
+                hands.add(hand2);
+                _hands.add(hand2);
+            }
+
             this.playSound(TESounds.ROAR.get());
         }
     }

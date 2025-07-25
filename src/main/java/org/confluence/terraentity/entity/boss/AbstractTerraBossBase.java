@@ -96,6 +96,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         return getMultiple(level(), attribute);
     }
 
+    /**
+     * 因为finalizeSpawn中生成时，id可能会错乱，所以必须推迟在onAddedToLevel中调用
+     */
     public void firstSpawn(){};
 
     @Override
