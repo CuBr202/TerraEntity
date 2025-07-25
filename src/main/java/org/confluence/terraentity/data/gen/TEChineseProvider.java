@@ -345,6 +345,17 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBoomerangItems.COMBAT_WRENCH.get(), "战斗扳手");
         add(TEBoomerangItems.BeiDou_BOOMERANG.get(), "北斗飞镖");
 
+        // 悠悠球
+        add(TEYoyosItems.WOODEN_YOYO.get(), "木悠悠球");
+        add(TEYoyosItems.RALLY.get(), "对打球");
+        add(TEYoyosItems.MALAISE.get(), "抑郁球");
+        add(TEYoyosItems.ARTERY.get(), "血脉球");
+        add(TEYoyosItems.AMAZON.get(), "亚马逊球");
+        add(TEYoyosItems.CODE_1.get(), "代码一号");
+        add(TEYoyosItems.HIVE_FIVE.get(), "蜂巢球");
+        add(TEYoyosItems.CASCADE.get(), "喷流球");
+        add(TEYoyosItems.VALOR.get(), "英勇球");
+
         // 骑乘
         add(TERideableItems.SLIMY_SADDLE.get(), "粘鞍");
         add(TERideableItems.HONEYED_GOGGLES.get(), "凃蜜护目镜");

@@ -55,7 +55,8 @@ public class TEItemModelProvider extends ItemModelProvider {
         genModels(List.of(
                 createDir(TESummonItems.ITEMS,"summon/"),
                 createDir(TEWhipItems.ITEMS,"whip/"),
-                createDir(TEBoomerangItems.ITEMS,"boomerang/")
+                createDir(TEBoomerangItems.ITEMS,"boomerang/"),
+                createDir(TEYoyosItems.ITEMS,"yoyo/")
         ),"item/handheld", (parent, resourcePath, path) -> {
             try {
                 withExistingParent(path, parent).texture("layer0", TerraEntity.space("item/" + resourcePath + path));
