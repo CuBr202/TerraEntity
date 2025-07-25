@@ -2,14 +2,16 @@ package org.confluence.terraentity.entity.summon;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -19,7 +21,11 @@ import org.confluence.terraentity.item.SummonItem;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.chester.ChesterConditionalType;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.List;
 import java.util.Map;
@@ -27,11 +33,36 @@ import java.util.Objects;
 
 public class Chester extends AbstractSummonMob<Chester> {
 
+    Player opener;
     ChesterItemHandler itemHandler = new ChesterItemHandler(27);
+    int openTime = 20;
+    private final int _openTime = 20;
+
+
+    static RawAnimation sleep = RawAnimation.begin().thenLoop("sleep");
+    static RawAnimation open = RawAnimation.begin().thenPlay("open");
+    static RawAnimation close = RawAnimation.begin().thenPlay("close");
+
+
+    private static final EntityDataAccessor<Boolean> DATA_OPEN = SynchedEntityData.defineId(Chester.class, EntityDataSerializers.BOOLEAN);
+
 
     public Chester(EntityType<? extends Chester> entityType, Level level) {
         super(entityType, level);
     }
+
+
+    public boolean isOpen() {
+        return getEntityData().get(DATA_OPEN);
+    }
+    public void setOpen(boolean open) {
+        getEntityData().set(DATA_OPEN, open);
+    }
+    @Override
+    public boolean isPickable() {
+        return true;
+    }
+
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
@@ -54,6 +85,8 @@ public class Chester extends AbstractSummonMob<Chester> {
                     Level level = Objects.requireNonNull(level().getServer()).getLevel(entry.getKey().levelId());
                     if(type.tryOpen(pos, player, level)){
 //                        player.sendSystemMessage(Component.literal("打开此箱子 :" + pos.toString()));
+                        setOpen(true);
+                        this.opener = player;
                         return InteractionResult.SUCCESS;
                     }
                     player.sendSystemMessage(Component.literal("无法打开此箱子 :" + pos.toString()));
@@ -63,19 +96,35 @@ public class Chester extends AbstractSummonMob<Chester> {
                 player.openMenu(globalEntry.stream().toList()
                         .get(data.chestType).getValue()
                         .getMenuProviderSupplier().get());
+                setOpen(true);
+                this.opener = player;
+                return InteractionResult.SUCCESS;
             }
 
 
         }
         return InteractionResult.SUCCESS;
     }
-    @Override
-    public boolean isPickable() {
-        return true;
-    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
+        controllers.add(new AnimationController<GeoAnimatable>(this, "Chester", 5, state->{
+            state.setControllerSpeed(1f);
+            if(this.openTime > 0){
+                if(this.isOpen()){
+                    return state.setAndContinue(open);
+                }
+                return state.setAndContinue(close);
+            }
+            if(state.isMoving()){
+                state.setControllerSpeed(3f);
+                return state.setAndContinue(DefaultAnimations.WALK);
+            }
+            if(this.level().dayTime() % 24000 > 13000){
+                return state.setAndContinue(sleep);
+            }
+            return state.setAndContinue(DefaultAnimations.IDLE);
+        }));
     }
 
     public ItemStackHandler getInventory() {
@@ -106,6 +155,35 @@ public class Chester extends AbstractSummonMob<Chester> {
             Entity e = level().getEntity(integer);
             if (e instanceof Chester) {
                 e.discard();
+            }
+        }
+    }
+
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_OPEN, false);
+    }
+
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if(key == DATA_OPEN){
+            this.openTime = this._openTime;
+        }
+
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        --this.openTime;
+        if (opener != null && isOpen() && !this.level().isClientSide) {
+            if(opener.containerMenu instanceof InventoryMenu){
+                this.setOpen(false);
+                this.opener = null;
             }
         }
     }

@@ -55,7 +55,7 @@ public class TESummonEntities {
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(CHESTER.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.FIRE_IMP.getId(), false, 1f,0));
+        event.registerEntityRenderer(CHESTER.get(), c->new GeoNormalRenderer<>(c, TESummonEntities.CHESTER.getId().withPrefix("summon/"), false, 1f,0));
 
         // sommon
         event.registerEntityRenderer(SUMMON_FINCH.get(), c-> new GeoNormalRenderer<>(c, SUMMON_FINCH.getId().withPrefix("summon/"),true));
