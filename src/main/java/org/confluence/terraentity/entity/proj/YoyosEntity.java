@@ -3,6 +3,7 @@ package org.confluence.terraentity.entity.proj;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -31,6 +32,9 @@ public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> 
     boolean isBacking = false;
     int maxRetrieveTicks = 40;
     int retrieveTicks = 0;
+    float maxRange = 10;
+    YoyosItem item;
+    public ResourceLocation texture;
 
     protected static final EntityDataAccessor<ItemStack> DATA_WEAPON_ITEM = SynchedEntityData.defineId(YoyosEntity.class, EntityDataSerializers.ITEM_STACK);
 
@@ -48,7 +52,9 @@ public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> 
             return;
         }
         Vec3 lookVec = owner.getLookAngle().normalize();
-        int maxRange = 10;
+        this.setXRot(0);
+        this.setYRot(0);
+        this.yBodyRot = 0;
         Vec3 targetPos;
 
         float speedModifier = 1.0f;
@@ -111,6 +117,19 @@ public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> 
         super.defineSynchedData(builder);
         builder.define(DATA_WEAPON_ITEM, ItemStack.EMPTY);
 
+
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if(DATA_WEAPON_ITEM.equals(key)){
+            if(getWeaponItem().getItem() instanceof YoyosItem yoyo) {
+                this.item = yoyo;
+                this.texture = item.getTexture();
+                this.maxRange = item.getMaxRange();
+            }
+        }
     }
 
     public void setWeaponItem(ItemStack itemStack) {

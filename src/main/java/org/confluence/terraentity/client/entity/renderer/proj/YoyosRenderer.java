@@ -4,11 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -22,20 +20,30 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.proj.YoyosEntity;
 import org.confluence.terraentity.item.YoyosItem;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class YoyosRenderer extends EntityRenderer<YoyosEntity<?>> {
-
-    protected final EntityModel<YoyosEntity<?>> model;
+public class YoyosRenderer extends GeoEntityRenderer<YoyosEntity<?>> {
 
 
-    public YoyosRenderer(EntityRendererProvider.Context pContext, EntityModel<YoyosEntity<?>> pModel) {
-        super(pContext);
-        this.model = pModel;
-    }
+    public YoyosRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new GeoModel<>(){
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull YoyosEntity<?> yoyosEntity) {
-        return TerraEntity.space("textures/entity/yoyos.png");
+            @Override
+            public ResourceLocation getModelResource(YoyosEntity<?> animatable) {
+                return TerraEntity.space("geo/entity/yoyos.geo.json");
+            }
+
+            @Override
+            public ResourceLocation getTextureResource(YoyosEntity<?> animatable) {
+                return animatable.texture;
+            }
+
+            @Override
+            public ResourceLocation getAnimationResource(YoyosEntity<?> animatable) {
+                return null;
+            }
+        });
     }
 
     @Override
@@ -46,6 +54,9 @@ public class YoyosRenderer extends EntityRenderer<YoyosEntity<?>> {
     @Override
     public void render(YoyosEntity<?> entity, float entityYaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int packedLight) {
         LivingEntity living = entity.getOwner();
+        if(entity.texture == null){
+            return;
+        }
 
         Item weapon = entity.getWeaponItem().getItem();
         if(!(weapon instanceof YoyosItem yoyosItem)) {
@@ -58,8 +69,11 @@ public class YoyosRenderer extends EntityRenderer<YoyosEntity<?>> {
             poseStack.mulPose(Axis.YP.rotationDegrees(-Mth.lerp(partialTicks , player.yHeadRotO,player.yHeadRot)));
             poseStack.translate(0,0.25,0);
             poseStack.mulPose(Axis.XN.rotationDegrees((entity.tickCount + partialTicks) * 45));
-            poseStack.translate(0,-0.25,0);
-            model.renderToBuffer(poseStack, buffer.getBuffer(RenderType.entitySolid(getTextureLocation(entity))), OverlayTexture.NO_OVERLAY, packedLight);
+            poseStack.translate(0,-0.5,0);
+
+
+            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+//            model.renderToBuffer(poseStack, buffer.getBuffer(RenderType.entitySolid(getTextureLocation(entity))), OverlayTexture.NO_OVERLAY, packedLight);
 
             poseStack.popPose();
 
@@ -78,7 +92,6 @@ public class YoyosRenderer extends EntityRenderer<YoyosEntity<?>> {
             }
 
             poseStack.popPose();
-            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
         }
 
     }

@@ -80,7 +80,7 @@ public class TESummonEntities {
         event.registerEntityRenderer(SUMMON_NETHERITE_SWORD.get(), c->new SummonSwordRenderer<>(c));
         event.registerEntityRenderer(TERRAPRISMA.get(), c->new TerraprismaRenderer(c));
 
-        event.registerEntityRenderer(YOYOS_ENTITY.get(), (c)->new YoyosRenderer(c, new CabbageProjModel<>(c.bakeLayer(CabbageProjModel.LAYER_LOCATION))));
+        event.registerEntityRenderer(YOYOS_ENTITY.get(), (c)->new YoyosRenderer(c));
 
     }
 
