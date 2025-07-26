@@ -5,6 +5,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -16,11 +17,13 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.entity.PartEntity;
 import org.confluence.terraentity.api.item.ILeftClickReceiver;
 import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.entity.summon.AbstractSummonMob;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.item.YoyosItem;
+import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.TEUtils;
 import software.bernie.geckolib.animation.AnimatableManager;
 
@@ -44,12 +47,23 @@ public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> 
     }
 
     @Override
+    protected void registerGoals() {
+    }
+
+
+    @Override
     public void tick() {
         super.tick();
         Entity owner = getOwner();
         if (owner == null) {
             discard();
             return;
+        }
+
+        // 存在时间
+        if(this.tickCount > this.item.getExistTime() * 20){
+            this.isBacking = true;
+            this.noPhysics = true;
         }
         Vec3 lookVec = owner.getLookAngle().normalize();
         this.setXRot(0);
@@ -129,6 +143,13 @@ public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> 
                 this.texture = item.getTexture();
                 this.maxRange = item.getMaxRange();
             }
+        }else if(DATA_OWNERUUID_ID.equals(key)){
+            Entity owner = getOwner();
+            WeaponStorage data = null;
+            if (owner != null) {
+                data = owner.getData(TEAttachments.WEAPON_STORAGE);
+                data.yoyosEntity = this;
+            }
         }
     }
 
@@ -148,6 +169,9 @@ public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> 
         if (owner != null) {
             WeaponStorage data = owner.getData(TEAttachments.WEAPON_STORAGE);
             data.yoyosEntity = null;
+            if(owner instanceof  Player player){
+                player.getCooldowns().removeCooldown(item);
+            }
         }
     }
 
@@ -178,5 +202,47 @@ public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> 
         this.isBacking = true;
         this.noPhysics = true;
     }
+
+    @Override
+    public void onReceiveWhellScroll(Player player, ItemStack itemStack, int scrollAmount){
+        this.maxRange = Mth.clamp(this.maxRange + scrollAmount, 1,  ((YoyosItem)itemStack.getItem()).getMaxRange());
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        Entity entity = getOwner();
+        // 不能攻击主人
+        if(entity == target) return false;
+
+        if (!target.isAttackable()) {
+            // 不可攻击的实体
+            return false;
+        }
+
+        if(entity != null && entity.isPassengerOfSameVehicle(target)) {
+            // 不能攻击坐骑
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean shouldDoCollision(){
+        return true;
+
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity entity) {
+        if(super.doHurtTarget(entity) && entity instanceof LivingEntity living){
+            IEffectStrategy effectStrategy = this.item.getEffectStrategy();
+            if(effectStrategy!= null){
+                effectStrategy.getEffect().accept(this.getOwner(), living);
+            }
+            return true;
+        }
+        return false;
+    }
+
 
 }

@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -80,6 +81,7 @@ public class YoyosRenderer extends GeoEntityRenderer<YoyosEntity<?>> {
             float f = player.getAttackAnim(partialTicks);
             float f1 = Mth.sin(Mth.sqrt(f) * 3.1415927F);
             Vec3 vec3 = this.getPlayerHandPos(player, f1, partialTicks);
+
             Vec3 vec31 = entity.getPosition(partialTicks).add(0.0, 0.25, 0.0);
             float f2 = (float)(vec3.x - vec31.x);
             float f3 = (float)(vec3.y - vec31.y);
@@ -103,7 +105,12 @@ public class YoyosRenderer extends GeoEntityRenderer<YoyosEntity<?>> {
 
         if (this.entityRenderDispatcher.options.getCameraType().isFirstPerson() && player == Minecraft.getInstance().player) {
             double d4 = 960.0 / (double) this.entityRenderDispatcher.options.fov().get();
-            Vec3 vec3 = this.entityRenderDispatcher.camera.getNearPlane().getPointOnPlane((float)i * 0.525F, -0.1F).scale(d4).yRot(p_340872_ * 0.5F).xRot(-p_340872_ * 0.7F);
+            Vec3 vec3 = this.entityRenderDispatcher.camera.getNearPlane()
+                    .getPointOnPlane((float)i * 0.525F, -0.5F)
+                    .scale(d4)
+//                    .yRot(p_340872_ * 0.5F)
+//                    .xRot(-p_340872_ * 0.7F)
+                    ;
             return player.getEyePosition(partialTick).add(vec3);
         } else {
             float f = Mth.lerp(partialTick, player.yBodyRotO, player.yBodyRot) * 0.017453292F;
@@ -111,9 +118,9 @@ public class YoyosRenderer extends GeoEntityRenderer<YoyosEntity<?>> {
             double d1 = Mth.cos(f);
             float f1 = player.getScale();
             double d2 = (double)i * 0.35 * (double)f1;
-            double d3 = 0.8 * (double)f1;
+            double d3 = 0.25 * (double)f1;
             float f2 = player.isCrouching() ? -0.1875F : 0.0F;
-            return player.getEyePosition(partialTick).add(-d1 * d2 - d0 * d3, (double)f2 - 0.45 * (double)f1, -d0 * d2 + d1 * d3);
+            return player.getEyePosition(partialTick).add(-d1 * d2 - d0 * d3, (double)f2 - 0.65 * (double)f1, -d0 * d2 + d1 * d3);
         }
     }
 

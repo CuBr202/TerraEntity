@@ -13,6 +13,10 @@ public interface ILeftClickStateItem {
 
     void onLeftRelease(Player player, ItemStack itemStack);
 
+    default void onWhellScroll(Player player, ItemStack itemStack, int scrollAmount){
+
+    }
+
     boolean canSwitchWithoutRelease(Player player, ItemStack itemStack);
 
 }

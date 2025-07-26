@@ -27,7 +27,9 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
     private enum TypeEnum {
         SUMMON_SKELETRON, // 由于mixin，不能添加到handler
         MOUSE_LEFT_CLICK,
-        MOUSE_RELEASE
+        MOUSE_RELEASE,
+        WHEEL_UP,
+        WHEEL_DOWN
     }
     static EnumMap<TypeEnum, Consumer<Player>> handlers = new EnumMap<>(ImmutableMap.<TypeEnum, Consumer<Player>>builder()
             .put(TypeEnum.MOUSE_LEFT_CLICK, (player)-> {
@@ -44,6 +46,18 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
                     item.onLeftRelease(player, stack);
                 }
             })
+            .put(TypeEnum.WHEEL_UP, (player)-> {
+                ItemStack stack = player.getMainHandItem();
+                if(stack.getItem() instanceof ILeftClickStateItem item){
+                    item.onWhellScroll(player, stack, 1);
+                }
+            })
+            .put(TypeEnum.WHEEL_DOWN, (player)-> {
+                ItemStack stack = player.getMainHandItem();
+                if(stack.getItem() instanceof ILeftClickStateItem item){
+                    item.onWhellScroll(player, stack, -1);
+                }
+             })
 
             .build());
 
@@ -102,5 +116,13 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
 
     public static void mouseRelease(){
         AdapterUtils.sendToServer(new ServerBoundEventPacket(TypeEnum.MOUSE_RELEASE));
+    }
+
+    public static void wheelUp(){
+        AdapterUtils.sendToServer(new ServerBoundEventPacket(TypeEnum.WHEEL_UP));
+    }
+
+    public static void wheelDown(){
+        AdapterUtils.sendToServer(new ServerBoundEventPacket(TypeEnum.WHEEL_DOWN));
     }
 }

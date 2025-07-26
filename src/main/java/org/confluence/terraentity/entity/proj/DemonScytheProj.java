@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.proj;
 
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
@@ -14,7 +15,7 @@ public class DemonScytheProj extends LineProj {
 
     @Override
     protected Vec3 warpSpeed(Vec3 speed) {
-        return super.warpSpeed(speed).scale(Math.max(Math.min(1.0, this.tickCount / 40.0 - 0.5), 0.1f));
+        return super.warpSpeed(speed).scale(Mth.clamp(this.tickCount / 20.0 - 0.2, 0.1f, 2.0));
     }
 
 

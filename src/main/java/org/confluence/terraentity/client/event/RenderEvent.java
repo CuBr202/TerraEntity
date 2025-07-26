@@ -6,20 +6,19 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.InteractionHand;
 
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
@@ -34,9 +33,11 @@ import org.confluence.terraentity.client.init.model.EntityBlockModelRegister;
 import org.confluence.terraentity.client.post.BrainTranslucent;
 import org.confluence.terraentity.effect.harmful.TheTongueEffect;
 import org.confluence.terraentity.entity.boss.WallOfFleshMouth;
+import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.item.BaseWhipItem;
+import org.confluence.terraentity.item.YoyosItem;
 import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -159,10 +160,12 @@ public class RenderEvent {
     public static void renderHand(RenderHandEvent event) {
         ItemStack stack = event.getItemStack();
         LocalPlayer player = Minecraft.getInstance().player;
+        if(player == null){
+            return;
+        }
         if (event.getHand() == InteractionHand.MAIN_HAND && stack.getItem() instanceof BaseWhipItem item) {
             // 右手使用鞭子时取消渲染
-
-            if (player != null && player.getCooldowns().isOnCooldown(item)) {
+            if (player.getCooldowns().isOnCooldown(item)) {
 //                ci.cancel();
                 float progress = (player.tickCount - BaseWhipItem.clickTime + event.getPartialTick());
                 int cooldown = BaseWhipItem.cooldownTime;
@@ -173,29 +176,33 @@ public class RenderEvent {
             }
         }
 //        Minecraft.getInstance().getBlockRenderer().renderBatched();
-//        if (event.getHand() == InteractionHand.MAIN_HAND && !player.getMainHandItem().isEmpty()) {
-//            var itemRenderer= Minecraft.getInstance().gameRenderer.itemInHandRenderer;
-//
-//            PlayerRenderer playerrenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(player);
-//            PoseStack poseStack = event.getPoseStack();
-//
-//            poseStack.translate(0,0,-0.5);
-//
-//            poseStack.pushPose();
-////            poseStack.translate(0.5,-0.2,-1.2);
-//            var buffer = event.getMultiBufferSource();
-//            int packedLight = event.getPackedLight();
-//            float f = 1.0F ;
-//            poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
-//            poseStack.mulPose(Axis.XP.rotationDegrees(20.0F));
-//            poseStack.mulPose(Axis.ZP.rotationDegrees(f * -60.0F));
-//            poseStack.translate(f * 0.3F, -1.1F, 0.45F);
-//            poseStack.translate(0.8,1.0,0.3);
-//
-//            playerrenderer.renderRightHand(poseStack, buffer, packedLight, player);
-//
-//            poseStack.popPose();
-//        }
+        if (event.getHand() == InteractionHand.MAIN_HAND) {
+
+            Item item = player.getMainHandItem().getItem();
+            // 使用有悠悠球时渲染手臂
+            if(item instanceof YoyosItem && player.getData(TEAttachments.WEAPON_STORAGE.get()).yoyosEntity != null) {
+
+                PlayerRenderer playerrenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(player);
+                PoseStack poseStack = event.getPoseStack();
+
+                poseStack.translate(0.3, 0.1, -0.5);
+
+                poseStack.pushPose();
+//            poseStack.translate(0.5,-0.2,-1.2);
+                var buffer = event.getMultiBufferSource();
+                int packedLight = event.getPackedLight();
+                float f = 1.0F;
+                poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(20.0F));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(f * -60.0F));
+                poseStack.translate(f * 0.3F, -1.1F, 0.45F);
+                poseStack.translate(0.8, 1.0, 0.3);
+
+                playerrenderer.renderRightHand(poseStack, buffer, packedLight, player);
+
+                poseStack.popPose();
+            }
+        }
 
 
     }

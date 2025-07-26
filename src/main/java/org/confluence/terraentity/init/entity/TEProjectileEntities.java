@@ -11,10 +11,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.client.entity.model.CabbageProjModel;
-import org.confluence.terraentity.client.entity.model.DemonScytheModel;
-import org.confluence.terraentity.client.entity.model.HarpyFeatherProjectileModel;
-import org.confluence.terraentity.client.entity.model.Stinger;
+import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.entity.renderer.proj.*;
 import org.confluence.terraentity.client.util.RegisterUtils;
 import org.confluence.terraentity.entity.proj.*;
@@ -57,6 +54,8 @@ public class TEProjectileEntities {
     public static final DeferredHolder<EntityType<?>,EntityType<TrailSwordProj>> TRAIL_SWORD_PROJECTILE = TEEntities.ENTITIES.register("trail_sword_projectile",() -> EntityType.Builder.<TrailSwordProj>of((e, l)->
             new TrailSwordProj(e,l) , MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F,0.5F).build(TEEntities.Key("trail_sword_projectile")));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<BeeProj>> BEE_PROJ = registerProj("bee_proj",(e, l)->
+            new BeeProj(e,l),1.2F,1.2F);
 
 
     @OnlyIn(Dist.CLIENT)
@@ -78,6 +77,9 @@ public class TEProjectileEntities {
         // 鞭子
         event.registerEntityRenderer(WHIP_PROJECTILE.get(), WhipEntityRenderer::new);
         event.registerEntityRenderer(TRAIL_SWORD_PROJECTILE.get(), TrailSwordProjectileRenderer::new);
+
+        event.registerEntityRenderer(BEE_PROJ.get(), c->new ProjRenderer<>(c, new BeeProjModel(c.bakeLayer(BeeProjModel.LAYER_LOCATION))));
+
     }
 
     public static <T extends Projectile> DeferredHolder<EntityType<?>, EntityType<T>> registerProj(String name, EntityType.EntityFactory<T> entityFactory, float w, float h) {

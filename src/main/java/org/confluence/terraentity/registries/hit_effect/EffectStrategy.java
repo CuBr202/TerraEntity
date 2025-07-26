@@ -11,6 +11,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.apache.commons.lang3.function.TriFunction;
+import org.confluence.terraentity.api.item.IProjectileModifier;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
 import org.confluence.terraentity.utils.TEUtils;
@@ -114,16 +115,16 @@ public class EffectStrategy {
         Projectile projectile = supplier.apply(owner.level());
         projectile.setOwner(owner);
         projectile.setPos(entity.position().add(entity.getRandom().nextFloat()*0.2f, entity.getEyeHeight()*0.5f, entity.getRandom().nextFloat()*0.2f));
+        if(owner.getMainHandItem().getItem() instanceof IProjectileModifier modifier){
+            modifier.modifyProjectile(owner.level(), owner, projectile);
+        }
         owner.level().addFreshEntity(projectile);
     };
 
     /**命中时残留多次弹幕*/
     public static final BiFunction<Function<Level, Projectile>, Integer, BiConsumer<LivingEntity, LivingEntity>>  ON_HIT_PROJECTILE_COUNT = (supplier, count)-> (owner, entity)->{
         for(int i=0;i<count;i++) {
-            Projectile projectile = supplier.apply(owner.level());
-            projectile.setOwner(owner);
-            projectile.setPos(entity.position().add(entity.getRandom().nextFloat() * 0.2f, entity.getEyeHeight() * 0.5f, entity.getRandom().nextFloat() * 0.2f));
-            owner.level().addFreshEntity(projectile);
+            ON_HIT_PROJECTILE.apply(supplier).accept(owner, entity);
         }
     };
 

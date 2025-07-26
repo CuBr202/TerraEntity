@@ -9,4 +9,9 @@ public interface ILeftClickReceiver {
 
     void onReceiveLeftRelease(Player player, ItemStack itemStack);
 
+    default void onReceiveWhellScroll(Player player, ItemStack itemStack, int scrollAmount){
+
+    }
+
+
 }

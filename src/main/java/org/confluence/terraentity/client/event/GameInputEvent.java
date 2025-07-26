@@ -36,9 +36,18 @@ public class GameInputEvent {
         }
 
         if(item instanceof ILeftClickStateItem item1){
+            if(Minecraft.getInstance().mouseHandler.isLeftPressed()) { // 暂时可以这样写省性能，如果后面有新需求，需要注释掉
+                if (event.getScrollDeltaY() > 0) {
+                    ServerBoundEventPacket.wheelUp();
+                } else {
+                    ServerBoundEventPacket.wheelDown();
+                }
+            }
+
             if(!item1.canSwitchWithoutRelease(player, stack) && player.getData(TEAttachments.WEAPON_STORAGE).leftClicking){
                 event.setCanceled(true);
             }
+
         }
     }
 

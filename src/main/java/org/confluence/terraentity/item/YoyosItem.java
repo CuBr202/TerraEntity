@@ -2,6 +2,7 @@ package org.confluence.terraentity.item;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -9,24 +10,30 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.item.ILeftClickStateItem;
+import org.confluence.terraentity.api.item.IProjectileModifier;
 import org.confluence.terraentity.attachment.WeaponStorage;
+import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.entity.proj.YoyosEntity;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.entity.TESummonEntities;
+import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 
-public class YoyosItem extends Item implements ILeftClickStateItem  {
+public class YoyosItem<T extends BaseProj<?>> extends Item implements ILeftClickStateItem, IProjectileModifier<T> {
 
     final int stringColor;
     final float attackDamage;
     final float maxRange;
+    final float existTime;
     final ResourceLocation texture;
+    IEffectStrategy effectStrategy;
 
-    public YoyosItem(Properties properties, float attackDamage, int maxRange, int stringColor, String suffix) {
+    public YoyosItem(Properties properties, float attackDamage, int maxRange, int stringColor, float existTime, String suffix) {
         super(properties);
         this.attackDamage = attackDamage;
         this.stringColor = stringColor;
         this.texture = TerraEntity.space("textures/entity/yoyos/" + suffix + ".png");
         this.maxRange = maxRange;
+        this.existTime = existTime;
     }
 
     public float getAttackDamage() {
@@ -60,7 +67,7 @@ public class YoyosItem extends Item implements ILeftClickStateItem  {
         Level level = player.level();
         YoyosEntity<?> proj = TESummonEntities.YOYOS_ENTITY.get().create(level);
         if(proj!= null){
-
+            player.getCooldowns().addCooldown(itemStack.getItem(), (int) (this.existTime * 20));
             weaponStorage.yoyosEntity = proj;
             proj.setPos(player.getX(), player.getY(0.5f), player.getZ());
             proj.summon_setOwnerUUID(player.getUUID());
@@ -81,5 +88,32 @@ public class YoyosItem extends Item implements ILeftClickStateItem  {
     @Override
     public boolean canSwitchWithoutRelease(Player player, ItemStack itemStack) {
         return false;
+    }
+
+    @Override
+    public void onWhellScroll(Player player, ItemStack itemStack, int scrollAmount){
+        WeaponStorage weaponStorage = player.getData(TEAttachments.WEAPON_STORAGE.get());
+        if(weaponStorage.yoyosEntity != null && weaponStorage.yoyosEntity.isAlive()){
+            weaponStorage.yoyosEntity.onReceiveWhellScroll(player, itemStack, scrollAmount);
+        }
+    }
+
+    public YoyosItem setEffectStrategy(IEffectStrategy effectStrategy) {
+        this.effectStrategy = effectStrategy;
+        return this;
+    }
+
+    public IEffectStrategy getEffectStrategy() {
+        return effectStrategy;
+    }
+
+    public float getExistTime() {
+        return existTime;
+    }
+
+
+    @Override
+    public void modifyProjectile(Level level, LivingEntity shooter, T projectile) {
+        projectile.setDamage(attackDamage * 0.5f);
     }
 }

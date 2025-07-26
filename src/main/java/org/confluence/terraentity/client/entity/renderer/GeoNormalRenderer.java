@@ -38,6 +38,7 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
         this.ifRotX = ifRotX;
         this.scale=scale;
         this.offsetY=offsetY;
+        this.shadowRadius = 0.25F;
     }
 
     @Override
@@ -66,6 +67,11 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
     @Override
     public float getMotionAnimThreshold(T animatable) {
         return 0.01F;
+    }
+
+    public GeoNormalRenderer<T> setShadowRadius(float shadowRadius) {
+        this.shadowRadius = shadowRadius;
+        return this;
     }
 
 }

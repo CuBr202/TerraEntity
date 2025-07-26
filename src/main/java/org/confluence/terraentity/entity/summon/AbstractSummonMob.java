@@ -54,8 +54,7 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
         super.tick();
         if(summon_discardWhenOwnerDie()) return;
 
-        doCollisionAttack(e -> e instanceof LivingEntity living && canAttack(living) &&
-                        (living instanceof Enemy && !(living instanceof NeutralMob) || living == getTarget()),
+        doCollisionAttack(e -> e instanceof LivingEntity living && this.canAttack(living),
                 this::doHurtTarget);
 
         if(this.getOwner() != null) {
@@ -83,9 +82,10 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
     }
 
     @Override
-    public boolean canAttack(LivingEntity target) {
-        if(target == getOwner()) return false;
-        return super.canAttack(target);
+    public boolean canAttack(LivingEntity living) {
+        return super.canAttack(living) &&
+                (living instanceof Enemy && !(living instanceof NeutralMob) || living == getTarget());
+
     }
 
     @Override

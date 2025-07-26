@@ -13,14 +13,9 @@ import java.util.Map;
 public class WeaponStorage implements INBTSerializable<CompoundTag> {
     private final Map<Item , Integer> boomerangCounter = new HashMap<>();
     public boolean bowFullPull = false;
-    public boolean hasYoyos = true;
     public boolean leftClicking = false;
     public YoyosEntity<?> yoyosEntity = null;
 
-    public enum MouseStatus{
-        NONE,
-        LEFT_CLICKED
-    }
 
     public int tryReduce(Item item){
         return boomerangCounter.compute(item, (k, c) -> c != null && c > 0? c - 1 : 0);
