@@ -1,13 +1,15 @@
 package org.confluence.terraentity.item;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.proj.DemonScytheProj;
@@ -24,6 +26,13 @@ public class DebugItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         if (!level.isClientSide) {
 
+
+            Component c = Component.literal("").append(Items.BOWL.getDefaultInstance().getDisplayName());
+//            Component b = MutableComponent.create(ItemStackContents.create(TerraEntity.space("test")))
+                    ;
+//            player.sendSystemMessage(b);
+
+//                    .append(" x").append(String.valueOf(1))
 
             EntityHitResult hit = TEUtils.getEyeTraceHitResult(player, player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE));
 //            if(hit!= null){
@@ -45,11 +54,11 @@ public class DebugItem extends Item {
                 proj.setOwner(player);
                 Vec3 forward = player.getLookAngle().scale(10);
 
-                for(int i=0;i<100;i++){
-                    for(int j=0;j<100;j++){
-                        level.setBlock(player.blockPosition().offset((int) (i + forward.x), (int) forward.y, (int) (j + forward.z)), Blocks.GLASS.defaultBlockState(), 3);
-                    }
-                }
+//                for(int i=0;i<100;i++){
+//                    for(int j=0;j<100;j++){
+//                        level.setBlock(player.blockPosition().offset((int) (i + forward.x), (int) forward.y, (int) (j + forward.z)), Blocks.GLASS.defaultBlockState(), 3);
+//                    }
+//                }
 
 
                 proj.shoot(forward.x, forward.y, forward.z, 0.5f, 2f);

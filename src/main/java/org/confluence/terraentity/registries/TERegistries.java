@@ -6,7 +6,9 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.registries.chat.ChatElementProvider;
 import org.confluence.terraentity.init.TEEffectStrategies;
+import org.confluence.terraentity.registries.chat.ChatProviderTypes;
 import org.confluence.terraentity.registries.chester.ChesterConditionalType;
 import org.confluence.terraentity.registries.chester.ChesterConditionalTypes;
 import org.confluence.terraentity.registries.chester.ChesterType;
@@ -46,6 +48,7 @@ public class TERegistries {
         event.register(ChesterTypesProviders.REGISTRY);
         event.register(ChesterConditionalTypesProviders.REGISTRY);
         event.register(TradeModifierProviderRegistry.REGISTRY);
+        event.register(ChatElementProviderRegistry.REGISTRY);
 //        event.register(MoodInfoRegistry.REGISTRY);
     }
 
@@ -61,6 +64,7 @@ public class TERegistries {
         ChesterTypes.TYPES.register(bus);
         ChesterConditionalTypes.TYPES.register(bus);
         TradeModifierProviderTypes.TYPES.register(bus);
+        ChatProviderTypes.TYPES.register(bus);
 //        org.confluence.terraentity.entity.npc.mood.MoodInfos.TYPES.register(bus);
 
     }
@@ -147,5 +151,10 @@ public class TERegistries {
     public static class TradeModifierProviderRegistry {
         public static final ResourceKey<Registry<TradeModifierProvider>> KEY = createRegistryKey(TerraEntity.space("trade_modifier_provider"));
         public static final Registry<TradeModifierProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
+    }
+
+    public static class ChatElementProviderRegistry {
+        public static final ResourceKey<Registry<ChatElementProvider>> KEY = createRegistryKey(TerraEntity.space("chat_element"));
+        public static final Registry<ChatElementProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
     }
 }
