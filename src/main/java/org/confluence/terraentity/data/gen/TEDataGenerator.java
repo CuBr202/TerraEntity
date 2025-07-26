@@ -12,7 +12,10 @@ import org.confluence.lib.common.data.gen.CollectRecipeProvider;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.gen.loot.TELootModifyProvider;
 import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
-import org.confluence.terraentity.data.gen.recipe.TENPCShopProvider;
+import org.confluence.terraentity.data.gen.npc.NPCChatProvider;
+import org.confluence.terraentity.data.gen.npc.NPCMoodProvider;
+import org.confluence.terraentity.data.gen.npc.NPCNameProvider;
+import org.confluence.terraentity.data.gen.npc.TENPCShopProvider;
 import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 import org.confluence.terraentity.data.gen.tags.*;
 
@@ -55,6 +58,8 @@ public class TEDataGenerator {
         generator.addProvider(server, new TENPCShopProvider(output, lookup));
         generator.addProvider(server, new NPCNameProvider(output, lookup));
         generator.addProvider(server, new NPCMoodProvider(output, lookup));
+        generator.addProvider(server, new NPCChatProvider(output, lookup));
+
 //        generator.addProvider(server, new TENPCShopModifierProvider(output, lookup));  // 用来测试，发布时应该注释掉
 
         boolean client = event.includeClient();

@@ -4,11 +4,11 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import org.confluence.terraentity.client.gui.renderer.chat.ChatComponentRenderer;
+import org.confluence.terraentity.client.gui.renderer.chat.element.ChatComponentRenderer;
 import org.confluence.terraentity.registries.chat.ChatElementProvider;
 import org.confluence.terraentity.registries.chat.ChatProviderTypes;
-import org.confluence.terraentity.api.chat.IChatElement;
-import org.confluence.terraentity.api.chat.IChatRenderer;
+import org.confluence.terraentity.api.npc.chat.IChatElement;
+import org.confluence.terraentity.api.npc.chat.IChatRenderer;
 
 public class StringChatElement implements IChatElement<Component> {
 
@@ -29,7 +29,7 @@ public class StringChatElement implements IChatElement<Component> {
     }
 
     @Override
-    public IChatRenderer<Component> getRenderer() {
+    public IChatRenderer<StringChatElement> getRenderer() {
         return ChatComponentRenderer.INSTANCE;
     }
 

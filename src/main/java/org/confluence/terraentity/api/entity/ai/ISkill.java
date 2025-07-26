@@ -16,15 +16,13 @@ public interface ISkill {
      */
     void update(int delta);
 
-    /**+
-     * 最大冷却时间
-     */
-    int getMaxCooldown();
 
     /**
-     * 技能名(索引)
+     * 技能名(索引)(optional, for toString)
      */
-    int getIndex();
+    default int getIndex(){
+        return -1;
+    }
 
     /**
      * 重置冷却

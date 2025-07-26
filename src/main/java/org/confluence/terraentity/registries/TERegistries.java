@@ -9,6 +9,8 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.chat.ChatElementProvider;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.registries.chat.ChatProviderTypes;
+import org.confluence.terraentity.registries.chat_condition.ChatConditionProvider;
+import org.confluence.terraentity.registries.chat_condition.ChatConditionProviderTypes;
 import org.confluence.terraentity.registries.chester.ChesterConditionalType;
 import org.confluence.terraentity.registries.chester.ChesterConditionalTypes;
 import org.confluence.terraentity.registries.chester.ChesterType;
@@ -49,6 +51,7 @@ public class TERegistries {
         event.register(ChesterConditionalTypesProviders.REGISTRY);
         event.register(TradeModifierProviderRegistry.REGISTRY);
         event.register(ChatElementProviderRegistry.REGISTRY);
+        event.register(ChatConditionProviderRegistry.REGISTRY);
 //        event.register(MoodInfoRegistry.REGISTRY);
     }
 
@@ -65,6 +68,7 @@ public class TERegistries {
         ChesterConditionalTypes.TYPES.register(bus);
         TradeModifierProviderTypes.TYPES.register(bus);
         ChatProviderTypes.TYPES.register(bus);
+        ChatConditionProviderTypes.TYPES.register(bus);
 //        org.confluence.terraentity.entity.npc.mood.MoodInfos.TYPES.register(bus);
 
     }
@@ -156,5 +160,10 @@ public class TERegistries {
     public static class ChatElementProviderRegistry {
         public static final ResourceKey<Registry<ChatElementProvider>> KEY = createRegistryKey(TerraEntity.space("chat_element"));
         public static final Registry<ChatElementProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
+    }
+
+    public static class ChatConditionProviderRegistry {
+        public static final ResourceKey<Registry<ChatConditionProvider>> KEY = createRegistryKey(TerraEntity.space("chat_condition"));
+        public static final Registry<ChatConditionProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
     }
 }

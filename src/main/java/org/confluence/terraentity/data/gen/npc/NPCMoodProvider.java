@@ -1,10 +1,11 @@
-package org.confluence.terraentity.data.gen;
+package org.confluence.terraentity.data.gen.npc;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.entity.EntityType;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.data.gen.AbstractExistCodecProvider;
 import org.confluence.terraentity.entity.npc.mood.Mood;
 import org.confluence.terraentity.entity.npc.mood.MoodInfo;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;

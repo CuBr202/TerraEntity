@@ -1,4 +1,4 @@
-package org.confluence.terraentity.data.gen.recipe;
+package org.confluence.terraentity.data.gen.npc;
 
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -29,13 +29,13 @@ import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
 import org.confluence.terraentity.init.item.TESummonItems;
-import org.confluence.terraentity.api.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.TradeProperties;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeLootTable;
 import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
-import org.confluence.terraentity.api.trade.ITradeGenerator;
+import org.confluence.terraentity.api.npc.trade.ITradeGenerator;
 import org.confluence.terraentity.registries.npc_trade_list.variant.WeightMapGenerator;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.KillEntityLock;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;

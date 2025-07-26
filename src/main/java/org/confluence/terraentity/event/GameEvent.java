@@ -12,6 +12,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
+import org.confluence.terraentity.entity.npc.chat.ChatManager;
 import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
@@ -40,6 +41,7 @@ public class GameEvent {
         TradeModifiers.readTradesFromJson(event.getServer(), event.getServer().registryAccess());
         AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
         TEAttributeModifierConfig.getInstance().loadConfig();
+        ChatManager.readChatsFromJson(event.getServer(), event.getServer().registryAccess());
     }
 
     @SubscribeEvent

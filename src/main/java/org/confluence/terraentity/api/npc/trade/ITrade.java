@@ -1,4 +1,4 @@
-package org.confluence.terraentity.api.trade;
+package org.confluence.terraentity.api.npc.trade;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;

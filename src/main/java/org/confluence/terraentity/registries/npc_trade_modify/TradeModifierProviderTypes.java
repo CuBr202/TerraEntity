@@ -3,7 +3,7 @@ package org.confluence.terraentity.registries.npc_trade_modify;
 import com.mojang.serialization.MapCodec;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.api.trade.ITradeModifier;
+import org.confluence.terraentity.api.npc.trade.ITradeModifier;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.npc_trade_modify.variant.TradeItemModifier;
 import org.confluence.terraentity.registries.npc_trade_modify.variant.TradeListModifier;

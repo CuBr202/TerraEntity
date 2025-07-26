@@ -74,7 +74,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.monster_attributes_multiplier_damage", "Monster Attributes Multiplier-Damage");
 
         add("terra_entity.configuration.spawn_without_light", "Spawn monsters without light");
-
+        add("terra_entity.configuration.chance_to_spawn_slime_on_zombie_head", "Chance to Spawn Slime on Zombie Head");
 
         add("terra_entity.configuration.boss_bar_style", "Boss Health Bar Style");
         add("terra_entity.configuration.boss_bar_number_offset_x", "Boss Health Bar Number Offset-X");
@@ -84,7 +84,8 @@ public class TEEnglishProvider extends LanguageProvider {
 
         add("terra_entity.configuration.enableNonSpiderModel", "Spider Harmonization");
         add("terra_entity.configuration.enableNonSpiderModel.tooltip", "Enable this option if you dislike spiders or want to beautify them.(This configuration change requires a game restart!)");
-        add("terra_entity.configuration.chance_to_spawn_slime_on_zombie_head", "Chance to Spawn Slime on Zombie Head");
+
+        add("terra_entity.configuration.npc_chat_bubble_style", "NPC Chat Bubble Style");
 
 
         // Tooltip

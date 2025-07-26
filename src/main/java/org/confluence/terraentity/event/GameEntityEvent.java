@@ -30,7 +30,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.ISummonMob;
-import org.confluence.terraentity.api.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.entity.monster.AbstractMonster;

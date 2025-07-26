@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.confluence.terraentity.api.trade.ITradeModifier;
+import org.confluence.terraentity.api.npc.trade.ITradeModifier;
 
 import java.io.IOException;
 import java.io.Reader;

@@ -10,7 +10,7 @@ import org.confluence.terraentity.data.gen.AbstractExistCodecProvider;
 import org.confluence.terraentity.entity.npc.trade.TradeModifiers;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
-import org.confluence.terraentity.api.trade.ITradeModifier;
+import org.confluence.terraentity.api.npc.trade.ITradeModifier;
 import org.confluence.terraentity.registries.npc_trade_modify.variant.TradeItemModifier;
 import org.confluence.terraentity.registries.npc_trade_modify.variant.TradeListModifier;
 

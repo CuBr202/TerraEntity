@@ -3,12 +3,15 @@ package org.confluence.terraentity.entity.npc.chat;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.gui.Font;
 import net.minecraft.world.phys.Vec2;
-import org.confluence.terraentity.api.chat.IChatElement;
+import org.confluence.terraentity.api.npc.chat.IChatElement;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 聊天元素排版器。只需要传入聊天元素列表和字体，自动转换统一的相对格式
+ */
 public class ChatArranger {
 
     private int initialX = 12;
@@ -17,6 +20,7 @@ public class ChatArranger {
     public Map<IChatElement, Vec2> elementPositions;
     public int width;
     public int height;
+    public int startTick = 0;
 
     public ChatArranger(List<IChatElement> chatElements, Font font){
         this.elementPositions = new Object2ObjectOpenHashMap<>();

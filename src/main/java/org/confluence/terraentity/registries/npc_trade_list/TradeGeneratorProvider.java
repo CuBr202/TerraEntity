@@ -1,7 +1,7 @@
 package org.confluence.terraentity.registries.npc_trade_list;
 
 import com.mojang.serialization.MapCodec;
-import org.confluence.terraentity.api.trade.ITradeGenerator;
+import org.confluence.terraentity.api.npc.trade.ITradeGenerator;
 
 /**
  * 用于提供NPC交易类型编解码器

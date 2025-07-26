@@ -2,7 +2,7 @@ package org.confluence.terraentity.client.gui.container;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import org.confluence.terraentity.api.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.menu.SimpleTradeMenu;
 
 /**

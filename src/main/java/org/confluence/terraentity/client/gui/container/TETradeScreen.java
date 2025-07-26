@@ -16,10 +16,10 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
-import org.confluence.terraentity.api.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.menu.TETradesMenu;
 import org.confluence.terraentity.mixed.IPlayer;
-import org.confluence.terraentity.api.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

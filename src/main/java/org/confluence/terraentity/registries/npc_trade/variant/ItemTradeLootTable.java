@@ -9,9 +9,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.confluence.lib.common.recipe.AmountIngredient;
-import org.confluence.terraentity.api.trade.IIngredientTrade;
-import org.confluence.terraentity.api.trade.ITradeLootTable;
-import org.confluence.terraentity.api.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.IIngredientTrade;
+import org.confluence.terraentity.api.npc.trade.ITradeLootTable;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 
 import java.util.List;

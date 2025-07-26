@@ -3,6 +3,7 @@ package org.confluence.terraentity.config;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.confluence.terraentity.client.gui.renderer.chat.bubble.BubbleConfig;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientConfig {
@@ -14,6 +15,9 @@ public class ClientConfig {
     public static ModConfigSpec.BooleanValue GENERATE_PROJECTILE_PARTICLE;
 
     public static ModConfigSpec.BooleanValue ENABLE_NON_SPIDER_MODEL;
+
+    public static ModConfigSpec.EnumValue<BubbleConfig> NPC_CHAT_BUBBLE_STYLE;
+
     public static ModConfigSpec SPEC;
     public static int bossBarStyle;
 
@@ -37,6 +41,8 @@ public class ClientConfig {
                 .comment("Generate Projectile Particle.")
                 .define("generate_projectile_particle", true);
         ENABLE_NON_SPIDER_MODEL = BUILDER.define("enableNonSpiderModel", false);
+        NPC_CHAT_BUBBLE_STYLE = BUILDER.comment("NPC Chat Bubble Style.")
+                .defineEnum("npc_chat_bubble_style", BubbleConfig.RECT);
         SPEC = BUILDER.build();
         return SPEC;
     }

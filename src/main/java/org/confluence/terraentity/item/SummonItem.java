@@ -94,7 +94,7 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
 
         T entity = entityType.get().create(level);
         if (entity!=null) {
-            BlockPos pos = TEUtils.getEyeBlockHitResult(player);
+            BlockPos pos = TEUtils.getEyeBlockHitResult(player).above();
             entity.setPos(pos.getX(), pos.getY(), pos.getZ());
             entity.summon(player, stack);
             entity.setCost(consume);

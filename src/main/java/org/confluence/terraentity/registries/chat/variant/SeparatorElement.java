@@ -5,8 +5,8 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.Font;
 import org.confluence.terraentity.registries.chat.ChatElementProvider;
 import org.confluence.terraentity.registries.chat.ChatProviderTypes;
-import org.confluence.terraentity.api.chat.IChatElement;
-import org.confluence.terraentity.api.chat.IChatRenderer;
+import org.confluence.terraentity.api.npc.chat.IChatElement;
+import org.confluence.terraentity.api.npc.chat.IChatRenderer;
 
 public class SeparatorElement implements IChatElement<Void> {
 
@@ -25,7 +25,7 @@ public class SeparatorElement implements IChatElement<Void> {
     }
 
     @Override
-    public IChatRenderer<Void> getRenderer() {
+    public IChatRenderer getRenderer() {
         return null;
     }
 

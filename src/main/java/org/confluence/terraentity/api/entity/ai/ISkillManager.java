@@ -13,7 +13,7 @@ public interface ISkillManager {
     /**
      * 触发技能
      */
-    void triggerSkill(ISkill skill);
+    boolean triggerSkill(ISkill skill);
 
     /**
      * 每帧更新，减少所有技能的剩余冷却时间

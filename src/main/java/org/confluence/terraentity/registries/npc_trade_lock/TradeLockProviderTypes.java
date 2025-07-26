@@ -3,7 +3,7 @@ package org.confluence.terraentity.registries.npc_trade_lock;
 import com.mojang.serialization.MapCodec;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.api.trade.ITradeLock;
+import org.confluence.terraentity.api.npc.trade.ITradeLock;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.*;
 

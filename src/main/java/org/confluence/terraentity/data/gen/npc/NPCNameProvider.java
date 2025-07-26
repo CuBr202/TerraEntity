@@ -1,4 +1,4 @@
-package org.confluence.terraentity.data.gen;
+package org.confluence.terraentity.data.gen.npc;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
@@ -6,6 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.entity.EntityType;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.data.gen.AbstractExistCodecProvider;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 

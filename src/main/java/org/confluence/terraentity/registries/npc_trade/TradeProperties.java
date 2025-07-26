@@ -2,7 +2,7 @@ package org.confluence.terraentity.registries.npc_trade;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import org.confluence.terraentity.api.trade.ITradeLock;
+import org.confluence.terraentity.api.npc.trade.ITradeLock;
 
 import java.util.Optional;
 

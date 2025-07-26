@@ -3,11 +3,11 @@ package org.confluence.terraentity.registries.chat.variant;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.Font;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terraentity.client.gui.renderer.chat.ChatItemRenderer;
+import org.confluence.terraentity.client.gui.renderer.chat.element.ChatItemRenderer;
 import org.confluence.terraentity.registries.chat.ChatElementProvider;
 import org.confluence.terraentity.registries.chat.ChatProviderTypes;
-import org.confluence.terraentity.api.chat.IChatElement;
-import org.confluence.terraentity.api.chat.IChatRenderer;
+import org.confluence.terraentity.api.npc.chat.IChatElement;
+import org.confluence.terraentity.api.npc.chat.IChatRenderer;
 
 public class ItemChatElement implements IChatElement<ItemStack> {
     public static final MapCodec<ItemChatElement> MAPCODEC = ItemStack.CODEC.xmap(ItemChatElement::new, ItemChatElement::getContent).fieldOf("content");
@@ -27,7 +27,7 @@ public class ItemChatElement implements IChatElement<ItemStack> {
     }
 
     @Override
-    public IChatRenderer<ItemStack> getRenderer() {
+    public IChatRenderer<ItemChatElement> getRenderer() {
         return ChatItemRenderer.INSTANCE;
     }
 

@@ -4,8 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.chat.Component;
-import org.confluence.terraentity.api.trade.ITradeHolder;
-import org.confluence.terraentity.api.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTypes;
 

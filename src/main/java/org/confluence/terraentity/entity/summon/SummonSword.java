@@ -281,11 +281,6 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         }
 
         @Override
-        public int getMaxCooldown() {
-            return _skillCooldown;
-        }
-
-        @Override
         public int getIndex() {
             return skillIndex;
         }

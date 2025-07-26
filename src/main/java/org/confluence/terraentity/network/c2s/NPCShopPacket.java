@@ -9,9 +9,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
-import org.confluence.terraentity.api.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.mixed.IPlayer;
-import org.confluence.terraentity.api.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
 

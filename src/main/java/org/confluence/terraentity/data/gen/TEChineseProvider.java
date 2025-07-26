@@ -388,7 +388,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.monster_attributes_multiplier_health", "Monster属性倍率-生命");
         add("terra_entity.configuration.monster_attributes_multiplier_damage", "Monster属性倍率-伤害");
         add("terra_entity.configuration.spawn_without_light", "无视光照生成怪物");
-
+        add("terra_entity.configuration.chance_to_spawn_slime_on_zombie_head", "在僵尸头上生成史莱姆的几率");
 
 
         add("terra_entity.configuration.boss_bar_style", "BOSS血条样式");
@@ -398,8 +398,10 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.enableNonSpiderModel.tooltip", "如果你对蜘蛛反感或想美化他们，请开启这个选项（该配置更换需要重启游戏！）");
 
         add("terra_entity.configuration.generate_projectile_particle", "生成弹幕粒子");
+        add("terra_entity.configuration.npc_chat_bubble_style", "NPC聊天气泡样式");
 
-        add("terra_entity.configuration.chance_to_spawn_slime_on_zombie_head", "在僵尸头上生成史莱姆的几率");
+
+
 
         // Tooltip
         add("tooltic.terra_entity.summon_item.desc", "长按以解除所有召唤物");

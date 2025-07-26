@@ -20,11 +20,11 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.api.trade.ITrade;
-import org.confluence.terraentity.api.trade.ITradeGenerator;
-import org.confluence.terraentity.api.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeGenerator;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade_list.variant.SimpleGenerator;
-import org.confluence.terraentity.api.trade.ITradeLock;
+import org.confluence.terraentity.api.npc.trade.ITradeLock;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;

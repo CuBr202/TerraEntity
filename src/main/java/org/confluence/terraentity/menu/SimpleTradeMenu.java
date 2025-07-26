@@ -1,8 +1,8 @@
 package org.confluence.terraentity.menu;
 
 import net.minecraft.world.entity.player.Inventory;
-import org.confluence.terraentity.api.trade.ITrade;
-import org.confluence.terraentity.api.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.init.TEMenus;
 import org.jetbrains.annotations.Nullable;
 

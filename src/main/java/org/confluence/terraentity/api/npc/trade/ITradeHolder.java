@@ -1,4 +1,4 @@
-package org.confluence.terraentity.api.trade;
+package org.confluence.terraentity.api.npc.trade;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;

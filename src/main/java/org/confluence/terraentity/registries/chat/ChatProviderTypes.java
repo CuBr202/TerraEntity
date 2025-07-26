@@ -5,6 +5,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.chat.variant.ItemChatElement;
 import org.confluence.terraentity.registries.chat.variant.SeparatorElement;
+import org.confluence.terraentity.registries.chat.variant.SpriteChatElement;
 import org.confluence.terraentity.registries.chat.variant.StringChatElement;
 
 import java.util.function.Supplier;
@@ -15,5 +16,7 @@ public class ChatProviderTypes {
     public static final Supplier<ChatElementProvider> COMPONENT = TYPES.register("component", ()-> new ChatElementProvider(StringChatElement.MAPCODEC));
     public static final Supplier<ChatElementProvider> ITEM = TYPES.register("item", ()-> new ChatElementProvider(ItemChatElement.MAPCODEC));
     public static final Supplier<ChatElementProvider> SEPARATOR = TYPES.register("separator", ()-> new ChatElementProvider(SeparatorElement.CODEC));
+    public static final Supplier<ChatElementProvider> SPIRIT = TYPES.register("spirit", ()-> new ChatElementProvider(SpriteChatElement.MAPCODEC));
+
 
 }

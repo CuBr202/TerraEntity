@@ -13,25 +13,29 @@ import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec2;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.npc.chat.IBubbleRenderer;
+import org.confluence.terraentity.client.ModRenderTypes;
+import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.chat.ChatArranger;
-import org.confluence.terraentity.api.chat.IChatElement;
+import org.confluence.terraentity.mixed.IShaderInstance;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>{
 
     // 应该使用static，在所有实体渲染完后再bind
     MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(1536));
     VertexBuffer consumeBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-    TextureTarget target = new TextureTarget(500,500,false, false);
+    TextureTarget target = new TextureTarget(200,200,false, false);
+
+//    IBubbleRenderer bubbleRenderer = CloudBubble.INSTANCE;
+    IBubbleRenderer bubbleRenderer;
 
     public NPCRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
         super(renderManager, path.withPrefix("npc/"));
@@ -56,6 +60,10 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
             float scale = chat.getBubbleScale();
             float width = 50 * scale;
             float height = 50 * scale;
+            float progress = (animatable.chatCount - partialTick )/ animatable._chatCount;
+            progress = progress * (1 - progress) * 10;
+            progress = 1 - Mth.clamp(progress, 0, 1);
+
 
             // 存储之前的mp
             Matrix4f cache_m = new Matrix4f(RenderSystem.getModelViewMatrix());
@@ -64,29 +72,15 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
             RenderSystem.getProjectionMatrix().set(createOrthographicMatrix(0, 100 * scale, 100 * scale, 0, -100, 100));
 
             // 离屏渲染聊天气泡
-            target.setClearColor(0,1,0,0);
+            target.setClearColor(0,1,0,0f);
             target.clear(true);
             target.bindWrite(true);
             GuiGraphics guiGraphics = new GuiGraphics(Minecraft.getInstance(), this.bufferSource);
 
 
             // 渲染阴影
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().scale(scale, scale, 1);
-            guiGraphics.setColor(0.3f,0.3f,0.3f,0.2f);
-            guiGraphics.blit(TerraEntity.space("textures/gui/chat_bubble.png"), 1,1,100,100,0,0,100,100,100, 100);
-            guiGraphics.setColor(1,1,1,1);
-            guiGraphics.blit(TerraEntity.space("textures/gui/chat_bubble.png"), 0,0,100,100,0,0,100,100,100, 100);
-            guiGraphics.pose().popPose();
-
-            Map<IChatElement, Vec2> elements = chat.elementPositions;
-            for (var element: elements.entrySet()) {
-                Vec2 pos = element.getValue();
-                if(element.getKey().getRenderer() != null){
-                    element.getKey().getRenderer().render(element.getKey().getContent(), width + pos.x, height - 6  + pos.y, poseStack, guiGraphics, packedLight, packedOverlay, animatable.level(), this.bufferSource);
-                }
-
-            }
+            bubbleRenderer = ClientConfig.NPC_CHAT_BUBBLE_STYLE.get().getRenderer();
+            bubbleRenderer.renderBubble(guiGraphics, chat, poseStack, animatable.level(), this.bufferSource, scale, width, height, packedLight, packedOverlay);
 
             guiGraphics.flush();
 
@@ -104,22 +98,49 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
             float yaw = -Mth.lerp(partialTick, Minecraft.getInstance().player.yHeadRotO, Minecraft.getInstance().player.yHeadRot);
             poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
 
+            bubbleRenderer.adjustPose(poseStack, scale, width, height);
+
 
             // 聊天气泡广告牌渲染到头顶
             poseStack.scale(scale, scale, 1);
             poseStack.translate(0, height / 50 * 0.05f, 0);
-            renderChatBubble(poseStack.last().pose(), shader->{
+            float finalProgress = progress;
+            renderChatBubble(poseStack.last().pose(), ()->{
                 RenderSystem.setShaderTexture(0, target.getColorTextureId());
+                RenderSystem.setShaderTexture(1, TerraEntity.space("textures/gui/noise.png"));
+                IShaderInstance shader = (IShaderInstance) ModRenderTypes.Shaders.pixelStyleBlitShader;
+                shader.getTerra_entity$Progress().set(finalProgress);
+                shader.getTerra_entity$PixelSize().set(32f);
+                return ModRenderTypes.Shaders.pixelStyleBlitShader;
             });
 
             poseStack.popPose();
         }
     }
 
+//    private void renderBubble(GuiGraphics guiGraphics, ChatArranger chat, PoseStack poseStack, Level level, MultiBufferSource.BufferSource bufferSource, float scale, float width, float height , int packedLight, int packedOverlay) {
+//        guiGraphics.pose().pushPose();
+//        guiGraphics.pose().scale(scale, scale, 1);
+//        guiGraphics.setColor(0.3f,0.3f,0.3f,0.2f);
+//        guiGraphics.blit(TerraEntity.space("textures/gui/chat_bubble.png"), 1,1,100,100,0,0,100,100,100, 100);
+//        guiGraphics.setColor(1,1,1,1);
+//        guiGraphics.blit(TerraEntity.space("textures/gui/chat_bubble.png"), 0,0,100,100,0,0,100,100,100, 100);
+//        guiGraphics.pose().popPose();
+//
+//        Map<IChatElement, Vec2> elements = chat.elementPositions;
+//        for (var element: elements.entrySet()) {
+//            Vec2 pos = element.getValue();
+//            if(element.getKey().getRenderer() != null){
+//                element.getKey().getRenderer().render(element.getKey().getContent(), width + pos.x, height - 6  + pos.y, poseStack, guiGraphics, packedLight, packedOverlay, level, bufferSource);
+//            }
+//
+//        }
+//    }
+
     /**
      * 渲染聊天气泡Billboard
      */
-    private void renderChatBubble(Matrix4f viewMatrix, Consumer<ShaderInstance> setSampler ) {
+    private void renderChatBubble(Matrix4f viewMatrix, Supplier<ShaderInstance> setSampler ) {
         if(consumeBuffer!= null){
             consumeBuffer.close();
         }
@@ -136,9 +157,9 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
             consumeBuffer = null;
         } else{
             consumeBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShader(setSampler);
 //            RenderSystem.setShaderTexture(0, texture);
-            setSampler.accept(GameRenderer.getPositionTexShader());
+//            setSampler.accept(GameRenderer.getPositionTexShader());
 
 
             consumeBuffer.bind();
@@ -153,7 +174,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
                                         .rotation())
                                 .conjugate()),
                         RenderSystem.getProjectionMatrix(),
-                        GameRenderer.getPositionTexShader());
+                        RenderSystem.getShader());
             }
 
             VertexBuffer.unbind();
@@ -162,8 +183,9 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
     }
 
     private void renderChatBubble(Matrix4f viewMatrix, ResourceLocation texture) {
-        this.renderChatBubble(viewMatrix, (shader) -> {
+        this.renderChatBubble(viewMatrix, () -> {
             RenderSystem.setShaderTexture(0, texture);
+            return GameRenderer.getPositionTexShader();
         });
     }
 

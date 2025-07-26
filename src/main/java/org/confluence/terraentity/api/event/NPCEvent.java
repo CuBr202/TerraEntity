@@ -11,8 +11,8 @@ import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.fml.event.IModBusEvent;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
-import org.confluence.terraentity.api.trade.ITradeHolder;
-import org.confluence.terraentity.api.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITrade;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;

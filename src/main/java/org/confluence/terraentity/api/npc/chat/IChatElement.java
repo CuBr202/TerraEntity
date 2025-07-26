@@ -1,4 +1,4 @@
-package org.confluence.terraentity.api.chat;
+package org.confluence.terraentity.api.npc.chat;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.Font;
@@ -14,7 +14,7 @@ public interface IChatElement<T> {
 
     ChatElementProvider getProvider();
 
-    IChatRenderer<T> getRenderer();
+    IChatRenderer<? extends IChatElement<T>> getRenderer();
 
     int wrapWidth(int input, Font font);
 
