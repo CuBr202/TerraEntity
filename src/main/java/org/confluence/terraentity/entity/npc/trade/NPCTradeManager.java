@@ -125,6 +125,31 @@ public class NPCTradeManager {
         return this.availableTrades;
     }
 
+    /**
+     * 获取可用的交易表。玩家实际交易时调用，防止客户端数据不同步
+     */
+    public ITrade targetTrade(TradeParams params, int index) {
+
+        if (params == null) {
+            throw new IllegalArgumentException("Trade params cannot be null");
+        }
+        BitMask bitMask = params.bitMask();
+        int target = 0;
+        for (ITrade trade : this.trades) {
+            if (bitMask.contains(target)) {
+                target++;
+                continue;
+            }
+
+            if(index == 0){
+                return trade;
+            }
+            index--;
+            target++;
+        }
+        throw new IllegalArgumentException("Trade index out of range");
+    }
+
     public ITradeGenerator getRawTrades(){
         if(tradeList == null){
             return new SimpleGenerator(trades);
@@ -161,7 +186,7 @@ public class NPCTradeManager {
             }
             index++;
         }
-        if (dirty) {
+        if (dirty) { // 不能因为数据为脏才同步，这样会出现数据不同步
             this.owner.syncTradeTasksParams();
         }
     }

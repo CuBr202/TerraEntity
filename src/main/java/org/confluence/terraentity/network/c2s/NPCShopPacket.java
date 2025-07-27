@@ -10,16 +10,18 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
+import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
 
 
-public record NPCShopPacket(int tradeIndex) implements CustomPacketPayload {
+public record NPCShopPacket(int tradeIndex, TradeParams params) implements CustomPacketPayload {
     public static final Type<NPCShopPacket> TYPE = new Type<>(TerraEntity.space("npc_trade_packet_s2c"));
     public static final StreamCodec<ByteBuf, NPCShopPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,NPCShopPacket::tradeIndex,
+            TradeParams.STREAM_CODEC, NPCShopPacket::params,
             NPCShopPacket::new
     );
 
@@ -37,7 +39,8 @@ public record NPCShopPacket(int tradeIndex) implements CustomPacketPayload {
                     if(tradeIndex < 0 ){
                         return;
                     }
-                    trade = holder.getTradeManager().availableTrades().get(tradeIndex);
+//                    trade = holder.getTradeManager().availableTrades().get(tradeIndex);
+                    trade = holder.getTradeManager().targetTrade(params, tradeIndex);
 
                     NPCEvent.NPCTradeEvent event = new NPCEvent.NPCTradeEvent(holder, trade, sp);
                     AdapterUtils.postEvent(event);

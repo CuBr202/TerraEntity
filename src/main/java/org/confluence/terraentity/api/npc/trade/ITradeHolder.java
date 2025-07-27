@@ -95,7 +95,7 @@ public interface ITradeHolder {
 
 
     /**
-     * <p>需要使用task时或者使用带lock的trade时重写</p>
+     * <p>需要使用task时或者使用带lock的trade时重写，且应该是强制同步数据</p>
      * <p>同步{@link TradeParams 交易参数列表}</p>
      * <p>实体使用{@link TEEntityDataSerializers#NPC_TRADE_PARAMS_SERIALIZER EntityData}同步</p>
      */

@@ -37,7 +37,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     private static final Component TRADES_LABEL = Component.translatable("title.terra_entity.npc_trade");
 
     // 交易项
-    protected int shopItem = -1;
+    public int shopItem = -1;
     private int hoveredItem = -1;
     private int row;
     private final int col = 5;
@@ -329,6 +329,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
                 mouseY > (double)(j + 36)&& mouseY <= (double)(j + 36 + 16)
         ) {
             this.isClicked = true;
+            this.lastClickTime = System.currentTimeMillis();
             return super.mouseClicked(mouseX, mouseY, button);
         }
         if(canSelect(hoveredItem,mouseX, mouseY, button)) {

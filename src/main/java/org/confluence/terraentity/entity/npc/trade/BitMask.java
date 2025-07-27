@@ -1,6 +1,9 @@
 package org.confluence.terraentity.entity.npc.trade;
 
 import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +13,7 @@ public class BitMask {
     public List<Long> bitMask;
 
     public static Codec<BitMask> CODEC = Codec.LONG.listOf().xmap(BitMask::new, BitMask::bitMask);
+    public static StreamCodec<ByteBuf, BitMask> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
     private List<Long> bitMask() {
         if(bitMask == null){
@@ -103,5 +107,18 @@ public class BitMask {
             }
         }
         return indexes;
+    }
+
+    @Override
+    public String toString(){
+        String s = "";
+        for(int i = 0; i < bitMask.size(); i++){
+            for(int j = 0; j < 64; j++){
+                if((bitMask.get(i) & (1L << j)) != 0){
+                    s += i * 64 + j + " ";
+                }
+            }
+        }
+        return s;
     }
 }

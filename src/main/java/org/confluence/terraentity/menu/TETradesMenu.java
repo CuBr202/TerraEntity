@@ -126,20 +126,24 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
         }
     }
 
+    @Override
     public void clicked(int slotId, int button, ClickType clickType, Player player) {
-        if(slotId == 0){
-            if(player.isLocalPlayer()) {
-                var d = ((IPlayer) player).terra_entity$getTradeHolder();
-
-                if (selectedMerchantIndex >= 0 && selectedMerchantIndex < d.trades().size()) {
-                    ITrade trade = d.trades().get(selectedMerchantIndex);
-                    AdapterUtils.sendToServer(new NPCShopPacket(selectedMerchantIndex));
-                    var npc = ((IPlayer) player).terra_entity$getTradeHolder();
-                    trade.onLocalClickSlot(player, button, clickType, npc, selectedMerchantIndex);
-                }
+        if(player.isLocalPlayer()) {
+            if(slotId == 0){
+                this.handleTrade(player, selectedMerchantIndex, button, clickType);
             }
         }
         super.clicked(slotId, button, clickType, player);
+    }
+
+    protected void handleTrade(Player player, int selectedMerchantIndex, int button, ClickType clickType){
+        var d = ((IPlayer) player).terra_entity$getTradeHolder();
+        if (d != null && selectedMerchantIndex >= 0 && selectedMerchantIndex < d.trades().size()) {
+            ITrade trade = d.trades().get(selectedMerchantIndex);
+            AdapterUtils.sendToServer(new NPCShopPacket(selectedMerchantIndex, this.NPCTrades.getTradeParams()));
+            var npc = ((IPlayer) player).terra_entity$getTradeHolder();
+            trade.onLocalClickSlot(player, button, clickType, npc, selectedMerchantIndex);
+        }
     }
 
 }

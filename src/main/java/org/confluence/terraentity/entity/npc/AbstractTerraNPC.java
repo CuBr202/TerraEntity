@@ -49,7 +49,6 @@ import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
-import org.confluence.terraentity.entity.npc.brain.behavior.NPCTalkBrain;
 import org.confluence.terraentity.entity.npc.chat.ChatArranger;
 import org.confluence.terraentity.entity.npc.chat.ChatManager;
 import org.confluence.terraentity.entity.npc.chat.NPCChat;
