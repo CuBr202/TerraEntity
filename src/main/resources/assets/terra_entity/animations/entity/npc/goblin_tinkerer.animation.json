@@ -261,6 +261,11 @@
 							"vector": [0, -1, 0]
 						}
 					}
+				},
+				"bone": {
+					"scale": {
+						"vector": [1, 0, 0]
+					}
 				}
 			}
 		},
@@ -362,6 +367,52 @@
 				"LeftLeg": {
 					"rotation": {
 						"vector": [0.21865, -4.99523, -2.50954]
+					}
+				},
+				"bone": {
+					"scale": {
+						"vector": [1, 0, 0]
+					}
+				}
+			}
+		},
+		"sit": {
+			"loop": "hold_on_last_frame",
+			"bones": {
+				"Head": {
+					"position": {
+						"vector": [0, -10, 0]
+					}
+				},
+				"Body": {
+					"position": {
+						"vector": [0, -10, 0]
+					}
+				},
+				"RightArm": {
+					"position": {
+						"vector": [0, -10, 0]
+					}
+				},
+				"LeftArm": {
+					"position": {
+						"vector": [0, -10, 0]
+					}
+				},
+				"RightLeg": {
+					"rotation": {
+						"vector": [-90, 22.5, 0]
+					},
+					"position": {
+						"vector": [0, -10, 0]
+					}
+				},
+				"LeftLeg": {
+					"rotation": {
+						"vector": [-90, -22.5, 0]
+					},
+					"position": {
+						"vector": [0, -10, 0]
 					}
 				}
 			}
