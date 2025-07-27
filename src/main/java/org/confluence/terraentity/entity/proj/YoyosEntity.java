@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.proj;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,9 +16,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.entity.PartEntity;
 import org.confluence.terraentity.api.item.ILeftClickReceiver;
 import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.entity.summon.AbstractSummonMob;
@@ -107,6 +108,11 @@ public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> 
 
     }
 
+    @Override
+    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {}
+
+    @Override
+    protected void playBlockFallSound() {}
 
     @Override
     public float summon_getKnockback(Entity attacker, DamageSource damageSource) {

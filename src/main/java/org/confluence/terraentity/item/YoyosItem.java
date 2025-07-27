@@ -1,13 +1,11 @@
 package org.confluence.terraentity.item;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.item.ILeftClickStateItem;
 import org.confluence.terraentity.api.item.IProjectileModifier;
@@ -53,12 +51,8 @@ public class YoyosItem<T extends BaseProj<?>> extends Item implements ILeftClick
     }
 
     @Override
-    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
-        return !player.isCreative();
-    }
-
-    @Override
     public void onLeftClick(Player player, ItemStack itemStack) {
+        if (player.isSpectator()) return;
         WeaponStorage weaponStorage = player.getData(TEAttachments.WEAPON_STORAGE.get());
         if(weaponStorage.yoyosEntity != null && weaponStorage.yoyosEntity.isAlive()){
             weaponStorage.yoyosEntity.onReceiveLeftClick(player, itemStack);

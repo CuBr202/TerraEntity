@@ -1,6 +1,9 @@
 package org.confluence.terraentity.client.event;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -12,25 +15,25 @@ import org.confluence.terraentity.api.item.ILeftClickStateItem;
 import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.item.BaseWhipItem;
+import org.confluence.terraentity.item.YoyosItem;
 import org.confluence.terraentity.network.c2s.ServerBoundEventPacket;
+import org.lwjgl.glfw.GLFW;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
-@EventBusSubscriber(modid = MODID,bus = EventBusSubscriber.Bus.GAME,value = Dist.CLIENT)
+@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class GameInputEvent {
 
     @SubscribeEvent
     public static void mouseScroll(InputEvent.MouseScrollingEvent event) {
         // 防止切鞭，非常超模
         Player player = Minecraft.getInstance().player;
-        if(player == null){
-            return;
-        }
+        if (player == null) return;
+
         ItemStack stack = player.getMainHandItem();
         Item item = stack.getItem();
 
-        if (item  instanceof BaseWhipItem whipItem
-                && player.getCooldowns().isOnCooldown(whipItem)) {
+        if (item instanceof BaseWhipItem whipItem && player.getCooldowns().isOnCooldown(whipItem)) {
             event.setCanceled(true);
             return;
         }
@@ -44,10 +47,9 @@ public class GameInputEvent {
                 }
             }
 
-            if(!item1.canSwitchWithoutRelease(player, stack) && player.getData(TEAttachments.WEAPON_STORAGE).leftClicking){
+            if (!item1.canSwitchWithoutRelease(player, stack) && player.getData(TEAttachments.WEAPON_STORAGE).leftClicking) {
                 event.setCanceled(true);
             }
-
         }
     }
 
@@ -57,29 +59,37 @@ public class GameInputEvent {
         if (player != null && !Minecraft.getInstance().isPaused() && Minecraft.getInstance().screen == null && !player.isSpectator()) {
             WeaponStorage data = player.getData(TEAttachments.WEAPON_STORAGE);
             boolean clicking = data.leftClicking;
-            if(event.getButton() == 0){ // 左键
-                if (event.getAction() == 0) { // 松开
+            if (event.getButton() == GLFW.GLFW_MOUSE_BUTTON_1) { // 左键
+                if (event.getAction() == InputConstants.RELEASE) { // 松开
                     data.leftClicking = false;
-                    if(clicking) {
+                    if (clicking) {
 //                        player.sendSystemMessage(Component.literal("not clicking"));
                         ServerBoundEventPacket.mouseRelease();
-
                     }
                     return;
                 }
                 ItemStack stack = player.getMainHandItem();
-                if(stack.getItem() instanceof ILeftClickStateItem) {
-                    if (event.getAction() == 1) { // 按下
+                if (stack.getItem() instanceof ILeftClickStateItem) {
+                    if (event.getAction() == InputConstants.PRESS) { // 按下
                         if (!clicking) {
                             data.leftClicking = true;
 //                            player.sendSystemMessage(Component.literal("clicking"));
                             ServerBoundEventPacket.mouseLeftClick();
                         }
-                        return;
                     }
                 }
             }
         }
+    }
 
+    @SubscribeEvent
+    public static void interactionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
+        if (event.isAttack() && event.getHand() == InteractionHand.MAIN_HAND) {
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player != null && player.getMainHandItem().getItem() instanceof YoyosItem<?>) {
+                event.setCanceled(true);
+                event.setSwingHand(false);
+            }
+        }
     }
 }
