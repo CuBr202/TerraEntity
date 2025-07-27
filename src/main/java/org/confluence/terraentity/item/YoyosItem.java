@@ -52,7 +52,6 @@ public class YoyosItem<T extends BaseProj<?>> extends Item implements ILeftClick
 
     @Override
     public void onLeftClick(Player player, ItemStack itemStack) {
-        if (player.isSpectator()) return;
         WeaponStorage weaponStorage = player.getData(TEAttachments.WEAPON_STORAGE.get());
         if(weaponStorage.yoyosEntity != null && weaponStorage.yoyosEntity.isAlive()){
             weaponStorage.yoyosEntity.onReceiveLeftClick(player, itemStack);
