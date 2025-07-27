@@ -88,8 +88,7 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
             } else if (type == TypeEnum.SUMMON_SKELETRON) {
                 Vec3 pos = player.position();
                 if (((IPlayer) player).terra_entity$getTradeHolder() instanceof AbstractTerraNPC npc && npc.getType() == TENpcEntities.OLD_MAN.get()) {
-                    // confluence mixed here
-                    npc.discard(); // 这样不会肢解，但是不会触发死亡事件所以需要mixin
+                    confluenceHook(npc);
                     Skeletron skeletron = TEBossEntities.SKELETRON.get().create(player.level());
                     if (skeletron != null) {
                         skeletron.setPos(pos.add(TEUtils.sphere(10, (float) Math.random() * 3.14F, (float) Math.random() * 3.14F)));
@@ -99,6 +98,10 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
             }
 
         });
+    }
+
+    private static void confluenceHook(AbstractTerraNPC npc) {
+        npc.discard(); // 这样不会肢解，但是不会触发死亡事件所以需要mixin
     }
 
     @Override
