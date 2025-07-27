@@ -44,6 +44,13 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICo
 
     @Override
     public void tick() {
+        if(this.getParent()== null || this.getParent().isRemoved()){
+            discard();
+            return;
+        }
+        if(this.isRemoved()){
+            return;
+        }
         updateLastPos();
         this.xxo = this.getX();
         this.yyo = this.getY();

@@ -174,5 +174,12 @@ public class BaseWarm extends AbstractMonster {
     public boolean isInvulnerableTo(DamageSource source) {
         return super.isInvulnerableTo(source) || source.is(DamageTypes.IN_WALL);
     }
-
+    public void onRemovedFromLevel() {
+        super.onRemovedFromLevel();
+        for (int i = 0; i < this.bodySegments.length; i++) {
+            if(this.bodySegments[i]!= null && !this.bodySegments[i].isRemoved()) {
+                this.bodySegments[i].onRemovedFromLevel();
+            }
+        }
+    }
 }

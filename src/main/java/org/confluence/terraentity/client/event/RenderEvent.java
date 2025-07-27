@@ -184,10 +184,10 @@ public class RenderEvent {
 
                 PlayerRenderer playerrenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(player);
                 PoseStack poseStack = event.getPoseStack();
-
+                poseStack.pushPose();
                 poseStack.translate(0.3, 0.1, -0.5);
 
-                poseStack.pushPose();
+
 //            poseStack.translate(0.5,-0.2,-1.2);
                 var buffer = event.getMultiBufferSource();
                 int packedLight = event.getPackedLight();
