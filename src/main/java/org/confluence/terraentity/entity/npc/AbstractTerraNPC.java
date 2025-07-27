@@ -42,7 +42,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
@@ -50,6 +49,7 @@ import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
+import org.confluence.terraentity.entity.npc.brain.behavior.NPCTalkBrain;
 import org.confluence.terraentity.entity.npc.chat.ChatArranger;
 import org.confluence.terraentity.entity.npc.chat.ChatManager;
 import org.confluence.terraentity.entity.npc.chat.NPCChat;
@@ -63,12 +63,9 @@ import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.init.TEItems;
-import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.menu.SimpleTradeMenu;
 import org.confluence.terraentity.network.s2c.UpdateNPCTradePacket;
-import org.confluence.terraentity.api.npc.chat.IChatElement;
-import org.confluence.terraentity.registries.chat.variant.SpriteChatElement;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -103,6 +100,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public Player tradingPlayer;
     public House house = House.EMPTY;
     private NPCMood mood;
+
 
     private NPCAi ai;
     private float rangeDistance = 8; // 远程攻击范围
@@ -232,23 +230,12 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
 
         // 初始化对话系统
-//        this.chatManager = new ChatManager(List.of(
-//                new ChatHolder(new NPCChat(List.of(new SpriteChatElement(List.of(
-//                        TerraEntity.space("textures/gui/sprites/random_gift.png")
-////                        TerraEntity.space("textures/gui/sprites/unknown.png")
-//                ), 2f))), new MemoryStateCondition(Map.of(MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_PRESENT)), 200),
-//                new ChatHolder(new NPCChat(List.of(new SpriteChatElement(List.of(
-////                        TerraEntity.space("textures/gui/sprites/random_gift.png"),
-//                        TerraEntity.space("textures/gui/sprites/unknown.png")
-//                ), 2f))), new WeatherChatCondition(Optional.of(true), Optional.of(false)), 200)
-//        ));
-
         this.chatManager = ChatManager.getChatManager(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()), this.level().registryAccess());
         if(this.chatManager != null) {
             this.chatManager.setOwner(this);
         }
 
-//        AdapterUtils.postEvent(event);
+
         // 使用预先注册的事件处理器
         var consumer = NPCEvent.NPCBrainCollectionEvent.getConsumer(getType());
         if (consumer != null) {
@@ -469,36 +456,6 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
                 this.chatManager.update(1);
             }
         }
-    }
-
-    protected List<IChatElement> chat(){
-        if(this.getType() == TENpcEntities.GUIDE.get()) {
-            if(this.getMainHandItem().isEmpty()) {
-//                return List.of(new ItemChatElement(Items.BOW.getDefaultInstance()));
-                return List.of(new SpriteChatElement(List.of(
-                        TerraEntity.space("textures/gui/sprites/random_gift.png"),
-                        TerraEntity.space("textures/gui/sprites/unknown.png")
-                ), 2f));
-
-            }
-        }
-        return List.of();
-//        return List.of(
-//                new StringChatElement(Items.BOW.getDescription()),
-//                new ItemChatElement(Items.BOW.getDefaultInstance()),
-//                SeparatorElement.INSTANCE,
-//                new StringChatElement(TESummonEntities.TERRAPRISMA.get().getDescription()),
-//                SeparatorElement.INSTANCE,
-//                new StringChatElement(TESummonEntities.TERRAPRISMA.get().getDescription()),
-//                new StringChatElement(TESummonEntities.TERRAPRISMA.get().getDescription()),
-//                new StringChatElement(TESummonEntities.TERRAPRISMA.get().getDescription()),
-//                new StringChatElement(TESummonEntities.TERRAPRISMA.get().getDescription()),
-//                SeparatorElement.INSTANCE,
-//                new StringChatElement(TESummonEntities.TERRAPRISMA.get().getDescription()),
-//                SeparatorElement.INSTANCE,
-//                new StringChatElement(TESummonEntities.TERRAPRISMA.get().getDescription()),
-//                SeparatorElement.INSTANCE
-//        );
     }
 
     @Override
@@ -793,7 +750,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
     public void setChat(NPCChat chat){
         if(chat.getChatElement() != null && !chat.getChatElement().isEmpty()) {
-            this.entityData.set(DATA_CHAT, chat, true);
+            this.entityData.set(DATA_CHAT, chat.generateChat(this.random), true);
         }
     }
 
@@ -803,4 +760,10 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
         return null;
     }
+
+    public ChatManager getChatManager() {
+        return chatManager;
+    }
+
+
 }

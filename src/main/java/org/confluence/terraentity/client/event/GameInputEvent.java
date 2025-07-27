@@ -35,7 +35,7 @@ public class GameInputEvent {
             return;
         }
 
-        if(item instanceof ILeftClickStateItem item1){
+        if(!player.isSpectator() && item instanceof ILeftClickStateItem item1){
             if(Minecraft.getInstance().mouseHandler.isLeftPressed()) { // 暂时可以这样写省性能，如果后面有新需求，需要注释掉
                 if (event.getScrollDeltaY() > 0) {
                     ServerBoundEventPacket.wheelUp();
@@ -54,7 +54,7 @@ public class GameInputEvent {
     @SubscribeEvent
     public static void mouseClick(InputEvent.MouseButton.Pre event) {
         Player player = Minecraft.getInstance().player;
-        if (player != null && !Minecraft.getInstance().isPaused() && Minecraft.getInstance().screen == null) {
+        if (player != null && !Minecraft.getInstance().isPaused() && Minecraft.getInstance().screen == null && !player.isSpectator()) {
             WeaponStorage data = player.getData(TEAttachments.WEAPON_STORAGE);
             boolean clicking = data.leftClicking;
             if(event.getButton() == 0){ // 左键

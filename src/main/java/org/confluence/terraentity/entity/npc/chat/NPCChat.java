@@ -4,8 +4,10 @@ import com.mojang.serialization.Codec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 import org.confluence.terraentity.api.npc.chat.IChatElement;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,6 +29,16 @@ public class NPCChat {
 
     public List<IChatElement> getChatElement() {
         return chatElement;
+    }
+
+    /**
+     * 为复合结点生成对话内容
+     */
+    public NPCChat generateChat(RandomSource random){
+        return new NPCChat(chatElement.stream()
+                .map(c->c.generate(random))
+                .flatMap(Collection::stream)
+                .toList());
     }
 
 

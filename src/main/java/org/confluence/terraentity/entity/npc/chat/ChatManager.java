@@ -1,29 +1,24 @@
 package org.confluence.terraentity.entity.npc.chat;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.entity.ai.ISkill;
-import org.confluence.terraentity.api.npc.chat.IChatCondition;
 import org.confluence.terraentity.entity.ai.goal.skill.SkillCooldownManager;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * NPC 对话管理器
@@ -31,8 +26,21 @@ import java.util.NoSuchElementException;
 public class ChatManager extends SkillCooldownManager {
 
     List<ChatHolder> chatHolders;
+    ToTypeChat toOtherChat;
 
-    public static Codec<ChatManager> CODEC = ChatHolder.CODEC.listOf().xmap(ChatManager::new, ChatManager::getChatHolders);
+    public static Codec<ChatManager> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.list(ChatHolder.CODEC).fieldOf("chatHolders").forGetter(ChatManager::getChatHolders),
+            ToTypeChat.CODEC.optionalFieldOf("toOtherChat").forGetter(ChatManager::getToOtherChat)
+    ).apply(instance, (chatHolders, toOtherChat)-> new ChatManager(chatHolders, toOtherChat.orElse(null))));
+
+//            ChatHolder.CODEC.listOf().xmap(ChatManager::new, ChatManager::getChatHolders);
+
+    public Optional<ToTypeChat> getToOtherChat() {
+        if(this.toOtherChat!= null){
+            return Optional.of(this.toOtherChat);
+        }
+        return Optional.empty();
+    }
 
     private List<ChatHolder> getChatHolders() {
         return chatHolders;
@@ -44,6 +52,11 @@ public class ChatManager extends SkillCooldownManager {
     public ChatManager(List<ChatHolder> chatHolders) {
         this.chatHolders = chatHolders;
         chatHolders.forEach(this::addSkill);
+    }
+
+    public ChatManager(List<ChatHolder> chatHolders, ToTypeChat toOtherChat) {
+        this.chatHolders = chatHolders;
+        this.toOtherChat = toOtherChat;
     }
 
 

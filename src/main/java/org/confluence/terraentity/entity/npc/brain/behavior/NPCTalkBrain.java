@@ -7,12 +7,15 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.chat.ChatHolder;
+import org.confluence.terraentity.entity.npc.chat.ChatManager;
 import org.confluence.terraentity.entity.npc.chat.NPCChat;
 import org.confluence.terraentity.init.TEAi;
 import org.confluence.terraentity.registries.chat.variant.SpriteChatElement;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NPCTalkBrain extends Behavior<AbstractTerraNPC> {
 
@@ -71,13 +74,25 @@ public class NPCTalkBrain extends Behavior<AbstractTerraNPC> {
                     npc.getBrain().setMemory(TEAi.MemoryModules.TALKING_NPC.get(), living);
                     npc.talkingBrainTick = this.talkTime;
                     living.talkingBrainTick = this.talkTime;
-                     // todo 根据npc类型设置对话内容
-                    living.setChat(new NPCChat(List.of(new SpriteChatElement(
-                            List.of(TerraEntity.space("textures/gui/sprites/random_gift.png")), 2f))));
-                    living.talkingTarget = npc;
-                    npc.talkingTarget = living;
-                    this.isPassive = false;
-                    return;
+
+                    ChatManager manager = living.getChatManager();
+                    if(manager != null) {
+                        AtomicBoolean isFound = new AtomicBoolean(false);
+                        manager.getToOtherChat().ifPresent(chat -> {
+                            ChatHolder holder = chat.getChatHolder(npc);
+                            if (holder.canChat(npc, holder)) {
+                                var ch = holder.getChat().generateChat(living.getRandom());
+                                living.setChat(ch);
+                                isFound.set(true);
+                                living.talkingTarget = npc;
+                                npc.talkingTarget = living;
+                                this.isPassive = false;
+                            }
+                        });
+                        if (isFound.get()) {
+                            return;
+                        }
+                    }
                 }else{
                     if(memory.get() == living){ // 被对话的对象
 

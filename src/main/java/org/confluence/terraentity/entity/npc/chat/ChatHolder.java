@@ -22,7 +22,7 @@ public class ChatHolder implements ISkill {
 
     public static Codec<ChatHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             NPCChat.CODEC.fieldOf("chat").forGetter(ChatHolder::getChat),
-            IChatCondition.TYPE_CODEC.fieldOf("condition").forGetter(ChatHolder::getCondition),
+            IChatCondition.TYPE_CODEC.optionalFieldOf("condition", null).forGetter(ChatHolder::getCondition),
             Codec.INT.fieldOf("maxCooldown").forGetter(ChatHolder::_maxCooldown)
     ).apply(instance, ChatHolder::new));
 
@@ -44,6 +44,10 @@ public class ChatHolder implements ISkill {
         this(new NPCChat(chatElements), condition, maxCooldown);
     }
 
+    public ChatHolder(List<IChatElement> chatElements, int maxCooldown) {
+        this(new NPCChat(chatElements), null, maxCooldown);
+    }
+
     /**
      * 单个npc表情
      * @param sprites 表情动图
@@ -54,15 +58,22 @@ public class ChatHolder implements ISkill {
         return new ChatHolder(new NPCChat(List.of(new SpriteChatElement(sprites, 2f))), condition, maxCooldown);
     }
 
+    public static ChatHolder NPCEmoji(List<ResourceLocation> sprites, int maxCooldown){
+        return new ChatHolder(new NPCChat(List.of(new SpriteChatElement(sprites, 2f))), null, maxCooldown);
+    }
+
     public NPCChat getChat() {
         return chat;
     }
 
-    public IChatCondition getCondition() {
+    private IChatCondition getCondition() {
         return condition;
     }
 
     public boolean canChat(AbstractTerraNPC npc, ChatHolder chatHolder) {
+        if(condition == null){
+            return true;
+        }
         return condition.canChat(npc, chatHolder);
     }
 
