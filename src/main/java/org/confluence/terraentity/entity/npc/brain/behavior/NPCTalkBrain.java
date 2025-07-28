@@ -82,7 +82,7 @@ public class NPCTalkBrain extends Behavior<AbstractTerraNPC> {
                         AtomicBoolean isFound = new AtomicBoolean(false);
                         manager.getToOtherChat().ifPresent(chat -> {
                             ChatHolder holder = chat.getChatHolder(npc);
-                            if (holder.canChat(npc, holder)) {
+                            if (holder != null && holder.canChat(npc, holder)) {
                                 var ch = holder.getChat().generateChat(living.getRandom());
                                 living.setChat(ch);
                                 isFound.set(true);
