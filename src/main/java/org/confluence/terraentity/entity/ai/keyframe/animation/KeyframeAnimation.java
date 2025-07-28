@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * <p> 2D 单值关键帧插值管理类
+ * <p> 1D 单值关键帧插值管理类
  * <p> 将一组关键帧的每个区间进行插值
  */
 public class KeyframeAnimation implements IKeyframeAnimation<Double> {

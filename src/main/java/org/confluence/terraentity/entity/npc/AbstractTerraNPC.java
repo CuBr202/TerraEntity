@@ -31,6 +31,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
@@ -42,7 +43,9 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.Tags;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
@@ -156,6 +159,18 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         // confluence mixin here
         return !this.hasCustomName(); // 交互以后不会被刷走
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level level) {
+        return new GroundPathNavigation(this, level){
+            @Override
+            public boolean isStableDestination(BlockPos pos) {
+                BlockPos blockpos = pos.below();
+                BlockState state = this.level.getBlockState(blockpos);
+                return state.isSolidRender(this.level, blockpos) || state.is(Tags.Blocks.GLASS_BLOCKS);
+            }
+        };
     }
 
     public void initName() {
@@ -480,7 +495,13 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     @SuppressWarnings("all")
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+
         if (!(player instanceof ServerPlayer serverPlayer)) {
+            if (stack.is(TEItems.HOUSE_DETECTOR.get())) {
+                return InteractionResult.PASS;
+            }
+
             return InteractionResult.SUCCESS;
         }
 
@@ -489,14 +510,12 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if (hand == InteractionHand.OFF_HAND) {
             return InteractionResult.SUCCESS;
         }
-        this.setCustomNameVisible(true);
 
-        ItemStack stack = player.getItemInHand(hand);
+        this.setCustomNameVisible(true);
 
         if (stack.is(TEItems.HOUSE_DETECTOR.get())) {
             return InteractionResult.PASS;
         }
-
 
         if (stack.getItem() instanceof ArmorItem armorItem) {
             // 如果是装备，则穿上

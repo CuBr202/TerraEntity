@@ -22,6 +22,7 @@ public class NPCTalkBrain extends Behavior<AbstractTerraNPC> {
     int talkTime; // 对话间隔时间
     int _talkTime;
     boolean isPassive; // 是否被动触发
+    int talkContinueTime; // 对话持续时间
 
     public NPCTalkBrain(int talkTime) {
         super(Map.of(
@@ -31,6 +32,7 @@ public class NPCTalkBrain extends Behavior<AbstractTerraNPC> {
         ), talkTime);
         this.talkTime = talkTime;
         this._talkTime = talkTime;
+        this.talkContinueTime = 200;
     }
 
     @Override
@@ -72,8 +74,8 @@ public class NPCTalkBrain extends Behavior<AbstractTerraNPC> {
                 if(memory.isEmpty()){
                     brain.setMemory(TEAi.MemoryModules.TALKING_NPC.get(), npc);
                     npc.getBrain().setMemory(TEAi.MemoryModules.TALKING_NPC.get(), living);
-                    npc.talkingBrainTick = this.talkTime;
-                    living.talkingBrainTick = this.talkTime;
+                    npc.talkingBrainTick = this.talkContinueTime;
+                    living.talkingBrainTick = this.talkContinueTime;
 
                     ChatManager manager = living.getChatManager();
                     if(manager != null) {

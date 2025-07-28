@@ -170,7 +170,7 @@ public class NPCAi {
                                 Pair.of(InteractWith.of(EntityType.CAT, 8, MemoryModuleType.INTERACTION_TARGET, speedModifier, 2), 1),
 //                                Pair.of(VillageBoundRandomStroll.create(speedModifier), 1),
                                 Pair.of(HomeNearbyStroll.create(speedModifier), 2), // 家附近随机游走
-                                Pair.of(RandomStroll.stroll(1.0f), 1), // 随机游走
+                                Pair.of(RandomStroll.stroll(1.0f, 5, 2), 1), // 随机游走
 
                                 Pair.of(SetWalkTargetFromLookTarget.create(speedModifier, 2), 1),
                                 Pair.of(new JumpOnBed(speedModifier), 1),
