@@ -1,8 +1,6 @@
-package org.confluence.terraentity.registries.chat;
+package org.confluence.terraentity.api.npc.chat;
 
 import net.minecraft.client.gui.Font;
-import org.confluence.terraentity.api.npc.chat.IChatElement;
-import org.confluence.terraentity.api.npc.chat.IChatRenderer;
 
 /**
  * 作为组合模式的复合结点

@@ -60,7 +60,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
                 target = new TextureTarget(200,200,false, false);
                 entity.textureTarget = target;
             }
-            target.setClearColor(0,1,0,0f);
+            target.setClearColor(0,1,0,1f);
 //            target.clear(true);
             target.bindWrite(true);
             GuiGraphics guiGraphics = new GuiGraphics(Minecraft.getInstance(), this.bufferSource);

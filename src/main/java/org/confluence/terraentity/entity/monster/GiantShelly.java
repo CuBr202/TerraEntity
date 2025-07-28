@@ -72,6 +72,13 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
                         e.moveControl.setWantedPosition(cachedTarget.x, cachedTarget.y, cachedTarget.z, 1.0f);
                     }
                 })
+                .onOver(e->{
+                    if(e.getTarget() == null) {
+                        skills.forceStartIndex(0);
+                        return;
+                    }
+                })
+
         ;
 
         shrinking_shell = new MobSkill<GiantShelly>(RawAnimation.begin().thenPlay("shrinking_shell"), 50, 0)
@@ -81,6 +88,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
                         e.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(armorAddition, 2, AttributeModifier.Operation.ADD_VALUE));
                     }
                 })
+
         ;
 
         turn = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("turn"), 50, 20)
@@ -95,7 +103,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
                     }
                 })
         ;
-        turn2 = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("turn2"), 20, 0)
+        turn2 = new MobSkill<GiantShelly>(RawAnimation.begin().thenPlay("turn2"), 15, 0)
 
 
         ;

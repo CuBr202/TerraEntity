@@ -50,19 +50,23 @@ public class ChatManager extends SkillCooldownManager {
     int forceCooldown = 50;
 
     public ChatManager(List<ChatHolder> chatHolders) {
-        this.chatHolders = chatHolders;
-        chatHolders.forEach(this::addSkill);
+        this(chatHolders, null);
     }
 
     public ChatManager(List<ChatHolder> chatHolders, ToTypeChat toOtherChat) {
         this.chatHolders = chatHolders;
         this.toOtherChat = toOtherChat;
+        chatHolders.forEach(this::addSkill);
+
     }
 
 
     public void setOwner(AbstractTerraNPC owner) {
         this.owner = owner;
         this.chatHolders.forEach(chatHolder -> chatHolder.setOwner(owner));
+        if(this.toOtherChat!= null){
+            toOtherChat.chatMap.values().forEach(e-> e.forEach(i->i.setOwner(owner)));
+        }
     }
 
     @Override

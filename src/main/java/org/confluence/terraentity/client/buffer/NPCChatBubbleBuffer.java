@@ -33,7 +33,7 @@ public class NPCChatBubbleBuffer extends AbstractBufferManager {
         if (instance == null) {
             synchronized (NPCChatBubbleBuffer.class) {
                 if (instance == null) {
-                    instance = new NPCChatBubbleBuffer(1000);
+                    instance = new NPCChatBubbleBuffer();
                 }
             }
         }
@@ -47,11 +47,10 @@ public class NPCChatBubbleBuffer extends AbstractBufferManager {
     public void addRenderData(BufferBuilder buffer, TextureTarget target, float progress, double dist) {
         renderQueue.add(new RenderData(buffer, target, progress, dist));
     }
-    /**
-     * @param refreshTime 刷新间隔，单位毫秒
-     */
-    public NPCChatBubbleBuffer(int refreshTime) {
-        super(refreshTime);
+
+
+    public NPCChatBubbleBuffer() {
+        super(1000);
     }
 
     @Override
@@ -87,6 +86,7 @@ public class NPCChatBubbleBuffer extends AbstractBufferManager {
                     VertexBuffer.unbind();
                     poseStack.popPose();
                 }
+//                data.target.blitToScreen(200, 200, false);
             }
 
 
