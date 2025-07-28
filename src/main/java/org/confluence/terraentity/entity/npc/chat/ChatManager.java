@@ -30,7 +30,7 @@ public class ChatManager extends SkillCooldownManager {
 
     public static Codec<ChatManager> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.list(ChatHolder.CODEC).fieldOf("chatHolders").forGetter(ChatManager::getChatHolders),
-            ToTypeChat.CODEC.optionalFieldOf("toOtherChat").forGetter(ChatManager::getToOtherChat)
+            ToTypeChat.CODEC.optionalFieldOf("toOtherChat").forGetter(i-> Optional.ofNullable(i.toOtherChat))
     ).apply(instance, (chatHolders, toOtherChat)-> new ChatManager(chatHolders, toOtherChat.orElse(null))));
 
 //            ChatHolder.CODEC.listOf().xmap(ChatManager::new, ChatManager::getChatHolders);

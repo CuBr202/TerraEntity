@@ -10,6 +10,7 @@ import org.confluence.terraentity.api.npc.chat.IChatCondition;
 import org.confluence.terraentity.registries.chat.variant.SpriteChatElement;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 实际上npc持有的单个对话信息，包含对话内容、触发条件和对话效果
@@ -22,9 +23,9 @@ public class ChatHolder implements ISkill {
 
     public static Codec<ChatHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             NPCChat.CODEC.fieldOf("chat").forGetter(ChatHolder::getChat),
-            IChatCondition.TYPE_CODEC.optionalFieldOf("condition", null).forGetter(ChatHolder::getCondition),
+            IChatCondition.TYPE_CODEC.optionalFieldOf("condition").forGetter(i-> Optional.ofNullable(i.getCondition())),
             Codec.INT.fieldOf("maxCooldown").forGetter(ChatHolder::_maxCooldown)
-    ).apply(instance, ChatHolder::new));
+    ).apply(instance, (chat, condition, maxCooldown)-> new ChatHolder(chat, condition.orElse(null), maxCooldown)));
 
     private Integer _maxCooldown() {
         return _maxCooldown;

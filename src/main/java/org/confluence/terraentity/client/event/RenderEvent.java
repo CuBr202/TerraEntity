@@ -1,8 +1,10 @@
 package org.confluence.terraentity.client.event;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.irisshaders.iris.pipeline.programs.ExtendedShader;
 import net.minecraft.client.Minecraft;
 
 import net.minecraft.client.model.EntityModel;
@@ -24,10 +26,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
+import org.confluence.terraentity.client.buffer.NPCChatBubbleBuffer;
+import org.confluence.terraentity.client.entity.renderer.mob.NPCRenderer;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.client.init.model.EntityBlockModelRegister;
 import org.confluence.terraentity.client.post.BrainTranslucent;
@@ -36,6 +41,7 @@ import org.confluence.terraentity.entity.boss.WallOfFleshMouth;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
+import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.item.BaseWhipItem;
 import org.confluence.terraentity.item.YoyosItem;
 import org.confluence.terraentity.utils.TEUtils;
@@ -67,11 +73,23 @@ public class RenderEvent {
         }
     }
 
+    public static boolean isIrisShader = false;
+    public static boolean isAfterSky = false;
     @SubscribeEvent
     public static void renderLevelStage(RenderLevelStageEvent event) {
         if(event.getStage()== RenderLevelStageEvent.Stage.AFTER_LEVEL){
+            isIrisShader = ModChecker.isIrisLoaded.get() && RenderSystem.getShader() instanceof ExtendedShader;
+
             BrainTranslucent.render(event);
             DebugBlocksHelper.Singleton().render(event);
+
+//            NPCRenderer.target.blitToScreen(100,100);
+            NPCChatBubbleBuffer.getInstance().render(event);
+            isAfterSky = false;
+        }else if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY){
+//            NPCChatBubbleBuffer.getInstance().refresh();
+
+            isAfterSky = true;
         }
     }
 

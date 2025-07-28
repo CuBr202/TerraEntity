@@ -15,7 +15,9 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.model.TerraprismaModel;
+import org.confluence.terraentity.client.event.RenderEvent;
 import org.confluence.terraentity.entity.summon.Terraprisma;
+import org.confluence.terraentity.integration.iris.IrisHelper;
 import org.jetbrains.annotations.NotNull;
 
 public class TerraprismaRenderer extends EntityRenderer<Terraprisma> {
@@ -98,7 +100,7 @@ public class TerraprismaRenderer extends EntityRenderer<Terraprisma> {
         if(RenderSystem.getShader() == null){
             return;
         }
-        if(ModList.get().isLoaded("iris") && RenderSystem.getShader() instanceof ExtendedShader) {
+        if(IrisHelper.isIrisShader()) {
 
             poseStack.pushPose();
             poseStack.scale(0.9f,0.9f,0.9f);

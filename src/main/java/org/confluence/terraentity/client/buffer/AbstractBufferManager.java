@@ -4,15 +4,18 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
+
+import java.util.function.Supplier;
 
 /**
  * 用于管理缓冲区的抽象类
  */
 public abstract class AbstractBufferManager {
-    private VertexBuffer vertexBuffer;
+    protected VertexBuffer vertexBuffer;
     protected long lastRefreshTime = 0;
     protected final int refreshInterval;
 
@@ -20,7 +23,7 @@ public abstract class AbstractBufferManager {
      * @param refreshTime 刷新间隔，单位毫秒
      */
     public AbstractBufferManager(int refreshTime) {
-        vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
+//        vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.refreshInterval = refreshTime;
     }
 
@@ -39,13 +42,16 @@ public abstract class AbstractBufferManager {
         if(vertexBuffer!= null){
             vertexBuffer.close();
         }
-        vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+        vertexBuffer = new VertexBuffer(VertexBuffer.Usage.DYNAMIC);
+        BufferBuilder buffer = getBufferBuilder();
 
         buildBuffer(buffer);
+        this.bind(buffer);
+    }
 
-        var build = buffer.build();
+    public void bind(BufferBuilder buffer){
+        MeshData build = buffer.build();
+
         if (build == null) {
             vertexBuffer = null;
         } else {
@@ -56,18 +62,25 @@ public abstract class AbstractBufferManager {
     }
 
 
+    public BufferBuilder getBufferBuilder(){
+        return Tesselator.getInstance().begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+    }
+
+
     public void render(RenderLevelStageEvent event){
         render(event.getPoseStack(), event.getModelViewMatrix(), Minecraft.getInstance().gameRenderer.getMainCamera().getPosition(), event.getProjectionMatrix());
 
     }
     public void render(PoseStack poseStack, Matrix4f modelMatrix, Vec3 playerPos, Matrix4f projectMatrix){
-        if(shouldRefresh())
-            refresh();
+        if(shouldRefresh()) {
+            this.refresh();
+
+        }
 
         if (vertexBuffer != null) {
 
             beforeRender();
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
+            RenderSystem.setShader(setShader());
 
             poseStack.pushPose();
             poseStack.mulPose(modelMatrix);
@@ -84,4 +97,14 @@ public abstract class AbstractBufferManager {
 
         }
     }
+
+    protected Supplier<ShaderInstance> setShader(){
+        return GameRenderer::getPositionColorShader;
+    }
+
+    public VertexBuffer getVertexBuffer() {
+        return vertexBuffer;
+    }
+
+
 }

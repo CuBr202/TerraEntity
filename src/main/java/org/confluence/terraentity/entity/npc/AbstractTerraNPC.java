@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.npc;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -115,6 +116,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
     ChatArranger chatArranger;
     ChatManager chatManager;
+    public TextureTarget textureTarget;
 
     public BoneStateMachine<BoneStates> leftArm;
     public BoneStateMachine<BoneStates> rightArm;
@@ -453,6 +455,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if(!level().isClientSide){
             if(this.chatManager != null) {
                 this.chatManager.update(1);
+//                if(this.tickCount % 50 == 0){ // todo debug
+//                    this.setChat(new NPCChat(List.of(new SpriteChatElement(List.of(TerraEntity.space("textures/gui/sprites/random_gift.png")), 2f))));
+//                }
             }
         }
     }
