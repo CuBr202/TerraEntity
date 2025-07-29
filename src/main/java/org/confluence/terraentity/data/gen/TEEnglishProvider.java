@@ -48,6 +48,8 @@ public class TEEnglishProvider extends LanguageProvider {
         add("title.terra_entity.npc_trade.task.dynamic_reward", "Dynamic Reward Task");
         add("title.terra_entity.npc_trade.task.progress", "Progress Task");
 
+        add("container.terra_entity.chester", "Chester");
+
 
 
         add("entity.terra_entity.mother_slime", "Mother Slime");

@@ -3,6 +3,7 @@ package org.confluence.terraentity.init;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import org.confluence.lib.common.PlayerContainer;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.attachment.ItemInHandTrailAttachment;
 import org.confluence.terraentity.attachment.SummonerAttachment;
@@ -19,5 +20,6 @@ public final class TEAttachments {
     public static final Supplier<AttachmentType<SummonerAttachment>> SENTRY_STORAGE = TYPES.register("sentry_storage", () -> AttachmentType.serializable(ins->new SummonerAttachment(SummonerAttachment.SummonerType.SENTRY)).copyOnDeath().build());
     public static final Supplier<AttachmentType<WeaponStorage>> WEAPON_STORAGE = TYPES.register("weapon_storage", () -> AttachmentType.serializable(WeaponStorage::new).copyOnDeath().build());
     public static final Supplier<AttachmentType<ItemInHandTrailAttachment>> TRAIL_STORAGE = TYPES.register("trail_storage", () -> AttachmentType.serializable(ItemInHandTrailAttachment::new).build());
+    public static final Supplier<AttachmentType<PlayerContainer>> CHESTER = TYPES.register("chester", () -> AttachmentType.serializable(()->new PlayerContainer(6)).build());
 
 }

@@ -26,6 +26,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("title.terra_entity.npc_trade.task.dynamic_reward", "动态奖励任务");
         add("title.terra_entity.npc_trade.task.progress", "进度任务");
 
+        add("container.terra_entity.chester", "切斯特");
+
         add(TEMonsterEntities.ICE_SLIME.get(), "冰冻史莱姆");
         add(TEMonsterEntities.BLUE_SLIME.get(), "蓝色史莱姆");
         add(TEMonsterEntities.RED_SLIME.get(), "红色史莱姆");
