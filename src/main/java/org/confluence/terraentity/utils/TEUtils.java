@@ -26,21 +26,19 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.api.entity.Boss;
-import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.api.entity.ISummonMob;
+import org.confluence.terraentity.config.ServerConfig;
+import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -434,8 +432,6 @@ public final class TEUtils {
 
     /**
      * 获取玩家视角下方块
-     * @param player
-     * @return
      */
     public static BlockPos getEyeBlockHitResult(Player player){
         final BlockHitResult result = getPlayerPOVHitResult(player.level(), player, ClipContext.Fluid.SOURCE_ONLY);
@@ -443,7 +439,7 @@ public final class TEUtils {
     }
 
     public static boolean isFTWWorld(ServerLevel level) {
-        return false; // confluence mixed here
+        return false; // confluence mixin here
     }
 
     /**
