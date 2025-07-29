@@ -227,8 +227,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEAnimals.BOOM_BUNNY.get(), "爆炸兔");
         add(TEAnimals.DUCK.get(), "鸭子");
         add(TEAnimals.BIRD.get(), "鸟");
-        add(TEAnimals.BLUE_JAY.get(), "冠蓝鹊");
-        add(TEAnimals.CARDINAL.get(), "红鹊");
+        add(TEAnimals.BLUE_JAY.get(), "冠蓝鸦");
+        add(TEAnimals.CARDINAL.get(), "红雀");
 
 
         // boss
@@ -297,8 +297,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.JEWEL_BUNNY_SPAWN_EGG.get(), "宝石兔刷怪蛋");
         add(TESpawnEggItems.DUCK_SPAWN_EGG.get(), "鸭子刷怪蛋");
         add(TESpawnEggItems.BIRD_SPAWN_EGG.get(), "鸟刷怪蛋");
-        add(TESpawnEggItems.BLUE_JAY_SPAWN_EGG.get(), "冠蓝鹊刷怪蛋");
-        add(TESpawnEggItems.CARDINAL_SPAWN_EGG.get(), "红鹊刷怪蛋");
+        add(TESpawnEggItems.BLUE_JAY_SPAWN_EGG.get(), "冠蓝鸦刷怪蛋");
+        add(TESpawnEggItems.CARDINAL_SPAWN_EGG.get(), "红雀刷怪蛋");
 
 
         // 召唤杖
