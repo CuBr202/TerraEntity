@@ -1,5 +1,6 @@
 package org.confluence.terraentity.event;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -10,10 +11,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.monster.ZombifiedPiglin;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -229,6 +228,15 @@ public class GameEntityEvent {
     @SubscribeEvent
     public static void mobFinalizeSpawn(FinalizeSpawnEvent event) {
         Mob mob = event.getEntity();
+
+        if(mob instanceof Enemy && event.getEntity().getRandom().nextFloat() >= ServerConfig.ENEMY_SPAWN_CHANCE.get()
+                && event.getSpawnType() == MobSpawnType.NATURAL){
+            if(ServerConfig.ENEMY_SPAWN_CHANCE_APPLY_ALL.get() || BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).getNamespace().equals(MODID)){
+                event.setSpawnCancelled(true);
+                return;
+            }
+        }
+
         RandomSource randomSource = mob.getRandom();
         if (mob instanceof DemonEye demonEye) {
             demonEye.setVariant(DemonEyeVariant.random(randomSource));

@@ -20,7 +20,8 @@ public class ServerConfig {
     public static ModConfigSpec.ConfigValue<Boolean> SPAWN_WITHOUT_LIGHT;
 
     public static ModConfigSpec.ConfigValue<Double> CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD;
-
+    public static ModConfigSpec.ConfigValue<Double> ENEMY_SPAWN_CHANCE;
+    public static ModConfigSpec.ConfigValue<Boolean> ENEMY_SPAWN_CHANCE_APPLY_ALL;
     public static ModConfigSpec init(){
         final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
@@ -64,7 +65,12 @@ public class ServerConfig {
         CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD = BUILDER
                 .comment("Chance to spawn slime on zombie head.")
                 .defineInRange("chance_to_spawn_slime_on_zombie_head", 0.05, 0, 1);
-
+        ENEMY_SPAWN_CHANCE = BUILDER
+                .comment("Chance to spawn a monster.")
+                .defineInRange("enemy_spawn_chance", 1D, 0, 1);
+        ENEMY_SPAWN_CHANCE_APPLY_ALL = BUILDER
+                .comment("Should the chance to spawn a monster apply to all monsters?")
+                .define("enemy_spawn_chance_apply_all", false);
         return BUILDER.build();
     }
 }

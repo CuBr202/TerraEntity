@@ -389,6 +389,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.monster_attributes_multiplier_damage", "Monster属性倍率-伤害");
         add("terra_entity.configuration.spawn_without_light", "无视光照生成怪物");
         add("terra_entity.configuration.chance_to_spawn_slime_on_zombie_head", "在僵尸头上生成史莱姆的几率");
+        add("terra_entity.configuration.enemy_spawn_chance_apply_all", "所有怪物的生成几率");
+        add("terra_entity.configuration.enemy_spawn_chance", "Terra Entity怪物生成几率");
 
 
         add("terra_entity.configuration.boss_bar_style", "BOSS血条样式");
