@@ -31,13 +31,13 @@ public class TEProjectileEntities {
             new SummonBeeStick(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<SkullProjectile>> SKULL = registerProj("skull_proj", SkullProjectile::new,0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<ParticleLineProj>> VILE_SPIT_PROJ = registerProj("vile_spit",(e, l)->
-            (ParticleLineProj) new ParticleLineProj(e,l).addEffect(new MobEffectInstance(MobEffects.HUNGER, 100)),0.5F,0.5F);
+            (ParticleLineProj) new ParticleLineProj(e,l).setCanBeHurt().addEffect(new MobEffectInstance(MobEffects.HUNGER, 100)),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<ParticleLineProj>> DARK_CASTER_PROJ = registerProj("dark_caster_proj",(e, l)->
-            new ParticleLineProj(e,l).setParticleOptions(ParticleTypes.SOUL),0.5F,0.5F);
+            (ParticleLineProj) new ParticleLineProj(e,l).setParticleOptions(ParticleTypes.SOUL).setCanBeHurt(),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<ParticleLineProj>> FIRE_IMP_PROJ = registerProj("fire_imp_proj",(e, l)->
-            (ParticleLineProj) new ParticleLineProj(e,l).setParticleOptions(ParticleTypes.FLAME).setEffectStrategy(PrefabEffect.of("set_fire", TEEffectStrategies.SET_FIRE_EFFECT)),0.5F,0.5F);
+            (ParticleLineProj) new ParticleLineProj(e,l).setParticleOptions(ParticleTypes.FLAME).setCanBeHurt().setEffectStrategy(PrefabEffect.of("set_fire", TEEffectStrategies.SET_FIRE_EFFECT)),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> HARPY_FEATURE_PROJ = registerProj("harpy_feature",(e, l)->
-            new LineProj(e,l).setTexture(TerraEntity.space("textures/entity/model/harpy_feather_projectile.png")),0.5F,0.5F);
+            new LineProj(e,l).setCanBeHurt().setTexture(TerraEntity.space("textures/entity/model/harpy_feather_projectile.png")),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<DemonScytheProj>> DEMON_SCYTHE_PROJ = registerProj("demon_scythe_proj",(e, l)->
             (DemonScytheProj) new DemonScytheProj(e,l, null).setTexture(TerraEntity.space("textures/entity/model/demon_scythe_projectile.png")),1.2F,1.2F);
 

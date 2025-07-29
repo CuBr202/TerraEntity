@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.ModRenderTypes;
@@ -40,12 +41,12 @@ public class NPCChatBubbleBuffer extends AbstractBufferManager {
         return instance;
     }
 
-    public record RenderData(BufferBuilder buffer, TextureTarget target, float progress, double dist){
+    public record RenderData(BufferBuilder buffer, TextureTarget target, float progress, int light){
 
     }
 
-    public void addRenderData(BufferBuilder buffer, TextureTarget target, float progress, double dist) {
-        renderQueue.add(new RenderData(buffer, target, progress, dist));
+    public void addRenderData(BufferBuilder buffer, TextureTarget target, float progress, int light) {
+        renderQueue.add(new RenderData(buffer, target, progress, light));
     }
 
 
@@ -78,7 +79,10 @@ public class NPCChatBubbleBuffer extends AbstractBufferManager {
                     IShaderInstance shader = (IShaderInstance) ModRenderTypes.Shaders.pixelStyleBlitShader;
                     shader.getTerra_entity$Progress().set(data.progress);
                     shader.getTerra_entity$PixelSize().set(32f);
-
+//                    int light = data.light;
+//                    light = Mth.clamp(Math.max((light & 0x0000f0) >> 4,(light & 0x0f00000)>> 20), 3, 15);
+//                    float l = light / 15f;
+//                    RenderSystem.setShaderColor(l, l,l,1f);
                     poseStack.pushPose();
 
                     BufferUploader.drawWithShader(meshData);
@@ -89,7 +93,7 @@ public class NPCChatBubbleBuffer extends AbstractBufferManager {
 //                data.target.blitToScreen(200, 200, false);
             }
 
-
+            RenderSystem.setShaderColor(1F,1F,1f,1f);
             afterRender(poseStack);
             this.renderQueue.clear();
             RenderSystem.setShader(()->oldShader);

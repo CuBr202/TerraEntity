@@ -5,6 +5,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
@@ -15,6 +17,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
+import org.confluence.terraentity.api.entity.IAttackableProjectile;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.data.enchantment.TEEnchantmentHelper;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
@@ -237,6 +240,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
             AABB aabb = new AABB(pos.x - range, pos.y - range, pos.z - range,
                     pos.x + range, pos.y + range, pos.z + range);
             for (var entity : level().getEntities(this, aabb, e -> e != getOwner())) {
+                IAttackableProjectile.tryHit(entity, getDamageSource());
 
                 // 某些鞭子禁止穿墙攻击
                 if (item != null && !item.canPenetrate && level().clip(new ClipContext(owner.getEyePosition(), entity.position().add(0, entity.getBbHeight(), 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner)).getType() != HitResult.Type.MISS
@@ -338,8 +342,15 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 return false;
             }
         }
-        actualHurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON,  owner), (float) damage * weepDamage);
+        actualHurter.hurt(getDamageSource(), (float) damage * weepDamage);
         return trigger;
+    }
+
+    protected DamageSource getDamageSource(){
+        if(this.getOwner() != null){
+            return TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON,  getOwner());
+        }
+        return damageSources().magic();
     }
 
     @Override

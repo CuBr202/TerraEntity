@@ -55,7 +55,6 @@ import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.chat.ChatArranger;
-import org.confluence.terraentity.entity.npc.chat.ChatHolder;
 import org.confluence.terraentity.entity.npc.chat.ChatManager;
 import org.confluence.terraentity.entity.npc.chat.NPCChat;
 import org.confluence.terraentity.entity.npc.house.House;
@@ -88,7 +87,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
- * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMood.Loader 心情系统}
+ * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMood 心情系统}，{@link ChatManager 对话系统}
  */
 public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc, ITradeHolder, IUseItemAnimatable<BoneStates>, CrossbowAttackMob {
 

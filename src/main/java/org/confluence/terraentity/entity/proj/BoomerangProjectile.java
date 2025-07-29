@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +24,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.entity.PartEntity;
+import org.confluence.terraentity.api.entity.IAttackableProjectile;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.data.component.SingleBooleanComponent;
 import org.confluence.terraentity.entity.util.trail.BoomerangTrail;
@@ -111,6 +113,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
                 hurter = part.getParent();
             }
             if(this.getOwner() instanceof LivingEntity owner && this.getOwner() != actualHurter) {
+                DamageSource source = this.damageSources().mobProjectile(this, owner);
                 if (hurter instanceof LivingEntity living && actualHurter.isAlive() && TEUtils.projectileCanHurtEntityTest.test(this, living)) {
                     penetrationCount--;
                     float damage = (float) owner.getAttributeValue(Attributes.ATTACK_DAMAGE) + modifier.damage - 1;
@@ -119,10 +122,13 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
                         data.applyAll((LivingEntity) this.getOwner(), living);
                     }
                     owner.setLastHurtMob(actualHurter);
-                    actualHurter.hurt(this.damageSources().mobProjectile(this, owner), damage);
+                    actualHurter.hurt(source, damage);
                     //击退
                     doKnockback(living);
                 }
+
+                IAttackableProjectile.tryHit(hurter, source);
+
                 if (!modifier.canPenetrate && penetrationCount <= 0 && modifier.forwardTick - tickCount > 10) {
                     if (!isBacking) {
                         backTime = this.tickCount;

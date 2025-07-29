@@ -19,14 +19,10 @@ public class MaidBoomerangAttackStrafingTask extends Behavior<EntityMaid> {
 
     public MaidBoomerangAttackStrafingTask() {
         super(ImmutableMap.of(
-                MemoryModuleType.WALK_TARGET,
-                MemoryStatus.VALUE_ABSENT,
-                MemoryModuleType.LOOK_TARGET,
-                MemoryStatus.REGISTERED,
-                MemoryModuleType.ATTACK_TARGET,
-                MemoryStatus.VALUE_PRESENT,
-                MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
-                MemoryStatus.VALUE_PRESENT),
+                MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT,
+                MemoryModuleType.LOOK_TARGET, MemoryStatus.REGISTERED,
+                MemoryModuleType.ATTACK_TARGET, MemoryStatus.VALUE_PRESENT,
+                MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES, MemoryStatus.VALUE_PRESENT),
                 1200);
     }
 

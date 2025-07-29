@@ -93,7 +93,7 @@ public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSumm
             double x = target.getX() - this.getX();
             double y = target.getY() + target.getEyeHeight() * 0.5f - this.getY();
             double z = target.getZ() - this.getZ();
-            proj.shoot(x,y,z, 1, v);
+            proj.shoot(x,y,z, 1F, v);
             level().addFreshEntity(proj);
         }
     }

@@ -36,6 +36,7 @@ import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.api.entity.IAttackableProjectile;
 import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
@@ -705,6 +706,11 @@ public final class TEUtils {
      * <h1>统一弹幕目标伤害过滤</h1>
      */
     public static BiPredicate<Projectile, Entity> projectileCanHurtEntityTest = (projectile, target)-> {
+
+        if(target instanceof IAttackableProjectile<?> projectile1 && projectile1.canBeAttacked()){
+            return true;
+        }
+
         if (!target.isAttackable() ||  target instanceof     Npc  || target instanceof ArmorStand) {
             return false;
         }
@@ -732,6 +738,10 @@ public final class TEUtils {
         Entity entity = projectile.getOwner();
         // 不能攻击主人
         if(entity == target) return false;
+
+        if(target instanceof IAttackableProjectile<?> projectile1 && projectile1.canBeAttacked()){
+            return true;
+        }
 
         if (!target.isAttackable()) {
             // 不可攻击的实体

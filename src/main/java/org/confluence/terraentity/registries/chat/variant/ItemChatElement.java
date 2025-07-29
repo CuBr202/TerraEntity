@@ -1,6 +1,8 @@
 package org.confluence.terraentity.registries.chat.variant;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.Font;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.client.gui.renderer.chat.element.ChatItemRenderer;
@@ -9,11 +11,28 @@ import org.confluence.terraentity.registries.chat.ChatProviderTypes;
 import org.confluence.terraentity.api.npc.chat.IChatElement;
 import org.confluence.terraentity.api.npc.chat.IChatRenderer;
 
+import java.util.Optional;
+
 public class ItemChatElement implements IChatElement<ItemStack> {
-    public static final MapCodec<ItemChatElement> MAPCODEC = ItemStack.CODEC.xmap(ItemChatElement::new, ItemChatElement::getContent).fieldOf("content");
+
+    public static final MapCodec<ItemChatElement> MAPCODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ItemStack.CODEC.fieldOf("content").forGetter(ItemChatElement::getContent),
+            Codec.FLOAT.optionalFieldOf("scale").forGetter(i-> i.scale)
+    ).apply(instance, (content, scale)-> new ItemChatElement(content, scale.orElse(1.0f))));
+
     ItemStack content;
+    Optional<Float> scale;
+
+    public float getScale() {
+        return scale.orElse(1.0f);
+    }
     public ItemChatElement(ItemStack content) {
         this.content = content;
+        this.scale = Optional.empty();
+    }
+    public ItemChatElement(ItemStack content, float scale) {
+        this.content = content;
+        this.scale = Optional.of(scale);
     }
 
     @Override

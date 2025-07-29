@@ -34,6 +34,7 @@ public class RangeShooter extends AbstractMonster {
     int phase = _phase;
     int _delay = 8;
     int delay = -1;
+    int lastPhase = _phase;
     Supplier<? extends EntityType<? extends BaseProj<?>>> projType;
 
     public RangeShooter(EntityType<? extends Monster> type, Level level, Supplier<? extends EntityType<? extends BaseProj<?>>> projType, AttributeBuilder builder) {
@@ -63,6 +64,7 @@ public class RangeShooter extends AbstractMonster {
             lookAt(target, 10, 70);
             this.moveControl.strafe(0.01f, 0.01f);
             if(phase == 180 || phase == 130 || phase == 80){
+                lastPhase = phase;
                 delay = _delay;
                 this.swing(InteractionHand.MAIN_HAND, true);
             }
@@ -99,7 +101,11 @@ public class RangeShooter extends AbstractMonster {
         if (getType() == TEMonsterEntities.FIRE_IMP.get() && pSource.is(DamageTypeTags.IS_FIRE)) {
             return false;
         }
-        return super.hurt(pSource, pAmount);
+        if(super.hurt(pSource, pAmount)){
+            this.phase = this.lastPhase;
+            return true;
+        }
+        return false;
     }
 
     public int getCurrentSwingDuration() {

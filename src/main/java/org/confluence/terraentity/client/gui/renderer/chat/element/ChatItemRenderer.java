@@ -19,6 +19,7 @@ public enum ChatItemRenderer implements IChatRenderer<ItemChatElement> {
     public void render(ItemChatElement chat, ChatArranger chatArranger, float x, float y, PoseStack poseStack, GuiGraphics guiGraphics, int packedLight, int packedOverlay, Level level, MultiBufferSource.BufferSource bufferSource) {
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(x + 6, y + 6,0f);
+        float scale = this.scale * chat.getScale();
         guiGraphics.pose().scale(-scale,-scale,-scale);
 //            guiGraphics.renderItem(Items.BOW.getDefaultInstance(), 0,0);
         Minecraft.getInstance().getItemRenderer().renderStatic(chat.getContent(), ItemDisplayContext.FIXED,

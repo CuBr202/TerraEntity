@@ -7,13 +7,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
+import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.npc.chat.IChatCondition;
 import org.confluence.terraentity.data.gen.AbstractExistCodecProvider;
 import org.confluence.terraentity.entity.npc.chat.ChatHolder;
 import org.confluence.terraentity.entity.npc.chat.ChatManager;
 import org.confluence.terraentity.entity.npc.chat.ToTypeChat;
 import org.confluence.terraentity.init.entity.TENpcEntities;
+import org.confluence.terraentity.registries.chat_condition.variant.ItemInHandChatCondition;
 import org.confluence.terraentity.registries.chat_condition.variant.MemoryStateCondition;
 import org.confluence.terraentity.registries.chat_condition.variant.WeatherChatCondition;
 
@@ -41,7 +44,8 @@ public class NPCChatProvider extends AbstractExistCodecProvider<ChatManager> {
                         List.of(TerraEntity.space("textures/gui/sprites/unknown.png")),
                         new WeatherChatCondition(Optional.of(true), Optional.of(false)),
                         1000
-                )
+                ),
+               ChatHolder.singleItem(Items.BOW.getDefaultInstance(), 600, IChatCondition.not(new ItemInHandChatCondition(Items.BOW)))
         ),new ToTypeChat(Map.of(
                 TENpcEntities.GUIDE.get(), List.of(ChatHolder.NPCEmoji(
                         List.of(TerraEntity.space("textures/gui/sprites/random_gift.png")),

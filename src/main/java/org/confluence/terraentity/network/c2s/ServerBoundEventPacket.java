@@ -5,6 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -25,13 +26,23 @@ import java.util.function.Consumer;
 
 public class ServerBoundEventPacket implements CustomPacketPayload{
     private enum TypeEnum {
-        SUMMON_SKELETRON, // 由于mixin，不能添加到handler
+        SUMMON_SKELETRON,
         MOUSE_LEFT_CLICK,
         MOUSE_RELEASE,
         WHEEL_UP,
         WHEEL_DOWN
     }
     static EnumMap<TypeEnum, Consumer<Player>> handlers = new EnumMap<>(ImmutableMap.<TypeEnum, Consumer<Player>>builder()
+            .put(TypeEnum.SUMMON_SKELETRON, (player)-> {
+                Vec3 pos = player.position();
+                if (((IPlayer) player).terra_entity$getTradeHolder() instanceof AbstractTerraNPC npc && npc.getType() == TENpcEntities.OLD_MAN.get()) {
+                    confluenceHook(npc);
+                    TEUtils.spawnEntity(TEBossEntities.SKELETRON.get(),
+                            (ServerLevel) player.level(),
+                            pos.add(TEUtils.sphere(10, (float) Math.random() * 3.14F, (float) Math.random() * 3.14F))
+                    );
+                }
+            })
             .put(TypeEnum.MOUSE_LEFT_CLICK, (player)-> {
                 player.getData(TEAttachments.WEAPON_STORAGE.get()).leftClicking = true;
                 ItemStack stack = player.getMainHandItem();
@@ -85,18 +96,9 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
             TypeEnum type = packet._type;
             if (handlers.containsKey(type)) {
                 handlers.get(type).accept(player);
-            } else if (type == TypeEnum.SUMMON_SKELETRON) {
-                Vec3 pos = player.position();
-                if (((IPlayer) player).terra_entity$getTradeHolder() instanceof AbstractTerraNPC npc && npc.getType() == TENpcEntities.OLD_MAN.get()) {
-                    confluenceHook(npc);
-                    Skeletron skeletron = TEBossEntities.SKELETRON.get().create(player.level());
-                    if (skeletron != null) {
-                        skeletron.setPos(pos.add(TEUtils.sphere(10, (float) Math.random() * 3.14F, (float) Math.random() * 3.14F)));
-                        player.level().addFreshEntity(skeletron);
-                    }
-                }
+            }else{
+                TerraEntity.LOGGER.warn("Unknown server-bound event packet type: {}", type);
             }
-
         });
     }
 

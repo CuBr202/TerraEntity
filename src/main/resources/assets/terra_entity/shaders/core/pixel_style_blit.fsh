@@ -40,7 +40,7 @@ void main() {
     if(dissolveFactor < Progress + edgeWidth) {
         // 计算过渡因子
         float transitionFactor = 1.0 - (Progress + edgeWidth - dissolveFactor) / edgeWidth;
-        // 颜色变
+        // 颜色变换
         color0.rgb *= transitionFactor * 0.5 + 0.5;
     }
 

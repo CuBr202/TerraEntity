@@ -3,10 +3,12 @@ package org.confluence.terraentity.entity.npc.chat;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.api.npc.chat.IChatElement;
 import org.confluence.terraentity.api.entity.ai.ISkill;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.api.npc.chat.IChatCondition;
+import org.confluence.terraentity.registries.chat.variant.ItemChatElement;
 import org.confluence.terraentity.registries.chat.variant.SpriteChatElement;
 
 import java.util.List;
@@ -61,6 +63,10 @@ public class ChatHolder implements ISkill {
 
     public static ChatHolder NPCEmoji(List<ResourceLocation> sprites, int maxCooldown){
         return new ChatHolder(new NPCChat(List.of(new SpriteChatElement(sprites, 2f))), null, maxCooldown);
+    }
+
+    public static ChatHolder singleItem(ItemStack itemStack, int maxCooldown, IChatCondition condition){
+        return new ChatHolder(new NPCChat(List.of(new ItemChatElement(itemStack, 2f))), condition, maxCooldown);
     }
 
     public NPCChat getChat() {

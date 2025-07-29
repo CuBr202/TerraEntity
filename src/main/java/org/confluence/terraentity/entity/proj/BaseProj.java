@@ -15,6 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
@@ -24,12 +25,9 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
-import org.confluence.terraentity.api.entity.ISummonMob;
+import org.confluence.terraentity.api.entity.*;
 import org.confluence.terraentity.init.TETags;
-import org.confluence.terraentity.api.entity.IGeneration;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
-import org.confluence.terraentity.api.entity.ITrackType;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +40,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 
-public abstract class BaseProj<T extends BaseProj<T>> extends Projectile implements ICollisionAttackEntity<T> {
+public abstract class BaseProj<T extends BaseProj<T>> extends Projectile implements ICollisionAttackEntity<T>, IAttackableProjectile<T> {
     public float damage = 1;
     private final Set<UUID> hitList = new HashSet<>();
     public int penetration =1;
@@ -56,6 +54,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     CollisionProperties collisionProperties = new CollisionProperties(1,1,0.5f);
     protected double accelerationPower = 0.1;
     protected float power = 0.4f;
+    protected boolean canBeAttacked = true;
 
     public CollisionProperties getCollisionProperties(){
         return collisionProperties;
@@ -117,6 +116,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     }
     public T setEffectStrategy(IEffectStrategy effectStrategy){
         this.effectStrategy = effectStrategy;
+        return (T) this;
+    }
+    public T setCanBeHurt(){
+        this.canBeAttacked = true;
         return (T) this;
     }
 
@@ -225,10 +228,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     public void onAddedToLevel(){
         super.onAddedToLevel();
         if(!level().isClientSide()){
-            if(getOwner()==null){
-                discard();
-                return;
-            }
+//            if(getOwner()==null){
+////                discard();
+//                return;
+//            }
             this.damage += defaultDamage();
         }
     }
@@ -241,6 +244,14 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         }else if(hurter instanceof PartEntity part && part.getParent() instanceof LivingEntity living && canHitEntity(living)){
             doHurt(living);
         }
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if(this.canBeAttacked() && !this.level().isClientSide()){
+            this.kill();
+        }
+        return super.hurt(source, amount);
     }
 
     public float defaultDamage(){
@@ -323,4 +334,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         super.onHitBlock(pResult);
         if(!this.level().isClientSide()) discard();
     }
+
+    public boolean canBeAttacked(){
+        return canBeAttacked;
+    }
+
 }

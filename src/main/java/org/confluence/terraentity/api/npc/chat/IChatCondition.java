@@ -5,6 +5,7 @@ import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.chat.ChatHolder;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.chat_condition.ChatConditionProvider;
+import org.confluence.terraentity.registries.chat_condition.variant.NotChatCondition;
 
 /**
  * npc 触发对话条件
@@ -17,7 +18,11 @@ public interface IChatCondition {
 
     Codec<IChatCondition> TYPE_CODEC = TERegistries.ChatConditionProviderRegistry.REGISTRY
             .byNameCodec()
-            .dispatch(IChatCondition::getProvider, ChatConditionProvider::codec);;
+            .dispatch(IChatCondition::getProvider, ChatConditionProvider::codec);
+
+    static NotChatCondition not(IChatCondition condition) {
+        return new NotChatCondition(condition);
+    }
 
 
 }

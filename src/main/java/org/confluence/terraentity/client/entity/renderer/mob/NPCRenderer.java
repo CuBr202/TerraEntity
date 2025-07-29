@@ -66,13 +66,13 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
             GuiGraphics guiGraphics = new GuiGraphics(Minecraft.getInstance(), this.bufferSource);
 
 
-            // 渲染阴影
+            // 渲染内容
             bubbleRenderer = ClientConfig.NPC_CHAT_BUBBLE_STYLE.get().getRenderer();
             bubbleRenderer.renderBubble(guiGraphics, chat, poseStack, entity.level(), this.bufferSource, scale, width, height, packedLight, OverlayTexture.NO_OVERLAY);
 
             guiGraphics.flush();
 
-                // 恢复之前的mp
+            // 恢复之前的mp
             RenderSystem.getModelViewMatrix().set(cache_m);
             RenderSystem.getProjectionMatrix().set(cache_p);
 
@@ -95,7 +95,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
             poseStack.scale(scale, scale, 1);
             poseStack.translate(0, height / 50 * 0.05f, 0);
 
-            renderChatBubble(poseStack.last().pose(), target, progress, Minecraft.getInstance().player.distanceToSqr(entity));
+            renderChatBubble(poseStack.last().pose(), target, progress, packedLight);
 
             poseStack.popPose();
         }
@@ -105,7 +105,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
     /**
      * 渲染聊天气泡Billboard
      */
-    private void renderChatBubble(Matrix4f viewMatrix, TextureTarget target, float progress, double distance) {
+    private void renderChatBubble(Matrix4f viewMatrix, TextureTarget target, float progress, int light) {
 
         BufferBuilder consumer = NPCChatBubbleBuffer.getInstance().getBufferBuilder();
 
@@ -114,7 +114,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
         consumer.addVertex(viewMatrix, 0.5f, 0.5f, 0).setUv(0, 1);
         consumer.addVertex(viewMatrix, -0.5f, 0.5f, 0).setUv(1, 1);
 
-        NPCChatBubbleBuffer.getInstance().addRenderData(consumer, target, progress, distance);
+        NPCChatBubbleBuffer.getInstance().addRenderData(consumer, target, progress, light);
 
     }
 
