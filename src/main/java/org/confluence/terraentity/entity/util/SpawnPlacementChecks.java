@@ -132,8 +132,8 @@ public class SpawnPlacementChecks {
         }
 
         int y = pPos.getY();
-        if (y < -55 || y > 0) {
-            return false; // 只能生成在 y = -55 到 y = 0 之间
+        if (y < -55 || y > -20) {
+            return false; // 只能生成在 y = -55 到 y = -20 之间
         }
 
         return true;
