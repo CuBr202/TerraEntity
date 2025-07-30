@@ -54,7 +54,7 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
                     Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
 //            poseStack.translate(0, 0, 0);
         }
-        adjustPose(poseStack, animatable, partialTick);
+        this.adjustPose(poseStack, animatable, partialTick);
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
 

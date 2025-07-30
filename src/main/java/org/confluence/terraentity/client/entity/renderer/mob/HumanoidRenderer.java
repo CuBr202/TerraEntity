@@ -13,9 +13,12 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.*;
 import org.confluence.terraentity.client.entity.model.GeoHumanoidModel;
 import org.confluence.terraentity.client.entity.renderer.AnimatorRenderer;
+import org.confluence.terraentity.client.event.RenderEvent;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.client.util.DefaultBoneBoundIdents;
 import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
+import org.confluence.terraentity.integration.iris.IrisHelper;
+import org.jetbrains.annotations.ApiStatus;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -50,6 +53,7 @@ public class HumanoidRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<Bon
     public static final String HELMET = DefaultBoneBoundIdents.HEAD_ARMOR_BONE_IDENT;
 
     protected float rightBoneRotX;
+    private boolean isFinished;
 
     public HumanoidRenderer(EntityRendererProvider.Context renderManager, GeoHumanoidModel<T> model, boolean ifRotX, float scale, float offsetY) {
         super(renderManager, model, ifRotX, scale, offsetY);
@@ -131,17 +135,22 @@ public class HumanoidRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<Bon
 
         });
 
-        // Add some held item rendering
-        addRenderLayer(new BlockAndItemGeoLayer<>(this) {
+        // 手持物品渲染
+        this.addRenderLayer(new BlockAndItemGeoLayer<>(this) {
+
+            // 获取手中物品
             @Nullable
             @Override
             protected ItemStack getStackForBone(GeoBone bone, T animatable) {
-                // 重置原骨骼的旋转，防止多次应用旋转
 
-                bone.setRotY(0);
-                bone.setRotZ(0);
-                bone.setRotX(0);
-                // Retrieve the items in the entity's hands for the relevant bone
+                // 防止iris渲染阴影导致场景中只有一个同类实体时骨骼旋转被重置（原因未知）
+                if(RenderEvent.isAfterSky) {
+                    // 重置原骨骼的旋转，防止geo多次应用旋转
+                    bone.setRotY(0);
+                    bone.setRotZ(0);
+                    bone.setRotX(0);
+                }
+
                 return switch (bone.getName()) {
                     case LEFT_HAND -> animatable.isLeftHanded() ?
                             animatable.getMainHandItem() : animatable.getOffhandItem();
@@ -221,6 +230,14 @@ public class HumanoidRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<Bon
             });
         }
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+
+    }
+
+    @Override
+    @ApiStatus.Internal
+    public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+
 
     }
 
