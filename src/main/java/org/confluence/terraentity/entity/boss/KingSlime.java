@@ -26,9 +26,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.color.FloatRGB;
 import org.confluence.lib.util.LibUtils;
-import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.ai.IBossFSM;
+import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
@@ -284,10 +284,6 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(MAX_HEALTHS);
         setHealth(MAX_HEALTHS);
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-
-        for (Player player : nearbyPlayers){
-            //todo music
-        }
     }
 
     private int getMaxSize() {
