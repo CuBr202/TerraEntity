@@ -110,7 +110,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> DEVOURER = TEEntities.registerEntity("devourer", (e, l) -> new BaseWarm(e, l, AbstractPrefab.WARM_BUILDER.get().setHealth(52).setAttackDamage(8).setArmor(2).setSpawnWithoutLight()), 2F, 2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> TOMB_CRAWLER = TEEntities.registerEntity("tomb_crawler", (e, l) -> new BaseWarm(e, l, AbstractPrefab.WARM_BUILDER.get().setHealth(16).setAttackDamage(4).setArmor(2)), 2F, 2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> GIANT_WORM = TEEntities.registerEntity("giant_worm", (e, l) -> new BaseWarm(e, l, AbstractPrefab.WARM_BUILDER.get().setHealth(31).setAttackDamage(9).setArmor(3)), 2F, 2F);
-    public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> LEECH = TEEntities.registerEntity("leech", (e, l) -> new BaseWarm(e, l, AbstractPrefab.WARM_BUILDER.get().setHealth(36).setAttackDamage(10).setArmor(4)), 2F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseWarm>> LEECH = TEEntities.registerEntity("leech", (e, l) -> new BaseWarm(e, l, AbstractPrefab.WARM_BUILDER.get().setHealth(36).setAttackDamage(10).setArmor(4).setMovementSpeed(1.45F)), 2F, 2F);
     // 卷壳怪
     public static final DeferredHolder<EntityType<?>, EntityType<GiantShelly>> GIANT_SHELLY = TEEntities.registerEntity("giant_shelly", GiantShelly::new, 0.8F, 0.8F);
     // 宁芙

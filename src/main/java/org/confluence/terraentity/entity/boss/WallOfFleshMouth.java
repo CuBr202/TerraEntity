@@ -5,6 +5,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -13,10 +14,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
-import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.monster.BaseWarm;
-import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
@@ -29,27 +29,27 @@ import software.bernie.geckolib.animation.RawAnimation;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("all")
 public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> implements Boss{
 
     public WallOfFlesh parentMob;
 
-    private static final float DAMAGE = 39f;//一阶段接触伤害
-    private int pendingSpawns = 0; // 待生成数量
-    private int spawnInterval = 0; // 间隔计时器
+    private static final float DAMAGE = 39f;
+    private int pendingSpawns = 0;
+    private int spawnInterval = 0;
 
-    private int summonCDAll = 1000; //仆从召唤cd
+    private static final int BASE_SUMMON_CD = 100;
+    private int summonCDAll = BASE_SUMMON_CD;
     private int summonCD = summonCDAll;
 
 
     public WallOfFleshMouth(EntityType<WallOfFleshMouth> entityType, Level level) {
         super(entityType, level,WallOfFlesh.MAX_HEALTHS,4);
-        //初始属性
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
         getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32f);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.playSound(TESounds.ROAR.get());
-        if(ServerConfig.BOSS_NO_PHYSICS.get())
-            this.noPhysics = true;
+        this.noPhysics = true;
         collisionProperties.attackInternal = 1;
         collisionProperties.detectInternal = 1;
     }
@@ -59,10 +59,25 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> im
     }
 
     @Override
-    public boolean canAttack(LivingEntity target) {
-        return super.canAttack(target) && !(target instanceof DemonEye);
+    public boolean canAttack(LivingEntity entity) {
+        if(this.parentMob == null)
+            return super.canAttack(entity);
+        else return this.parentMob.canAttack(entity);
     }
 
+    @Override
+    public float getYRot() {
+        if(this.parentMob!=null)return this.parentMob.getYRot();
+        return super.getYRot();
+    }
+
+    @Override
+    public float getXRot() {
+        if(this.parentMob!=null)return this.parentMob.getXRot();
+        return super.getXRot();
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if(this.getTarget() == null || !this.getTarget().isAlive() || this.parentMob == null || !this.parentMob.isAlive())return;
@@ -77,7 +92,7 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> im
         if(this.getHealth()!= parentMob.getHealth())this.setHealth(parentMob.getHealth());
 
         if (--summonCD <= 0 && this.canShoot(getTarget(), 1.0f)) {
-            summonCD = (int) (summonCDAll + summonCDAll * (0.1 + 0.3 * Math.random()));
+            summonCD = summonCDAll + random.nextInt(6) * 20;
             float healthPercent = parentMob.getHealthPercentage();
             int count;
             if (healthPercent > 0.5F) {
@@ -101,8 +116,20 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> im
     }
 
     private void spawnLeech(LivingEntity target) {
-        if (level() instanceof ServerLevel serverLevel) {
-            BaseWarm warm = new BaseWarm(TEMonsterEntities.LEECH.get(), this.level(), AbstractPrefab.WARM_BUILDER.get());
+        if (level() instanceof ServerLevel) {
+            ServerLevel serverLevel = (ServerLevel) level();
+            BaseWarm warm = new BaseWarm(TEMonsterEntities.LEECH.get(), this.level(), AbstractPrefab.WARM_BUILDER.get()){
+                @Override
+                public boolean hurt(DamageSource source, float amount) {
+                    if(source.is(DamageTypes.MOB_ATTACK) && source.getEntity().is(WallOfFleshMouth.this))
+                        return false;
+                    return super.hurt(source, amount);
+                }
+                @Override
+                public boolean canAttack(LivingEntity entity) {
+                    return WallOfFleshMouth.this.canAttack(entity);
+                }
+            };
             warm.setPos(position().add(getForward().normalize().scale(1)));
             warm.setTarget(target);
             serverLevel.addFreshEntity(warm);
@@ -110,13 +137,10 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> im
     }
 
     protected void registerGoals() {
-        //this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 45F));
-        //this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
-        //this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
     }
 
-    @Override // 受伤音效
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
 
     @Override
@@ -146,26 +170,25 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> im
         return true;
     }
 
-
     @Override
-    public void addSkills() {
-
-    }
+    public void addSkills() {}
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, state -> state.setAndContinue(RawAnimation.begin().thenLoop("bait"))));
     }
 
+    @Override
     public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
         return this.parentMob==null?super.addEffect(effectInstance, entity):this.parentMob.addEffect(effectInstance, entity);
     }
 
+    @Override
     public boolean canUsePortal(boolean allowPassengers) {
         return this.parentMob==null?super.canUsePortal(allowPassengers):this.parentMob.canUsePortal(allowPassengers);
-
     }
 
+    @Override
     public boolean isInvulnerableTo(DamageSource source) {
         if(source.is(DamageTypeTags.IS_FIRE)||source.is(DamageTypeTags.IS_DROWNING)){
             return true;

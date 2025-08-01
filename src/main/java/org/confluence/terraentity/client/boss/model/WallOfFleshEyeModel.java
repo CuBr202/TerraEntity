@@ -12,6 +12,7 @@ import software.bernie.geckolib.animation.Animation;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
+import org.confluence.terraentity.entity.boss.WallOfFlesh;
 
 @SuppressWarnings("removal")
 public class WallOfFleshEyeModel extends DefaultedEntityGeoModel<WallOfFleshEye> {
@@ -25,40 +26,56 @@ public class WallOfFleshEyeModel extends DefaultedEntityGeoModel<WallOfFleshEye>
         if (this.turnsHead) {
             GeoBone head = this.getAnimationProcessor().getBone(getHead());
             if (head != null) {
-                float currentYaw = head.getRotY();
-                float currentPitch = head.getRotX();
+                head.setRotX(0);
+                head.setRotY(0);
+                head.setRotZ(0);
 
                 if (animatable.hasActiveAttackTarget()) {
                     LivingEntity target = animatable.getActiveAttackTarget();
-
                     if (target == null || !target.isAlive() || target.isRemoved()) {
-                        head.setRotX(0);
-                        head.setRotY(0);
                         return;
                     }
 
-                    Vec3 entityPos = animatable.getEyePosition();
+                    WallOfFlesh parentMob = animatable.getParentMob();
+                    if (parentMob == null || !parentMob.isAlive()) {
+                        return;
+                    }
+
+                    Vec3 wallForward = parentMob.getForward();
                     Vec3 targetPos = target.getEyePosition();
-                    Vec3 direction = targetPos.subtract(entityPos);
+                    Vec3 entityPos = animatable.getEyePosition();
 
-                    double horizontalDistance = Math.sqrt(direction.x * direction.x + direction.z * direction.z);
+                    // 计算到目标的方向向量
+                    Vec3 toTarget = targetPos.subtract(entityPos);
+                    
+                    // 计算水平距离
+                    double horizontalDistance = Math.sqrt(toTarget.x * toTarget.x + toTarget.z * toTarget.z);
 
-                    // 计算Yaw
-                    float targetYaw = (float) -Math.toDegrees(Math.atan2(direction.z, direction.x)) - 90.0f;;
-                    targetYaw = Mth.wrapDegrees(targetYaw);
+                    if (horizontalDistance > 0.001) {
+                        // 计算俯仰角（上下看的角度）
+                        float pitch = (float) Math.toDegrees(Math.atan2(-toTarget.y, horizontalDistance));
+                        pitch = Mth.clamp(pitch, -45.0F, 45.0F);
 
-                    float lerpSpeed = 0.47F; // 插值速度
+                        // 计算偏航角（左右看的角度）
+                        float yaw = (float) Math.toDegrees(Math.atan2(toTarget.z, toTarget.x));
+                        
+                        // 计算墙体的偏航角
+                        float wallYaw = (float) Math.toDegrees(Math.atan2(wallForward.z, wallForward.x));
+                        
+                        // 计算相对于墙体的角度差
+                        float relativeYaw = yaw - wallYaw;
+                        relativeYaw = Mth.wrapDegrees(relativeYaw);
+                        
+                        // 限制头部转动范围
+                        relativeYaw = Mth.clamp(relativeYaw, -60.0F, 60.0F);
 
-                    // 计算俯仰角
-                    float targetPitch = (float) Math.toDegrees(Math.atan2(direction.y, horizontalDistance));
-                    targetPitch = Mth.clamp(targetPitch, -89.9F, 89.9F); // 限制俯仰范围
+                        // 转换为弧度并应用旋转
+                        float finalYaw = relativeYaw * 0.017453292F;
+                        float finalPitch = pitch * 0.017453292F;
 
-                    // 使用角度差值函数平滑过渡
-                    float newYaw = Mth.rotLerp(lerpSpeed, currentYaw, targetYaw);
-                    float newPitch = Mth.lerp(lerpSpeed, currentPitch, targetPitch);
-
-                    head.setRotY((float) Math.toRadians(newYaw));
-                    head.setRotX((float) Math.toRadians(newPitch));
+                        head.setRotY(-finalYaw);
+                        head.setRotX(-finalPitch);
+                    }
                 }
             }
         }

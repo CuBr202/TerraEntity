@@ -20,10 +20,12 @@ public class TrailProjectile extends LineProj {
     protected Vec3 posO = Vec3.ZERO;
     public TrailProjectile(EntityType<TrailProjectile> type, Level level) {
         super(type, level);
+        this.setNoGravity(true);
+        this.setExistTick(20*8);
     }
 
     public TrailProjectile(LivingEntity shooter, int trailColor) {
-        super(TEProjectileEntities.TRAIL_PROJECTILE.get(),shooter.level());
+        this(TEProjectileEntities.TRAIL_PROJECTILE.get(),shooter.level());
         setTrailColor(trailColor);
     }
 
@@ -42,6 +44,7 @@ public class TrailProjectile extends LineProj {
         super.tick();
     }
 
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_TRAIL_COLOR, 0xFFFFFF);
@@ -55,15 +58,18 @@ public class TrailProjectile extends LineProj {
         return entityData.get(DATA_TRAIL_COLOR);
     }
 
+    @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("TrailColor", getTrailColor());
     }
 
+    @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         setTrailColor(tag.getInt("TrailColor"));
     }
+
     public List<Vec3> getTrails() {
         return trails;
     }

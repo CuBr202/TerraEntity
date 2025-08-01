@@ -8,6 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -38,13 +39,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements Boss {
-    public static final float MAX_HEALTHS = 3068f;
-    private static final float DAMAGE = 39f;//接触伤害
+    public static final float MAX_HEALTHS = 3096;
+    private static final float DAMAGE = 39f;
 
-    static float moveSpeedBase = 0.15f;//移动速度
+    static float moveSpeedBase = 0.15f;
 
-    boolean genSegments = true;//是否生成体节
-    int genTick = 10;//生成体节延迟
+    boolean genSegments = true;
+    int genTick = 20;
     boolean shouldMove = true;
 
     float inverseFactor = Mth.clamp(0.5F - getHealthPercentage(),0.0F,1.0F);
@@ -54,11 +55,11 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
     public AABB insideCollisionBox;
     public AABB outsideCollisionBox;
 
-    private int gridSizeX = 15;
-    private int gridSizeY = 10;
+    private final int gridSizeX = 15;
+    private final int gridSizeY = 10;
     public float gridSpacing = 15.0f;
 
-    private static int summonCDAll = 1200; //仆从召唤cd
+    private static final int summonCDAll = 1200; //饿鬼召唤cd
     private int summonCD = summonCDAll;
 
     private static final double FINISH_LINE_DISTANCE = 2000;
@@ -93,172 +94,234 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
     private void genGridWall() {
         if (!this.level().isClientSide) {
             Vec3 baseOffset = this.getForward().scale(7.5F);
-            boolean[][] eyeMarkers = new boolean[gridSizeX][gridSizeY];
-            boolean[][] mouthMarkers = new boolean[gridSizeX][gridSizeY];
-            boolean[][] entityMarkers = new boolean[gridSizeX][gridSizeY];
-
-            // 眼睛生成逻辑
-            Map<Integer, List<Double>> eyeYPositions = new HashMap<>();
-            for (int x = 0; x < gridSizeX; x++) {
-                for (int y = 0; y < gridSizeY; y++) {
-                    double offsetX = (random.nextDouble() - 0.5) * gridSpacing * 0.2; // X轴±20%偏移
-                    double offsetY = (random.nextDouble() - 0.5) * gridSpacing * 0.2; // Y轴±20%偏移
-
-                    Vec3 eyeBasePos;
-                    if (isMovingAlongX()) {
-                        eyeBasePos = new Vec3(
-                                0,  // X位置固定
-                                y * gridSpacing + offsetY,            // Y方向偏移
-                                (x - gridSizeX / 2.0) * gridSpacing                            // Z方向偏移
-                        ).add(baseOffset);
-                    } else {
-                        eyeBasePos = new Vec3(
-                                (x - gridSizeX / 2.0) * gridSpacing + offsetX,  // X方向偏移
-                                y * gridSpacing + offsetY,                      // Y方向偏移
-                                0                                              // Z位置固定
-                        ).add(baseOffset);
-                    }
-
-                    if (isValidEyePosition(x, y, eyeMarkers)) {
-                        WallOfFleshEye eye = TEUtils.spawnEntity(()->new WallOfFleshEye(level()), (ServerLevel) level(), eyeBasePos);
-                        if (eye != null) {
-                            addChildSegment(eye, eyeBasePos);
-                            eye.setYRot(this.getYRot());
-                            eye.setParent(this);
-                            eyeMarkers[x][y] = true;
-                            eyeYPositions.computeIfAbsent(x, k -> new ArrayList<>())
-                                    .add(eyeBasePos.y);
-                        }
-
-                    }
+            
+            // 四叉树生成参数
+            final int MAX_DEPTH = 5; // 减少深度
+            final double EYE_CHANCE = 0.8; // 眼睛生成概率
+            final double MOUTH_CHANCE = 0.4; // 嘴巴生成概率
+            final double HUNGRY_CHANCE = 0.2; // 饿鬼生成概率
+            final double SUBDIVISION_CHANCE = 0.85; // 细分概率
+            
+            // 存储生成的位置
+            List<Vec3> eyePositions = new ArrayList<>();
+            List<Vec3> mouthPositions = new ArrayList<>();
+            List<Vec3> hungryPositions = new ArrayList<>();
+            
+            // 使用四叉树生成眼睛、嘴巴和饿鬼位置
+            generateAllEntitiesQuadTree(0, 0, gridSizeX, gridSizeY, 0, MAX_DEPTH, 
+                                      EYE_CHANCE, MOUTH_CHANCE, HUNGRY_CHANCE, SUBDIVISION_CHANCE,
+                                      eyePositions, mouthPositions, hungryPositions, baseOffset);
+            
+            // 额外在眼睛之间生成嘴巴
+            generateMouthsBetweenEyes(eyePositions, mouthPositions, baseOffset);
+            
+            // 生成眼睛
+            for (Vec3 eyePos : eyePositions) {
+                WallOfFleshEye eye = TEUtils.spawnEntity(() -> new WallOfFleshEye(level()), (ServerLevel) level(), eyePos);
+                if (eye != null) {
+                    addChildSegment(eye, eyePos);
+                    eye.setYRot(this.getYRot());
+                    eye.setParent(this);
                 }
             }
-            // 嘴巴生成逻辑
-            eyeYPositions.forEach((gridX, yCoords) -> {
-                Collections.sort(yCoords);
-                for (int i = 0; i < yCoords.size() - 1; i++) {
-                    if (random.nextDouble() < 2.0 / 3) {
-                        double midY = (yCoords.get(i) + yCoords.get(i + 1)) / 2.0;
-                        int gridY = (int) (midY / gridSpacing);
-
-                        double offsetX = (random.nextDouble() - 0.5) * gridSpacing * 0.2; // X轴±20%偏移
-                        double offsetY = (random.nextDouble() - 0.5) * gridSpacing * 0.2; // Y轴±20%偏移
-
-                        Vec3 mouthPos;
-                        if (isMovingAlongX()) {
-                            mouthPos = new Vec3(
-                                    0,
-                                    midY,
-                                    (gridX - gridSizeX / 2.0) * gridSpacing                          // Z方向偏移
-                            ).add(baseOffset);
-                        } else {
-                            mouthPos = new Vec3(
-                                    (gridX - gridSizeX / 2.0) * gridSpacing,
-                                    midY,
-                                    0                                           // Z位置固定
-                            ).add(baseOffset);
-                        }
-
-                        WallOfFleshMouth mouth = TEUtils.spawnEntity(()->new WallOfFleshMouth(level()), (ServerLevel)level(), mouthPos);
+            
+            // 生成嘴巴
+            for (Vec3 mouthPos : mouthPositions) {
+                WallOfFleshMouth mouth = TEUtils.spawnEntity(() -> new WallOfFleshMouth(level()), (ServerLevel) level(), mouthPos);
                         if (mouth != null) {
                             addChildSegment(mouth, mouthPos);
                             mouth.parentMob = this;
                             mouth.setYRot(this.getYRot());
-                        }
-
-                        if (gridY >= 0 && gridY < gridSizeY) {
-                            mouthMarkers[gridX][gridY] = true;
-                            entityMarkers[gridX][gridY] = eyeMarkers[gridX][gridY] || mouthMarkers[gridX][gridY];
-                        }
-
-                    }
                 }
-            });
-            // 饿鬼生成逻辑
-            for (int x = 0; x < gridSizeX; x++) {
-                for (int y = 0; y < gridSizeY; y++) {
-                    Vec3 theHungryPos;
-                    if (isMovingAlongX()) {
-                        theHungryPos = new Vec3(
-                                0,
-                                y * gridSpacing,
-                                (x - gridSizeX / 2.0) * gridSpacing
-                        ).add(baseOffset);
-                    } else {
-                        theHungryPos = new Vec3(
-                                (x - gridSizeX / 2.0) * gridSpacing,
-                                y * gridSpacing,
-                                0
-                        ).add(baseOffset);
-
-                    }
-                    if (!this.level().isClientSide() && !eyeMarkers[x][y] && !mouthMarkers[x][y]) {
-                        TheHungry hungry = TEUtils.spawnEntity(()->new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),new AbstractPrefab(60,2,15,32,0.75f,1).getPrefab()) {
+            }
+            
+            // 生成饿鬼
+            for (Vec3 hungryPos : hungryPositions) {
+                TheHungry hungry = TEUtils.spawnEntity(() -> new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(), 
+                    new AbstractPrefab(60, 2, 15, 32, 0.75f, 1).getPrefab()) {
                             @Override
                             protected boolean shouldDropLoot() {
                                 return false;
                             }
-                        }, (ServerLevel) level(), theHungryPos);
+                }, (ServerLevel) level(), hungryPos);
 
                         if (hungry != null) {
-                            addChildSegment(hungry, theHungryPos);
-                            this.theHungryMap.put(theHungryPos, hungry);
+                    addChildSegment(hungry, hungryPos);
+                    this.theHungryMap.put(hungryPos, hungry);
                             hungry.minion_setOwner(this);
                             hungry.setYRot(this.getYRot());
-                            hungry.setInitPos(this.position().add(theHungryPos).toVector3f());
-                        }
-
-                    }
+                    hungry.setInitPos(this.position().add(hungryPos).toVector3f());
                 }
             }
+            
             Boss.sendBossSpawnMessage(this);
         }
     }
 
-    // 间隔验证方法（曼哈顿距离）
-    private boolean isValidEyePosition(int x, int y, boolean[][] eyeGrid) {
-        final int BASE_RADIUS_X = 3;
-        final int BASE_RADIUS_Y = 2;
-        final double DENSITY_FACTOR = 0.47;
-        final RandomSource rand = this.random;
+    //四叉树
 
-        int dynamicRadiusY = BASE_RADIUS_Y + rand.nextInt(1);
+    private void generateAllEntitiesQuadTree(int x, int y, int width, int height, int depth, int maxDepth,
+                                           double eyeChance, double mouthChance, double hungryChance, double subdivisionChance,
+                                           List<Vec3> eyePositions, List<Vec3> mouthPositions, List<Vec3> hungryPositions, Vec3 baseOffset) {
 
-        int verticalJitter = rand.nextInt(2);
+        if (width <= 0 || height <= 0) {
+            return;
+        }
 
-        boolean earlyExit = false;
+        int centerX = x + width / 2;
+        int centerY = y + height / 2;
 
-        // 非对称检测区域循环
-        outer:
-        for(int dx = -BASE_RADIUS_X; dx <= BASE_RADIUS_X; dx++) {
-            // 30%概率提前退出横向检测
-            if(rand.nextDouble() < 0.3) break outer;
+        double maxOffset = gridSpacing * 0.8;
+        double offsetX = (random.nextDouble() - 0.5) * maxOffset;
+        double offsetY = (random.nextDouble() - 0.5) * maxOffset;
 
-            for(int dy = -dynamicRadiusY; dy <= dynamicRadiusY; dy++) {
-                int jitteredDy = dy + verticalJitter;
+        Vec3 worldPos;
+        if (isMovingAlongX()) {
+            worldPos = new Vec3(
+                0,
+                centerY * gridSpacing + offsetY,
+                (centerX - gridSizeX / 2.0) * gridSpacing + offsetX
+            ).add(baseOffset);
+        } else {
+            worldPos = new Vec3(
+                (centerX - gridSizeX / 2.0) * gridSpacing + offsetX,
+                centerY * gridSpacing + offsetY,
+                0
+            ).add(baseOffset);
+        }
 
-                double distanceX = Math.abs(dx) * (0.9 + rand.nextDouble()*0.2);
-                double distanceY = Math.abs(jitteredDy) * (1.0 - rand.nextDouble()*0.6);
+        boolean shouldSubdivide = depth < maxDepth && 
+                                width > 1 && height > 1 && 
+                                random.nextDouble() < subdivisionChance;
 
-                if((distanceX*distanceX)/(BASE_RADIUS_X*BASE_RADIUS_X*2) +(distanceY*distanceY)/(dynamicRadiusY*dynamicRadiusY) < 1)
-                {
-                    int nx = x + dx;
-                    int ny = y + jitteredDy;
+        if (depth < 3 && random.nextDouble() < 0.95) {
+            shouldSubdivide = true;
+        }
+        
+        if (shouldSubdivide) {
+            int halfWidth = width / 2;
+            int halfHeight = height / 2;
 
-                    if(nx >=0 && nx < eyeGrid.length && ny >=0 && ny < eyeGrid[0].length) {
-                        if(eyeGrid[nx][ny]) {
-                            double verticalDecay = 1.0 - (distanceY / (dynamicRadiusY * 1.2));
-                            if(rand.nextDouble() < DENSITY_FACTOR * verticalDecay) {
-                                earlyExit = true;
-                                break outer;
-                            }
-                        }
+            generateAllEntitiesQuadTree(x, y, halfWidth, halfHeight, depth + 1, maxDepth,
+                                      eyeChance, mouthChance, hungryChance, subdivisionChance * 0.95,
+                                      eyePositions, mouthPositions, hungryPositions, baseOffset);
+            
+            generateAllEntitiesQuadTree(x + halfWidth, y, width - halfWidth, halfHeight, depth + 1, maxDepth,
+                                      eyeChance, mouthChance, hungryChance, subdivisionChance * 0.95,
+                                      eyePositions, mouthPositions, hungryPositions, baseOffset);
+            
+            generateAllEntitiesQuadTree(x, y + halfHeight, halfWidth, height - halfHeight, depth + 1, maxDepth,
+                                      eyeChance, mouthChance, hungryChance, subdivisionChance * 0.95,
+                                      eyePositions, mouthPositions, hungryPositions, baseOffset);
+            
+            generateAllEntitiesQuadTree(x + halfWidth, y + halfHeight, width - halfWidth, height - halfHeight, depth + 1, maxDepth,
+                                      eyeChance, mouthChance, hungryChance, subdivisionChance * 0.95,
+                                      eyePositions, mouthPositions, hungryPositions, baseOffset);
+        } else {
+            double rand = random.nextDouble();
+
+            boolean hasConflict = false;
+            double conflictDistance = gridSpacing * 0.6;
+
+            for (Vec3 existingPos : eyePositions) {
+                if (existingPos.distanceToSqr(worldPos) < conflictDistance * conflictDistance) {
+                    hasConflict = true;
+                    break;
+                }
+            }
+            
+            if (!hasConflict) {
+                for (Vec3 existingPos : mouthPositions) {
+                    if (existingPos.distanceToSqr(worldPos) < conflictDistance * conflictDistance) {
+                        hasConflict = true;
+                        break;
                     }
                 }
             }
+            
+            if (!hasConflict) {
+                for (Vec3 existingPos : hungryPositions) {
+                    if (existingPos.distanceToSqr(worldPos) < conflictDistance * conflictDistance) {
+                        hasConflict = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (!hasConflict) {
+                if (rand < eyeChance) {
+                    eyePositions.add(worldPos);
+                } else if (rand < eyeChance + mouthChance) {
+                    mouthPositions.add(worldPos);
+                } else if (rand < eyeChance + mouthChance + hungryChance) {
+                    hungryPositions.add(worldPos);
+                }
+            }
         }
-        return !earlyExit;
     }
+    
+    /**
+     * 在上下相邻且空间足够的眼睛中间生成嘴巴
+     */
+    private void generateMouthsBetweenEyes(List<Vec3> eyePositions, List<Vec3> mouthPositions, Vec3 baseOffset) {
+        // 按网格X坐标分组眼睛
+        Map<Integer, List<Vec3>> eyesByGridX = new HashMap<>();
+        
+        for (Vec3 eyePos : eyePositions) {
+            int gridX;
+            if (isMovingAlongX()) {
+                gridX = (int) Math.round((eyePos.z - baseOffset.z) / gridSpacing + gridSizeX / 2.0);
+            } else {
+                gridX = (int) Math.round((eyePos.x - baseOffset.x) / gridSpacing + gridSizeX / 2.0);
+            }
+            
+            if (gridX >= 0 && gridX < gridSizeX) {
+                eyesByGridX.computeIfAbsent(gridX, k -> new ArrayList<>()).add(eyePos);
+            }
+        }
+
+        eyesByGridX.forEach((gridX, eyesInColumn) -> {
+            eyesInColumn.sort((a, b) -> Double.compare(a.y, b.y));
+            
+            for (int i = 0; i < eyesInColumn.size() - 1; i++) {
+                Vec3 eye1 = eyesInColumn.get(i);
+                Vec3 eye2 = eyesInColumn.get(i + 1);
+
+                double distance = Math.abs(eye2.y - eye1.y);
+                if (distance >= gridSpacing * 1.5) {
+                    double midY = (eye1.y + eye2.y) / 2.0;
+                    
+                    Vec3 mouthPos;
+        if (isMovingAlongX()) {
+                        mouthPos = new Vec3(
+                0,
+                            midY,
+                            (gridX - gridSizeX / 2.0) * gridSpacing
+            ).add(baseOffset);
+        } else {
+                        mouthPos = new Vec3(
+                            (gridX - gridSizeX / 2.0) * gridSpacing,
+                            midY,
+                0
+            ).add(baseOffset);
+        }
+
+        boolean hasConflict = false;
+                    for (Vec3 existingMouth : mouthPositions) {
+                        if (existingMouth.distanceToSqr(mouthPos) < gridSpacing * gridSpacing * 0.5) {
+                hasConflict = true;
+                break;
+            }
+        }
+        
+                    if (!hasConflict && random.nextDouble() < 0.8) {
+                        mouthPositions.add(mouthPos);
+                    }
+                }
+            }
+        });
+    }
+
 
     @Override
     public boolean isPushable() {
@@ -268,20 +331,6 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
     @Override
     public boolean isPickable() {
         return false;
-    }
-
-    @Override
-    public Vec2 getRotationVector() {
-        // 标准化YRot到0°或180°
-       //float originalYaw = this.getYRot();
-       //float normalizedYaw = (originalYaw + 180) % 360;
-       //if (normalizedYaw < 0) normalizedYaw += 360;
-       //normalizedYaw -= 180; // 范围[-180, 180)
-       //
-       //float alignedYaw = (normalizedYaw >= -90 && normalizedYaw < 90) ? 0 : 180;
-       //
-       // return new Vec2(this.getXRot(), alignedYaw);
-        return new Vec2(this.getXRot(), this.getYRot());
     }
 
     public boolean isMovingAlongX() {
@@ -300,7 +349,7 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
             case EAST -> this.setYRot(0.0F);    // 东: 0°
             case SOUTH -> this.setYRot(90.0F);   // 南: 90°
             case WEST -> this.setYRot(180.0F);   // 西: 180°
-            case NORTH -> this.setYRot(270.0F);  // 北: 270° (或 -90°)
+            case NORTH -> this.setYRot(270.0F);  // 北: 270°
             default -> throw new IllegalArgumentException("Invalid direction: " + direction);
         }
     }
@@ -324,10 +373,6 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
             } else if (child instanceof WallOfFleshEye || child instanceof WallOfFleshMouth) {
                 child.setPos(childPos.x, childPos.y, childPos.z);
             }
-            if (child instanceof WallOfFleshMouth || child instanceof WallOfFleshEye) {
-                child.setYRot(this.getYRot());
-                child.setXRot(this.getXRot());
-            }
         }
     }
 
@@ -338,14 +383,6 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
         this.noCulling = true;
         this.setNoGravity(true);
         double summonDir = 50;
-        Direction[] horizontalDirections = {Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH};
-        Direction randomDir = horizontalDirections[this.random.nextInt(horizontalDirections.length)];
-        this.setYRot(randomDir.toYRot());
-        //this.setForward(randomDir);
-        //this.setForward(Direction.SOUTH);
-        //this.setForward(Direction.NORTH);
-        //this.setForward(Direction.EAST);
-        this.setForward(Direction.WEST);
 
         Vec3 summonPos = new Vec3(this.position().x, this.level().getMinBuildHeight(), this.position().z).add(getForward().scale(-summonDir));
         this.moveTo(summonPos);
@@ -392,13 +429,12 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
             }
         }
 
-        //召唤的瞬间位置为初始值，要延迟召唤segments
         if (this.tickCount > genTick && genSegments && this.dirty) {
             genGridWall();
             genSegments = false;
 
             if (!level().isClientSide) {
-                CameraShakeManager.addCameraShake(new CameraShakeData(600, this.position(), 90));
+                CameraShakeManager.addCameraShake(new CameraShakeData(300, this.position(), 180));
             }
         }
 
@@ -414,6 +450,12 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
             Vec3 moveDirection = this.getForward();
             Vec3 currentOffset = this.position().subtract(InitPos);
             double progress = currentOffset.dot(moveDirection);
+
+            if (!this.level().getWorldBorder().isWithinBounds(this.position())) {
+                // 如果肉山碰撞到世界边界，立即死亡
+                this.discard();
+                return;
+            }
 
             // 四方向终点判断
             if ((moveDirection.x > 0 && progress >= FINISH_LINE_DISTANCE) || // 东方向
@@ -481,6 +523,7 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
         return this.outsideCollisionBox;
     }
 
+    @Override
     public AABB getBoundingBoxForCulling() {
         return this.getOutsideCollisionBox();
     }
@@ -512,6 +555,19 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
             return true;
         }
         return super.isInvulnerableTo(source);
+    }
+
+    public boolean hurt(DamageSource source, float amount) {
+        if (source.is(DamageTypes.EXPLOSION)) {
+            float resistance = switch (this.level().getDifficulty()) {
+                case EASY -> 0.75f;   // 简单75%
+                case NORMAL -> 0.85f; // 普通85%
+                case HARD -> 0.95f;   // 困难95%
+                default -> 0.85f;
+            };
+            amount *= (1.0f - resistance);
+        }
+        return super.hurt(source, amount);
     }
 
     @Override
@@ -594,6 +650,13 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
     }
 
     public static boolean isWallOfFleshMob(Entity entity) {
-        return entity instanceof WallOfFlesh || entity instanceof WallOfFleshEye || entity instanceof WallOfFleshMouth || entity instanceof TheHungry;
+        if (entity == null) {
+            return false;
+        }
+        return entity instanceof WallOfFlesh || 
+               entity instanceof WallOfFleshEye || 
+               entity instanceof WallOfFleshMouth || 
+               entity instanceof TheHungry || 
+               entity.getType() == TEMonsterEntities.LEECH.get();
     }
 }
