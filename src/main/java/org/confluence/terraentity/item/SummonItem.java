@@ -161,11 +161,16 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
         // 收回所有召唤物
         if (getUseDuration(stack, livingEntity) - remainingUseDuration == 20) {
-            if (livingEntity instanceof ServerPlayer player) {
-                var data = player.getData(summonType.get());
-                data.clear(player);
-                data.sync(player);
-            }
+            this.onRetrieve(livingEntity, stack);
+        }
+    }
+
+    protected void onRetrieve(LivingEntity livingEntity, ItemStack stack) {
+        livingEntity.swing(livingEntity.getUsedItemHand());
+        if (livingEntity instanceof ServerPlayer player) {
+            var data = player.getData(summonType.get());
+            data.clear(player);
+            data.sync(player);
         }
     }
 

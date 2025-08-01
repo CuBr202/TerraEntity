@@ -53,7 +53,6 @@ public class HumanoidRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<Bon
     public static final String HELMET = DefaultBoneBoundIdents.HEAD_ARMOR_BONE_IDENT;
 
     protected float rightBoneRotX;
-    private boolean isFinished;
 
     public HumanoidRenderer(EntityRendererProvider.Context renderManager, GeoHumanoidModel<T> model, boolean ifRotX, float scale, float offsetY) {
         super(renderManager, model, ifRotX, scale, offsetY);
@@ -230,14 +229,6 @@ public class HumanoidRenderer<T extends Mob & GeoEntity & IUseItemAnimatable<Bon
             });
         }
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
-
-    }
-
-    @Override
-    @ApiStatus.Internal
-    public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-
 
     }
 

@@ -51,6 +51,10 @@ public class Chester extends AbstractSummonMob<Chester> {
         super(entityType, level);
     }
 
+    @Override
+    public boolean shouldDoCollision(){
+        return false;
+    }
 
     public boolean isOpen() {
         return getEntityData().get(DATA_OPEN);
@@ -63,6 +67,10 @@ public class Chester extends AbstractSummonMob<Chester> {
         return true;
     }
 
+    @Override
+    public float summon_getStartDistanceToOwner(){
+        return 3 * 3;
+    }
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {

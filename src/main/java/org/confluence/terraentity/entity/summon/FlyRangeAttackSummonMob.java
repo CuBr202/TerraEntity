@@ -125,10 +125,6 @@ public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSumm
     }
 
     @Override
-    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
-    }
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "Walk/Idle/Attack", 5, state -> {
             if (this.swinging)

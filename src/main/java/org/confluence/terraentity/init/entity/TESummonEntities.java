@@ -46,6 +46,7 @@ public class TESummonEntities {
 
 
     public static final DeferredHolder<EntityType<?>, EntityType<Chester>> CHESTER = TEEntities.registerEntity("chester", (e,l)->new Chester(e,l),1F,1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<PiggyBank>> PIGGY_BANK = TEEntities.registerEntity("piggy_bank", (e,l)->new PiggyBank(e,l),1F,1F);
 
     // 悠悠球
     public static final DeferredHolder<EntityType<?>,EntityType<YoyosEntity<?>>> YOYOS_ENTITY = TEEntities.registerEntity("yoyos_projectile", (e, l)->new YoyosEntity<>(e,l) , 0.5f, 0.5f);
@@ -56,6 +57,7 @@ public class TESummonEntities {
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(CHESTER.get(), c->new GeoNormalRenderer<>(c, TESummonEntities.CHESTER.getId().withPrefix("summon/"), false, 1f,0));
+        event.registerEntityRenderer(PIGGY_BANK.get(), c->new GeoNormalRenderer<>(c, TESummonEntities.PIGGY_BANK.getId().withPrefix("summon/"), false, 1f,0));
 
         // sommon
         event.registerEntityRenderer(SUMMON_FINCH.get(), c-> new GeoNormalRenderer<>(c, SUMMON_FINCH.getId().withPrefix("summon/"),true));
@@ -86,6 +88,7 @@ public class TESummonEntities {
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(CHESTER.get(), AbstractSummonMob.createAttributes().build());
+        event.put(PIGGY_BANK.get(), AbstractSummonMob.createAttributes().build());
 
         // sommon
         event.put(SUMMON_FINCH.get(), AbstractSummonMob.createAttributes().add(Attributes.GRAVITY, 0).add(Attributes.SAFE_FALL_DISTANCE, 1024).add(Attributes.ATTACK_KNOCKBACK, 0).build());

@@ -115,7 +115,7 @@ public class ChesterSummonItem<T extends Chester> extends SummonItem<T> {
     private boolean increaseAdditionalPointer(SummonerAttachment data, Player player){
         // 当全局存储指针处于最后，附加指针开始检索位置附加存储
         int bandSize = data.boundBlocks.size();
-        if(data.chestTypeAdditional == bandSize){
+        if(data.chestTypeAdditional >= bandSize){
             // 附加指针也指向最后，重置指针，启用全局存储
             data.chestTypeAdditional = 0;
             return false;
