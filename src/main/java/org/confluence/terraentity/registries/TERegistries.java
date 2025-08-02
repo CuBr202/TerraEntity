@@ -47,12 +47,12 @@ public class TERegistries {
         event.register(TradeTaskProviders.REGISTRY);
         event.register(TradeLockProviders.REGISTRY);
         event.register(TradeGeneratorProviders.REGISTRY);
-        event.register(ChesterTypesProviders.REGISTRY);
+        event.register(ChesterTypesRegistry.REGISTRY);
         event.register(ChesterConditionalTypesProviders.REGISTRY);
         event.register(TradeModifierProviderRegistry.REGISTRY);
         event.register(ChatElementProviderRegistry.REGISTRY);
         event.register(ChatConditionProviderRegistry.REGISTRY);
-//        event.register(MoodInfoRegistry.REGISTRY);
+
     }
 
     public static void register(IEventBus bus) {
@@ -69,7 +69,6 @@ public class TERegistries {
         TradeModifierProviderTypes.TYPES.register(bus);
         ChatProviderTypes.TYPES.register(bus);
         ChatConditionProviderTypes.TYPES.register(bus);
-//        org.confluence.terraentity.entity.npc.mood.MoodInfos.TYPES.register(bus);
 
     }
 
@@ -139,7 +138,7 @@ public class TERegistries {
     /**
      * 切斯特全局存储器注册表，用来给切斯特添加可以打开的全局菜单
      */
-    public static class ChesterTypesProviders {
+    public static class ChesterTypesRegistry {
         public static final ResourceKey<Registry<ChesterType>> KEY = createRegistryKey(TerraEntity.space("chester_type"));
         public static final Registry<ChesterType> REGISTRY = new RegistryBuilder<>(KEY).create();
     }

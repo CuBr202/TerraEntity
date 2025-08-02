@@ -79,7 +79,7 @@ public class Chester extends AbstractSummonMob<Chester> {
         }
         if(!level().isClientSide()){
             var data = player.getData(TEAttachments.SUMMONER_STORAGE);
-            var globalEntry = TERegistries.ChesterTypesProviders.REGISTRY.entrySet();
+            var globalEntry = TERegistries.ChesterTypesRegistry.REGISTRY.entrySet();
             int globalSize = globalEntry.size();
             if(data.chestType == globalSize - 1 && data.chestTypeAdditional != 0){
                 int additionalSize = data.chestTypeAdditional;

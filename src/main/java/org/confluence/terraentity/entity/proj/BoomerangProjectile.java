@@ -16,14 +16,19 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.entity.PartEntity;
+import net.neoforged.neoforge.event.EventHooks;
 import org.confluence.terraentity.api.entity.IAttackableProjectile;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.data.component.SingleBooleanComponent;
@@ -38,7 +43,7 @@ import org.confluence.terraentity.utils.TEUtils;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BoomerangProjectile extends AbstractHurtingProjectile {
+public class BoomerangProjectile extends Projectile {
 
     public ItemStack weapon = ItemStack.EMPTY;
     private BoomerangModifier modifier;
@@ -52,7 +57,7 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
     public Queue<Vec3> trailQueue;
     public Queue<Vec3> trailQueue2;
 
-    public BoomerangProjectile(EntityType<? extends AbstractHurtingProjectile> entityType, Level level) {
+    public BoomerangProjectile(EntityType<? extends Projectile> entityType, Level level) {
         super(entityType, level);
         this.modifier = new BoomerangModifier();
         this.randomRotation = this.random.nextInt(114514);
@@ -79,7 +84,6 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
         builder.define(DATA_WEAPON, ItemStack.EMPTY);
         builder.define(DATA_BACKING, false);
         builder.define(DATA_BACKING_TIME, 0);
@@ -179,7 +183,38 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
     }
     @Override
     public void tick(){
-        super.tick();
+        Entity entity = this.getOwner();
+        if (this.level().isClientSide || (entity == null || !entity.isRemoved()) && this.level().hasChunkAt(this.blockPosition())) {
+            super.tick();
+
+            HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity, ClipContext.Block.COLLIDER);
+            if (hitresult.getType() != HitResult.Type.MISS && !EventHooks.onProjectileImpact(this, hitresult)) {
+                this.hitTargetOrDeflectSelf(hitresult);
+            }
+
+            this.checkInsideBlocks();
+            Vec3 vec3 = this.getDeltaMovement();
+            double d0 = this.getX() + vec3.x;
+            double d1 = this.getY() + vec3.y;
+            double d2 = this.getZ() + vec3.z;
+            ProjectileUtil.rotateTowardsMovement(this, 0.2F);
+            float f;
+            if (!this.isInWater()) {
+                f = 0.95F;
+            } else {
+                for(int i = 0; i < 4; ++i) {
+                    float f1 = 0.25F;
+                    this.level().addParticle(ParticleTypes.BUBBLE, d0 - vec3.x * 0.25, d1 - vec3.y * 0.25, d2 - vec3.z * 0.25, vec3.x, vec3.y, vec3.z);
+                }
+                f = 0.8F;
+            }
+            this.setDeltaMovement(vec3.add(vec3.normalize().scale(0.1)).scale(f));
+            this.setPos(d0, d1, d2);
+        } else {
+            this.discard();
+        }
+
+
         if(level().isClientSide){
             if(trail != null) {
                 trail.generateTrail(this, tickCount);
@@ -235,10 +270,8 @@ public class BoomerangProjectile extends AbstractHurtingProjectile {
         this.shoot(f, f1, f2, velocity, inaccuracy);
         this.setDeltaMovement(this.getDeltaMovement());
     }
-    @Override
-    protected ParticleOptions getTrailParticle() {
-        return null;
-    }
+
+
     @Override
     public boolean isOnFire() {
         return modifier.fire && (this.level().isClientSide && this.getSharedFlag(0));

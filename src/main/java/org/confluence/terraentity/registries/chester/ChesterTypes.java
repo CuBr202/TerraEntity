@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  * 注册切斯特可以远程打开的菜单
  */
 public class ChesterTypes {
-    public static DeferredRegister<ChesterType> TYPES = DeferredRegister.create(TERegistries.ChesterTypesProviders.KEY, TerraEntity.MODID);
+    public static DeferredRegister<ChesterType> TYPES = DeferredRegister.create(TERegistries.ChesterTypesRegistry.KEY, TerraEntity.MODID);
 
     public static final Supplier<ChesterType> ENDER_CHEST = TYPES.register("ender_chest", ()->new ChesterType(
             "container.enderchest",
