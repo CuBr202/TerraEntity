@@ -95,6 +95,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.THE_HUNGRY.get(), "饿鬼");
         add(TEMonsterEntities.ANTLION_SWARMER.get(), "蚁狮蜂");
         add(TEMonsterEntities.GIANT_ANTLION_SWARMER.get(), "巨型蚁狮蜂");
+        add(TEMonsterEntities.GHOST.get(), "鬼魂");
 
 
         // boss
@@ -186,6 +187,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
         add(TESpawnEggItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
         add(TESpawnEggItems.WANDERING_EYE_FISH_SPAWN_EGG.get(), "游荡眼球怪鱼刷怪蛋");
+        add(TESpawnEggItems.GHOST_SPAWN_EGG.get(), "鬼魂刷怪蛋");
 
         add(TESpawnEggItems.BLOOD_CRAWLER_SPAWN_EGG.get(), "血爬虫刷怪蛋");
         add(TESpawnEggItems.BLOODY_SPORE_SPAWN_EGG.get(), "血腥芽孢刷怪蛋");
@@ -305,6 +307,7 @@ public class TEChineseProvider extends LanguageProvider {
 
         // 召唤杖
         add(TESummonItems.CHESTER_STAFF.get(), "眼骨");
+        add(TESummonItems.WALLET.get(), "钱币槽");
 
         add(TESummonItems.FINCH_STAFF.get(), "雀杖");
         add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
