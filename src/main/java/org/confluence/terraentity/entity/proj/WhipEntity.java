@@ -6,10 +6,11 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
-import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -17,12 +18,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
+import org.confluence.terraentity.api.entity.IAttackableProjectile;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.data.enchantment.TEEnchantmentHelper;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.dynamic_curve.SplineKeyframeDynamicCurve;
-import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.TESounds;
@@ -39,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WhipEntity extends AbstractHurtingProjectile {
+public class WhipEntity extends Projectile {
 
     Map<Entity, Integer> hitEntities = new HashMap<>();
 
@@ -202,6 +204,20 @@ public class WhipEntity extends AbstractHurtingProjectile {
 
     @Override
     public void tick() {
+        Entity entity = this.getOwner();
+        if (this.level().isClientSide || (entity == null || !entity.isRemoved()) && this.level().hasChunkAt(this.blockPosition())) {
+            super.tick();
+            this.checkInsideBlocks();
+            Vec3 vec3 = this.getDeltaMovement();
+            double d0 = this.getX() + vec3.x;
+            double d1 = this.getY() + vec3.y;
+            double d2 = this.getZ() + vec3.z;
+            this.setDeltaMovement(vec3.add(vec3.normalize().scale(0.1)));
+            this.setPos(d0, d1, d2);
+        } else {
+            this.discard();
+        }
+
         if (!level().isClientSide) {
             if (existTick < tickCount) {
                 discard();
@@ -223,7 +239,6 @@ public class WhipEntity extends AbstractHurtingProjectile {
                 this.attackDetect(owner);
             }
         }
-        super.tick();
     }
 
     private void attackDetect(Player owner) {
@@ -239,6 +254,7 @@ public class WhipEntity extends AbstractHurtingProjectile {
             AABB aabb = new AABB(pos.x - range, pos.y - range, pos.z - range,
                     pos.x + range, pos.y + range, pos.z + range);
             for (var entity : level().getEntities(this, aabb, e -> e != getOwner())) {
+                IAttackableProjectile.tryHit(entity, getDamageSource());
 
                 // 某些鞭子禁止穿墙攻击
                 if (item != null && !item.canPenetrate && level().clip(new ClipContext(owner.getEyePosition(), entity.position().add(0, entity.getBbHeight(), 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner)).getType() != HitResult.Type.MISS
@@ -344,6 +360,13 @@ public class WhipEntity extends AbstractHurtingProjectile {
         return trigger;
     }
 
+    protected DamageSource getDamageSource(){
+        if(this.getOwner() != null){
+            return TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON,  getOwner());
+        }
+        return damageSources().magic();
+    }
+
     @Override
     public boolean shouldBeSaved() {
         return false;
@@ -402,9 +425,17 @@ public class WhipEntity extends AbstractHurtingProjectile {
         float f2 = Mth.cos(y * 0.017453292F) * Mth.cos(x * 0.017453292F);
         this.shoot(f, f1, f2, velocity, inaccuracy);
         Vec3 vec3 = shooter.getDeltaMovement();
-        this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, vec3.y, vec3.z));
+        Vec3 dir = new Vec3(f, f1, f2);
+        if(TEUtils.angleBetween(shooter.getLookAngle(), vec3) < 1.5f){
+            this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, vec3.y * 0.2F, vec3.z));
+        }else{
+            this.setDeltaMovement(this.getDeltaMovement().add(vec3.x * 0.23f, vec3.y * 0.2F, vec3.z * 0.23f));
+        }
+        dir = dir.normalize().scale(this.getDeltaMovement().length());
+        this.setDeltaMovement(dir);
+
         this.initialPosition = position();
-        this.initDirection = new Vec3(f, f1, f2);
+        this.initDirection = dir;
         this.entityData.set(DATA_INITIAL_POSITION, initialPosition.toVector3f());
         this.entityData.set(DATA_INITIAL_DIRECTION, initDirection.toVector3f());
     }

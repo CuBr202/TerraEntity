@@ -1,6 +1,7 @@
 package org.confluence.terraentity.registries.npc_trade_modify;
 
 import com.mojang.serialization.MapCodec;
+import org.confluence.terraentity.api.npc.trade.ITradeModifier;
 
 import java.util.function.Supplier;
 

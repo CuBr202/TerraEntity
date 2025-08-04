@@ -3,6 +3,7 @@ package org.confluence.terraentity.entity.boss;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -16,8 +17,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.entity.ai.Boss;
-import org.confluence.terraentity.entity.ai.IAngryMob;
+import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.api.entity.IAngryMob;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.monster.LittleHornet;
@@ -26,6 +27,7 @@ import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
+import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -107,12 +109,12 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                     lookAt(10);
                     dashComponent.hangOn(getTarget(), 5, 4, getMoveSpeed());
                     if(skills.tick % 10 == 0) {
-                        LittleHornet bee = TEMonsterEntities.LITTLE_HORNET.get().create(level());
+
+                        LittleHornet bee = TEUtils.spawnEntity(TEMonsterEntities.LITTLE_HORNET.get(), (ServerLevel) level(), e.position());
                         if (bee!=null) {
                             bee.minion_setOwner(e);
                             bee.setPos(e.position());
                             bee.setYRot(e.getYRot());
-                            level().addFreshEntity(bee);
                         }
                     }
                 })

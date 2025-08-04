@@ -41,6 +41,11 @@ public class DebugBlocksHelper extends AbstractBufferManager{
         }
     }
 
+    @Override
+    protected boolean shouldRefresh() {
+        return super.shouldRefresh() && !debugInfoMap.isEmpty();
+    }
+
     public void clear(BlockPos pos) {
 //        blocks.remove(pos);
         debugInfoMap.remove(pos);

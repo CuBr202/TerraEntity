@@ -9,15 +9,16 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
+import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.entity.boss.QueenBee;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
-public class QueenBeeRenderer extends GeoBossRenderer<QueenBee, GeoBossModel<QueenBee>> {
+public class QueenBeeRenderer extends GeoNormalRenderer<QueenBee> {
 
     public QueenBeeRenderer(EntityRendererProvider.Context renderManager, GeoBossModel<QueenBee> model) {
-        super(renderManager, model,1.0f,0.75f,false);
+        super(renderManager, model,false,1.0f,0.75f);
         this.addRenderLayer(new AutoGlowingGeoLayer<>(this){
             @Override
             protected ResourceLocation getTextureResource(QueenBee animatable) {
@@ -33,11 +34,6 @@ public class QueenBeeRenderer extends GeoBossRenderer<QueenBee, GeoBossModel<Que
     @Override
     public void preRender(PoseStack poseStack, QueenBee animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    @Override
-    public void render(QueenBee entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 
     public void reRender(BakedGeoModel model, PoseStack poseStack, MultiBufferSource bufferSource, QueenBee animatable,

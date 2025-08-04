@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.mixin.accessor.LevelRendererAccessor;
-import org.confluence.terraentity.utils.IOriented;
+import org.confluence.terraentity.api.entity.IOriented;
 import org.confluence.terraentity.utils.OBB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

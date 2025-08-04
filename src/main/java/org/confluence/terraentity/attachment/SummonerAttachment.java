@@ -16,7 +16,6 @@ import net.minecraftforge.network.NetworkDirection;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.network.NetworkHandler;
 import org.confluence.terraentity.network.s2c.SyncSummonPacket;
-import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.chester.ChesterConditionalType;
 import org.confluence.terraentity.registries.chester.ChesterConditionalTypes;
 

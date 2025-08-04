@@ -20,6 +20,7 @@ public final class ModRenderTypes {
         public static ShaderInstance colorBlitShader;
         public static ShaderInstance mixAddShader;
         public static ShaderInstance dissolveBlitShader;
+        public static ShaderInstance pixelStyleBlitShader;
 
         @SubscribeEvent
         public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
@@ -51,6 +52,13 @@ public final class ModRenderTypes {
                             DefaultVertexFormat.BLIT_SCREEN),
                     shader -> {
                         dissolveBlitShader = shader;
+                    }
+            );
+            event.registerShader(new ShaderInstance(resourceProvider,
+                            TerraEntity.space("pixel_style_blit"),
+                            DefaultVertexFormat.BLIT_SCREEN),
+                    shader -> {
+                        pixelStyleBlitShader = shader;
                     }
             );
         }

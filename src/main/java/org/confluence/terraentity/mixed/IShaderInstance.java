@@ -10,4 +10,5 @@ public interface IShaderInstance {
     Uniform getTerra_entity$Radius();
     Uniform getTerra_entity$Progress();
     Uniform getTerra_entity$Distance();
+    Uniform getTerra_entity$PixelSize();
 }

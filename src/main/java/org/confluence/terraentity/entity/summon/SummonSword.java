@@ -4,7 +4,6 @@ import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -17,18 +16,16 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.attachment.SummonerAttachment;
-import org.confluence.terraentity.entity.ai.goal.skill.ISkill;
+import org.confluence.terraentity.api.entity.ai.ISkill;
 import org.confluence.terraentity.entity.ai.goal.skill.SkillCooldownManager;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
 import org.confluence.terraentity.entity.util.KeyframeAnimationCounter;
-import org.confluence.terraentity.entity.util.trail.PositionPoseProperties;
 import org.confluence.terraentity.entity.util.trail.SummonSwordTrail;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
-import org.confluence.terraentity.utils.IOriented;
+import org.confluence.terraentity.api.entity.IOriented;
 import org.confluence.terraentity.utils.OBB;
 import org.confluence.terraentity.utils.TEUtils;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -279,11 +276,6 @@ public class SummonSword extends AbstractSummonMob<SummonSword> implements IOrie
         @Override
         public void update(int delta) {
             this.skillCooldown = Math.max(0, skillCooldown - delta);
-        }
-
-        @Override
-        public int getMaxCooldown() {
-            return _skillCooldown;
         }
 
         @Override

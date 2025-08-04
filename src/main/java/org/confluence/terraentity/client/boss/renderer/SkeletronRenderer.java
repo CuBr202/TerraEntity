@@ -7,20 +7,21 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
+import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.entity.boss.Skeletron;
 import org.joml.Vector3f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 import javax.annotation.Nullable;
 
-public class SkeletronRenderer extends GeoBossRenderer<Skeletron, GeoBossModel<Skeletron>> {
+public class SkeletronRenderer extends GeoNormalRenderer<Skeletron> {
 
     public SkeletronRenderer(EntityRendererProvider.Context renderManager, GeoBossModel<Skeletron> model) {
-        super(renderManager, model);
+        super(renderManager, model, true, 1, 0);
     }
 
     @Override
-    public void preRender(PoseStack poseStack, Skeletron entity, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float r,float g,float b,float a) {
+    public void preRender(PoseStack poseStack, Skeletron entity, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float r, float g, float b, float a) {
         model.getBone("bone3").ifPresent(bone -> bone.setHidden(true));
         model.getBone("bone2").ifPresent(geoBone -> geoBone.setHidden(false));
 //        poseStack.scale(0.3f, 0.3f, 0.3f);

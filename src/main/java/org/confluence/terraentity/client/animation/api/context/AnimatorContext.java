@@ -9,4 +9,14 @@ public class AnimatorContext implements IAnimatorContext {
     public AnimatorContext(double usingTime) {
         this.usingTime = usingTime;
     }
+
+    public double getUsingTime() {
+        return usingTime;
+    }
+
+    public void setUsingTime(double usingTime) {
+        this.usingTime = usingTime;
+    }
+
+
 }

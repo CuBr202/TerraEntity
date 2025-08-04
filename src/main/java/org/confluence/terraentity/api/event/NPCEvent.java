@@ -8,8 +8,8 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.event.IModBusEvent;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
-import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -128,7 +128,7 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
         }
 
         /**
-         * 当交易触发时，重新设置交易的逻辑，替换{@link org.confluence.terraentity.registries.npc_trade.ITrade#onTrade(ServerPlayer, ITradeHolder, int)}
+         * 当交易触发时，重新设置交易的逻辑，替换{@link ITrade#onTrade(ServerPlayer, ITradeHolder, int)}
          */
         public void setRedirection(BiConsumer<Player, ITrade> reDirection) {
             this.reDirection = reDirection;

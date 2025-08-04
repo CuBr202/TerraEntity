@@ -2,8 +2,8 @@ package org.confluence.terraentity.registries.npc_trade_list.variant;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import org.confluence.terraentity.registries.npc_trade.ITrade;
-import org.confluence.terraentity.registries.npc_trade_list.ITradeGenerator;
+import org.confluence.terraentity.api.npc.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeGenerator;
 import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProvider;
 import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProviderTypes;
 

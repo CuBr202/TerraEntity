@@ -1,14 +1,20 @@
 package org.confluence.terraentity.integration;
 
-
+import com.google.common.base.Suppliers;
 import net.minecraftforge.fml.ModList;
+
+
+import java.util.function.Supplier;
 
 public class ModChecker {
 
-    public static boolean confluence = false;
+
+    public static Supplier<Boolean> isConfluenceLoaded = Suppliers.memoize(()->ModList.get().isLoaded("confluence"));
+
+    public static Supplier<Boolean> isIrisLoaded = Suppliers.memoize(()-> ModList.get().isLoaded("iris"));
 
 
-    public static void check(){
-        confluence = ModList.get().isLoaded("confluence");
-    }
+
+
+
 }

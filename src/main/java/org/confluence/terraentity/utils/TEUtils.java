@@ -4,16 +4,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -21,27 +19,34 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.npc.Npc;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.*;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.entity.PartEntity;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.network.event.EventNetworkChannel;
+import org.confluence.terraentity.api.entity.IAttackableProjectile;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.ai.Boss;
+import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
-import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.api.entity.ISummonMob;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -712,6 +717,11 @@ public final class TEUtils {
      * <h1>统一弹幕目标伤害过滤</h1>
      */
     public static BiPredicate<Projectile, Entity> projectileCanHurtEntityTest = (projectile, target)-> {
+
+        if(target instanceof IAttackableProjectile<?> projectile1 && projectile1.canBeAttacked()){
+            return true;
+        }
+
         if (!target.isAttackable() ||  target instanceof     Npc  || target instanceof ArmorStand) {
             return false;
         }
@@ -739,6 +749,10 @@ public final class TEUtils {
         Entity entity = projectile.getOwner();
         // 不能攻击主人
         if(entity == target) return false;
+
+        if(target instanceof IAttackableProjectile<?> projectile1 && projectile1.canBeAttacked()){
+            return true;
+        }
 
         if (!target.isAttackable()) {
             // 不可攻击的实体
@@ -885,4 +899,41 @@ public final class TEUtils {
         book.enchant(registryLookup.getOrThrow(key).get(), level);
         return book;
     }
+
+    public static<T extends Entity> T spawnEntity(Supplier<? extends T> entitySupplier, ServerLevel serverLevel, Vec3 pos){
+        T entity = entitySupplier.get();
+        if (entity != null) {
+            entity.moveTo(pos);
+            if(internalSpawnEntity(entity, serverLevel)){
+                serverLevel.addFreshEntityWithPassengers(entity);
+            }
+            return entity;
+        }
+        return null;
+    }
+
+    public static<T extends Entity> T spawnEntity(EntityType<? extends T> type, ServerLevel level, Vec3 pos){
+        return spawnEntity(() -> type.create(level), level, pos);
+    }
+
+    /**
+     * 通过finalize事件初始化生物
+     * @return 是否应该生成
+     */
+    public static boolean internalSpawnEntity(Entity entity, ServerLevel serverLevel){
+        if (entity instanceof Mob mob) {
+            mob.yHeadRot = mob.getYRot();
+            mob.yBodyRot = mob.getYRot();
+            // 事件中对生物血量修饰，生物finalizeSpawn中可能设置自身的属性baseValue
+            MobSpawnEvent.FinalizeSpawn event = new MobSpawnEvent.FinalizeSpawn(mob, serverLevel, mob.getX(), mob.getY(), mob.getZ(), serverLevel.getCurrentDifficultyAt(mob.blockPosition()), MobSpawnType.CHUNK_GENERATION, null, null, null );
+            MinecraftForge.EVENT_BUS.post(event);
+
+            if (mob.isSpawnCancelled()) {
+                mob.discard();
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

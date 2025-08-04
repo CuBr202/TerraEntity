@@ -12,14 +12,15 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.entity.ai.Boss;
-import org.confluence.terraentity.entity.ai.IAutoLeaveMob;
+import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.api.entity.IAutoLeaveMob;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
+import org.confluence.terraentity.utils.TEUtils;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -286,18 +287,17 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         if (level() instanceof ServerLevel serverLevel) {
             if (--summonCD > 0) return;
             summonCD = summonCDAll;
-            DemonEye eye = new DemonEye(TEMonsterEntities.DEMON_EYE.get(), serverLevel) {
+            DemonEye eye = TEUtils.spawnEntity(()->new DemonEye(TEMonsterEntities.DEMON_EYE.get(), serverLevel) {
                 @Override
                 protected boolean shouldDropLoot() {
                     return false;
                 }
-            };
+            }, serverLevel, position().add(getForward().normalize().scale(-1)));
             eye.minion_setOwner(this);
             eye.setHealth(3);
             eye.getAttribute(Attributes.MAX_HEALTH).setBaseValue(3);
-            eye.setPos(position().add(getForward().normalize().scale(-1)));
             eye.setTarget(target);
-            serverLevel.addFreshEntity(eye);
+
         }
     }
 

@@ -3,10 +3,8 @@ package org.confluence.terraentity.network.s2c;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
-import org.confluence.terraentity.mixed.IPlayer;
-import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
 
 import java.util.UUID;

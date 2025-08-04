@@ -12,12 +12,16 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
+import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
@@ -26,9 +30,9 @@ import org.confluence.terraentity.init.entity.TEProjectileEntities;
 /**
  * 世吞体节
  */
-public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSegment> {
+public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSegment> implements Boss {
     private static final float MAX_HEALTHS = 50f;
-    private static final float DAMAGE = 4f;//接触伤害
+    private static final float DAMAGE = 5f;//接触伤害
 
     private int _shootTick = 100;
     private int shootTick = _shootTick;
@@ -51,6 +55,14 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
              ifTail = entityData.get(DATA_TAIL);
          }
     }
+
+    protected void registerGoals() {
+        //this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 100F));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
+    }
+
     public void setHead(EaterOfWorlds head){
         this.head = head;
     }
@@ -180,5 +192,10 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
         return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA);
+    }
+
+    @Override
+    public boolean isMainBody(){
+        return false;
     }
 }

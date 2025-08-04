@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.ai.keyframe.animation;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import org.confluence.terraentity.api.entity.animation.IKeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
 import org.confluence.terraentity.entity.ai.keyframe.baker.AbstractKeyframeBaker;
 

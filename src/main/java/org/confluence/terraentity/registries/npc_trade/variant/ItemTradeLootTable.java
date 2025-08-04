@@ -5,8 +5,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import org.confluence.terraentity.api.npc.trade.IIngredientTrade;
+import org.confluence.terraentity.api.npc.trade.ITradeLootTable;
 import org.confluence.terraentity.data.util.AmountIngredient;
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 
 import java.util.List;

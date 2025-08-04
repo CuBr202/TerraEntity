@@ -11,9 +11,10 @@ import net.minecraftforge.fml.common.Mod;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.gen.loot.TELootModifyProvider;
 import org.confluence.terraentity.data.gen.loot.TELootTableProvider;
+import org.confluence.terraentity.data.gen.npc.NPCMoodProvider;
+import org.confluence.terraentity.data.gen.npc.NPCNameProvider;
 import org.confluence.terraentity.data.gen.recipe.CollectRecipeProvider;
-import org.confluence.terraentity.data.gen.recipe.TENPCShopModifierProvider;
-import org.confluence.terraentity.data.gen.recipe.TENPCShopProvider;
+import org.confluence.terraentity.data.gen.npc.TENPCShopProvider;
 import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 import org.confluence.terraentity.data.gen.tags.*;
 

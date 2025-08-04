@@ -4,6 +4,7 @@ import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.npc.chat.NPCChat;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
@@ -22,6 +23,7 @@ public final class TEEntityDataSerializers {
     public static final Supplier<EntityDataSerializer<TradeParams>> NPC_TRADE_PARAMS_SERIALIZER = SERIALIZERS.register(TradeParams.KEY, () -> EntityDataSerializer.simple(TradeParams.WRITER, TradeParams.READER));
 
     public static final Supplier<EntityDataSerializer<KeyframeAnimationCounter>> KEYFRAME_ANIMATION_SERIALIZER = SERIALIZERS.register("keyframe_animation", () -> EntityDataSerializer.simple(KeyframeAnimationCounter.WRITER, KeyframeAnimationCounter.READER));
+    public static final Supplier<EntityDataSerializer<NPCChat>> NPC_CHAT_SERIALIZER = SERIALIZERS.register("npc_chat", () -> EntityDataSerializer.simple(NPCChat.WRITER, NPCChat.READER));
 
 
 }

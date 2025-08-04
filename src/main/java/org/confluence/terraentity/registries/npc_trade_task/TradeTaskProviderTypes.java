@@ -5,6 +5,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.npc.trade.ITradeTask;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.npc_trade_task.variant.*;
 
@@ -14,7 +15,7 @@ import java.util.function.Supplier;
  * 注册交易任务编解码器的类型
  */
 public class TradeTaskProviderTypes {
-    public static final DeferredRegister<TradeTaskProvider> TYPES = DeferredRegister.create(TERegistries.TradeTaskProviders.KEY, TerraEntity.MODID);
+    public static final DeferredRegister<TradeTaskProvider> TYPES = DeferredRegister.create(TERegistries.Keys.TRADE_TASK_PROVIDER, TerraEntity.MODID);
     public static final Supplier<IForgeRegistry<TradeTaskProvider>> REGISTRY = TYPES.makeRegistry(RegistryBuilder::new);
 
     public static final Supplier<TradeTaskProvider> PROGRESS_TRADE_TASK = register("progress_trade_task", ()->ProgressTradeTask.CODEC);

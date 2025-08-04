@@ -7,8 +7,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.RegistryObject;
+import org.confluence.terraentity.api.npc.trade.IIngredientTrade;
+import org.confluence.terraentity.api.npc.trade.ITradeItemList;
 import org.confluence.terraentity.data.util.AmountIngredient;
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade.*;
 
 import java.util.ArrayList;

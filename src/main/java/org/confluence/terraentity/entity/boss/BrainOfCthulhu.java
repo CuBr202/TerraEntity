@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.boss;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -8,10 +9,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.ai.Boss;
+import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
-import org.confluence.terraentity.entity.ai.motion.curve.Curve;
+import org.confluence.terraentity.api.entity.animation.Curve;
 import org.confluence.terraentity.entity.monster.VisualNeuron;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
@@ -89,18 +90,17 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                     int interval = 2;
                     int cur = skills.tick - 21;
                     if(skills.canContinue() && cur % interval == 0 && minions.size() < minionsCount ){
-                        VisualNeuron minion = TEMonsterEntities.VISUAL_NEURON.get().create(level());
-                        minions.add(minion);
 
                         float r = random.nextFloat() + 5;
                         float theta = random.nextFloat()  * (float) Math.PI;
                         float beta = random.nextFloat() * (float) Math.PI ;
                         Vec3 pos = TEUtils.sphere(r,theta,beta);
-
-                        homePoses.add(pos);
-                        minion.setOwner(this);
-                        minion.setPos(position().add(pos));
-                        level().addFreshEntity(minion);
+                        VisualNeuron minion = TEUtils.spawnEntity(()->TEMonsterEntities.VISUAL_NEURON.get().create(level()), (ServerLevel) level(), position().add(pos));
+                        if (minion != null) {
+                            minion.setOwner(this);
+                            minions.add(minion);
+                            homePoses.add(pos);
+                        }
                     }
                     setDeltaMovement(0,0.05f,0);
                 })

@@ -3,6 +3,7 @@ package org.confluence.terraentity.attachment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.util.INBTSerializable;
+import org.confluence.terraentity.entity.proj.YoyosEntity;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashMap;
@@ -11,6 +12,9 @@ import java.util.Map;
 public class WeaponStorage implements INBTSerializable<CompoundTag> {
     private final Map<Item , Integer> boomerangCounter = new HashMap<>();
     public boolean bowFullPull = false;
+    public boolean leftClicking = false;
+    public YoyosEntity<?> yoyosEntity = null;
+
 
     public int tryReduce(Item item){
         return boomerangCounter.compute(item, (k, c) -> c != null && c > 0? c - 1 : 0);

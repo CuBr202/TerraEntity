@@ -1,8 +1,8 @@
 package org.confluence.terraentity.entity.npc;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.JsonOps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -33,6 +33,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
@@ -45,27 +46,29 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.common.Tags;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
+import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
-import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
-import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
+import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
+import org.confluence.terraentity.entity.npc.chat.ChatArranger;
+import org.confluence.terraentity.entity.npc.chat.ChatManager;
+import org.confluence.terraentity.entity.npc.chat.NPCChat;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.Mood;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.entity.spawner.NPCSpawner;
-import org.confluence.terraentity.entity.util.SpawnPlacementChecks;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
@@ -90,7 +93,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /**
- * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMood.Loader 心情系统}
+ * 泰拉风格的npc，集成远程攻击，{@link NPCTradeManager 交易菜单}，{@link HouseManager 房屋系统}，{@link NPCMood 心情系统}，{@link ChatManager 对话系统}
  */
 public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntity, Npc, ITradeHolder, IUseItemAnimatable<BoneStates>, CrossbowAttackMob {
 
@@ -109,6 +112,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public House house = House.EMPTY;
     private NPCMood mood;
 
+
     private NPCAi ai;
     private float rangeDistance = 8; // 远程攻击范围
     private Predicate<AbstractTerraNPC> canPerformerAttackTest;
@@ -116,6 +120,14 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public int cooldownTick = 0; // 攻击冷却时间
     private int _cooldownTicks;
 
+    public int _chatCount = 100; // 对话显示时间，客户端有效
+    public int chatCount = 0;
+    public int talkingBrainTick = 0; // 对话行为持续时间
+    public AbstractTerraNPC talkingTarget; // 对话目标
+
+    ChatArranger chatArranger;
+    ChatManager chatManager;
+    public TextureTarget textureTarget;
 
     public BoneStateMachine<BoneStates> leftArm;
     public BoneStateMachine<BoneStates> rightArm;
@@ -127,6 +139,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     private static final EntityDataAccessor<NPCMood> DATA_MOOD = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_MOOD_SERIALIZER.get());
     private static final EntityDataAccessor<TradeParams> DATA_TRADE_PARAMS = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_TRADE_PARAMS_SERIALIZER.get());
     private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(AbstractTerraNPC.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<NPCChat> DATA_CHAT = SynchedEntityData.defineId(AbstractTerraNPC.class, TEEntityDataSerializers.NPC_CHAT_SERIALIZER.get());
 
 
     public AbstractTerraNPC(EntityType<? extends AbstractTerraNPC> entityType, Level level) {
@@ -147,12 +160,25 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if (canPerformerAttackTest == null) {
             canPerformerAttackTest = npc -> npc.getMainHandItem().getItem() instanceof BowItem;
         }
+        // confluence mixin here
     }
 
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        // confluence mixed here
+        // confluence mixin here
         return !this.hasCustomName(); // 交互以后不会被刷走
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level level) {
+        return new GroundPathNavigation(this, level){
+            @Override
+            public boolean isStableDestination(BlockPos pos) {
+                BlockPos blockpos = pos.below();
+                BlockState state = this.level.getBlockState(blockpos);
+                return state.isSolidRender(this.level, blockpos) || state.is(Tags.Blocks.GLASS);
+            }
+        };
     }
 
     public void initName() {
@@ -163,6 +189,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             }
         }
     }
+
+
+
 
 
 
@@ -224,7 +253,13 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             }
         }
 
-//        AdapterUtils.postEvent(event);
+        // 初始化对话系统
+        this.chatManager = ChatManager.getChatManager(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()), this.level().registryAccess());
+        if(this.chatManager != null) {
+            this.chatManager.setOwner(this);
+        }
+
+
         // 使用预先注册的事件处理器
         var consumer = NPCEvent.NPCBrainCollectionEvent.getConsumer(getType());
         if (consumer != null) {
@@ -336,6 +371,10 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             } else if (DATA_TRADE_PARAMS.equals(key)) {
                 this.getTradeManager().refreshAvailableTrades();
 
+            }else if(DATA_CHAT.equals(key) && level().isClientSide()){
+                this.chatCount = _chatCount;
+                this.chatArranger = new ChatArranger(this.entityData.get(DATA_CHAT).chatElement, Minecraft.getInstance().font);
+                this.chatArranger.startTick = this.tickCount;
             }
         }
         if (DATA_MOOD.equals(key)) {
@@ -353,6 +392,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         this.entityData.define(DATA_MOOD, new NPCMood());
         this.entityData.define(DATA_TRADE_PARAMS, TradeParams.create());
         this.entityData.define(DATA_IS_CHARGING_CROSSBOW, false);
+        this.entityData.define(DATA_CHAT, new NPCChat(List.of()));
     }
 
     @Override
@@ -433,6 +473,15 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         } else {
             this.cooldownTick = 0;
         }
+        --this.chatCount;
+        if(!level().isClientSide){
+            if(this.chatManager != null) {
+                this.chatManager.update(1);
+//                if(this.tickCount % 150 == 0){ // todo debug
+//                    this.setChat(new NPCChat(List.of(new SpriteChatElement(List.of(TerraEntity.space("textures/gui/sprites/random_gift.png")), 2f))));
+//                }
+            }
+        }
     }
 
     @Override
@@ -453,7 +502,13 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     @SuppressWarnings("all")
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+
         if (!(player instanceof ServerPlayer serverPlayer)) {
+            if (stack.is(TEItems.HOUSE_DETECTOR.get())) {
+                return InteractionResult.PASS;
+            }
+
             return InteractionResult.SUCCESS;
         }
 
@@ -462,14 +517,12 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         if (hand == InteractionHand.OFF_HAND) {
             return InteractionResult.SUCCESS;
         }
-        this.setCustomNameVisible(true);
 
-        ItemStack stack = player.getItemInHand(hand);
+        this.setCustomNameVisible(true);
 
         if (stack.is(TEItems.HOUSE_DETECTOR.get())) {
             return InteractionResult.PASS;
         }
-
 
         if (stack.getItem() instanceof ArmorItem armorItem) {
             // 如果是装备，则穿上
@@ -666,6 +719,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
         return false;
     }
+
     @Override
     protected @NotNull Vec3 getLeashOffset() {
         return new Vec3(-0.3, this.getEyeHeight() * 0.5f, this.getBbWidth() * 0.1F);
@@ -727,7 +781,14 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
     public BoneStateMachine<BoneStates> getRightArmBoneStateMachine() {
         return rightArm;
+
     }
+
+
+
+
+
+
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
@@ -735,4 +796,23 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         this.setLeftHanded(false);
         return pSpawnData;
     }
+
+    public void setChat(NPCChat chat){
+        if(chat.getChatElement() != null && !chat.getChatElement().isEmpty()) {
+            this.entityData.set(DATA_CHAT, chat.generateChat(this.random), true);
+        }
+    }
+
+    public ChatArranger getChat(){
+        if(this.chatCount > 0){
+            return this.chatArranger;
+        }
+        return null;
+    }
+
+    public ChatManager getChatManager() {
+        return chatManager;
+    }
+
+
 }

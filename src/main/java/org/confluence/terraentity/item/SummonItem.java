@@ -25,7 +25,7 @@ import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.attachment.SummonerAttachment;
-import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TESounds;
@@ -160,12 +160,16 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
         // 收回所有召唤物
         if (getUseDuration(stack) - remainingUseDuration == 20) {
-            if (livingEntity instanceof ServerPlayer player) {
-                player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data -> {
-                    data.clear(player);
-                    data.sync(player);
-                });
-            }
+            this.onRetrieve(livingEntity, stack);
+        }
+    }
+
+    protected void onRetrieve(LivingEntity livingEntity, ItemStack stack) {
+        if(livingEntity instanceof ServerPlayer player) {
+            player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data -> {
+                data.clear(player);
+                data.sync(player);
+            });
         }
     }
 

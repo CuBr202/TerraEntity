@@ -4,15 +4,18 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
+
+import java.util.function.Supplier;
 
 /**
  * 用于管理缓冲区的抽象类
  */
 public abstract class AbstractBufferManager {
-    private VertexBuffer vertexBuffer;
+    protected VertexBuffer vertexBuffer;
     protected long lastRefreshTime = 0;
     protected final int refreshInterval;
 
@@ -20,7 +23,7 @@ public abstract class AbstractBufferManager {
      * @param refreshTime 刷新间隔，单位毫秒
      */
     public AbstractBufferManager(int refreshTime) {
-        vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
+//        vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.refreshInterval = refreshTime;
     }
 
@@ -36,22 +39,33 @@ public abstract class AbstractBufferManager {
 
     public void refresh() {
         lastRefreshTime = System.currentTimeMillis();
+        if(vertexBuffer!= null){
+            vertexBuffer.close();
+        }
+        vertexBuffer = new VertexBuffer(VertexBuffer.Usage.DYNAMIC);
+        BufferBuilder buffer = getBufferBuilder();
 
-        vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
-
-        beginBuffer(buffer);
         buildBuffer(buffer);
-
-        var build = buffer.end();
-        vertexBuffer.bind();
-        vertexBuffer.upload(build);
-        VertexBuffer.unbind();
+        this.bind(buffer);
     }
 
-    protected void beginBuffer(BufferBuilder buffer){
+    public void bind(BufferBuilder buffer){
+        BufferBuilder.RenderedBuffer build = buffer.end();
+
+        if (build == null) {
+            vertexBuffer = null;
+        } else {
+            vertexBuffer.bind();
+            vertexBuffer.upload(build);
+            VertexBuffer.unbind();
+        }
+    }
+
+
+    public BufferBuilder getBufferBuilder(){
+        var buffer = Tesselator.getInstance().getBuilder();
         buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR);
+        return buffer;
     }
 
 
@@ -60,13 +74,15 @@ public abstract class AbstractBufferManager {
 
     }
     public void render(PoseStack poseStack, Vec3 playerPos, Matrix4f projectMatrix){
-        if(shouldRefresh())
-            refresh();
+        if(shouldRefresh()) {
+            this.refresh();
+
+        }
 
         if (vertexBuffer != null) {
 
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
             beforeRender();
+            RenderSystem.setShader(setShader());
 
             poseStack.pushPose();
             poseStack.translate(-playerPos.x(), -playerPos.y(), -playerPos.z());
@@ -81,4 +97,14 @@ public abstract class AbstractBufferManager {
 
         }
     }
+
+    protected Supplier<ShaderInstance> setShader(){
+        return GameRenderer::getPositionColorShader;
+    }
+
+    public VertexBuffer getVertexBuffer() {
+        return vertexBuffer;
+    }
+
+
 }

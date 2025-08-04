@@ -1,12 +1,23 @@
 package org.confluence.terraentity.client.event;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.confluence.terraentity.api.item.ILeftClickStateItem;
+import org.confluence.terraentity.attachment.WeaponStorage;
+import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.item.BaseWhipItem;
+import org.confluence.terraentity.item.YoyosItem;
+import org.confluence.terraentity.network.c2s.ServerBoundEventPacket;
+import org.lwjgl.glfw.GLFW;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -17,10 +28,68 @@ public class GameInputEvent {
     public static void mouseScroll(InputEvent.MouseScrollingEvent event) {
         // 防止切鞭，非常超模
         Player player = Minecraft.getInstance().player;
-        if (player!= null && player.getMainHandItem().getItem() instanceof BaseWhipItem whipItem
-                && player.getCooldowns().isOnCooldown(whipItem)) {
+        if (player == null) return;
+
+        ItemStack stack = player.getMainHandItem();
+        Item item = stack.getItem();
+
+        if (item instanceof BaseWhipItem whipItem && player.getCooldowns().isOnCooldown(whipItem)) {
             event.setCanceled(true);
+            return;
+        }
+
+        if(!player.isSpectator() && item instanceof ILeftClickStateItem item1){
+            if(Minecraft.getInstance().mouseHandler.isLeftPressed()) { // 暂时可以这样写省性能，如果后面有新需求，需要注释掉
+                if (event.getScrollDelta() > 0) {
+                    ServerBoundEventPacket.wheelUp();
+                } else {
+                    ServerBoundEventPacket.wheelDown();
+                }
+            }
+
+            if (!item1.canSwitchWithoutRelease(player, stack) && player.getCapability(TEAttachments.WEAPON_STORAGE).orElse(new WeaponStorage()).leftClicking) {
+                event.setCanceled(true);
+            }
         }
     }
 
+    @SubscribeEvent
+    public static void mouseClick(InputEvent.MouseButton.Pre event) {
+        Player player = Minecraft.getInstance().player;
+        if (player != null && !Minecraft.getInstance().isPaused() && Minecraft.getInstance().screen == null && !player.isSpectator()) {
+            WeaponStorage data = player.getCapability(TEAttachments.WEAPON_STORAGE).orElse(new WeaponStorage());
+            boolean clicking = data.leftClicking;
+            if (event.getButton() == GLFW.GLFW_MOUSE_BUTTON_1) { // 左键
+                if (event.getAction() == InputConstants.RELEASE) { // 松开
+                    data.leftClicking = false;
+                    if (clicking) {
+//                        player.sendSystemMessage(Component.literal("not clicking"));
+                        ServerBoundEventPacket.mouseRelease();
+                    }
+                    return;
+                }
+                ItemStack stack = player.getMainHandItem();
+                if (stack.getItem() instanceof ILeftClickStateItem) {
+                    if (event.getAction() == InputConstants.PRESS) { // 按下
+                        if (!clicking) {
+                            data.leftClicking = true;
+//                            player.sendSystemMessage(Component.literal("clicking"));
+                            ServerBoundEventPacket.mouseLeftClick();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void interactionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
+        if (event.isAttack() && event.getHand() == InteractionHand.MAIN_HAND) {
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player != null && player.getMainHandItem().getItem() instanceof YoyosItem<?>) {
+                event.setCanceled(true);
+                event.setSwingHand(false);
+            }
+        }
+    }
 }

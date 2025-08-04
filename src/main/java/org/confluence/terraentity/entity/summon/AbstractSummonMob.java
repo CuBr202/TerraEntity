@@ -1,6 +1,7 @@
 
 package org.confluence.terraentity.entity.summon;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.server.level.ServerLevel;
@@ -12,7 +13,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
+import org.confluence.terraentity.api.entity.ISummonMob;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -29,7 +32,12 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
         super(entityType, level);
     }
 
-/* Collision Attack API */
+    @Override
+    public boolean fireImmune() {
+        return true;
+    }
+
+    /* Collision Attack API */
 
     CollisionProperties collisionProperties = new CollisionProperties(5,5,0.75f);
 
@@ -48,8 +56,7 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
         super.tick();
         if(summon_discardWhenOwnerDie()) return;
 
-        doCollisionAttack(living -> living instanceof LivingEntity living1 && canAttack(living1) &&
-                        (living instanceof Enemy && !(living instanceof NeutralMob) || living == getTarget()),
+        doCollisionAttack(e -> e instanceof LivingEntity living && this.canAttack(living),
                 this::doHurtTarget);
 
         if(this.getOwner() != null) {
@@ -77,9 +84,10 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
     }
 
     @Override
-    public boolean canAttack(LivingEntity target) {
-        if(target == getOwner()) return false;
-        return super.canAttack(target);
+    public boolean canAttack(LivingEntity living) {
+        return super.canAttack(living) &&
+                (living instanceof Enemy && !(living instanceof NeutralMob) || living == getTarget());
+
     }
 
     @Override
@@ -149,6 +157,14 @@ public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal imp
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
         return null;
+    }
+
+    @Override
+    public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
+        return false;
+    }
+
+    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
     }
 
     public static AttributeSupplier.Builder createAttributes() {

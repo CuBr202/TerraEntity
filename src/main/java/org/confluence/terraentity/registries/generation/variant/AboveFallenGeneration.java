@@ -11,7 +11,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
-import org.confluence.terraentity.registries.generation.IGeneration;
+import org.confluence.terraentity.api.entity.IGeneration;
 import org.confluence.terraentity.utils.AimUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;

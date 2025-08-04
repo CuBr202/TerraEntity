@@ -16,6 +16,7 @@ public class SpitParticle extends RisingParticle {
         this.sprites = sprites;
         this.scale(1.5F);
         this.setSpriteFromAge(sprites);
+        this.lifetime  = 8;
     }
 
     public int getLightColor(float partialTick) {
@@ -29,6 +30,7 @@ public class SpitParticle extends RisingParticle {
     public void tick() {
         super.tick();
         this.setSpriteFromAge(this.sprites);
+        this.quadSize = 1 -  this.age / (float)this.lifetime;
     }
 
     @OnlyIn(Dist.CLIENT)

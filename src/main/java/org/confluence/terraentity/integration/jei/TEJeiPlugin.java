@@ -21,8 +21,8 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.util.ClientAdapterUtil;
 import org.confluence.terraentity.data.util.AmountIngredient;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
-import org.confluence.terraentity.registries.npc_trade.ITrade;
-import org.confluence.terraentity.registries.npc_trade.ITradeHealth;
+import org.confluence.terraentity.api.npc.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeHealth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

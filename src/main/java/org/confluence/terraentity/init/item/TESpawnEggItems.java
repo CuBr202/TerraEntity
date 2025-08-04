@@ -68,6 +68,7 @@ public class TESpawnEggItems {
     public static final RegistryObject<Item> DRIPPLER_SPAWN_EGG = registerEgg("drippler_spawn_egg", TEMonsterEntities.DRIPPLER, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> BLOOD_ZOMBIE_SPAWN_EGG = registerEgg("blood_zombie_spawn_egg", TEMonsterEntities.BLOOD_ZOMBIE, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> WANDERING_EYE_FISH_SPAWN_EGG = registerEgg("wandering_eye_fish_spawn_egg", TEMonsterEntities.WANDERING_EYE_FISH, 0xffffff, 0xffffff);
+    public static final RegistryObject<Item> GHOST_SPAWN_EGG = registerEgg("ghost_spawn_egg", TEMonsterEntities.GHOST, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> CRIMSON_KEMERA_SPAWN_EGG = registerEgg("crimson_kemera_spawn_egg", TEMonsterEntities.CRIMSON_KEMERA, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> EATER_OF_SOULS_SPAWN_EGG = registerEgg("eater_of_souls_spawn_egg", TEMonsterEntities.EATER_OF_SOULS, 0xffffff, 0xffffff);
     public static final RegistryObject<Item> FACE_MONSTER_SPAWN_EGG = registerEgg("face_monster_spawn_egg", TEMonsterEntities.FACE_MONSTER, 0xffffff, 0xffffff);

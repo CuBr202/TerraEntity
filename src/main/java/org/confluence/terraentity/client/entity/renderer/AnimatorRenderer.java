@@ -9,6 +9,11 @@ import org.confluence.terraentity.client.entity.model.AnimatorModel;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 
+import javax.annotation.Nullable;
+
+/**
+ * 带有硬编码动画的生物骨骼动画渲染器
+ */
 public class AnimatorRenderer<T extends Mob & GeoEntity> extends GeoNormalRenderer<T>{
 
     protected final AnimatorModel<T> model;
@@ -19,7 +24,7 @@ public class AnimatorRenderer<T extends Mob & GeoEntity> extends GeoNormalRender
     }
 
     @Override
-    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float r, float g, float b, float a) {
+    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float r, float g, float b, float a) {
         if(!isReRender && !init){
             init = true;
             this.model.initBoneAnimators(animatable, model);

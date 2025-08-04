@@ -32,6 +32,8 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
+import org.confluence.terraentity.api.entity.ai.IFSMGeoMob;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.entity.ai.*;
@@ -92,6 +94,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         return getMultiple(level(), attribute);
     }
 
+    /**
+     * 因为finalizeSpawn中生成时，id可能会错乱，所以必须推迟在onAddedToLevel中调用
+     */
     public void firstSpawn(){};
 
     @Override

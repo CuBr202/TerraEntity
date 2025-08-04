@@ -15,16 +15,16 @@ import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.util.ClientAdapterUtil;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.menu.TETradesMenu;
 import org.confluence.terraentity.mixed.IPlayer;
-import org.confluence.terraentity.registries.npc_trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 /**
- * <p>由于交易的获得的内容是单个，统一使用trade的抽象菜单类
+ * <p>统一使用trade的抽象菜单类
  * <p>渲染cost的逻辑在{@link ITrade#renderCosts(ITradeHolder, GuiGraphics, Font, int, int, int, int, int, int)}
  * <p>使用时必须继承此类，否则会出现类型推断不匹配</p>
  */
@@ -36,7 +36,7 @@ public abstract class TETradeScreen< M extends TETradesMenu> extends AbstractCon
     private static final Component TRADES_LABEL = Component.translatable("title.terra_entity.npc_trade");
 
     // 交易项
-    protected int shopItem = -1;
+    public int shopItem = -1;
     private int hoveredItem = -1;
     private int row;
     private final int col = 5;

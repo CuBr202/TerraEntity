@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.util.trail.ITrail;
+import org.confluence.terraentity.api.entity.trail.ITrail;
 import org.joml.Matrix4f;
 
 import java.util.function.Consumer;

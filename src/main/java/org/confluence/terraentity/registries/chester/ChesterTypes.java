@@ -8,7 +8,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.TERegistries;
-import org.confluence.terraentity.registries.generation.GenerationProvider;
 
 import java.util.function.Supplier;
 
@@ -16,7 +15,7 @@ import java.util.function.Supplier;
  * 注册切斯特可以远程打开的菜单
  */
 public class ChesterTypes {
-    public static DeferredRegister<ChesterType> TYPES = DeferredRegister.create(TERegistries.ChesterTypesProviders.KEY, TerraEntity.MODID);
+    public static DeferredRegister<ChesterType> TYPES = DeferredRegister.create(TERegistries.Keys.CHESTER_TYPE, TerraEntity.MODID);
     public static final Supplier<IForgeRegistry<ChesterType>> REGISTRY = TYPES.makeRegistry(RegistryBuilder::new);
 
     public static final Supplier<ChesterType> ENDER_CHEST = TYPES.register("ender_chest", ()->new ChesterType("container.enderchest", ()->new SimpleMenuProvider((id, inv, player)-> ChestMenu.threeRows(id, inv, player.getEnderChestInventory()), Component.literal("Chester Ender Chest"))));

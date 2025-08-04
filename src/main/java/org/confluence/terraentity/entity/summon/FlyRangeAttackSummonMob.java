@@ -149,4 +149,9 @@ public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSumm
     public boolean isFlying() {
         return true;
     }
+
+    @Override
+    public boolean shouldDoCollision(){
+        return false;
+    }
 }

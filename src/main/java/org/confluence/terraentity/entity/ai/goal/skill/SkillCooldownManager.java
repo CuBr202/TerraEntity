@@ -1,12 +1,19 @@
 package org.confluence.terraentity.entity.ai.goal.skill;
 
+import org.confluence.terraentity.api.entity.ai.ISkill;
+import org.confluence.terraentity.api.entity.ai.ISkillManager;
+
 import java.util.*;
 
-public class SkillCooldownManager implements ISkillManager{
+/**
+ * 并行冷却时间管理器
+ */
+public class SkillCooldownManager implements ISkillManager {
 
-    private final HashMap<Integer, ISkill> cooldownMap = new HashMap<>(); // 技能名 -> 剩余冷却时间
-    private final PriorityQueue<ISkill> cooldownQueue = new PriorityQueue<>(Comparator.comparing(ISkill::getCooldown));
-    private final Queue<ISkill> availableSkills = new LinkedList<>(); // 可用的技能列表
+    private final HashSet<ISkill> cooldownMap = new HashSet<>(); // 技能名 -> 剩余冷却时间
+
+    protected final PriorityQueue<ISkill> cooldownQueue = new PriorityQueue<>(Comparator.comparing(ISkill::getCooldown));
+    protected final Queue<ISkill> availableSkills = new LinkedList<>(); // 可用的技能列表
 
 
     /**
@@ -18,26 +25,28 @@ public class SkillCooldownManager implements ISkillManager{
 
     @Override
     public void addSkill(ISkill skill) {
-        cooldownMap.put(skill.getIndex(), skill);
+        cooldownMap.add(skill);
         cooldownQueue.add(skill);
     }
 
     @Override
-    public void triggerSkill(ISkill skill) {
+    public boolean triggerSkill(ISkill skill) {
         if(canTriggerSkill(skill)){
             this.availableSkills.poll();
             skill.reset();
             addSkill(skill);
+            return true;
         }
+        return false;
     }
 
     @Override
     public void update(int deltaTime) {
-        cooldownMap.forEach((k,v)->v.update(deltaTime));
-        cooldownMap.entrySet().removeIf(entry -> entry.getValue().getCooldown() <= 0);
+        cooldownMap.forEach(v->v.update(deltaTime));
+        cooldownMap.removeIf(v->v.getCooldown()<=0);
 
         while (!cooldownQueue.isEmpty() &&
-               (!cooldownMap.containsKey(cooldownQueue.peek().getIndex()) || cooldownQueue.peek()!= null &&
+               (!cooldownMap.contains(cooldownQueue.peek()) || cooldownQueue.peek()!= null &&
                 cooldownQueue.peek().getCooldown() <= 0)) {
             this.availableSkills.add(cooldownQueue.poll());
         }
@@ -57,5 +66,11 @@ public class SkillCooldownManager implements ISkillManager{
     @Override
     public boolean canTriggerSkill(ISkill skill) {
         return !this.availableSkills.isEmpty() && this.availableSkills.peek() == skill;
+    }
+
+    protected void exchangeQueue(){
+        if(!this.availableSkills.isEmpty()) {
+            this.availableSkills.add(this.availableSkills.poll());
+        }
     }
 }

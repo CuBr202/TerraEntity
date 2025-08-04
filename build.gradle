@@ -161,6 +161,16 @@ dependencies {
     compileOnly fg.deobf("curse.maven:embeddium-908741:5681725")
     runtimeOnly fg.deobf("curse.maven:embeddium-908741:5681725")
 
+    // 密码库
+    minecraftLibrary 'com.github.edg_thexu:vigsecurity:1.0.0'
+    implementation (files("libs/vigsecurity-1.0.0.jar"))
+    jarJar('com.github.edg_thexu:vigsecurity:1.0.0'){
+        jarJar.ranged(it, "[1.0.0,)")
+    }
+
+//    jarJar(files("libs/vigsecurity-1.0.0.jar"))
+//    additionalRuntimeClasspath "com.github.edg_thexu:vigsecurity:1.0.0"
+
 //    implementation fg.deobf("curse.maven:kubejs-238086:5853326")
 //    implementation fg.deobf("curse.maven:architectury-api-419699:5137938")
 //    implementation fg.deobf("curse.maven:rhino-416294:6186971")

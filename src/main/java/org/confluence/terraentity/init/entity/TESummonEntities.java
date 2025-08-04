@@ -20,6 +20,8 @@ import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.SculkWispRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.SummonSwordRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.TerraprismaRenderer;
+import org.confluence.terraentity.client.entity.renderer.proj.YoyosRenderer;
+import org.confluence.terraentity.entity.proj.YoyosEntity;
 import org.confluence.terraentity.entity.summon.*;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.init.TEEntities;
@@ -45,10 +47,18 @@ public class TESummonEntities {
 
 
     public static final RegistryObject<EntityType<Chester>> CHESTER = TEEntities.registerEntity("chester", (e,l)->new Chester(e,l),1F,1F);
+    public static final RegistryObject<EntityType<PiggyBank>> PIGGY_BANK = TEEntities.registerEntity("piggy_bank", (e,l)->new PiggyBank(e,l),1F,1F);
+
+    // 悠悠球
+    public static final RegistryObject<EntityType<YoyosEntity<?>>> YOYOS_ENTITY = TEEntities.registerEntity("yoyos_projectile", (e, l)->new YoyosEntity<>(e,l) , 0.5f, 0.5f);
+
+
+//    Color c = new Color(0xFF714C11, true);  // 删掉注释查看颜色
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(CHESTER.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.FIRE_IMP.getId(), false, 1f,0));
+        event.registerEntityRenderer(CHESTER.get(), c->new GeoNormalRenderer<>(c, TESummonEntities.CHESTER.getId().withPrefix("summon/"), false, 1f,0));
+        event.registerEntityRenderer(PIGGY_BANK.get(), c->new GeoNormalRenderer<>(c, TESummonEntities.PIGGY_BANK.getId().withPrefix("summon/"), false, 1f,0));
 
         // sommon
         event.registerEntityRenderer(SUMMON_FINCH.get(), c-> new GeoNormalRenderer<>(c, SUMMON_FINCH.getId().withPrefix("summon/"),true));
@@ -56,7 +66,7 @@ public class TESummonEntities {
         event.registerEntityRenderer(SUMMON_IRON_GOLEM.get(), IronGolemRenderer::new);
         event.registerEntityRenderer(SUMMON_HORNET.get(), c->new GeoNormalRenderer<>(c, new GeoNormalModel<>(TEMonsterEntities.HORNET.getId(),false),true, 0.6f, 0.5f));
         event.registerEntityRenderer(SCULK_WISP.get(), c->new SculkWispRenderer(c, SCULK_WISP.getId().withPrefix("summon/")));
-        event.registerEntityRenderer(IMP.get(), c->new GeoNormalRenderer<>(c, IMP.getId().withPrefix("summon/"), true, 0.8f,0));
+        event.registerEntityRenderer(IMP.get(), c->new GeoNormalRenderer<>(c, IMP.getId().withPrefix("summon/"), true, 0.8f,-0.5F));
         event.registerEntityRenderer(SUMMON_SNOW_FLINX.get(), c->new GeoNormalRenderer<>(c, SUMMON_SNOW_FLINX.getId().withPrefix("summon/"),false){
             @Override
             protected void adjustPose(PoseStack poseStack, SummonSnowFlinx animatable, float partialTick){
@@ -73,11 +83,13 @@ public class TESummonEntities {
         event.registerEntityRenderer(SUMMON_NETHERITE_SWORD.get(), c->new SummonSwordRenderer<>(c));
         event.registerEntityRenderer(TERRAPRISMA.get(), c->new TerraprismaRenderer(c));
 
+        event.registerEntityRenderer(YOYOS_ENTITY.get(), (c)->new YoyosRenderer(c));
 
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(CHESTER.get(), AbstractSummonMob.createAttributes().build());
+        event.put(PIGGY_BANK.get(), AbstractSummonMob.createAttributes().build());
 
         // sommon
         event.put(SUMMON_FINCH.get(), AbstractSummonMob.createAttributes().add(ForgeMod.ENTITY_GRAVITY.get(), 0).add(Attributes.ATTACK_KNOCKBACK, 0).build());
@@ -97,7 +109,7 @@ public class TESummonEntities {
         event.put(SUMMON_NETHERITE_SWORD.get(), AbstractSummonMob.createAttributes().build());
         event.put(TERRAPRISMA.get(), AbstractSummonMob.createAttributes().build());
 
-
+        event.put(YOYOS_ENTITY.get(), AbstractSummonMob.createAttributes().build());
     }
 
     public static void register(){

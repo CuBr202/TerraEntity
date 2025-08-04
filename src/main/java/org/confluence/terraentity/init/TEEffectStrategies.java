@@ -9,6 +9,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
+import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
@@ -30,7 +31,7 @@ import static org.confluence.terraentity.registries.hit_effect.EffectStrategy.*;
  * @author coffee
  */
 public final class TEEffectStrategies {
-    public static final DeferredRegister<EffectStrategy> EFFECT_STRATEGY = DeferredRegister.create(TERegistries.EffectStrategies.KEY, TerraEntity.MODID);
+    public static final DeferredRegister<EffectStrategy> EFFECT_STRATEGY = DeferredRegister.create(TERegistries.Keys.EFFECT_STRATEGY, TerraEntity.MODID);
     public static final Supplier<IForgeRegistry<EffectStrategy>> REGISTRY = EFFECT_STRATEGY.makeRegistry(RegistryBuilder::new);
 
     /**
@@ -52,7 +53,7 @@ public final class TEEffectStrategies {
     }
 
     /**未定义效果*/
-    private static final RegistryObject<EffectStrategy> UNDEFINED = createEffect("undefined",
+    public static final RegistryObject<EffectStrategy> UNDEFINED = createEffect("undefined",
             UNDEFINED_EFFECT);
 
     /**蝙蝠棍*/
@@ -97,9 +98,12 @@ public final class TEEffectStrategies {
 //    private static final  DeferredHolder<EffectStrategy, EffectStrategy> LIGHTS_BANE_EFFECT = createEffect("lights_bane",
 //            ON_HIT_PROJECTILE.apply((level)->ModEntities.LIGHTS_BANE_PROJECTILE.get().create(level).addAttackDamage(7f)));
 //
-//    /** 养蜂人*/
-//    private static final  DeferredHolder<EffectStrategy, EffectStrategy> BEE_KEEPER_EFFECT = createEffect("bee_keeper",
-//            ON_HIT_PROJECTILE_COUNT.apply((level)->ModEntities.BEE_PROJECTILE.get().create(level).addAttackDamage(2), 3));
+    public static final  RegistryObject<EffectStrategy> YOYO_BEE_PROJ_EFFECT = createEffect("yoyo_bee_proj",
+            (owner, entity)->{
+                if(owner.getRandom().nextFloat() < 0.33f) {
+                    ON_HIT_PROJECTILE.apply((level) -> TEProjectileEntities.BEE_PROJ.get().create(level)).accept(owner, entity);
+                }
+            });
 
     // 北斗飞镖
     private static final RegistryObject<EffectStrategy> FROST_BURN_10_SEC_4_AMP = createEffect("frozen_burn_10_sec_4_amp",

@@ -16,7 +16,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.ai.Boss;
+import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
@@ -33,7 +33,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implements Boss {
     private static final float MAX_HEALTHS = 54f;
-    private static final float DAMAGE = 5f;//接触伤害
+    private static final float DAMAGE = 12.5f;//接触伤害
     private static final float projDamage = 3;
 
     private float segmentInternal = 2.8f;
@@ -85,13 +85,11 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         baseSegments.add(this);
         baseSegmentsHealth.add(this.getMaxHealth());
         for(int i=1;i<=segmentCount;i++){
-            EaterOfWorldsSegment newSegment = new EaterOfWorldsSegment(this,level());
-            newSegment.setPos(position().add(dir.scale(i*0.5)));
+            EaterOfWorldsSegment newSegment = TEUtils.spawnEntity(()->new EaterOfWorldsSegment(this,level()), (ServerLevel) level(),position().add(dir.scale(i*0.5)));
             newSegment.setLastSegment(Objects.requireNonNullElse(temp, this));
             temp = newSegment;
             baseSegments.add(newSegment);
             baseSegmentsHealth.add(newSegment.getMaxHealth());
-            level().addFreshEntity(newSegment);
         }
 
         ((EaterOfWorldsSegment)baseSegments.get(segmentCount)).ifTail = true;
@@ -370,9 +368,8 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
 
                         //错误体节，替换为头                                       //被区块刷新掉的重现
                         if(current instanceof EaterOfWorldsSegment || baseSegmentsHealth.get(i)>0 && current.isRemoved()){
-                            newHead = new EaterOfWorlds(level(),false);
+                            newHead = TEUtils.spawnEntity(()->new EaterOfWorlds(level(),false), (ServerLevel)level(),current.position());
                             newHead.setHealth(current.getHealth());
-                            newHead.setPos(current.position());
                             newHead.setYRot(current.yRotO);
                             newHead.setXRot(current.xRotO);
                             newHead.genSegments =  false;
@@ -380,7 +377,6 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                             //newHead.segments.add(newHead);
                             current.discard();
                             baseSegments.set(i,newHead);
-                            level().addFreshEntity(newHead);
                         }
 
                         newHead = (EaterOfWorlds) baseSegments.get(i);

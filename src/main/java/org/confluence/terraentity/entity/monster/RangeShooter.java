@@ -1,6 +1,8 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -14,10 +16,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.proj.BaseProj;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -31,6 +33,7 @@ public class RangeShooter extends AbstractMonster {
     int phase = _phase;
     int _delay = 8;
     int delay = -1;
+    int lastPhase = _phase;
 
     static final AttributeModifier modifier = new AttributeModifier(UUID.fromString("eabc7402-ad87-4567-94e5-253a6cf4e391"),"range",1, AttributeModifier.Operation.MULTIPLY_BASE);
     Supplier<? extends EntityType<? extends BaseProj<?>>> projType;
@@ -62,6 +65,7 @@ public class RangeShooter extends AbstractMonster {
             lookAt(target, 10, 70);
             this.moveControl.strafe(0.01f, 0.01f);
             if(phase == 180 || phase == 130 || phase == 80){
+                lastPhase = phase;
                 delay = _delay;
                 this.swing(InteractionHand.MAIN_HAND, true);
             }
@@ -93,17 +97,30 @@ public class RangeShooter extends AbstractMonster {
         }
 
     }
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (getType() == TEMonsterEntities.FIRE_IMP.get() && pSource.is(DamageTypeTags.IS_FIRE)) {
+            return false;
+        }
+        if(super.hurt(pSource, pAmount)){
+            this.phase = this.lastPhase;
+            return true;
+        }
+        return false;
+    }
 
     public int getCurrentSwingDuration() {
         return 20;
     }
 
-    RawAnimation attack = RawAnimation.begin().thenPlay("attack.range");
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "Walk/Idle/Attack", 5, state ->{
             if(this.swingTime > 0){
-                return state.setAndContinue(attack);
+                return state.setAndContinue(DefaultAnimations.ATTACK_CAST);
+            }
+            if(state.isMoving()){
+                return state.setAndContinue(DefaultAnimations.WALK);
             }
             return state.setAndContinue(DefaultAnimations.IDLE);
         }

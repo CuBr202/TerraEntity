@@ -34,7 +34,6 @@ public class TEAttributeModifierConfig extends AbstractJsonConfig {
         return INSTANCE;
     }
 
-    String comment;
     Map<EntityType<?>, List<Modifier>> modifiers;
 
     static MapCodec<Map<EntityType<?>, List<Modifier>>> CODEC =

@@ -5,7 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.registries.track.ITrackType;
+import org.confluence.terraentity.api.entity.ITrackType;
 import org.confluence.terraentity.registries.track.TrackTypeProvider;
 import org.confluence.terraentity.registries.track.TrackTypeProviderTypes;
 import org.confluence.terraentity.utils.TEUtils;

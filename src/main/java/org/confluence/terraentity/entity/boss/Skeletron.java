@@ -6,6 +6,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
@@ -21,7 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.entity.ai.Boss;
+import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.proj.SkullProjectile;
 import org.confluence.terraentity.init.TESounds;
@@ -31,9 +32,9 @@ import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,6 +105,14 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
         return TESounds.TR_SKELETON_HURT.get();
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pSource.is(DamageTypeTags.IS_DROWNING)) {
+            return false;
+        }
+        return super.hurt(pSource, pAmount); // confluence mixin here
     }
 
     @Override
@@ -195,16 +204,21 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     @Override
     public void firstSpawn() {
         if (isMainBody() && !level().isClientSide) {
-            SkeletronHand hand1 = new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.LEFT);
-            SkeletronHand hand2 = new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.RIGHT);
-            hand1.setPos(position());
-            hand2.setPos(position());
-            level().addFreshEntity(hand1);
-            level().addFreshEntity(hand2);
-            hands.add(hand1);
-            hands.add(hand2);
-            _hands.add(hand1);
-            _hands.add(hand2);
+            SkeletronHand hand1 = TEUtils.spawnEntity(()->new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.LEFT), (ServerLevel) level(), position());
+            SkeletronHand hand2 = TEUtils.spawnEntity(()->new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.RIGHT), (ServerLevel)level(),position());
+//            ;
+//            new SkeletronHand(TEBossEntities.SKELETRON_HAND.get(), level(), this, SkeletronHand.HandSide.RIGHT);
+            if (hand1 != null) {
+                hand1.setPos(position());
+                hands.add(hand1);
+                _hands.add(hand1);
+            }
+            if (hand2 != null) {
+                hand2.setPos(position());
+                hands.add(hand2);
+                _hands.add(hand2);
+            }
+
             this.playSound(TESounds.ROAR.get());
         }
     }

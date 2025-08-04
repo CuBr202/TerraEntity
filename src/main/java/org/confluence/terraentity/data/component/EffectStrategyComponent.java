@@ -15,6 +15,8 @@ import java.util.function.Supplier;
 
 /**
  * 命中效果的数据生成器组件
+ *
+ * @param effects 命中效果
  */
 public record EffectStrategyComponent(List<IEffectStrategy> effects) implements IDataComponentType<EffectStrategyComponent> {
 
@@ -27,6 +29,7 @@ public record EffectStrategyComponent(List<IEffectStrategy> effects) implements 
             effect.getEffect().accept(owner, target);
         }
     }
+
     public static EffectStrategyComponent of(IEffectStrategy effect) {
         return new EffectStrategyComponent(List.of(effect));
     }
@@ -44,5 +47,6 @@ public record EffectStrategyComponent(List<IEffectStrategy> effects) implements 
 //    public static EffectStrategyComponent of(EffectStrategy effect) {
 //        return new EffectStrategyComponent(List.of(effect.getProvider()));
 //    }
+
 
 }

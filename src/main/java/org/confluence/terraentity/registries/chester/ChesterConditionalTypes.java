@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.function.Supplier;
 
 public class ChesterConditionalTypes {
-    public static DeferredRegister<ChesterConditionalType> TYPES = DeferredRegister.create(TERegistries.ChesterConditionalTypesProviders.KEY, TerraEntity.MODID);
+    public static DeferredRegister<ChesterConditionalType> TYPES = DeferredRegister.create(TERegistries.Keys.CHESTER_CONDITIONAL_TYPE, TerraEntity.MODID);
     public static final Supplier<IForgeRegistry<ChesterConditionalType>> REGISTRY = TYPES.makeRegistry(RegistryBuilder::new);
 
     public static final Supplier<ChesterConditionalType> ENDER_CHEST = TYPES.register("routine_container", ()->new ChesterConditionalType(

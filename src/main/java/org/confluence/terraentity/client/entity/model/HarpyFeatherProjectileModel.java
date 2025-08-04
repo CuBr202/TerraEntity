@@ -45,6 +45,4 @@ public class HarpyFeatherProjectileModel<T extends Entity> extends EntityModel<T
 		poseStack.translate(0,-1.45,0);
 		bone.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
-
-
 }

@@ -3,7 +3,7 @@ package org.confluence.terraentity.client.entity.model;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.util.IVariant;
+import org.confluence.terraentity.api.entity.IVariant;
 import software.bernie.geckolib.animatable.GeoEntity;
 
 

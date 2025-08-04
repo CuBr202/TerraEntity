@@ -8,7 +8,7 @@ import org.confluence.terraentity.client.animation.bone.animator.humanoid.LeftHa
 import org.confluence.terraentity.client.animation.bone.animator.humanoid.RightHandGeoBoneAnimator;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
-import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
+import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -17,6 +17,10 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import static org.confluence.terraentity.client.entity.renderer.mob.HumanoidRenderer.LEFT_HAND;
 import static org.confluence.terraentity.client.entity.renderer.mob.HumanoidRenderer.RIGHT_HAND;
 
+/**
+ * 人形怪的Geo模型
+ * @param <T>
+ */
 public class GeoHumanoidModel<T extends LivingEntity & GeoEntity & IUseItemAnimatable<BoneStates>> extends AnimatorModel<T>{
 
     protected GeoBoneAnimator<T> rightArmAnimator;
@@ -41,6 +45,14 @@ public class GeoHumanoidModel<T extends LivingEntity & GeoEntity & IUseItemAnima
         }
         if(leftArmAnimator!= null) {
             handleBone(animatable.getLeftArmBoneStateMachine(), animatable, leftArmAnimator, partialTick, context);
+        }
+        if(animatable.getVehicle() != null) {
+            this.getBone("LeftLeg").ifPresent(bone -> {
+                bone.setRotX(1.5707963F);
+            });
+            this.getBone("RightLeg").ifPresent(bone -> {
+                bone.setRotX(1.5707963F);
+            });
         }
     }
 

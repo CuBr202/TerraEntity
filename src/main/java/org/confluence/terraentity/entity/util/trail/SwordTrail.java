@@ -10,6 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.confluence.terraentity.api.entity.trail.ITrail;
 import org.confluence.terraentity.client.util.ShaderUtil;
 import org.confluence.terraentity.entity.proj.TrailSwordProj;
 import org.joml.Matrix4f;

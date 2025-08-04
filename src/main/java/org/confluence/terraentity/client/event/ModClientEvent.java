@@ -32,29 +32,11 @@ import static org.confluence.terraentity.client.util.RegisterUtils.registerModel
 
 @Mod.EventBusSubscriber(modid = TerraEntity.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ModClientEvent {
-/*
-    public static final BlockColor HALLOW_LEAVES_COLOR = (blockState, getter, pos, tint) -> {
-        if (pos == null) return -1;
-
-        IntegerRGB x = hallowMixture(Math.abs(pos.getX()) % 12);
-        IntegerRGB y = hallowMixture(Math.abs(pos.getY()) % 12);
-        IntegerRGB z = hallowMixture(Math.abs(pos.getZ()) % 12);
-
-        return x.mixture(y, 0.5F).mixture(z, 0.5F).getPrefab();
-    };
-    public static final ItemColor SIMPLE = (pStack, pTintIndex) -> ColoredItem.getColor(pStack);
-
-    private static IntegerRGB hallowMixture(int m) {
-        if (m <= 4) return IntegerRGB.HALLOW_A.mixture(IntegerRGB.HALLOW_B, m * 0.25F);
-        if (m <= 8) return IntegerRGB.HALLOW_B.mixture(IntegerRGB.HALLOW_C, (m - 4) * 0.25F);
-        return IntegerRGB.HALLOW_C.mixture(IntegerRGB.HALLOW_A, (m - 8) * 0.25F);
-    }
-*/
 
     @SubscribeEvent
-    public static void onClientSetup(final FMLClientSetupEvent event) {
+    public static void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            MenuScreens.register(TEMenus.SIMPLE_NPC_TRADES_MENU.get(), SimpleTradeScreen::new);
+            registerMenuScreens();
             ItemInHandTrailAttachment.registerDefault();
             SDHelper.registerDynamicLight();
         });
@@ -64,6 +46,8 @@ public final class ModClientEvent {
     public static void onEnqueue(final InterModEnqueueEvent event) {
         ConfigContainerRegister.registerModsPage(event);
     }
+
+
 
     @SubscribeEvent
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
@@ -75,6 +59,7 @@ public final class ModClientEvent {
         registerModel(event, DemonScytheModel.class);
 //        registerModel(event, TerraprismaModel.class);
         event.registerLayerDefinition(TerraprismaModel.LAYER_LOCATION, TerraprismaModel::createBodyLayer);
+        registerModel(event, BeeProjModel.class);
 
     }
 
@@ -109,6 +94,10 @@ public final class ModClientEvent {
     }
 
 
+    public static void registerMenuScreens() {
+        MenuScreens.register(TEMenus.SIMPLE_NPC_TRADES_MENU.get(), SimpleTradeScreen::new);
+
+    }
 
 
 

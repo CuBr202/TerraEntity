@@ -8,7 +8,7 @@ import org.confluence.terraentity.client.animation.api.context.AnimatorContext;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.client.animation.bone.GeoBoneState;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
-import org.confluence.terraentity.entity.animation.IUseItemAnimatable;
+import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import software.bernie.geckolib.cache.object.GeoBone;
 
 import java.util.EnumMap;

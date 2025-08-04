@@ -4,7 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
-import org.confluence.terraentity.entity.ai.IFlyRideableMob;
+import org.confluence.terraentity.api.entity.IFlyRideableMob;
 import org.confluence.terraentity.utils.AdapterUtils;
 
 import java.util.function.Supplier;

@@ -1,7 +1,7 @@
 package org.confluence.terraentity.entity.ai.goal.summon;
 
 import net.minecraft.world.entity.Mob;
-import org.confluence.terraentity.entity.summon.ISummonMob;
+import org.confluence.terraentity.api.entity.ISummonMob;
 
 public class SummonFlyFlowOwnerGoal<T extends Mob & ISummonMob<?>> extends SummonFollowOwnerGoal<T>{
 

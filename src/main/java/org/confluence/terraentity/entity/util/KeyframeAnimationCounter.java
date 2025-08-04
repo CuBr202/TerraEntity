@@ -22,7 +22,7 @@ public class KeyframeAnimationCounter {
             new KeyframeAnimationCounter(aFloat, animation)).orElseGet(() -> new KeyframeAnimationCounter(animation))));
 
 //    public static StreamCodec<ByteBuf, KeyframeAnimationCounter> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
-public static FriendlyByteBuf.Writer<KeyframeAnimationCounter> WRITER = AdapterUtils.CodecWriter(CODEC);
+    public static FriendlyByteBuf.Writer<KeyframeAnimationCounter> WRITER = AdapterUtils.CodecWriter(CODEC);
     public static FriendlyByteBuf.Reader<KeyframeAnimationCounter> READER = AdapterUtils.CodecReader(CODEC);
 
 

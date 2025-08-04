@@ -47,6 +47,7 @@ public class TEAi {
         public static Supplier<MemoryModuleType<LivingEntity>> NEAREST_VISIBLE_ALLIANCE = MEMORY_MODULES.register("nearest_visible_alliance", () -> new MemoryModuleType<>(Optional.empty()));
         public static Supplier<MemoryModuleType<LivingEntity>> NEAREST_VISIBLE_ALLIANCE_NURSE_TARGET = MEMORY_MODULES.register("nearest_visible_alliance_nurse_target", () -> new MemoryModuleType<>(Optional.empty()));
         public static Supplier<MemoryModuleType<List<AbstractTerraNPC>>> NEARBY_NPC = MEMORY_MODULES.register("nearby_npc", () -> new MemoryModuleType<>(Optional.empty()));
+        public static Supplier<MemoryModuleType<AbstractTerraNPC>> TALKING_NPC = MEMORY_MODULES.register("talking_npc", () -> new MemoryModuleType<>(Optional.empty()));
 
         public static void register(IEventBus bus){
             MEMORY_MODULES.register(bus);

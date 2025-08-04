@@ -127,6 +127,8 @@ public class TEMonsterEntities {
     // 穿墙怪
     public static final RegistryObject<EntityType<CursedSkull>> CURSED_SKULL = TEEntities.registerEntity("cursed_skull", (e, l) -> new CursedSkull(e, l, new AbstractPrefab(21, 1, 18, 32, 1, 0.82f).getPrefab()), 1F, 1F);
 
+    public static final RegistryObject<EntityType<Ghost>> GHOST = TEEntities.registerEntity("ghost", (e, l) -> new Ghost(e, l, new AbstractPrefab(26, 1, 8, 16, 0, 0.55f).getPrefab()), 1F, 1.8F);
+
     // 远程法师
     public static final RegistryObject<EntityType<RangeShooter>> DARK_CASTER = TEEntities.registerEntity("dark_caster", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(26, 1, 10, 32, 1, 0.82f).getPrefab()), 0.65F, 1.85F);
     public static final RegistryObject<EntityType<RangeShooter>> GOBLIN_SORCERER = TEEntities.registerEntity("goblin_sorcerer", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(20, 1, 10, 32, 1, 0.46f).getPrefab()), 0.65F, 1.85F);
@@ -142,6 +144,7 @@ public class TEMonsterEntities {
 
     //饿鬼
     public static final RegistryObject<EntityType<TheHungry>> THE_HUNGRY = TEEntities.registerEntity("the_hungry", (e, l) -> new TheHungry(e, l, new AbstractPrefab(30, 2, 16, 32, 0.75f, 0.28f).getPrefab()), 1F, 1F);
+
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -237,6 +240,8 @@ public class TEMonsterEntities {
 
         // 穿墙怪
         event.registerEntityRenderer(TEMonsterEntities.CURSED_SKULL.get(), c -> new CursedSkullRenderer<>(c, TEMonsterEntities.CURSED_SKULL.getId(), true, 1f, 0));
+
+        event.registerEntityRenderer(TEMonsterEntities.GHOST.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.GHOST.getId(), false, 1f, 0));
 
         // 远程法师
         event.registerEntityRenderer(TEMonsterEntities.DARK_CASTER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.DARK_CASTER.getId()));
@@ -341,6 +346,8 @@ public class TEMonsterEntities {
         // 穿墙怪
         event.put(CURSED_SKULL.get(), AbstractMonster.createAttributes().build());
 
+        event.put(GHOST.get(), AbstractMonster.createAttributes().build());
+
         // 远程法师
         event.put(DARK_CASTER.get(), AbstractMonster.createAttributes().build());
         event.put(FIRE_IMP.get(), AbstractMonster.createAttributes().build());
@@ -437,6 +444,8 @@ public class TEMonsterEntities {
 
         // 穿墙怪
         event.register(CURSED_SKULL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
+        event.register(GHOST.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
         // 远程法师
         event.register(DARK_CASTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDungeonMonsterSpawn, SpawnPlacementRegisterEvent.Operation.REPLACE);

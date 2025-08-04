@@ -4,13 +4,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.confluence.terraentity.registries.npc_trade_modify.ITradeModifier;
+import org.confluence.terraentity.api.npc.trade.ITradeModifier;
 
 import java.io.IOException;
 import java.io.Reader;

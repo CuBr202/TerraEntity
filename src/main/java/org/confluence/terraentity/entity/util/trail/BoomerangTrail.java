@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.util.trail;
 
+import org.confluence.terraentity.api.entity.trail.ITrail;
 import org.confluence.terraentity.entity.proj.BoomerangProjectile;
 
 public class BoomerangTrail implements ITrail<BoomerangProjectile> {

@@ -87,6 +87,7 @@ public class NPCAi {
                 new MoveToTargetSink(),
                 new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
                 new CountDownCooldownTicks(MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS),
+                new NPCTalkBrain(800),
                 getPanicTriggerBrain(),
                 getAttackTriggerBrain(),
                 NPCHouseBehaviors.findHouse(MemoryModuleType.HOME) // 寻找家

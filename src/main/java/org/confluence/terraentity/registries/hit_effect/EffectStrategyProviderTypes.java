@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * 注册命中效果编解码器的类型
  */
 public class EffectStrategyProviderTypes {
-    public static final DeferredRegister<EffectStrategyProvider> TYPES = DeferredRegister.create(TERegistries.EffectStrategyProviders.KEY, TerraEntity.MODID);
+    public static final DeferredRegister<EffectStrategyProvider> TYPES = DeferredRegister.create(TERegistries.Keys.EFFECT_STRATEGY_PROVIDER, TerraEntity.MODID);
     public static final Supplier<IForgeRegistry<EffectStrategyProvider>> REGISTRY = TYPES.makeRegistry(RegistryBuilder::new);
 
     public static final RegistryObject<EffectStrategyProvider> TIME_POSSIBILITY_AMPLIFIER_EFFECT_PROVIDER = register("time_possibility_amplifier_effect", ()->TimePossibilityAmplifierEffect.CODEC);

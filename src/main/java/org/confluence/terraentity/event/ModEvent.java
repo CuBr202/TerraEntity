@@ -33,10 +33,8 @@ public class ModEvent {
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            ModChecker.check();
             NetworkHandler.register();
             CraftingHelper.register(AmountIngredient.TYPE(), AmountIngredient.Serializer.INSTANCE);
-
         });
     }
 

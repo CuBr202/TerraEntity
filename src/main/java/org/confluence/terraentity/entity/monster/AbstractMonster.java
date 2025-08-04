@@ -18,7 +18,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.common.ForgeMod;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.entity.ai.ICollisionAttackEntity;
+import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
@@ -186,7 +186,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     }
 
     public float getJumpBoostPower() {
-        return (float) (super.getJumpBoostPower() + getAttributeValue(Attributes.JUMP_STRENGTH));
+        return (float) (getAttributeValue(Attributes.JUMP_STRENGTH)) - 0.42f;
     }
     @Override
     public boolean isNoGravity() {

@@ -6,7 +6,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
-import org.confluence.terraentity.entity.ai.motion.curve.Curve;
+import org.confluence.terraentity.api.entity.animation.Curve;
 
 /**
  * 蠕虫游走ai

@@ -5,10 +5,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.animation.api.context.AnimatorContext;
 import org.confluence.terraentity.client.animation.multi_bone.animator.SkeletronAnimator;
 import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
+import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.entity.animation.MultiBone;
 import org.confluence.terraentity.entity.animation.MultiBoneStateMachine;
@@ -17,12 +17,12 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 
-public class SkeletronHandRenderer extends GeoBossRenderer<SkeletronHand, SkeletronHandModel> {
+public class SkeletronHandRenderer extends GeoNormalRenderer<SkeletronHand> {
     private GeoBone hand;
     SkeletronAnimator<SkeletronHand> animator;
 
     public SkeletronHandRenderer(EntityRendererProvider.Context renderManager, SkeletronHandModel model) {
-        super(renderManager, model);
+        super(renderManager, model, true, 1, 0);
     }
 
     @Override

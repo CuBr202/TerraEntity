@@ -1,12 +1,13 @@
 package org.confluence.terraentity.menu;
 
 import net.minecraft.world.entity.player.Inventory;
-import org.confluence.terraentity.entity.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.init.TEMenus;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * 这个类提供简单统一的菜单界面{@link org.confluence.terraentity.registries.npc_trade.ITrade}
+ * 这个类提供简单统一的菜单界面{@link ITrade}
  */
 public class SimpleTradeMenu extends TETradesMenu {
 
