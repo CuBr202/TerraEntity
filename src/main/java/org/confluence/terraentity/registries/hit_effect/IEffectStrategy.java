@@ -33,7 +33,7 @@ public interface IEffectStrategy {
 
     default String getTranslationKey() {
         return TerraEntity.MODID + ".effect.strategy." + getName();
-//        return "effect.strategy." + TERegistries.EffectStrategyProviders.REGISTRY.getKey(getCodec().get());
+//        return "effect.strategy." + TERegistries.EffectStrategyProviders.GENERATION_PROVIERS.getKey(getCodec().get());
     }
 
     default MutableComponent getDescription() {
@@ -87,7 +87,7 @@ public interface IEffectStrategy {
      */
     EffectStrategyProvider codec();
 
-    Codec<IEffectStrategy> TYPED_CODEC = TERegistries.EffectStrategyProviders.REGISTRY.byNameCodec().dispatch(IEffectStrategy::codec, EffectStrategyProvider::codec);
+    Codec<IEffectStrategy> TYPED_CODEC = TERegistries.EFFECT_STRATEGY_PROVIDERS.byNameCodec().dispatch(IEffectStrategy::codec, EffectStrategyProvider::codec);
 
     StreamCodec<FriendlyByteBuf, IEffectStrategy> STREAM_CODEC = new StreamCodec<>() {
         @Override

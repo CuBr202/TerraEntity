@@ -27,7 +27,7 @@ public interface ITrackType {
      */
     TrackTypeProvider getCodec();
 
-    Codec<ITrackType> TYPED_CODEC = TERegistries.TrackTypeProviders.REGISTRY
+    Codec<ITrackType> TYPED_CODEC = TERegistries.TRACK_TYPE_PROVIDERS
             .byNameCodec()
             .dispatch(ITrackType::getCodec, TrackTypeProvider::codec);
 

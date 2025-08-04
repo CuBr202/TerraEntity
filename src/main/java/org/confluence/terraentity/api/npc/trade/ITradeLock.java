@@ -31,7 +31,7 @@ public interface ITradeLock {
     TradeLockProvider getCodec();
 
 
-    Codec<ITradeLock> TYPED_CODEC = TERegistries.TradeLockProviders.REGISTRY
+    Codec<ITradeLock> TYPED_CODEC = TERegistries.TRADE_LOCK_PROVIDERS
             .byNameCodec()
             .dispatch(ITradeLock::getCodec, TradeLockProvider::codec);
 

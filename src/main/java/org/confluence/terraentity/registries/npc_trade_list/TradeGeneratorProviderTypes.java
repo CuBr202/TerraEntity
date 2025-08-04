@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * 注册交易表生成器编解码器的类型
  */
 public class TradeGeneratorProviderTypes {
-    public static final DeferredRegister<TradeGeneratorProvider> TYPES = DeferredRegister.create(TERegistries.TradeGeneratorProviders.REGISTRY, TerraEntity.MODID);
+    public static final DeferredRegister<TradeGeneratorProvider> TYPES = DeferredRegister.create(TERegistries.TRADE_GENERATOR_PROVIDERS, TerraEntity.MODID);
 
     public static final Supplier<TradeGeneratorProvider> SIMPLE_LIST = register("simple_list", SimpleGenerator.CODEC);
     public static final Supplier<TradeGeneratorProvider> WEIGHT_MAP = register("weight_map", WeightMapGenerator.CODEC);

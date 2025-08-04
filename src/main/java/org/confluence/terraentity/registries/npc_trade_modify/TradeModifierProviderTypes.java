@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * 注册交易任务编解码器的类型
  */
 public class TradeModifierProviderTypes {
-    public static final DeferredRegister<TradeModifierProvider> TYPES = DeferredRegister.create(TERegistries.TradeModifierProviderRegistry.REGISTRY, TerraEntity.MODID);
+    public static final DeferredRegister<TradeModifierProvider> TYPES = DeferredRegister.create(TERegistries.TRADE_MODIFIER_PROVIDERS, TerraEntity.MODID);
 
     public static final Supplier<TradeModifierProvider> MODIFY_SINGLE = register("single", TradeItemModifier.CODEC);
     public static final Supplier<TradeModifierProvider> MODIFY_LIST = register("list", TradeListModifier.CODEC);

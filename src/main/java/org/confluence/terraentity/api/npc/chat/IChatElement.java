@@ -34,7 +34,7 @@ public interface IChatElement<T> {
     }
 
 
-    Codec<IChatElement> TYPED_CODEC = TERegistries.ChatElementProviderRegistry.REGISTRY
+    Codec<IChatElement> TYPED_CODEC = TERegistries.CHAT_ELEMENT_PROVIDERS
             .byNameCodec()
             .dispatch(IChatElement::getProvider, ChatElementProvider::codec);
 

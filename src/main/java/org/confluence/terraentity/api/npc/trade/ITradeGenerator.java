@@ -32,7 +32,7 @@ public interface ITradeGenerator {
     TradeGeneratorProvider getCodec();
 
 
-    Codec<ITradeGenerator> TYPED_CODEC = TERegistries.TradeGeneratorProviders.REGISTRY
+    Codec<ITradeGenerator> TYPED_CODEC = TERegistries.TRADE_GENERATOR_PROVIDERS
             .byNameCodec()
             .dispatch(ITradeGenerator::getCodec, TradeGeneratorProvider::codec);
 

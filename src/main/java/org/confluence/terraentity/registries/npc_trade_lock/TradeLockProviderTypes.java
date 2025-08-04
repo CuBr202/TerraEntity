@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * 注册交易任务编解码器的类型
  */
 public class TradeLockProviderTypes {
-    public static final DeferredRegister<TradeLockProvider> TYPES = DeferredRegister.create(TERegistries.TradeLockProviders.REGISTRY, TerraEntity.MODID);
+    public static final DeferredRegister<TradeLockProvider> TYPES = DeferredRegister.create(TERegistries.TRADE_LOCK_PROVIDERS, TerraEntity.MODID);
 
     public static final Supplier<TradeLockProvider> AND_LOCK = register("and_lock", AndLock.CODEC);
     public static final Supplier<TradeLockProvider> OR_LOCK = register("or_lock", OrLock.CODEC);

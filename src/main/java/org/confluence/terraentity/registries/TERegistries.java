@@ -37,21 +37,59 @@ import static net.minecraft.resources.ResourceKey.createRegistryKey;
 
 public class TERegistries {
 
+    public static final Registry<GenerationProvider> GENERATION_PROVIERS = createRegistry(Keys.GENERATION_PROVIDER);
+    public static final Registry<EffectStrategyProvider> EFFECT_STRATEGY_PROVIDERS = createRegistry(Keys.EFFECT_STRATEGY_PROVIDER);
+    public static final Registry<EffectStrategy> EFFECT_STRATEGIES = createRegistry(Keys.EFFECT_STRATEGY);
+    public static final Registry<TrackTypeProvider> TRACK_TYPE_PROVIDERS = createRegistry(Keys.TRACK_TYPE_PROVIDER);
+    public static final Registry<TradeProvider> TRADE_PROVIDERS = createRegistry(Keys.TRADE_PROVIDER);
+    public static final Registry<TradeTaskProvider> TRADE_TASK_PROVIDERS = createRegistry(Keys.TRADE_TASK_PROVIDER);
+    public static final Registry<TradeLockProvider> TRADE_LOCK_PROVIDERS = createRegistry(Keys.TRADE_LOCK_PROVIDER);
+    public static final Registry<TradeGeneratorProvider> TRADE_GENERATOR_PROVIDERS = createRegistry(Keys.TRADE_GENERATOR_PROVIDER);
+    public static final Registry<ChesterType> CHESTER_TYPES = createRegistry(Keys.CHESTER_TYPE);
+    public static final Registry<ChesterConditionalType> CHESTER_CONDITIONAL_TYPES = createRegistry(Keys.CHESTER_CONDITIONAL_TYPE);
+    public static final Registry<TradeModifierProvider> TRADE_MODIFIER_PROVIDERS = createRegistry(Keys.TRADE_MODIFIER_PROVIDER);
+    public static final Registry<ChatElementProvider> CHAT_ELEMENT_PROVIDERS = createRegistry(Keys.CHAT_ELEMENT_PROVIDER);
+    public static final Registry<ChatConditionProvider> CHAT_CONDITION_PROVIDERS = createRegistry(Keys.CHAT_CONDITION_PROVIDER);
+
+
+    private static  <T> Registry<T> createRegistry(ResourceKey<Registry<T>> key) {
+        return new RegistryBuilder<>(key).create();
+    }
+
+    public static class Keys {
+        public static final ResourceKey<Registry<GenerationProvider>> GENERATION_PROVIDER = createRegistryKey(TerraEntity.space("generation_provider"));
+        public static final ResourceKey<Registry<EffectStrategyProvider>> EFFECT_STRATEGY_PROVIDER = createRegistryKey(TerraEntity.space("effect_strategy_type"));
+        public static final ResourceKey<Registry<EffectStrategy>> EFFECT_STRATEGY = createRegistryKey(TerraEntity.space("effect_strategy"));
+        public static final ResourceKey<Registry<TrackTypeProvider>> TRACK_TYPE_PROVIDER = createRegistryKey(TerraEntity.space("track_type_provider"));
+        public static final ResourceKey<Registry<TradeProvider>> TRADE_PROVIDER = createRegistryKey(TerraEntity.space("trade_provider"));
+        public static final ResourceKey<Registry<TradeTaskProvider>> TRADE_TASK_PROVIDER = createRegistryKey(TerraEntity.space("trade_task_provider"));
+        public static final ResourceKey<Registry<TradeLockProvider>> TRADE_LOCK_PROVIDER = createRegistryKey(TerraEntity.space("trade_lock_provider"));
+        public static final ResourceKey<Registry<TradeGeneratorProvider>> TRADE_GENERATOR_PROVIDER = createRegistryKey(TerraEntity.space("trade_generator_provider"));
+        public static final ResourceKey<Registry<ChesterType>> CHESTER_TYPE = createRegistryKey(TerraEntity.space("chester_type"));
+        public static final ResourceKey<Registry<ChesterConditionalType>> CHESTER_CONDITIONAL_TYPE = createRegistryKey(TerraEntity.space("chester_conditional_type"));
+        public static final ResourceKey<Registry<TradeModifierProvider>> TRADE_MODIFIER_PROVIDER = createRegistryKey(TerraEntity.space("trade_modifier_provider"));
+        public static final ResourceKey<Registry<ChatElementProvider>> CHAT_ELEMENT_PROVIDER = createRegistryKey(TerraEntity.space("chat_element"));
+        public static final ResourceKey<Registry<ChatConditionProvider>> CHAT_CONDITION_PROVIDER = createRegistryKey(TerraEntity.space("chat_condition"));
+
+
+    }
+
+
     // 注册监听
     public static void newRegistry(NewRegistryEvent event) {
-        event.register(EffectStrategyProviders.REGISTRY);
-        event.register(TrackTypeProviders.REGISTRY);
-        event.register(GenerationProviders.REGISTRY);
-        event.register(EffectStrategies.REGISTRY);
-        event.register(TradeProviders.REGISTRY);
-        event.register(TradeTaskProviders.REGISTRY);
-        event.register(TradeLockProviders.REGISTRY);
-        event.register(TradeGeneratorProviders.REGISTRY);
-        event.register(ChesterTypesRegistry.REGISTRY);
-        event.register(ChesterConditionalTypesProviders.REGISTRY);
-        event.register(TradeModifierProviderRegistry.REGISTRY);
-        event.register(ChatElementProviderRegistry.REGISTRY);
-        event.register(ChatConditionProviderRegistry.REGISTRY);
+        event.register(EFFECT_STRATEGY_PROVIDERS);
+        event.register(TRACK_TYPE_PROVIDERS);
+        event.register(GENERATION_PROVIERS);
+        event.register(EFFECT_STRATEGIES);
+        event.register(TRADE_PROVIDERS);
+        event.register(TRADE_TASK_PROVIDERS);
+        event.register(TRADE_LOCK_PROVIDERS);
+        event.register(TRADE_GENERATOR_PROVIDERS);
+        event.register(CHESTER_TYPES);
+        event.register(CHESTER_CONDITIONAL_TYPES);
+        event.register(TRADE_MODIFIER_PROVIDERS);
+        event.register(CHAT_ELEMENT_PROVIDERS);
+        event.register(CHAT_CONDITION_PROVIDERS);
 
     }
 
@@ -72,97 +110,4 @@ public class TERegistries {
 
     }
 
-    /**
-     * 跟踪类型编解码器注册表
-     */
-    public static class GenerationProviders{
-        public static final ResourceKey<Registry<GenerationProvider>> KEY = createRegistryKey(TerraEntity.space("generation_provider"));
-        public static final Registry<GenerationProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-
-    /**
-     * 命中效果注册类型表
-     */
-    public static class EffectStrategyProviders{
-        public static final ResourceKey<Registry<EffectStrategyProvider>> KEY = createRegistryKey(TerraEntity.space("effect_strategy_type"));
-        public static final Registry<EffectStrategyProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-
-    /**
-     * 命中效果注册表
-     */
-    public static class EffectStrategies{
-        public static final ResourceKey<Registry<EffectStrategy>> KEY = createRegistryKey(TerraEntity.space("effect_strategy"));
-        public static final Registry<EffectStrategy> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-
-    /**
-     * 跟踪类型编解码器注册表
-     */
-    public static class TrackTypeProviders{
-        public static final ResourceKey<Registry<TrackTypeProvider>> KEY = createRegistryKey(TerraEntity.space("track_type_provider"));
-        public static final Registry<TrackTypeProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-
-
-    /**
-     * NPC交易注册表
-     */
-    public static class TradeProviders{
-        public static final ResourceKey<Registry<TradeProvider>> KEY = createRegistryKey(TerraEntity.space("trade_provider"));
-        public static final Registry<TradeProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-    /**
-     * NPC交易任务注册表
-     */
-    public static class TradeTaskProviders{
-        public static final ResourceKey<Registry<TradeTaskProvider>> KEY = createRegistryKey(TerraEntity.space("trade_task_provider"));
-        public static final Registry<TradeTaskProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-    /**
-     * NPC心情注册表
-     */
-    public static class TradeLockProviders {
-        public static final ResourceKey<Registry<TradeLockProvider>> KEY = createRegistryKey(TerraEntity.space("trade_lock_provider"));
-        public static final Registry<TradeLockProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-
-    /**
-     * NPC交易列表注册表
-     */
-    public static class TradeGeneratorProviders {
-        public static final ResourceKey<Registry<TradeGeneratorProvider>> KEY = createRegistryKey(TerraEntity.space("trade_generator_provider"));
-        public static final Registry<TradeGeneratorProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-
-    /**
-     * 切斯特全局存储器注册表，用来给切斯特添加可以打开的全局菜单
-     */
-    public static class ChesterTypesRegistry {
-        public static final ResourceKey<Registry<ChesterType>> KEY = createRegistryKey(TerraEntity.space("chester_type"));
-        public static final Registry<ChesterType> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-
-    /**
-     * 切斯特方块容器记录器，给切斯特添加可以打开的方块容器
-     */
-    public static class ChesterConditionalTypesProviders {
-        public static final ResourceKey<Registry<ChesterConditionalType>> KEY = createRegistryKey(TerraEntity.space("chester_conditional_type"));
-        public static final Registry<ChesterConditionalType> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-
-    public static class TradeModifierProviderRegistry {
-        public static final ResourceKey<Registry<TradeModifierProvider>> KEY = createRegistryKey(TerraEntity.space("trade_modifier_provider"));
-        public static final Registry<TradeModifierProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-
-    public static class ChatElementProviderRegistry {
-        public static final ResourceKey<Registry<ChatElementProvider>> KEY = createRegistryKey(TerraEntity.space("chat_element"));
-        public static final Registry<ChatElementProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
-
-    public static class ChatConditionProviderRegistry {
-        public static final ResourceKey<Registry<ChatConditionProvider>> KEY = createRegistryKey(TerraEntity.space("chat_condition"));
-        public static final Registry<ChatConditionProvider> REGISTRY = new RegistryBuilder<>(KEY).create();
-    }
 }

@@ -36,8 +36,8 @@ public class EffectStrategy {
     }
 
     public static Codec<EffectStrategy> CODEC = ResourceLocation.CODEC.xmap(
-            TERegistries.EffectStrategies.REGISTRY::get,
-            TERegistries.EffectStrategies.REGISTRY::getKey
+            TERegistries.EFFECT_STRATEGIES::get,
+            TERegistries.EFFECT_STRATEGIES::getKey
     );
 
     /**

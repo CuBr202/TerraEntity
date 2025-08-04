@@ -1,14 +1,9 @@
 package org.confluence.terraentity.registries.chester;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ShulkerBoxMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
@@ -19,7 +14,7 @@ import java.util.Comparator;
 import java.util.function.Supplier;
 
 public class ChesterConditionalTypes {
-    public static DeferredRegister<ChesterConditionalType> TYPES = DeferredRegister.create(TERegistries.ChesterConditionalTypesProviders.KEY, TerraEntity.MODID);
+    public static DeferredRegister<ChesterConditionalType> TYPES = DeferredRegister.create(TERegistries.Keys.CHESTER_CONDITIONAL_TYPE, TerraEntity.MODID);
 
     public static final Supplier<ChesterConditionalType> ENDER_CHEST = TYPES.register("routine_container", ()->new ChesterConditionalType(
             5,
@@ -49,7 +44,7 @@ public class ChesterConditionalTypes {
 
     @Nullable
     public static ChesterConditionalType match(BlockPos pos, Player player, Level level){
-        return TERegistries.ChesterConditionalTypesProviders.REGISTRY.stream()
+        return TERegistries.CHESTER_CONDITIONAL_TYPES.stream()
                 .filter(provider -> provider.canOpen(pos, player, level))
                 .min(Comparator.comparingInt(ChesterConditionalType::getPriority))
                 .orElse(null);

@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * 注册交易任务编解码器的类型
  */
 public class TradeTaskProviderTypes {
-    public static final DeferredRegister<TradeTaskProvider> TYPES = DeferredRegister.create(TERegistries.TradeTaskProviders.REGISTRY, TerraEntity.MODID);
+    public static final DeferredRegister<TradeTaskProvider> TYPES = DeferredRegister.create(TERegistries.TRADE_TASK_PROVIDERS, TerraEntity.MODID);
 
     public static final Supplier<TradeTaskProvider> PROGRESS_TRADE_TASK = register("progress_trade_task", ProgressTradeTask.CODEC);
     public static final Supplier<TradeTaskProvider> RANDOM_TRADE_TASK = register("random_trade_task", RandomTradeTask.CODEC);

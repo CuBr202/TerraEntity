@@ -29,7 +29,7 @@ import static org.confluence.terraentity.registries.hit_effect.EffectStrategy.*;
  * @author coffee
  */
 public final class TEEffectStrategies {
-    public static final DeferredRegister<EffectStrategy> EFFECT_STRATEGY = DeferredRegister.create(TERegistries.EffectStrategies.REGISTRY, TerraEntity.MODID);
+    public static final DeferredRegister<EffectStrategy> EFFECT_STRATEGY = DeferredRegister.create(TERegistries.EFFECT_STRATEGIES, TerraEntity.MODID);
 
     /**
      * 复杂的回调效果

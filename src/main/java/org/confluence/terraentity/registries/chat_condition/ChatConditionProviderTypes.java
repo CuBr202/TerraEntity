@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 public class ChatConditionProviderTypes {
 
-    public static final DeferredRegister<ChatConditionProvider> TYPES = DeferredRegister.create(TERegistries.ChatConditionProviderRegistry.REGISTRY, TerraEntity.MODID);
+    public static final DeferredRegister<ChatConditionProvider> TYPES = DeferredRegister.create(TERegistries.CHAT_CONDITION_PROVIDERS, TerraEntity.MODID);
 
     public static final Supplier<ChatConditionProvider> WEATHER = register("weather", WeatherChatCondition.CODEC);
     public static final Supplier<ChatConditionProvider> VANILLA = register("vanilla", ChatVanillaCondition.CODEC);

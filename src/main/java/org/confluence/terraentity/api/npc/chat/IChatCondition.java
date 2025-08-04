@@ -16,7 +16,7 @@ public interface IChatCondition {
 
     ChatConditionProvider getProvider();
 
-    Codec<IChatCondition> TYPE_CODEC = TERegistries.ChatConditionProviderRegistry.REGISTRY
+    Codec<IChatCondition> TYPE_CODEC = TERegistries.CHAT_CONDITION_PROVIDERS
             .byNameCodec()
             .dispatch(IChatCondition::getProvider, ChatConditionProvider::codec);
 

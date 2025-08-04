@@ -63,7 +63,7 @@ public class ChesterSummonItem<T extends Chester> extends SummonItem<T> {
                 return InteractionResultHolder.success(player.getItemInHand(hand));
             }
 
-            int maxSize = TERegistries.ChesterTypesRegistry.REGISTRY.entrySet().size();
+            int maxSize = TERegistries.CHESTER_TYPES.entrySet().size();
             if(data.chestType == maxSize-1){
                 if(increaseAdditionalPointer(data, player)){
                     ChesterAttachmentPacketS2C.syncChesterOpenType(data.chestType, data.chestTypeAdditional, (ServerPlayer) player);
@@ -71,7 +71,7 @@ public class ChesterSummonItem<T extends Chester> extends SummonItem<T> {
                 }
             }
             // 全局指针未在最后
-            data.chestType = ++data.chestType % TERegistries.ChesterTypesRegistry.REGISTRY.entrySet().size();
+            data.chestType = ++data.chestType % TERegistries.CHESTER_TYPES.entrySet().size();
             ChesterAttachmentPacketS2C.syncChesterOpenType(data.chestType, data.chestTypeAdditional, (ServerPlayer) player);
             player.sendSystemMessage(Component.literal(data.chestType + " " + data.chestTypeAdditional ));
             return InteractionResultHolder.success(player.getItemInHand(hand));
@@ -88,7 +88,7 @@ public class ChesterSummonItem<T extends Chester> extends SummonItem<T> {
         if (Minecraft.getInstance().player != null) {
             Player player = Minecraft.getInstance().player;
             SummonerAttachment data = player.getData(TEAttachments.SUMMONER_STORAGE);
-            var globalEntry = TERegistries.ChesterTypesRegistry.REGISTRY.entrySet();
+            var globalEntry = TERegistries.CHESTER_TYPES.entrySet();
             int globalSize = globalEntry.size();
             int maxAdditionalSize = data.boundBlocks.size();
             if(data.chestType == globalSize - 1 && data.chestTypeAdditional != 0){
@@ -102,8 +102,8 @@ public class ChesterSummonItem<T extends Chester> extends SummonItem<T> {
 
                 }
             }else{
-                Map.Entry<ResourceKey<ChesterType>, ChesterType> index =  TERegistries.ChesterTypesRegistry.REGISTRY.entrySet().stream()
-                        .toList().get(data.chestType % TERegistries.ChesterTypesRegistry.REGISTRY.entrySet().size());
+                Map.Entry<ResourceKey<ChesterType>, ChesterType> index =  TERegistries.CHESTER_TYPES.entrySet().stream()
+                        .toList().get(data.chestType % TERegistries.CHESTER_TYPES.entrySet().size());
                 tooltipComponents.add(index.getValue().getName());
 //                tooltips.add(Component.literal(globalEntry.stream().toList().get(data.chestType).getValue().getName()));
 

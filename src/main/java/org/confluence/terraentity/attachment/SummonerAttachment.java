@@ -5,12 +5,9 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -83,7 +80,7 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
     record BandedBlockEntry (Key pos, ChesterConditionalType type){
         public static final Codec<BandedBlockEntry> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
                 Key.CODEC.fieldOf("pos").forGetter(BandedBlockEntry::pos),
-                TERegistries.ChesterConditionalTypesProviders.REGISTRY.byNameCodec().fieldOf("type").forGetter(BandedBlockEntry::type)
+                TERegistries.CHESTER_CONDITIONAL_TYPES.byNameCodec().fieldOf("type").forGetter(BandedBlockEntry::type)
         ).apply(instance, BandedBlockEntry::new));
     }
 

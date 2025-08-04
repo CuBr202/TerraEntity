@@ -26,7 +26,7 @@ public interface IGeneration {
      */
     GenerationProvider getCodec();
 
-    Codec<IGeneration> TYPED_CODEC = TERegistries.GenerationProviders.REGISTRY
+    Codec<IGeneration> TYPED_CODEC = TERegistries.GENERATION_PROVIERS
             .byNameCodec()
             .dispatch(IGeneration::getCodec, GenerationProvider::codec);
 }

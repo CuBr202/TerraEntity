@@ -8,7 +8,7 @@ import org.confluence.terraentity.registries.chat.variant.*;
 import java.util.function.Supplier;
 
 public class ChatProviderTypes {
-    public static final DeferredRegister<ChatElementProvider> TYPES = DeferredRegister.create(TERegistries.ChatElementProviderRegistry.KEY, TerraEntity.MODID);
+    public static final DeferredRegister<ChatElementProvider> TYPES = DeferredRegister.create(TERegistries.Keys.CHAT_ELEMENT_PROVIDER, TerraEntity.MODID);
 
     public static final Supplier<ChatElementProvider> COMPONENT = TYPES.register("component", ()-> new ChatElementProvider(StringChatElement.MAPCODEC));
     public static final Supplier<ChatElementProvider> ITEM = TYPES.register("item", ()-> new ChatElementProvider(ItemChatElement.MAPCODEC));

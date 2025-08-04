@@ -140,7 +140,7 @@ public interface ITrade{
     TradeProvider getCodec();
 
 
-    Codec<ITrade> TYPED_CODEC = TERegistries.TradeProviders.REGISTRY
+    Codec<ITrade> TYPED_CODEC = TERegistries.TRADE_PROVIDERS
             .byNameCodec()
             .dispatch(ITrade::getCodec, TradeProvider::codec);
 

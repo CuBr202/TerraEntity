@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * 注册交易编解码器的类型
  */
 public class TradeProviderTypes {
-    public static final DeferredRegister<TradeProvider> TYPES = DeferredRegister.create(TERegistries.TradeProviders.REGISTRY, TerraEntity.MODID);
+    public static final DeferredRegister<TradeProvider> TYPES = DeferredRegister.create(TERegistries.TRADE_PROVIDERS, TerraEntity.MODID);
 
     public static final Supplier<TradeProvider> ITEM_TRADE_HEALTH = register("ingredient_trade_health", ItemTradeHealth.CODEC);
     public static final Supplier<TradeProvider> TRADE_TASK = register("trade_task", TradeTask.CODEC);

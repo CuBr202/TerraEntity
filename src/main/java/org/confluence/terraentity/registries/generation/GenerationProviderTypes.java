@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  * 注册追踪编解码器的类型
  */
 public class GenerationProviderTypes {
-    public static final DeferredRegister<GenerationProvider> TYPES = DeferredRegister.create(TERegistries.GenerationProviders.REGISTRY, TerraEntity.MODID);
+    public static final DeferredRegister<GenerationProvider> TYPES = DeferredRegister.create(TERegistries.GENERATION_PROVIERS, TerraEntity.MODID);
 
     public static final Supplier<GenerationProvider> FORWARD_GENERATION = register("forward", ForwardGeneration.CODEC);
     public static final Supplier<GenerationProvider> ABOVE_FALLEN = register("above_fallen", AboveFallenGeneration.CODEC);

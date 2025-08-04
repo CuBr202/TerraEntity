@@ -2,6 +2,7 @@ package org.confluence.terraentity.api.entity;
 
 import net.minecraft.world.entity.Entity;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -25,21 +26,20 @@ public interface ICollisionAttackEntity<T extends Entity>{
     boolean shouldDoCollision();
 
     default void doCollisionAttack(Predicate<Entity> filter, Consumer<Entity> attackCallback){
-        if(!shouldDoCollision() || collision$getSelf().level().isClientSide) return;
-        getCollisionProperties().reduceAttackInterval();
-        if (canCollisionHurt() && !collision$getSelf().level().isClientSide && getCollisionProperties().canAttack()) {
+        if(!this.shouldDoCollision() || this.collision$getSelf().level().isClientSide) return;
+        CollisionProperties properties = this.getCollisionProperties();
+        if (this.canCollisionHurt() && !this.collision$getSelf().level().isClientSide && properties.canAttack()) {
             // 包围盒检测造成伤害
-            var entities = collision$getSelf().level().getEntities(collision$getSelf(), collision$getSelf().getBoundingBox().inflate(getCollisionProperties().attackRangeExtent), e-> e!= collision$getSelf());
+            List<Entity> entities = this.collision$getSelf().level().getEntities(this.collision$getSelf(), this.collision$getSelf().getBoundingBox().inflate(properties.attackRangeExtent), e-> e!= this.collision$getSelf());
             if (!entities.isEmpty()) {
                 for (var e : entities) {
                     if (filter.test(e) ){
                         attackCallback.accept(e);
-                        getCollisionProperties().rewind();
+                        properties.rewind();
                     }
                 }
-
             }else{
-                getCollisionProperties().reDetect();
+                properties.reDetect();
             }
         }
     }

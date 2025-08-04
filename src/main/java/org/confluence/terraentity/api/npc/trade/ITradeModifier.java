@@ -32,7 +32,7 @@ public interface ITradeModifier extends BiConsumer<NPCTradeManager, ResourceLoca
     TradeModifierProvider getCodec();
 
 
-    Codec<ITradeModifier> TYPED_CODEC = TERegistries.TradeModifierProviderRegistry.REGISTRY
+    Codec<ITradeModifier> TYPED_CODEC = TERegistries.TRADE_MODIFIER_PROVIDERS
             .byNameCodec()
             .dispatch(ITradeModifier::getCodec, TradeModifierProvider::codec);
 

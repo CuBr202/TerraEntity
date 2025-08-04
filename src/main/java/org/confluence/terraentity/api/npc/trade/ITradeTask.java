@@ -105,7 +105,7 @@ public interface ITradeTask {
     TradeTaskProvider getCodec();
 
 
-    Codec<ITradeTask> TYPED_CODEC = TERegistries.TradeTaskProviders.REGISTRY
+    Codec<ITradeTask> TYPED_CODEC = TERegistries.TRADE_TASK_PROVIDERS
             .byNameCodec()
             .dispatch(ITradeTask::getCodec, TradeTaskProvider::codec);
 
