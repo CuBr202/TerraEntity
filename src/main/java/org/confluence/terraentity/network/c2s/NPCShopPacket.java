@@ -9,10 +9,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
+import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.mixed.IPlayer;
-import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,8 +42,7 @@ public record NPCShopPacket(int tradeIndex, TradeParams params) implements Custo
 //                    trade = holder.getTradeManager().availableTrades().get(tradeIndex);
                     trade = holder.getTradeManager().targetTrade(params, tradeIndex);
 
-                    NPCEvent.NPCTradeEvent event = new NPCEvent.NPCTradeEvent(holder, trade, sp);
-                    AdapterUtils.postEvent(event);
+                    NPCEvent.NPCTradeEvent event = AdapterUtils.postEvent(new NPCEvent.NPCTradeEvent(holder, trade, sp));
                     if (event.isCanceled()) {
                         return;
                     }

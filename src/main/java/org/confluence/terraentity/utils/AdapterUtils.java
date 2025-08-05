@@ -32,22 +32,16 @@ public class AdapterUtils {
         PacketDistributor.sendToServer(payload);
     }
 
-    /**
-     * 实际上bus={@link net.neoforged.fml.common.EventBusSubscriber.Bus#GAME}
-     */
     public static <T extends Event> T postGameEvent(T event){
         return NeoForge.EVENT_BUS.post(event);
     }
 
-    /**
-     * 实际上bus={@link net.neoforged.fml.common.EventBusSubscriber.Bus#MOD}
-     */
-    public static <T extends Event & IModBusEvent> void postEvent(T event){
-        ModLoader.postEvent(event);
+    public static <T extends Event & IModBusEvent> T postEvent(T event) {
+        return ModLoader.postEventWithReturn(event);
     }
 
     public static void enchant(ItemStack stack, ResourceKey<Enchantment> enchantment, int level, HolderLookup.RegistryLookup<Enchantment> enchantLookup){
-          stack.enchant(enchantLookup.get(enchantment).get(),level);
+        stack.enchant(enchantLookup.getOrThrow(enchantment), level);
     }
 
     public static void setPotion(ItemStack stack, Holder<Potion> potion){

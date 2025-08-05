@@ -33,9 +33,7 @@ public interface IHouseDetector {
     String message();
 
     static IHouseDetector detect(BlockPos pos, Level level){
-        var event = new HouseDetectEvent(pos, level);
-        AdapterUtils.postEvent(event);
-        return event.getDetector();
+        return AdapterUtils.postEvent(new HouseDetectEvent(pos, level)).getDetector();
     }
 
     default House getHouse(String uuid){

@@ -46,13 +46,13 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.Tags;
-import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.api.event.NPCEvent;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
-import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.chat.ChatArranger;
 import org.confluence.terraentity.entity.npc.chat.ChatManager;
@@ -62,7 +62,6 @@ import org.confluence.terraentity.entity.npc.house.HouseManager;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.Mood;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
-import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
@@ -70,7 +69,6 @@ import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.menu.SimpleTradeMenu;
 import org.confluence.terraentity.network.s2c.UpdateNPCTradePacket;
-import org.confluence.terraentity.registries.chat.variant.SpriteChatElement;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -82,7 +80,10 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -433,13 +434,12 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public void onAddedToLevel() {
         super.onAddedToLevel();
 
-        NPCEvent.InitNPCTradeEvent event = new NPCEvent.InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
-        AdapterUtils.postEvent(event);
+        NPCEvent.InitNPCTradeEvent event = AdapterUtils.postEvent(new NPCEvent.InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType())));
         // 如果是第一次生成
         if (trades == null && !level().isClientSide) {
-            trades = NPCTradeManager.getCopy(event.getOrigin(), level().registryAccess().createSerializationContext(NbtOps.INSTANCE));
+            trades = NPCTradeManager.getCopy(event.getRedirection(), level().registryAccess().createSerializationContext(NbtOps.INSTANCE));
             if (trades != null) {
-                trades.initTrades(this, event.getOrigin());
+                trades.initTrades(this, event.getRedirection());
                 onInitTrades();
                 syncTrades();
             }
@@ -569,8 +569,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             return InteractionResult.PASS;
         }
 
-        NPCEvent.InteractNPCEvent event = new NPCEvent.InteractNPCEvent(this, serverPlayer);
-        AdapterUtils.postEvent(event);
+        NPCEvent.InteractNPCEvent event = AdapterUtils.postEvent(new NPCEvent.InteractNPCEvent(this, serverPlayer));
         event.execute((npc, player1) -> {
             if (getTradeManager() != null) {
                 this.getTradeManager().reCheckAvailableTrades(player1);

@@ -23,7 +23,7 @@ public class TradeModifiers {
 
     private static Map<ResourceLocation, List<ITradeModifier>> modifiersMap;
     public static final String KEY = "npc/trade_modifiers";
-    public static Codec<List<ITradeModifier>> CODEC = ITradeModifier.TYPED_CODEC.listOf();
+    public static final Codec<List<ITradeModifier>> CODEC = ITradeModifier.TYPED_CODEC.listOf();
 
     public Map<ResourceLocation, List<ITradeModifier>> getModifiers() {
         return modifiersMap;

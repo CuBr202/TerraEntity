@@ -9,10 +9,10 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.fml.event.IModBusEvent;
+import org.confluence.terraentity.api.npc.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
-import org.confluence.terraentity.api.npc.trade.ITradeHolder;
-import org.confluence.terraentity.api.npc.trade.ITrade;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -85,18 +85,24 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
      * 当初始化npc时触发，用于替换NPC交易列表
      */
     public static class InitNPCTradeEvent extends NPCEvent implements ICancellableEvent {
-        private ResourceLocation origin;
+        private final ResourceLocation origin;
+        private ResourceLocation redirection;
 
         public InitNPCTradeEvent(AbstractTerraNPC npc, ResourceLocation origin) {
             super(npc);
             this.origin = origin;
+            this.redirection = origin;
         }
 
         /**
          * 设置重定向交易列表，当newResource不为空时，使用这个交易列表
          */
         public void setRedirection(@Nonnull ResourceLocation newResource) {
-            this.origin = newResource;
+            this.redirection = newResource;
+        }
+
+        public ResourceLocation getRedirection() {
+            return redirection;
         }
 
         public ResourceLocation getOrigin() {

@@ -20,6 +20,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.npc.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeGenerator;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.data.gen.AbstractExistCodecProvider;
 import org.confluence.terraentity.data.gen.loot.TENPCLoot;
@@ -29,13 +31,11 @@ import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
 import org.confluence.terraentity.init.item.TESummonItems;
-import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.registries.npc_trade.TradeProperties;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeLootTable;
 import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
-import org.confluence.terraentity.api.npc.trade.ITradeGenerator;
 import org.confluence.terraentity.registries.npc_trade_list.variant.WeightMapGenerator;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.KillEntityLock;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
@@ -59,7 +59,7 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
 
     public TENPCShopProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
         super(output, lookup);
-        this.npcShopPathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, NPCTradeManager.KEY);
+        this.npcShopPathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, NPCTradeManager.Loader.KEY);
 
     }
 

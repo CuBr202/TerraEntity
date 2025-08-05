@@ -46,11 +46,11 @@ public record SyncNPCTradesPacketS2C(Map<ResourceLocation, Tag> tradesMap) imple
 
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
-            NPCTradeManager.reset(context.player().registryAccess(), tradesMap);
+            NPCTradeManager.Loader.getInstance().syncFromServer(context.player().registryAccess(), tradesMap);
         }).exceptionally(e -> null);
     }
 
     public static void sync(ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player, new SyncNPCTradesPacketS2C(NPCTradeManager.getTagMap()));
+        PacketDistributor.sendToPlayer(player, new SyncNPCTradesPacketS2C(NPCTradeManager.Loader.getInstance().getTagMap()));
     }
 }

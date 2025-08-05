@@ -60,8 +60,7 @@ public class TEWhipItems {
 
     public static DeferredItem<BaseWhipItem> registerWhip(String name,float damage,float markDamage, float attackSpeed,int cooldown,float range, Function<BaseWhipItem.WhipProperties, Item.Properties> whipFactory){
 
-        var event = new WhipRegisterModifyEvent(damage, markDamage, attackSpeed, cooldown, range, name);
-        AdapterUtils.postEvent(event);
+        var event = AdapterUtils.postEvent(new WhipRegisterModifyEvent(damage, markDamage, attackSpeed, cooldown, range, name));
         if(event.isCanceled()){
             return null;
         }
