@@ -83,7 +83,7 @@ public class Squirrel extends Animal implements  GeoEntity,  IVanillaVariant<Int
 
     @Nullable
     public Squirrel getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
-        return TEAnimals.JEWEL_SQUIRREL.get().create(level);
+        return TEAnimals.SQUIRREL.get().create(level);
     }
 
 

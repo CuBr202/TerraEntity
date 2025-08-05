@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.LivingEntity;
+import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
@@ -22,7 +23,7 @@ public class RandomWeightEffect implements IEffectStrategy {
         return effectMap.get();
     }
     public static MapCodec<RandomWeightEffect> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            Codec.unboundedMap(EffectStrategy.CODEC.xmap(i->i,i->i), Codec.FLOAT).fieldOf("effectMap").forGetter(RandomWeightEffect::getEffectMap),
+            Codec.unboundedMap(TERegistries.EFFECT_STRATEGIES.byNameCodec(), Codec.FLOAT).fieldOf("effect_map").forGetter(RandomWeightEffect::getEffectMap),
             Codec.STRING.fieldOf("name").forGetter(RandomWeightEffect::getName)
     ).apply(instance, (map,name)->new RandomWeightEffect(name, () -> map)));
 

@@ -1,12 +1,11 @@
 package org.confluence.terraentity.registries.hit_effect;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JavaOps;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
@@ -87,17 +86,9 @@ public interface IEffectStrategy {
      */
     EffectStrategyProvider codec();
 
-    Codec<IEffectStrategy> TYPED_CODEC = TERegistries.EFFECT_STRATEGY_PROVIDERS.byNameCodec().dispatch(IEffectStrategy::codec, EffectStrategyProvider::codec);
+    Codec<IEffectStrategy> TYPED_CODEC = TERegistries.EFFECT_STRATEGY_PROVIDERS.byNameCodec()
+            .dispatch(IEffectStrategy::codec, EffectStrategyProvider::codec);
 
-    StreamCodec<FriendlyByteBuf, IEffectStrategy> STREAM_CODEC = new StreamCodec<>() {
-        @Override
-        public IEffectStrategy decode(FriendlyByteBuf buffer) {
-            return TYPED_CODEC.parse(JavaOps.INSTANCE, ResourceLocation.parse(buffer.readUtf())).getOrThrow();
-        }
+    StreamCodec<RegistryFriendlyByteBuf, IEffectStrategy> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(TYPED_CODEC);
 
-        @Override
-        public void encode(FriendlyByteBuf buffer, IEffectStrategy value) {
-            buffer.writeUtf(((ResourceLocation) TYPED_CODEC.encodeStart(JavaOps.INSTANCE, value).getOrThrow()).toString());
-        }
-    };
 }

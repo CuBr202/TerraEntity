@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -14,7 +15,9 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.init.loot.TELootParams;
+import org.confluence.terraentity.init.entity.TEAnimals;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public class JewelSquirrel extends Squirrel  {
@@ -46,7 +49,6 @@ public class JewelSquirrel extends Squirrel  {
             .put(5, TerraEntity.space("textures/entity/animal/squirrel/ruby_squirrel.png"))
             .put(6, TerraEntity.space("textures/entity/animal/squirrel/sapphire_squirrel.png"))
             .put(7, TerraEntity.space("textures/entity/animal/squirrel/topaz_squirrel.png"))
-            .put(8, TerraEntity.space("textures/entity/animal/squirrel/red_squirrel.png"))
             .build()
     );
 
@@ -55,4 +57,8 @@ public class JewelSquirrel extends Squirrel  {
         return textures;
     }
 
+    @Nullable
+    public Squirrel getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
+        return TEAnimals.JEWEL_SQUIRREL.get().create(level);
+    }
 }

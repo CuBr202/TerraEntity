@@ -84,7 +84,7 @@ public class Bunny extends Rabbit implements GeoEntity {
 
     @Nullable
     public Bunny getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
-        return TEAnimals.JEWEL_BUNNY.get().create(level);
+        return TEAnimals.BUNNY.get().create(level);
     }
 
     private static final EntityDataAccessor<Integer> DATA_RANDOM_WATCH_COUNT = SynchedEntityData.defineId(Bunny.class, EntityDataSerializers.INT);

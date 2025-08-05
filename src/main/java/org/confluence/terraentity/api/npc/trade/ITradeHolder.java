@@ -50,6 +50,12 @@ public interface ITradeHolder {
      */
     @Nullable NPCMood getMood();
 
+    /**
+     * npc代理{@link ITradeGenerator#generateTrades(ITradeHolder)},若返回null，则使用{@link ITradeGenerator#generateTradesDefault(ITradeHolder)}
+     */
+    default @Nullable List<ITrade> generateTrades(ITradeGenerator tradeGenerator){
+        return null;
+    }
 
     /*
       以下三个方法，实体不用重写

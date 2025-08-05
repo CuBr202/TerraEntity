@@ -28,6 +28,7 @@ public interface ICollisionAttackEntity<T extends Entity>{
     default void doCollisionAttack(Predicate<Entity> filter, Consumer<Entity> attackCallback){
         if(!this.shouldDoCollision() || this.collision$getSelf().level().isClientSide) return;
         CollisionProperties properties = this.getCollisionProperties();
+        properties.reduceAttackInterval();
         if (this.canCollisionHurt() && !this.collision$getSelf().level().isClientSide && properties.canAttack()) {
             // 包围盒检测造成伤害
             List<Entity> entities = this.collision$getSelf().level().getEntities(this.collision$getSelf(), this.collision$getSelf().getBoundingBox().inflate(properties.attackRangeExtent), e-> e!= this.collision$getSelf());

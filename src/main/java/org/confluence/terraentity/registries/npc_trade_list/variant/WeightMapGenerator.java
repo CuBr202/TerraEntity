@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.api.npc.trade.ITradeGenerator;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProvider;
 import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProviderTypes;
 import org.confluence.terraentity.utils.TEUtils;
@@ -35,7 +36,7 @@ public class WeightMapGenerator implements ITradeGenerator {
     int count;
     Map<ITrade, Integer> tradeWeightMap;
 
-    private Integer getCount() {
+    public Integer getCount() {
         return count;
     }
 
@@ -54,7 +55,23 @@ public class WeightMapGenerator implements ITradeGenerator {
     }
 
     @Override
-    public List<ITrade> generateTrades() {
+    public List<ITrade> generateTrades(ITradeHolder npc) {
+        List<ITrade> trades = npc.generateTrades(this);
+        if(trades == null){
+            return generateTradesDefault(npc);
+        }
+        return trades;
+    }
+
+    @Override
+    public List<ITrade> generateTradesDefault(ITradeHolder npc) {
+        return generateTradesDynamic(this.count);
+    }
+
+    /**
+     * npc动态代理生成数量，如旅商
+     */
+    public List<ITrade> generateTradesDynamic(int count) {
         List<ITrade> trades = new ArrayList<>();
         Map<ITrade, Integer> temp = new HashMap<>(this.tradeWeightMap);
         for(int i = 0; i < count; i++){

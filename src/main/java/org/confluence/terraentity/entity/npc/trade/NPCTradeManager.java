@@ -99,7 +99,7 @@ public class NPCTradeManager {
      */
     public void initTrades(ITradeHolder holder, ResourceLocation id) {
         if (tradeList != null) {
-            this.trades = new ArrayList<>(tradeList.generateTrades());
+            this.trades = new ArrayList<>(tradeList.generateTrades(holder));
             this.tradeList = null;
         }
         if (id != null) { // 正常情况只会在第一次生成时不为null

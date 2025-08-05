@@ -2,7 +2,6 @@ package org.confluence.terraentity.data.component;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -23,7 +22,7 @@ import java.util.List;
  */
 public record EffectStrategyComponent(List<IEffectStrategy> effects) implements DataComponentType<EffectStrategyComponent> {
     public static final Codec<EffectStrategyComponent> CODEC = IEffectStrategy.TYPED_CODEC.listOf().xmap(EffectStrategyComponent::new, EffectStrategyComponent::effects);
-    public static final StreamCodec<FriendlyByteBuf, EffectStrategyComponent> STREAM_CODEC = IEffectStrategy.STREAM_CODEC.apply(ByteBufCodecs.list()).map(EffectStrategyComponent::new, EffectStrategyComponent::effects);
+    public static final StreamCodec<RegistryFriendlyByteBuf, EffectStrategyComponent> STREAM_CODEC = IEffectStrategy.STREAM_CODEC.apply(ByteBufCodecs.list()).map(EffectStrategyComponent::new, EffectStrategyComponent::effects);
 
     public void applyAll(LivingEntity owner, LivingEntity target) {
         for (IEffectStrategy effect : effects) {
@@ -51,6 +50,7 @@ public record EffectStrategyComponent(List<IEffectStrategy> effects) implements 
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == this) return true;
         return obj instanceof EffectStrategyComponent(IEffectStrategy effect1) && effect1 == effects;
     }
 }

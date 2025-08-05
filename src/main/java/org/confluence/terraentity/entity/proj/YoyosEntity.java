@@ -10,6 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -244,6 +245,10 @@ public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> 
             IEffectStrategy effectStrategy = this.item.getEffectStrategy();
             if(effectStrategy!= null){
                 effectStrategy.getEffect().accept(this.getOwner(), living);
+            }
+            ItemStack stack = getMainHandItem();
+            if(getOwner() != null) {
+                stack.hurtAndBreak(1, getOwner(), EquipmentSlot.MAINHAND);
             }
             return true;
         }

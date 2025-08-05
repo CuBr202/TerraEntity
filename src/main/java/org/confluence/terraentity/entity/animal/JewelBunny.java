@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -16,10 +17,12 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.data.init.loot.TELootParams;
 import org.confluence.terraentity.api.entity.IVariant;
+import org.confluence.terraentity.data.init.loot.TELootParams;
+import org.confluence.terraentity.init.entity.TEAnimals;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public class JewelBunny extends Bunny implements IVariant<Integer> {
@@ -105,5 +108,10 @@ public class JewelBunny extends Bunny implements IVariant<Integer> {
     @Override
     public void setTEVariant(Integer variant) {
         this.entityData.set(DATA_VARIANT_ID, variant);
+    }
+
+    @Nullable
+    public Bunny getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
+        return TEAnimals.JEWEL_BUNNY.get().create(level);
     }
 }
