@@ -1,18 +1,138 @@
-# This is Terra Entity, and it is also a sub-module of Confluence.
+# Terra Entity -- submodule of Confluence: OtherWorld
+
+lang: [中文](./README_zh.md) | [English](./README.md)
 ___ 
-##  What we have?
+## Mod Contents
 
-![image](https://media.forgecdn.net/attachments/description/null/description_126c5246-2872-4211-baa1-57bb58060639.png)
+- **Creatures**
+    - Monsters
+    - Animals
+    - Bosses
+    - NPCs
+    - Summonings
 
-### Monsters
-Flying monsters, walking monsters, they have beautiful models and different AI, and we will add more monsters in the future.  
-You will meet cute slimes, Chimeras that chase you, and Crimson Spores that explode, which are our original monsters.
+- **Items**
+    - **Weapons**
+        - Yoyos
+        - Boomerangs
+        - Summoning staffs
+        - Whips
 
-### Bosses
-Slime King, Eye of Cthulhu, Devourer of Worlds.
-Each of them is a tricky and interesting BOSS.
+    - **Enchant Books**
+        - Whip Sweep
+        - Multi Boomerang
 
-## Notice
-Since our mod is a sub-module, there is no drop list provided, but you can configure it yourself.  
-We provide a simple configuration file to adapt your own game by setting the boss's health and attack power.  
-Of course, if you don't know Confluence yet, we strongly recommend you to play Confluence to experience the complete boss battle and thrilling Terraria.
+    - **Tools**
+        - House Detector
+        - Pets
+        - Rideable
+
+    - **Spawn Eggs**
+___
+## 🥚 Creatures
+
+### 😈 Monsters
+- Slime 14 variants
+- Demon Eye 14 variants
+- Bat 5 kinds
+- Goblin 7 kinds
+- Skeleton 7 kinds
+- Worm 3 kinds
+- Hornet 
+- Fly Fish、Crimson Kemera... 5 kinds
+- Giant Shelly 2 variants
+- Variant Zombies 4 kinds
+- Decayeder
+- Antlion Swarmer 2 kinds
+- Nymph
+- Harpy
+- Demon 2 kinds
+- Ghost
+- Snow Flinx
+- Fire Imp
+- Bloody Spore
+- Blood Crawler
+- Cursed Skeleton
+- Man Easter、Snatcher
+- piranha
+
+### 🐰 Animals
+- Dusk
+- Squirrel 2 variants
+- Jewel Squirrel 8 variants
+- Bunny
+- Jewel Bunny 8 variants
+- Bird 3 kinds
+
+### 🤡 Bosses
+- King Slime
+- Eye of Cthulhu
+- Eater of Worlds
+- Queen Bee
+- Skeletron
+- Wall of Flesh
+
+### 😆 NPCs
+- Guide、Merchant、Nurse、Goblin Thinkerer、Demolitionist、Arms Dealer、Fish Man... 17 kinds
+
+### 🐣 召唤物
+- Finch Staff
+- Iron Golem Staff
+- Slime_ Staff
+- Hornet Staff
+- Sculk Wisp Staff
+- Imp Staff
+- Snow Flinx Staff
+- Summon Sword 6 kinds
+- Terraprism 
+
+---
+## ⚔️ Weapons
+### 🪀 Yoyos 
+
+Long press the mouse to shoot, and scroll the mouse wheel to change the range. You can lock onto the target pointed by the nearest pointer.
+
+### 🪃 Boomerangs
+
+Right-click to fire, and it will fly for a period of time before returning to the player's hand.
+
+### 🪄 Summoning staffs
+
+Right-click to fire, and it will fly for a while before returning to the player's hand.
+
+### 🪢 Whips
+
+Right-click to whip all targets within range, causing the summonings to deal additional damage to the targets.
+
+---
+## 📕 Enchant Books
+
+### Whip Sweep
+
+The whip can sweep all targets within its range.
+
+### Multi Boomerang
+
+You can fire an additional boomerang.
+
+---
+## 🔧 Tools
+
+### 🏠 House Detector
+
+It has three modes: detecting houses, adding houses (requires prior detection), and deleting houses. Right-click on NPCs to add houses, allowing NPCs to move in.
+
+### 🐕 Pets
+
+- Chester, Wallet: They allow remote connection to containers and ender chests.
+
+### 🐎 Rideable
+
+Right-click to summon a pet mount, and right-click again to recall the pet.
+- Slime
+- Bee
+
+
+
+
+
