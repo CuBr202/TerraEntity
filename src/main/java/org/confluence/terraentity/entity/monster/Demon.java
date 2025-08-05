@@ -11,14 +11,11 @@ import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.proj.DemonScytheProj;
 import org.confluence.terraentity.init.TESounds;
-import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
-
-import javax.annotation.Nullable;
 
 public class Demon extends Harpy {
 
@@ -77,7 +74,8 @@ public class Demon extends Harpy {
         if(proj != null) {
             proj.setPos(this.getEyePosition());
             proj.setOwner(this);
-            proj.shoot(living.getX() - this.getX(), living.getY() - this.getY(), living.getZ() - this.getZ(), 0.5f, 2f);
+            proj.shootFromRotation(this, getXRot(), getYRot(), 0, 0.2F, 2); // fixme 射弹的初始旋转有问题
+            //proj.shoot(living.getX() - this.getX(), living.getY() - this.getY(), living.getZ() - this.getZ(), 0.2f, 2f);
             proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
             level().addFreshEntity(proj);
         }

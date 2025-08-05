@@ -23,8 +23,7 @@ public class TEProjectileEntities {
 
     // 回旋镖
     public static final DeferredHolder<EntityType<?>, EntityType<BoomerangProjectile>> BOOMERANG_PROJECTILE = TEEntities.ENTITIES.register("boomerang_projectile", () -> EntityType.Builder.<BoomerangProjectile>of(BoomerangProjectile::new, MobCategory.MISC).sized(0.5F, 0.5F).build(TEEntities.Key("boomerang_projectile")));
-    public static final DeferredHolder<EntityType<?>, EntityType<ThrowableProj>> CABBAGE_PROJ = registerProj("cabbage_proj",(e, l)->
-            new ThrowableProj(e,l),0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<ThrowableProj>> CABBAGE_PROJ = registerProj("cabbage_proj", ThrowableProj::new, 0.5F, 0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> BEE_STICK_PROJ = registerProj("bee_stick_proj",(e, l)->
             new LineProj(e,l).setTexture(TerraEntity.space("textures/entity/model/stinger.png")),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> SUMMON_BEE_STICK_PROJ = registerProj("summon_bee_stick_proj",(e, l)->
@@ -42,8 +41,7 @@ public class TEProjectileEntities {
             (DemonScytheProj) new DemonScytheProj(e,l, null).setTexture(TerraEntity.space("textures/entity/model/demon_scythe_projectile.png")),1.2F,1.2F);
 
     // 鞭子
-    public static final DeferredHolder<EntityType<?>,EntityType<WhipEntity>> WHIP_PROJECTILE = TEEntities.ENTITIES.register("whip_projectile",() -> EntityType.Builder.<WhipEntity>of((e, l)->
-            new WhipEntity(e,l) , MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F,0.5F).build(TEEntities.Key("whip_projectile")));
+    public static final DeferredHolder<EntityType<?>, EntityType<WhipEntity>> WHIP_PROJECTILE = TEEntities.ENTITIES.register("whip_projectile", () -> EntityType.Builder.<WhipEntity>of(WhipEntity::new, MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F, 0.5F).build(TEEntities.Key("whip_projectile")));
 
     //子弹
     public static final DeferredHolder<EntityType<?>, EntityType<TrailProjectile>> TRAIL_PROJECTILE = TEEntities.ENTITIES.register("trail_projectile", () -> EntityType.Builder.<TrailProjectile>of(TrailProjectile::new, MobCategory.MISC)
@@ -51,11 +49,9 @@ public class TEProjectileEntities {
             .build(TEEntities.Key("trail_projectile")));
 
     // OBB剑气
-    public static final DeferredHolder<EntityType<?>,EntityType<TrailSwordProj>> TRAIL_SWORD_PROJECTILE = TEEntities.ENTITIES.register("trail_sword_projectile",() -> EntityType.Builder.<TrailSwordProj>of((e, l)->
-            new TrailSwordProj(e,l) , MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F,0.5F).build(TEEntities.Key("trail_sword_projectile")));
+    public static final DeferredHolder<EntityType<?>, EntityType<TrailSwordProj>> TRAIL_SWORD_PROJECTILE = TEEntities.ENTITIES.register("trail_sword_projectile", () -> EntityType.Builder.<TrailSwordProj>of(TrailSwordProj::new, MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F, 0.5F).build(TEEntities.Key("trail_sword_projectile")));
 
-    public static final DeferredHolder<EntityType<?>, EntityType<BeeProj>> BEE_PROJ = registerProj("bee_proj",(e, l)->
-            new BeeProj(e,l),1.2F,1.2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BeeProj>> BEE_PROJ = registerProj("bee_proj", BeeProj::new, 1.2F, 1.2F);
 
 
     @OnlyIn(Dist.CLIENT)
@@ -71,7 +67,7 @@ public class TEProjectileEntities {
         RegisterUtils.registerBaseProjRenderer(event, HARPY_FEATURE_PROJ.get(), c->new HarpyFeatherProjectileModel<>(c.bakeLayer(HarpyFeatherProjectileModel.LAYER_LOCATION)));
 //        RegisterUtils.registerBaseProjRenderer(event, DEMON_SCYTHE_PROJ.get(), c->new DemonScytheModel<>(c.bakeLayer(DemonScytheModel.LAYER_LOCATION)));
 
-        event.registerEntityRenderer(DEMON_SCYTHE_PROJ.get(), c->new DemonScytheProjRenderer(c, new DemonScytheModel<>(c.bakeLayer(DemonScytheModel.LAYER_LOCATION))));
+        event.registerEntityRenderer(DEMON_SCYTHE_PROJ.get(), c -> new DemonScytheProjRenderer(c, new DemonScytheModel(c.bakeLayer(DemonScytheModel.LAYER_LOCATION))));
         // 子弹
         event.registerEntityRenderer(TEProjectileEntities.TRAIL_PROJECTILE.get(), TrailProjectileRenderer::new);
         // 鞭子
