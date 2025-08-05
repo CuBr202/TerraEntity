@@ -12,7 +12,7 @@ import java.util.Map;
 public class ToTypeChat implements IToOtherChat {
 
     Map<EntityType<?>, List<ChatHolder>> chatMap;
-    public static Codec<ToTypeChat> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<ToTypeChat> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.unboundedMap(
                     BuiltInRegistries.ENTITY_TYPE.byNameCodec(),
                     Codec.list(ChatHolder.CODEC)

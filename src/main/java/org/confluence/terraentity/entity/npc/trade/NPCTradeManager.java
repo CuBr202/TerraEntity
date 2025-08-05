@@ -19,6 +19,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.common.conditions.ConditionalOps;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.api.npc.trade.ITradeGenerator;
@@ -102,7 +103,7 @@ public class NPCTradeManager {
             this.tradeList = null;
         }
         if (id != null) { // 正常情况只会在第一次生成时不为null
-            TradeModifiers.applyModifiers(this, id);
+            TradeModifiers.getInstance().applyModifiers(this, id);
         }
         this.setOwner(holder);
     }
@@ -257,7 +258,7 @@ public class NPCTradeManager {
             ImmutableMap.Builder<ResourceLocation, NPCTradeManager> map1 = ImmutableMap.builder();
             ImmutableMap.Builder<ResourceLocation, Tag> map2 = ImmutableMap.builder();
 
-            RegistryOps<JsonElement> ops = makeConditionalOps();
+            ConditionalOps<JsonElement> ops = makeConditionalOps();
             map.forEach((key, value) -> NPCTradeManager.CODEC.parse(ops, value).ifSuccess(r -> {
                 map1.put(key, r);
                 map2.put(key, JsonOps.INSTANCE.convertTo(NbtOps.INSTANCE, value));

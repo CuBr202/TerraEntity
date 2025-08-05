@@ -249,7 +249,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         }
 
         // 初始化对话系统
-        this.chatManager = ChatManager.getChatManager(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()), this.level().registryAccess());
+        this.chatManager = ChatManager.get(this.getType());
         if(this.chatManager != null) {
             this.chatManager.setOwner(this);
         }

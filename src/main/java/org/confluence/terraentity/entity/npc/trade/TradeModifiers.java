@@ -4,11 +4,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.neoforged.neoforge.common.conditions.ConditionalOps;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.npc.trade.ITradeModifier;
 
@@ -31,7 +31,7 @@ public class TradeModifiers extends SimpleJsonResourceReloadListener {
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
         Map<ResourceLocation, List<ITradeModifier>> map1 = new HashMap<>();
 
-        RegistryOps<JsonElement> ops = makeConditionalOps();
+        ConditionalOps<JsonElement> ops = makeConditionalOps();
         map.forEach((k, v) -> CODEC.parse(ops, v).ifSuccess(rl -> {
             for (ITradeModifier modifier : rl) {
                 map1.computeIfAbsent(modifier.id(), map2 -> new ArrayList<>()).add(modifier);
@@ -56,8 +56,8 @@ public class TradeModifiers extends SimpleJsonResourceReloadListener {
         return INSTANCE;
     }
 
-    public static void applyModifiers(NPCTradeManager trade, ResourceLocation location) {
-        List<ITradeModifier> modifiers = TradeModifiers.getInstance().modifiersMap.get(location);
+    public void applyModifiers(NPCTradeManager trade, ResourceLocation location) {
+        List<ITradeModifier> modifiers = modifiersMap.get(location);
         if (modifiers != null) {
             for (ITradeModifier modifier : modifiers) {
                 modifier.accept(trade, location);

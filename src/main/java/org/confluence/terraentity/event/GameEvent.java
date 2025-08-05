@@ -39,7 +39,6 @@ public class GameEvent {
     public static void serverStartBefore(ServerAboutToStartEvent event) {
         AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
         TEAttributeModifierConfig.getInstance().loadConfig();
-        ChatManager.readChatsFromJson(event.getServer(), event.getServer().registryAccess());
     }
 
     @SubscribeEvent
@@ -59,5 +58,6 @@ public class GameEvent {
         event.addListener(NPCDialogs.Loader.getInstance());
         event.addListener(NPCTradeManager.Loader.getInstance());
         event.addListener(TradeModifiers.getInstance());
+        event.addListener(ChatManager.Loader.getInstance());
     }
 }

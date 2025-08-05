@@ -4,10 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terraentity.api.npc.chat.IChatElement;
 import org.confluence.terraentity.api.entity.ai.ISkill;
-import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.api.npc.chat.IChatCondition;
+import org.confluence.terraentity.api.npc.chat.IChatElement;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.registries.chat.variant.ItemChatElement;
 import org.confluence.terraentity.registries.chat.variant.SpriteChatElement;
 
@@ -23,7 +23,7 @@ public class ChatHolder implements ISkill {
     IChatCondition condition;
     int _maxCooldown;
 
-    public static Codec<ChatHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<ChatHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             NPCChat.CODEC.fieldOf("chat").forGetter(ChatHolder::getChat),
             IChatCondition.TYPE_CODEC.optionalFieldOf("condition").forGetter(i-> Optional.ofNullable(i.getCondition())),
             Codec.INT.fieldOf("maxCooldown").forGetter(ChatHolder::_maxCooldown)
