@@ -37,7 +37,6 @@ public class GameEvent {
 
     @SubscribeEvent
     public static void serverStartBefore(ServerAboutToStartEvent event) {
-        TradeModifiers.readTradesFromJson(event.getServer(), event.getServer().registryAccess());
         AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
         TEAttributeModifierConfig.getInstance().loadConfig();
         ChatManager.readChatsFromJson(event.getServer(), event.getServer().registryAccess());
@@ -59,5 +58,6 @@ public class GameEvent {
         event.addListener(NPCMood.Loader.getInstance());
         event.addListener(NPCDialogs.Loader.getInstance());
         event.addListener(NPCTradeManager.Loader.getInstance());
+        event.addListener(TradeModifiers.getInstance());
     }
 }
