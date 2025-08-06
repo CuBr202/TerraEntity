@@ -78,6 +78,9 @@ public class ChatHolder implements ISkill {
     }
 
     public boolean canChat(AbstractTerraNPC npc, ChatHolder chatHolder) {
+        if(npc.getBrain() == null){
+            return false;
+        }
         if(condition == null){
             return true;
         }
