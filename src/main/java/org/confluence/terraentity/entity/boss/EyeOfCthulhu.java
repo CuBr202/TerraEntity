@@ -11,9 +11,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.IAutoLeaveMob;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
@@ -112,7 +112,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         BlockPos pos = BlockPos.containing(position());
 
                         /*
-                        ((ServerLevel) level()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, ModBlocks.TR_CRIMSON_STONE.getPrefab().defaultBlockState()),
+                        ((ServerLevel) level()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, ModBlocks.TR_CRIMSON_STONE.get().defaultBlockState()),
                                 pos.getX() + 0.5F,
                                 pos.getY() + 0.75F,
                                 pos.getZ() + 0.5F,

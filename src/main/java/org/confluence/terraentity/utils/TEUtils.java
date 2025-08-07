@@ -875,11 +875,11 @@ public final class TEUtils {
         boolean hasBoss = hasBoss(Short.MAX_VALUE, player.level(),
                 player.getBoundingBox());
         if (hasBoss) {
-            return player.getRandom().nextInt(ModConfigs.BOSS_RESPAWN_TIME_MIN.getPrefab()
-                    , ModConfigs.BOSS_RESPAWN_TIME_MAX.getPrefab());
+            return player.getRandom().nextInt(ModConfigs.BOSS_RESPAWN_TIME_MIN.get()
+                    , ModConfigs.BOSS_RESPAWN_TIME_MAX.get());
         } else {
-            return player.getRandom().nextInt(ModConfigs.DEFAULT_RESPAWN_TIME_MIN.getPrefab(),
-                    ModConfigs.DEFAULT_RESPAWN_TIME_MAX.getPrefab());
+            return player.getRandom().nextInt(ModConfigs.DEFAULT_RESPAWN_TIME_MIN.get(),
+                    ModConfigs.DEFAULT_RESPAWN_TIME_MAX.get());
         }
     }*/
 
