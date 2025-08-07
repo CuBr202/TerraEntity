@@ -8,7 +8,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
-import net.neoforged.fml.event.IModBusEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
@@ -215,7 +214,7 @@ public abstract class NPCEvent extends Event {
     /**
      * 服务器初始化时触发，以免每次生成npc都post相同的event。且将线性的if else转为map提高效率
      */
-    public static class NPCBrainCollectionEvent extends Event implements IModBusEvent, ICancellableEvent {
+    public static class NPCBrainCollectionEvent extends Event implements ICancellableEvent {
         private static final Map<EntityType<?>, Consumer<NPCBrainCollector>> consumerMap = new HashMap<>();
 
         public static Consumer<NPCBrainCollector> getConsumer(EntityType<?> id) {

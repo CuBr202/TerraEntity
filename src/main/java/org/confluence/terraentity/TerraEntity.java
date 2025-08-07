@@ -6,10 +6,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import org.confluence.terraentity.api.event.WhipRegisterModifyEvent;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.data.biome.TEBiomes;
-import org.confluence.terraentity.event.ModEvent;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.registries.TERegistries;
 import org.slf4j.Logger;
@@ -27,8 +25,6 @@ public class TerraEntity {
     public static String toLang(ResourceLocation location){return location.toLanguageKey().replace("/",".");}
 
     public TerraEntity (IEventBus modEventBus, ModContainer modContainer) {
-
-        newListener(modEventBus);
         modEventBus.addListener(TERegistries::newRegistry);
 
         TEEntities.register(modEventBus);
@@ -50,13 +46,5 @@ public class TerraEntity {
 
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-    }
-
-
-
-    public void newListener(IEventBus eventBus){
-        eventBus.addListener(WhipRegisterModifyEvent.class, event -> {});
-        eventBus.addListener(ModEvent::onCollectBrains);
-
     }
 }

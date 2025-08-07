@@ -1,6 +1,8 @@
 package org.confluence.terraentity.event;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.CrossbowItem;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
@@ -12,19 +14,24 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
+import org.confluence.terraentity.entity.npc.brain.ArmDealerNPCAi;
+import org.confluence.terraentity.entity.npc.brain.DemolitionistNPCAi;
+import org.confluence.terraentity.entity.npc.brain.NurseAi;
+import org.confluence.terraentity.entity.npc.brain.OldManAi;
 import org.confluence.terraentity.entity.npc.chat.ChatManager;
 import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.entity.npc.trade.TradeModifiers;
+import org.confluence.terraentity.init.entity.TENpcEntities;
+import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.network.s2c.SyncDataS2C;
 import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
 import org.confluence.terraentity.utils.AdapterUtils;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = TerraEntity.MODID)
 public class GameEvent {
-
     @SubscribeEvent
     public static void onDatapackSync(OnDatapackSyncEvent event) {
         ServerPlayer serverPlayer = event.getPlayer();
@@ -37,7 +44,7 @@ public class GameEvent {
 
     @SubscribeEvent
     public static void serverStartBefore(ServerAboutToStartEvent event) {
-        AdapterUtils.postEvent(new NPCEvent.NPCBrainCollectionEvent());
+        AdapterUtils.postGameEvent(new NPCEvent.NPCBrainCollectionEvent());
         TEAttributeModifierConfig.getInstance().loadConfig();
     }
 
@@ -59,5 +66,32 @@ public class GameEvent {
         event.addListener(NPCTradeManager.Loader.getInstance());
         event.addListener(TradeModifiers.getInstance());
         event.addListener(ChatManager.Loader.getInstance());
+    }
+
+    @SubscribeEvent
+    public static void onCollectBrains(NPCEvent.NPCBrainCollectionEvent event) {
+        if (!ModChecker.isConfluenceLoaded.get()) {
+            event.register(TENpcEntities.DEMOLITIONIST.get(), (collector) -> {
+                collector.setReplace(new DemolitionistNPCAi(collector.getNPC()));
+            });
+            event.register(TENpcEntities.GUIDE.get(), (collector) -> {
+                collector.getNPC().setCanPerformerAttackTest(e -> e.getMainHandItem().getItem() instanceof BowItem);
+//                collector.getNPC().getMood().addMoodInfo(MoodInfos.GUILD1.get());
+//                collector.getNPC().getMood().addMoodInfo(MoodInfos.GUILD2.get());
+
+            });
+            event.register(TENpcEntities.ARMS_DEALER.get(), (collector) -> {
+                collector.setReplace(new ArmDealerNPCAi(collector.getNPC()));
+                collector.getNPC().setCanPerformerAttackTest(e -> e.getMainHandItem().getItem() instanceof CrossbowItem);
+            });
+            event.register(TENpcEntities.NURSE.get(), (collector) -> {
+                collector.setReplace(new NurseAi(collector.getNPC()));
+            });
+            event.register(TENpcEntities.GOBLIN_TINKERER.get(), (collector) -> {
+                collector.getNPC().setCanPerformerAttackTest(e -> e.getMainHandItem().getItem() instanceof BowItem);
+            });
+        }
+
+        event.register(TENpcEntities.OLD_MAN.get(), collector -> collector.setReplace(new OldManAi(collector.getNPC())));
     }
 }
