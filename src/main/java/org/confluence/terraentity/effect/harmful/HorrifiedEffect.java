@@ -34,7 +34,8 @@ public class HorrifiedEffect extends MobEffect {
                 nearestMouth.ifPresent(mouth -> {
                     DeferredHolder<MobEffect, TheTongueEffect> horrifiedHolder = TEEffects.THE_TONGUE;
                     horrifiedHolder.get().setWallOfFleshMouth(mouth);
-                    if(!living.hasEffect(TEEffects.THE_TONGUE))living.addEffect(new MobEffectInstance(horrifiedHolder, 60));
+                    if(!living.hasEffect(TEEffects.THE_TONGUE))
+                        living.addEffect(new MobEffectInstance(horrifiedHolder, 60));
                 });
             }
         }

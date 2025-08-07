@@ -2,28 +2,18 @@ package org.confluence.terraentity.client.event;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.irisshaders.iris.pipeline.programs.ExtendedShader;
 import net.minecraft.client.Minecraft;
 
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.client.player.LocalPlayer;
 
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -32,19 +22,12 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.client.buffer.NPCChatBubbleBuffer;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
-import org.confluence.terraentity.client.init.model.EntityBlockModelRegister;
 import org.confluence.terraentity.client.post.BrainTranslucent;
-import org.confluence.terraentity.effect.harmful.TheTongueEffect;
-import org.confluence.terraentity.entity.boss.WallOfFleshMouth;
+import org.confluence.terraentity.client.post.TongueRenderer;
 import org.confluence.terraentity.init.TEAttachments;
-import org.confluence.terraentity.init.TEEffects;
-import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.item.BaseWhipItem;
 import org.confluence.terraentity.item.YoyosItem;
-import org.confluence.terraentity.utils.TEUtils;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 import static org.confluence.terraentity.config.ClientConfig.bossBarStyle;
@@ -75,101 +58,30 @@ public class RenderEvent {
     public static boolean isAfterSky = false;
     @SubscribeEvent
     public static void renderLevelStage(RenderLevelStageEvent event) {
-        if(event.getStage()== RenderLevelStageEvent.Stage.AFTER_LEVEL){
+        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
             isIrisShader = ModChecker.isIrisLoaded.get() && RenderSystem.getShader() instanceof ExtendedShader;
 
-            BrainTranslucent.render(event);
-            DebugBlocksHelper.Singleton().render(event);
+            if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
+                BrainTranslucent.render(event);
+                DebugBlocksHelper.Singleton().render(event);
+                //            NPCRenderer.target.blitToScreen(100,100);
+                NPCChatBubbleBuffer.getInstance().render(event);
+                isAfterSky = false;
+            } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
+                TongueRenderer.renderFirstPerson(event);
 
-//            NPCRenderer.target.blitToScreen(100,100);
-            NPCChatBubbleBuffer.getInstance().render(event);
-            isAfterSky = false;
-        }else if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY){
+
+            } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY) {
 //            NPCChatBubbleBuffer.getInstance().refresh();
 
-            isAfterSky = true;
+                isAfterSky = true;
+            }
         }
     }
 
-
     @SubscribeEvent
-    public static void MobRenderTongue(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
-        LivingEntity livingEntity = event.getEntity();
-        PoseStack poseStack = event.getPoseStack();
-        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-        float partialTick = event.getPartialTick();
-        int packedLight = event.getPackedLight();
-        if (livingEntity.hasEffect(TEEffects.THE_TONGUE)) {
-            MobEffect rawEffect = livingEntity.getEffect(TEEffects.THE_TONGUE).getEffect().value();
-            if (rawEffect instanceof TheTongueEffect effect) {
-                WallOfFleshMouth mouth = effect.getWallOfFleshMouth();
-                if (mouth != null && mouth.isAlive() && livingEntity.isAlive()) {
-                    Vec3 init = mouth.position();
-
-                    poseStack.pushPose();
-                    if (Minecraft.getInstance().player != null) {
-                        // 错位渲染，防止正对的时候看到的是片面
-                        Vec3 p = Minecraft.getInstance().player.position().subtract(init);
-                        double a = p.cross(new Vec3(0, 1, 0)).dot(Minecraft.getInstance().player.position().subtract(livingEntity.position()));
-                        poseStack.mulPose(Axis.YN.rotation(a > 0 ? 0.5f : -0.5f));
-                    }
-
-                    poseStack.popPose();
-
-                    Vec3 lerpPos = new Vec3(
-                            Mth.lerp(partialTick, livingEntity.xOld, livingEntity.getX()),
-                            Mth.lerp(partialTick, livingEntity.yOld+livingEntity.getEyeHeight()*0.5f, livingEntity.getY()+livingEntity.getEyeHeight()*0.5f),
-                            Mth.lerp(partialTick, livingEntity.zOld, livingEntity.getZ())
-                    );
-
-                    Vec3 _diff = lerpPos.subtract(init);
-                    Vec3 diffNorm = _diff.normalize();
-
-                    // 让叶子紧贴实体
-                    Vec3 offset = diffNorm.scale(-1);
-                    Vec3 diff = _diff.subtract(offset);
-                    double distance = _diff.length(); // 获取实体与初始点的直线距离[6](@ref)
-                    int baseCount = 5; // 基础数量
-                    float densityFactor = 0.8f; // 每米增加的数量密度
-
-                    int count = Mth.clamp(
-                            (int) (distance * densityFactor) + baseCount,
-                            baseCount,
-                            50
-                    );
-                    double dx = diff.x / count;
-                    double dy = diff.y / count;
-                    double dz = diff.z / count;
-                    Quaternionf rotate = TEUtils.rotateFromV1ToV2(new Vector3f(0, 1, 0), new Vector3f((float) dx, (float) dy, (float) dz));
-                    BakedModel model = Minecraft.getInstance().getModelManager().getModel(EntityBlockModelRegister.getInstance().getModelResourceLocation(TEMonsterEntities.THE_HUNGRY.get()));
-
-                    for (int i = 0; i < count; i++) {
-                        Vec3 pos = new Vec3(-i * dx + offset.x, -i * dy + offset.y, -i * dz + offset.z);
-                        poseStack.pushPose();
-                        poseStack.translate(-0.5f, 0.5f, -0.5f);
-                        poseStack.translate(pos.x, pos.y, pos.z);
-//            poseStack.translate(offset.x, offset.y, offset.z);
-                        poseStack.translate(0.5, 0, 0.5);
-
-                        poseStack.mulPose(rotate);
-                        poseStack.mulPose(Axis.YN.rotation(i * 0.5f));
-                        poseStack.translate(-0.5, 0, -0.5);
-
-//            poseStack.translate(-0.5,0,0);
-
-                        ItemStack stack = Items.AIR.getDefaultInstance();
-                        for (RenderType rendertype : model.getRenderTypes(stack, false)) {
-                            VertexConsumer vertexconsumer = ItemRenderer.getFoilBuffer(bufferSource, rendertype, false, stack.isEnchanted());
-                            Minecraft.getInstance().getItemRenderer().renderModelLists(
-                                    model, stack, packedLight, OverlayTexture.NO_OVERLAY,
-                                    poseStack, vertexconsumer);
-                        }
-
-                        poseStack.popPose();
-                    }
-                }
-            }
-        }
+    public static void RenderLiving(RenderLivingEvent.Pre<Player, EntityModel<Player>> event) {
+        TongueRenderer.render(event);
     }
 
     @SubscribeEvent

@@ -45,9 +45,8 @@ public class TheTongueEffect extends MobEffect {
                 double speedFactor = Mth.clamp(distance / 15.0 + wall.getMoveSpeed()+0.35f, wall.getMoveSpeed() + 0.15f, wall.getMoveSpeed() + 0.5); // 距离因子基于固定10格
                 Vec3 adjustedForce = dragDirection.scale(speedFactor);
 
-                if ((distance <= 9.0F || !living.isAlive()) && !living.level().isClientSide && living instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.connection.send(new ClientboundRemoveMobEffectPacket(living.getId(), TEEffects.HORRIFIED));
-                    serverPlayer.getActiveEffectsMap().remove(TEEffects.THE_TONGUE).getEffect();
+                if ((distance <= 9.0F || !living.isAlive())) {
+                    living.getActiveEffectsMap().remove(TEEffects.THE_TONGUE).getEffect();
                 } else {
                     living.setDeltaMovement(living.getDeltaMovement().add(adjustedForce));
                     living.hurtMarked = true;
@@ -57,9 +56,8 @@ public class TheTongueEffect extends MobEffect {
                         living.hurt(living.level().damageSources().mobAttack(mouth), damage);
                     }
                 }
-        }else if(!living.level().isClientSide && living.tickCount % 100 == 0 && living instanceof ServerPlayer serverPlayer){
-                serverPlayer.connection.send(new ClientboundRemoveMobEffectPacket(living.getId(), TEEffects.HORRIFIED));
-                serverPlayer.getActiveEffectsMap().remove(TEEffects.THE_TONGUE).getEffect();
+        }else if(living.tickCount % 60 == 0){
+                living.getActiveEffectsMap().remove(TEEffects.THE_TONGUE).getEffect();
             }
         }
        return true;

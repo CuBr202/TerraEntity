@@ -4,7 +4,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,15 +17,14 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.confluence.terraentity.api.entity.Boss;
-import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.proj.TrailProjectile;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
+import org.confluence.terraentity.utils.AimUtils;
 import org.confluence.terraentity.utils.TEUtils;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 
 import javax.annotation.Nullable;
@@ -37,23 +35,22 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
 
     @Nullable
     private LivingEntity clientSideCachedAttackTarget;
+    @Nullable
+    private WallOfFlesh clientSideCachedParentMob;
     private static final EntityDataAccessor<Integer> DATA_ID_ATTACK_TARGET = SynchedEntityData.defineId(WallOfFleshEye.class, EntityDataSerializers.INT);
-    private static final float DAMAGE = 4f;//一阶段接触伤害
+    private static final EntityDataAccessor<Integer> DATA_ID_PARENT_MOB = SynchedEntityData.defineId(WallOfFleshEye.class, EntityDataSerializers.INT);
+    private static final float DAMAGE = 8f;
 
-    //定义技能参数
-    private int summonCDAll = 60; //仆从召唤cd
+    private static final int summonCDAll = 40;
     private int summonCD = summonCDAll;
 
     public WallOfFleshEye(EntityType<WallOfFleshEye> entityType, Level level) {
         super(entityType, level,WallOfFlesh.MAX_HEALTHS,2);
-        //初始属性
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-        getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(16);
-        //getAttribute(FOLLOW_RANGE).setBaseValue(32.0);
+        getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.playSound(TESounds.ROAR.get());
-        if(ServerConfig.BOSS_NO_PHYSICS.get())
-            this.noPhysics = true;
+        this.noPhysics = true;
         collisionProperties.attackInternal = 1;
         collisionProperties.detectInternal = 1;
     }
@@ -63,14 +60,17 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
     }
 
     @Override
-    public boolean canAttack(LivingEntity target) {
-        return super.canAttack(target) && !(target instanceof DemonEye);
+    public boolean canAttack(LivingEntity entity) {
+        if(this.parentMob == null)
+            return super.canAttack(entity);
+        else return this.parentMob.canAttack(entity);
     }
 
     protected boolean canShoot(Entity target,float range) {
         return target!= null && TEUtils.angleBetween(this.getLookAngle(), target.position().subtract(this.position())) < range;
     }
 
+    @Override
     protected void registerGoals() {
         //this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 45F));
         //this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
@@ -78,7 +78,7 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
         //this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
     }
 
-    @Override // 受伤音效
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
 
     @Override
@@ -98,6 +98,27 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
 
     public void setParent(WallOfFlesh parent){
         this.parentMob = parent;
+        if (!this.level().isClientSide && parent != null) {
+            this.entityData.set(DATA_ID_PARENT_MOB, parent.getId());
+        }
+    }
+    
+    public WallOfFlesh getParentMob() {
+        if (this.level().isClientSide) {
+            if (this.clientSideCachedParentMob != null) {
+                return this.clientSideCachedParentMob;
+            } else {
+                Entity entity = this.level().getEntity(this.entityData.get(DATA_ID_PARENT_MOB));
+                if (entity instanceof WallOfFlesh wallOfFlesh) {
+                    this.clientSideCachedParentMob = wallOfFlesh;
+                    return this.clientSideCachedParentMob;
+                } else {
+                    return null;
+                }
+            }
+        } else {
+            return this.parentMob;
+        }
     }
 
     @Override
@@ -109,6 +130,18 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
     @Override
     public boolean requiresCustomPersistence() {
         return true;
+    }
+
+    @Override
+    public float getYRot() {
+        if(this.parentMob!=null)return this.parentMob.getYRot();
+        return super.getYRot();
+    }
+
+    @Override
+    public float getXRot() {
+        if(this.parentMob!=null)return this.parentMob.getXRot();
+        return super.getXRot();
     }
 
     @Override
@@ -124,30 +157,44 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
             }else if (forward.dot(new Vec3(toTarget.x, 0, toTarget.z).normalize()) >= 0) {
                 this.setActiveAttackTarget(getTarget().getId());
             }else this.setActiveAttackTarget(0);
-        }else if(this.getActiveAttackTarget()!=null && this.getActiveAttackTarget()instanceof Player player && (player.isCreative() || player.isSpectator())) this.setActiveAttackTarget(0);
-        // 生成仆从
+        }else if(this.getActiveAttackTarget()!=null && this.getActiveAttackTarget() instanceof Player player && (player.isCreative() || player.isSpectator())) this.setActiveAttackTarget(0);
         if (!this.level().isClientSide) {
-
-            if (getTarget() == null || !getTarget().isAlive()) return;
 
             if(this.getHealth()!= parentMob.getHealth())this.setHealth(parentMob.getHealth());
 
             if (--summonCD > 0) return;
             float healthPercent = parentMob.getHealthPercentage();
-            summonCD = healthPercent < 0.5f? (int) (summonCDAll * Math.clamp(healthPercent, 0.2F, 1.0f)) : summonCDAll;
-            if (canShoot(this.getTarget(),0.75F)) {
-                TrailProjectile proj = TEProjectileEntities.TRAIL_PROJECTILE.get().create(level());
-                if (proj!=null) {
-                    proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
-                    proj.setExistTick(200);
-                    proj.setOwner(this);
-                    proj.setTrailColor(ChatFormatting.DARK_PURPLE.getColor());
-                    proj.setPos(this.position());
-                    proj.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST));
-                    Vec3 dir = target.getEyePosition().add(0, 0.15F, 0).subtract(this.position());
-                    proj.shoot(dir.x, dir.y, dir.z, 1, 0.15f);
-                    level().addFreshEntity(proj);
-                }
+            if (canShoot(this.getTarget(),0.75F) && getTarget().isAlive()) {
+                int randomCD = summonCDAll + random.nextInt(4) * 10;
+                summonCD = healthPercent < 0.5f ? (int) (randomCD * Math.clamp(healthPercent, 0.2F, 1.0f)) : randomCD;
+                TrailProjectile proj = new TrailProjectile(TEProjectileEntities.TRAIL_PROJECTILE.get(), this.level()) {
+
+                    @Override
+                    protected boolean canHitEntity(@NotNull Entity target) {
+                        return super.canHitEntity(target) && !WallOfFlesh.isWallOfFleshMob(target);
+                    }
+
+                };
+                proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+                proj.setExistTick(200);
+                proj.setOwner(this);
+                proj.setTrailColor(ChatFormatting.DARK_PURPLE.getColor());
+                proj.setPos(this.position());
+                proj.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST));
+                Vec3 dir = getTarget().getEyePosition().subtract(this.position());
+
+                /*
+                    AimUtils.AimHelperOptions aimOptions = new AimUtils.AimHelperOptions()
+                            .setProjectileSpeed(0.4)
+                            .setProjectileSpeedMulti(1.1)
+                            .setProjectileGravity(0)
+                            .setTicksTotal(20)
+                            .setRandomOffsetRadius(0)
+                            .setEpoch(3);
+                     */
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    proj.shoot(dir.x, dir.y, dir.z, 1.5f, 0.015f);
+                level().addFreshEntity(proj);
             }
         }
     }
@@ -156,14 +203,17 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
         return this.position().y + this.getHitbox().getYsize() / 2;
     }
 
+    @Override
     public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
         return this.parentMob==null?super.addEffect(effectInstance, entity):this.parentMob.addEffect(effectInstance, entity);
     }
 
+    @Override
     public boolean canUsePortal(boolean allowPassengers) {
         return this.parentMob==null?super.canUsePortal(allowPassengers):this.parentMob.canUsePortal(allowPassengers);
     }
 
+    @Override
     public boolean isInvulnerableTo(DamageSource source) {
         if(source.is(DamageTypeTags.IS_FIRE)||source.is(DamageTypeTags.IS_DROWNING)){
             return true;
@@ -175,6 +225,7 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_ID_ATTACK_TARGET, 0);
+        builder.define(DATA_ID_PARENT_MOB, 0);
     }
 
     void setActiveAttackTarget(int activeAttackTargetId) {
@@ -224,6 +275,9 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
         if (DATA_ID_ATTACK_TARGET.equals(key)) {
             this.clientSideCachedAttackTarget = null;
         }
+        if (DATA_ID_PARENT_MOB.equals(key)) {
+            this.clientSideCachedParentMob = null;
+        }
     }
 
     @Override
@@ -239,6 +293,7 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
         return false;
     }
 
+    @Override
     public boolean isMainBody(){
         return false;
     }
