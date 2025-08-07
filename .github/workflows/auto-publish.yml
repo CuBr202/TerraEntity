@@ -36,7 +36,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Generate assets
-        run: ./gradlew runData
+        run: ./gradlew runData -Pdev=false
 
       - name: Build with Gradle
         run: ./gradlew build -Pdev=false
