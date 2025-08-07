@@ -50,6 +50,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
+import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
@@ -74,6 +75,7 @@ import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.menu.SimpleTradeMenu;
 import org.confluence.terraentity.network.s2c.UpdateNPCTradePacket;
+import org.confluence.terraentity.registries.chat.variant.SpriteChatElement;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -393,6 +395,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         this.entityData.define(DATA_TRADE_PARAMS, TradeParams.create());
         this.entityData.define(DATA_IS_CHARGING_CROSSBOW, false);
         this.entityData.define(DATA_CHAT, new NPCChat(List.of()));
+
     }
 
     @Override
@@ -449,6 +452,8 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
                 onInitTrades();
                 syncTrades();
             }
+            // forge 奇妙的bug，也是奇妙的修复方式
+            this.entityData.set(DATA_TRADE_PARAMS, TradeParams.create());
         }
     }
 
@@ -476,8 +481,8 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         --this.chatCount;
         if(!level().isClientSide){
             if(this.chatManager != null) {
-                this.chatManager.update(1);
-//                if(this.tickCount % 150 == 0){ // todo debug
+//                this.chatManager.update(1);
+//                if(this.tickCount % 200 == 0){ // todo debug
 //                    this.setChat(new NPCChat(List.of(new SpriteChatElement(List.of(TerraEntity.space("textures/gui/sprites/random_gift.png")), 2f))));
 //                }
             }

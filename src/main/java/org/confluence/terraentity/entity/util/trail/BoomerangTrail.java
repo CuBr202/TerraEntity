@@ -14,12 +14,13 @@ public class BoomerangTrail implements ITrail<BoomerangProjectile> {
     public void generateTrail(BoomerangProjectile entity, int ticks) {
         double f = ticks * 0.8F;
         float w = 0.8f;
-        entity.trailQueue.add(entity.position().add(Math.sin(f) * w, 0, Math.cos(f) * w));
-        if (entity.trailQueue.size() > 40) {
-            entity.trailQueue.poll();
+        if(!entity.isBacking) {
+            entity.trailQueue.add(entity.position().add(Math.sin(f) * w, 0, Math.cos(f) * w));
+            entity.trailQueue2.add(entity.position().add(Math.cos(f) * w, 0, Math.sin(f) * w));
+
         }
-        entity.trailQueue2.add(entity.position().add(Math.cos(f) * w, 0, Math.sin(f) * w));
-        if (entity.trailQueue2.size() > 40) {
+        if (entity.trailQueue.size() > 40 || entity.isBacking) {
+            entity.trailQueue.poll();
             entity.trailQueue2.poll();
         }
     }

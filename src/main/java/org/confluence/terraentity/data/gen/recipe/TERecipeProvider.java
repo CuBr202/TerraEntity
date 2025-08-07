@@ -13,6 +13,7 @@ import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.init.item.TESummonItems;
 import org.confluence.terraentity.init.item.TEWhipItems;
+import org.confluence.terraentity.init.item.TEYoyosItems;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -97,8 +98,34 @@ public class TERecipeProvider extends AbstractRecipeProvider {
                 .unlockedBy("has_golden_sword_staff", has(TESummonItems.SUMMON_GOLDEN_SWORD_STAFF.get()))
                 .save(recipeOutput, "terra_entity:terraprisma_2");
 
+
+        registerYoyo(recipeOutput, TEYoyosItems.WOODEN_YOYO.get(), ItemTags.PLANKS, "has_planks");
+        registerYoyo(recipeOutput, TEYoyosItems.RALLY.get(), Items.IRON_INGOT, "has_iron_ingot");
+        registerYoyo(recipeOutput, TEYoyosItems.MALAISE.get(), Items.SHULKER_SHELL, "has_shulker_shell");
+
     }
 
+    private static void registerYoyo(Consumer<FinishedRecipe> recipeOutput, ItemLike yoyo, ItemLike material, String name){
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, yoyo)
+                .pattern(" BB")
+                .pattern("ABB")
+                .pattern("A  ")
+                .define('A', Items.STRING)
+                .define('B', material)
+                .unlockedBy(name,has(yoyo))
+                .save(recipeOutput);
+    }
+
+    private static void registerYoyo(Consumer<FinishedRecipe> recipeOutput, ItemLike yoyo, TagKey<Item> material, String name){
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, yoyo)
+                .pattern(" BB")
+                .pattern("ABB")
+                .pattern("A  ")
+                .define('A', Items.STRING)
+                .define('B', material)
+                .unlockedBy(name,has(yoyo))
+                .save(recipeOutput);
+    }
     protected static void netheriteSmithing(Consumer<FinishedRecipe> recipeOutput, Item ingredientItem, RecipeCategory category, Item resultItem) {
         SmithingTransformRecipeBuilder.smithing(
                         Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE), Ingredient.of(ingredientItem), Ingredient.of(Items.NETHERITE_INGOT), category, resultItem

@@ -16,8 +16,12 @@ public interface ITradeGenerator {
     /**
      * <P>初始化可以交易的物品列表</P>
      */
-    List<ITrade> generateTrades();
+    List<ITrade> generateTrades(ITradeHolder npc);
 
+    /**
+     * <P>默认交易的物品列表，当npc没有重写{@link ITradeHolder#generateTrades(ITradeGenerator)}时，使用默认的</P>
+     */
+    List<ITrade> generateTradesDefault(ITradeHolder npc);
     /**
      * 用于jei自定义配方显示
      */

@@ -4,41 +4,41 @@
 ___ 
 ##  模组内容
 
-- **[生物](#-生物-)**
-  - [怪物](#怪物-)
-  - [动物](#动物-)
-  - [Boss](#boss-)
-  - [NPC](#npc-)
-  - [召唤物](#召唤物-)
+- **[生物](#a-classemojia-span-classtext生物span)**
+  - [怪物](#span-classtext怪物span-a-classemoji-a)
+  - [动物](#span-classtext动物span-a-classemojia)
+  - [Boss](#span-classtextbossspan-a-classemoji-a)
+  - [NPC](#span-classtextnpcspan-a-classemoji-a)
+  - [召唤物](#span-classtext召唤物span-a-classemoji-a)
 
 - **物品**
-  - **[武器](#-武器-)**
+  - **[武器](#a-classemojia-span-classtext武器span)**
     - [悠悠球](#悠悠球-)
     - [回旋镖](#回旋镖-)
     - [召唤杖](#召唤杖-)
     - [鞭子](#鞭子-)
 
-  - **[附魔书](#-附魔书-)**
+  - **[附魔书](#a-classemoji-a-span-classtext附魔书-span)**
     - [横扫之鞭](#横扫之鞭-)
     - [影分身](#影分身-)
-  
-  - **[工具](#-工具-)**
-    - [房屋检测工具](#房屋检测工具-)
-    - [宠物](#宠物-)
-    - [坐骑](#坐骑-)
 
-  - **[刷怪蛋](#-刷怪蛋)**
-  
-- **[游戏机制](#-游戏机制)**
+  - **[工具](#a-classemoji-a-span-classtext工具span)**
+    - [房屋检测工具](#span-classtext房屋检测工具span-a-classemoji-a)
+    - [宠物](#span-classtext宠物span-a-classemoji-a)
+    - [坐骑](#span-classtext坐骑span-a-classemoji-a)
+
+  - **[刷怪蛋](#a-classemojia-span-classtext刷怪蛋span)**
+
+- **[游戏机制](#a-classemojia-span-classtext游戏机制span)**
   - [NPC系统](#npc系统-)
   - [召唤师系统](#召唤师系统-)
   - [配置文件](#配置文件-)
 
 
 ___
-## 🥚 生物 
+## <a class="emoji">🧬</a> <span class="text">生物</span>
 
-### 怪物 😈
+### <span class="text">怪物</span> <a class="emoji">😈 </a>
 
 <div class="box">
   <img src="images/monster.png" alt="chester" style="max-width: 100%;">
@@ -68,7 +68,7 @@ ___
 - 食人怪、抓人草
 - 食人鱼
 
-### 动物 🐰
+### <span class="text">动物</span> <a class="emoji">🐰</a>
 
 <div class="box">
   <img src="images/animal.png" alt="chester" style="max-width: 100%;">
@@ -82,7 +82,7 @@ ___
 - 宝石兔子 8变种
 - 鸟 3种
 
-### Boss 🤡
+### <span class="text">Boss</span> <a class="emoji">🤡 </a>
 
 <div class="box">
   <img src="images/boss.png" alt="chester" style="max-width: 100%;">
@@ -95,7 +95,7 @@ ___
 - 骷髅王
 - 血肉之墙
 
-### NPC 😆
+### <span class="text">NPC</span> <a class="emoji">😆 </a>
 
 <div class="box">
   <img src="images/npc.png" alt="chester" style="max-width: 100%;">
@@ -103,7 +103,7 @@ ___
 
 - 向导、商人、护士、哥布林工匠、爆破商、武器商、渔夫等 共17种
 
-### 召唤物 🐣
+### <span class="text">召唤物</span> <a class="emoji">🐣 </a>
 
 <div class="box">
   <img src="images/summoning.png" alt="chester" style="max-width: 50%;">
@@ -121,7 +121,7 @@ ___
 - 泰拉棱镜
 
 ---
-## ⚔️ 武器 
+## <a class="emoji">⚔️</a> <span class="text">武器</span>
 
 <div class="box">
   <img src="images/weapon.png" alt="chester" style="max-width: 100%;">
@@ -144,24 +144,24 @@ ___
 右键鞭打范围内所有目标，使得召唤杖对目标造成额外伤害。
 
 ---
-## 📕 附魔书 
+## <a class="emoji">📕 </a> <span class="text">附魔书 </span>
 
-### 横扫之鞭  
+### 横扫之鞭
 
 鞭子可以横扫范围内所有目标。
 
-### 影分身  
+### 影分身
 
 可以额外射出一个回旋镖。
 
 ---
-## 🔧 工具 
+## <a class="emoji">🔧 </a> <span class="text">工具</span>
 
-### 房屋检测工具 🏠
+### <span class="text">房屋检测工具</span> <a class="emoji">🏠 </a>
 
 拥有三种模式：检测房屋、添加房屋（需要提前检测）、删除房屋。右键NPC添加房屋，使得NPC可以入住。
 
-### 宠物 🐕
+### <span class="text">宠物</span> <a class="emoji">🐕 </a>
 
 - 切斯特、钱币槽：可以远程连接容器、末影箱。
 
@@ -169,7 +169,7 @@ ___
   <img src="images/pet.png" alt="chester" style="max-width: 50%;">
 </div>
 
-### 坐骑 🐎
+### <span class="text">坐骑</span> <a class="emoji">🐎 </a>
 
 右键召唤宠物坐骑，按下**shift**可以收回宠物。
 - 粘鞍
@@ -182,7 +182,7 @@ ___
 
 
 --- 
-## 🥚 刷怪蛋
+## <a class="emoji">🥚</a> <span class="text">刷怪蛋</span>
 
 <div class="box">
     <img src="images/eggs_1.png" alt="chester" style="max-width: 45%;">
@@ -191,12 +191,12 @@ ___
 
 
 ---
-## 📖 游戏机制
+##  <a class="emoji">📖</a> <span class="text">游戏机制</span>
 ### NPC系统 🙋‍♂️
 - 交易 (data/terra_entity/npc/shop/)
 - 心情 (data/terra_entity/npc/moods.json)
 - 对话 (data/terra_entity/npc/dialogs.json)
-- 交流(data/terra_entity/npc/chat/)
+- 交流 (data/terra_entity/npc/chat/)
 - 姓名 (data/terra_entity/npc/names.json)
 
 ### 召唤师系统 🧙🏻
@@ -226,7 +226,13 @@ img {
 }
 
 h1 {
-    background: linear-gradient(135deg, #0eaf6d, #ff6ac6, #147b96);
+    background: linear-gradient(135deg, #ba356d, #147b96);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+h2 .text {
+    background: linear-gradient(90deg, #86866d, #147b25);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }

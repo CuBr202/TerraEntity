@@ -102,6 +102,6 @@ public class CustomizeBossHealthBar {
 
     public static ResourceLocation defaultResource(EntityType<?> entityType) {
         ResourceLocation loc = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-        return ResourceLocation.fromNamespaceAndPath(loc.getNamespace(), "textures/gui/" + loc.getPath() + "_bar.png");
+        return TerraEntity.fromSpaceAndPath(loc.getNamespace(), "textures/gui/" + loc.getPath() + "_bar.png");
     }
 }

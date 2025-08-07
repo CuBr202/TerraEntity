@@ -4,11 +4,13 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import org.confluence.terraentity.api.entity.IFlyRideableMob;
+import org.confluence.terraentity.attachment.SummonerAttachment;
 import org.confluence.terraentity.init.TEAttachments;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -25,11 +27,12 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
     public RideableBee(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
         this.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).setBaseValue(0.03f);
+        this.moveControl = new FlyingMoveControl(this, 20, false);
     }
 
+    @Override
     public void tick(){
         super.tick();
-
         if(!level().isClientSide){
             if(getOwner() != null && isInWater()) {
                 this.getOwner().stopRiding();
@@ -42,11 +45,16 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
     }
 
     @Override
+    protected float getFlyingSpeed() {
+        return this.getSpeed() * 0.2F;
+    }
+
+    @Override
     protected void tickRiddenLocal(Player player, Vec3 travelVector){
         if(getOwner() == null){
             return;
         }
-        var data = getOwner().getCapability(TEAttachments.SUMMONER_STORAGE).orElseGet(() -> null);
+        SummonerAttachment data = getOwner().getCapability(TEAttachments.SUMMONER_STORAGE).orElseGet(SummonerAttachment::new);
         Vec3 speed = getDeltaMovement();
 
         if(this.isInputtingJumping()){
@@ -69,9 +77,9 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
         float f1 = Math.max(player.zza, -0.1f);
 
         if (this.onGround()) {
-            return new Vec3(f*0.08f,0,f1*0.15f);
+            return new Vec3(f*0.08f,0,f1*0.3f);
         } else {
-            return new Vec3(f*0.5f, 0.0, f1);
+            return new Vec3(f*2, 0.0, f1);
         }
     }
 

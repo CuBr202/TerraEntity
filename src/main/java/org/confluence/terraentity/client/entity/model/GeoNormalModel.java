@@ -13,7 +13,6 @@ public class GeoNormalModel<T extends GeoEntity> extends DefaultedEntityGeoModel
 
     GeoBone head;
     String headName = "Head";
-    boolean turnsHead;
 
     public GeoNormalModel(ResourceLocation path) {
         super(path, true);

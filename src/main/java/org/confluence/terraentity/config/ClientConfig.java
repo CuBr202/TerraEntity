@@ -1,6 +1,7 @@
 package org.confluence.terraentity.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.confluence.terraentity.client.gui.renderer.chat.bubble.BubbleConfig;
 
 public class ClientConfig {
 
@@ -11,6 +12,9 @@ public class ClientConfig {
     public static ForgeConfigSpec.BooleanValue GENERATE_PROJECTILE_PARTICLE;
 
     public static ForgeConfigSpec.BooleanValue ENABLE_NON_SPIDER_MODEL;
+
+    public static ForgeConfigSpec.EnumValue<BubbleConfig> NPC_CHAT_BUBBLE_STYLE;
+
     public static ForgeConfigSpec SPEC;
 
     public static ForgeConfigSpec.Builder init(ForgeConfigSpec.Builder BUILDER){
@@ -30,6 +34,8 @@ public class ClientConfig {
                 .comment("Generate Projectile Particle.")
                 .define("generate_projectile_particle", true);
         ENABLE_NON_SPIDER_MODEL = BUILDER.define("enableNonSpiderModel", false);
+        NPC_CHAT_BUBBLE_STYLE = BUILDER.comment("NPC Chat Bubble Style.")
+                .defineEnum("npc_chat_bubble_style", BubbleConfig.RECT);
         SPEC = BUILDER.build();
         BUILDER.pop();
         return BUILDER;

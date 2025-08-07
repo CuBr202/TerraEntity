@@ -48,6 +48,8 @@ public class TEEnglishProvider extends LanguageProvider {
         add("title.terra_entity.npc_trade.task.dynamic_reward", "Dynamic Reward Task");
         add("title.terra_entity.npc_trade.task.progress", "Progress Task");
 
+        add("container.terra_entity.chester", "Chester");
+
 
 
         add("entity.terra_entity.mother_slime", "Mother Slime");
@@ -78,8 +80,9 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.configuration.server.disable_builtin_health_attack_modifier", "Disable Built-in Attributes Settings");
 
         add("terra_entity.configuration.server.spawn_without_light", "Spawn monsters without light");
-
         add("terra_entity.configuration.server.chance_to_spawn_slime_on_zombie_head", "Chance to Spawn Slime on Zombie Head");
+        add("terra_entity.configuration.server.enemy_spawn_chance_apply_all", "Enemy Spawn Chance Apply to all monsters");
+        add("terra_entity.configuration.server.enemy_spawn_chance", "Enemy of Terra Entity Spawn Chance ");
 
 
 
@@ -91,6 +94,9 @@ public class TEEnglishProvider extends LanguageProvider {
 
         add("terra_entity.configuration.client.enableNonSpiderModel", "Spider Harmonization");
         add("terra_entity.configuration.client.enableNonSpiderModel.tooltip", "Enable this option if you dislike spiders or want to beautify them.");
+
+        add("terra_entity.configuration.client.npc_chat_bubble_style", "NPC Chat Bubble Style");
+
 
         // Tooltip
         add("tooltic.terra_entity.summon_item.desc", "Press for a while to release all summons");
@@ -125,6 +131,13 @@ public class TEEnglishProvider extends LanguageProvider {
         add("tooltip.terra_entity.boomerang.on_hit_effects", "Effects");
         add("tooltip.terra_entity.boomerang.max_count", "Max Count");
         add("tooltip.terra_entity.boomerang.fly_speed", "Fly Speed");
+
+        // yoyos
+        add("tooltip.terra_entity.yoyo.max_range", "Max Range");
+        add("tooltip.terra_entity.yoyo.exist_time", "Using Time");
+        add("tooltip.terra_entity.yoyo.hit_effect", "Hit Effect");
+
+
 
         // attribute
         add("attribute.name.player.summon_damage", "Summon Damage");

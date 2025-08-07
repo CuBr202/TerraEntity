@@ -440,8 +440,6 @@ public final class TEUtils {
 
     /**
      * 获取玩家视角下方块
-     * @param player
-     * @return
      */
     public static BlockPos getEyeBlockHitResult(Player player){
         Vec3 vec3 = player.getEyePosition();

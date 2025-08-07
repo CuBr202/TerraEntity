@@ -23,7 +23,7 @@ public enum ChatItemRenderer implements IChatRenderer<ItemChatElement> {
         guiGraphics.pose().scale(-scale,-scale,-scale);
 //            guiGraphics.renderItem(Items.BOW.getDefaultInstance(), 0,0);
         Minecraft.getInstance().getItemRenderer().renderStatic(chat.getContent(), ItemDisplayContext.FIXED,
-                0xF000F0,packedOverlay, guiGraphics.pose(), bufferSource, level, 0
+                0x0F000F0,packedOverlay, guiGraphics.pose(), bufferSource, level, 0
         );
         guiGraphics.pose().popPose();
     }

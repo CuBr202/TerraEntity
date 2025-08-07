@@ -86,7 +86,7 @@ public class GameInputEvent {
     public static void interactionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
         if (event.isAttack() && event.getHand() == InteractionHand.MAIN_HAND) {
             LocalPlayer player = Minecraft.getInstance().player;
-            if (player != null && player.getMainHandItem().getItem() instanceof YoyosItem<?>) {
+            if (player != null && player.getMainHandItem().getItem() instanceof ILeftClickStateItem) {
                 event.setCanceled(true);
                 event.setSwingHand(false);
             }

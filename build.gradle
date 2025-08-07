@@ -88,10 +88,11 @@ jarJar.enable()
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+
     flatDir {
         dir 'libs'
     }
-    mavenLocal()
+//    mavenLocal()
     maven {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
@@ -104,6 +105,11 @@ repositories {
 
     maven {
         url = "https://www.cursemaven.com"
+    }
+
+    maven {
+        name = "EDGtheXu's maven"
+        url = "https://raw.githubusercontent.com/EDGtheXu/edg_thexu_maven/master/repository"
     }
 
 // This is the repositories block in your build.gradle. NOT the one in publishing, or in buildscript. If it does not exist already, create it.
@@ -148,9 +154,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:jade-324717:6271651")
     runtimeOnly fg.deobf("curse.maven:jade-324717:6271651")
 
-    jarJar(implementation fg.deobf("libs:cafelib:1.0.0-all")) {
-        jarJar.ranged(it, "[1.0.0,)")
-    }
+
 
     compileOnly fg.deobf("curse.maven:dynamiclights-reforged-551736:6044481")
     runtimeOnly fg.deobf("curse.maven:dynamiclights-reforged-551736:6044481")
@@ -161,12 +165,22 @@ dependencies {
     compileOnly fg.deobf("curse.maven:embeddium-908741:5681725")
     runtimeOnly fg.deobf("curse.maven:embeddium-908741:5681725")
 
+
+    // mc lib 要用lib:
+    implementation fg.deobf("libs:cafelib:1.0.1+1201forge-all")
+    jarJar("com.github.edg_thexu:cafelib:1.0.1+1201forge-all") {
+        jarJar.ranged(it, "[1.0.1,)")
+    }
+
     // 密码库
-    minecraftLibrary 'com.github.edg_thexu:vigsecurity:1.0.0'
-    implementation (files("libs/vigsecurity-1.0.0.jar"))
-    jarJar('com.github.edg_thexu:vigsecurity:1.0.0'){
+    minecraftLibrary 'com.github.edg_thexu:vigsecurity:1.0.0.20'
+    implementation (files("libs/vigsecurity-1.0.0.20.jar"))
+//    implementation 'com.github.edg_thexu:vigsecurity:1.0.0'
+    jarJar('com.github.edg_thexu:vigsecurity:1.0.0.20'){
         jarJar.ranged(it, "[1.0.0,)")
     }
+
+
 
 //    jarJar(files("libs/vigsecurity-1.0.0.jar"))
 //    additionalRuntimeClasspath "com.github.edg_thexu:vigsecurity:1.0.0"

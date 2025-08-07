@@ -26,6 +26,8 @@ public class TEChineseProvider extends LanguageProvider {
         add("title.terra_entity.npc_trade.task.dynamic_reward", "动态奖励任务");
         add("title.terra_entity.npc_trade.task.progress", "进度任务");
 
+        add("container.terra_entity.chester", "切斯特");
+
         add(TEMonsterEntities.ICE_SLIME.get(), "冰冻史莱姆");
         add(TEMonsterEntities.BLUE_SLIME.get(), "蓝色史莱姆");
         add(TEMonsterEntities.RED_SLIME.get(), "红色史莱姆");
@@ -93,6 +95,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.THE_HUNGRY.get(), "饿鬼");
         add(TEMonsterEntities.ANTLION_SWARMER.get(), "蚁狮蜂");
         add(TEMonsterEntities.GIANT_ANTLION_SWARMER.get(), "巨型蚁狮蜂");
+        add(TEMonsterEntities.GHOST.get(), "鬼魂");
 
 
         // boss
@@ -184,13 +187,14 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.DRIPPLER_SPAWN_EGG.get(), "滴滴怪刷怪蛋");
         add(TESpawnEggItems.BLOOD_ZOMBIE_SPAWN_EGG.get(), "血腥僵尸刷怪蛋");
         add(TESpawnEggItems.WANDERING_EYE_FISH_SPAWN_EGG.get(), "游荡眼球怪鱼刷怪蛋");
+        add(TESpawnEggItems.GHOST_SPAWN_EGG.get(), "鬼魂刷怪蛋");
 
         add(TESpawnEggItems.BLOOD_CRAWLER_SPAWN_EGG.get(), "血爬虫刷怪蛋");
         add(TESpawnEggItems.BLOODY_SPORE_SPAWN_EGG.get(), "血腥芽孢刷怪蛋");
         add(TESpawnEggItems.CRIMSON_KEMERA_SPAWN_EGG.get(), "猩红喀迈拉刷怪蛋");
         add(TESpawnEggItems.FACE_MONSTER_SPAWN_EGG.get(), "脸怪刷怪蛋");
         add(TESpawnEggItems.FIRE_IMG_SPAWN_EGG.get(), "火焰小鬼刷怪蛋");
-        add(TESpawnEggItems.SNOW_FLINX_SPAWN_EGG.get(), "雪怪刷怪蛋");
+        add(TESpawnEggItems.SNOW_FLINX_SPAWN_EGG.get(), "小雪怪刷怪蛋");
 
         add(TESpawnEggItems.PIRANHA_SPAWN_EGG.get(), "食人鱼刷怪蛋");
 
@@ -227,8 +231,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEAnimals.BOOM_BUNNY.get(), "爆炸兔");
         add(TEAnimals.DUCK.get(), "鸭子");
         add(TEAnimals.BIRD.get(), "鸟");
-        add(TEAnimals.BLUE_JAY.get(), "冠蓝鹊");
-        add(TEAnimals.CARDINAL.get(), "红鹊");
+        add(TEAnimals.BLUE_JAY.get(), "冠蓝鸦");
+        add(TEAnimals.CARDINAL.get(), "红雀");
 
 
         // boss
@@ -297,12 +301,13 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.JEWEL_BUNNY_SPAWN_EGG.get(), "宝石兔刷怪蛋");
         add(TESpawnEggItems.DUCK_SPAWN_EGG.get(), "鸭子刷怪蛋");
         add(TESpawnEggItems.BIRD_SPAWN_EGG.get(), "鸟刷怪蛋");
-        add(TESpawnEggItems.BLUE_JAY_SPAWN_EGG.get(), "冠蓝鹊刷怪蛋");
-        add(TESpawnEggItems.CARDINAL_SPAWN_EGG.get(), "红鹊刷怪蛋");
+        add(TESpawnEggItems.BLUE_JAY_SPAWN_EGG.get(), "冠蓝鸦刷怪蛋");
+        add(TESpawnEggItems.CARDINAL_SPAWN_EGG.get(), "红雀刷怪蛋");
 
 
         // 召唤杖
         add(TESummonItems.CHESTER_STAFF.get(), "眼骨");
+        add(TESummonItems.WALLET.get(), "钱币槽");
 
         add(TESummonItems.FINCH_STAFF.get(), "雀杖");
         add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
@@ -345,6 +350,17 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBoomerangItems.COMBAT_WRENCH.get(), "战斗扳手");
         add(TEBoomerangItems.BeiDou_BOOMERANG.get(), "北斗飞镖");
 
+        // 悠悠球
+        add(TEYoyosItems.WOODEN_YOYO.get(), "木悠悠球");
+        add(TEYoyosItems.RALLY.get(), "对打球");
+        add(TEYoyosItems.MALAISE.get(), "抑郁球");
+        add(TEYoyosItems.ARTERY.get(), "血脉球");
+        add(TEYoyosItems.AMAZON.get(), "亚马逊球");
+        add(TEYoyosItems.CODE_1.get(), "代码一号");
+        add(TEYoyosItems.HIVE_FIVE.get(), "蜂巢球");
+        add(TEYoyosItems.CASCADE.get(), "喷流球");
+        add(TEYoyosItems.VALOR.get(), "英勇球");
+
         // 骑乘
         add(TERideableItems.SLIMY_SADDLE.get(), "粘鞍");
         add(TERideableItems.HONEYED_GOGGLES.get(), "凃蜜护目镜");
@@ -381,10 +397,12 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.server.monster_attributes_multiplier_health", "Monster属性倍率-生命");
         add("terra_entity.configuration.server.monster_attributes_multiplier_damage", "Monster属性倍率-伤害");
         add("terra_entity.configuration.server.spawn_without_light", "无视光照生成怪物");
+        add("terra_entity.configuration.server.chance_to_spawn_slime_on_zombie_head", "在僵尸头上生成史莱姆的几率");
+        add("terra_entity.configuration.server.enemy_spawn_chance_apply_all", "所有怪物的生成几率");
+        add("terra_entity.configuration.server.enemy_spawn_chance", "Terra Entity怪物生成几率");
 
         add("terra_entity.configuration.server.disable_builtin_health_attack_modifier", "禁用内置的属性设置");
 
-        add("terra_entity.configuration.server.chance_to_spawn_slime_on_zombie_head", "在僵尸头上生成史莱姆的几率");
 
 
         add("terra_entity.configuration.client.boss_bar_style", "BOSS血条样式");
@@ -394,6 +412,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.client.enableNonSpiderModel.tooltip", "如果你对蜘蛛反感或想美化他们，请开启这个选项");
 
         add("terra_entity.configuration.client.generate_projectile_particle", "生成弹幕粒子");
+        add("terra_entity.configuration.client.npc_chat_bubble_style", "NPC聊天气泡样式");
 
 
         // Tooltip
@@ -430,6 +449,12 @@ public class TEChineseProvider extends LanguageProvider {
         add("tooltip.terra_entity.boomerang.on_hit_effects", "命中效果");
         add("tooltip.terra_entity.boomerang.max_count", "分身数量");
         add("tooltip.terra_entity.boomerang.fly_speed", "飞行速度");
+
+        // yoyos
+        add("tooltip.terra_entity.yoyo.max_range", "最大射程");
+        add("tooltip.terra_entity.yoyo.exist_time", "使用时间");
+        add("tooltip.terra_entity.yoyo.hit_effect", "命中效果");
+
 
         // attribute
         add("attribute.name.player.summon_damage", "召唤伤害");

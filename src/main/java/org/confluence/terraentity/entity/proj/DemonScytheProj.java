@@ -14,7 +14,13 @@ public class DemonScytheProj extends LineProj {
 
     @Override
     protected Vec3 warpSpeed(Vec3 speed) {
-        return super.warpSpeed(speed).scale(Math.max(Math.min(1.0, this.tickCount / 40.0 - 0.5), 0.1f));
+        if (tickCount > 10) {
+            speed = getDeltaMovement();
+            if (speed.lengthSqr() < 2.18300625) { // 60(mph) -> 44.325*2/3/20 = 1.4775(m/tick) -> 1.4775^2 = 2.18300625
+                return speed.scale(1.1940371819652); // (1.06^70)^(1/23) = 1.1940371819652
+            }
+        }
+        return speed;
     }
 
 

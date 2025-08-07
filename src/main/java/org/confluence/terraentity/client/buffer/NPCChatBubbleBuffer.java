@@ -60,11 +60,11 @@ public class NPCChatBubbleBuffer extends AbstractBufferManager {
             var oldShader = RenderSystem.getShader();
             Iterator<RenderData> datas = this.renderQueue.iterator();
 
-            Matrix4f model = new Matrix4f()
-                    .rotate(new Quaternionf(Minecraft.getInstance().gameRenderer.getMainCamera()
-                            .rotation())
-                            .conjugate());
-            RenderSystem.getModelViewMatrix().set(model);
+//            Matrix4f model = new Matrix4f()
+//                    .rotate(new Quaternionf(Minecraft.getInstance().gameRenderer.getMainCamera()
+//                            .rotation())
+//                            .conjugate());
+//            RenderSystem.getModelViewMatrix().set(model);
 
             while (datas.hasNext()) {
                 RenderData data = datas.next();
@@ -127,8 +127,9 @@ public class NPCChatBubbleBuffer extends AbstractBufferManager {
 
     @Override
     public BufferBuilder getBufferBuilder(){
-        return new BufferBuilder(1536);
-//        return Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        BufferBuilder bufferBuilder = new BufferBuilder(1536);
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        return bufferBuilder;
     }
 
     @Override

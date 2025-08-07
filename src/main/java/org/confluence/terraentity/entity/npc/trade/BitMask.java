@@ -104,4 +104,17 @@ public class BitMask {
         }
         return indexes;
     }
+
+    @Override
+    public String toString(){
+        String s = "";
+        for(int i = 0; i < bitMask.size(); i++){
+            for(int j = 0; j < 64; j++){
+                if((bitMask.get(i) & (1L << j)) != 0){
+                    s += i * 64 + j + " ";
+                }
+            }
+        }
+        return s;
+    }
 }

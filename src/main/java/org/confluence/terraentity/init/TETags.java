@@ -23,7 +23,7 @@ public class TETags {
         public static final TagKey<Item> WHIP_ENCHANTABLE = registerItem("whip_enchantable");
         public static final TagKey<Item> BOOMERANG_ENCHANTABLE = registerItem("boomerang_enchantable");
 
-        public static final TagKey<Item> WEAPONS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "weapons"));
+        public static final TagKey<Item> WEAPONS = TagKey.create(Registries.ITEM, TerraEntity.fromSpaceAndPath("c", "weapons"));
     }
 
     public static class Blocks {

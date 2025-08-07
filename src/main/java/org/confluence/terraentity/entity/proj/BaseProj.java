@@ -24,10 +24,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
-import org.confluence.terraentity.api.entity.IGeneration;
+import org.confluence.terraentity.api.entity.*;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
-import org.confluence.terraentity.api.entity.ITrackType;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +39,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 
-public abstract class BaseProj<T extends BaseProj<T>> extends Projectile implements ICollisionAttackEntity<T> {
+public abstract class BaseProj<T extends BaseProj<T>> extends Projectile implements ICollisionAttackEntity<T>, IAttackableProjectile<T> {
     public float damage = 1;
     private final Set<UUID> hitList = new HashSet<>();
     public int penetration =1;
@@ -54,6 +53,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     CollisionProperties collisionProperties = new CollisionProperties(1,1,0.5f);
     protected double accelerationPower = 0.1;
     protected float power = 0.4f;
+    protected boolean canBeAttacked = true;
 
     public CollisionProperties getCollisionProperties(){
         return collisionProperties;
@@ -64,7 +64,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         return true;
     }
 
-    protected Vec3 initSpeed = new Vec3(0, 0, 0);
+    protected Vec3 initSpeed = Vec3.ZERO;
 
     protected static final EntityDataAccessor<Vector3f> DATA_INIT_SPEED = SynchedEntityData.defineId(BaseProj.class, EntityDataSerializers.VECTOR3);
 
@@ -117,10 +117,28 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         this.effectStrategy = effectStrategy;
         return (T) this;
     }
+    public T setCanBeHurt(){
+        this.canBeAttacked = true;
+        return (T) this;
+    }
 
 
+    /**
+     * 简单弹幕的贴图
+     */
     public ResourceLocation getTexture(){return texture;}
+
+    /**
+     * 生存时间
+     */
     public abstract int getLifetime();
+
+    /**
+     * 无限生存时间
+     */
+    public boolean isInfinite(){
+        return false;
+    }
     public boolean shouldBeSaved(){
         return false;
     }
@@ -182,7 +200,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         if(!level().isClientSide){
             this.doCollisionAttack(this::canHitEntity, this::doHurt);
 
-            if (tickCount > getLifetime()) {
+            if (!this.isInfinite() && tickCount > getLifetime()) {
                 discard();
                 return;
             }
@@ -194,6 +212,8 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         }
 
     }
+
+
 
     //弹幕设置
     @Override//取消射击惯性
@@ -225,6 +245,14 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         }
     }
 
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if(this.canBeAttacked() && !this.level().isClientSide()){
+            this.kill();
+        }
+        return super.hurt(source, amount);
+    }
+
     public float defaultDamage(){
 //        if(getOwner() != null)
 //            return (int) ((LivingEntity)getOwner()).getAttribute(Attributes.ATTACK_DAMAGE).getValue();
@@ -247,6 +275,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
                 level().playSound(this, this.blockPosition(), hitSound.get(), SoundSource.AMBIENT, 1.0f, 1.0f);
 
             if(hurter.hurt(getDamageSource(living), damage)){
+                if(this.getOwner() instanceof LivingEntity owner){
+                    owner.setLastHurtMob(hurter);
+                }
                 doKnockBack(living);
             }
 
@@ -260,6 +291,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     }
 
     public DamageSource getDamageSource(LivingEntity hurter){
+        if(getOwner() instanceof ISummonMob<?> mob) {
+            return TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMONER, mob.summon_getOwner());
+        }
         if(getOwner() != null && getOwner() instanceof LivingEntity living){
             return damageSources().mobProjectile(this, living);
         }
@@ -299,4 +333,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         super.onHitBlock(pResult);
         if(!this.level().isClientSide()) discard();
     }
+
+    public boolean canBeAttacked(){
+        return canBeAttacked;
+    }
+
 }

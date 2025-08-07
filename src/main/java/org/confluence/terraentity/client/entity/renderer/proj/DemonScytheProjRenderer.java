@@ -27,7 +27,7 @@ public class DemonScytheProjRenderer extends ProjRenderer<DemonScytheProj> {
     protected void adjustPosePost(PoseStack poseStack, DemonScytheProj entity, float partialTick){
         Vec3 v = entity.getDeltaMovement();
 
-        float progress = Math.min(1, (entity.tickCount + partialTick) / 20);
+        float progress = Math.min(1, (entity.tickCount + partialTick) / 10);
         progress = progress * progress;
         poseStack.scale(progress,progress,progress);
         float yaw = (float) Math.atan2(v.z, v.x);
@@ -35,7 +35,7 @@ public class DemonScytheProjRenderer extends ProjRenderer<DemonScytheProj> {
 
         poseStack.translate(0,0.8,0);
 
-        poseStack.mulPose(Axis.XN.rotationDegrees((entity.tickCount + partialTick) * 15 * progress));
+        poseStack.mulPose(Axis.XN.rotationDegrees((entity.tickCount + partialTick) * 45 * progress));
         poseStack.translate(0,-0.8,0);
     }
 

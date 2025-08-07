@@ -10,14 +10,20 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.api.npc.trade.ITradeLock;
+import org.confluence.terraentity.entity.boss.EyeOfCthulhu;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProvider;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProviderTypes;
+import org.jetbrains.annotations.NotNull;
 
 public record KillEntityLock(EntityType<?> entityType) implements ITradeLock {
 
     public static final MapCodec<KillEntityLock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(KillEntityLock::entityType)
     ).apply(instance, KillEntityLock::new));
+
+    public static ITradeLock create(@NotNull EntityType<EyeOfCthulhu> eyeOfCthulhuEntityType) {
+        return new KillEntityLock(eyeOfCthulhuEntityType);
+    }
 
     @Override
     public boolean canTrade(Player player, ITradeHolder npc, int index) {

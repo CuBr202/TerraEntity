@@ -35,8 +35,12 @@ public class TEConfigScreen extends ConfigScreen {
     }
 
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTicks) {
-        super.render(g, mouseX, mouseY, partialTicks);
+    public int getMaxScroll() {
+        return Math.max(0, 250);
+    }
+
+    @Override
+    protected void renderTitle(GuiGraphics g, int mouseX, int mouseY, float partialTicks) {
         // 渲染彩色标题
 
         target.setClearColor(0 ,0, 0, 0);
@@ -60,12 +64,6 @@ public class TEConfigScreen extends ConfigScreen {
             shader.setSampler("Sampler0", target);
             shader.setSampler("Sampler1", Minecraft.getInstance().getTextureManager().getTexture(TerraEntity.space("textures/gui/noise.png")));
         });
-
-
     }
 
-    @Override
-    public int getMaxScroll() {
-        return Math.max(0, 250);
-    }
 }

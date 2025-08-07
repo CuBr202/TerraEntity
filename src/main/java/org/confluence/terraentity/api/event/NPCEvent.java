@@ -13,7 +13,9 @@ import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -90,6 +92,36 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
 
         public ResourceLocation getOrigin() {
             return origin;
+        }
+    }
+
+    /**
+     * 旅商生成时初始化交易项数量
+     */
+    public static class TravelingMerchantGenerateTradeEvent extends NPCEvent {
+
+        int count;
+        List<ITrade> append;
+        public TravelingMerchantGenerateTradeEvent(AbstractTerraNPC npc, int count) {
+            super(npc);
+            this.count = count;
+            this.append = new ArrayList<>();
+        }
+
+        public void setGenerateCount(int count){
+            this.count = count;
+        }
+
+        public int getGenerateCount(){
+            return count;
+        }
+
+        public void addTrade(ITrade trade){
+            append.add(trade);
+        }
+
+        public List<ITrade> getTrades(){
+            return append;
         }
     }
 

@@ -46,7 +46,7 @@ public abstract class SingleJsonFileReloadListener implements PreparableReloadLi
             try (Reader reader = resource.openAsReader()) {
                 JsonObject jsonobject = GsonHelper.fromJson(GSON, reader, JsonObject.class);
                 for (Map.Entry<String, JsonElement> entry : jsonobject.entrySet()) {
-                    ResourceLocation loc = ResourceLocation.parse(entry.getKey());
+                    ResourceLocation loc = TerraEntity.parse(entry.getKey());
                     map.put(loc, entry.getValue());
                 }
             } catch (RuntimeException | IOException ioexception) {

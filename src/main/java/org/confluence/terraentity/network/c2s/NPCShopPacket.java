@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.utils.AdapterUtils;
@@ -14,14 +15,16 @@ import java.util.function.Supplier;
 
 public class NPCShopPacket {
     int tradeIndex;
+    TradeParams params;
 
-    public NPCShopPacket(int tradeIndex) {
+    public NPCShopPacket(int tradeIndex, TradeParams params) {
         this.tradeIndex = tradeIndex;
+        this.params = params;
     }
 
     public NPCShopPacket(FriendlyByteBuf buf) {
         tradeIndex = buf.readInt();
-
+        params = buf.readJsonWithCodec(TradeParams.CODEC);
     }
 
     public static NPCShopPacket decode(FriendlyByteBuf buffer) {
@@ -30,6 +33,7 @@ public class NPCShopPacket {
 
     public static void encode(NPCShopPacket packet, FriendlyByteBuf buf) {
         buf.writeInt(packet.tradeIndex);
+        buf.writeJsonWithCodec(TradeParams.CODEC, packet.params);
     }
 
 
@@ -37,28 +41,29 @@ public class NPCShopPacket {
         var context = ctx.get();
         context.enqueueWork(() -> {
 
-                AbstractTerraNPC npc;
+                AbstractTerraNPC holder;
                 ServerPlayer sp = context.getSender();
                 ITrade trade;
                 int tradeIndex = packet.tradeIndex;
-                if(((IPlayer)sp).terra_entity$getTradeHolder() instanceof AbstractTerraNPC npc1){
-                    npc = npc1;
+                if(((IPlayer)sp).terra_entity$getTradeHolder() instanceof AbstractTerraNPC npc){
+                    holder = npc;
+                    TradeParams params = packet.params;
                     if(tradeIndex < 0 ){
                         return;
                     }
-                    trade = npc.getTradeManager().availableTrades().get(tradeIndex);
+//                    trade = holder.getTradeManager().availableTrades().get(tradeIndex);
+                    trade = holder.getTradeManager().targetTrade(params, tradeIndex);
 
-                    NPCEvent.NPCTradeEvent event = new NPCEvent.NPCTradeEvent(npc, trade, sp);
+                    NPCEvent.NPCTradeEvent event = new NPCEvent.NPCTradeEvent(holder, trade, sp);
                     AdapterUtils.postEvent(event);
                     if (event.isCanceled()) {
                         return;
                     }
-                    if(event.isAlwaysPass() || trade.canTradeWithLock(sp, npc, tradeIndex)
-                    ) {
+                    if(event.isAlwaysPass() || trade.canTradeWithLock(sp, holder, tradeIndex)) {
                         if(event.getRedirection()!=null){
                             event.getRedirection().accept(sp, trade );
                         }else{
-                            trade.onTrade(sp, npc, tradeIndex);
+                            trade.onTrade(sp, holder, tradeIndex);
                         }
                     }
                 }

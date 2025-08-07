@@ -114,7 +114,6 @@ public class Squirrel extends Animal implements  GeoEntity,  IVanillaVariant<Int
     public @NotNull Integer getVariant() {
         return this.entityData.get(DATA_VARIANT_ID);
     }
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();

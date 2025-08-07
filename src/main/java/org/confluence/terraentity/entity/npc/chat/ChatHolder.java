@@ -23,7 +23,7 @@ public class ChatHolder implements ISkill {
     IChatCondition condition;
     int _maxCooldown;
 
-    public static Codec<ChatHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<ChatHolder> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             NPCChat.CODEC.fieldOf("chat").forGetter(ChatHolder::getChat),
             IChatCondition.TYPE_CODEC.optionalFieldOf("condition").forGetter(i-> Optional.ofNullable(i.getCondition())),
             Codec.INT.fieldOf("maxCooldown").forGetter(ChatHolder::_maxCooldown)
@@ -78,6 +78,9 @@ public class ChatHolder implements ISkill {
     }
 
     public boolean canChat(AbstractTerraNPC npc, ChatHolder chatHolder) {
+        if(npc.getBrain() == null){
+            return false;
+        }
         if(condition == null){
             return true;
         }
