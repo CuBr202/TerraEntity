@@ -39,7 +39,7 @@ jobs:
         run: ./gradlew runData
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -Pdev=false
 
       - name: Publish to PlantForm
         uses: Kir-Antipov/mc-publish@v3.3

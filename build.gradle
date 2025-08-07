@@ -153,18 +153,28 @@ repositories {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
     }
-
+    maven {
+        name "org.confluenceReleases"
+        url "https://maven.confluence.ink/releases"
+    }
+    maven {
+        name "org.confluenceSnapshots"
+        url "https://maven.confluence.ink/snapshots"
+    }
 }
 
-boolean dev = true // 在本体中开发为true，单独开发为false
+boolean dev = project.hasProperty('dev')
+        ? project.property('dev').toBoolean()
+        : true // 默认为true，-Pdev=false时，用于发行构建
 
 dependencies {
     if (dev) {
         implementation jarJar(project(":Confluence-Magic-Lib"))
         implementation("software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}")
     } else {
-        implementation files("libs/confluence_magic_lib-0.0.1.jar")
-        jarJar("org.confluence.lib:confluence_magic_lib:0.0.1") { }
+//        implementation files("libs/confluence_magic_lib-0.0.2a-SNAPSHOT.jar")
+//        jarJar("org.confluence.lib:confluence_magic_lib:0.0.2a-SNAPSHOT") { }
+        implementation(jarJar("org.confluence.lib:Confluence-Magic-Lib:0.0.2a-SNAPSHOT"))
         implementation(jarJar("software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"))
     }
 
