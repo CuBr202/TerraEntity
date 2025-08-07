@@ -19,9 +19,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    environment:
-      name: mc
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4

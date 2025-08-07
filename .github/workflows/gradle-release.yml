@@ -48,5 +48,5 @@ jobs:
           automatic_release_tag: 1.20.1-forge-latest
           prerelease: true
           title: "Terra Entity Latest Build"
-          files: ./TerraEntity/test/build/*.jar
+          files: ./build/libs/*.jar
 
