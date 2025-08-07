@@ -19,6 +19,10 @@ public record KillEntityLock(EntityType<?> entityType) implements ITradeLock {
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(KillEntityLock::entityType)
     ).apply(instance, KillEntityLock::new));
 
+    public static KillEntityLock create(EntityType<?> entityType){
+        return new KillEntityLock(entityType);
+    }
+
     @Override
     public boolean canTrade(Player player, ITradeHolder npc, int index) {
         if(player.isLocalPlayer()){

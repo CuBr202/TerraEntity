@@ -128,6 +128,13 @@ public class TEEnglishProvider extends LanguageProvider {
         add("tooltip.terra_entity.boomerang.max_count", "Max Count");
         add("tooltip.terra_entity.boomerang.fly_speed", "Fly Speed");
 
+        // yoyos
+        add("tooltip.terra_entity.yoyo.max_range", "Max Range");
+        add("tooltip.terra_entity.yoyo.exist_time", "Using Time");
+        add("tooltip.terra_entity.yoyo.hit_effect", "Hit Effect");
+
+
+
         // attribute
         add("attribute.name.player.summon_damage", "Summon Damage");
         add("attribute.name.player.mark_damage", "Mark Damage");

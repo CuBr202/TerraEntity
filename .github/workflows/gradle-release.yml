@@ -5,7 +5,8 @@
 # This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
 # For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
 
-name: Gradle Package
+name: GitHub Packages Release
+permissions: write-all
 
 on:
   workflow_dispatch:
@@ -31,6 +32,9 @@ jobs:
           settings-path: ${{ github.workspace }} # location for the settings.xml file
           cache: "gradle"
 
+      - name: Add permissions for gradlew
+        run: chmod +x gradlew
+
       - name: Generate assets
         run: ./gradlew runData
 
@@ -41,7 +45,8 @@ jobs:
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: test
+          automatic_release_tag: 1.21.1-neo-latest
           prerelease: true
-          title: "Terra Entity Test Build"
-          files: ./TerraEntity/test/build/*.jar
+          title: "Terra Entity Latest Build"
+          files: ./build/libs/*.jar
+

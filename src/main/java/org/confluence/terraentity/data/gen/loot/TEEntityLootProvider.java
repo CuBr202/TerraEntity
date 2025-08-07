@@ -16,7 +16,10 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.entries.*;
+import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.entries.TagEntry;
 import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
 import net.minecraft.world.level.storage.loot.functions.SetComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
@@ -34,11 +37,7 @@ import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.entity.TEAnimals;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
-import org.confluence.terraentity.init.item.TERideableItems;
-import org.confluence.terraentity.init.item.TESpawnEggItems;
-import org.confluence.terraentity.init.item.TESummonItems;
-import org.confluence.terraentity.init.item.TEWhipItems;
-
+import org.confluence.terraentity.init.item.*;
 
 import java.util.ArrayList;
 import java.util.stream.Stream;
@@ -63,11 +62,11 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         // 抓人草
         var enchantbuilder1 = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
         enchantbuilder1.set(this.registries.lookup(Registries.ENCHANTMENT).get().get(TEEnchantments.WHIP_SWEEP).get(),1);
-        var snatcherTable = LootTable.lootTable().withPool(weightLootPool(
-                singleItem(Items.ENCHANTED_BOOK, 1,5)
-                        .apply(SetComponentsFunction.setComponent(DataComponents.ENCHANTMENTS,enchantbuilder1.toImmutable())),
-                0.1f
-        ));
+        var snatcherTable = LootTable.lootTable()
+                .withPool(weightLootPool(singleItem(Items.ENCHANTED_BOOK, 1,5)
+                        .apply(SetComponentsFunction.setComponent(DataComponents.ENCHANTMENTS,enchantbuilder1.toImmutable())), 0.1f))
+                .withPool(singleItemPool(TEYoyosItems.AMAZON, 0.02f))
+                ;
         this.add(TEMonsterEntities.SNATCHER.get(), snatcherTable);
         this.add(TEMonsterEntities.MAN_EATER.get(), snatcherTable);
 
@@ -86,6 +85,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                 .withPool(singleItemPool(TESummonItems.SLIME_STAFF, 0.33F))
                 .withPool(singleItemPool(TEWhipItems.SWAMP_WHIP, 0.33F))
                 .withPool(singleItemPool(TERideableItems.SLIMY_SADDLE, 0.2F))
+                .withPool(singleItemPool(TEYoyosItems.CODE_1))
         );
 
 
@@ -106,6 +106,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         // 克脑
         this.add(TEMonsterEntities.BLOODY_SPORE.get(), LootTable.lootTable()
                 .withPool(singleItemPool(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.2F))
+                .withPool(singleItemPool(TEYoyosItems.ARTERY, 1F))
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
                         .add(LootItem.lootTableItem(Items.GUNPOWDER)
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
@@ -149,6 +150,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         // 蜂王
         this.add(TEMonsterEntities.HORNET.get(), LootTable.lootTable()
                 .withPool(singleItemPool(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG, 0.05F))
+                .withPool(singleItemPool(TEYoyosItems.HIVE_FIVE))
                 .withPool(weightLootPool(singleItemIncrease(Items.HONEY_BOTTLE, 1, 2), 1f))
         );
 
@@ -164,6 +166,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
             this.add(e.get(), LootTable.lootTable()
                     .withPool(weightLootPool(singleItemIncrease(Items.BONE, 1, 3), 1f))
                     .withPool(singleItemPool(TESpawnEggItems.SKELETRON_SPAWN_EGG,1, 0.05f))
+                    .withPool(singleItemPool(TEYoyosItems.VALOR))
             );
         });
 
@@ -179,21 +182,24 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
 
 
+        // 地狱怪
 
-        // 赤霄
+            // 赤霄
         Stream.of(TEMonsterEntities.VOODOO_DEMON, TEMonsterEntities.DEMON)
                 .forEach(e-> {
                     this.add(e.get(), LootTable.lootTable()
                             .withPool(singleItemPool(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF, 1,0.05f))
                             .withPool(weightLootPool(singleItemIncrease(Items.BLAZE_POWDER, 1, 2), 1f))
+                            .withPool(weightLootPool(singleItemIncrease(TEYoyosItems.CASCADE, 1, 2), 0.003f))
                     );
                 });
 
-        // 地狱怪
+
         Stream.of(TEMonsterEntities.HELL_BAT)
                 .forEach(e-> {
                     this.add(e.get(), LootTable.lootTable()
                             .withPool(weightLootPool(singleItemIncrease(Items.BLAZE_POWDER, 1, 2), 1f))
+                            .withPool(weightLootPool(singleItemIncrease(TEYoyosItems.CASCADE, 1, 2), 0.003f))
                     );
                 });
 
@@ -201,6 +207,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         this.add(TEMonsterEntities.FIRE_IMP.get(), LootTable.lootTable()
                 .withPool(singleItemPool(TESummonItems.IMP_STAFF, 1,0.05f))
                 .withPool(weightLootPool(singleItemIncrease(Items.BLAZE_POWDER, 1, 2), 1f))
+                .withPool(weightLootPool(singleItemIncrease(TEYoyosItems.CASCADE, 1, 2), 0.003f))
         );
 
         // 雪地怪

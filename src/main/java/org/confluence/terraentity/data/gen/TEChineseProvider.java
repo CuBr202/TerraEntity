@@ -445,6 +445,11 @@ public class TEChineseProvider extends LanguageProvider {
         add("tooltip.terra_entity.boomerang.max_count", "分身数量");
         add("tooltip.terra_entity.boomerang.fly_speed", "飞行速度");
 
+        // yoyos
+        add("tooltip.terra_entity.yoyo.max_range", "最大射程");
+        add("tooltip.terra_entity.yoyo.exist_time", "使用时间");
+        add("tooltip.terra_entity.yoyo.hit_effect", "命中效果");
+
         // attribute
         add("attribute.name.player.summon_damage", "召唤伤害");
         add("attribute.name.player.mark_damage", "标记伤害");

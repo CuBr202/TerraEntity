@@ -15,7 +15,6 @@ import org.confluence.terraentity.api.item.ILeftClickStateItem;
 import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.item.BaseWhipItem;
-import org.confluence.terraentity.item.YoyosItem;
 import org.confluence.terraentity.network.c2s.ServerBoundEventPacket;
 import org.lwjgl.glfw.GLFW;
 
@@ -86,7 +85,7 @@ public class GameInputEvent {
     public static void interactionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
         if (event.isAttack() && event.getHand() == InteractionHand.MAIN_HAND) {
             LocalPlayer player = Minecraft.getInstance().player;
-            if (player != null && player.getMainHandItem().getItem() instanceof YoyosItem<?>) {
+            if (player != null && player.getMainHandItem().getItem() instanceof ILeftClickStateItem) {
                 event.setCanceled(true);
                 event.setSwingHand(false);
             }
