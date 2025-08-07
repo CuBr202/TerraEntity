@@ -20,15 +20,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.attachment.SummonerAttachment;
-import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -86,14 +86,10 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
 
     public void summon(Player player, ItemStack stack) {
         Level level = player.level();
-        SummonEvent.Pre<T> event = new SummonEvent.Pre<>(player, stack, entityType.get());
-        ModLoader.postEvent(event);
-        if (event.isCancel()) {
-            return;
-        }
+        if (AdapterUtils.postGameEvent(new SummonEvent.Pre<>(player, stack, entityType.get())).isCanceled()) return;
 
         T entity = entityType.get().create(level);
-        if (entity!=null) {
+        if (entity != null) {
             BlockPos pos = TEUtils.getEyeBlockHitResult(player).above();
             entity.setPos(pos.getX(), pos.getY(), pos.getZ());
             entity.summon(player, stack);
@@ -115,11 +111,11 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
         tooltipComponents.add(Component.translatable("tooltic.terra_entity.summon_item.desc"));
 
         LocalPlayer localPlayer = Minecraft.getInstance().player;
-        if (localPlayer==null)return;
+        if (localPlayer == null) return;
         float additionAttackDamage = (float) localPlayer.getAttributeValue(TEAttributes.MARK_DAMAGE);
 
         tooltipComponents.add(Component.translatable("attribute.name.player.summon_damage").append(": " +
-                        (baseAttackDamage + (additionAttackDamage > 0 ? "  +%.1f".formatted((additionAttackDamage)): "")))
+                        (baseAttackDamage + (additionAttackDamage > 0 ? "  +%.1f".formatted((additionAttackDamage)) : "")))
                 .withColor(0x00AB00));
 
         tooltipComponents.add(Component.translatable("tooltip.terra_entity.summon_item_cost", consume).withColor(0xABAC00));
@@ -146,7 +142,7 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
             livingEntity.swing(livingEntity.getUsedItemHand());
             if (livingEntity instanceof ServerPlayer player) {
                 var data = player.getData(summonType.get());
-                if (!data.canSummon(consume)){
+                if (!data.canSummon(consume)) {
                     // 如果没有足够的召唤栏位，就移除最后一个仆从，再尝试生成。
                     data.removeLast(player, consume);
                 }

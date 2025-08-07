@@ -434,7 +434,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public void onAddedToLevel() {
         super.onAddedToLevel();
 
-        NPCEvent.InitNPCTradeEvent event = AdapterUtils.postEvent(new NPCEvent.InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType())));
+        NPCEvent.InitNPCTradeEvent event = AdapterUtils.postGameEvent(new NPCEvent.InitNPCTradeEvent(this, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType())));
         // 如果是第一次生成
         if (trades == null && !level().isClientSide) {
             trades = NPCTradeManager.getCopy(event.getRedirection(), level().registryAccess().createSerializationContext(NbtOps.INSTANCE));
@@ -569,7 +569,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
             return InteractionResult.PASS;
         }
 
-        NPCEvent.InteractNPCEvent event = AdapterUtils.postEvent(new NPCEvent.InteractNPCEvent(this, serverPlayer));
+        NPCEvent.InteractNPCEvent event = AdapterUtils.postGameEvent(new NPCEvent.InteractNPCEvent(this, serverPlayer));
         event.execute((npc, player1) -> {
             if (getTradeManager() != null) {
                 this.getTradeManager().reCheckAvailableTrades(player1);

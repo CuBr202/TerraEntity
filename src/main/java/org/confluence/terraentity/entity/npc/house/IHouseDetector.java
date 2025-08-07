@@ -16,10 +16,8 @@ import java.util.List;
  * <p>usage:
  * <p>{@link HouseDetectItem}
  * <p>{@link NPCHouseBehaviors#findHouse(MemoryModuleType)}
- *
  */
 public interface IHouseDetector {
-
     BlockPos min();
 
     BlockPos max();
@@ -32,12 +30,11 @@ public interface IHouseDetector {
 
     String message();
 
-    static IHouseDetector detect(BlockPos pos, Level level){
-        return AdapterUtils.postEvent(new HouseDetectEvent(pos, level)).getDetector();
+    static IHouseDetector detect(BlockPos pos, Level level) {
+        return AdapterUtils.postGameEvent(new HouseDetectEvent(pos, level)).getDetector();
     }
 
-    default House getHouse(String uuid){
+    default House getHouse(String uuid) {
         return new House(uuid, min(), max(), center());
     }
-
 }

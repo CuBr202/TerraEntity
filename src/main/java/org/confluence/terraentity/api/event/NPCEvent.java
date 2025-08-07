@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.fml.event.IModBusEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
@@ -25,7 +26,7 @@ import java.util.function.Consumer;
 /**
  * NPC事件基类
  */
-public abstract class NPCEvent  extends Event implements IModBusEvent {
+public abstract class NPCEvent extends Event {
     protected AbstractTerraNPC npc;
 
     public NPCEvent(AbstractTerraNPC npc) {
@@ -35,7 +36,6 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
     public AbstractTerraNPC getNPC() {
         return npc;
     }
-
 
     /**
      * 重定向交互npc事件，用于替换交互时打开的菜单
@@ -48,10 +48,6 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
         public InteractNPCEvent(AbstractTerraNPC npc, ServerPlayer player) {
             super(npc);
             this.player = player;
-        }
-
-        public AbstractTerraNPC getNpc() {
-            return npc;
         }
 
         public Player getPlayer() {
@@ -80,7 +76,6 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
                 defaultAction.accept(npc, player);
             }
         }
-
     }
 
     /**
@@ -116,28 +111,28 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
      * 旅商生成时初始化交易项数量
      */
     public static class TravelingMerchantGenerateTradeEvent extends NPCEvent implements ICancellableEvent {
+        private int count;
+        private final List<ITrade> append;
 
-        int count;
-        List<ITrade> append;
         public TravelingMerchantGenerateTradeEvent(AbstractTerraNPC npc, int count) {
             super(npc);
             this.count = count;
             this.append = new ArrayList<>();
         }
 
-        public void setGenerateCount(int count){
+        public void setGenerateCount(int count) {
             this.count = count;
         }
 
-        public int getGenerateCount(){
+        public int getGenerateCount() {
             return count;
         }
 
-        public void addTrade(ITrade trade){
+        public void addTrade(ITrade trade) {
             append.add(trade);
         }
 
-        public List<ITrade> getTrades(){
+        public List<ITrade> getTrades() {
             return append;
         }
     }
@@ -145,28 +140,24 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
     /**
      * 当交易时触发
      */
-    public static class NPCTradeEvent extends Event implements IModBusEvent, ICancellableEvent {
-        ITradeHolder holder;
-        ITrade trade;
-        Player player;
-        boolean alwaysPass = false;
-        BiConsumer<Player, ITrade> reDirection;
+    public static class NPCTradeEvent extends PlayerEvent implements ICancellableEvent {
+        private final ITradeHolder holder;
+        private final ITrade trade;
+        private boolean alwaysPass = false;
+        private BiConsumer<Player, ITrade> reDirection;
 
         public NPCTradeEvent(ITradeHolder holder, ITrade trade, Player player) {
+            super(player);
             this.holder = holder;
             this.trade = trade;
-            this.player = player;
         }
+
         public ITradeHolder getHolder() {
             return holder;
         }
 
         public ITrade getTrade() {
             return trade;
-        }
-
-        public Player getPlayer() {
-            return player;
         }
 
         /**
@@ -190,7 +181,6 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
         public BiConsumer<Player, ITrade> getRedirection() {
             return reDirection;
         }
-
     }
 
     /**
@@ -199,15 +189,17 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
      * <p>因此所有的ai必须继承自{@link NPCAi}
      */
     public static class NPCBrainCollector {
+        private NPCAi replace;
+        private final AbstractTerraNPC npc;
 
-        NPCAi replace;
-        AbstractTerraNPC npc;
         public NPCBrainCollector(AbstractTerraNPC npc) {
             this.npc = npc;
         }
+
         public AbstractTerraNPC getNPC() {
             return npc;
         }
+
         /**
          * 设置替换brain，当replace不为空时，使用这个brain
          */
@@ -218,28 +210,21 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
         public NPCAi getReplace() {
             return replace;
         }
-
     }
 
     /**
      * 服务器初始化时触发，以免每次生成npc都post相同的event。且将线性的if else转为map提高效率
      */
     public static class NPCBrainCollectionEvent extends Event implements IModBusEvent, ICancellableEvent {
-
         private static final Map<EntityType<?>, Consumer<NPCBrainCollector>> consumerMap = new HashMap<>();
 
         public static Consumer<NPCBrainCollector> getConsumer(EntityType<?> id) {
             return consumerMap.get(id);
         }
 
-        public NPCBrainCollectionEvent() {
-
-        }
-
         public void register(EntityType<?> type, Consumer<NPCBrainCollector> consumer) {
             consumerMap.put(type, consumer);
         }
-
     }
 
     public static class NPCDialogEvent extends Event {

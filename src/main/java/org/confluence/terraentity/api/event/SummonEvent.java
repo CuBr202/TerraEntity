@@ -4,17 +4,17 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.Event;
-import net.neoforged.fml.event.IModBusEvent;
+import net.neoforged.bus.api.ICancellableEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import org.confluence.terraentity.api.entity.ISummonMob;
 
-public class SummonEvent<T extends Mob> extends Event implements IModBusEvent {
-    ItemStack itemStack;
-    Player player;
-    ISummonMob<T> summon;
+public class SummonEvent<T extends Mob> extends PlayerEvent {
+    private final ItemStack itemStack;
+    private final ISummonMob<T> summon;
+
     public SummonEvent(Player player, ItemStack itemStack, ISummonMob<T> summon) {
+        super(player);
         this.itemStack = itemStack;
-        this.player = player;
         this.summon = summon;
     }
 
@@ -22,44 +22,26 @@ public class SummonEvent<T extends Mob> extends Event implements IModBusEvent {
         return itemStack;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
     public ISummonMob<T> getSummonMob() {
         return summon;
     }
 
-    public static class Pre<T extends Mob> extends Event implements IModBusEvent {
-        ItemStack itemStack;
-        Player player;
-        EntityType<T> summonType;
-        boolean cancel;
+    public static class Pre<T extends Mob> extends PlayerEvent implements ICancellableEvent {
+        private final ItemStack itemStack;
+        private final EntityType<T> summonType;
+
         public Pre(Player player, ItemStack itemStack, EntityType<T> summonType) {
+            super(player);
             this.itemStack = itemStack;
-            this.player = player;
             this.summonType = summonType;
         }
+
         public ItemStack getItemStack() {
             return itemStack;
-        }
-
-        public Player getPlayer() {
-            return player;
         }
 
         public EntityType<T> getSummonType() {
             return summonType;
         }
-
-        public boolean isCancel() {
-            return cancel;
-        }
-
-        public void setCancel(boolean cancel) {
-            this.cancel = cancel;
-        }
     }
-
-
 }
