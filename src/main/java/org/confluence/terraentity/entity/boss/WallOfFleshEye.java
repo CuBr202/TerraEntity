@@ -4,7 +4,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -22,7 +21,6 @@ import org.confluence.terraentity.entity.proj.TrailProjectile;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
-import org.confluence.terraentity.utils.AimUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -78,13 +76,6 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
         //this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
     }
 
-    @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return TESounds.ROUTINE_DEATH.get();
-    }
     @Override
     public boolean isNoGravity(){ return true; }
 

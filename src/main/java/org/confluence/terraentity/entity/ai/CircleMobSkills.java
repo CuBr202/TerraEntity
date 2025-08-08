@@ -52,7 +52,7 @@ public class CircleMobSkills<T extends Mob> {
 
         //状态结束
         if(mobSkills.get(lastIndex).stateOver!=null) mobSkills.get(lastIndex).stateOver.accept(owner);
-        owner.getEntityData().set(skillIndexData, index);
+        owner.getEntityData().set(skillIndexData, index, true);
     }
     /** 强制跳转状态 **/
     public void forceStartIndex(int index){
@@ -61,7 +61,14 @@ public class CircleMobSkills<T extends Mob> {
 
         //初次进入状态
         if(mobSkills.get(index).stateInit!=null) mobSkills.get(index).stateInit.accept(owner);
-        owner.getEntityData().set(skillIndexData, index);
+        owner.getEntityData().set(skillIndexData, index, true);
+    }
+
+    /** 强制跳转状态 **/
+    public void forceStartIndex(MobSkill skill){
+        int index = mobSkills.indexOf(skill);
+        if(index == -1) return ;
+        forceStartIndex(index);
     }
 
 

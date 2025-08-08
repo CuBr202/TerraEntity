@@ -34,12 +34,14 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.util.LibUtils;
+import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
+import org.confluence.terraentity.api.entity.IStateChangeableMob;
+import org.confluence.terraentity.api.entity.ai.IFSMGeoMob;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.CircleMobSkills;
-import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
-import org.confluence.terraentity.api.entity.ai.IFSMGeoMob;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.mixed.IBossEvent;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.utils.AdapterUtils;
@@ -62,7 +64,7 @@ import static org.confluence.terraentity.utils.TEUtils.getMultiple;
  * @param <T> Boss类型
  */
 @SuppressWarnings("all")
-public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackEntity<T> {
+public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackEntity<T>, IStateChangeableMob {
 
 /* 属性 */
 
@@ -115,11 +117,13 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                 bossEvent.getPlayers().forEach(p->syncBossHealthBar(p));
 
             }
+
         }
         super.onAddedToLevel();
-
-        if(skills.count() > 0)
+        if(skills.count() > 0) {
             skills.forceStartIndex(0);
+        }
+        this.changeState();
     }
 
     @Override
@@ -195,6 +199,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         syncSkills(DATA_SKILL_INDEX);
     }
 
+    public int getSkillIndex(){
+        return this.entityData.get(DATA_SKILL_INDEX);
+    }
 
 /* Collision */
 
@@ -227,6 +234,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                 skills.tick();
             //没有目标禁止行为
 
+
             if (target == null || !target.isAlive() || !target.canBeSeenAsEnemy()) {
                 var entity = findTarget();
                 setTarget(entity);
@@ -246,7 +254,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 //                    setTarget(this.level().getNearestPlayer(this, this.getAttributeValue(Attributes.FOLLOW_RANGE)));
 
                 }
-            }
+            }this.refreshDimensions();
             discardTick = 0;
 
             doCollisionAttack(
@@ -256,6 +264,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             if(shouldOverPlayer() && target!= null && position().y < target.getY()){
                 addDeltaMovement(new Vec3(0,0.02f,0));
             }
+        }else{
+            this.skills.tick += 1;
         }
 
         if (!shouldDiscardFriction()) {
@@ -353,6 +363,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
+
+        this.changeState();
+
         if(pSource.getEntity() instanceof IronGolem){
             pAmount *= ironGlomResistance;
         }
@@ -446,8 +459,11 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     }
 
     @Override // 受伤音效
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.SKELETON_HURT;
+    protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.ROUTINE_DEATH.get();
     }
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -514,5 +530,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
                 this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
             }
         }
+    }
+
+    public void changeState(){
+
     }
 }

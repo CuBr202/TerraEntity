@@ -1,7 +1,6 @@
 package org.confluence.terraentity.entity.boss;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -10,9 +9,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.api.entity.animation.Curve;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
-import org.confluence.terraentity.api.entity.animation.Curve;
 import org.confluence.terraentity.entity.monster.VisualNeuron;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
@@ -351,14 +350,6 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         return new float[]{ hp , maxHp};
     }
 
-
-    @Override // 受伤音效
-    protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return TESounds.ROUTINE_DEATH.get();
-    }
     @Override
     public boolean isNoGravity(){ return true; }
 

@@ -165,7 +165,9 @@ repositories {
 
 boolean dev = project.hasProperty('dev')
         ? project.property('dev').toBoolean()
-        : true // 默认为true，-Pdev=false时，用于发行构建
+        : true
+// Default true. When -Pdev=false, it's for release build.
+// Or if using this mod individually, please use ./gradlew build -Pdev=false
 
 dependencies {
     if (dev) {
@@ -191,9 +193,10 @@ dependencies {
     additionalRuntimeClasspath "org.apache.commons:commons-math3:3.6.1"
 
     // 密码库
-    implementation jarJar(files("libs/vigsecurity-1.0.0.21.jar"))
+//    implementation (files("libs/vigsecurity-1.0.0.21.jar"))
 //    jarJar(files("libs/vigsecurity-1.0.0.21.jar"))
-    additionalRuntimeClasspath "com.github.edg_thexu:vigsecurity:1.0.0.21"
+//    additionalRuntimeClasspath "com.github.edg_thexu:vigsecurity:1.0.0.21"
+
     // 女仆
     compileOnly "curse.maven:touhou-little-maid-355044:6613831-sources-6613865"
     //runtimeOnly "curse.maven:touhou-little-maid-355044:6613831-sources-6613865"

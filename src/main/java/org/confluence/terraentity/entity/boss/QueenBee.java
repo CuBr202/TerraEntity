@@ -4,9 +4,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.BossEvent;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -16,19 +14,17 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.IAngryMob;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.monster.LittleHornet;
 import org.confluence.terraentity.entity.proj.LineProj;
-import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.utils.TEUtils;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -251,15 +247,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                 })
         );
     }
-    @Override
-    protected SoundEvent getDeathSound() {
-        return TESounds.ROUTINE_DEATH.get();
-    }
 
-    @Override
-    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
-        return TESounds.ROUTINE_HURT.get();
-    }
 
     @Override
     public boolean isNoGravity(){ return true; }

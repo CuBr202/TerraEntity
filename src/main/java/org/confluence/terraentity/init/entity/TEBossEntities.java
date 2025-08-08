@@ -13,8 +13,10 @@ import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
 import org.confluence.terraentity.client.boss.model.WallOfFleshEyeModel;
 import org.confluence.terraentity.client.boss.renderer.*;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
+import org.confluence.terraentity.client.entity.renderer.GeoMotionBlurRenderer;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.KingSlimeRenderer;
+import org.confluence.terraentity.entity.blur.PosRotMotionBlurRenderer;
 import org.confluence.terraentity.entity.boss.*;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
@@ -42,7 +44,7 @@ public class TEBossEntities {
         event.registerEntityRenderer(TEBossEntities.CROWN_OF_KING_SLIME_MODEL.get(), CrownOfKingSlimeModelRenderer::new);
 
         event.registerEntityRenderer(TEBossEntities.KING_SLIME.get(), KingSlimeRenderer::new);
-        event.registerEntityRenderer(TEBossEntities.EYE_OF_CTHULHU.get(), c->new GeoNormalRenderer<>(c,new GeoBossModel<>(TEBossEntities.EYE_OF_CTHULHU), true,1,0.5f));
+        event.registerEntityRenderer(TEBossEntities.EYE_OF_CTHULHU.get(), c->new GeoMotionBlurRenderer<>(c,new GeoBossModel<>(TEBossEntities.EYE_OF_CTHULHU), true,1,0.5f).setMotionBlurRenderer(r->new PosRotMotionBlurRenderer<>(r.isIfRotX(), r.getOffsetY())));
         event.registerEntityRenderer(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), c-> new EaterOfWorldSegmentRenderer(c,2.2f, 0f));
         event.registerEntityRenderer(TEBossEntities.EATER_OF_WORLDS.get(), c->new GeoNormalRenderer<>(c,new GeoBossModel<>(TEBossEntities.EATER_OF_WORLDS), true,2.2f,0));
         event.registerEntityRenderer(TEBossEntities.BRAIN_OF_CTHULHU.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(TEBossEntities.BRAIN_OF_CTHULHU)));

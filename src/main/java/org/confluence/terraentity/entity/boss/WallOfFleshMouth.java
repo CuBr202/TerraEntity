@@ -1,7 +1,6 @@
 package org.confluence.terraentity.entity.boss;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -14,7 +13,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.entity.monster.BaseWarm;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
@@ -138,14 +136,6 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> im
 
     protected void registerGoals() {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return TESounds.ROUTINE_DEATH.get();
     }
 
     @Override

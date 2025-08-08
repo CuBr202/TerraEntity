@@ -5,12 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.irisshaders.iris.pipeline.programs.ExtendedShader;
 import net.minecraft.client.Minecraft;
-
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.client.player.LocalPlayer;
-
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -60,22 +58,19 @@ public class RenderEvent {
     public static void renderLevelStage(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
             isIrisShader = ModChecker.isIrisLoaded.get() && RenderSystem.getShader() instanceof ExtendedShader;
-
-            if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
-                BrainTranslucent.render(event);
-                DebugBlocksHelper.Singleton().render(event);
-                //            NPCRenderer.target.blitToScreen(100,100);
-                NPCChatBubbleBuffer.getInstance().render(event);
-                isAfterSky = false;
-            } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
-                TongueRenderer.renderFirstPerson(event);
+            BrainTranslucent.render(event);
+            DebugBlocksHelper.Singleton().render(event);
+            //            NPCRenderer.target.blitToScreen(100,100);
+            NPCChatBubbleBuffer.getInstance().render(event);
+            isAfterSky = false;
+        } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
+            TongueRenderer.renderFirstPerson(event);
 
 
-            } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY) {
+        } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY) {
 //            NPCChatBubbleBuffer.getInstance().refresh();
 
-                isAfterSky = true;
-            }
+            isAfterSky = true;
         }
     }
 

@@ -74,4 +74,31 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
         return this;
     }
 
+    public float getScale() {
+        return scale;
+    }
+
+    public GeoNormalRenderer<T> setScale(float scale) {
+        this.scale = scale;
+        return this;
+    }
+
+    public float getOffsetY() {
+        return offsetY;
+    }
+
+    public GeoNormalRenderer<T> setOffsetY(float offsetY) {
+        this.offsetY = offsetY;
+        return this;
+    }
+
+    public boolean isIfRotX() {
+        return ifRotX;
+    }
+
+    public GeoNormalRenderer<T> setIfRotX(boolean ifRotX) {
+        this.ifRotX = ifRotX;
+        return this;
+    }
+
 }

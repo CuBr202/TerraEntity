@@ -1,11 +1,12 @@
 package org.confluence.terraentity.entity.boss;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.BossEvent;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -13,14 +14,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.IAutoLeaveMob;
+import org.confluence.terraentity.api.entity.blur.IMotionBlurHolder;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.ai.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
+import org.confluence.terraentity.entity.blur.MotionBlurManager;
+import org.confluence.terraentity.entity.blur.PosRotMotionBlurContext;
+import org.confluence.terraentity.entity.blur.PosRotMotionBlurManager;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.utils.TEUtils;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -28,8 +34,8 @@ import software.bernie.geckolib.animation.RawAnimation;
 /**
  * 克眼
  */
-@SuppressWarnings("all")
-public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements GeoEntity, Boss, IAutoLeaveMob {
+
+public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements GeoEntity, Boss, IAutoLeaveMob, IMotionBlurHolder<PosRotMotionBlurContext> {
     private static final float MAX_HEALTHS = 728f;
     private static final float DAMAGE = 4f;//一阶段接触伤害
     private static final float CRAZY_DAMAGE = 6f;//二阶段接触伤害
@@ -60,6 +66,9 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
     DashComponent dashComponent;
 
+    public PosRotMotionBlurManager trails = new PosRotMotionBlurManager(20);
+
+    private static final EntityDataAccessor<Boolean> DATA_ENABLE_TRAILS = SynchedEntityData.defineId(EyeOfCthulhu.class, EntityDataSerializers.BOOLEAN);
 
 
     public EyeOfCthulhu(EntityType<EyeOfCthulhu> entityType, Level level) {
@@ -83,6 +92,12 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         this(TEBossEntities.EYE_OF_CTHULHU.get(), level);
     }
 
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_ENABLE_TRAILS, false);
+//        builder.define(DATA_SKILL_TICK, 0);
+    }
 
     // 定义技能类型
     MobSkill stage1_stare;
@@ -142,7 +157,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
                         this.addDeltaMovement(new Vec3(0, 0.02, 0));
                         // 不精准度
-                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(RandomSource.create(), 1);
+                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(this.getRandom(), 1);
                         dashDir = dashPos.subtract(position());
                         return;
                     }
@@ -214,6 +229,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         state2_dash.timeContinue = 20;
                         speedFactor = 3;
                         this.playSound(TESounds.HURRIED_ROARING.get());
+                        this.setMotionBlurEnabled(true);
                     }else {
                         state2_dash.timeTrigger = 10;
                         state2_dash.timeContinue = 20;
@@ -235,7 +251,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         this.addDeltaMovement(new Vec3(0, 0.02, 0));
                         float inaccuracy = (float) getTarget().getDeltaMovement().length();
                         // 不精准度
-                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(RandomSource.create(), inaccuracy * 10);
+                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(this.getRandom(), inaccuracy * 10);
                         dashDir = dashPos.subtract(position());
                         //冲撞距离过小则后退
                         if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashPos.normalize().scale(-1));
@@ -255,6 +271,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         // 冲刺完
                         stage2_dashCount = stage2_dashCount_base;
                         skills.forceStartIndex(5);
+                        this.setMotionBlurEnabled(false);
                     } else {
                         //继续冲刺
                         skills.forceStartIndex(6);
@@ -268,6 +285,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         addSkill(state1_dash); // 3
         addSkill(switch_1_to_2); // 4
         addSkill(stage2_stare); // 5
+
         addSkill(state2_dash); // 6
     }
 
@@ -275,6 +293,10 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
          super.tick();
          if(!this.level().isClientSide && shouldLeave()){
              doLeave();
+         }
+         if(this.level().isClientSide){
+
+             this.trails.update(this, this.position(), this.getXRot(), this.getYRot());
          }
     }
 
@@ -301,26 +323,16 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         }
     }
 
-    @Override // 受伤音效
-    protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return TESounds.ROUTINE_DEATH.get();
-    }
     @Override
     public boolean isNoGravity(){ return true; }
 
-    // 转换阶段
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        if (this.getHealth() / getMaxHealth() < 0.5 && stage == 1) {
+    public void changeState(){
+        if (stage == 1 &&this.getHealth() / getMaxHealth() < 0.5) {
             stage = 2;
-            skills.forceStartIndex(4); // 强制执行技能序列
+            skills.forceStartIndex(4);
         }
-        return super.hurt(pSource, pAmount);
     }
-
     @Override
     public boolean shouldLeave() {
         return IAutoLeaveMob.super.shouldLeave() && level().isDay();
@@ -338,5 +350,34 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
     protected boolean shouldOverPlayer(){
         return true;
+    }
+
+    @Override
+    public boolean isMotionBlurEnabled() {
+        return this.entityData.get(DATA_ENABLE_TRAILS);
+    }
+
+    @Override
+    public void setMotionBlurEnabled(boolean enabled) {
+        this.entityData.set(DATA_ENABLE_TRAILS, enabled);
+    }
+
+    @Override
+    public MotionBlurManager<PosRotMotionBlurContext> getMotionBlurManager() {
+        return trails;
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("Stage", stage);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if (tag.contains("Stage")) {
+            stage = tag.getInt("Stage");
+        }
     }
 }
