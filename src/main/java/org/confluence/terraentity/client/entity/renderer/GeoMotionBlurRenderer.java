@@ -13,6 +13,7 @@ import org.confluence.terraentity.api.entity.blur.IMotionBlurHolder;
 import org.confluence.terraentity.api.entity.blur.IMotionBlurRenderer;
 import org.confluence.terraentity.client.entity.model.GeoNormalModel;
 import org.confluence.terraentity.client.event.RenderEvent;
+import org.confluence.terraentity.config.ClientConfig;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -74,7 +75,7 @@ public class GeoMotionBlurRenderer<T extends Mob & GeoEntity & IMotionBlurHolder
 //        RenderSystem.stencilMask(0x00);
 
         // 控制光影不渲染运动残影
-        if (RenderEvent.isAfterSky) {
+        if (RenderEvent.isAfterSky && ClientConfig.ENABLE_ENTITY_MOTION_BLUR.get()) {
             this.isBlur = true;
 
 //            // 配置模板测试：仅渲染模板值不为1的区域

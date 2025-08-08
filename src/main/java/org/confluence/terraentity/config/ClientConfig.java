@@ -18,6 +18,8 @@ public class ClientConfig {
 
     public static ModConfigSpec.EnumValue<BubbleConfig> NPC_CHAT_BUBBLE_STYLE;
 
+    public static ModConfigSpec.BooleanValue ENABLE_ENTITY_MOTION_BLUR;
+
     public static ModConfigSpec SPEC;
     public static int bossBarStyle;
 
@@ -43,6 +45,8 @@ public class ClientConfig {
         ENABLE_NON_SPIDER_MODEL = BUILDER.define("enableNonSpiderModel", false);
         NPC_CHAT_BUBBLE_STYLE = BUILDER.comment("NPC Chat Bubble Style.")
                 .defineEnum("npc_chat_bubble_style", BubbleConfig.RECT);
+        ENABLE_ENTITY_MOTION_BLUR = BUILDER.comment("Enable Entity Motion Blur.")
+                .define("enable_entity_motion_blur", true);
         SPEC = BUILDER.build();
         return SPEC;
     }
