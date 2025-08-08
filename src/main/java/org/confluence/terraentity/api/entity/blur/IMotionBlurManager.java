@@ -22,12 +22,15 @@ public interface IMotionBlurManager <C extends IMotionBlurContext> extends Itera
     void update(IMotionBlurHolder<C> entity,C trail);
 
 
+    /**
+     * 返回从前往后的迭代器，越前方越靠近本体，所以建议使用双端队列
+     */
     default @NotNull Iterator<C> iterator(){
-        return getTrails().iterator();
+        return getTrails().descendingIterator();
     }
 
     /**
-     * 获取最后一个残影
+     * 获取最后一个残影，准确来说是最后一个加入的残影
      */
     default C getLast(){
         return getTrails().getLast();

@@ -60,7 +60,6 @@ public class GeoMotionBlurRenderer<T extends Mob & GeoEntity & IMotionBlurHolder
 
         // 渲染主体（会写入模板值1）
         super.defaultRender(poseStack, animatable, bufferSource, renderType, buffer, yaw, partialTick, packedLight);
-
 //        Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
 
     }
@@ -88,7 +87,7 @@ public class GeoMotionBlurRenderer<T extends Mob & GeoEntity & IMotionBlurHolder
                     // 渲染残影（仅在不等于1的区域）
                     super.actuallyRender(poseStack, animatable, model,
                             RenderType.entityTranslucent(getTextureLocation(animatable)),
-                            bufferSource, buffer, false, partialTick, 0x0f000f0, packedOverlay, color);
+                            bufferSource, buffer, false, partialTick, packedLight, packedOverlay, color);
                 });
             }
 

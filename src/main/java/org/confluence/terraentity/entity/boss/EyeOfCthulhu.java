@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.boss;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -229,7 +230,6 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         state2_dash.timeContinue = 20;
                         speedFactor = 3;
                         this.playSound(TESounds.HURRIED_ROARING.get());
-                        this.setMotionBlurEnabled(true);
                     }else {
                         state2_dash.timeTrigger = 10;
                         state2_dash.timeContinue = 20;
@@ -244,21 +244,36 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 terraBossBase -> {
                     // 延迟冲刺
                     if (getTarget() == null) return;
-                    lookAt(360);
+//                    lookAt(360);
                     if (!skills.canContinue()) {
                         // 调整方向
 
                         this.addDeltaMovement(new Vec3(0, 0.02, 0));
-                        float inaccuracy = (float) getTarget().getDeltaMovement().length();
+                        float inaccuracy = (float) getTarget().getDeltaMovement().length() * 10;
+                        if(stage2_dashCount <= stage2_dashCount_max){
+                            inaccuracy *= 6;// 疯狗冲刺非常不准确
+                            if(this.getRandom().nextFloat() < 0.3f){ // 触发时间可以提前
+                                skills.tick++;
+                            }
+                        }
                         // 不精准度
-                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(this.getRandom(), inaccuracy * 10);
+                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(this.getRandom(), inaccuracy);
                         dashDir = dashPos.subtract(position());
+                        dashPos = dashPos.add(dashDir.normalize().scale(20));
                         //冲撞距离过小则后退
-                        if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashPos.normalize().scale(-1));
+                        if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashDir.normalize().scale(-1));
                         return;
+                    }else{
+                        if(stage2_dashCount <= stage2_dashCount_max){ // 疯狗冲刺时间不稳定
+                            if(skills.tick > 23 && this.getRandom().nextFloat() < 0.2f){
+                                skills.forceEnd();
+                            }
+                        }
                     }
                     if(dashPos != null && dashDir != null) {
+                        this.setMotionBlurEnabled(true);
                         this.lookControl.setLookAt(dashPos);
+                        this.lookAt(EntityAnchorArgument.Anchor.EYES, dashPos);
                         // 冲刺增加伤害
                         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE * dashFactor);
                         this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor * stage2SpeedFactor));

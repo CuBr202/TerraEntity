@@ -30,20 +30,23 @@ public class PosRotMotionBlurRenderer<T extends Entity & IMotionBlurHolder<PosRo
 
         MotionBlurManager<PosRotMotionBlurContext> manager = animatable.getMotionBlurManager();
         Iterator<PosRotMotionBlurContext> trails = manager.iterator();
+        if(!trails.hasNext()){
+            return;
+        }
         double x = Mth.lerp(partialTick, animatable.xo, animatable.getX());
         double y = Mth.lerp(partialTick, animatable.yo, animatable.getY());
         double z = Mth.lerp(partialTick, animatable.zo, animatable.getZ());
 
         int maxAge = manager.size();
-        int age = maxAge;
+        int age = 0;
+        trails.next(); // 跳过第一个
         while(trails.hasNext()) {
-            age--;
+            age++;
             PosRotMotionBlurContext trail = trails.next();
-            if (manager.getLast() == trail) continue;
 
             poseStack.pushPose();
             double progress = (double) (age + partialTick) / (double) maxAge;
-            double pr = 1 - progress;
+            double pr = 1-progress;
             pr = Math.pow(pr, 2);
             poseStack.translate((trail.pos().x - x) * pr, (trail.pos().y - y) * pr + offsetY, (trail.pos().z - z) * pr);
 
@@ -54,10 +57,10 @@ public class PosRotMotionBlurRenderer<T extends Entity & IMotionBlurHolder<PosRo
                 poseStack.mulPose(Axis.XP.rotationDegrees(-xrot));
             }
 
-            float alpha = (float) (Math.pow(progress, 2));
-            int color = 0xFFFFFF | (int) ((alpha) * 0xFF * 0.3F) << 24;
+            float alpha = (float) (Math.pow(pr, 2)) * 0.5F;
+            int color = 0xFFFFFF | (int) ((alpha) * 0xFF ) << 24;
             float minSize = 0.95f- 0.3f;
-            float size = (float) (0.95 - minSize * pr);
+            float size = (float) (0.95 - minSize * progress);
             poseStack.scale(size, size, size);
 
             renderCallback.accept(color);
