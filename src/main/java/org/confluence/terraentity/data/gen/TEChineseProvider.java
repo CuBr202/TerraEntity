@@ -363,7 +363,7 @@ public class TEChineseProvider extends LanguageProvider {
 
         // 骑乘
         add(TERideableItems.SLIMY_SADDLE.get(), "粘鞍");
-        add(TERideableItems.HONEYED_GOGGLES.get(), "凃蜜护目镜");
+        add(TERideableItems.HONEYED_GOGGLES.get(), "涂蜜护目镜");
 
         // mob_effect
         add(TEEffects.DEMONIC_THOUGHTS.get(), "邪念");
