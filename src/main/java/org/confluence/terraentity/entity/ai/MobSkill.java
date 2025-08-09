@@ -1,20 +1,21 @@
 package org.confluence.terraentity.entity.ai;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.function.Consumer;
 
-public class MobSkill<T extends Mob> {
+public class MobSkill<T extends Entity> extends AbstractMobSkill<T> {
 
 
     public int timeContinue;
     public int timeTrigger;
     public RawAnimation anim;
 
-    public Consumer<T> stateInit;
-    public Consumer<T> stateTick;
-    public Consumer<T> stateOver;
+    private Consumer<T> stateInit;
+    private Consumer<T> stateTick;
+    private Consumer<T> stateOver;
 
     /**
      * @param anim 动画名称
@@ -22,9 +23,7 @@ public class MobSkill<T extends Mob> {
      * @param timeTrigger 逻辑触发时间
      */
     public MobSkill(RawAnimation anim, int timeContinue, int timeTrigger){
-        this.anim = anim;
-        this.timeContinue = timeContinue;
-        this.timeTrigger = timeTrigger;
+        super(anim, timeContinue, timeTrigger);
     }
 
     public MobSkill(RawAnimation anim, int timeContinue, int timeTrigger,
@@ -32,9 +31,7 @@ public class MobSkill<T extends Mob> {
                     Consumer<T> stateTick,
                     Consumer<T> stateOver
     ){
-        this.anim = anim;
-        this.timeContinue = timeContinue;
-        this.timeTrigger = timeTrigger;
+        this(anim, timeContinue, timeTrigger);
         this.stateInit = stateInit;
         this.stateTick = stateTick;
         this.stateOver = stateOver;
@@ -49,6 +46,16 @@ public class MobSkill<T extends Mob> {
     public void addStateOver(Consumer<T> stateOver){
         this.stateOver = stateOver;
     };
+
+    public void init(T mob){
+        if(stateInit!= null) stateInit.accept(mob);
+    }
+    public void tick(T mob){
+        if(stateTick!= null) stateTick.accept(mob);
+    }
+    public void over(T mob){
+        if(stateOver!= null) stateOver.accept(mob);
+    }
 
     public MobSkill<T> onTick (Consumer<T> stateTick){
         this.stateTick = stateTick;

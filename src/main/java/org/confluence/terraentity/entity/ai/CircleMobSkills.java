@@ -1,15 +1,16 @@
 package org.confluence.terraentity.entity.ai;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CircleMobSkills<T extends Mob> {
+public class CircleMobSkills<T extends Entity> {
     public T owner;
-    protected final List<MobSkill> mobSkills = new ArrayList<>();
+    protected final List<AbstractMobSkill> mobSkills = new ArrayList<>();
 
     public int tick = 0;
     public int index = 0;
@@ -21,7 +22,7 @@ public class CircleMobSkills<T extends Mob> {
     }
     public int count(){return mobSkills.size();};
 
-    public boolean pushSkill(MobSkill skill){
+    public boolean pushSkill(AbstractMobSkill skill){
         mobSkills.add(skill);
         if(mobSkills.size()==1) tick = 0;
         return true;
@@ -29,13 +30,15 @@ public class CircleMobSkills<T extends Mob> {
 
 
     public void tick(){
-        if(owner.level().isClientSide()) return ;
+        if(owner.level().isClientSide()) {
+            this.tick++;
+            return;
+        }
         if(mobSkills.isEmpty()) return ;
         this.tick++;
 
-        if(mobSkills.get(index).stateTick !=null) {
-            mobSkills.get(index).stateTick.accept(owner);
-        }
+        mobSkills.get(index).tick(owner);
+
         if(mobSkills.isEmpty())return;
         if(mobSkills.get(index).timeContinue < tick) {
             forceEnd();
@@ -51,7 +54,7 @@ public class CircleMobSkills<T extends Mob> {
         index = (index +1) % mobSkills.size();
 
         //状态结束
-        if(mobSkills.get(lastIndex).stateOver!=null) mobSkills.get(lastIndex).stateOver.accept(owner);
+        mobSkills.get(lastIndex).over(owner);
         owner.getEntityData().set(skillIndexData, index);
     }
     /** 强制跳转状态 **/
@@ -60,7 +63,7 @@ public class CircleMobSkills<T extends Mob> {
         this.index = index;
 
         //初次进入状态
-        if(mobSkills.get(index).stateInit!=null) mobSkills.get(index).stateInit.accept(owner);
+        mobSkills.get(index).init(owner);
         owner.getEntityData().set(skillIndexData, index);
     }
 

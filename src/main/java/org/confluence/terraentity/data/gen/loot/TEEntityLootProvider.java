@@ -167,7 +167,6 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
             this.add(e.get(), LootTable.lootTable()
                     .withPool(weightLootPool(singleItemIncrease(Items.BONE, 1, 3), 1f))
                     .withPool(singleItemPool(TESpawnEggItems.SKELETRON_SPAWN_EGG,1, 0.05f))
-                    .withPool(singleItemPool(TEYoyosItems.VALOR))
             );
         });
 
@@ -175,6 +174,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         this.add(TEBossEntities.SKELETRON_HAND.get(), LootTable.lootTable()
                 .withPool(weightLootPool(singleItem(Items.BONE, 10, 20), 1f))
                 .withPool(singleItemPool(TESummonItems.IRON_GOLEM_STAFF,1, 1f))
+                .withPool(singleItemPool(TEYoyosItems.VALOR))
         );
 
 

@@ -186,12 +186,12 @@ dependencies {
     }
 
     // 密码库
-    minecraftLibrary 'com.github.edg_thexu:vigsecurity:1.0.0.20'
-    implementation (files("libs/vigsecurity-1.0.0.20.jar"))
-//    implementation 'com.github.edg_thexu:vigsecurity:1.0.0'
-    jarJar('com.github.edg_thexu:vigsecurity:1.0.0.20'){
-        jarJar.ranged(it, "[1.0.0,)")
-    }
+//    minecraftLibrary 'com.github.edg_thexu:vigsecurity:1.0.0.20'
+//    implementation (files("libs/vigsecurity-1.0.0.20.jar"))
+////    implementation 'com.github.edg_thexu:vigsecurity:1.0.0'
+//    jarJar('com.github.edg_thexu:vigsecurity:1.0.0.20'){
+//        jarJar.ranged(it, "[1.0.0,)")
+//    }
 
 
 

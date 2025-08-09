@@ -1,7 +1,5 @@
 package org.confluence.terraentity.mixin;
 
-import com.github.edg_thexu.security.SecurityWrapper;
-import com.github.edg_thexu.security.ill;
 import com.google.common.base.Suppliers;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -10,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.ClientTerraEntity;
+import org.confluence.terraentity.data.security.SecurityFace;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import software.bernie.geckolib.loading.FileLoader;
@@ -31,13 +30,13 @@ public class FileLoaderMixin {
                     try {
                         ResourceLocation location1 = TerraEntity.space("license.bin");
                         InputStream inputStream = Minecraft.getInstance().getResourceManager().open(location1);
-                        return ill.lII(inputStream, i-> location1.hashCode());
+                        return SecurityFace.readKey(inputStream, i-> location1.hashCode());
                     } catch (IOException e){
                         throw new RuntimeException("License Key Error");
                     }
                 });
             }
-            return SecurityWrapper.IlIl.lIl(result, ClientTerraEntity.seKey.get());
+            return SecurityFace.S3.decrypt(result, ClientTerraEntity.seKey.get());
         }
         return result;
     }

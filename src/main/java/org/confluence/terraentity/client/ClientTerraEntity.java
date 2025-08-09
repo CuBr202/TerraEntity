@@ -1,10 +1,6 @@
 package org.confluence.terraentity.client;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.config.ModConfig;
-import org.confluence.terraentity.config.ClientConfig;
 
 import java.util.function.Supplier;
 

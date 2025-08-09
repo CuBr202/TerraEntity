@@ -11,20 +11,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.ai.CircleMobSkills;
 import org.confluence.terraentity.api.entity.ai.IFSMGeoMob;
+import org.confluence.terraentity.entity.ai.goal.FSMGoal;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 
 public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extends AbstractMonster implements IFSMGeoMob<T> {
 
-    protected CircleMobSkills<T> skills;
     protected ClientBoundAnimationMessage clientBoundAnimationMessage = new ClientBoundAnimationMessage();
+    FSMGoal fsmGoal;
 
-    public static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractFSMMonster.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractFSMMonster.class, EntityDataSerializers.INT);
 
     public AbstractFSMMonster(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level, builder);
 
-        skills = new CircleMobSkills(this, DATA_SKILL_INDEX);
+
+        fsmGoal = createFSMGoal(DATA_SKILL_INDEX);
     }
 
     @Override
@@ -35,10 +37,14 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
 
     }
 
+    protected abstract FSMGoal<T> createFSMGoal(EntityDataAccessor<Integer> data);
+
     @Override
     public void tick() {
          super.tick();
-         skills.tick();
+         if(level().isClientSide){
+             this.getSkills().tick();
+         }
     }
 
     @Override
@@ -49,19 +55,24 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        syncSkills(key);
+        if(key == DATA_SKILL_INDEX) {
+            syncSkills(key);
+        }
     }
 
 
     @Override
     public void onAddedToWorld(){
         super.onAddedToWorld();
-        addToLevel();
+
+        if(!level().isClientSide){
+            this.goalSelector.addGoal(0, createFSMGoal(DATA_SKILL_INDEX));
+        }
     }
 
     @Override
     public CircleMobSkills<T> getSkills() {
-        return skills;
+        return fsmGoal.getSkills();
     }
 
     @Override
