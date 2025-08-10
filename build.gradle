@@ -222,6 +222,7 @@ dependencies {
 
 //    compileOnly "net.fabricmc.fabric-api:fabric-renderer-api-v1:6.0.2+75fa737a29"
 
+    compileOnly "curse.maven:azurelib-817423:6849116" // GeckoLib的分支，由于模型加密导致其崩溃，故添加对其的兼容
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

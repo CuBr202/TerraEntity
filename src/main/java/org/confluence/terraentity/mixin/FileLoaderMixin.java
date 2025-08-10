@@ -11,14 +11,15 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.ClientTerraEntity;
 import org.confluence.terraentity.data.security.SecurityFace;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
-import software.bernie.geckolib.loading.FileLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-@Mixin(FileLoader.class)
+@Pseudo
+@Mixin(value = software.bernie.geckolib.loading.FileLoader.class, targets = "mod.azure.azurelib.common.internal.common.loading.FileLoader", remap = false)
 public class FileLoaderMixin {
     @WrapOperation(method = "getFileContents", at = @At(value = "INVOKE", target = "Lorg/apache/commons/io/IOUtils;toString(Ljava/io/InputStream;Ljava/nio/charset/Charset;)Ljava/lang/String;"))
     private static String wrapToString(InputStream sw, Charset input, Operation<String> original, @Local(argsOnly = true) ResourceLocation location) {
