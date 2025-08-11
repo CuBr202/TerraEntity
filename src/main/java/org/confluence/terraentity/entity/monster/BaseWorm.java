@@ -156,6 +156,8 @@ public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster {
             cur.setYRot(yaw);
             cur.setXRot(pitch);
 
+            cur.yRotOO = wrapRotation(cur.yRotOO, yaw);
+
             cur.setDeltaMovement(destX - cur.getX(), destY - cur.getY(), destZ - cur.getZ());
             cur.moveTo(destX, destY, destZ, yaw, pitch);
 //            cur.setPosRaw(destX, destY, destZ);
@@ -168,6 +170,16 @@ public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster {
                     );
 
         }
+    }
+
+    private float wrapRotation(float current, float target){
+        while (target - current > 180.0F){
+            current += 360.0F;
+        }
+        while (target - current < -180.0F){
+            current -= 360.0F;
+        }
+        return current;
     }
 
     private float adjustTargetAngle(float target, float current) {
