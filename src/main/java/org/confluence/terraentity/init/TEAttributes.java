@@ -19,7 +19,7 @@ public final class TEAttributes {
      */
     public static final Holder<Attribute> SENTRY_CAPACITY = ATTRIBUTES.register("player.sentry_capacity", () -> new RangedAttribute("attribute.name.player.sentry_capacity", 1.0, 0.0, 128.0).setSyncable(true));
     /**
-     * 召唤伤害
+     * 鞭子伤害
      */
     public static final Holder<Attribute> SUMMON_DAMAGE = ATTRIBUTES.register("player.summon_damage", () -> new RangedAttribute("attribute.name.player.summon_damage", 1.0, 0.0, 2048.0).setSyncable(true));
     /**
