@@ -39,8 +39,9 @@ import org.confluence.terraentity.api.entity.IStateChangeableMob;
 import org.confluence.terraentity.api.entity.ai.IFSMGeoMob;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.entity.ai.CircleMobSkills;
+import org.confluence.terraentity.entity.ai.fsm.CircleMobSkills;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
+import org.confluence.terraentity.entity.util.DifficultSelector;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.mixed.IBossEvent;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
@@ -70,11 +71,12 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     public float ironGlomResistance = 0.4f;
     public float explosionResistance = 0.5f;
-    protected boolean difficult = true; // 困难模式
+
     protected boolean dirty = true;
     protected ServerBossEvent bossEvent;
     protected float baseHealth;
     protected int baseArmor;
+    protected DifficultSelector difficultSelector ;
 
     public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level, float health, int armor) {
         super(type, level);
@@ -85,11 +87,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         if(level().isClientSide){
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
         }
-        if(level.getDifficulty().equals(level.getDifficulty().EASY)
-                || level.getDifficulty().equals(level.getDifficulty().NORMAL)
-        ){
-            difficult = false;
-        }
+
+        difficultSelector = new DifficultSelector(level);
         this.addSkills();
         bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), getBossBarColor(), BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
     }
@@ -535,4 +534,15 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public void changeState(){
 
     }
+
+    protected boolean isExpertise(){
+        return this.difficultSelector.isExpertise();
+    }
+    protected boolean isMaster(){
+        return this.difficultSelector.isMaster();
+    }
+    protected boolean isFtw(){
+        return this.difficultSelector.isFtw();
+    }
+
 }

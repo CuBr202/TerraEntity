@@ -20,7 +20,6 @@ import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.function.Supplier;
@@ -102,7 +101,7 @@ public class RangeShooter extends AbstractMonster {
             return false;
         }
         if(super.hurt(pSource, pAmount)){
-            this.phase = this.lastPhase;
+            this.phase = this.lastPhase-1;
             return true;
         }
         return false;

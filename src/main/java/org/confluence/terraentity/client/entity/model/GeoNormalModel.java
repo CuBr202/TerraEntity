@@ -13,13 +13,22 @@ public class GeoNormalModel<T extends GeoEntity> extends DefaultedEntityGeoModel
 
     GeoBone head;
     String headName = "Head";
+    private ResourceLocation path;
 
     public GeoNormalModel(ResourceLocation path) {
-        super(path, true);
+        this(path, true);
     }
 
     public GeoNormalModel(ResourceLocation path, boolean turnsHead) {
         super(path, turnsHead);
+        this.path = path;
+    }
+
+    public GeoNormalModel(GeoNormalModel<T> model) {
+        super(model.path, model.turnsHead);
+        this.path = model.path;
+        this.headName = model.headName;
+        this.head = model.head;
     }
 
     @Override

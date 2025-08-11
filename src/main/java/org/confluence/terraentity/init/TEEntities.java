@@ -24,8 +24,12 @@ public final class TEEntities {
         return TerraEntity.MODID + ":" + key;
     }
 
-    public static <T extends Mob> DeferredHolder<EntityType<?>,EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> entityFactory, float width, float height){
+    public static <T extends Mob> DeferredHolder<EntityType<?>,EntityType<T>> registerMonster(String name, EntityType.EntityFactory<T> entityFactory, float width, float height){
         return registerEntity(name, entityFactory, MobCategory.MONSTER, width, height);
+    }
+
+    public static <T extends Mob> DeferredHolder<EntityType<?>,EntityType<T>> registerCreature(String name, EntityType.EntityFactory<T> entityFactory, float width, float height){
+        return registerEntity(name, entityFactory, MobCategory.CREATURE, width, height);
     }
 
     public static <T extends Mob> DeferredHolder<EntityType<?>,EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> entityFactory, MobCategory category, float width, float height){

@@ -5,8 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
 import org.confluence.terraentity.api.entity.animation.Curve;
+import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
 
 /**
  * 蠕虫游走ai
@@ -15,27 +15,27 @@ public class RandomWanderGoal extends Goal {
     private Vec3 randomTarget;
     private int tickToChangeTarget;
     private final int _tickToChangeTarget;
-    private final Mob warm;
+    private final Mob worm;
 
     Curve curve;
 
-    public RandomWanderGoal(Mob warm, int tickToChangeTarget) {
-        this.warm = warm;
+    public RandomWanderGoal(Mob worm, int tickToChangeTarget) {
+        this.worm = worm;
         this._tickToChangeTarget = tickToChangeTarget;
         this.tickToChangeTarget = _tickToChangeTarget;
     }
 
     protected Vec3 findWanderTarget() {
-        randomTarget = warm.position().add(Math.random() * 20 - 10, Math.random() * 20 - 8, Math.random() * 20 - 10)
-                .add(warm.getLookAngle().normalize().scale(10)); // 防止寻路到背后导致突然转向
+        Vec3 randomTarget = worm.position().add(Math.random() * 20 - 10, Math.random() * 20 - 8, Math.random() * 20 - 10)
+                .add(worm.getLookAngle().normalize().scale(10)); // 防止寻路到背后导致突然转向
 
         BlockPos pos = new BlockPos((int) randomTarget.x, (int) randomTarget.y, (int) randomTarget.z);
         int delta = 0;
-        while (warm.level().getBlockState(pos).isAir() && pos.getY() > -65) {
+        while (worm.level().getBlockState(pos).isAir() && pos.getY() > -65) {
             pos = pos.below();
             delta++;
         }
-        float f0 = (float) (randomTarget.y - delta) + warm.getRandom().nextIntBetweenInclusive(-3,5); // 控制高度起伏
+        float f0 = (float) (randomTarget.y - delta) + worm.getRandom().nextIntBetweenInclusive(-3,5); // 控制高度起伏
 //        float f1 = f0 < -65 ? -130 - f0 : f0;
         randomTarget = new Vec3(randomTarget.x, f0, randomTarget.z);
 
@@ -45,41 +45,41 @@ public class RandomWanderGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return warm.getTarget() == null && warm.tickCount > 5;
+        return worm.getTarget() == null && worm.tickCount > 5;
     }
 
 
     @Override
     public void start() {
-        findWanderTarget();
+        this.randomTarget = findWanderTarget();
         tickToChangeTarget = _tickToChangeTarget;
-        Vec3 dir = warm.getLookAngle().normalize();
-        Vec3 mid = warm.position().add(dir.scale(warm.getRandom().nextIntBetweenInclusive(5,10))); // 切线
+        Vec3 dir = worm.getLookAngle().normalize();
+        Vec3 mid = worm.position().add(dir.scale(worm.getRandom().nextIntBetweenInclusive(5,10))); // 切线
 
         // 调整控制点落差
-        double dy =  mid.y - warm.position().y;
-        mid = mid.add(0, -dy + (dy > 0? 1 : -1) * warm.getRandom().nextIntBetweenInclusive(5,8), 0);
+        double dy =  mid.y - worm.position().y;
+        mid = mid.add(0, -dy + (dy > 0? 1 : -1) * worm.getRandom().nextIntBetweenInclusive(5,8), 0);
 
         // 调整开口方向
-        if(warm.position().y > mid.y){
+        if(worm.position().y > mid.y){
             // 开口方向向上
-            float raiseHeight = warm.getRandom().nextIntBetweenInclusive(9,13); // 上升高度
-            randomTarget = randomTarget.add(0, warm.position().y  -  randomTarget.y + raiseHeight, 0) ;
-            mid = mid.add(0, warm.position().y - 2  -  mid.y, 0);
+            float raiseHeight = worm.getRandom().nextIntBetweenInclusive(9,13); // 上升高度
+            randomTarget = randomTarget.add(0, worm.position().y  -  randomTarget.y + raiseHeight, 0) ;
+            mid = mid.add(0, worm.position().y - 2  -  mid.y, 0);
         }else{
             // 开口方向向下
-            float landDepth = 5 + warm.getRandom().nextIntBetweenInclusive(1,3); // 着陆深度
+            float landDepth = 5 + worm.getRandom().nextIntBetweenInclusive(1,3); // 着陆深度
             randomTarget = randomTarget.add(0, - landDepth, 0) ;
         }
 
-        this.curve = new Bezier3Curse(warm.position(),
+        this.curve = new Bezier3Curse(worm.position(),
                 mid,
                 randomTarget
         );
     }
 
     public boolean canContinueToUse() {
-        return warm.distanceToSqr(randomTarget) > 3f && tickToChangeTarget > 0;
+        return worm.distanceToSqr(randomTarget) > 3f && tickToChangeTarget > 0;
     }
 
 
@@ -92,10 +92,10 @@ public class RandomWanderGoal extends Goal {
         if(curve != null){
             Vec3 target = curve.cal( (_tickToChangeTarget - tickToChangeTarget) * 1.0f / _tickToChangeTarget);
 //            System.out.println((_tickToChangeTarget - tickToChangeTarget) * 1.0f / _tickToChangeTarget);
-            Vec3 lookPos = target.subtract(warm.position()).scale(20).add(warm.position());
-            warm.lookAt(EntityAnchorArgument.Anchor.EYES, lookPos);
-            warm.getLookControl().setLookAt(lookPos.x, lookPos.y, lookPos.z, 10, 10);
-            warm.setDeltaMovement(target.subtract(warm.position()).scale(0.85f)); // * 0.9防止头抽搐
+            Vec3 lookPos = target.subtract(worm.position()).scale(20).add(worm.position());
+            worm.lookAt(EntityAnchorArgument.Anchor.EYES, lookPos);
+            worm.getLookControl().setLookAt(lookPos.x, lookPos.y, lookPos.z, 10, 10);
+            worm.setDeltaMovement(target.subtract(worm.position()).scale(0.85f)); // * 0.9防止头抽搐
         }
     }
 }

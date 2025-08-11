@@ -165,7 +165,7 @@ repositories {
 
 boolean dev = project.hasProperty('dev')
         ? project.property('dev').toBoolean()
-        : true
+        : true  // If using this mod individually, please set false
 // Default true. When -Pdev=false, it's for release build.
 // Or if using this mod individually, please use ./gradlew build -Pdev=false
 
@@ -222,7 +222,9 @@ dependencies {
 
 //    compileOnly "net.fabricmc.fabric-api:fabric-renderer-api-v1:6.0.2+75fa737a29"
 
-    compileOnly "curse.maven:azurelib-817423:6849116" // GeckoLib的分支，由于模型加密导致其崩溃，故添加对其的兼容
+    // 兼容azurelib读geo文件
+//    implementation "curse.maven:azurelib-817423:6849116"
+
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -318,4 +320,10 @@ tasks.register("genVoilaRun") {
 
 def isRunningInIdea() {
     return System.getProperty("idea.active") == "true"
+}
+
+tasks.register('buildRelease', Exec) {
+    group = "build"
+    description = "Builds a release version of the mod"
+    commandLine 'cmd', '/c', 'gradlew.bat build -Pdev=false'
 }

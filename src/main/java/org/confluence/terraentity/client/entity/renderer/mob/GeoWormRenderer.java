@@ -11,15 +11,15 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
-import org.confluence.terraentity.entity.monster.BaseWarm;
-import org.confluence.terraentity.entity.monster.BaseWarmPart;
+import org.confluence.terraentity.entity.monster.BaseWorm;
+import org.confluence.terraentity.entity.monster.BaseWormPart;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 
-public class GeoWormRenderer<T extends BaseWarm> extends GeoNormalRenderer<T> {
+public class GeoWormRenderer<T extends BaseWorm<S>, S extends BaseWormPart> extends GeoNormalRenderer<T> {
 
-    GeoWormSegmentRenderer<BaseWarmPart> partRenderer;
+    GeoWormSegmentRenderer partRenderer;
     public double lerpx;
     public double lerpy;
     public double lerpz;
@@ -44,10 +44,14 @@ public class GeoWormRenderer<T extends BaseWarm> extends GeoNormalRenderer<T> {
      */
     public GeoWormRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path, float scale, float offsetY) {
         super(renderManager, path, true, scale, offsetY);
+        partRenderer = createPartRenderer(renderManager, path);
+    }
+
+    protected GeoWormSegmentRenderer createPartRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
         String name = path.getPath();
         String segment = name + "_segment";
         String tail = name + "_tail";
-        partRenderer = new GeoWormSegmentRenderer<>(renderManager,this,
+        return new GeoWormSegmentRenderer<>(renderManager,this,
                 TerraEntity.space(segment),
                 TerraEntity.space(tail),scale,offsetY);
     }
@@ -55,7 +59,7 @@ public class GeoWormRenderer<T extends BaseWarm> extends GeoNormalRenderer<T> {
     @Override
     public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
 
-        BaseWarmPart part1 = entity.bodySegments[0];
+        S part1 = entity.bodySegments.get(0);
         poseStack.pushPose();
         Vec3 dir = entity.position().subtract(part1.position());
         float yRot = Mth.lerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
@@ -71,9 +75,9 @@ public class GeoWormRenderer<T extends BaseWarm> extends GeoNormalRenderer<T> {
         lerpy = Mth.lerp(partialTick, entity.yOld, entity.getY());
         lerpz = Mth.lerp(partialTick, entity.zOld, entity.getZ());
 
-        for(BaseWarmPart part : entity.bodySegments){
+        for(S part : entity.bodySegments){
             poseStack.pushPose();
-            float lerpYRot = Mth.lerp(partialTick, part.yRotO, part.getYRot());
+            float lerpYRot = Mth.lerp(partialTick, part.yRotOO, part.getYRot());
             partRenderer.render(part, lerpYRot, partialTick, poseStack, bufferSource, Minecraft.getInstance().getEntityRenderDispatcher().getPackedLightCoords(part, partialTick));
             poseStack.popPose();
         }

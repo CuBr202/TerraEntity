@@ -34,7 +34,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class Squirrel extends Animal implements  GeoEntity,  IVanillaVariant<Integer> {
+public class Squirrel extends Animal implements GeoEntity, IVanillaVariant<Integer> {
 
     private boolean initializedVariant = false;
 

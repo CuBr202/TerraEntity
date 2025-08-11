@@ -14,8 +14,8 @@ import org.confluence.terraentity.init.TEEntities;
 
 public class TERideableEntities {
 
-    public static final DeferredHolder<EntityType<?>, EntityType<RideableSlime>> RIDEABLE_SLIME = TEEntities.registerEntity("rideable_slime", RideableSlime::new,0.5F,0.5F);
-    public static final DeferredHolder<EntityType<?>, EntityType<RideableBee>> RIDEABLE_BEE = TEEntities.registerEntity("rideable_bee", RideableBee::new,0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<RideableSlime>> RIDEABLE_SLIME = TEEntities.registerMonster("rideable_slime", RideableSlime::new,0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<RideableBee>> RIDEABLE_BEE = TEEntities.registerMonster("rideable_bee", RideableBee::new,0.5F,0.5F);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

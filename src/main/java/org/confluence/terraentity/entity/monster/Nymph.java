@@ -12,7 +12,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -306,10 +308,6 @@ public class Nymph extends AbstractMonster {
         return super.getScale();
     }
 
-    @Override
-    public boolean shouldDoCollision() {
-        return super.shouldDoCollision() && !isTrigger() && !isTamed;
-    }
 
     @Override
     public boolean isPreventingPlayerRest(Player player) {

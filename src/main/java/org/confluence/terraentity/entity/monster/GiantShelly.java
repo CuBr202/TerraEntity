@@ -15,9 +15,11 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.ai.MobSkill;
-import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.api.entity.IVanillaVariant;
+import org.confluence.terraentity.entity.ai.fsm.CircleMobSkills;
+import org.confluence.terraentity.entity.ai.fsm.MobSkill;
+import org.confluence.terraentity.entity.ai.goal.FSMGoal;
+import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.init.TESounds;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -32,7 +34,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
 
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(GiantShelly.class, EntityDataSerializers.INT);
 
-    Vec3 cachedTarget = null;
+
     static final ResourceLocation armorAddition = TerraEntity.space("shrink");
     public GiantShelly(EntityType<? extends Monster> type, Level level) {
         super(type, level, new AbstractPrefab(26,3,9,10,0,0.4f)
@@ -42,79 +44,87 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
         );
         this.collisionProperties = new CollisionProperties(1,20,1);
     }
-    MobSkill<GiantShelly> walk;
-    MobSkill<GiantShelly> free;
-    MobSkill<GiantShelly> shrinking_shell;
-    MobSkill<GiantShelly> turn;
-    MobSkill<GiantShelly> turn2;
 
     @Override
-    public void addSkills() {
-        free = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("free"), 40, 0)
-                .onInit(e->{
-                    if(e.getAttribute(Attributes.ARMOR).hasModifier(armorAddition)){
-                        e.getAttribute(Attributes.ARMOR).removeModifier(armorAddition);
-                    }
-                })
-        ;
+    protected FSMGoal<GiantShelly> createFSMGoal(EntityDataAccessor<Integer> data) {
+        return new FSMGoal<>(this, data) {
+            MobSkill<GiantShelly> walk;
+            MobSkill<GiantShelly> free;
+            MobSkill<GiantShelly> shrinking_shell;
+            MobSkill<GiantShelly> turn;
+            MobSkill<GiantShelly> turn2;
+            Vec3 cachedTarget = null;
 
-        walk = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("walk"), 60, 0)
-                .onInit(e->{
-                    cachedTarget = LandRandomPos.getPos(e, 15, 7);
-                })
-                .onTick(e->{
-                    if(this.hurtTime > 0){
-                        skills.forceStartIndex(2);
-                    }
-                    if(e.getTarget() != null){
-                        e.getNavigation().moveTo(e.getTarget(), 1.0f);
-                    }else if(cachedTarget!= null){
-                        e.moveControl.setWantedPosition(cachedTarget.x, cachedTarget.y, cachedTarget.z, 1.0f);
-                    }
-                })
-                .onOver(e->{
-                    if(e.getTarget() == null) {
-                        skills.forceStartIndex(0);
-                        return;
-                    }
-                })
+            @Override
+            public void init(CircleMobSkills<GiantShelly> skills) {
+                free = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("free"), 40, 0)
+                        .onInit(e->{
+                            if(e.getAttribute(Attributes.ARMOR).hasModifier(armorAddition)){
+                                e.getAttribute(Attributes.ARMOR).removeModifier(armorAddition);
+                            }
+                        })
+                ;
 
-        ;
+                walk = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("walk"), 60, 0)
+                        .onInit(e->{
+                            cachedTarget = LandRandomPos.getPos(e, 15, 7);
+                        })
+                        .onTick(e->{
+                            if(GiantShelly.this.hurtTime > 0){
+                                skills.forceStartIndex(2);
+                            }
+                            if(e.getTarget() != null){
+                                e.getNavigation().moveTo(e.getTarget(), 1.0f);
+                            }else if(cachedTarget!= null){
+                                e.moveControl.setWantedPosition(cachedTarget.x, cachedTarget.y, cachedTarget.z, 1.0f);
+                            }
+                        })
+                        .onOver(e->{
+                            if(e.getTarget() == null) {
+                                skills.forceStartIndex(0);
+                                return;
+                            }
+                        })
 
-        shrinking_shell = new MobSkill<GiantShelly>(RawAnimation.begin().thenPlay("shrinking_shell"), 50, 0)
-                .onInit(e->{
-                    e.navigation.stop();
-                    if(!e.getAttribute(Attributes.ARMOR).hasModifier(armorAddition)){
-                        e.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(armorAddition, 2, AttributeModifier.Operation.ADD_VALUE));
-                    }
-                })
+                ;
 
-        ;
+                shrinking_shell = new MobSkill<GiantShelly>(RawAnimation.begin().thenPlay("shrinking_shell"), 50, 0)
+                        .onInit(e->{
+                            e.navigation.stop();
+                            if(!e.getAttribute(Attributes.ARMOR).hasModifier(armorAddition)){
+                                e.getAttribute(Attributes.ARMOR).addTransientModifier(new AttributeModifier(armorAddition, 2, AttributeModifier.Operation.ADD_VALUE));
+                            }
+                        })
 
-        turn = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("turn"), 50, 20)
-                .onTick(e->{
-                    if(e.getTarget() == null) {
+                ;
+
+                turn = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("turn"), 50, 20)
+                        .onTick(e->{
+                            if(e.getTarget() == null) {
 //                        skills.forceStartIndex(0);
-                        return;
-                    }
-                    if(skills.canTrigger() && e.getTarget() != null){
-                        Vec3 dir = e.getTarget().position().add(0,1,0).subtract(e.position());
-                        this.setDeltaMovement(dir.normalize().scale(dir.length()*0.5f));
-                    }
-                })
-        ;
-        turn2 = new MobSkill<GiantShelly>(RawAnimation.begin().thenPlay("turn2"), 15, 0)
+                                return;
+                            }
+                            if(skills.canTrigger() && e.getTarget() != null){
+                                Vec3 dir = e.getTarget().position().add(0,1,0).subtract(e.position());
+                                GiantShelly.this.setDeltaMovement(dir.normalize().scale(dir.length()*0.5f));
+                            }
+                        })
+                ;
+                turn2 = new MobSkill<>(RawAnimation.begin().thenPlay("turn2"), 15, 0)
 
 
-        ;
+                ;
 
-        addSkill(free);
-        addSkill(walk);
-        addSkill(shrinking_shell);
-        addSkill(turn);
-        addSkill(turn2);
-
+                this.addSkill(free);
+                this.addSkill(walk);
+                this.addSkill(shrinking_shell);
+                this.addSkill(turn);
+                this.addSkill(turn2);
+            }
+        };
     }
+
+
 
 /* Variant */
 
@@ -179,5 +189,10 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
     @Override
     public Map<Integer, ResourceLocation> getTexturesMap() {
         return textures;
+    }
+
+    @Override
+    public boolean shouldDoCollision() {
+        return this.getSkills().index > 1;
     }
 }

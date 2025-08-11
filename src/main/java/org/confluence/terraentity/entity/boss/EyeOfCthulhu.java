@@ -8,6 +8,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -17,7 +18,7 @@ import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.IAutoLeaveMob;
 import org.confluence.terraentity.api.entity.blur.IMotionBlurHolder;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.entity.ai.MobSkill;
+import org.confluence.terraentity.entity.ai.fsm.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.blur.MotionBlurManager;
 import org.confluence.terraentity.entity.blur.PosRotMotionBlurContext;
@@ -206,8 +207,18 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 },
                 terraBossBase -> {
                     if (getTarget() == null) return;
-                    if(difficult && getTarget().distanceTo(this) > 8)
+                    if(!this.isExpertise() && getTarget().distanceTo(this) > 8 && this.getRandom().nextFloat() < 0.5f) {
                         skills.tick -= 1;
+                    }
+                    if(TEUtils.isFTWWorld((ServerLevel) level())){
+                        if(this.getHealthPercentage() < 0.15f) { // 天顶世界接近无限冲刺
+                            skills.tick += 1;
+                        }
+                        for(int i = 0; i < 2; i++) {
+                            this.spawnMinions(getTarget()); // 天顶世界生成仆从
+                        }
+                    }
+
                     lookAt(10);
 
                     // 向玩家正上方移动
@@ -217,15 +228,21 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 },
                 terraBossBase -> {
                     // 生成冲撞次数
-                    this.stage2_dashCount = (int) ((stage2_dashCount_base + 10 - this.getHealth() / (getMaxHealth() / 10)) * 1.5);
-                    this.stage2_dashCount_max = this.stage2_dashCount - 3;
+                    if(this.isExpertise()) {
+                        this.stage2_dashCount = (int) ((stage2_dashCount_base + 10 - this.getHealth() / (getMaxHealth() / 10)) * 1.5);
+                        if (this.getHealth() / getMaxHealth() < 0.3f) {
+                            this.stage2_dashCount_max = this.stage2_dashCount;
+                        }
+                    }else{
+                        this.stage2_dashCount = 3;
+                    }
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE);
                 }
         );
         this.state2_dash = new MobSkill(type2run, 30, 20,
                 terraBossBase -> {
                     if (getTarget() == null) return;
-                    if(this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount <= stage2_dashCount_max){
+                    if(this.isEnhanceDash()){
                         state2_dash.timeTrigger = 10;
                         state2_dash.timeContinue = 20;
                         speedFactor = 3;
@@ -237,7 +254,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         this.playSound(TESounds.ROAR.get());
                     }
 
-                    if(difficult && distanceTo(getTarget()) < 8){
+                    if(this.isExpertise() && distanceTo(getTarget()) < 8){
                         skills.tick -= 1;
                     }
                 },
@@ -245,12 +262,13 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                     // 延迟冲刺
                     if (getTarget() == null) return;
 //                    lookAt(360);
+                    boolean isEnhance = isEnhanceDash();
                     if (!skills.canContinue()) {
                         // 调整方向
 
                         this.addDeltaMovement(new Vec3(0, 0.02, 0));
                         float inaccuracy = (float) getTarget().getDeltaMovement().length() * 10;
-                        if(stage2_dashCount <= stage2_dashCount_max){
+                        if(isEnhance){
                             inaccuracy *= 6;// 疯狗冲刺非常不准确
                             if(this.getRandom().nextFloat() < 0.3f){ // 触发时间可以提前
                                 skills.tick++;
@@ -264,14 +282,16 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashDir.normalize().scale(-1));
                         return;
                     }else{
-                        if(stage2_dashCount <= stage2_dashCount_max){ // 疯狗冲刺时间不稳定
+                        if(isEnhance){ // 疯狗冲刺时间不稳定
                             if(skills.tick > 23 && this.getRandom().nextFloat() < 0.2f){
                                 skills.forceEnd();
                             }
                         }
                     }
                     if(dashPos != null && dashDir != null) {
-                        this.setMotionBlurEnabled(true);
+
+                        this.setMotionBlurEnabled(this.isEnhanceDash());
+
                         this.lookControl.setLookAt(dashPos);
                         this.lookAt(EntityAnchorArgument.Anchor.EYES, dashPos);
                         // 冲刺增加伤害
@@ -302,6 +322,10 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         addSkill(stage2_stare); // 5
 
         addSkill(state2_dash); // 6
+    }
+
+    private boolean isEnhanceDash(){
+        return this.isExpertise() && this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount <= stage2_dashCount_max;
     }
 
     public void tick() {
@@ -346,6 +370,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         if (stage == 1 &&this.getHealth() / getMaxHealth() < 0.5) {
             stage = 2;
             skills.forceStartIndex(4);
+            this.getAttribute(Attributes.ARMOR).setBaseValue(0); // 二阶段没有护甲
         }
     }
     @Override
@@ -359,6 +384,18 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         dashComponent.uniformMove(1);
     }
 
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if(this.isExpertise()){
+            if(this.getHealthPercentage() < 0.4f){
+                pAmount += 15;
+            }
+            if(this.getHealthPercentage() < 0.12f) {
+                pAmount += 7;
+            }
+        }
+        return super.hurt(pSource,pAmount);
+    }
     protected BossEvent.BossBarColor getBossBarColor(){
         return BossEvent.BossBarColor.RED;
     };

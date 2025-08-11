@@ -59,6 +59,10 @@ import static net.minecraft.world.item.Item.getPlayerPOVHitResult;
 
 
 public final class TEUtils {
+
+    private TEUtils() {
+    }
+
     public static float nextFloat(RandomSource randomSource, float origin, float bound) {
         if (origin >= bound) {
             throw new IllegalArgumentException("bound - origin is non positive");

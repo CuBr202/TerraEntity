@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.animation.Curve;
-import org.confluence.terraentity.entity.ai.MobSkill;
+import org.confluence.terraentity.entity.ai.fsm.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
 import org.confluence.terraentity.entity.monster.VisualNeuron;
 import org.confluence.terraentity.init.TESounds;
@@ -55,7 +55,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         this.noPhysics = true;
 
         this.xpReward = 2000;
-        if(difficult){
+        if(this.isExpertise()){
             minionsSummonInternal = 6;
         }
     }
@@ -146,7 +146,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         stage1_fade_out = new MobSkill<BrainOfCthulhu>(close, 40, 0)
                 .onInit(e->{
                     if(getTarget() != null) {
-                        float r = random.nextFloat() + (difficult ? 6 : 8);
+                        float r = random.nextFloat() + (this.isExpertise() ? 6 : 8);
 
                         float theta = random.nextFloat() * 2 * (float) Math.PI;
                         float beta = random.nextFloat() * (float) Math.PI;
@@ -303,8 +303,8 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
 
     public boolean canAttack(LivingEntity target) {
         return super.canAttack(target) && !(target instanceof VisualNeuron) && (
-                //大师始终可以攻击，非大师瞬移后短时间不攻击
-                difficult || !(skills.index == 3 && skills.tick < 25))
+                //ftw 始终可以攻击，非ftw瞬移后短时间不攻击
+                this.isFtw() || !(skills.index == 3 && skills.tick < 25))
                 ;
 
     }

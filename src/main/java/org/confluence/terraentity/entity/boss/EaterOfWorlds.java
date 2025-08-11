@@ -16,7 +16,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
-import org.confluence.terraentity.entity.ai.MobSkill;
+import org.confluence.terraentity.entity.ai.fsm.MobSkill;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.utils.CameraShakeData;
 import org.confluence.terraentity.utils.CameraShakeManager;
@@ -109,7 +109,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                 (AbstractTerraBossBase)->{
                     isDashing = true;
 
-                    if(difficult) moveSpeed = moveSpeedBase * 2f;
+                    if(this.isFtw()) moveSpeed = moveSpeedBase * 2f; // ftw 神吞的冲刺加速
                     else moveSpeed = moveSpeedBase * 1.5f;
 
                     turnSpeed = 5F;

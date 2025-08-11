@@ -5,9 +5,11 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,51 +24,96 @@ import org.confluence.terraentity.entity.ai.goal.RandomWanderGoal;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 不可分裂的蠕虫类
  */
-public class BaseWarm extends AbstractMonster {
+public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster {
 
-    private int currentSegmentCount = 12;
-    private float segInternal = 1.6f;
-    public BaseWarmPart[] bodySegments;
+    protected float segInternal = 1.6f;
+    public List<T> bodySegments;
+    int timeToDive = 0;
 
-    public BaseWarm(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
+    public BaseWorm(EntityType<? extends BaseWorm> type, Level level, AttributeBuilder builder) {
         super(type, level, builder);
         this.collisionProperties = new CollisionProperties(3,3,0);
-        bodySegments = new BaseWarmPart[currentSegmentCount];
+        int currentSegmentCount = getSegmentCount();
+//        bodySegments = new BaseWormPart[currentSegmentCount];
+        bodySegments = new ArrayList<>(currentSegmentCount);
         for (int i = 0; i < currentSegmentCount; i++) {
-            bodySegments[i] = new BaseWarmPart(this);
-
+            bodySegments.add(createPart(i+1));
         }
-        bodySegments[currentSegmentCount - 1].isTail = true;
+        bodySegments.get(currentSegmentCount - 1).isTail = true;
         this.noPhysics = true;
         this.noCulling = true;
+    }
+
+    protected abstract T createPart(int index);
+
+    public static BaseWormPart createSimplePart(BaseWorm worm, int index){
+        return new BaseWormPart(worm, index);
+    }
+
+    public static BaseWorm<BaseWormPart> simpleWorm(EntityType<? extends BaseWorm> type, Level level, AttributeBuilder builder) {
+        return new BaseWorm<>(type, level, builder) {
+            @Override
+            protected BaseWormPart createPart(int index) {
+                return createSimplePart(this, index);
+            }
+        };
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new ComeAndBackDashAttackGoal(this, 16));
-        this.goalSelector.addGoal(5, new RandomWanderGoal(this, 30));
+        this.goalSelector.addGoal(1, new ComeAndBackDashAttackGoal(this, 16){
+            @Override
+            public boolean canUse() {
+                return super.canUse() && BaseWorm.this.timeToDive > 0;
+            }
+        });
+        this.goalSelector.addGoal(5, new RandomWanderGoal(this, 30){
+            @Override
+            public boolean canUse() {
+                return super.canUse() || BaseWorm.this.timeToDive < 0;
+            }
+        });
 
         this.targetSelector.addGoal(1,new AccelerateOnSeeingGoal(this,0.25f));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class,false, LivingEntity::canBeSeenAsEnemy));
     }
 
+    protected int getSegmentCount() {
+        return 12;
+    }
+
     @Override
     public void tick() {
         super.tick();
+        if(this.isInWall()){
+            this.timeToDive = 200;
+        }else{
+            --this.timeToDive;
+        }
         if(!isAlive()) {
             this.noPhysics = false;
             addDeltaMovement(new Vec3(0,-0.05f,0));
 //            return;
         }
-        for (int i = 0; i < this.bodySegments.length; i++) {
+        for (int i = 0; i < this.bodySegments.size(); i++) {
 
-            Entity leader = i == 0 ? this : this.bodySegments[i - 1];
-            BaseWarmPart cur = this.bodySegments[i];
+            Entity leader = i == 0 ? this : this.bodySegments.get(i - 1);
+            BaseWormPart cur = this.bodySegments.get(i);
             cur.tick();
+            cur.xxo = cur.getX();
+            cur.yyo = cur.getY();
+            cur.zzo = cur.getZ();
+            cur.xRotOO = cur.getXRot();
+//            this.setYRot(this.getYRot() % 360);
+            cur.yRotOO = cur.getYRot();
+
 
             double followX = leader.getX();
             double followY = leader.getY();
@@ -111,13 +158,32 @@ public class BaseWarm extends AbstractMonster {
 
             cur.setDeltaMovement(destX - cur.getX(), destY - cur.getY(), destZ - cur.getZ());
             cur.moveTo(destX, destY, destZ, yaw, pitch);
-
+//            cur.setPosRaw(destX, destY, destZ);
+//            cur.setYRot(yaw);
+//            cur.setXRot(pitch);
+//            this.setOldPosAndRot();
+//            cur.setPos(destX, destY, destZ);
             cur.doCollisionAttack(e->e instanceof LivingEntity living && canAttack(living),
                     e->doHurtTarget(e)
                     );
 
         }
     }
+
+    private float adjustTargetAngle(float target, float current) {
+        target = target % 360;
+        current = current % 360;
+        float diff = target - current;
+
+        // 规范化角度差到[-180, 180]范围
+        if (diff > 180) {
+            target -= 360;
+        } else if (diff < -180) {
+            target += 360;
+        }
+        return target;
+    }
+
     @Override
     protected void tickDeath() {
         if(this.onGround()) {
@@ -138,7 +204,7 @@ public class BaseWarm extends AbstractMonster {
 
     @Override
     public @Nullable PartEntity<?>[] getParts() {
-        return bodySegments;
+        return bodySegments.toArray(new PartEntity[0]);
     }
 
     @Override
@@ -151,8 +217,8 @@ public class BaseWarm extends AbstractMonster {
     @Override
     public void recreateFromPacket(ClientboundAddEntityPacket packet) {
         super.recreateFromPacket(packet);
-        for (int i = 0; i < this.bodySegments.length; i++) {
-            this.bodySegments[i].setId(this.getId() + i + 1);
+        for (int i = 0; i < this.bodySegments.size(); i++) {
+            this.bodySegments.get(i).setId(this.getId() + i + 1);
         }
     }
 
@@ -176,10 +242,11 @@ public class BaseWarm extends AbstractMonster {
     }
     public void onRemovedFromLevel() {
         super.onRemovedFromLevel();
-        for (int i = 0; i < this.bodySegments.length; i++) {
-            if(this.bodySegments[i]!= null && !this.bodySegments[i].isRemoved()) {
-                this.bodySegments[i].onRemovedFromLevel();
+        for (T bodySegment : this.bodySegments) {
+            if (bodySegment != null && !bodySegment.isRemoved()) {
+                bodySegment.onRemovedFromLevel();
             }
         }
     }
+
 }

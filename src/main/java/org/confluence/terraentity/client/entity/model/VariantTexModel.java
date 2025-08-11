@@ -29,6 +29,9 @@ public class VariantTexModel<T extends Entity & IVariant<Integer> & GeoEntity> e
 
     @Override
     public ResourceLocation getTextureResource(T entity) {
+        if(entity.getTexture() == null){
+            return TerraEntity.space("textures/entity/default.png");
+        }
         return entity.getTexture();
     }
     @Override

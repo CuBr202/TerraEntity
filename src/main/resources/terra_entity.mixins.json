@@ -12,6 +12,7 @@
     "accessor.EntityAccessor",
     "accessor.ProjectileWeaponAccessor",
     "accessor.SlimeAccessor",
+    "azurelib.AzurelibFileLoaderMixin",
     "client.ServerChunkLoadingManagerMixin"
   ],
   "client": [

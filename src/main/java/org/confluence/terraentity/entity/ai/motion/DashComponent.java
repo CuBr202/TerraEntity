@@ -38,6 +38,9 @@ public class DashComponent {
             setNearestTargetPos(target, distance, height);
             direction = targetPos.subtract(owner.position());
             owner.addDeltaMovement(direction.scale(speed * 0.01f));
+            if(owner.distanceToSqr(target)<2){
+                owner.setDeltaMovement(owner.getDeltaMovement().scale(0.95f));
+            }
         }
     }
 

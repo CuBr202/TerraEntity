@@ -17,16 +17,18 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 /**
  * 蠕虫体节
  */
-public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICollisionAttackEntity<BaseWarmPart> {
+public class BaseWormPart extends PartEntity<BaseWorm> implements GeoEntity, ICollisionAttackEntity<BaseWormPart> {
 
     private final EntityDimensions size;
     public boolean isTail = false;
+    public int index;
 
-    public BaseWarmPart(BaseWarm parent) {
+    public BaseWormPart(BaseWorm parent, int index) {
         super(parent);
         this.size = this.getParent().getDimensions(Pose.STANDING);
 
         this.setBoundingBox(parent.getBoundingBox());
+        this.index = index;
     }
     public final void updateLastPos() {
         this.moveTo(this.getX(), this.getY(), this.getZ());
@@ -38,6 +40,8 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICo
     public double xxo;
     public double yyo;
     public double zzo;
+    public float xRotOO;
+    public float yRotOO;
 
     public int deathTime;
     public int hurtTime;
@@ -51,13 +55,15 @@ public class BaseWarmPart extends PartEntity<BaseWarm> implements GeoEntity, ICo
         if(this.isRemoved()){
             return;
         }
-        updateLastPos();
+//        updateLastPos();
         this.xxo = this.getX();
         this.yyo = this.getY();
         this.zzo = this.getZ();
         this.deathTime = this.getParent().deathTime;
         this.hurtTime = Math.max(0, this.hurtTime - 1);
-        super.tick();
+
+//        super.tick();
+
     }
 
     @Override

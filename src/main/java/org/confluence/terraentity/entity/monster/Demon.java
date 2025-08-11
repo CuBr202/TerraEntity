@@ -80,4 +80,5 @@ public class Demon extends Harpy {
             level().addFreshEntity(proj);
         }
     }
+
 }

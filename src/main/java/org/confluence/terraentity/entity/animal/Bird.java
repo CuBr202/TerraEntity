@@ -24,6 +24,7 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -48,7 +49,7 @@ import java.util.Iterator;
 /**
  * 套用的鹦鹉ai，确实好用
  */
-public class Bird extends Animal implements GeoEntity {
+public class Bird extends Animal implements GeoEntity, FlyingAnimal {
 
 
     public float flap;
@@ -93,6 +94,10 @@ public class Bird extends Animal implements GeoEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0).add(Attributes.FLYING_SPEED, 0.4000000059604645).add(Attributes.MOVEMENT_SPEED, 0.20000000298023224).add(Attributes.ATTACK_DAMAGE, 3.0);
+    }
+
+    public static AttributeSupplier.Builder createInspectAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 3.0).add(Attributes.FLYING_SPEED, 0.25).add(Attributes.MOVEMENT_SPEED, 0.18).add(Attributes.ATTACK_DAMAGE, 3.0);
     }
 
     protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
@@ -254,9 +259,9 @@ public class Bird extends Animal implements GeoEntity {
     }
 
     
-    static class BirdWanderGoal extends WaterAvoidingRandomFlyingGoal {
-        public BirdWanderGoal(PathfinderMob p_186224_, double p_186225_) {
-            super(p_186224_, p_186225_);
+    public static class BirdWanderGoal extends WaterAvoidingRandomFlyingGoal {
+        public BirdWanderGoal(PathfinderMob mob, double speedModifier) {
+            super(mob, speedModifier);
         }
 
         @Nullable

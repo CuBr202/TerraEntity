@@ -26,18 +26,18 @@ public class TEBossEntities {
 
     public static final DeferredHolder<EntityType<?>, EntityType<KingSlime>> KING_SLIME = TEEntities.ENTITIES.register("king_slime", () -> EntityType.Builder.<KingSlime>of(KingSlime::new, MobCategory.MONSTER).sized(0.6f, 0.6f).clientTrackingRange(10).build(TEEntities.Key("king_slime")));
     public static final DeferredHolder<EntityType<?>, EntityType<CrownOfKingSlimeModelEntity>> CROWN_OF_KING_SLIME_MODEL = TEEntities.ENTITIES.register("crown_of_king_slime_model", () -> EntityType.Builder.<CrownOfKingSlimeModelEntity>of(CrownOfKingSlimeModelEntity::new, MobCategory.MISC).sized(0.0F, 0.0F).clientTrackingRange(10).build(TEEntities.Key("crown_of_king_slime_model")));
-    public static final DeferredHolder<EntityType<?>, EntityType<EyeOfCthulhu>> EYE_OF_CTHULHU = TEEntities.registerEntity("eye_of_cthulhu", EyeOfCthulhu::new, 2.04F, 2.04F);
-    public static final DeferredHolder<EntityType<?>, EntityType<EaterOfWorldsSegment>> EATER_OF_WORLDS_SEGMENT = TEEntities.registerEntity("eater_of_worlds_segment", EaterOfWorldsSegment::new, 2F, 2F);
-    public static final DeferredHolder<EntityType<?>, EntityType<EaterOfWorlds>> EATER_OF_WORLDS = TEEntities.registerEntity("eater_of_worlds", EaterOfWorlds::new, 3F, 2F);
-    public static final DeferredHolder<EntityType<?>, EntityType<BrainOfCthulhu>> BRAIN_OF_CTHULHU = TEEntities.registerEntity("brain_of_cthulhu", BrainOfCthulhu::new, 4F, 4F);
-    public static final DeferredHolder<EntityType<?>, EntityType<BrainFake>> BRAIN_FAKE = TEEntities.registerEntity("brain_fake", BrainFake::new, 4F, 4F);
-    public static final DeferredHolder<EntityType<?>, EntityType<QueenBee>> QUEEN_BEE = TEEntities.registerEntity("queen_bee", QueenBee::new, 2.5F, 3F);
-    public static final DeferredHolder<EntityType<?>, EntityType<Skeletron>> SKELETRON = TEEntities.registerEntity("skeletron", Skeletron::new, 2.3F, 2.3F);
-    public static final DeferredHolder<EntityType<?>, EntityType<SkeletronHand>> SKELETRON_HAND = TEEntities.registerEntity("skeletron_hand", SkeletronHand::new, 2F, 2F);
-    public static final DeferredHolder<EntityType<?>, EntityType<WallOfFlesh>> WALL_OF_FLESH = TEEntities.registerEntity("wall_of_flesh", WallOfFlesh::new, 0.1F,0.1F);
-    public static final DeferredHolder<EntityType<?>, EntityType<WallOfFleshEye>> WALL_OF_FLESH_EYE = TEEntities.registerEntity("wall_of_flesh_eye", WallOfFleshEye::new, 4.15F, 4.15F);
-    public static final DeferredHolder<EntityType<?>, EntityType<WallOfFleshMouth>> WALL_OF_FLESH_MOUTH = TEEntities.registerEntity("wall_of_flesh_mouth", WallOfFleshMouth::new, 4.15F, 4.15F);
-    public static final DeferredHolder<EntityType<?>, EntityType<DungeonGuardian>> DUNGEON_GUARDIAN = TEEntities.registerEntity("dungeon_guardian", DungeonGuardian::new, 2.5F, 2.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<EyeOfCthulhu>> EYE_OF_CTHULHU = TEEntities.registerMonster("eye_of_cthulhu", EyeOfCthulhu::new, 2.04F, 2.04F);
+    public static final DeferredHolder<EntityType<?>, EntityType<EaterOfWorldsSegment>> EATER_OF_WORLDS_SEGMENT = TEEntities.registerMonster("eater_of_worlds_segment", EaterOfWorldsSegment::new, 2F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<EaterOfWorlds>> EATER_OF_WORLDS = TEEntities.registerMonster("eater_of_worlds", EaterOfWorlds::new, 3F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BrainOfCthulhu>> BRAIN_OF_CTHULHU = TEEntities.registerMonster("brain_of_cthulhu", BrainOfCthulhu::new, 4F, 4F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BrainFake>> BRAIN_FAKE = TEEntities.registerMonster("brain_fake", BrainFake::new, 4F, 4F);
+    public static final DeferredHolder<EntityType<?>, EntityType<QueenBee>> QUEEN_BEE = TEEntities.registerMonster("queen_bee", QueenBee::new, 2.5F, 3F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Skeletron>> SKELETRON = TEEntities.registerMonster("skeletron", Skeletron::new, 2.3F, 2.3F);
+    public static final DeferredHolder<EntityType<?>, EntityType<SkeletronHand>> SKELETRON_HAND = TEEntities.registerMonster("skeletron_hand", SkeletronHand::new, 2F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<WallOfFlesh>> WALL_OF_FLESH = TEEntities.registerMonster("wall_of_flesh", WallOfFlesh::new, 0.1F,0.1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<WallOfFleshEye>> WALL_OF_FLESH_EYE = TEEntities.registerMonster("wall_of_flesh_eye", WallOfFleshEye::new, 4.15F, 4.15F);
+    public static final DeferredHolder<EntityType<?>, EntityType<WallOfFleshMouth>> WALL_OF_FLESH_MOUTH = TEEntities.registerMonster("wall_of_flesh_mouth", WallOfFleshMouth::new, 4.15F, 4.15F);
+    public static final DeferredHolder<EntityType<?>, EntityType<DungeonGuardian>> DUNGEON_GUARDIAN = TEEntities.registerMonster("dungeon_guardian", DungeonGuardian::new, 2.5F, 2.5F);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

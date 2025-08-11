@@ -96,6 +96,10 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.ANTLION_SWARMER.get(), "蚁狮蜂");
         add(TEMonsterEntities.GIANT_ANTLION_SWARMER.get(), "巨型蚁狮蜂");
         add(TEMonsterEntities.GHOST.get(), "鬼魂");
+        add(TEMonsterEntities.GRANITE_ELEMENTAL.get(), "花岗精");
+        add(TEMonsterEntities.PIXIE.get(), "妖精");
+        add(TEMonsterEntities.WYVERN.get(), "飞龙");
+
 
 
         // boss
@@ -173,6 +177,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.TOMB_CRAWLER_SPAWN_EGG.get(), "墓穴爬虫刷怪蛋");
         add(TESpawnEggItems.ANTLION_SWARMER_SPAWN_EGG.get(), "蚁狮蜂刷怪蛋");
         add(TESpawnEggItems.GIANT_ANTLION_SWARMER_SPAWN_EGG.get(), "巨型蚁狮蜂刷怪蛋");
+        add(TESpawnEggItems.GRANTITE_ELEMENTAL_SPAWN_EGG.get(), "花岗精刷怪蛋");
+
         add(TESpawnEggItems.CAVE_BAT_SPAWN_EGG.get(), "洞穴蝙蝠刷怪蛋");
         add(TESpawnEggItems.ICE_BAT_SPAWN_EGG.get(), "冰雪蝙蝠刷怪蛋");
         add(TESpawnEggItems.JUNGLE_BAT_SPAWN_EGG.get(), "丛林蝙蝠刷怪蛋");
@@ -235,6 +241,26 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEAnimals.CARDINAL.get(), "红雀");
 
 
+        add(TEAnimals.CRAB.get(), "螃蟹");
+        add(TEAnimals.GLOWING_SNAIL.get(), "发光蜗牛");
+        add(TEAnimals.GRUBBY.get(), "蛆虫");
+        add(TEAnimals.MAGGOT.get(), "蚁子");
+        add(TEAnimals.MAGMA_SNAIL.get(), "岩浆蜗牛");
+        add(TEAnimals.SLUGGY.get(), "鼻涕虫");
+        add(TEAnimals.SNAIL.get(), "蜗牛");
+
+        add(TEAnimals.BUTTERFLY.get(), "蝴蝶");
+        add(TEAnimals.HELL_BUTTERFLY.get(), "熔岩蝴蝶");
+        add(TEAnimals.DRAGONFLY.get(), "蜻蜓");
+        add(TEAnimals.FAIRY.get(), "仙灵");
+        add(TEAnimals.FEALING.get(), "飞灵");
+        add(TEAnimals.GRASSHOPPER.get(), "蚂蚱");
+        add(TEAnimals.LADYBUG.get(), "瓢虫");
+        add(TEAnimals.SCORPION.get(), "蝎子");
+        add(TEAnimals.WORM.get(), "蠕虫");
+
+
+
         // boss
         add(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
         add(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
@@ -274,6 +300,11 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.GOBLIN_SCOUT_SPAWN_EGG.get(), "哥布林侦察兵刷怪蛋");
         add(TESpawnEggItems.ANGER_GOBLIN_SPAWN_EGG.get(), "愤怒哥布林刷怪蛋");
 
+        // 肉后怪物
+        add(TESpawnEggItems.WYVERN_SPAWN_EGG.get(), "飞龙刷怪蛋");
+        add(TESpawnEggItems.PIXIE_SPAWN_EGG.get(), "妖精刷怪蛋");
+
+
         add(TESpawnEggItems.GUIDE_SPAWN_EGG.get(), "向导刷怪蛋");
         add(TESpawnEggItems.DEMOLITIONIST_SPAWN_EGG.get(), "爆破专家刷怪蛋");
         add(TESpawnEggItems.GOBLIN_TINKERER_SPAWN_EGG.get(), "哥布林工匠刷怪蛋");
@@ -303,6 +334,31 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.BIRD_SPAWN_EGG.get(), "鸟刷怪蛋");
         add(TESpawnEggItems.BLUE_JAY_SPAWN_EGG.get(), "冠蓝鸦刷怪蛋");
         add(TESpawnEggItems.CARDINAL_SPAWN_EGG.get(), "红雀刷怪蛋");
+
+
+
+        add(TESpawnEggItems.CRAB_SPAWN_EGG.get(), "螃蟹刷怪蛋");
+        add(TESpawnEggItems.GLOWING_SNAIL_SPAWN_EGG.get(), "发光蜗牛刷怪蛋");
+        add(TESpawnEggItems.GRUBBY_SPAWN_EGG.get(), "蛆虫刷怪蛋");
+        add(TESpawnEggItems.MAGGOT_SPAWN_EGG.get(), "蚁子刷怪蛋");
+        add(TESpawnEggItems.MAGMA_SNAIL_SPAWN_EGG.get(), "岩浆蜗牛刷怪蛋");
+        add(TESpawnEggItems.SLUGGY_SPAWN_EGG.get(), "鼻涕虫刷怪蛋");
+        add(TESpawnEggItems.SNAIL_SPAWN_EGG.get(), "蜗牛刷怪蛋");
+
+        add(TESpawnEggItems.BUTTERFLY_SPAWN_EGG.get(), "蝴蝶刷怪蛋");
+        add(TESpawnEggItems.HELL_BUTTERFLY_SPAWN_EGG.get(), "熔岩蝴蝶刷怪蛋");
+        add(TESpawnEggItems.DRAGONFLY_SPAWN_EGG.get(), "蜻蜓刷怪蛋");
+        add(TESpawnEggItems.FAIRY_SPAWN_EGG.get(), "仙灵刷怪蛋");
+        add(TESpawnEggItems.FEALING_SPAWN_EGG.get(), "飞灵刷怪蛋");
+        add(TESpawnEggItems.GRASSHOPPER_SPAWN_EGG.get(), "蚂蚱刷怪蛋");
+        add(TESpawnEggItems.LADYBUG_SPAWN_EGG.get(), "瓢虫刷怪蛋");
+        add(TESpawnEggItems.SCORPION_SPAWN_EGG.get(), "蝎子刷怪蛋");
+        add(TESpawnEggItems.WORM_SPAWN_EGG.get(), "蠕虫刷怪蛋");
+
+
+
+
+
 
 
         // 召唤杖

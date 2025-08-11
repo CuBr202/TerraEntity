@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.IAngryMob;
 import org.confluence.terraentity.config.ServerConfig;
-import org.confluence.terraentity.entity.ai.MobSkill;
+import org.confluence.terraentity.entity.ai.fsm.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.monster.LittleHornet;
 import org.confluence.terraentity.entity.proj.LineProj;
@@ -148,7 +148,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                             Math.abs(target.getY() - e.getY()) > 2 ||
                             Math.abs(this.getXRot()) > 10
                     ){
-                        if(difficult && random.nextBoolean())
+                        if(this.isExpertise() && random.nextBoolean())
                             skills.tick--;
                     }
 
@@ -176,7 +176,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
 
                 .onTick(e->{
                     if(getTarget() == null) return;
-                    dashComponent.uniformMove(getMoveSpeed() * 2f * (isAngry() && difficult? 1.5f : 1f));
+                    dashComponent.uniformMove(getMoveSpeed() * 2f * (isAngry() && this.isExpertise()? 1.5f : 1f));
                     if(distanceToSqr(target) > 15 * 15) skills.forceEnd();
 
                 })

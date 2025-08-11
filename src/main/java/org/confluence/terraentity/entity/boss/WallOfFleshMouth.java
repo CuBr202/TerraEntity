@@ -14,7 +14,8 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.api.entity.Boss;
-import org.confluence.terraentity.entity.monster.BaseWarm;
+import org.confluence.terraentity.entity.monster.BaseWorm;
+import org.confluence.terraentity.entity.monster.BaseWormPart;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
@@ -116,7 +117,12 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> im
     private void spawnLeech(LivingEntity target) {
         if (level() instanceof ServerLevel) {
             ServerLevel serverLevel = (ServerLevel) level();
-            BaseWarm warm = new BaseWarm(TEMonsterEntities.LEECH.get(), this.level(), AbstractPrefab.WARM_BUILDER.get()){
+            BaseWorm warm = new BaseWorm(TEMonsterEntities.LEECH.get(), this.level(), AbstractPrefab.WARM_BUILDER.get()){
+                @Override
+                protected BaseWormPart createPart(int index) {
+                    return new BaseWormPart(this, index);
+                }
+
                 @Override
                 public boolean hurt(DamageSource source, float amount) {
                     if(source.is(DamageTypes.MOB_ATTACK) && source.getEntity().is(WallOfFleshMouth.this))

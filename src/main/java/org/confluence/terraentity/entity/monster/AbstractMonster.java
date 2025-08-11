@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -23,6 +24,7 @@ import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
+import org.confluence.terraentity.entity.util.DifficultSelector;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +42,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     protected CollisionProperties collisionProperties = new CollisionProperties(10, 20, 0);
     public AttributeBuilder builder;
     protected boolean dirty = true;
+    protected DifficultSelector difficultSelector;
 
     public AbstractMonster(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level);
@@ -54,6 +57,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
 //        this.builder.modify(this);
 
         this.xpReward = builder.xpReward;
+        this.difficultSelector = new DifficultSelector(level());
     }
 
 //    @Override
@@ -201,7 +205,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         super.tick();
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
         if(!level().isClientSide && builder.attachAttack && isAlive()){
-            doCollisionAttack(e->e instanceof LivingEntity living && canAttack(living) && e.getType() != this.getType(),
+            doCollisionAttack(e->e instanceof LivingEntity living && canAttack(living) && e.getType() != this.getType() && this.collisionTestAddition(living),
                     this::doHurtTarget
             );
         }
@@ -221,10 +225,15 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
                         entity != this &&!(entity instanceof AbstractTerraBossBase);
     }
 
+    protected boolean collisionTestAddition(LivingEntity entity){
+        return !(entity instanceof Enemy);
+    }
+
     @Override
     public CollisionProperties getCollisionProperties() {
         return collisionProperties;
     }
+
 
     @Override
     public boolean shouldDoCollision() {
