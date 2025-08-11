@@ -153,8 +153,8 @@ public class TEMonsterEntities {
 
 
     /* *********肉后***************** */
-    public static final DeferredHolder<EntityType<?>, EntityType<Wyvern<BaseWormPart>>> WYVERN = TEEntities.registerMonster("wyvern", (e, l) -> new Wyvern<>(e, l, new AbstractPrefab(30, 2, 16, 50, 0.75f, 0.28f).getPrefab()), 1F, 1F);
-    public static final DeferredHolder<EntityType<?>, EntityType<Pixie>> PIXIE = TEEntities.registerMonster("pixie", (e, l) -> new Pixie(e, l, new AbstractPrefab(30, 2, 16, 16, 0.75f, 0.28f).getPrefab()), 1F, 1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Wyvern<BaseWormPart>>> WYVERN = TEEntities.registerMonster("wyvern", (e, l) -> new Wyvern<>(e, l, new AbstractPrefab(2080, 2, 41, 50, 1f, 0.28f).getPrefab()), 1F, 1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Pixie>> PIXIE = TEEntities.registerMonster("pixie", (e, l) -> new Pixie(e, l, new AbstractPrefab(78, 5, 28, 16, 0.46f, 0.28f).getPrefab()), 1F, 1F);
 
 
     @OnlyIn(Dist.CLIENT)

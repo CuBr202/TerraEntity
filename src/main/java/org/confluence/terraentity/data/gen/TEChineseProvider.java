@@ -244,17 +244,17 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEAnimals.CRAB.get(), "螃蟹");
         add(TEAnimals.GLOWING_SNAIL.get(), "发光蜗牛");
         add(TEAnimals.GRUBBY.get(), "蛆虫");
-        add(TEAnimals.MAGGOT.get(), "蚁子");
+        add(TEAnimals.MAGGOT.get(), "蝇蛆");
         add(TEAnimals.MAGMA_SNAIL.get(), "岩浆蜗牛");
         add(TEAnimals.SLUGGY.get(), "鼻涕虫");
         add(TEAnimals.SNAIL.get(), "蜗牛");
 
         add(TEAnimals.BUTTERFLY.get(), "蝴蝶");
-        add(TEAnimals.HELL_BUTTERFLY.get(), "熔岩蝴蝶");
+        add(TEAnimals.HELL_BUTTERFLY.get(), "地狱蝴蝶");
         add(TEAnimals.DRAGONFLY.get(), "蜻蜓");
         add(TEAnimals.FAIRY.get(), "仙灵");
         add(TEAnimals.FEALING.get(), "飞灵");
-        add(TEAnimals.GRASSHOPPER.get(), "蚂蚱");
+        add(TEAnimals.GRASSHOPPER.get(), "蚱蜢");
         add(TEAnimals.LADYBUG.get(), "瓢虫");
         add(TEAnimals.SCORPION.get(), "蝎子");
         add(TEAnimals.WORM.get(), "蠕虫");
@@ -340,17 +340,17 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.CRAB_SPAWN_EGG.get(), "螃蟹刷怪蛋");
         add(TESpawnEggItems.GLOWING_SNAIL_SPAWN_EGG.get(), "发光蜗牛刷怪蛋");
         add(TESpawnEggItems.GRUBBY_SPAWN_EGG.get(), "蛆虫刷怪蛋");
-        add(TESpawnEggItems.MAGGOT_SPAWN_EGG.get(), "蚁子刷怪蛋");
+        add(TESpawnEggItems.MAGGOT_SPAWN_EGG.get(), "蝇蛆刷怪蛋");
         add(TESpawnEggItems.MAGMA_SNAIL_SPAWN_EGG.get(), "岩浆蜗牛刷怪蛋");
         add(TESpawnEggItems.SLUGGY_SPAWN_EGG.get(), "鼻涕虫刷怪蛋");
         add(TESpawnEggItems.SNAIL_SPAWN_EGG.get(), "蜗牛刷怪蛋");
 
         add(TESpawnEggItems.BUTTERFLY_SPAWN_EGG.get(), "蝴蝶刷怪蛋");
-        add(TESpawnEggItems.HELL_BUTTERFLY_SPAWN_EGG.get(), "熔岩蝴蝶刷怪蛋");
+        add(TESpawnEggItems.HELL_BUTTERFLY_SPAWN_EGG.get(), "地狱蝴蝶刷怪蛋");
         add(TESpawnEggItems.DRAGONFLY_SPAWN_EGG.get(), "蜻蜓刷怪蛋");
         add(TESpawnEggItems.FAIRY_SPAWN_EGG.get(), "仙灵刷怪蛋");
         add(TESpawnEggItems.FEALING_SPAWN_EGG.get(), "飞灵刷怪蛋");
-        add(TESpawnEggItems.GRASSHOPPER_SPAWN_EGG.get(), "蚂蚱刷怪蛋");
+        add(TESpawnEggItems.GRASSHOPPER_SPAWN_EGG.get(), "蚱蜢刷怪蛋");
         add(TESpawnEggItems.LADYBUG_SPAWN_EGG.get(), "瓢虫刷怪蛋");
         add(TESpawnEggItems.SCORPION_SPAWN_EGG.get(), "蝎子刷怪蛋");
         add(TESpawnEggItems.WORM_SPAWN_EGG.get(), "蠕虫刷怪蛋");
