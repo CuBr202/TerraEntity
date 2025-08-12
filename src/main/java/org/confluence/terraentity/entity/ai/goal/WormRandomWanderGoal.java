@@ -5,21 +5,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.api.entity.IHeightControlMob;
 import org.confluence.terraentity.api.entity.animation.Curve;
 import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
 
 /**
  * 蠕虫游走ai
  */
-public class RandomWanderGoal extends Goal {
+public class WormRandomWanderGoal<T extends Mob & IHeightControlMob> extends Goal {
     private Vec3 randomTarget;
     private int tickToChangeTarget;
     private final int _tickToChangeTarget;
-    private final Mob worm;
+    private final T worm;
 
     Curve curve;
 
-    public RandomWanderGoal(Mob worm, int tickToChangeTarget) {
+    public WormRandomWanderGoal(T worm, int tickToChangeTarget) {
         this.worm = worm;
         this._tickToChangeTarget = tickToChangeTarget;
         this.tickToChangeTarget = _tickToChangeTarget;
@@ -35,12 +36,16 @@ public class RandomWanderGoal extends Goal {
             pos = pos.below();
             delta++;
         }
-        float f0 = (float) (randomTarget.y - delta) + worm.getRandom().nextIntBetweenInclusive(-3,5); // 控制高度起伏
+        float f0 = (float) (this.getBaseHeight(randomTarget.add(0,randomTarget.y - delta, 0)) + worm.getRandom().nextIntBetweenInclusive(-3,5)); // 控制高度起伏
 //        float f1 = f0 < -65 ? -130 - f0 : f0;
         randomTarget = new Vec3(randomTarget.x, f0, randomTarget.z);
 
         // 此时randomTarget为接触地面的点或者地面以下
         return randomTarget;
+    }
+
+    protected double getBaseHeight(Vec3 pos){ // 控制游走高度
+        return worm.wrapWanderHeight(pos);
     }
 
     @Override

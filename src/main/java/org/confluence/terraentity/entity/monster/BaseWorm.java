@@ -18,9 +18,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.entity.PartEntity;
+import org.confluence.terraentity.api.entity.IHeightControlMob;
 import org.confluence.terraentity.entity.ai.goal.AccelerateOnSeeingGoal;
 import org.confluence.terraentity.entity.ai.goal.ComeAndBackDashAttackGoal;
-import org.confluence.terraentity.entity.ai.goal.RandomWanderGoal;
+import org.confluence.terraentity.entity.ai.goal.WormRandomWanderGoal;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * 不可分裂的蠕虫类
  */
-public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster {
+public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster implements IHeightControlMob {
 
     protected float segInternal = 1.6f;
     public List<T> bodySegments;
@@ -56,11 +57,25 @@ public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster {
         return new BaseWormPart(worm, index);
     }
 
+    /**
+     * 常规的地下蠕虫
+     */
     public static BaseWorm<BaseWormPart> simpleWorm(EntityType<? extends BaseWorm> type, Level level, AttributeBuilder builder) {
         return new BaseWorm<>(type, level, builder) {
+
             @Override
             protected BaseWormPart createPart(int index) {
                 return createSimplePart(this, index);
+            }
+
+            @Override
+            public double wrapWanderHeight(Vec3 pos){
+                return Math.min(pos.y, 20);
+            }
+
+            @Override
+            public boolean isAttackableHeight(float originalHeight){
+                return originalHeight < 50;
             }
         };
     }
@@ -68,13 +83,13 @@ public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new ComeAndBackDashAttackGoal(this, 16){
+        this.goalSelector.addGoal(1, new ComeAndBackDashAttackGoal<>(this, 16){
             @Override
             public boolean canUse() {
                 return super.canUse() && BaseWorm.this.timeToDive > 0;
             }
         });
-        this.goalSelector.addGoal(5, new RandomWanderGoal(this, 30){
+        this.goalSelector.addGoal(5, new WormRandomWanderGoal<>(this, 30){
             @Override
             public boolean canUse() {
                 return super.canUse() || BaseWorm.this.timeToDive < 0;
@@ -250,6 +265,16 @@ public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster {
                 bodySegment.onRemovedFromLevel();
             }
         }
+    }
+
+    @Override
+    public double wrapWanderHeight(Vec3 pos){
+        return pos.y;
+    }
+
+    @Override
+    public boolean isAttackableHeight(float originalHeight){
+        return true;
     }
 
 }

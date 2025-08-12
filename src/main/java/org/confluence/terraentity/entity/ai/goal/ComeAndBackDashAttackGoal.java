@@ -4,20 +4,21 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.api.entity.IHeightControlMob;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.utils.TEUtils;
 
 import java.util.EnumSet;
 
-public class ComeAndBackDashAttackGoal extends Goal {
+public class ComeAndBackDashAttackGoal<T extends Mob & IHeightControlMob> extends Goal {
     protected boolean randomDirection;
-    protected final Mob worm;
+    protected final T worm;
     private final float _distanceToTurn;
     int soundTick = 0;
     int soundInternal = 50;
     protected boolean turning = false;
 
-    public ComeAndBackDashAttackGoal(Mob worm, float distanceToTurn) {
+    public ComeAndBackDashAttackGoal(T worm, float distanceToTurn) {
         this.worm = worm;
         this._distanceToTurn = distanceToTurn * distanceToTurn;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE,Flag.LOOK));
@@ -25,7 +26,7 @@ public class ComeAndBackDashAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return worm.getTarget() != null;
+        return worm.getTarget() != null && worm.isAttackableHeight((float) worm.getY());
     }
 
     public boolean canContinueToUse() {
