@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -23,6 +25,7 @@ import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -218,10 +221,18 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
         super.tick();
         if(builder!=null && builder.ticker!=null) builder.ticker.accept(this);
         if(!level().isClientSide && builder.attachAttack && isAlive()){
-            doCollisionAttack(e->e instanceof LivingEntity living && canAttack(living) && e.getType() != this.getType(),
+            doCollisionAttack(e->e instanceof LivingEntity living && canAttack(living) && e.getType() != this.getType() && this.collisionTestAddition(living),
                     this::doHurtTarget
             );
         }
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (getType() == TEMonsterEntities.HELL_BAT.get() && pSource.is(DamageTypeTags.IS_FIRE)) {
+            return false;
+        }
+        return super.hurt(pSource, pAmount);
     }
 
     @Override
@@ -230,10 +241,15 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
                         entity != this &&!(entity instanceof AbstractTerraBossBase);
     }
 
+    protected boolean collisionTestAddition(LivingEntity entity){
+        return !(entity instanceof Enemy);
+    }
+
     @Override
     public CollisionProperties getCollisionProperties() {
         return collisionProperties;
     }
+
 
     @Override
     public boolean shouldDoCollision() {

@@ -194,10 +194,6 @@ dependencies {
 //    }
 
 
-
-//    jarJar(files("libs/vigsecurity-1.0.0.jar"))
-//    additionalRuntimeClasspath "com.github.edg_thexu:vigsecurity:1.0.0"
-
 //    implementation fg.deobf("curse.maven:kubejs-238086:5853326")
 //    implementation fg.deobf("curse.maven:architectury-api-419699:5137938")
 //    implementation fg.deobf("curse.maven:rhino-416294:6186971")
@@ -209,6 +205,10 @@ dependencies {
 
 
 //    implementation fg.deobf("curse.maven:pehkui-319596:5393101")
+
+
+    // 兼容azurelib读geo文件
+//    implementation fg.deobf("curse.maven:azurelib-817423:6849107")
 
 }
 tasks.named('processResources', ProcessResources).configure {

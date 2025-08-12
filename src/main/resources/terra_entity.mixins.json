@@ -23,7 +23,8 @@
     "accessor.SlimeAccessor",
     "client.ServerChunkLoadingManagerMixin",
     "container.AbstractContainerMenuMixin",
-    "container.ChestMenuMixin"
+    "container.ChestMenuMixin",
+    "integration.azurelib.AzurelibFileLoaderMixin"
   ],
   "client": [
     "accessor.GameRendererAccessor",

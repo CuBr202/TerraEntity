@@ -17,6 +17,7 @@ import org.confluence.terraentity.entity.ai.brain.sensor.NPCNearbyOthersSensor;
 import org.confluence.terraentity.entity.ai.brain.sensor.NPCNearestVisibleAllianceSensor;
 import org.confluence.terraentity.entity.ai.brain.sensor.NPCNurseTargetSensor;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
+import software.bernie.geckolib.loading.FileLoader;
 
 import java.util.List;
 import java.util.Optional;

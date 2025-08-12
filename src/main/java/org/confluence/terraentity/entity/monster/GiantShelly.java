@@ -50,13 +50,6 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
     public void addSkills() {
     }
 
-/* Variant */
-
-    @Override
-    public void onAddedToWorld(){
-        super.onAddedToWorld();
-        this.setVariant(random.nextInt(2));
-    }
 
     @Override
     protected FSMGoal<GiantShelly> createFSMGoal(EntityDataAccessor<Integer> data) {
@@ -122,10 +115,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
                             }
                         })
                 ;
-                turn2 = new MobSkill<>(RawAnimation.begin().thenLoop("turn2"), 20, 0)
-
-
-                ;
+                turn2 = new MobSkill<>(RawAnimation.begin().thenPlay("turn2"), 20, 0);
 
                 this.addSkill(free);
                 this.addSkill(walk);
@@ -134,6 +124,13 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
                 this.addSkill(turn2);
             }
         };
+    }
+    /* Variant */
+
+    @Override
+    public void onAddedToWorld(){
+        super.onAddedToWorld();
+        this.setVariant(random.nextInt(2));
     }
 
     @Override
