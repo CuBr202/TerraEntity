@@ -13,7 +13,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.*;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -28,6 +27,7 @@ import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.api.entity.IDiscardWhenRespawnEntity;
 import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.config.ServerConfig;
@@ -86,9 +86,7 @@ public class GameEntityEvent {
             // 同步召唤栏信息
             player.getData(TEAttachments.SUMMONER_STORAGE.get()).sync(player);
 
-            if (player.level().getEntities(player, player.getBoundingBox().inflate(32), e -> e instanceof Player && e != player).isEmpty()) {
-                player.level().getEntities(player, player.getBoundingBox().inflate(32), e -> e instanceof Boss).forEach(Entity::discard);
-            }
+            IDiscardWhenRespawnEntity.process(player);
 
         }
     }

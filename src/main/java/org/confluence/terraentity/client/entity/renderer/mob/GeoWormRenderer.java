@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.entity.monster.BaseWorm;
@@ -61,19 +60,22 @@ public class GeoWormRenderer<T extends BaseWorm<S>, S extends BaseWormPart> exte
 
         S part1 = entity.bodySegments.get(0);
         poseStack.pushPose();
-        Vec3 dir = entity.position().subtract(part1.position());
-        float yRot = Mth.lerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
-        double rad = yRot*Math.PI/180;
-        float pitch = (float) (Math.atan2(dir.y,
-                Math.sqrt(dir.x * dir.x + dir.z * dir.z)));
-        poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotation(-pitch));
-
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-        poseStack.popPose();
 
         lerpx = Mth.lerp(partialTick, entity.xOld, entity.getX());
         lerpy = Mth.lerp(partialTick, entity.yOld, entity.getY());
         lerpz = Mth.lerp(partialTick, entity.zOld, entity.getZ());
+        double lerpDx = lerpx - Mth.lerp(partialTick, part1.xOld, part1.getX());
+        double lerpDy = lerpy - Mth.lerp(partialTick, part1.yOld, part1.getY());
+        double lerpDz = lerpz - Mth.lerp(partialTick, part1.zOld, part1.getZ());
+
+        float yRot = Mth.lerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
+        double rad = yRot*Math.PI/180;
+        float pitch = (float) (Math.atan2(lerpDy,
+                Math.sqrt(lerpDx * lerpDx + lerpDz * lerpDz)));
+        poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotation(-pitch));
+
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        poseStack.popPose();
 
         for(S part : entity.bodySegments){
             poseStack.pushPose();
@@ -83,10 +85,13 @@ public class GeoWormRenderer<T extends BaseWorm<S>, S extends BaseWormPart> exte
         }
     }
 
+    protected void rotateX(PoseStack poseStack, T animatable, float partialTick){
+
+    }
+
     @Override
     public RenderType getRenderType(T animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityCutoutNoCull(texture);
-
     }
 
 }

@@ -13,7 +13,7 @@ import org.confluence.lib.color.GlobalColors;
  * <p>
  * 所有boss都应该实现这个接口
  */
-public interface Boss extends Enemy {
+public interface Boss extends Enemy, IDiscardWhenRespawnEntity{
     default boolean shouldShowMessage(){
         return isMainBody();
     }

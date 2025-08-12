@@ -182,19 +182,6 @@ public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster {
         return current;
     }
 
-    private float adjustTargetAngle(float target, float current) {
-        target = target % 360;
-        current = current % 360;
-        float diff = target - current;
-
-        // 规范化角度差到[-180, 180]范围
-        if (diff > 180) {
-            target -= 360;
-        } else if (diff < -180) {
-            target += 360;
-        }
-        return target;
-    }
 
     @Override
     protected void tickDeath() {
@@ -249,9 +236,13 @@ public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster {
             return !blockstate.isAir() && blockstate.isSuffocating(this.level(), p_201942_) && Shapes.joinIsNotEmpty(blockstate.getCollisionShape(this.level(), p_201942_).move((double)p_201942_.getX(), (double)p_201942_.getY(), (double)p_201942_.getZ()), Shapes.create(aabb), BooleanOp.AND);
         });
     }
+
+    @Override
     public boolean isInvulnerableTo(DamageSource source) {
         return super.isInvulnerableTo(source) || source.is(DamageTypes.IN_WALL);
     }
+
+    @Override
     public void onRemovedFromLevel() {
         super.onRemovedFromLevel();
         for (T bodySegment : this.bodySegments) {

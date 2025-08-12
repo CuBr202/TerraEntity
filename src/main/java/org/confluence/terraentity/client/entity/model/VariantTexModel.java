@@ -6,7 +6,10 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.entity.IVariant;
 import software.bernie.geckolib.animatable.GeoEntity;
 
-@SuppressWarnings("removal")
+/**
+ * 变种模型：将贴图与变种id绑定
+ * @param <T>
+ */
 public class VariantTexModel<T extends Entity & IVariant<Integer> & GeoEntity> extends GeoNormalModel<T> {
     private final ResourceLocation animation;
     private final ResourceLocation model;

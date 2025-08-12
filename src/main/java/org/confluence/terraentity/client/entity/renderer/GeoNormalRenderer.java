@@ -47,17 +47,18 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
         poseStack.scale(scale, scale, scale);
         poseStack.translate(0, offsetY, 0);
         if(ifRotX) {
-
-            double rad = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) * Math.PI / 180;
-
-            poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(
-                    Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
-//            poseStack.translate(0, 0, 0);
+            this.rotateX(poseStack, animatable, partialTick);
         }
         this.adjustPose(poseStack, animatable, partialTick);
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
 
+    }
+
+    protected void rotateX(PoseStack poseStack, T animatable, float partialTick){
+        double rad = Mth.lerp(partialTick, animatable.yRotO, animatable.getYRot()) * Math.PI / 180;
+        poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad), 0, (float) Math.sin(rad))).rotationDegrees(
+                Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
     }
 
     protected void adjustPose(PoseStack poseStack, T animatable, float partialTick){
