@@ -7,9 +7,12 @@ import net.minecraft.world.entity.Mob;
  */
 public interface IPetMob<T extends Mob> extends ISummonMob<T> {
 
+    @Override
     default int getCost(){
         return 0;
     }
+
+    @Override
     default boolean isPet(){
         return true;
     }
