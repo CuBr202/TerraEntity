@@ -176,7 +176,7 @@ repositories {
 
 boolean dev = project.hasProperty('dev')
         ? project.property('dev').toBoolean()
-        : false  // If using this mod individually, please set false
+        : true  // If using this mod individually, please set false
 // Default true. When -Pdev=false, it's for release build.
 // Or if using this mod individually, please use ./gradlew build -Pdev=false
 
