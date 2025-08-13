@@ -2,32 +2,28 @@ package org.confluence.terraentity.entity.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.confluence.terraentity.config.ServerConfig;
 
 public class SpawnPlacementChecks {
 
-    public static boolean checkTEMonsterWithConfig(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom){
+    public static boolean checkTEMonsterWithConfig(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!(pLevel instanceof Level level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
         }
 
-        if(ServerConfig.SPAWN_WITHOUT_LIGHT.get()) {
+        if (ServerConfig.SPAWN_WITHOUT_LIGHT.get()) {
             return Mob.checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom);
-        }else{
+        } else {
             return Monster.isDarkEnoughToSpawn(pLevel, pPos, pRandom) && Mob.checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom);
         }
     }
 
-    public static boolean checkTEMonster(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom){
+    public static boolean checkTEMonster(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!(pLevel instanceof Level level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
         }
@@ -59,7 +55,7 @@ public class SpawnPlacementChecks {
 
     public static boolean checkGroundSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
 
-        if(!checkTEMonsterWithConfig(type, pLevel, pSpawnType, pPos, pRandom)){
+        if (!checkTEMonsterWithConfig(type, pLevel, pSpawnType, pPos, pRandom)) {
             return false;
         }
         int y = pPos.getY();
@@ -71,7 +67,7 @@ public class SpawnPlacementChecks {
     }
 
     public static boolean checkRoutineMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if(!checkTEMonsterWithConfig(type, pLevel, pSpawnType, pPos, pRandom)){
+        if (!checkTEMonsterWithConfig(type, pLevel, pSpawnType, pPos, pRandom)) {
             return false;
         }
 
@@ -83,7 +79,7 @@ public class SpawnPlacementChecks {
         return true;
     }
 
-    public static boolean  checkOnlyDayMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+    public static boolean checkOnlyDayMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!(pLevel instanceof Level level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
         }
@@ -188,5 +184,9 @@ public class SpawnPlacementChecks {
         }
 
         return true;
+    }
+
+    public static <T extends Entity> SpawnPlacements.SpawnPredicate<T> checkHardmode(SpawnPlacements.SpawnPredicate<T> predicate) {
+        return predicate; // confluence mixin here
     }
 }
