@@ -262,6 +262,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEAnimals.LADYBUG.get(), "瓢虫");
         add(TEAnimals.SCORPION.get(), "蝎子");
         add(TEAnimals.WORM.get(), "蠕虫");
+        add(TEAnimals.PRISMATIC_LACEWING.get(), "七彩草蛉");
 
 
 
@@ -351,6 +352,7 @@ public class TEChineseProvider extends LanguageProvider {
 
         add(TESpawnEggItems.BUTTERFLY_SPAWN_EGG.get(), "蝴蝶刷怪蛋");
         add(TESpawnEggItems.HELL_BUTTERFLY_SPAWN_EGG.get(), "地狱蝴蝶刷怪蛋");
+        add(TESpawnEggItems.PRISMATIC_LACEWING_SPAWN_EGG.get(), "七彩草蛉刷怪蛋");
         add(TESpawnEggItems.DRAGONFLY_SPAWN_EGG.get(), "蜻蜓刷怪蛋");
         add(TESpawnEggItems.FAIRY_SPAWN_EGG.get(), "仙灵刷怪蛋");
         add(TESpawnEggItems.FEALING_SPAWN_EGG.get(), "飞灵刷怪蛋");

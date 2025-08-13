@@ -49,6 +49,7 @@ public class TEAnimals {
 
     public static final DeferredHolder<EntityType<?>, EntityType<BirdVariantAnimal>> BUTTERFLY = TEEntities.registerCreature("butterfly", (e, l)-> new BirdVariantAnimal(e, l, VariantsTextureMaps.butterflyTextures), 0.5F, 0.3F);
     public static final DeferredHolder<EntityType<?>, EntityType<Bird>> HELL_BUTTERFLY = TEEntities.registerCreature("hell_butterfly", (e, l)-> new Bird(e, l), 0.5F, 0.3F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Bird>> PRISMATIC_LACEWING = TEEntities.registerCreature("prismatic_lacewing", (e, l)-> new Bird(e, l), 0.5F, 0.3F);
     public static final DeferredHolder<EntityType<?>, EntityType<BirdVariantAnimal>> DRAGONFLY = TEEntities.registerCreature("dragonfly",  (e, l)-> new BirdVariantAnimal(e, l, VariantsTextureMaps.dragonflyTextures), 0.5F, 0.3F);
     public static final DeferredHolder<EntityType<?>, EntityType<Fairy>> FAIRY = TEEntities.registerCreature("fairy", (e,l)-> new Fairy(e, l, VariantsTextureMaps.fairyTextures), 0.5F, 0.3F);
     public static final DeferredHolder<EntityType<?>, EntityType<Fairy>> FEALING = TEEntities.registerCreature("fealing", (e,l)-> new Fairy(e, l, VariantsTextureMaps.fealingTextures), 0.5F, 0.3F);
@@ -80,6 +81,7 @@ public class TEAnimals {
 
         event.registerEntityRenderer(BUTTERFLY.get(), c-> new GeoNormalRenderer<>(c, new VariantTexModel<>(BUTTERFLY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(HELL_BUTTERFLY.get(), c-> new GeoNormalRenderer<>(c, new GeoModelTextureDecoration<>(new GeoNormalModel<Bird>(BUTTERFLY.getId().withPrefix("animal/"), true).setHeadName("head"), TerraEntity.space("animal/butterfly/hell_butterfly")), false, 1, 0));
+        event.registerEntityRenderer(PRISMATIC_LACEWING.get(), c-> new GeoNormalRenderer<>(c, new GeoModelTextureDecoration<>(new GeoNormalModel<Bird>(BUTTERFLY.getId().withPrefix("animal/"), true).setHeadName("head"), TerraEntity.space("animal/butterfly/prismatic_lacewing")), false, 1, 0));
         event.registerEntityRenderer(DRAGONFLY.get(), c-> new GeoNormalRenderer<>(c, new VariantTexModel<>(DRAGONFLY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(FAIRY.get(), c-> new FairyRenderer<>(c, new VariantTexModel<Fairy>(FAIRY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0).setBoneToGlow(List.of("Outline","Outline2","Outline3","Outline4","Outline5"), List.of("Body", "Internal","Internal2","Internal3","Internal4")));
         event.registerEntityRenderer(FEALING.get(), c-> new FairyRenderer<>(c, new VariantTexModel<Fairy>(FAIRY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0).setBoneToGlow(List.of("Outline","Outline2","Outline3","Outline4","Outline5"), List.of("Body", "Internal","Internal2","Internal3","Internal4")));
@@ -112,6 +114,7 @@ public class TEAnimals {
 
         event.put(BUTTERFLY.get(), Bird.createInspectAttributes().build());
         event.put(HELL_BUTTERFLY.get(), Bird.createInspectAttributes().build());
+        event.put(PRISMATIC_LACEWING.get(), Bird.createInspectAttributes().build());
         event.put(DRAGONFLY.get(), Bird.createInspectAttributes().build());
         event.put(FAIRY.get(), Bird.createInspectAttributes().build());
         event.put(FEALING.get(), Bird.createInspectAttributes().build());
@@ -142,6 +145,7 @@ public class TEAnimals {
 
         event.register(BUTTERFLY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(HELL_BUTTERFLY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(PRISMATIC_LACEWING.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(DRAGONFLY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(FAIRY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(FEALING.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);

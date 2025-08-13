@@ -37,10 +37,8 @@ public class VariantsTextureMaps {
 
     public static final Map<Integer, ResourceLocation> butterflyTextures = makeAnimalTextureMap("butterfly", List.of(
             TerraEntity.space("gold_butterfly.png"),
-            TerraEntity.space("hell_butterfly.png"),
             TerraEntity.space("julia_butterfly.png"),
             TerraEntity.space("monarch_butterfly.png"),
-            TerraEntity.space("prismatic_lacewing.png"),
             TerraEntity.space("purple_emperor_butterfly.png"),
             TerraEntity.space("red_admiral_butterfly.png"),
             TerraEntity.space("sulphur_butterfly.png"),

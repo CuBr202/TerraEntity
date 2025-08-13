@@ -157,6 +157,7 @@ public class TESpawnEggItems {
 
     public static final DeferredItem<SpawnEggItem> BUTTERFLY_SPAWN_EGG = registerEgg("butterfly_spawn_egg", TEAnimals.BUTTERFLY, 0xffffff);
     public static final DeferredItem<SpawnEggItem> HELL_BUTTERFLY_SPAWN_EGG = registerEgg("hell_butterfly_spawn_egg", TEAnimals.HELL_BUTTERFLY, 0xffffff);
+    public static final DeferredItem<SpawnEggItem> PRISMATIC_LACEWING_SPAWN_EGG = registerEgg("prismatic_lacewing_spawn_egg", TEAnimals.PRISMATIC_LACEWING, 0xffffff);
     public static final DeferredItem<SpawnEggItem> DRAGONFLY_SPAWN_EGG = registerEgg("dragonfly_spawn_egg", TEAnimals.DRAGONFLY, 0xffffff);
     public static final DeferredItem<SpawnEggItem> FAIRY_SPAWN_EGG = registerEgg("fairy_spawn_egg", TEAnimals.FAIRY, 0xffffff);
     public static final DeferredItem<SpawnEggItem> FEALING_SPAWN_EGG = registerEgg("fealing_spawn_egg", TEAnimals.FEALING, 0xffffff);
