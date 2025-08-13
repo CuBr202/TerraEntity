@@ -17,11 +17,19 @@ import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TENpcEntities;
+import org.confluence.terraentity.integration.ModChecker;
+import org.confluence.terraentity.integration.curios.CuriosHelper;
+import org.confluence.terraentity.item.RideableItem;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.ISlotType;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
+import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import java.util.EnumMap;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ServerBoundEventPacket implements CustomPacketPayload{
@@ -30,7 +38,8 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
         MOUSE_LEFT_CLICK,
         MOUSE_RELEASE,
         WHEEL_UP,
-        WHEEL_DOWN
+        WHEEL_DOWN,
+        RIDE_OR_LEAVE
     }
     static EnumMap<TypeEnum, Consumer<Player>> handlers = new EnumMap<>(ImmutableMap.<TypeEnum, Consumer<Player>>builder()
             .put(TypeEnum.SUMMON_SKELETRON, (player)-> {
@@ -69,6 +78,9 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
                     item.onWhellScroll(player, stack, -1);
                 }
              })
+            .put(TypeEnum.RIDE_OR_LEAVE, (player)-> {
+                CuriosHelper.rideOrLeave(player);
+            })
 
             .build());
 
@@ -129,5 +141,9 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
 
     public static void wheelDown(){
         AdapterUtils.sendToServer(new ServerBoundEventPacket(TypeEnum.WHEEL_DOWN));
+    }
+
+    public static void rideOrLeave(){
+        AdapterUtils.sendToServer(new ServerBoundEventPacket(TypeEnum.RIDE_OR_LEAVE));
     }
 }

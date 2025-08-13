@@ -228,11 +228,12 @@ public class WhipEntity extends Projectile {
             }
         }
 
-        if(existTick * 0.3f == tickCount){
+        if((int)(existTick * 0.3f) == tickCount){
             if(this.getOwner() != null) {
                 this.getOwner().playSound(TESounds.WHIP_ATTACK.get(), 0.6F + getRandom().nextFloat() * 0.2f, 1.0F);
             }
         }
+
 
         if(parts == null || parts.isEmpty()) return;
         this.speed = (double) _existTick / this.existTick;

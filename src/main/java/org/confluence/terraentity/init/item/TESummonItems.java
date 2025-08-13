@@ -6,15 +6,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TESummonEntities;
-import org.confluence.terraentity.item.ChesterSummonItem;
 import org.confluence.terraentity.item.SummonItem;
 
 
 public class TESummonItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(TerraEntity.MODID);
-
-    public static final DeferredItem<Item> CHESTER_STAFF = ITEMS.register("chester_staff", () -> new ChesterSummonItem<>(new Item.Properties(), TESummonEntities.CHESTER));
-    public static final DeferredItem<Item> WALLET = ITEMS.register("wallet", () -> new ChesterSummonItem<>(new Item.Properties(), TESummonEntities.PIGGY_BANK));
 
     public static final DeferredItem<Item> FINCH_STAFF = ITEMS.register("finch_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SUMMON_FINCH, 1, 2));
     public static final DeferredItem<Item> IRON_GOLEM_STAFF = ITEMS.register("iron_golem_staff", () -> new SummonItem<>(new Item.Properties(), TESummonEntities.SUMMON_IRON_GOLEM, 1, 8));

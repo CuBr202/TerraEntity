@@ -28,10 +28,10 @@ import org.confluence.terraentity.utils.TEUtils;
 import java.util.List;
 import java.util.Map;
 
-public class ChesterSummonItem<T extends Chester> extends SummonItem<T> {
+public class ChesterSummonItem<T extends Chester> extends PetItem<T> {
 
     public ChesterSummonItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType) {
-        super(properties, entityType, 0, 1);
+        super(properties, entityType);
     }
 
     @Override

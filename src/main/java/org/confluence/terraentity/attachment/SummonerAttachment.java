@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.network.s2c.SyncSummonPacket;
 import org.confluence.terraentity.registries.TERegistries;
@@ -129,13 +130,17 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
      * 移除死亡的实体，刷新仆从栏错误数据
      */
     public void refresh(ServerPlayer player) {
+        int occupied = 0;
         for(int id : this.getIds()){
             Entity entity = player.level().getEntity(id);
             if(entity == null || !entity.isAlive()){
                 this.getIds().remove(id);
             }
+            if(entity instanceof ISummonMob<?> mob){
+                occupied += mob.getCost();
+            }
         }
-        this.setCurrentCapacity(getMaxCapacity(player) - this.getIds().size());
+        this.setCurrentCapacity(getMaxCapacity(player) - occupied);
     }
 
     /**
@@ -180,10 +185,14 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
     }
 
     public void removeLast(Player player, int cost){
-        var entity = player.level().getEntity(ids.getLast());
-        if(entity!= null && entity.isAlive()){
-            entity.discard();
+        List<Entity> summons = getEntities(player.level()).stream().filter(entity -> entity instanceof ISummonMob<?> mob && !mob.isPet()).toList();
+        if(!summons.isEmpty()){
+            Entity entity = summons.getLast();
+            if(entity!= null && entity.isAlive()){
+                entity.discard();
+            }
         }
+
     }
 
 
@@ -216,6 +225,9 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
         this.ids = ids;
     }
 
+    public List<Entity> getEntities(Level level) {
+        return ids.stream().map(level::getEntity).filter(Objects::nonNull).toList();
+    }
 
 
     @Override

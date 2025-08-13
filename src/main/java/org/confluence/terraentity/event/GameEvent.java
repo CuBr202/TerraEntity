@@ -5,6 +5,7 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.CrossbowItem;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.CapabilityHooks;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
@@ -70,7 +71,7 @@ public class GameEvent {
 
     @SubscribeEvent
     public static void onCollectBrains(NPCEvent.NPCBrainCollectionEvent event) {
-        if (!ModChecker.isConfluenceLoaded.get()) {
+        if (!ModChecker.isConfluenceLoaded) {
             event.register(TENpcEntities.DEMOLITIONIST.get(), (collector) -> {
                 collector.setReplace(new DemolitionistNPCAi(collector.getNPC()));
             });

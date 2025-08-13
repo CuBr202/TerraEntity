@@ -13,7 +13,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.init.item.*;
 import org.confluence.terraentity.item.DebugItem;
 import org.confluence.terraentity.item.HouseDetectItem;
@@ -41,6 +40,7 @@ public class TEItems {
                     .displayItems((itemDisplayParameters, output) -> {
                         TESpawnEggItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TERideableItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        TEPetItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TESummonItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEWhipItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEBoomerangItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
@@ -48,8 +48,13 @@ public class TEItems {
                         TEItems.TOOLS.getEntries().forEach(item -> output.accept(item.get()));
                         TEBlocks.BLOCKITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         HolderLookup.RegistryLookup<Enchantment> registryLookup = itemDisplayParameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
-                        output.accept(TEUtils.enchantedBook(registryLookup, TEEnchantments.MULTI_BOOMERANG, 3));
-                        output.accept(TEUtils.enchantedBook(registryLookup, TEEnchantments.WHIP_SWEEP, 1));
+                        registryLookup.listElements().forEach(enchantment -> {
+                            if(enchantment.getKey() != null && enchantment.getKey().location().getNamespace().equals(MODID)) {
+                                output.accept(TEUtils.enchantedBook(enchantment.getDelegate(), enchantment.value().getMaxLevel()));
+                            }
+                        });
+//                        output.accept(TEUtils.enchantedBook(registryLookup, TEEnchantments.MULTI_BOOMERANG, 3));
+//                        output.accept(TEUtils.enchantedBook(registryLookup, TEEnchantments.WHIP_SWEEP, 1));
                     })
                     //.withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("terra_moment", "tab")))
                     .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, TerraEntity.fromSpaceAndPath("enemybanner", "enemybanner_tab")))
@@ -60,6 +65,7 @@ public class TEItems {
 
     public static void register(IEventBus bus) {
         TESpawnEggItems.ITEMS.register(bus);
+        TEPetItems.ITEMS.register(bus);
         TESummonItems.ITEMS.register(bus);
         TEWhipItems.ITEMS.register(bus);
         TEBoomerangItems.ITEMS.register(bus);

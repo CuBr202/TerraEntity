@@ -6,6 +6,7 @@ import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.entity.*;
 import org.confluence.terraentity.init.item.*;
+import org.confluence.terraentity.integration.curios.CuriosHelper;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
@@ -27,6 +28,9 @@ public class TEChineseProvider extends LanguageProvider {
         add("title.terra_entity.npc_trade.task.progress", "进度任务");
 
         add("container.terra_entity.chester", "切斯特");
+
+        add("key.terra_entity.ride", "使用坐骑(需要CuriosAPI)");
+
 
         add(TEMonsterEntities.ICE_SLIME.get(), "冰冻史莱姆");
         add(TEMonsterEntities.BLUE_SLIME.get(), "蓝色史莱姆");
@@ -362,8 +366,8 @@ public class TEChineseProvider extends LanguageProvider {
 
 
         // 召唤杖
-        add(TESummonItems.CHESTER_STAFF.get(), "眼骨");
-        add(TESummonItems.WALLET.get(), "钱币槽");
+        add(TEPetItems.CHESTER_STAFF.get(), "眼骨");
+        add(TEPetItems.WALLET.get(), "钱币槽");
 
         add(TESummonItems.FINCH_STAFF.get(), "雀杖");
         add(TESummonItems.SLIME_STAFF.get(), "史莱姆法杖");
@@ -506,6 +510,11 @@ public class TEChineseProvider extends LanguageProvider {
         add("tooltip.terra_entity.yoyo.exist_time", "使用时间");
         add("tooltip.terra_entity.yoyo.hit_effect", "命中效果");
 
+        // rideable
+        add("tooltip.terra_entity.rideable_item.desc", "按下快捷键以骑乘。默认 R 键");
+
+
+
         // attribute
         add("attribute.name.player.summon_damage", "召唤伤害");
         add("attribute.name.player.mark_damage", "标记伤害");
@@ -577,11 +586,18 @@ public class TEChineseProvider extends LanguageProvider {
         add("task.terra_entity.boomerang_attack.desc", "女仆会主动用回旋镖攻击周围的敌对生物");
         add("task.terra_entity.boomerang_attack.condition.has_boomerang", "主手持有回旋镖");
 
+        // curios
+        add("curios.identifier." + CuriosHelper.RIDEABLE_KEY, "坐骑");
+        add("curios.identifier." + CuriosHelper.PET_KEY, "宠物");
+        add("curios.identifier." + CuriosHelper.LIGHT_PET_KEY, "照明宠物");
+
         // 附魔
         add("enchantment.terra_entity.multi_boomerang", "影分身");
         add("enchantment.terra_entity.multi_boomerang.desc", "额外发射一个回旋镖");
         add("enchantment.terra_entity.whip_sweep", "横扫之鞭");
         add("enchantment.terra_entity.whip_sweep.desc", "概率造成大范围伤害");
+        add("enchantment.terra_entity.summoner_pact", "召唤师契约");
+        add("enchantment.terra_entity.summoner_pact.desc", "召唤额外的仆从");
 
         // npc对话
         add("dialogs.terra_entity.guide.0", "我的工作是为你接下来的任务提供建议。建议你遇到任何困难时都来和我谈谈。");

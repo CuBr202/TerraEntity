@@ -8,9 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.init.TETags;
-import org.confluence.terraentity.init.item.TEBoomerangItems;
-import org.confluence.terraentity.init.item.TESummonItems;
-import org.confluence.terraentity.init.item.TEWhipItems;
+import org.confluence.terraentity.init.item.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +34,12 @@ public class TEItemTagsProvider extends ItemTagsProvider {
         });
         TESummonItems.ITEMS.getEntries().forEach(item ->{
             tag(TETags.Items.WEAPONS);
+        });
+        TERideableItems.ITEMS.getEntries().forEach(item ->{
+            tag(TETags.Items.CURIOS_RIDEABLE).add(item.get());
+        });
+        TEPetItems.ITEMS.getEntries().forEach(item ->{
+            tag(TETags.Items.CURIOS_PET).add(item.get());
         });
     }
 }

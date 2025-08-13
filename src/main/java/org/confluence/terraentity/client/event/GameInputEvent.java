@@ -14,6 +14,7 @@ import net.neoforged.neoforge.client.event.InputEvent;
 import org.confluence.terraentity.api.item.ILeftClickStateItem;
 import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.item.BaseWhipItem;
 import org.confluence.terraentity.network.c2s.ServerBoundEventPacket;
 import org.lwjgl.glfw.GLFW;
@@ -77,6 +78,15 @@ public class GameInputEvent {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void KeyPressed(InputEvent.Key event) {
+        if(event.getAction() == 1 && ModChecker.isCuriosLoaded){
+            if(TEKeyBindings.RIDE.get().matches(event.getKey(), event.getModifiers())) {
+                ServerBoundEventPacket.rideOrLeave();
             }
         }
     }

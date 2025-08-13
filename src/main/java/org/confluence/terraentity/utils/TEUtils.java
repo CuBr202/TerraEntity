@@ -40,6 +40,7 @@ import org.confluence.terraentity.api.entity.IAttackableProjectile;
 import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
+import org.confluence.terraentity.mixed.IAttributeInstance;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -892,6 +893,11 @@ public final class TEUtils {
         book.enchant(registryLookup.getOrThrow(key), level);
         return book;
     }
+    public static ItemStack enchantedBook(Holder<Enchantment> enchantment, int level) {
+        ItemStack book = Items.ENCHANTED_BOOK.getDefaultInstance();
+        book.enchant(enchantment, level);
+        return book;
+    }
 
     public static<T extends Entity> T spawnEntity(Supplier<? extends T> entitySupplier, ServerLevel serverLevel, Vec3 pos){
         T entity = entitySupplier.get();
@@ -928,4 +934,16 @@ public final class TEUtils {
         return true;
     }
 
+    /**
+     * 获取百分比增伤
+     * <p>E.G</p>
+     * <p>1.2 -> +20%</p>
+     */
+    public static float getAttributePercent(Holder<Attribute> attribute, LivingEntity entity){
+        AttributeInstance instance = entity.getAttribute(attribute);
+        if(instance!= null){
+            return (float) ((IAttributeInstance) instance).terraentity$getPercentage();
+        }
+        return 1;
+    }
 }

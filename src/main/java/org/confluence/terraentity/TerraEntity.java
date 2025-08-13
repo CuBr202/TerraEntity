@@ -8,7 +8,9 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.data.biome.TEBiomes;
+import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.init.*;
+import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.registries.TERegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +45,11 @@ public class TerraEntity {
         TEMenus.TYPES.register(modEventBus);
         TEBiomes.register(modEventBus);
         TELoots.register(modEventBus);
+        TEEnchantments.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
+
+        ModChecker.registerEvents();
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 }

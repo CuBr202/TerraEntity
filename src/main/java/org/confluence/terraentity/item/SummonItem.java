@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -22,6 +23,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.confluence.terraentity.api.entity.IPetMob;
 import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.api.event.SummonEvent;
 import org.confluence.terraentity.attachment.SummonerAttachment;
@@ -70,10 +72,11 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
 
             EntityHitResult hit = TEUtils.getEyeTraceHitResult(player, player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE));
             if (hit != null) {
-                if (hit.getEntity() instanceof ISummonMob summonMob && summonMob.summon_getOwner() == player) {
+                if (this.canDiscard(hit.getEntity(), player)) {
                     hit.getEntity().discard();
                     return InteractionResultHolder.success(player.getItemInHand(hand));
                 }
+                return InteractionResultHolder.success(player.getItemInHand(hand));
             }
 
             player.startUsingItem(hand);
@@ -81,6 +84,11 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
             return InteractionResultHolder.pass(itemstack);
         }
         return InteractionResultHolder.fail(itemstack);
+    }
+
+    protected boolean canDiscard(Entity entity, Player player){
+        // 这里设计不合理，不过也没有其他需求
+        return entity instanceof ISummonMob summonMob && !summonMob.isPet() &&  summonMob.summon_getOwner() == player;
     }
 
 
@@ -146,7 +154,7 @@ public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
                     // 如果没有足够的召唤栏位，就移除最后一个仆从，再尝试生成。
                     data.removeLast(player, consume);
                 }
-                if (player.isCreative() || data.canSummon(consume)) {
+                if (data.canSummon(consume)) {
                     summon(player, stack);
                 }
             }

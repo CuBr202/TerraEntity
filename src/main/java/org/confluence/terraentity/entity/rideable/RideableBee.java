@@ -148,4 +148,9 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
     protected void playExitSound() {
         this.playSound(SoundEvents.BEEHIVE_ENTER, 1.0F, 1.0F);
     }
+
+    @Override
+    protected float getFlyingSpeed() {
+        return this.getSpeed() * 0.2F;
+    }
 }

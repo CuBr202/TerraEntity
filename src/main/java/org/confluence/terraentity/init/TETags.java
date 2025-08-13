@@ -16,12 +16,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.integration.curios.CuriosHelper;
 
 public class TETags {
 
     public static class Items {
         public static final TagKey<Item> WHIP_ENCHANTABLE = registerItem("whip_enchantable");
         public static final TagKey<Item> BOOMERANG_ENCHANTABLE = registerItem("boomerang_enchantable");
+        public static final TagKey<Item> CURIOS_RIDEABLE = registerCuriosItem(CuriosHelper.RIDEABLE_KEY);
+        public static final TagKey<Item> CURIOS_PET = registerCuriosItem(CuriosHelper.PET_KEY);
+        public static final TagKey<Item> CURIOS_LIGHT_PET = registerCuriosItem(CuriosHelper.LIGHT_PET_KEY);
 
         public static final TagKey<Item> WEAPONS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "weapons"));
     }
@@ -72,6 +76,9 @@ public class TETags {
 
     private static TagKey<Item> registerItem(String id) {
         return ItemTags.create(TerraEntity.space(id));
+    }
+    private static TagKey<Item> registerCuriosItem(String id) {
+        return ItemTags.create(TerraEntity.fromSpaceAndPath("curios", id));
     }
     private static TagKey<Block> registerBlock(String id) {
         return BlockTags.create(TerraEntity.space(id));

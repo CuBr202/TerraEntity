@@ -33,9 +33,11 @@ import org.confluence.terraentity.entity.ai.goal.summon.SummonOwnerHurtByTargetG
 import org.confluence.terraentity.entity.ai.goal.summon.SummonOwnerHurtTargetGoal;
 import org.confluence.terraentity.entity.ai.goal.summon.SummonPriorAttackGoal;
 import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.item.SummonItem;
 import org.confluence.terraentity.utils.AdapterUtils;
+import org.confluence.terraentity.utils.TEUtils;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -52,6 +54,13 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
 
     default T asEntity() {
         return (T) this;
+    }
+
+    /**
+     * 区分是否为宠物，这样不需要再进行一次类型检查
+     */
+    default boolean isPet(){
+        return false;
     }
 
     /*Tamed Animals**/
@@ -202,6 +211,9 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
     default float summon_getAttackDamage(Entity entity, ServerLevel serverLevel, DamageSource damageSource) {
         float f = (float) asEntity().getAttributeValue(Attributes.ATTACK_DAMAGE);
         f = EnchantmentHelper.modifyDamage(serverLevel, asEntity().getWeaponItem(), entity, damageSource, f);
+        if(getOwner() != null){
+            f *= TEUtils.getAttributePercent(TEAttributes.SUMMON_DAMAGE, getOwner());
+        }
         return f;
     }
 

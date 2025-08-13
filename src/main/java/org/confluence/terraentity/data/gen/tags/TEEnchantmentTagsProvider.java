@@ -21,8 +21,10 @@ public class TEEnchantmentTagsProvider extends EnchantmentTagsProvider {
 
         this.tag(EnchantmentTags.NON_TREASURE).add(
                 TEEnchantments.MULTI_BOOMERANG,
-                TEEnchantments.WHIP_SWEEP
+                TEEnchantments.WHIP_SWEEP,
+                TEEnchantments.SUMMONER_PACT
         );
+
 //        this.tag(EnchantmentTags.ON_RANDOM_LOOT).add(
 //                TEEnchantments.MULTI_BOOMERANG,
 //                TEEnchantments.WHIP_SWEEP

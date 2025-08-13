@@ -15,6 +15,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.confluence.terraentity.api.entity.IPetMob;
 import org.confluence.terraentity.attachment.SummonerAttachment;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.item.SummonItem;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class Chester extends AbstractSummonMob<Chester> {
+public class Chester extends AbstractSummonMob<Chester> implements IPetMob<Chester> {
 
     Player opener;
     ChesterItemHandler itemHandler = new ChesterItemHandler(27);

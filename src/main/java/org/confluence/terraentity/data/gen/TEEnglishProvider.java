@@ -8,6 +8,7 @@ import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.item.*;
+import org.confluence.terraentity.integration.curios.CuriosHelper;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -50,6 +51,7 @@ public class TEEnglishProvider extends LanguageProvider {
 
         add("container.terra_entity.chester", "Chester");
 
+        add("key.terra_entity.ride", "Use Ride(need CuriosAPI");
 
 
         add("entity.terra_entity.mother_slime", "Mother Slime");
@@ -59,6 +61,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("message.terraentity.boss_leave", "%s Has Been Defeated!");
         add("message.terraentity.boss_discard", "Has Been Discarded！");
         add("message.terra_entity.trade.not_enough_items", "Not Enough Items");
+
 
 
 
@@ -133,7 +136,8 @@ public class TEEnglishProvider extends LanguageProvider {
         add("tooltip.terra_entity.yoyo.exist_time", "Using Time");
         add("tooltip.terra_entity.yoyo.hit_effect", "Hit Effect");
 
-
+        // rideable
+        add("tooltip.terra_entity.rideable_item.desc", "Press hotkey to ride. Default R .");
 
         // attribute
         add("attribute.name.player.summon_damage", "Summon Damage");
@@ -169,6 +173,11 @@ public class TEEnglishProvider extends LanguageProvider {
         add("task.terra_entity.boomerang_attack", "Boomerang Attack");
         add("task.terra_entity.boomerang_attack.desc", "Maid attacks enemies with a boomerang.");
         add("task.terra_entity.boomerang_attack.condition.has_boomerang", "Mainhand holds a boomerang");
+
+        // curios
+        add("curios.identifier." + CuriosHelper.RIDEABLE_KEY, "Rideable");
+        add("curios.identifier." + CuriosHelper.PET_KEY, "Pet");
+        add("curios.identifier." + CuriosHelper.LIGHT_PET_KEY, "Light Pet");
 
         // 附魔
         add("enchantment.terra_entity.multi_boomerang", "Multi Shoot Boomerang");
