@@ -22,7 +22,6 @@ import org.confluence.terraentity.client.entity.model.VariantTexModel;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.FairyRenderer;
 import org.confluence.terraentity.entity.animal.*;
-import org.confluence.terraentity.entity.util.SpawnPlacementChecks;
 import org.confluence.terraentity.init.TEEntities;
 
 import java.util.List;
@@ -38,9 +37,9 @@ public class TEAnimals {
     public static final DeferredHolder<EntityType<?>, EntityType<Bird>> BIRD = TEEntities.ENTITIES.register("bird", () -> EntityType.Builder.of(Bird::new, MobCategory.CREATURE).sized(0.4F, 0.5F).clientTrackingRange(8).build(TEEntities.Key("bird")));
     public static final DeferredHolder<EntityType<?>, EntityType<Bird>> BLUE_JAY = TEEntities.ENTITIES.register("blue_jay", () -> EntityType.Builder.of(Bird::new, MobCategory.CREATURE).sized(0.4F, 0.5F).clientTrackingRange(8).build(TEEntities.Key("blue_jay")));
     public static final DeferredHolder<EntityType<?>, EntityType<Bird>> CARDINAL = TEEntities.ENTITIES.register("cardinal", () -> EntityType.Builder.of(Bird::new, MobCategory.CREATURE).sized(0.4F, 0.5F).clientTrackingRange(8).build(TEEntities.Key("cardinal")));
+    public static final DeferredHolder<EntityType<?>, EntityType<Crab>> CRAB = TEEntities.registerCreature("crab", Crab::new, 0.5F, 0.3F);
 
     // 昆虫
-    public static final DeferredHolder<EntityType<?>, EntityType<Crab>> CRAB = TEEntities.registerCreature("crab", Crab::new, 0.5F, 0.3F);
     public static final DeferredHolder<EntityType<?>, EntityType<SimpleAnimal>> GLOWING_SNAIL = TEEntities.registerCreature("glowing_snail", SimpleAnimal::new, 0.5F, 0.3F);
     public static final DeferredHolder<EntityType<?>, EntityType<SimpleAnimal>> GRUBBY = TEEntities.registerCreature("grubby", SimpleAnimal::new, 0.5F, 0.3F);
     public static final DeferredHolder<EntityType<?>, EntityType<SimpleAnimal>> MAGGOT= TEEntities.registerCreature("maggot", SimpleAnimal::new, 0.5F, 0.3F);
