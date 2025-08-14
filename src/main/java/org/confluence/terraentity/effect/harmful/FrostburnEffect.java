@@ -51,6 +51,6 @@ public class FrostburnEffect extends MobEffect { //霜冻：缓慢损失生命 �
     @Override
     public void fillEffectCures(Set<EffectCure> cures, MobEffectInstance effectInstance) {
         super.fillEffectCures(cures, effectInstance);
-        //cures.add(LibUtils.DENY_HEAL);
+        cures.add(LibUtils.DENY_HEAL);
     }
 }
