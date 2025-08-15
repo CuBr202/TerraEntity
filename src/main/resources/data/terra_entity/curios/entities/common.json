@@ -3,7 +3,8 @@
         "player"
     ],
     "slots": [
-        "rideable",
-        "pet"
+        "mount",
+        "pet",
+        "light_pet"
     ]
 }

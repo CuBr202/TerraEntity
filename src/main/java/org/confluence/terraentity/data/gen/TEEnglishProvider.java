@@ -175,7 +175,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("task.terra_entity.boomerang_attack.condition.has_boomerang", "Mainhand holds a boomerang");
 
         // curios
-        add("curios.identifier." + CuriosHelper.RIDEABLE_KEY, "Rideable");
+        add("curios.identifier." + CuriosHelper.MOUNT_KEY, "Mount");
         add("curios.identifier." + CuriosHelper.PET_KEY, "Pet");
         add("curios.identifier." + CuriosHelper.LIGHT_PET_KEY, "Light Pet");
 

@@ -23,7 +23,7 @@ public class TETags {
     public static class Items {
         public static final TagKey<Item> WHIP_ENCHANTABLE = registerItem("whip_enchantable");
         public static final TagKey<Item> BOOMERANG_ENCHANTABLE = registerItem("boomerang_enchantable");
-        public static final TagKey<Item> CURIOS_RIDEABLE = registerCuriosItem(CuriosHelper.RIDEABLE_KEY);
+        public static final TagKey<Item> CURIOS_MOUNT = registerCuriosItem(CuriosHelper.MOUNT_KEY);
         public static final TagKey<Item> CURIOS_PET = registerCuriosItem(CuriosHelper.PET_KEY);
         public static final TagKey<Item> CURIOS_LIGHT_PET = registerCuriosItem(CuriosHelper.LIGHT_PET_KEY);
 

@@ -589,7 +589,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("task.terra_entity.boomerang_attack.condition.has_boomerang", "主手持有回旋镖");
 
         // curios
-        add("curios.identifier." + CuriosHelper.RIDEABLE_KEY, "坐骑");
+        add("curios.identifier." + CuriosHelper.MOUNT_KEY, "坐骑");
         add("curios.identifier." + CuriosHelper.PET_KEY, "宠物");
         add("curios.identifier." + CuriosHelper.LIGHT_PET_KEY, "照明宠物");
 

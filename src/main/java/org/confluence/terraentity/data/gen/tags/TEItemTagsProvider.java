@@ -36,7 +36,7 @@ public class TEItemTagsProvider extends ItemTagsProvider {
             tag(TETags.Items.WEAPONS);
         });
         TERideableItems.ITEMS.getEntries().forEach(item ->{
-            tag(TETags.Items.CURIOS_RIDEABLE).add(item.get());
+            tag(TETags.Items.CURIOS_MOUNT).add(item.get());
         });
         TEPetItems.ITEMS.getEntries().forEach(item ->{
             tag(TETags.Items.CURIOS_PET).add(item.get());

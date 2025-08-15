@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class CuriosHelper {
 
-    public static final String RIDEABLE_KEY = "rideable";
+    public static final String MOUNT_KEY = "mount";
     public static final String PET_KEY = "pet";
     public static final String LIGHT_PET_KEY = "light_pet";
 
@@ -42,7 +42,7 @@ public class CuriosHelper {
             Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(player);
             if(!player.isPassenger()) {
                 curiosInventory.ifPresent(handler -> {
-                    ICurioStacksHandler itemStackHandler = handler.getCurios().get(CuriosHelper.RIDEABLE_KEY);
+                    ICurioStacksHandler itemStackHandler = handler.getCurios().get(CuriosHelper.MOUNT_KEY);
                     if (itemStackHandler != null) {
                         var list = itemStackHandler.getStacks();
                         if (list != null && list.getSlots() > 0) {
