@@ -37,7 +37,6 @@ public class TETags {
     public static class EntityTypes {
         public static final TagKey<EntityType<?>> SLIME = registerEntityType("slime");
         public static final TagKey<EntityType<?>> CORRUPT = registerEntityType("corrupt");
-        public static final TagKey<EntityType<?>> TRANSMUTATION_FEALING = registerEntityType("transmutation_fealing");
     }
 
     public static class Biomes{
