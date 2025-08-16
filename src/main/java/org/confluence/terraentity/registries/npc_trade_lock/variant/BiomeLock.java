@@ -15,18 +15,17 @@ import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProviderTyp
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-public record BiomeLock(Optional<List<ResourceKey<Biome>>> values, Optional<List<TagKey<Biome>>> tags) implements ITradeLock {
+public record BiomeLock(List<ResourceKey<Biome>> values, List<TagKey<Biome>> tags) implements ITradeLock {
     public static final MapCodec<BiomeLock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ResourceKey.codec(Registries.BIOME).listOf().lenientOptionalFieldOf("values").forGetter(BiomeLock::values),
-            TagKey.codec(Registries.BIOME).listOf().lenientOptionalFieldOf("tags").forGetter(BiomeLock::tags)
+            ResourceKey.codec(Registries.BIOME).listOf().lenientOptionalFieldOf("values", List.of()).forGetter(BiomeLock::values),
+            TagKey.codec(Registries.BIOME).listOf().lenientOptionalFieldOf("tags", List.of()).forGetter(BiomeLock::tags)
     ).apply(instance, BiomeLock::new));
 
     @Override
     public boolean canTrade(Player player, ITradeHolder npc, int index) {
         Holder<Biome> biome = npc.level().getBiome(npc.blockPosition());
-        return (values.isEmpty() || values.get().stream().anyMatch(biome::is)) && (tags.isEmpty() || tags.get().stream().anyMatch(biome::is));
+        return (values.isEmpty() || values.stream().anyMatch(biome::is)) && (tags.isEmpty() || tags.stream().anyMatch(biome::is));
     }
 
     @Override
@@ -36,11 +35,11 @@ public record BiomeLock(Optional<List<ResourceKey<Biome>>> values, Optional<List
 
     @SafeVarargs
     public static BiomeLock of(ResourceKey<Biome>... values) {
-        return new BiomeLock(Optional.of(Arrays.stream(values).toList()), Optional.empty());
+        return new BiomeLock(Arrays.stream(values).toList(), List.of());
     }
 
     @SafeVarargs
     public static BiomeLock of(TagKey<Biome>... tags) {
-        return new BiomeLock(Optional.empty(), Optional.of(Arrays.stream(tags).toList()));
+        return new BiomeLock(List.of(), Arrays.stream(tags).toList());
     }
 }

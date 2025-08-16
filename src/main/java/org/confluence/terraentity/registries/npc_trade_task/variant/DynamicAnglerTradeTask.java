@@ -12,6 +12,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.common.recipe.AmountIngredient;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.api.npc.trade.ITradeLock;
@@ -98,7 +99,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
     // 由于渔夫是一天一次，所以要setNext后不要立即同步数据
     @Override
     public void setNext(ITradeHolder npc, int index) {
-        ItemStack cost = costPool.get(this.currentSelected = npc.getRandom().nextInt(costPool.size()));
+        ItemStack cost = LibUtils.forMixin$ModifyExpression(costPool.get(this.currentSelected = npc.getRandom().nextInt(costPool.size())));
         List<ItemStack> result = resultPool.get(npc.getTradeParams().getLevel(index) + 1);
 
         if (result == null) {
