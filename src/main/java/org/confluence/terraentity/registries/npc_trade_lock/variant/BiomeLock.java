@@ -13,6 +13,7 @@ import org.confluence.terraentity.api.npc.trade.ITradeLock;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProvider;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProviderTypes;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,5 +32,15 @@ public record BiomeLock(Optional<List<ResourceKey<Biome>>> values, Optional<List
     @Override
     public TradeLockProvider getCodec() {
         return TradeLockProviderTypes.BIOME_LOCK.get();
+    }
+
+    @SafeVarargs
+    public static BiomeLock of(ResourceKey<Biome>... values) {
+        return new BiomeLock(Optional.of(Arrays.stream(values).toList()), Optional.empty());
+    }
+
+    @SafeVarargs
+    public static BiomeLock of(TagKey<Biome>... tags) {
+        return new BiomeLock(Optional.empty(), Optional.of(Arrays.stream(tags).toList()));
     }
 }

@@ -37,6 +37,10 @@ public interface ITradeLock {
 
     StreamCodec<ByteBuf, ITradeLock> STREAM_CODEC = ByteBufCodecs.fromCodec(TYPED_CODEC);
 
+    default ITradeLock invert() {
+        return not(this);
+    }
+
     static ITradeLock and(ITradeLock... locks){
         return new AndLock(Arrays.asList(locks));
     }
