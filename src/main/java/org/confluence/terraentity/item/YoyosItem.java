@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.api.event.YoyosThrowingEvent;
 import org.confluence.terraentity.api.item.ILeftClickStateItem;
 import org.confluence.terraentity.api.item.IProjectileModifier;
 import org.confluence.terraentity.attachment.WeaponStorage;
@@ -17,6 +18,7 @@ import org.confluence.terraentity.entity.proj.YoyosEntity;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.entity.TESummonEntities;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
+import org.confluence.terraentity.utils.AdapterUtils;
 
 import java.util.List;
 
@@ -81,6 +83,7 @@ public class YoyosItem<T extends BaseProj<?>> extends Item implements ILeftClick
             proj.setPos(player.getX(), player.getY(0.5f), player.getZ());
             proj.summon_setOwnerUUID(player.getUUID());
             proj.setWeaponItem(itemStack);
+            AdapterUtils.postGameEvent(new YoyosThrowingEvent(player, itemStack, proj));
             level.addFreshEntity(proj);
         }
     }

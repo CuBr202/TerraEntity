@@ -42,7 +42,7 @@ public record NPCShopPacket(int tradeIndex, TradeParams params) implements Custo
 //                    trade = holder.getTradeManager().availableTrades().get(tradeIndex);
                     trade = holder.getTradeManager().targetTrade(params, tradeIndex);
 
-                    NPCEvent.NPCTradeEvent event = AdapterUtils.postGameEvent(new NPCEvent.NPCTradeEvent(holder, trade, sp));
+                    NPCEvent.NPCTradeEvent.Pre event = AdapterUtils.postGameEvent(new NPCEvent.NPCTradeEvent.Pre(holder, trade, sp));
                     if (event.isCanceled()) {
                         return;
                     }
@@ -52,6 +52,7 @@ public record NPCShopPacket(int tradeIndex, TradeParams params) implements Custo
                         } else {
                             trade.onTrade(sp, holder, tradeIndex);
                         }
+                        AdapterUtils.postGameEvent(new NPCEvent.NPCTradeEvent.Post(holder, trade, sp));
                     }
                 }
             } else {

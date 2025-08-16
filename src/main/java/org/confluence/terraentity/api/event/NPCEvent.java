@@ -142,8 +142,6 @@ public abstract class NPCEvent extends Event {
     public static class NPCTradeEvent extends PlayerEvent implements ICancellableEvent {
         private final ITradeHolder holder;
         private final ITrade trade;
-        private boolean alwaysPass = false;
-        private BiConsumer<Player, ITrade> reDirection;
 
         public NPCTradeEvent(ITradeHolder holder, ITrade trade, Player player) {
             super(player);
@@ -159,26 +157,41 @@ public abstract class NPCEvent extends Event {
             return trade;
         }
 
-        /**
-         * 强行使交易通过
-         */
-        public void setAlwaysPass() {
-            this.alwaysPass = true;
+        public static class Pre extends NPCTradeEvent {
+            private boolean alwaysPass = false;
+            private BiConsumer<Player, ITrade> reDirection;
+
+            public Pre(ITradeHolder holder, ITrade trade, Player player) {
+                super(holder, trade, player);
+            }
+
+            /**
+             * 强行使交易通过
+             */
+            public void setAlwaysPass() {
+                this.alwaysPass = true;
+            }
+
+            public boolean isAlwaysPass() {
+                return alwaysPass;
+            }
+
+            /**
+             * 当交易触发时，重新设置交易的逻辑，替换{@link ITrade#onTrade(ServerPlayer, ITradeHolder, int)}
+             */
+            public void setRedirection(BiConsumer<Player, ITrade> reDirection) {
+                this.reDirection = reDirection;
+            }
+
+            public BiConsumer<Player, ITrade> getRedirection() {
+                return reDirection;
+            }
         }
 
-        public boolean isAlwaysPass() {
-            return alwaysPass;
-        }
-
-        /**
-         * 当交易触发时，重新设置交易的逻辑，替换{@link ITrade#onTrade(ServerPlayer, ITradeHolder, int)}
-         */
-        public void setRedirection(BiConsumer<Player, ITrade> reDirection) {
-            this.reDirection = reDirection;
-        }
-
-        public BiConsumer<Player, ITrade> getRedirection() {
-            return reDirection;
+        public static class Post extends NPCTradeEvent {
+            public Post(ITradeHolder holder, ITrade trade, Player player) {
+                super(holder, trade, player);
+            }
         }
     }
 
