@@ -10,6 +10,7 @@ import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProvider;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.AndLock;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.NotLock;
 import org.confluence.terraentity.registries.npc_trade_lock.variant.OrLock;
+import org.confluence.terraentity.registries.npc_trade_lock.variant.TrueLock;
 
 import java.util.Arrays;
 
@@ -18,6 +19,9 @@ import java.util.Arrays;
  * <p>判断是否可以进行交易的接口</p>
  */
 public interface ITradeLock {
+    Codec<ITradeLock> TYPED_CODEC = TERegistries.TRADE_LOCK_PROVIDERS.byNameCodec().dispatch(ITradeLock::getCodec, TradeLockProvider::codec);
+
+    StreamCodec<ByteBuf, ITradeLock> STREAM_CODEC = ByteBufCodecs.fromCodec(TYPED_CODEC);
 
     /**
      * <P>对交易进行额外的优先判断
@@ -30,24 +34,23 @@ public interface ITradeLock {
      */
     TradeLockProvider getCodec();
 
-
-    Codec<ITradeLock> TYPED_CODEC = TERegistries.TRADE_LOCK_PROVIDERS
-            .byNameCodec()
-            .dispatch(ITradeLock::getCodec, TradeLockProvider::codec);
-
-    StreamCodec<ByteBuf, ITradeLock> STREAM_CODEC = ByteBufCodecs.fromCodec(TYPED_CODEC);
-
     default ITradeLock invert() {
         return not(this);
     }
 
-    static ITradeLock and(ITradeLock... locks){
+    static ITradeLock and(ITradeLock... locks) {
         return new AndLock(Arrays.asList(locks));
     }
-    static ITradeLock or(ITradeLock... locks){
+
+    static ITradeLock or(ITradeLock... locks) {
         return new OrLock(Arrays.asList(locks));
     }
-    static ITradeLock not(ITradeLock lock){
+
+    static ITradeLock not(ITradeLock lock) {
         return new NotLock(lock);
+    }
+
+    static ITradeLock alwaysTrue() {
+        return TrueLock.INSTANCE;
     }
 }

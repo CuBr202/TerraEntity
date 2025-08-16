@@ -24,7 +24,6 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.api.npc.trade.ITradeGenerator;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
-import org.confluence.terraentity.api.npc.trade.ITradeLock;
 import org.confluence.terraentity.registries.npc_trade_list.variant.SimpleGenerator;
 import org.jetbrains.annotations.Nullable;
 
@@ -178,8 +177,7 @@ public class NPCTradeManager {
         boolean dirty = false;
         this.availableTrades = new ArrayList<>();
         for (ITrade trade : this.trades) {
-            ITradeLock lock = trade.lock();
-            if (lock == null || lock.canTrade(player, owner, index)) {
+            if (trade.lock().canTrade(player, owner, index)) {
                 this.availableTrades.add(trade);
                 if (bitMask.remove(index)) {
                     dirty = true;

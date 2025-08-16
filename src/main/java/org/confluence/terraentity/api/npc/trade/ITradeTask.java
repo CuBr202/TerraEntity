@@ -53,7 +53,7 @@ public interface ITradeTask {
     /**
      * 这个title不为空时会覆盖重写的getTile()的硬编码标题
      */
-    default String title(){
+    default @Nullable String title() {
         return null;
     }
     /**

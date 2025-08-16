@@ -19,6 +19,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.npc_trade.TradeProperties;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -56,12 +57,12 @@ public interface ITrade{
     List<ItemStack> normalizeResult();
 
     /**
-     * 获取交易锁
+     * 获取交易锁，默认为alwaysTrue
      */
-    default ITradeLock lock(){
+    default @NotNull ITradeLock lock() {
         TradeProperties properties = properties();
         if(properties == null){
-            return null;
+            return ITradeLock.alwaysTrue();
         }
         return properties.lock();
     }
@@ -72,11 +73,7 @@ public interface ITrade{
      * 带交易锁的交易条件，默认使用这个方法
      */
     default boolean canTradeWithLock(Player player, ITradeHolder npc, int index){
-        ITradeLock lock = lock();
-        if(lock == null){
-            return canTrade(player, npc, index);
-        }
-        return canTrade(player, npc, index) && lock.canTrade(player, npc, index);
+        return canTrade(player, npc, index) && lock().canTrade(player, npc, index);
     }
 
     /**

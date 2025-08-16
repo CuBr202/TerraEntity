@@ -7,9 +7,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terraentity.api.npc.trade.IIngredientTrade;
-import org.confluence.terraentity.api.npc.trade.ITradeItemList;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
-import org.confluence.terraentity.registries.npc_trade.*;
+import org.confluence.terraentity.api.npc.trade.ITradeItemList;
+import org.confluence.terraentity.registries.npc_trade.TradeProperties;
+import org.confluence.terraentity.registries.npc_trade.TradeProvider;
+import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ import java.util.Optional;
  */
 public record ItemTradeItemList(List<AmountIngredient> costs, List<ItemStack> result, TradeProperties properties) implements IIngredientTrade, ITradeItemList {
 
-    public static MapCodec<ItemTradeItemList> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<ItemTradeItemList> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             AmountIngredient.CODEC.codec().listOf().fieldOf("costs").forGetter(ItemTradeItemList::costs),
             ItemStack.OPTIONAL_CODEC.listOf().fieldOf("result").forGetter(ItemTradeItemList::result),
             TradeProperties.CODEC.optionalFieldOf("properties").forGetter(i-> Optional.ofNullable(i.properties))

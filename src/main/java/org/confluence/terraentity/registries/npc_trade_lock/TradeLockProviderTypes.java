@@ -18,6 +18,7 @@ public class TradeLockProviderTypes {
     public static final Supplier<TradeLockProvider> AND_LOCK = register("and_lock", AndLock.CODEC);
     public static final Supplier<TradeLockProvider> OR_LOCK = register("or_lock", OrLock.CODEC);
     public static final Supplier<TradeLockProvider> NOT_LOCK = register("not_lock", NotLock.CODEC);
+    public static final Supplier<TradeLockProvider> TRUE_LOCK = register("true_lock", TrueLock.CODEC);
 
     public static final Supplier<TradeLockProvider> BIOME_LOCK = register("biome_lock", BiomeLock.CODEC);
     public static final Supplier<TradeLockProvider> TIME_LOCK = register("time_lock", TimeLock.CODEC);

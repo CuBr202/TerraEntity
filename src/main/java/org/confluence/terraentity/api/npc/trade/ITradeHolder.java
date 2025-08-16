@@ -2,6 +2,7 @@ package org.confluence.terraentity.api.npc.trade;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
@@ -29,7 +30,7 @@ public interface ITradeHolder {
      * 获取当前客户端菜单选中的交易索引
      * @return 当前客户端菜单选中的交易索引
      */
-    static int selectTradeIndex(){
+    static int selectTradeIndex() {
         return _util.selectTradeIndex;
     }
 
@@ -37,9 +38,10 @@ public interface ITradeHolder {
      * 设置当前客户端菜单选中的交易索引
      * @param index 当前客户端菜单选中的交易索引
      */
-    static void setSelectTradeIndex(int index){
+    static void setSelectTradeIndex(int index) {
         _util.selectTradeIndex = index;
     }
+
     /**
      * 获取交易管理器
      */
@@ -53,7 +55,7 @@ public interface ITradeHolder {
     /**
      * npc代理{@link ITradeGenerator#generateTrades(ITradeHolder)},若返回null，则使用{@link ITradeGenerator#generateTradesDefault(ITradeHolder)}
      */
-    default @Nullable List<ITrade> generateTrades(ITradeGenerator tradeGenerator){
+    default @Nullable List<ITrade> generateTrades(ITradeGenerator tradeGenerator) {
         return null;
     }
 
@@ -79,8 +81,8 @@ public interface ITradeHolder {
     /**
      * 获取可用交易列表
      */
-    default List<ITrade> trades(){
-        if(getTradeManager() == null) return null;
+    default List<ITrade> trades() {
+        if (getTradeManager() == null) return null;
         return getTradeManager().availableTrades();
     }
 
@@ -99,7 +101,6 @@ public interface ITradeHolder {
      */
     @Nullable TradeParams getTradeParams();
 
-
     /**
      * <p>需要使用task时或者使用带lock的trade时重写，且应该是强制同步数据</p>
      * <p>同步{@link TradeParams 交易参数列表}</p>
@@ -115,10 +116,59 @@ public interface ITradeHolder {
      */
     void syncNpcTrade(int index);
 
-
-    default Optional<TradeParams.Param> getTradeParam(int key){
-        return Optional.ofNullable(getTradeParams()).isPresent()?
+    default Optional<TradeParams.Param> getTradeParam(int key) {
+        return Optional.ofNullable(getTradeParams()).isPresent() ?
                 Optional.ofNullable(getTradeParams().params().get(key)) :
                 Optional.empty();
+    }
+
+    static ITradeHolder dummy(Player player) {
+        return new Dummy(player);
+    }
+
+    class Dummy implements ITradeHolder {
+        private final Player player;
+        private final NPCTradeManager manager;
+
+        Dummy(Player player) {
+            this.player = player;
+            this.manager = new NPCTradeManager(List.of());
+        }
+
+        @Override
+        public NPCTradeManager getTradeManager() {
+            return manager;
+        }
+
+        @Override
+        public @Nullable NPCMood getMood() {
+            return null;
+        }
+
+        @Override
+        public RandomSource getRandom() {
+            return player.getRandom();
+        }
+
+        @Override
+        public Level level() {
+            return player.level();
+        }
+
+        @Override
+        public BlockPos blockPosition() {
+            return player.blockPosition();
+        }
+
+        @Override
+        public @Nullable TradeParams getTradeParams() {
+            return null;
+        }
+
+        @Override
+        public void syncTradeTasksParams() {}
+
+        @Override
+        public void syncNpcTrade(int index) {}
     }
 }
