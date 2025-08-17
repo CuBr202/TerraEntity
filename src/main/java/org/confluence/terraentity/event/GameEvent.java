@@ -72,7 +72,7 @@ public class GameEvent {
 
     @SubscribeEvent
     public static void onCollectBrains(NPCEvent.NPCBrainCollectionEvent event) {
-        if (!ModChecker.isConfluenceLoaded) {
+        if (!ModChecker.confluence.isLoaded()) {
             event.register(TENpcEntities.DEMOLITIONIST.get(), (collector) -> {
                 collector.setReplace(new DemolitionistNPCAi(collector.getNPC()));
             });

@@ -62,7 +62,7 @@ public class RenderEvent {
     @SubscribeEvent
     public static void renderLevelStage(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
-            isIrisShader = ModChecker.isIrisLoaded && RenderSystem.getShader() instanceof ExtendedShader;
+            isIrisShader = ModChecker.iris.isLoaded() && RenderSystem.getShader() instanceof ExtendedShader;
             BrainTranslucent.render(event);
             DebugBlocksHelper.Singleton().render(event);
             //            NPCRenderer.target.blitToScreen(100,100);

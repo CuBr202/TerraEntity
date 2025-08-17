@@ -1,28 +1,29 @@
 package org.confluence.terraentity.integration;
 
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
 import org.confluence.terraentity.integration.curios.CuriosEvents;
 import org.confluence.terraentity.integration.iron_spell.IronSpellEvents;
 
 public class ModChecker {
 
-
-
-    public static boolean isConfluenceLoaded = ModList.get().isLoaded("confluence");
-    public static boolean isIrisLoaded = ModList.get().isLoaded("iris");
-    public static boolean isIronSpellLoaded = ModList.get().isLoaded("irons_spellbooks");
-    public static boolean isCuriosLoaded = ModList.get().isLoaded("curios");
+    public static ModLoadPair confluence = create("confluence");
+    public static ModLoadPair iris = create("iris");
+    public static ModLoadPair irons_spellbooks = create("irons_spellbooks");
+    public static ModLoadPair curios = create("curios");
+    public static ModLoadPair terraCurio = create("terra_curio");
 
 
     public static void registerEvents(){
-        if(isIronSpellLoaded){
+        if(irons_spellbooks.isLoaded()){
             NeoForge.EVENT_BUS.register(IronSpellEvents.class);
         }
-        if(isCuriosLoaded){
+        if(curios.isLoaded()){
             NeoForge.EVENT_BUS.register(CuriosEvents.class);
         }
     }
 
 
+    private static ModLoadPair create(String key){
+        return new ModLoadPair(key);
+    }
 }

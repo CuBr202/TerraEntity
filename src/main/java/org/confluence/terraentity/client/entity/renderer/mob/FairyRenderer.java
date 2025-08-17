@@ -51,7 +51,7 @@ public class FairyRenderer<T extends Entity & GeoEntity> extends GeoNegativeVolu
                                MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
                                int packedLight, int packedOverlay, int colour) {
         if(isReRender){
-            super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, true, partialTick, packedLight, packedOverlay, 0xDDDDDDDD);
+            super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, true, partialTick, packedLight, packedOverlay, 0xFFFFFFFF);
         }else{
              super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, false, partialTick, 0X0F000F0, packedOverlay, 0xFFFFFFFF);
         }

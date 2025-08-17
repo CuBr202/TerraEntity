@@ -84,7 +84,7 @@ public class GameInputEvent {
 
     @SubscribeEvent
     public static void KeyPressed(InputEvent.Key event) {
-        if(event.getAction() == 1 && ModChecker.isCuriosLoaded){
+        if(event.getAction() == 1 && ModChecker.curios.isLoaded()){
             if(TEKeyBindings.RIDE.get().matches(event.getKey(), event.getModifiers())) {
                 ServerBoundEventPacket.rideOrLeave();
             }

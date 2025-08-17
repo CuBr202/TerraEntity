@@ -62,7 +62,7 @@ public class ModEvent {
     // 这个事件在注册能力之前调用
     @SubscribeEvent
     public static void registerCapabilitiesBefore(RegisterCauldronFluidContentEvent event) {
-        if(ModChecker.isCuriosLoaded){
+        if(ModChecker.curios.isLoaded()){
             CuriosHelper.registerCurios();
         }
     }

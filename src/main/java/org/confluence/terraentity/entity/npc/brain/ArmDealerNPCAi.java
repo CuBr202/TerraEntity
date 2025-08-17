@@ -28,6 +28,7 @@ public class ArmDealerNPCAi extends NPCAi {
         npc.setCooldownTicks(30);
     }
 
+    @Override
     public ImmutableList<Pair<Integer, ? extends BehaviorControl<? super AbstractTerraNPC>>> getRangeAttackPackage(float speedModifier) {
 
         return ImmutableList.of(
@@ -35,6 +36,7 @@ public class ArmDealerNPCAi extends NPCAi {
                 Pair.of(5, getRangeAttackBrain()),
                 Pair.of(5, new CrossBowAttackOnCooldownBrain<>(npc.getCooldownTicks(), npc.getAttackRange() * 0.6F,speedModifier)),
                 Pair.of(5, new NPCAttackCalmDownBrain<>(15){
+                    @Override
                     protected void calmDown(ServerLevel level, AbstractTerraNPC living, long gameTimeIn) {
                         super.calmDown(level, living, gameTimeIn);
                         living.stopUsingItem();
@@ -44,8 +46,10 @@ public class ArmDealerNPCAi extends NPCAi {
         );
     }
 
+    @Override
     protected NPCRangeAttackBrain<? super AbstractTerraNPC> getRangeAttackBrain() {
         return new NPCRangeAttackBrain<>(10, npc.getAttackRange()){
+            @Override
             protected boolean customDoAttack(ServerLevel level, AbstractTerraNPC owner, LivingEntity target){
                 ItemStack stack = owner.getMainHandItem();
                 if(stack.getItem() instanceof CrossbowItem weaponItem){

@@ -41,7 +41,7 @@ public class RideableItem<T extends AbstractRideableEntity> extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        if(ModChecker.isCuriosLoaded){
+        if(ModChecker.curios.isLoaded()){
             tooltipComponents.add(Component.translatable("tooltip.terra_entity.rideable_item.desc"));
         }
     }

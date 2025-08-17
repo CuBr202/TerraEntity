@@ -39,7 +39,7 @@ public class CuriosHelper {
     }
 
     public static void rideOrLeave(Player player){
-        if(ModChecker.isCuriosLoaded){
+        if(ModChecker.curios.isLoaded()){
             Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(player);
             if(!player.isPassenger()) {
                 curiosInventory.ifPresent(handler -> {

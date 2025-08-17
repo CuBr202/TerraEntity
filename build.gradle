@@ -176,7 +176,7 @@ repositories {
 
 boolean dev = project.hasProperty('dev')
         ? project.property('dev').toBoolean()
-        : false  // If using this mod individually, please set false
+        : true  // If using this mod individually, please set false
 // Default true. When -Pdev=false, it's for release build.
 // Or if using this mod individually, please use ./gradlew build -Pdev=false
 
@@ -235,13 +235,20 @@ dependencies {
 
     // 兼容azurelib读geo文件
 //    implementation "curse.maven:azurelib-817423:6849116"
+
+    // 联动curios
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+
+    // 联动铁魔法
     compileOnly "io.redspace:irons_spellbooks:${irons_spells_version}:api"
     compileOnly "io.redspace:irons_spellbooks:${irons_spells_version}"
-    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
     runtimeOnly "io.redspace:irons_spellbooks:${irons_spells_version}"
     runtimeOnly "dev.kosmx.player-anim:player-animation-lib-forge:${player_animator_version}"
 
+    // 联动泰拉饰品
+    compileOnly "curse.maven:terra-curio-1027625:6881159"
+    runtimeOnly "curse.maven:terra-curio-1027625:6881159"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

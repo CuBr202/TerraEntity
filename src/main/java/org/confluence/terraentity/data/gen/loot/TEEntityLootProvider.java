@@ -72,7 +72,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
 
         // 史王
-        Stream.of(TEMonsterEntities.BLUE_SLIME, TEMonsterEntities.GREEN_SLIME, TEMonsterEntities.PINK_SLIME, TEMonsterEntities.CORRUPT_SLIME, TEMonsterEntities.DESERT_SLIME, TEMonsterEntities.JUNGLE_SLIME, TEMonsterEntities.EVIL_SLIME, TEMonsterEntities.ICE_SLIME, TEMonsterEntities.LAVA_SLIME, TEMonsterEntities.LUMINOUS_SLIME, TEMonsterEntities.CRIMSLIME, TEMonsterEntities.PURPLE_SLIME, TEMonsterEntities.RED_SLIME, TEMonsterEntities.TROPIC_SLIME, TEMonsterEntities.YELLOW_SLIME, TEMonsterEntities.HONEY_SLIME, TEMonsterEntities.BLACK_SLIME, TEMonsterEntities.SWAMP_SLIME, TEMonsterEntities.GREEN_DUMPLING_SLIME, TEMonsterEntities.CRIMSLIME
+        Stream.of(TEMonsterEntities.BLUE_SLIME, TEMonsterEntities.GREEN_SLIME, TEMonsterEntities.CORRUPT_SLIME, TEMonsterEntities.DESERT_SLIME, TEMonsterEntities.JUNGLE_SLIME, TEMonsterEntities.EVIL_SLIME, TEMonsterEntities.ICE_SLIME, TEMonsterEntities.LAVA_SLIME, TEMonsterEntities.LUMINOUS_SLIME, TEMonsterEntities.CRIMSLIME, TEMonsterEntities.PURPLE_SLIME, TEMonsterEntities.RED_SLIME, TEMonsterEntities.TROPIC_SLIME, TEMonsterEntities.YELLOW_SLIME, TEMonsterEntities.HONEY_SLIME, TEMonsterEntities.BLACK_SLIME, TEMonsterEntities.SWAMP_SLIME, TEMonsterEntities.GREEN_DUMPLING_SLIME, TEMonsterEntities.CRIMSLIME
                 ).forEach(e->{
             this.add(e.get(), LootTable.lootTable()
                     .withPool(singleItemPool(TESpawnEggItems.KING_SLIME_SPAWN_EGG, 0.01F))
@@ -80,6 +80,11 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                     .withPool(singleItemPool(TESummonItems.SLIME_STAFF, 0.001F))
             );
         });
+        this.add(TEMonsterEntities.PINK_SLIME.get(), LootTable.lootTable()
+                .withPool(singleItemPool(TESpawnEggItems.KING_SLIME_SPAWN_EGG, 0.2F))
+                .withPool(weightLootPool(singleItemIncrease(Items.SLIME_BALL, 1,2),0.2F))
+                .withPool(singleItemPool(TESummonItems.SLIME_STAFF, 0.01F))
+        );
 
         this.add(TEBossEntities.KING_SLIME.get(), LootTable.lootTable()
                 .withPool(singleItemPool(TESummonItems.SLIME_STAFF, 0.33F))
@@ -87,7 +92,6 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                 .withPool(singleItemPool(TERideableItems.SLIMY_SADDLE, 0.2F))
                 .withPool(singleItemPool(TEYoyosItems.CODE_1))
         );
-
 
 
         // 克眼
@@ -248,7 +252,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
         // 哥布林
         Stream.of(TEMonsterEntities.GOBLIN_SCOUT,TEMonsterEntities.GOBLIN_THIEF,TEMonsterEntities.GOBLIN_WARRIOR, TEMonsterEntities.GOBLIN_SORCERER,
-                TEMonsterEntities.GOBLIN_PEON,TEMonsterEntities.ANGER_GOBLIN,TEMonsterEntities.DARK_CASTER,TEMonsterEntities.GIANT_SHELLY,
+                TEMonsterEntities.GOBLIN_PEON,TEMonsterEntities.ANGER_GOBLIN,TEMonsterEntities.DARK_CASTER,
                 TEMonsterEntities.SPORE_ZOMBIE
         ).forEach(e->{
             this.add(e.get(), LootTable.lootTable()
@@ -261,6 +265,12 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                             .when(LootItemKilledByPlayerCondition.killedByPlayer())
                             .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.025F, 0.01F))));
         });
+
+        // 巨大卷壳怪
+        this.add(TEMonsterEntities.GIANT_SHELLY.get(), LootTable.lootTable()
+                .withPool(singleItemPool(TEYoyosItems.RALLY, 1, 0.039F)));
+
+
         this.add(TEMonsterEntities.GOBLIN_ARCHER.get(), LootTable.lootTable()
                 .withPool(weightLootPool(singleItemIncrease(Items.ROTTEN_FLESH, 1, 3), 1f))
                 .withPool(weightLootPool(singleItemIncrease(Items.ARROW, 1, 2), 1f))
