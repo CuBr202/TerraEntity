@@ -6,9 +6,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.common.recipe.AmountIngredient;
@@ -24,6 +27,7 @@ import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTyp
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -34,29 +38,26 @@ import java.util.stream.Collectors;
 public class DynamicAnglerTradeTask implements ITradeTask {
     public static final MapCodec<DynamicAnglerTradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.unboundedMap(Codec.STRING, ItemStack.CODEC.listOf()).xmap(
-                    map -> map.entrySet().stream().map(entry -> Map.entry(Integer.parseInt(entry.getKey()), entry.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)),
-                    map -> map.entrySet().stream().map(entry -> Map.entry(entry.getKey().toString(), entry.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                    map -> convertMapKey(map, Integer::parseInt),
+                    map -> convertMapKey(map, Object::toString)
             ).fieldOf("result_pool").forGetter(task -> task.resultPool),
+            Codec.unboundedMap(Codec.STRING, ResourceKey.codec(Registries.LOOT_TABLE)).xmap(
+                    map -> convertMapKey(map, Integer::parseInt),
+                    map -> convertMapKey(map, Object::toString)
+            ).fieldOf("loot_table_pool").forGetter(task -> task.lootTablePool),
             ItemStack.CODEC.listOf().fieldOf("cost_pool").forGetter(task -> task.costPool),
             ITradeLock.TYPED_CODEC.listOf().fieldOf("cost_lock").forGetter(task -> task.costLock),
             Codec.STRING.optionalFieldOf("title").forGetter(i -> Optional.ofNullable(i.title)),
             ItemTradeLootTable.CODEC.fieldOf("default_trade").forGetter(task -> task.defaultTrade),
             ItemTradeItemList.CODEC.codec().optionalFieldOf("dynamic_trade").forGetter(task -> Optional.ofNullable(task.dynamicTrade)),
             Codec.INT.lenientOptionalFieldOf("current_selected", 0).forGetter(task -> task.currentSelected)
-    ).apply(instance, (resultPool, costPool, costLock, title, defaultTrade, dynamicTrade, currentSelected) -> new DynamicAnglerTradeTask(
-            resultPool,
-            costPool,
-            costLock,
-            title.orElse(null),
-            defaultTrade,
-            dynamicTrade.orElse(null),
-            currentSelected
-    )));
+    ).apply(instance, DynamicAnglerTradeTask::new));
 
     private final Map<Integer, List<ItemStack>> resultPool;
+    private final Map<Integer, ResourceKey<LootTable>> lootTablePool;
     private final List<ItemStack> costPool;
     private final List<ITradeLock> costLock;
-    private final String title;
+    private final @Nullable String title;
 
     private ItemTradeLootTable defaultTrade;
     private ItemTradeItemList dynamicTrade;
@@ -67,17 +68,29 @@ public class DynamicAnglerTradeTask implements ITradeTask {
      * @param defaultTrade 默认奖励，渔夫使用{@link ItemTradeLootTable 战利品池交易表}
      * @param resultPool 等级对应的固定奖励池
      */
-    public DynamicAnglerTradeTask(Map<Integer, List<ItemStack>> resultPool, List<ItemStack> costPool, List<ITradeLock> costLock, @Nullable String title, ItemTradeLootTable defaultTrade, ItemTradeItemList dynamicTrade, int currentSelected) {
+    public DynamicAnglerTradeTask(
+            Map<Integer, List<ItemStack>> resultPool, Map<Integer, ResourceKey<LootTable>> lootTablePool,
+            List<ItemStack> costPool, List<ITradeLock> costLock, @Nullable String title,
+            ItemTradeLootTable defaultTrade, ItemTradeItemList dynamicTrade, int currentSelected
+    ) {
         if (costPool.size() != costLock.size()) {
             throw new IllegalArgumentException("costPool must match the size of costLock, but received costPool=" + costPool.size() + ", costLock=" + costLock.size());
         }
         this.resultPool = resultPool;
+        this.lootTablePool = lootTablePool;
         this.costPool = costPool;
         this.costLock = costLock;
         this.title = title;
         this.defaultTrade = defaultTrade;
         this.dynamicTrade = dynamicTrade;
         this.currentSelected = currentSelected;
+    }
+
+    private DynamicAnglerTradeTask(Map<Integer, List<ItemStack>> resultPool, Map<Integer, ResourceKey<LootTable>> lootTablePool,
+                                   List<ItemStack> costPool, List<ITradeLock> costLock, Optional<String> title,
+                                   ItemTradeLootTable defaultTrade, Optional<ItemTradeItemList> dynamicTrade, int currentSelected
+    ) {
+        this(resultPool, lootTablePool, costPool, costLock, title.orElse(null), defaultTrade, dynamicTrade.orElse(null), currentSelected);
     }
 
     public ItemStack getCurrentCost() {
@@ -100,13 +113,14 @@ public class DynamicAnglerTradeTask implements ITradeTask {
     @Override
     public void setNext(ITradeHolder npc, int index) {
         ItemStack cost = LibUtils.forMixin$ModifyExpression(costPool.get(this.currentSelected = npc.getRandom().nextInt(costPool.size())));
-        List<ItemStack> result = resultPool.get(npc.getTradeParams().getLevel(index) + 1);
+        int level = npc.getTradeParams().getLevel(index) + 1;
+        List<ItemStack> result = resultPool.get(level);
 
         if (result == null) {
             this.dynamicTrade = null;
             this.defaultTrade = new ItemTradeLootTable(
                     List.of(new AmountIngredient(Ingredient.of(cost), cost.getCount())),
-                    defaultTrade.lootTable(),
+                    lootTablePool.getOrDefault(level, defaultTrade.lootTable()),
                     defaultTrade.sprite(),
                     defaultTrade.translationKey(),
                     defaultTrade.properties()
@@ -163,7 +177,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
      */
     @Override
     public Component getTitle(ITradeHolder holder, Component original) {
-        return Component.translatable(title() == null ? "title.terra_entity.npc_trade.task.daily" : title());
+        return Component.translatable(title == null ? "title.terra_entity.npc_trade.task.daily" : title);
     }
 
     @Override
@@ -179,8 +193,13 @@ public class DynamicAnglerTradeTask implements ITradeTask {
         return new Builder().setDefaultTrade(defaultTrade).setCostPool(costPool);
     }
 
+    private static <S, T, V> Map<T, V> convertMapKey(Map<S, V> map, Function<S, T> function) {
+        return map.entrySet().stream().map(entry -> Map.entry(function.apply(entry.getKey()), entry.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
     public static class Builder {
         private final Map<Integer, List<ItemStack>> resultPool = new HashMap<>();
+        private final Map<Integer, ResourceKey<LootTable>> lootTablePool = new HashMap<>();
         private List<ItemStack> costPool;
         private List<ITradeLock> costLock;
         private String title;
@@ -196,6 +215,11 @@ public class DynamicAnglerTradeTask implements ITradeTask {
 
         public Builder addResult(int level, List<ItemStack> items) {
             this.resultPool.put(level, items);
+            return this;
+        }
+
+        public Builder addLootTable(int level, ResourceKey<LootTable> lootTable) {
+            this.lootTablePool.put(level, lootTable);
             return this;
         }
 
@@ -221,7 +245,7 @@ public class DynamicAnglerTradeTask implements ITradeTask {
         }
 
         public DynamicAnglerTradeTask build() {
-            return new DynamicAnglerTradeTask(resultPool, costPool, costLock, title, defaultTrade, null, 0);
+            return new DynamicAnglerTradeTask(resultPool, lootTablePool, costPool, costLock, title, defaultTrade, null, 0);
         }
     }
 }
