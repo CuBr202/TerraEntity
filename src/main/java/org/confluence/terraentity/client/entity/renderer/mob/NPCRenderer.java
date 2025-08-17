@@ -2,7 +2,9 @@ package org.confluence.terraentity.client.entity.renderer.mob;
 
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -26,12 +28,7 @@ public class NPCRenderer<T extends AbstractTerraNPC> extends HumanoidRenderer<T>
 
     public NPCRenderer(EntityRendererProvider.Context renderManager, ResourceLocation path) {
         super(renderManager, path.withPrefix("npc/"));
-
-    }
-
-    @Override
-    public float getMotionAnimThreshold(T animatable) {
-        return 0.01F;
+        setMotionAnimThreshold(0.01F);
     }
 
     @Override

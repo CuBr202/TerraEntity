@@ -20,6 +20,7 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
     protected boolean ifRotX;
     protected float scale;
     protected float offsetY;
+    protected float motionAnimThreshold = 0.01F;
 
     /**
      * @param path 实体文件位置 path.namespace/textures/entity/{name}.png
@@ -39,6 +40,11 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
         this.scale=scale;
         this.offsetY=offsetY;
         this.shadowRadius = 0.25F;
+    }
+
+    public GeoNormalRenderer<T> setMotionAnimThreshold(float threshold) {
+        this.motionAnimThreshold = threshold;
+        return this;
     }
 
     @Override
@@ -67,7 +73,7 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
 
     @Override
     public float getMotionAnimThreshold(T animatable) {
-        return 0.01F;
+        return motionAnimThreshold;
     }
 
     public GeoNormalRenderer<T> setShadowRadius(float shadowRadius) {
