@@ -2,12 +2,10 @@ package org.confluence.terraentity.init;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.effect.harmful.*;
-import org.confluence.terraentity.entity.boss.WallOfFlesh;
 
 public class TEEffects {
 
@@ -19,4 +17,6 @@ public class TEEffects {
     public static final DeferredHolder<MobEffect, MobEffect> HELLFIRE = EFFECTS.register("hellfire", HellFireEffect::new);
     public static final DeferredHolder<MobEffect, HorrifiedEffect> HORRIFIED = EFFECTS.register("horrified", HorrifiedEffect::new);
     public static final DeferredHolder<MobEffect, TheTongueEffect> THE_TONGUE = EFFECTS.register("the_tongue", TheTongueEffect::new);
+    public static final DeferredHolder<MobEffect, CrimsonStorm> CRIMSON_STORM = EFFECTS.register("crimson_storm", CrimsonStorm::new);
+
 }

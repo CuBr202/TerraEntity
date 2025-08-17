@@ -39,6 +39,7 @@ import org.confluence.terraentity.entity.monster.slime.GoldenSlime;
 import org.confluence.terraentity.entity.monster.slime.HoneySlime;
 import org.confluence.terraentity.entity.util.SpawnPlacementChecks;
 import org.confluence.terraentity.init.TEEntities;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -210,7 +211,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.BLOOD_ZOMBIE.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.BLOOD_ZOMBIE.getId(), false));
         event.registerEntityRenderer(TEMonsterEntities.SNOW_FLINX.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.SNOW_FLINX.getId(), false){
             @Override
-            protected void adjustPose(PoseStack poseStack, AbstractMonster animatable, float partialTick){
+            protected void adjustPose(PoseStack poseStack, AbstractMonster animatable, BakedGeoModel model, float partialTick){
                 poseStack.mulPose(Axis.YP.rotationDegrees(90+ Mth.lerp(partialTick, animatable.yBodyRotO - animatable.yHeadRotO,animatable.yBodyRot - animatable.yHeadRot)) );
             }
         });

@@ -41,13 +41,13 @@ public class MobSkill<T extends Entity> extends AbstractMobSkill<T> {
         this.stateOver = stateOver;
     };
 
-    public void init(T mob){
+    public void start(T mob){
         if(stateInit!= null) stateInit.accept(mob);
     }
     public void tick(T mob, int time){
         if(stateTick!= null) stateTick.accept(mob);
     }
-    public void over(T mob){
+    public void stop(T mob){
         if(stateOver!= null) stateOver.accept(mob);
     }
 

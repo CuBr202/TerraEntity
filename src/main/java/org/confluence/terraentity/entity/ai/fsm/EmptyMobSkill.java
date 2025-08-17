@@ -13,7 +13,7 @@ public class EmptyMobSkill<T extends Entity> extends AbstractMobSkill<T> {
     }
 
     @Override
-    public void init(T mob) {
+    public void start(T mob) {
     }
 
     @Override
@@ -21,6 +21,6 @@ public class EmptyMobSkill<T extends Entity> extends AbstractMobSkill<T> {
     }
 
     @Override
-    public void over(T mob) {
+    public void stop(T mob) {
     }
 }

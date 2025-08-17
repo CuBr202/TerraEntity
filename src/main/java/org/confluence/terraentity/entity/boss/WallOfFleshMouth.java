@@ -140,6 +140,7 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> im
         }
     }
 
+    @Override
     protected void registerGoals() {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
     }

@@ -176,7 +176,7 @@ repositories {
 
 boolean dev = project.hasProperty('dev')
         ? project.property('dev').toBoolean()
-        : true  // If using this mod individually, please set false
+        : false  // If using this mod individually, please set false
 // Default true. When -Pdev=false, it's for release build.
 // Or if using this mod individually, please use ./gradlew build -Pdev=false
 
@@ -222,16 +222,16 @@ dependencies {
     // iris
 
     compileOnly "curse.maven:irisshaders-455508:6213632"
-//    runtimeOnly "curse.maven:irisshaders-455508:6213632"
+    runtimeOnly "curse.maven:irisshaders-455508:6213632"
 //
 //    // sodium
     compileOnly "curse.maven:sodium-394468:6382651"
-//    runtimeOnly "curse.maven:sodium-394468:6382651"
+    runtimeOnly "curse.maven:sodium-394468:6382651"
 
     compileOnly "curse.maven:dynamiclights-reforged-551736:5807536"
     runtimeOnly "curse.maven:dynamiclights-reforged-551736:5807536"
 
-//    compileOnly "net.fabricmc.fabric-api:fabric-renderer-api-v1:6.0.2+75fa737a29"
+    compileOnly "net.fabricmc.fabric-api:fabric-renderer-api-v1:6.0.2+75fa737a29"
 
     // 兼容azurelib读geo文件
 //    implementation "curse.maven:azurelib-817423:6849116"
@@ -289,7 +289,7 @@ idea {
     }
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 

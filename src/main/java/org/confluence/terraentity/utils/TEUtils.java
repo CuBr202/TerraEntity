@@ -444,6 +444,13 @@ public final class TEUtils {
         return result.getBlockPos();
     }
 
+    /**
+     * 获取视角前方的位置
+     */
+    public static Vec3 getEyeVec3(Entity entity, float distance, float partialTicks){
+        return entity.getEyePosition(partialTicks).add(entity.getLookAngle().normalize().scale(distance));
+    }
+
     public static boolean isFTWWorld(ServerLevel level) {
         return false; // confluence mixin here
     }

@@ -49,7 +49,7 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
         if(ifRotX) {
             this.rotateX(poseStack, animatable, partialTick);
         }
-        this.adjustPose(poseStack, animatable, partialTick);
+        this.adjustPose(poseStack, animatable, model, partialTick);
 
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
 
@@ -61,7 +61,7 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
                 Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot())));
     }
 
-    protected void adjustPose(PoseStack poseStack, T animatable, float partialTick){
+    protected void adjustPose(PoseStack poseStack, T animatable, BakedGeoModel model,float partialTick){
 
     }
 

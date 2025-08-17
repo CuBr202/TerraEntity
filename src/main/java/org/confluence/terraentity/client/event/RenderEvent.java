@@ -18,8 +18,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
+import org.confluence.terraentity.client.buffer.DebugEntityHelper;
 import org.confluence.terraentity.client.buffer.NPCChatBubbleBuffer;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
+import org.confluence.terraentity.client.post.BossSpawnCameraManager;
 import org.confluence.terraentity.client.post.BrainTranslucent;
 import org.confluence.terraentity.client.post.TongueRenderer;
 import org.confluence.terraentity.init.TEAttachments;
@@ -34,6 +36,9 @@ import static org.confluence.terraentity.config.ClientConfig.bossBarStyle;
 public class RenderEvent {
     @SubscribeEvent
     public static void guiEvent( RenderGuiLayerEvent.Pre event){
+        if(BossSpawnCameraManager.INSTANCE.isAnimating()){
+            event.setCanceled(true);
+        }
 
     }
 
@@ -62,6 +67,7 @@ public class RenderEvent {
             DebugBlocksHelper.Singleton().render(event);
             //            NPCRenderer.target.blitToScreen(100,100);
             NPCChatBubbleBuffer.getInstance().render(event);
+
             isAfterSky = false;
         } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
             TongueRenderer.renderFirstPerson(event);
@@ -71,6 +77,8 @@ public class RenderEvent {
 //            NPCChatBubbleBuffer.getInstance().refresh();
 
             isAfterSky = true;
+        } else if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES){
+            DebugEntityHelper.INSTANCE.render(event);
         }
     }
 
@@ -81,6 +89,10 @@ public class RenderEvent {
 
     @SubscribeEvent
     public static void renderHand(RenderHandEvent event) {
+        if(BossSpawnCameraManager.INSTANCE.isAnimating()){
+            event.setCanceled(true);
+        }
+
         ItemStack stack = event.getItemStack();
         LocalPlayer player = Minecraft.getInstance().player;
         if(player == null){
@@ -132,9 +144,9 @@ public class RenderEvent {
 
 
     @SubscribeEvent
-    public static void renderHand(RenderArmEvent event) {
-//        PoseStack stack = event.getPoseStack();
-//        stack.translate(0, 0.5, 0);
+    public static void calculateCameraDistance(CalculateDetachedCameraDistanceEvent event) {
+        BossSpawnCameraManager.INSTANCE.update(Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true));
+
 
     }
 }

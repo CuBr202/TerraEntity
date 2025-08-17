@@ -57,7 +57,7 @@ public class GraniteElemental extends AbstractFSMMonster<GraniteElemental> imple
         public void init(CircleMobSkills<GraniteElemental> skills) {
             AbstractMobSkill<GraniteElemental> walk = new AbstractMobSkill<>(DefaultAnimations.WALK, 9999999, 0) {
                 @Override
-                public void init(GraniteElemental mob) {
+                public void start(GraniteElemental mob) {
 
                 }
 
@@ -81,14 +81,14 @@ public class GraniteElemental extends AbstractFSMMonster<GraniteElemental> imple
                 }
 
                 @Override
-                public void over(GraniteElemental mob) {
+                public void stop(GraniteElemental mob) {
                     mob.getNavigation().stop();
                 }
             };
             AbstractMobSkill<GraniteElemental> toDefenseSkill = new EmptyMobSkill<>(toDefense, 7);
             AbstractMobSkill<GraniteElemental> defenseSkill = new AbstractMobSkill<>(DefaultAnimations.IDLE, 100, 7) {
                 @Override
-                public void init(GraniteElemental mob) {
+                public void start(GraniteElemental mob) {
 
                 }
 
@@ -99,7 +99,7 @@ public class GraniteElemental extends AbstractFSMMonster<GraniteElemental> imple
                 }
 
                 @Override
-                public void over(GraniteElemental mob) {
+                public void stop(GraniteElemental mob) {
 
                 }
             };

@@ -56,7 +56,7 @@ public class CircleMobSkills<T extends Entity> {
         index = (index +1) % mobSkills.size();
 
         //状态结束
-        mobSkills.get(lastIndex).over(owner);
+        mobSkills.get(lastIndex).stop(owner);
         if(skillIndexData!= null) {
             owner.getEntityData().set(skillIndexData, index);
         }
@@ -67,7 +67,7 @@ public class CircleMobSkills<T extends Entity> {
         this.index = index;
 
         //初次进入状态
-        mobSkills.get(index).init(owner);
+        mobSkills.get(index).start(owner);
         if(skillIndexData!= null) {
             owner.getEntityData().set(skillIndexData, index);
         }

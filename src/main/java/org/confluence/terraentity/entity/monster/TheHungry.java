@@ -148,13 +148,17 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
         else return this.owner.canAttack(entity);
     }
 
+    protected Vec3 initDirection(LivingEntity owner){
+        return owner.getForward().normalize();
+    }
+
     @Override
     public void tick() {
-        if (this.owner == null && !this.level().isClientSide && this.tickCount % 60 == 0) {
+        if ((this.owner == null || !this.owner.isAlive()) && !this.level().isClientSide && this.tickCount % 60 == 0) {
             if (this.isFree) {
                 this.hurt(this.damageSources().starve(), 1.0F);
             } else {
-                this.discard();
+                this.kill();
             }
         }
         super.tick();
@@ -164,8 +168,8 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
             phase = 0;
         }
 
-        if (this.owner instanceof WallOfFlesh wall && !this.isFree) {
-            Vec3 testDir = wall.getForward().normalize();
+        if (this.owner instanceof LivingEntity wall && !this.isFree) {
+            Vec3 testDir = this.initDirection(wall);
             if(this.initDir == null || !this.initDir.equals(testDir)){
                 initDir = testDir;
             }
@@ -307,8 +311,11 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
     }
 
     @Override
-    public AABB getBoundingBoxForCulling() {
-        return this.getBoundingBox().inflate(10);
+    public @NotNull AABB getBoundingBoxForCulling() {
+        if(this.initPos == null){
+            return super.getBoundingBoxForCulling().inflate(10);
+        }
+        return new AABB(this.position(), this.initPos);
     }
 
     @Override
@@ -354,7 +361,7 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
     }
 
     public void minion_setOwner(Entity owner) {
-        if (owner instanceof WallOfFlesh wall) {
+        if (owner instanceof Mob wall) {
             minion_setOwnerUUID(owner.getUUID());
             this.owner = wall;
         }

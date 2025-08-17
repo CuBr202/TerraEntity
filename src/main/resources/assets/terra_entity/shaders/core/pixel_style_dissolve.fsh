@@ -21,9 +21,9 @@ void main() {
     }
 
     // 计算当前纹理坐标对应的像素块坐标
-//    vec2 uv = floor(texCoord0 * PixelSize) / PixelSize;
+    //    vec2 uv = floor(texCoord0 * PixelSize) / PixelSize;
 
-     vec2 uv = texCoord0 - mod(texCoord0, 1.0/PixelSize);
+    vec2 uv = texCoord0 - mod(texCoord0, 1.0/PixelSize);
 
     // 遮罩纹理
     vec4 mask = texture(Sampler1, uv);

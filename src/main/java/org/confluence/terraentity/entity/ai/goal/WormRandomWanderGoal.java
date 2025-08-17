@@ -16,7 +16,7 @@ public class WormRandomWanderGoal<T extends Mob & IHeightControlMob> extends Goa
     private Vec3 randomTarget;
     private int tickToChangeTarget;
     private final int _tickToChangeTarget;
-    private final T worm;
+    public final T worm;
 
     Curve curve;
 

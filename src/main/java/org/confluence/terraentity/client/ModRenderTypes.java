@@ -20,7 +20,9 @@ public final class ModRenderTypes {
         public static ShaderInstance colorBlitShader;
         public static ShaderInstance mixAddShader;
         public static ShaderInstance dissolveBlitShader;
-        public static ShaderInstance pixelStyleBlitShader;
+        public static ShaderInstance pixelStyleShader;
+        public static ShaderInstance floatFireShader;
+
 
         @SubscribeEvent
         public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
@@ -55,13 +57,44 @@ public final class ModRenderTypes {
                     }
             );
             event.registerShader(new ShaderInstance(resourceProvider,
-                            TerraEntity.space("pixel_style_blit"),
-                            DefaultVertexFormat.BLIT_SCREEN),
+                            TerraEntity.space("pixel_style_dissolve"),
+                            DefaultVertexFormat.POSITION_TEX),
                     shader -> {
-                        pixelStyleBlitShader = shader;
+                        pixelStyleShader = shader;
+                    }
+            );
+            event.registerShader(new ShaderInstance(resourceProvider,
+                            TerraEntity.space("float_fire"),
+                            DefaultVertexFormat.POSITION_TEX),
+                    shader -> {
+                        floatFireShader = shader;
                     }
             );
         }
+    }
+
+    public static ShaderInstance getFloatBarShader() {
+        return Shaders.floatBarShader;
+    }
+
+    public static ShaderInstance getColorBlitShader() {
+        return Shaders.colorBlitShader;
+    }
+
+    public static ShaderInstance getMixAddShader() {
+        return Shaders.mixAddShader;
+    }
+
+    public static ShaderInstance getDissolveBlitShader() {
+        return Shaders.dissolveBlitShader;
+    }
+
+    public static ShaderInstance getPixelStyleShader() {
+        return Shaders.pixelStyleShader;
+    }
+
+    public static ShaderInstance getFloatFireShader() {
+        return Shaders.floatFireShader;
     }
 
 }

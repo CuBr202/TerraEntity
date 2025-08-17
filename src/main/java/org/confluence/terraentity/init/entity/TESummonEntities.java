@@ -23,6 +23,7 @@ import org.confluence.terraentity.entity.proj.YoyosEntity;
 import org.confluence.terraentity.entity.summon.*;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.init.TEEntities;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 public class TESummonEntities {
     // tip 召唤物
@@ -67,7 +68,7 @@ public class TESummonEntities {
         event.registerEntityRenderer(IMP.get(), c->new GeoNormalRenderer<>(c, IMP.getId().withPrefix("summon/"), true, 0.8f,-0.5F));
         event.registerEntityRenderer(SUMMON_SNOW_FLINX.get(), c->new GeoNormalRenderer<>(c, SUMMON_SNOW_FLINX.getId().withPrefix("summon/"),false){
             @Override
-            protected void adjustPose(PoseStack poseStack, SummonSnowFlinx animatable, float partialTick){
+            protected void adjustPose(PoseStack poseStack, SummonSnowFlinx animatable, BakedGeoModel model, float partialTick){
                 poseStack.mulPose(Axis.YP.rotationDegrees(90+ Mth.lerp(partialTick, animatable.yBodyRotO - animatable.yHeadRotO,animatable.yBodyRot - animatable.yHeadRot)) );
             }
         });

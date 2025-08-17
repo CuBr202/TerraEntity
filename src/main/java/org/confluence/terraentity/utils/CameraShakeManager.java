@@ -1,7 +1,10 @@
 package org.confluence.terraentity.utils;
 
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -11,6 +14,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terraentity.network.s2c.SyncCameraShakePacket;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +72,19 @@ public class CameraShakeManager {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void handleCameraShake(ViewportEvent.ComputeCameraAngles event) {
+
+        try {
+            Method setPostionMethod = Camera.class.getDeclaredMethod("setPosition", double.class, double.class, double.class);
+            setPostionMethod.setAccessible(true);
+            Vec3 pos = Minecraft.getInstance().player.position();
+            setPostionMethod.invoke(event.getCamera(), pos.x, pos.y + 5, pos.z);
+
+
+        } catch (Exception e) {
+
+        }
+
+
         if (clientCameraShakeData.isEmpty()) {
             return;
         }
@@ -89,5 +106,7 @@ public class CameraShakeManager {
         event.setYaw(event.getYaw() + yaw);
         event.setRoll(event.getRoll() + roll);
         event.setPitch(event.getPitch() + pitch);
+
+
     }
 }

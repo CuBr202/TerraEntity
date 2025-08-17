@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.entity.summon.SculkWisp;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 public class SculkWispRenderer extends GeoNormalRenderer<SculkWisp> {
 
@@ -16,7 +17,7 @@ public class SculkWispRenderer extends GeoNormalRenderer<SculkWisp> {
 
 
     @Override
-    protected void adjustPose(PoseStack poseStack, SculkWisp animatable, float partialTick){
+    protected void adjustPose(PoseStack poseStack, SculkWisp animatable, BakedGeoModel model, float partialTick){
         poseStack.mulPose(Axis.YP.rotation(-Mth.HALF_PI));
         poseStack.translate(0, 0.5, 0);
     }

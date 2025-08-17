@@ -21,6 +21,7 @@ public class KeyframeAnimation implements IKeyframeAnimation<Double> {
     public List<Keyframe> keyframes;
     private final double length;
     List<AbstractKeyframeBaker> interpolators;
+    private final float endTime;
 
     public static Codec<KeyframeAnimation> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Keyframe.CODEC.listOf().fieldOf("keyframes").forGetter(KeyframeAnimation::getKeyframes)
@@ -57,6 +58,7 @@ public class KeyframeAnimation implements IKeyframeAnimation<Double> {
             ii.getAndIncrement();
         });
         this.length = keyframes.getLast().time;
+        this.endTime = (float) keyframes.getLast().time;
     }
 
     /**
@@ -73,6 +75,10 @@ public class KeyframeAnimation implements IKeyframeAnimation<Double> {
         int index = interval.insertPoint - 1;
         AbstractKeyframeBaker interpolator = interpolators.get(index);
         return interpolator.calculate(t);
+    }
+
+    public double getEndTime(){
+        return endTime;
     }
 
     @Override

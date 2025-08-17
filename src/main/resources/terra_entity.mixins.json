@@ -17,6 +17,7 @@
     "client.ServerChunkLoadingManagerMixin"
   ],
   "client": [
+    "accessor.CameraAccessor",
     "accessor.GameRendererAccessor",
     "accessor.LevelRendererAccessor",
     "client.BossHealthOverlayMixin",

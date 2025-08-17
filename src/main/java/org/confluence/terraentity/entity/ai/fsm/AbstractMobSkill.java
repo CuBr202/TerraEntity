@@ -19,9 +19,9 @@ public abstract class AbstractMobSkill<T extends Entity> {
         this.timeTrigger = timeTrigger;
     }
 
-    public abstract void init(T mob);
+    public abstract void start(T mob);
     public abstract void tick(T mob, int time);
-    public abstract void over(T mob);
+    public abstract void stop(T mob);
 
 
 }

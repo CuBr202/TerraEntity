@@ -102,6 +102,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
      */
     public void firstSpawn(){};
 
+    public void aganinSpawn(){};
+
+
     @Override
     protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
     }
@@ -110,8 +113,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public void onAddedToLevel(){
 
         if(!level().isClientSide){
-            if(dirty)
+            if(dirty) {
                 firstSpawn();
+            }
             if(bossEvent!= null){
                 bossEvent.getPlayers().forEach(p->syncBossHealthBar(p));
 
@@ -311,6 +315,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             if(!isCreativePlayer && !player.canBeSeenAsEnemy()){
                 isCreativePlayer = true;
             }
+            this.noActionTime = 0; // 防止某些站桩boss被刷新
         }
         return players;
     }
@@ -535,6 +540,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     }
 
+
+
     protected boolean isExpertise(){
         return this.difficultSelector.isExpertise();
     }
@@ -545,4 +552,16 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         return this.difficultSelector.isFtw();
     }
 
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
+    
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        if(source.is(DamageTypes.LAVA)){
+            return true;
+        }
+        return super.isInvulnerableTo(source);
+    }
 }

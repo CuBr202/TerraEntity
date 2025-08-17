@@ -144,7 +144,7 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
                             }
                 }, (ServerLevel) level(), hungryPos);
 
-                        if (hungry != null) {
+                if (hungry != null) {
                     addChildSegment(hungry, hungryPos);
                     this.theHungryMap.put(hungryPos, hungry);
                             hungry.minion_setOwner(this);

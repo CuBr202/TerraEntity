@@ -10,6 +10,7 @@ import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
 import java.util.Optional;
 
@@ -44,7 +45,7 @@ public class CuriosHelper {
                 curiosInventory.ifPresent(handler -> {
                     ICurioStacksHandler itemStackHandler = handler.getCurios().get(CuriosHelper.MOUNT_KEY);
                     if (itemStackHandler != null) {
-                        var list = itemStackHandler.getStacks();
+                        IDynamicStackHandler list = itemStackHandler.getStacks();
                         if (list != null && list.getSlots() > 0) {
                             ItemStack stack = list.getStackInSlot(0);
                             if (stack.getItem() instanceof RideableItem<?> rideable) {

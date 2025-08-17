@@ -18,8 +18,6 @@ public abstract class AttributeInstanceMixin implements IAttributeInstance {
 
     @Shadow protected abstract Collection<AttributeModifier> getModifiersOrEmpty(AttributeModifier.Operation operation);
 
-    @Shadow public abstract double getValue();
-
     @Unique
     private double terraentity$percentage;
     @Unique

@@ -17,11 +17,17 @@ public class ComeAndBackDashAttackGoal<T extends Mob & IHeightControlMob> extend
     int soundTick = 0;
     int soundInternal = 50;
     protected boolean turning = false;
+    float speedModifier;
 
-    public ComeAndBackDashAttackGoal(T worm, float distanceToTurn) {
+    public ComeAndBackDashAttackGoal(T worm, float distanceToTurn, float speedModifier) {
         this.worm = worm;
         this._distanceToTurn = distanceToTurn * distanceToTurn;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE,Flag.LOOK));
+        this.speedModifier = speedModifier;
+    }
+
+    public ComeAndBackDashAttackGoal(T worm, float distanceToTurn) {
+        this(worm, distanceToTurn, 1.0f);
     }
 
     @Override
@@ -79,6 +85,6 @@ public class ComeAndBackDashAttackGoal<T extends Mob & IHeightControlMob> extend
     }
 
     protected Vec3 getAttackMovement(LivingEntity target, double distance) {
-        return worm.getLookAngle().normalize().scale(0.4f);
+        return worm.getLookAngle().normalize().scale(0.4f * this.speedModifier);
     }
 }

@@ -77,27 +77,45 @@ public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster i
             public boolean isAttackableHeight(float originalHeight){
                 return originalHeight < 50;
             }
+
+            protected boolean canFly(){
+                return false;
+            }
         };
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new ComeAndBackDashAttackGoal<>(this, 16){
+        this.goalSelector.addGoal(1, new ComeAndBackDashAttackGoal<>(this, 16, this.getMoveSpeedModifier()){
             @Override
             public boolean canUse() {
-                return super.canUse() && BaseWorm.this.timeToDive > 0;
+                if(!this.worm.canFly()){
+                    return super.canUse() && BaseWorm.this.timeToDive > 0;
+                }
+                return super.canUse();
             }
         });
         this.goalSelector.addGoal(5, new WormRandomWanderGoal<>(this, 30){
             @Override
             public boolean canUse() {
-                return super.canUse() || BaseWorm.this.timeToDive < 0;
+                if(!this.worm.canFly()){
+                    return super.canUse() || BaseWorm.this.timeToDive < 0;
+                }
+                return super.canUse();
             }
         });
 
         this.targetSelector.addGoal(1,new AccelerateOnSeeingGoal(this,0.25f));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class,false, LivingEntity::canBeSeenAsEnemy));
+    }
+
+    protected float getMoveSpeedModifier(){
+        return 1.0f;
+    }
+
+    protected boolean canFly(){
+        return true;
     }
 
     protected int getSegmentCount() {

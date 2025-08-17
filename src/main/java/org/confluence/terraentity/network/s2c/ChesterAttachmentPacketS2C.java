@@ -1,6 +1,5 @@
 package org.confluence.terraentity.network.s2c;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -25,7 +24,7 @@ public class ChesterAttachmentPacketS2C implements CustomPacketPayload {
 
     Map<SummonerAttachment.Key, ChesterConditionalType> bandedBlocks;
 
-    public static final CustomPacketPayload.Type<ChesterAttachmentPacketS2C> TYPE = new CustomPacketPayload.Type<>(TerraEntity.fromSpaceAndPath(TerraEntity.MODID, "client_bound_event_packet"));
+    public static final CustomPacketPayload.Type<ChesterAttachmentPacketS2C> TYPE = new CustomPacketPayload.Type<>(TerraEntity.fromSpaceAndPath(TerraEntity.MODID, "chester_event_packet"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ChesterAttachmentPacketS2C> STREAM_CODEC = CustomPacketPayload.codec(ChesterAttachmentPacketS2C::write, ChesterAttachmentPacketS2C::new);
 
     public ChesterAttachmentPacketS2C(int code, Map<SummonerAttachment.Key, ChesterConditionalType> bandedBlocks) {

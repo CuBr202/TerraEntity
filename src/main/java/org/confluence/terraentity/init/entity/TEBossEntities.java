@@ -18,6 +18,7 @@ import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.KingSlimeRenderer;
 import org.confluence.terraentity.entity.blur.PosRotMotionBlurRenderer;
 import org.confluence.terraentity.entity.boss.*;
+import org.confluence.terraentity.entity.boss.hillofflesh.HillOfFlesh;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.init.TEEntities;
@@ -38,6 +39,8 @@ public class TEBossEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<WallOfFleshEye>> WALL_OF_FLESH_EYE = TEEntities.registerMonster("wall_of_flesh_eye", WallOfFleshEye::new, 4.15F, 4.15F);
     public static final DeferredHolder<EntityType<?>, EntityType<WallOfFleshMouth>> WALL_OF_FLESH_MOUTH = TEEntities.registerMonster("wall_of_flesh_mouth", WallOfFleshMouth::new, 4.15F, 4.15F);
     public static final DeferredHolder<EntityType<?>, EntityType<DungeonGuardian>> DUNGEON_GUARDIAN = TEEntities.registerMonster("dungeon_guardian", DungeonGuardian::new, 2.5F, 2.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HillOfFlesh>> HILL_OF_FLESH = TEEntities.registerMonster("hill_of_flesh", HillOfFlesh::new, 10F,10F);
+
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -59,6 +62,8 @@ public class TEBossEntities {
         event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH_EYE.get(), c->new GeoNormalRenderer<>(c,new WallOfFleshEyeModel(WALL_OF_FLESH_EYE.getId()), true,2,0.5f));
         event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), c->new GeoNormalRenderer<>(c,new GeoBossModel<>(WALL_OF_FLESH_MOUTH), true,2,0.5f));
 
+        event.registerEntityRenderer(TEBossEntities.HILL_OF_FLESH.get(), HillOfFleshRenderer::new);
+
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -79,6 +84,9 @@ public class TEBossEntities {
         event.put(TEBossEntities.WALL_OF_FLESH_EYE.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(TEBossEntities.DUNGEON_GUARDIAN.get(), AbstractTerraBossBase.createAttributes().build());
+
+        event.put(TEBossEntities.HILL_OF_FLESH.get(), AbstractTerraBossBase.createAttributes().build());
+
     }
 
     public static void register(){

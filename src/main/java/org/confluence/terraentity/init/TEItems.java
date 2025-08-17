@@ -12,6 +12,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.item.*;
 import org.confluence.terraentity.item.DebugItem;
@@ -39,6 +40,9 @@ public class TEItems {
                     .icon(()-> TESpawnEggItems.KING_SLIME_SPAWN_EGG.asItem().getDefaultInstance())
                     .displayItems((itemDisplayParameters, output) -> {
                         TESpawnEggItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        if(!ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get()) {
+                            TEBossSummonsItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        }
                         TERideableItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TEPetItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         TESummonItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
@@ -65,6 +69,7 @@ public class TEItems {
 
     public static void register(IEventBus bus) {
         TESpawnEggItems.ITEMS.register(bus);
+        TEBossSummonsItems.ITEMS.register(bus);
         TEPetItems.ITEMS.register(bus);
         TESummonItems.ITEMS.register(bus);
         TEWhipItems.ITEMS.register(bus);

@@ -1,18 +1,14 @@
 package org.confluence.terraentity.entity.proj;
 
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -20,7 +16,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
-import net.neoforged.neoforge.event.EventHooks;
 import org.confluence.terraentity.api.entity.IAttackableProjectile;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.data.enchantment.TEEnchantmentHelper;
@@ -133,7 +128,7 @@ public class WhipEntity extends Projectile {
 
             // 横扫之鞭
             parts = List.of(
-                    Vec3KeyframeAnimation.Builder()
+                    Vec3KeyframeAnimation.builder()
                             .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
                             .addKeyframeTimeStamp(0.1667, new Vec3(-3, 1, 4))
                             .addKeyframeTimeStamp(0.375, new Vec3(-9, 2, 4))
@@ -142,7 +137,7 @@ public class WhipEntity extends Projectile {
                             .addKeyframeTimeStamp(0.875, new Vec3(-3, 0, -4))
                             .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
                             .build(),
-                    Vec3KeyframeAnimation.Builder()
+                    Vec3KeyframeAnimation.builder()
                             .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
                             .addKeyframeTimeStamp(0.1667, new Vec3(-1, 0, 2))
                             .addKeyframeTimeStamp(0.375, new Vec3(-2, 1, 3))
@@ -155,14 +150,14 @@ public class WhipEntity extends Projectile {
             this.weepDamage += sweepLevel * 0.2f;
         }else {
             parts = List.of(
-                    Vec3KeyframeAnimation.Builder()
+                    Vec3KeyframeAnimation.builder()
                             .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
                             .addKeyframeTimeStamp(0.25, new Vec3(-4, 3, 0))
                             .addKeyframeTimeStamp(0.5, new Vec3(-14, 3, 0))
                             .addKeyframeTimeStamp(0.75, new Vec3(-16, -4, 0))
                             .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
                             .build(),
-                    Vec3KeyframeAnimation.Builder()
+                    Vec3KeyframeAnimation.builder()
                             .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
                             .addKeyframeTimeStamp(0.25, new Vec3(-1, 0, 0))
                             .addKeyframeTimeStamp(0.5, new Vec3(-4, 0, 0))
