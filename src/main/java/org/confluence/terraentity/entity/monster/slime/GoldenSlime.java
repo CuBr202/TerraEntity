@@ -64,7 +64,7 @@ public class GoldenSlime extends Slime implements DeathAnimOptions {
     }
 
     public static AttributeSupplier.Builder createSlimeAttributes() {
-        return Mob.createMobAttributes()
+        return BaseSlime.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE, 5)
                 .add(Attributes.ARMOR, 2)
                 .add(Attributes.MAX_HEALTH, 97);

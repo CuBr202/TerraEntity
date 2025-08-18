@@ -50,7 +50,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
     private float speedFactor = 2f; //冲刺加速
     private final float stage2SpeedFactor = 1.5f; //二阶段加速加成
     private final float minDashDistanceSqr = 20;
-    public int stage = 1; //阶段
+
 
     //定义技能参数
     private int summonCDAll = 20; //仆从召唤cd
@@ -367,12 +367,22 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
     @Override
     public void changeState(){
-        if (stage == 1 &&this.getHealth() / getMaxHealth() < 0.5) {
+        if(stage == 1 && this.getHealth() / getMaxHealth() < 0.5){
             stage = 2;
             skills.forceStartIndex(4);
             this.getAttribute(Attributes.ARMOR).setBaseValue(0); // 二阶段没有护甲
         }
+        this.syncStatus(stage);
     }
+
+    @Override
+    protected void initStage(int stage){
+        if(stage == 2){
+            skills.forceStartIndex(4);
+            this.getAttribute(Attributes.ARMOR).setBaseValue(0);
+        }
+    }
+
     @Override
     public boolean shouldLeave() {
         return IAutoLeaveMob.super.shouldLeave() && level().isDay();

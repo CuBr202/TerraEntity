@@ -20,6 +20,7 @@ import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.api.npc.trade.ITradeLock;
 import org.confluence.terraentity.api.npc.trade.ITradeTask;
+import org.confluence.terraentity.data.codec.TECodecs;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeLootTable;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
@@ -37,15 +38,8 @@ import java.util.stream.Collectors;
  */
 public class DynamicAnglerTradeTask implements ITradeTask {
     public static final MapCodec<DynamicAnglerTradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Codec.unboundedMap(Codec.STRING, ItemStack.CODEC.listOf()).xmap(
-                    map -> convertMapKey(map, Integer::parseInt),
-                    map -> convertMapKey(map, Object::toString)
-            ).fieldOf("result_pool").forGetter(task -> task.resultPool),
-            Codec.unboundedMap(Codec.STRING, ResourceKey.codec(Registries.LOOT_TABLE)).xmap(
-                    map -> convertMapKey(map, Integer::parseInt),
-                    map -> convertMapKey(map, Object::toString)
-            ).fieldOf("loot_table_pool").forGetter(task -> task.lootTablePool),
-            ItemStack.CODEC.listOf().fieldOf("cost_pool").forGetter(task -> task.costPool),
+            Codec.unboundedMap(TECodecs.INT_KEY, ItemStack.CODEC.listOf()).fieldOf("result_pool").forGetter(task -> task.resultPool),
+            Codec.unboundedMap(TECodecs.INT_KEY, ResourceKey.codec(Registries.LOOT_TABLE)).fieldOf("loot_table_pool").forGetter(task -> task.lootTablePool),ItemStack.CODEC.listOf().fieldOf("cost_pool").forGetter(task -> task.costPool),
             ITradeLock.TYPED_CODEC.listOf().fieldOf("cost_lock").forGetter(task -> task.costLock),
             Codec.STRING.optionalFieldOf("title").forGetter(i -> Optional.ofNullable(i.title)),
             ItemTradeLootTable.CODEC.fieldOf("default_trade").forGetter(task -> task.defaultTrade),

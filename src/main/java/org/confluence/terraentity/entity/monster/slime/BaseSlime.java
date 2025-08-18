@@ -48,6 +48,8 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
     static FloatRGB SlimeColor_Blue = FloatRGB.fromInteger(0x73bcf4);
     static FloatRGB SlimeColor_Purple = FloatRGB.fromInteger(0xf334f8);
 
+    public static float slimeWaterMoveSpeed = 0.2f;
+
     private final int size;
     private final FloatRGB color;
     private int honeySoakTime;
@@ -62,6 +64,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         }
         this.color = FloatRGB.fromInteger(color);
         this.honeySoakTime = 0;
+
     }
 
     Predicate<FloatRGB> colorTest = c->c.equals(SlimeColor_Green) || c.equals(SlimeColor_Blue) || c.equals(SlimeColor_Purple);
@@ -82,6 +85,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         return Mob.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE, attackDamage)
                 .add(Attributes.ARMOR, armor)
+                .add(Attributes.WATER_MOVEMENT_EFFICIENCY, slimeWaterMoveSpeed)
                 .add(Attributes.MAX_HEALTH, maxHealth);
     }
 

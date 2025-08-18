@@ -50,10 +50,13 @@ public class Vec3KeyframeAnimation implements IKeyframeAnimation<Vec3> {
 
     @Override
     public Vec3 cal(double t) {
-        return cache.computeIfAbsent(t, k -> new Vec3(xInterpolator.cal(t),yInterpolator.cal(t),zInterpolator.cal(t)));
+        return new Vec3(xInterpolator.cal(t),yInterpolator.cal(t),zInterpolator.cal(t));
     }
 
 
+    public Vec3 calWithCache(double t) {
+        return cache.computeIfAbsent(t, k -> new Vec3(xInterpolator.cal(t),yInterpolator.cal(t),zInterpolator.cal(t)));
+    }
 
     @Override
     public double getLength() {

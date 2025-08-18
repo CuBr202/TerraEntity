@@ -14,6 +14,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
+import org.confluence.terraentity.entity.animation.HillOfFleshModelAnimationTable;
 import org.confluence.terraentity.entity.boss.hillofflesh.HillOfFlesh;
 import org.confluence.terraentity.entity.npc.brain.ArmDealerNPCAi;
 import org.confluence.terraentity.entity.npc.brain.DemolitionistNPCAi;
@@ -38,8 +39,7 @@ public class GameEvent {
         ServerPlayer serverPlayer = event.getPlayer();
         if (serverPlayer != null) {
             SyncNPCTradesPacketS2C.sync(serverPlayer);
-            SyncDataS2C.syncNpcDialogs(serverPlayer);
-            SyncDataS2C.syncNpcMoods(serverPlayer);
+            SyncDataS2C.syncAll(serverPlayer);
         }
     }
 
@@ -47,7 +47,6 @@ public class GameEvent {
     public static void serverStartBefore(ServerAboutToStartEvent event) {
         AdapterUtils.postGameEvent(new NPCEvent.NPCBrainCollectionEvent());
         TEAttributeModifierConfig.getInstance().loadConfig();
-        HillOfFlesh.readAnimJson(event.getServer().getResourceManager());
     }
 
     @SubscribeEvent
@@ -68,6 +67,7 @@ public class GameEvent {
         event.addListener(NPCTradeManager.Loader.getInstance());
         event.addListener(TradeModifiers.getInstance());
         event.addListener(ChatManager.Loader.getInstance());
+        event.addListener(HillOfFleshModelAnimationTable.getInstance());
     }
 
     @SubscribeEvent

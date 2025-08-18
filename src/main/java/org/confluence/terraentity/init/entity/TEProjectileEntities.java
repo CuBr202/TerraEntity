@@ -39,6 +39,8 @@ public class TEProjectileEntities {
             new LineProj(e,l).setCanBeHurt().setTexture(TerraEntity.space("textures/entity/model/harpy_feather_projectile.png")),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<DemonScytheProj>> DEMON_SCYTHE_PROJ = registerProj("demon_scythe_proj",(e, l)->
             (DemonScytheProj) new DemonScytheProj(e,l, null).setTexture(TerraEntity.space("textures/entity/model/demon_scythe_projectile.png")),1.2F,1.2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<FirePillar>> FIRE_PILLAR = registerProj("fire_pillar",(e, l)->
+            new FirePillar(e,l).setEffectStrategy(PrefabEffect.of("set_fire", TEEffectStrategies.SET_FIRE_EFFECT)),1.2F,1.2F);
 
     // 鞭子
     public static final DeferredHolder<EntityType<?>, EntityType<WhipEntity>> WHIP_PROJECTILE = TEEntities.ENTITIES.register("whip_projectile", () -> EntityType.Builder.<WhipEntity>of(WhipEntity::new, MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F, 0.5F).build(TEEntities.Key("whip_projectile")));
@@ -61,13 +63,15 @@ public class TEProjectileEntities {
         RegisterUtils.registerBaseProjRenderer(event, SUMMON_BEE_STICK_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         event.registerEntityRenderer(BOOMERANG_PROJECTILE.get(), BoomerangProjRenderer::new);
         event.registerEntityRenderer(SKULL.get(), SkullProjectileRenderer::new);
-        RegisterUtils.registerBaseProjRenderer(event, VILE_SPIT_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
+        RegisterUtils.registerBaseProjRenderer(event, VILE_SPIT_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION))); // 没有指定纹理，默认粒子弹幕
         RegisterUtils.registerBaseProjRenderer(event, DARK_CASTER_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         RegisterUtils.registerBaseProjRenderer(event, FIRE_IMP_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         RegisterUtils.registerBaseProjRenderer(event, HARPY_FEATURE_PROJ.get(), c->new HarpyFeatherProjectileModel<>(c.bakeLayer(HarpyFeatherProjectileModel.LAYER_LOCATION)));
 //        RegisterUtils.registerBaseProjRenderer(event, DEMON_SCYTHE_PROJ.get(), c->new DemonScytheModel<>(c.bakeLayer(DemonScytheModel.LAYER_LOCATION)));
 
         event.registerEntityRenderer(DEMON_SCYTHE_PROJ.get(), c -> new DemonScytheProjRenderer(c, new DemonScytheModel(c.bakeLayer(DemonScytheModel.LAYER_LOCATION))));
+        RegisterUtils.registerBaseProjRenderer(event, FIRE_PILLAR.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
+
         // 子弹
         event.registerEntityRenderer(TEProjectileEntities.TRAIL_PROJECTILE.get(), TrailProjectileRenderer::new);
         // 鞭子

@@ -7,7 +7,7 @@ import org.confluence.terraentity.utils.TEUtils;
 
 public class DifficultSelector {
 
-    private static boolean expertise;
+    private static boolean expert;
     private static boolean master;
     private boolean ftw;
 
@@ -18,18 +18,18 @@ public class DifficultSelector {
     public void changeDifficulty(Level level){
         Difficulty difficulty = level.getDifficulty();
         if(difficulty.equals(Difficulty.PEACEFUL)){
-            expertise = false;
+            expert = false;
             master = false;
             ftw = false;
             return;
         }
 
-        expertise = true;
+        expert = true;
         master = true;
 
         if(difficulty.equals(Difficulty.EASY)) {
             master = false;
-            expertise = false;
+            expert = false;
         }else if(difficulty.equals(Difficulty.NORMAL)){
             master = false;
         }else{
@@ -52,6 +52,17 @@ public class DifficultSelector {
     }
 
     public boolean isExpertise() {
-        return expertise;
+        return expert;
+    }
+
+    public <T> T switchBy(T classic, T expert, T master, T ftw){
+        if(!DifficultSelector.expert){
+            return classic;
+        }else if(!DifficultSelector.master){
+            return expert;
+        }else if(!this.ftw){
+            return master;
+        }
+        return ftw;
     }
 }

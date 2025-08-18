@@ -39,7 +39,7 @@ public class HoneySlime extends Slime implements DeathAnimOptions {
     }
 
     public static AttributeSupplier.Builder createSlimeAttributes(float attackDamage, int armor, float maxHealth) {
-        return Mob.createMobAttributes()
+        return BaseSlime.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE, attackDamage)
                 .add(Attributes.ARMOR, armor)
                 .add(Attributes.MAX_HEALTH, maxHealth);

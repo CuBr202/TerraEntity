@@ -77,6 +77,15 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
                 TEMonsterEntities.LITTLE_HORNET.get(),
                 TEMonsterEntities.GIANT_SHELLY.get()
         );
+        tag(TETags.EntityTypes.FLESH_ALLIANCE).add(
+                TEMonsterEntities.LEECH.get(),
+                TEMonsterEntities.FLESH_SLIME.get(),
+                TEMonsterEntities.THE_HUNGRY.get(),
+                TEBossEntities.HILL_OF_FLESH.get(),
+                TEBossEntities.WALL_OF_FLESH_MOUTH.get(),
+                TEBossEntities.WALL_OF_FLESH_EYE.get(),
+                TEBossEntities.WALL_OF_FLESH.get()
+        );
     }
 
 }

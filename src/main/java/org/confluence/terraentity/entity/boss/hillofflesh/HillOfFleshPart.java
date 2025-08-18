@@ -201,4 +201,8 @@ public abstract class HillOfFleshPart extends PartEntity<HillOfFlesh> {
     public boolean shouldBeSaved() {
         return false;
     }
+
+    protected void onParentChangeState(int state){
+
+    }
 }

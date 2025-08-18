@@ -3,8 +3,11 @@ package org.confluence.terraentity.entity.boss.hillofflesh;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.TheHungry;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
+import org.confluence.terraentity.entity.monster.slime.FleshSlime;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.utils.TEUtils;
 
@@ -41,6 +44,10 @@ public class HillOfFleshMouse extends HillOfFleshPart {
                 }
                 return HillOfFleshMouse.this.modelOffset.add(0,-8,0).normalize().scale(1);
             }
+            @Override
+            public boolean canAttack(LivingEntity entity) {
+                return !(entity.getType().is(TETags.EntityTypes.FLESH_ALLIANCE)) &&  super.canAttack(entity);
+            }
 
         }, (ServerLevel) level(), hungryPos);
 
@@ -51,5 +58,9 @@ public class HillOfFleshMouse extends HillOfFleshPart {
             return hungry;
         }
         return null;
+    }
+
+    public void onSummonFleshSlime(FleshSlime fleshSlime){
+        fleshSlime.setDeltaMovement(this.modelOffset.normalize().scale(3f));
     }
 }

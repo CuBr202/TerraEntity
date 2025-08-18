@@ -16,8 +16,8 @@ public class KeyframeLinearInterpolator implements IInterpolator {
 
     @Override
     public void init(List<Keyframe> keyframes, int position) {
-        kf0 = keyframes.get(position - 1);
-        kf1 = keyframes.get(position);
+        kf0 = this.getFirst(keyframes, position);
+        kf1 = this.getSecond(keyframes, position);
     }
 
     @Override

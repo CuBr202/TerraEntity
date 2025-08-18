@@ -7,6 +7,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.animation.HillOfFleshModelAnimationTable;
+import org.confluence.terraentity.entity.animation.ModelPositionTable;
 import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.utils.AdapterUtils;
@@ -18,8 +20,12 @@ import java.util.function.Consumer;
 
 public record SyncDataS2C(int dataId, Object data) implements CustomPacketPayload {
     private static final Map<Integer, Handler<Object>> handlers = new HashMap<>();
+
     public static final int NPC_DIALOGS = register(NPCDialogs.Loader.CODEC, NPCDialogs.Loader::handle);
     public static final int NPC_MOODS = register(NPCMood.Loader.CODEC, NPCMood.Loader::handle);
+    public static final int HILL_ANIMATION = register(ModelPositionTable.CODEC, HillOfFleshModelAnimationTable::handle);
+
+
     public static final Type<SyncDataS2C> TYPE = new Type<>(TerraEntity.space("sync_data"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SyncDataS2C> STREAM_CODEC = new StreamCodec<>() {
         @Override
@@ -55,12 +61,22 @@ public record SyncDataS2C(int dataId, Object data) implements CustomPacketPayloa
         AdapterUtils.sendToPlayer(player, new SyncDataS2C(dataId, value));
     }
 
+    public static void syncAll(ServerPlayer player){
+        syncNpcDialogs(player);
+        syncNpcMoods(player);
+        syncHillAnimation(player);
+    }
+
     public static void syncNpcDialogs(ServerPlayer player) {
         sync(player, NPC_DIALOGS, NPCDialogs.Loader.getInstance().getDialogs());
     }
 
     public static void syncNpcMoods(ServerPlayer player) {
         sync(player, NPC_MOODS, NPCMood.Loader.getInstance().getByType());
+    }
+
+    public static void syncHillAnimation(ServerPlayer player) {
+        sync(player, HILL_ANIMATION, HillOfFleshModelAnimationTable.getTable());
     }
 
     public record Handler<T>(Codec<T> codec, Consumer<T> consumer) {}

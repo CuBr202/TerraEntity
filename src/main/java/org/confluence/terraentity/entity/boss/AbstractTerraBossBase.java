@@ -65,7 +65,7 @@ import static org.confluence.terraentity.utils.TEUtils.getMultiple;
  * @param <T> Boss类型
  */
 @SuppressWarnings("all")
-public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackEntity<T>, IStateChangeableMob {
+public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackEntity<T>, IStateChangeableMob<AbstractTerraBossBase> {
 
 /* 属性 */
 
@@ -76,7 +76,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     protected ServerBossEvent bossEvent;
     protected float baseHealth;
     protected int baseArmor;
-    protected DifficultSelector difficultSelector ;
+    protected DifficultSelector difficultSelector;
+    public int stage = 1; //阶段
+    private boolean consumeStageChange = false;
 
     public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level, float health, int armor) {
         super(type, level);
@@ -90,7 +92,17 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
         difficultSelector = new DifficultSelector(level);
         this.addSkills();
+
+
         bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), getBossBarColor(), BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
+    }
+
+    /**
+     * 再次进入游戏需要同步BOSS阶段
+     * @param stage
+     */
+    protected void initStage(int stage){
+
     }
 
     public float getAttributeMultiplier(Holder<Attribute> attribute){
@@ -126,7 +138,10 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         if(skills.count() > 0) {
             skills.forceStartIndex(0);
         }
-        this.changeState();
+        if(!this.level().isClientSide){
+            this.initStage(stage);
+        }
+
     }
 
     @Override
@@ -177,6 +192,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 /* FSM */
 
     public CircleMobSkills skills = new CircleMobSkills(this, DATA_SKILL_INDEX);
+    public static final EntityDataAccessor<Integer> DATA_STATUS_STATUS = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
     protected ClientBoundAnimationMessage skillMessage = new ClientBoundAnimationMessage();
     protected int lastSkillTick;
@@ -194,16 +210,24 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_SKILL_INDEX, 0);
-//        builder.define(DATA_SKILL_TICK, 0);
+        builder.define(DATA_STATUS_STATUS, 0);
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         syncSkills(DATA_SKILL_INDEX);
+        if(key == DATA_STATUS_STATUS){
+            this.stage = this.entityData.get(DATA_STATUS_STATUS);
+        }
     }
 
     public int getSkillIndex(){
         return this.entityData.get(DATA_SKILL_INDEX);
+    }
+
+    @Override
+    public EntityDataAccessor<Integer> get_DATA_STATUS_STATUS(){
+        return DATA_STATUS_STATUS;
     }
 
 /* Collision */
@@ -491,6 +515,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("dirty", false);
+        if(stage > 0) {
+            compound.putInt("Stage", stage);
+        }
     }
 
     @Override
@@ -501,6 +528,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         }
         if (tag.contains("dirty")) {
             dirty = false;
+        }
+        if (tag.contains("Stage")) {
+            stage = tag.getInt("Stage");
         }
     }
 
@@ -536,11 +566,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         }
     }
 
+    @Override
     public void changeState(){
-
     }
-
-
 
     protected boolean isExpertise(){
         return this.difficultSelector.isExpertise();
@@ -550,6 +578,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     }
     protected boolean isFtw(){
         return this.difficultSelector.isFtw();
+    }
+    public DifficultSelector getDifficultSelector(){
+        return this.difficultSelector;
     }
 
     @Override
@@ -564,4 +595,6 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         }
         return super.isInvulnerableTo(source);
     }
+
+
 }

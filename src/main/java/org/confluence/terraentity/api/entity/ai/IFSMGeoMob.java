@@ -29,15 +29,12 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
     }
 
     default void syncSkills(EntityDataAccessor<?> key) {
-        if(confluence$self().level().isClientSide() && getSkills()!= null && key == getSkills().skillIndexData){
-            getSkills().index = confluence$self().getEntityData().get(getSkills().skillIndexData);
+        CircleMobSkills<T> skills = getSkills();
+        if(confluence$self().level().isClientSide() && skills!= null && key == skills.skillIndexData){
+            skills.index = confluence$self().getEntityData().get(skills.skillIndexData);
             getAnimationMessage().lastSkillTick = confluence$self().tickCount;
-            getSkills().tick = 0;
+            skills.tick = 0;
         }
-    }
-
-    default void addToLevel(){
-        addSkills();
     }
 
     default AnimationController<IFSMGeoMob<T>> fsmAnimationController() {

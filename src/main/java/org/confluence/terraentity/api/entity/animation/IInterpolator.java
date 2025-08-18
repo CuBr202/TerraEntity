@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * <h2>Interface for interpolators</h2>
+ * <h2>插值器接口</h2>
  */
 public interface IInterpolator {
 
@@ -18,10 +18,18 @@ public interface IInterpolator {
 
     double cal(double t);
 
+    default Keyframe getFirst(List<Keyframe> keyframes, int position){
+        return keyframes.get(position - 1);
+    }
+
+    default Keyframe getSecond(List<Keyframe> keyframes, int position){
+        return keyframes.get(position);
+    }
+
     /**
      * 线性插值器
      */
-    Supplier<KeyframeLinearInterpolator> linear = KeyframeLinearInterpolator::new;
+//    Supplier<KeyframeLinearInterpolator> linear = KeyframeLinearInterpolator::new;
 
     /**
      * 二次插值器(不保证二阶连续)
@@ -50,7 +58,7 @@ public interface IInterpolator {
     /**
      * 三次样条插值器
      */
-    Supplier<KeyframeSplineInterpolator> spline2 = ()->new KeyframeSplineInterpolator();
+//    Supplier<KeyframeSplineInterpolator> spline2 = ()->new KeyframeSplineInterpolator();
     /**
      * 三次样条插值器
      */

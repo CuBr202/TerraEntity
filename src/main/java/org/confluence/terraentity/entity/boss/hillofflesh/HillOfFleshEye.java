@@ -2,19 +2,27 @@ package org.confluence.terraentity.entity.boss.hillofflesh;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.RangedAttackMob;
+import org.confluence.terraentity.api.entity.ai.ISkill;
 import org.confluence.terraentity.entity.proj.LineProj;
+import org.confluence.terraentity.entity.util.DifficultSelector;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
+import org.confluence.terraentity.utils.TEUtils;
 
 public class HillOfFleshEye extends HillOfFleshPart implements RangedAttackMob {
 
+    int shootDamage;
     int _shootDelay = 10;
     int _shootInterval = 40;
+    final int __shootInterval = _shootInterval;
     int _shootCount = 3;
     int shootDelay;
     int shootCount;
 
     public HillOfFleshEye(HillOfFlesh parentMob, String name, float width, float height) {
         super(parentMob, name, width, height);
+        DifficultSelector difficultSelector = parentMob.getDifficultSelector();
+        this.shootDamage = difficultSelector.switchBy(8,10,12,15);
+
     }
 
     @Override
@@ -52,8 +60,16 @@ public class HillOfFleshEye extends HillOfFleshPart implements RangedAttackMob {
             double y = target.getY() - this.getY();
             double z = target.getZ() - this.getZ();
             proj.shoot(x,y,z,v,1);
-            proj.setDamage(5);
+            proj.setDamage(this.shootDamage);
             this.level().addFreshEntity(proj);
         }
     }
+
+    @Override
+    protected void onParentChangeState(int state){
+        if(state == 2){
+            this._shootInterval = (int) (this.__shootInterval * 0.7f);
+        }
+    }
+
 }

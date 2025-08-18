@@ -49,17 +49,18 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
             return;
         }
 
-        float radius = animatable.outerRadius;
+        float radius = 10;
         int count = 50;
         double delta = Math.PI * 2 / count;
-        float height = 100;
+        float height = animatable.height;
         double angle = 0;
 
         float progress = animatable.getSpawnProgress(partialTick);
         if(progress < 0.5f){
-            radius = Mth.lerp(progress * 2, 10, radius);
+
             height = Mth.lerp(progress * 2, 1, 20);
         }else{
+            radius = Mth.lerp(progress * 2 - 1, radius, animatable.outerRadius);
             height = Mth.lerp(progress * 2 - 1, 20, height);
         }
 
@@ -106,16 +107,18 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
 //        float du = (animatable.tickCount + partialTick) * -0.015f;
         float dv = 0;
         float du = 0;
-        int mainColor = 230;
-        int backColor = 50;
+        float switchProgress = animatable.getSwitchProgress(partialTick);
+        int red = (int) Mth.lerp(switchProgress, 230,130);
+        int green = (int) Mth.lerp(switchProgress, 50,100);
+        int blue = 50;
         for(int i = 1; i<= count; i++){
             pos = new Vec3(radius * Math.cos(angle), pos.y, radius * Math.sin(angle));
             float u = i * 1.0f / count;
 
-            builder.addVertex(poseStack.last().pose(), (float) pos.x, (float) pos.y, (float) pos.z).setColor(mainColor, backColor, backColor,255).setUv(u + du,0 + dv);
-            builder.addVertex(poseStack.last().pose(), (float) pos.x,  (float) pos.y+ height, (float) pos.z).setColor(mainColor, backColor, backColor,255).setUv(u+ du,1+ dv);
-            builder.addVertex(poseStack.last().pose(), (float) lastX,  (float) pos.y+ height, (float) lastZ).setColor(mainColor, backColor, backColor,255).setUv(lastU+ du,1+ dv);
-            builder.addVertex(poseStack.last().pose(), (float) lastX, (float) pos.y, (float) lastZ).setColor(mainColor, backColor, backColor,255).setUv(lastU+ du,0+ dv);
+            builder.addVertex(poseStack.last().pose(), (float) pos.x, (float) pos.y, (float) pos.z).setColor(red, green, blue,150).setUv(u + du,0 + dv);
+            builder.addVertex(poseStack.last().pose(), (float) pos.x,  (float) pos.y+ height, (float) pos.z).setColor(red, green, blue,0).setUv(u+ du,1+ dv);
+            builder.addVertex(poseStack.last().pose(), (float) lastX,  (float) pos.y+ height, (float) lastZ).setColor(red, green, blue,0).setUv(lastU+ du,1+ dv);
+            builder.addVertex(poseStack.last().pose(), (float) lastX, (float) pos.y, (float) lastZ).setColor(red, green, blue,150).setUv(lastU+ du,0+ dv);
 
             angle += delta;
             lastX = pos.x;
@@ -160,20 +163,22 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
         double lastX = pos.x;
         double lastZ = pos.z;
         float lastU = 0;
-        float dv = (animatable.tickCount + partialTick) * -0.02f;
-        float du = (animatable.tickCount + partialTick) * -0.015f;
+        float dv = (animatable.tickCount + partialTick) * -0.005f;
+        float du = (animatable.tickCount + partialTick) * -0.002f;
 //        float dv = 0;
 //        float du = 0;
-        int mainColor = 230;
-        int backColor = 50;
+        float switchProgress = animatable.getSwitchProgress(partialTick);
+        int red = (int) Mth.lerp(switchProgress, 230,130);
+        int green = (int) Mth.lerp(switchProgress, 50,100);
+        int blue = 50;
         for(int i = 1; i<= count; i++){
             pos = new Vec3(radius * Math.cos(angle), pos.y, radius * Math.sin(angle));
             float u = i * 1.0f / count;
 
-            builder.addVertex(poseStack.last().pose(), (float) pos.x, (float) pos.y, (float) pos.z).setColor(mainColor, backColor, backColor,150).setUv(u + du,0 + dv);
-            builder.addVertex(poseStack.last().pose(), (float) pos.x,  (float) pos.y+ height, (float) pos.z).setColor(mainColor, backColor, backColor,0).setUv(u+ du,1+ dv);
-            builder.addVertex(poseStack.last().pose(), (float) lastX,  (float) pos.y+ height, (float) lastZ).setColor(mainColor, backColor, backColor,0).setUv(lastU+ du,1+ dv);
-            builder.addVertex(poseStack.last().pose(), (float) lastX, (float) pos.y, (float) lastZ).setColor(mainColor, backColor, backColor,150).setUv(lastU+ du,0+ dv);
+            builder.addVertex(poseStack.last().pose(), (float) pos.x, (float) pos.y, (float) pos.z).setColor(red, green, blue,150).setUv(u + du,0 + dv);
+            builder.addVertex(poseStack.last().pose(), (float) pos.x,  (float) pos.y+ height, (float) pos.z).setColor(red, green, blue,0).setUv(u+ du,1+ dv);
+            builder.addVertex(poseStack.last().pose(), (float) lastX,  (float) pos.y+ height, (float) lastZ).setColor(red, green, blue,0).setUv(lastU+ du,1+ dv);
+            builder.addVertex(poseStack.last().pose(), (float) lastX, (float) pos.y, (float) lastZ).setColor(red, green, blue,150).setUv(lastU+ du,0+ dv);
 
             angle += delta;
             lastX = pos.x;
