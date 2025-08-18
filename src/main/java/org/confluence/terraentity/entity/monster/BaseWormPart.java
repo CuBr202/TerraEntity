@@ -3,10 +3,13 @@ package org.confluence.terraentity.entity.monster;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -20,8 +23,13 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class BaseWormPart extends PartEntity<BaseWorm> implements GeoEntity, ICollisionAttackEntity<BaseWormPart> {
 
     private final EntityDimensions size;
+    CollisionProperties collisionProperties = new CollisionProperties(10,20,0);
+
     public boolean isTail = false;
     public int index;
+
+    public int deathTime;
+    public int hurtTime;
 
     public BaseWormPart(BaseWorm parent, int index) {
         super(parent);
@@ -30,21 +38,7 @@ public class BaseWormPart extends PartEntity<BaseWorm> implements GeoEntity, ICo
         this.setBoundingBox(parent.getBoundingBox());
         this.index = index;
     }
-    public final void updateLastPos() {
-        this.moveTo(this.getX(), this.getY(), this.getZ());
-        this.yRotO = this.getYRot();
-        this.xRotO = this.getXRot();
-        this.tickCount++;
-    }
 
-    public double xxo;
-    public double yyo;
-    public double zzo;
-    public float xRotOO;
-    public float yRotOO;
-
-    public int deathTime;
-    public int hurtTime;
 
     @Override
     public void tick() {
@@ -55,16 +49,88 @@ public class BaseWormPart extends PartEntity<BaseWorm> implements GeoEntity, ICo
         if(this.isRemoved()){
             return;
         }
-//        updateLastPos();
-        this.xxo = this.getX();
-        this.yyo = this.getY();
-        this.zzo = this.getZ();
+
         this.deathTime = this.getParent().deathTime;
         this.hurtTime = Math.max(0, this.hurtTime - 1);
 
-//        super.tick();
-
     }
+
+    public void tickPart(Entity leader, double segInternal) {
+
+        double xxo = this.getX();
+        double yyo = this.getY();
+        double zzo = this.getZ();
+        float xRotOO = this.getXRot();
+        float yRotOO = this.getYRot();
+
+        this.tick();
+
+        double followX = leader.getX();
+        double followY = leader.getY();
+        double followZ = leader.getZ();
+
+        // 方向
+
+        Vec3 diff = new Vec3(this.getX() - followX, this.getY() - followY, this.getZ() - followZ);
+        diff = diff.normalize().scale(segInternal);
+
+        // 弹簧恢复力
+//            if(!this.isAlive()) {
+//                float angle = (((leader.getYRot() + 180) * Mth.PI) / 180.0F);
+//                double straightenForce = 0.05D + (1.0D / (i + 1)) * 0.5D;
+//                if (this.isDeadOrDying()) straightenForce = 0.0D; //Dead snakes don't move
+//                double idealX = -Mth.sin(angle) * straightenForce;
+//                double idealZ = Mth.cos(angle) * straightenForce;
+//                double groundY = this.isInWall() ? followY + 2.0F : followY;
+//                double idealY = (groundY - followY) * straightenForce;
+//                diff = diff.add(idealX, idealY, idealZ).normalize();
+//            }
+        if(!this.isAlive()){
+            float dy = (float) (this.getY() - followY);
+            if(dy < 0)
+                diff = diff.add(new Vec3(0,dy * this.deathTime / 100,0 ));
+        }
+
+        double f = 1.0D;
+
+        double destX = followX + f * diff.x();
+        double destY = followY + f * diff.y();
+        double destZ = followZ + f * diff.z();
+
+        double distance = Mth.sqrt((float) (diff.x() * diff.x() + diff.z() * diff.z()));
+        float yaw = (float) (Math.atan2(diff.z(), diff.x()) * 180.0D / Math.PI) + 90.0F;
+        float pitch = -(float) (Math.atan2(diff.y(), distance) * 180.0D / Math.PI);
+
+        this.setYRot(yaw);
+        this.setXRot(pitch);
+
+
+        this.setDeltaMovement(destX - this.getX(), destY - this.getY(), destZ - this.getZ());
+        this.moveTo(destX, destY, destZ, yaw, pitch);
+
+        this.xo = xxo;
+        this.yo = yyo;
+        this.zo = zzo;
+        this.xRotO = xRotOO;
+        this.yRotO = yRotOO;
+        this.yRotO = wrapYRotation(this.yRotO, yaw);
+//        this.xRotO = wrapYRotation(this.xRotO, pitch);
+
+        this.doCollisionAttack(e->e instanceof LivingEntity living && this.getParent().canAttack(living),
+                e->this.getParent().doHurtTarget(e)
+        );
+    }
+
+    protected float wrapYRotation(float current, float target){
+        while (target - current > 180.0F){
+            current += 360.0F;
+        }
+        while (target - current < -180.0F){
+            current -= 360.0F;
+        }
+        return current;
+    }
+
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
@@ -75,8 +141,6 @@ public class BaseWormPart extends PartEntity<BaseWorm> implements GeoEntity, ICo
         }
         if(this.getParent().getHealth() <= 0) {
             return false;
-//            this.getParent().die(source);
-
         }
 
         this.hurtTime = 10;
@@ -125,7 +189,6 @@ public class BaseWormPart extends PartEntity<BaseWorm> implements GeoEntity, ICo
         return cache;
     }
 
-    CollisionProperties collisionProperties = new CollisionProperties(10,20,0);
     @Override
     public CollisionProperties getCollisionProperties() {
         return collisionProperties;
@@ -135,6 +198,7 @@ public class BaseWormPart extends PartEntity<BaseWorm> implements GeoEntity, ICo
     public boolean shouldDoCollision() {
         return getParent().shouldDoCollision();
     }
+
     @Override
     public boolean isSprinting() {
         return getParent().isSprinting();

@@ -34,7 +34,7 @@ public class Wyvern<S extends BaseWormPart> extends BaseWorm<S> implements IDisc
     protected void registerGoals() {
 
         this.goalSelector.addGoal(1, new WyvernAttackGoal<>(this, 16));
-        this.goalSelector.addGoal(3, new WyvernRandomStrollGoal<>(this, 20, 0.015f, 0.2f, 6, 150,10,1.0f));
+        this.goalSelector.addGoal(3, new WyvernRandomStrollGoal<>(this, 20, 0.015f, 0.2f, 6, 150,10,0.9f));
 
 //        this.targetSelector.addGoal(1,new AccelerateOnSeeingGoal(this,0.25f));
         this.targetSelector.addGoal(2, new MutableRangeNearestAttackableTargetGoal<>(this, Player.class,false));

@@ -15,7 +15,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
-import org.confluence.terraentity.entity.boss.WallOfFlesh;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
 import software.bernie.geckolib.model.GeoModel;
 
 import java.util.HashMap;

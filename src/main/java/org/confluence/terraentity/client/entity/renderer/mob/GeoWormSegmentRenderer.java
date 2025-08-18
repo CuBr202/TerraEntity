@@ -39,15 +39,15 @@ public class GeoWormSegmentRenderer<S extends BaseWormPart, R extends GeoWormRen
     @Override
     public void render(S part, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
 
-        double lerpx = Mth.lerp(partialTick, part.xxo, part.getX());
-        double lerpy = Mth.lerp(partialTick, part.yyo, part.getY());
-        double lerpz = Mth.lerp(partialTick, part.zzo, part.getZ());
+        double lerpx = Mth.lerp(partialTick, part.xo, part.getX());
+        double lerpy = Mth.lerp(partialTick, part.yo, part.getY());
+        double lerpz = Mth.lerp(partialTick, part.zo, part.getZ());
         poseStack.translate(lerpx - parent.lerpx, lerpy - parent.lerpy, lerpz - parent.lerpz);
 
         poseStack.mulPose(Axis.YN.rotationDegrees(entityYaw));
 //        poseStack.mulPose(parent.resetX);
 
-        float lerpXRot = Mth.lerp(partialTick, part.xRotOO, part.getXRot());
+        float lerpXRot = Mth.lerp(partialTick, part.xRotO, part.getXRot());
 //        poseStack.mulPose(Axis.of(new Vector3f((float) Math.cos(rad1), 0, (float) Math.sin(rad1))).rotationDegrees(-lerpXRot));
         poseStack.mulPose(Axis.XN.rotationDegrees(lerpXRot));
         poseStack.scale(scale, scale, scale);

@@ -2,11 +2,7 @@ package org.confluence.terraentity.entity.boss.hillofflesh;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Streams;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.JsonOps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -14,7 +10,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -37,7 +32,6 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.ai.goal.*;
 import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnimation;
 import org.confluence.terraentity.entity.animation.HillOfFleshModelAnimationTable;
-import org.confluence.terraentity.entity.animation.ModelPositionTable;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.BaseWorm;
 import org.confluence.terraentity.entity.monster.BaseWormPart;
@@ -51,7 +45,6 @@ import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.utils.EfficientCylinderDestruction;
 import org.confluence.terraentity.utils.TEUtils;
-import org.confluence.terraentity.utils.TaskScheduler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -84,6 +77,7 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh>  {
     List<LivingEntity> nearbyLivings;
     SummonLeechGoal summonLeechGoal;
     SummonFleshSlimeGoal summonFleshSlimeGoal;
+    GenerateFirePillar generateFirePillarGoal;
     EfficientCylinderDestruction task;
 
 
@@ -126,7 +120,15 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh>  {
         this.innerEntities = new HashSet<>();
         this.nearbyLivings = new ArrayList<>();
         this.firePillarDamage = this.difficultSelector.switchBy(8,10,12,15);
+        this.summonLeechCount = this.difficultSelector.switchBy(5,6,7,8);
+        this.summonFleshSlimeCount = this.difficultSelector.switchBy(5,6,7,8);
+        this.summonFirePillarCount = this.difficultSelector.switchBy(5,6,7,8);
 
+        if(!this.level().isClientSide) {
+            this.summonLeechGoal.setMaxCount(this.summonLeechCount);
+            this.summonFleshSlimeGoal.setMaxCount(this.summonFleshSlimeCount);
+            this.generateFirePillarGoal.setMaxCount(this.summonFirePillarCount);
+        }
 
     }
 
@@ -146,7 +148,6 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh>  {
 
         public SummonLeechGoal(HillOfFlesh mob, int interval, int maxCount){
             super(mob, interval, maxCount);
-            this.maxCount = this.mob.summonLeechCount = this.mob.difficultSelector.switchBy(5,6,7,8);
         }
 
         @Override
@@ -212,7 +213,6 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh>  {
         HillOfFleshMouse currentMouse;
         public SummonFleshSlimeGoal(HillOfFlesh mob, int interval, int maxCount){
             super(mob, interval, maxCount);
-            this.maxCount = this.mob.summonFleshSlimeCount = this.mob.difficultSelector.switchBy(5,6,7,8);
         }
 
         @Override
@@ -249,7 +249,6 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh>  {
 
         public GenerateFirePillar(HillOfFlesh mob, int interval, int maxCount) {
             super(mob, interval, maxCount);
-            this.maxCount = this.mob.summonFirePillarCount = this.mob.difficultSelector.switchBy(5,6,7,8);
         }
 
         @Override
@@ -294,9 +293,10 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh>  {
     protected void registerGoals() {
         this.summonLeechGoal = new SummonLeechGoal(this, 300, 5);
         this.summonFleshSlimeGoal = new SummonFleshSlimeGoal(this, 300, 5);
+        this.generateFirePillarGoal = new GenerateFirePillar(this, 100, 5);
         this.goalSelector.addGoal(0, this.summonLeechGoal);
         this.goalSelector.addGoal(0, this.summonFleshSlimeGoal);
-        this.goalSelector.addGoal(0, new GenerateFirePillar(this, 100, 5));
+        this.goalSelector.addGoal(0, this.generateFirePillarGoal);
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));

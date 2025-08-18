@@ -61,12 +61,12 @@ public class GeoWormRenderer<T extends BaseWorm<S>, S extends BaseWormPart> exte
         S part1 = entity.bodySegments.get(0);
         poseStack.pushPose();
 
-        lerpx = Mth.lerp(partialTick, entity.xOld, entity.getX());
-        lerpy = Mth.lerp(partialTick, entity.yOld, entity.getY());
-        lerpz = Mth.lerp(partialTick, entity.zOld, entity.getZ());
-        double lerpDx = lerpx - Mth.lerp(partialTick, part1.xOld, part1.getX());
-        double lerpDy = lerpy - Mth.lerp(partialTick, part1.yOld, part1.getY());
-        double lerpDz = lerpz - Mth.lerp(partialTick, part1.zOld, part1.getZ());
+        lerpx = Mth.lerp(partialTick, entity.xo, entity.getX());
+        lerpy = Mth.lerp(partialTick, entity.yo, entity.getY());
+        lerpz = Mth.lerp(partialTick, entity.zo, entity.getZ());
+        double lerpDx = lerpx - Mth.lerp(partialTick, part1.xo, part1.getX());
+        double lerpDy = lerpy - Mth.lerp(partialTick, part1.yo, part1.getY());
+        double lerpDz = lerpz - Mth.lerp(partialTick, part1.zo, part1.getZ());
 
         float yRot = Mth.lerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
         double rad = yRot*Math.PI/180;
@@ -79,7 +79,7 @@ public class GeoWormRenderer<T extends BaseWorm<S>, S extends BaseWormPart> exte
 
         for(S part : entity.bodySegments){
             poseStack.pushPose();
-            float lerpYRot = Mth.lerp(partialTick, part.yRotOO, part.getYRot());
+            float lerpYRot = Mth.lerp(partialTick, part.yRotO, part.getYRot());
             partRenderer.render(part, lerpYRot, partialTick, poseStack, bufferSource, Minecraft.getInstance().getEntityRenderDispatcher().getPackedLightCoords(part, partialTick));
             poseStack.popPose();
         }

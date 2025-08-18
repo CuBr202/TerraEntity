@@ -1,24 +1,13 @@
 package org.confluence.terraentity.effect.harmful;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.Shapes;
-import org.confluence.terraentity.entity.boss.WallOfFlesh;
-import org.confluence.terraentity.entity.boss.WallOfFleshMouth;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouth;
 import org.confluence.terraentity.init.TEEffects;
-
-import java.util.Comparator;
-import java.util.stream.Stream;
 
 
 public class TheTongueEffect extends MobEffect {

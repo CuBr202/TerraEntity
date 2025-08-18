@@ -185,9 +185,9 @@ dependencies {
         implementation jarJar(project(":Confluence-Magic-Lib"))
         implementation("software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}")
     } else {
-//        implementation files("libs/confluence_magic_lib-0.0.2a-SNAPSHOT.jar")
-//        jarJar("org.confluence.lib:confluence_magic_lib:0.0.2a-SNAPSHOT") { }
-        implementation(jarJar("org.confluence.lib:Confluence-Magic-Lib:0.0.2a-SNAPSHOT"))
+        implementation files("libs/confluence_magic_lib-0.0.2b-SNAPSHOT.jar")
+        jarJar("org.confluence.lib:confluence_magic_lib:0.0.2b-SNAPSHOT") { }
+//        implementation(jarJar("org.confluence.lib:Confluence-Magic-Lib:0.0.2b-SNAPSHOT"))
         implementation(jarJar("software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"))
     }
 

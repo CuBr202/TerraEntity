@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.boss;
+package org.confluence.terraentity.entity.boss.wallofflesh;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
@@ -14,6 +14,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.BaseWorm;
 import org.confluence.terraentity.entity.monster.BaseWormPart;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;

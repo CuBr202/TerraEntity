@@ -5,6 +5,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.animation.HillOfFleshModelAnimationTable;
@@ -12,6 +13,7 @@ import org.confluence.terraentity.entity.animation.ModelPositionTable;
 import org.confluence.terraentity.entity.npc.misc.NPCDialogs;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.utils.AdapterUtils;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -19,11 +21,23 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public record SyncDataS2C(int dataId, Object data) implements CustomPacketPayload {
+
+    /**
+     * @param <T> 用于类型推断
+     */
+    public interface DataType<T> {
+        int getId();
+        @Contract(pure = true)
+        static <T> @NotNull DataType<T> create(int id) {
+            return () -> id;
+        }
+    }
+
     private static final Map<Integer, Handler<Object>> handlers = new HashMap<>();
 
-    public static final int NPC_DIALOGS = register(NPCDialogs.Loader.CODEC, NPCDialogs.Loader::handle);
-    public static final int NPC_MOODS = register(NPCMood.Loader.CODEC, NPCMood.Loader::handle);
-    public static final int HILL_ANIMATION = register(ModelPositionTable.CODEC, HillOfFleshModelAnimationTable::handle);
+    public static final DataType<Map<EntityType<?>, NPCDialogs>> NPC_DIALOGS = register(NPCDialogs.Loader.CODEC, NPCDialogs.Loader::handle);
+    public static final DataType<Map<EntityType<?>, NPCMood.EntityMood>> NPC_MOODS = register(NPCMood.Loader.CODEC, NPCMood.Loader::handle);
+    public static final DataType<ModelPositionTable> HILL_ANIMATION = register(ModelPositionTable.CODEC, HillOfFleshModelAnimationTable::handle);
 
 
     public static final Type<SyncDataS2C> TYPE = new Type<>(TerraEntity.space("sync_data"));
@@ -42,9 +56,9 @@ public record SyncDataS2C(int dataId, Object data) implements CustomPacketPayloa
     };
 
     @SuppressWarnings("unchecked")
-    private static <T> int register(Codec<T> codec, Consumer<T> consumer) {
-        int id = handlers.size();
-        handlers.put(id, (Handler<Object>) new Handler<>(codec, consumer));
+    private static <T> DataType<T> register(Codec<T> codec, Consumer<T> consumer) {
+        DataType<T> id = DataType.create(handlers.size());
+        handlers.put(id.getId(), (Handler<Object>) new Handler<>(codec, consumer));
         return id;
     }
 
@@ -57,8 +71,8 @@ public record SyncDataS2C(int dataId, Object data) implements CustomPacketPayloa
         context.enqueueWork(() -> handlers.get(dataId).consumer.accept(data)).exceptionally(e -> null);
     }
 
-    public static <T> void sync(ServerPlayer player, int dataId, T value) {
-        AdapterUtils.sendToPlayer(player, new SyncDataS2C(dataId, value));
+    public static <T> void sync(ServerPlayer player, DataType<T> dataId, T value) {
+        AdapterUtils.sendToPlayer(player, new SyncDataS2C(dataId.getId(), value));
     }
 
     public static void syncAll(ServerPlayer player){

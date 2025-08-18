@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.boss;
+package org.confluence.terraentity.entity.boss.wallofflesh;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.proj.TrailProjectile;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;

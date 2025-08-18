@@ -21,6 +21,7 @@ import org.confluence.terraentity.entity.boss.hillofflesh.HillOfFlesh;
 import org.confluence.terraentity.entity.boss.hillofflesh.HillOfFleshPart;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.mixed.IShaderInstance;
+import org.confluence.terraentity.utils.Easing;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import org.lwjgl.opengl.GL11C;
@@ -75,8 +76,7 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
         float progress = animatable.getSpawnProgress(partialTick);
         if(progress < 0.5f){
             float x = progress * 2;
-            x = x < 0.5 ? 2 * x * x : (float) (1 - Math.pow(-2 * x + 2, 2) / 2);
-            poseStack.translate(0, Mth.lerp(x, -15, 0), 0);
+            poseStack.translate(0, Easing.EASE_IN_OUT_QUAD.easeToRange(x, -15, 0), 0);
 //            float scale = (float) Mth.lerp(Math.pow(progress * 2, 5f), 0.5f, 1f);
 //            poseStack.scale(scale, scale, scale);
             poseStack.mulPose(Axis.YP.rotation((float) Mth.lerp( x, 0, Math.PI * 4)));

@@ -139,82 +139,11 @@ public abstract class BaseWorm<T extends BaseWormPart> extends AbstractMonster i
 
             Entity leader = i == 0 ? this : this.bodySegments.get(i - 1);
             BaseWormPart cur = this.bodySegments.get(i);
-            cur.tick();
-            cur.xxo = cur.getX();
-            cur.yyo = cur.getY();
-            cur.zzo = cur.getZ();
-            cur.xRotOO = cur.getXRot();
-//            this.setYRot(this.getYRot() % 360);
-            cur.yRotOO = cur.getYRot();
 
-
-            double followX = leader.getX();
-            double followY = leader.getY();
-            double followZ = leader.getZ();
-
-            // 方向
-
-            Vec3 diff = new Vec3(cur.getX() - followX, cur.getY() - followY, cur.getZ() - followZ);
-            diff = diff.normalize().scale(segInternal);
-
-            // 弹簧恢复力
-//            if(!this.isAlive()) {
-//                float angle = (((leader.getYRot() + 180) * Mth.PI) / 180.0F);
-//                double straightenForce = 0.05D + (1.0D / (i + 1)) * 0.5D;
-//                if (this.isDeadOrDying()) straightenForce = 0.0D; //Dead snakes don't move
-//                double idealX = -Mth.sin(angle) * straightenForce;
-//                double idealZ = Mth.cos(angle) * straightenForce;
-//                double groundY = cur.isInWall() ? followY + 2.0F : followY;
-//                double idealY = (groundY - followY) * straightenForce;
-//                diff = diff.add(idealX, idealY, idealZ).normalize();
-//            }
-            if(!this.isAlive()){
-                float dy = (float) (this.getY() - followY);
-                if(dy < 0)
-                    diff = diff.add(new Vec3(0,dy * this.deathTime / 100,0 ));
-            }
-
-            double f = 1.0D;
-
-            double destX = followX + f * diff.x();
-            double destY = followY + f * diff.y();
-            double destZ = followZ + f * diff.z();
-
-//            cur.setPos(destX, destY, destZ);
-
-            double distance = Mth.sqrt((float) (diff.x() * diff.x() + diff.z() * diff.z()));
-            float yaw = (float) (Math.atan2(diff.z(), diff.x()) * 180.0D / Math.PI) + 90.0F;
-            float pitch = -(float) (Math.atan2(diff.y(), distance) * 180.0D / Math.PI);
-
-            cur.setYRot(yaw);
-            cur.setXRot(pitch);
-
-            cur.yRotOO = wrapRotation(cur.yRotOO, yaw);
-
-            cur.setDeltaMovement(destX - cur.getX(), destY - cur.getY(), destZ - cur.getZ());
-            cur.moveTo(destX, destY, destZ, yaw, pitch);
-//            cur.setPosRaw(destX, destY, destZ);
-//            cur.setYRot(yaw);
-//            cur.setXRot(pitch);
-//            this.setOldPosAndRot();
-//            cur.setPos(destX, destY, destZ);
-            cur.doCollisionAttack(e->e instanceof LivingEntity living && canAttack(living),
-                    e->doHurtTarget(e)
-                    );
+            cur.tickPart(leader, this.segInternal);
 
         }
     }
-
-    private float wrapRotation(float current, float target){
-        while (target - current > 180.0F){
-            current += 360.0F;
-        }
-        while (target - current < -180.0F){
-            current -= 360.0F;
-        }
-        return current;
-    }
-
 
     @Override
     protected void tickDeath() {

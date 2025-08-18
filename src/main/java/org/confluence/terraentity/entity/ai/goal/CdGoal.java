@@ -51,4 +51,8 @@ public abstract class CdGoal<T extends Mob> extends Goal implements ISkill {
     public void reset() {
         this.time = this.interval;
     }
+
+    public void setMaxCount(int maxCount) {
+        this.maxCount = maxCount;
+    }
 }

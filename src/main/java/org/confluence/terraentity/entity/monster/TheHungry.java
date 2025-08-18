@@ -19,7 +19,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.IMinion;
-import org.confluence.terraentity.entity.boss.WallOfFlesh;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeSurroundTargetGoal;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeWanderGoal;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;

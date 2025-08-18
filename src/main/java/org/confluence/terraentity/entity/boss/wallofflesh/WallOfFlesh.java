@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.boss;
+package org.confluence.terraentity.entity.boss.wallofflesh;
 
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -20,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.effect.harmful.HorrifiedEffect;
+import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.TheHungry;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.init.TEEffects;

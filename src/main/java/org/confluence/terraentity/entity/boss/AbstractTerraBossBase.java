@@ -232,7 +232,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
 /* Collision */
 
-    CollisionProperties collisionProperties = new CollisionProperties(5, 20, 0);
+    protected CollisionProperties collisionProperties = new CollisionProperties(5, 20, 0);
 
     @Override
     public CollisionProperties getCollisionProperties() {
