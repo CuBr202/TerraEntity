@@ -116,18 +116,14 @@ public class DynamicAnglerTradeTask implements ITradeTask {
         int level = npc.getTradeParams().getLevel(index) + 1;
         List<ItemStack> result = resultPool.get(level);
 
-        if (result == null) {
-            this.dynamicTrade = null;
-            this.defaultTrade = new ItemTradeLootTable(
-                    List.of(new AmountIngredient(Ingredient.of(cost), cost.getCount())),
-                    lootTablePool.getOrDefault(level, defaultTrade.lootTable()),
-                    defaultTrade.sprite(),
-                    defaultTrade.translationKey(),
-                    defaultTrade.properties()
-            );
-        } else {
-            this.dynamicTrade = ItemTradeItemList.builder().addCost(cost).addResult(result).build();
-        }
+        this.dynamicTrade = result == null ? null : ItemTradeItemList.builder().addCost(cost).addResult(result).build();
+        this.defaultTrade = new ItemTradeLootTable(
+                result == null ? List.of(new AmountIngredient(Ingredient.of(cost), cost.getCount())) : defaultTrade.costs(),
+                lootTablePool.getOrDefault(level, defaultTrade.lootTable()),
+                defaultTrade.sprite(),
+                defaultTrade.translationKey(),
+                defaultTrade.properties()
+        );
     }
 
     @Override

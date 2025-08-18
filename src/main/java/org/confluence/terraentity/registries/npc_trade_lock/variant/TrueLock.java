@@ -7,7 +7,7 @@ import org.confluence.terraentity.api.npc.trade.ITradeLock;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProvider;
 import org.confluence.terraentity.registries.npc_trade_lock.TradeLockProviderTypes;
 
-public class TrueLock implements ITradeLock {
+public final class TrueLock implements ITradeLock {
     public static final TrueLock INSTANCE = new TrueLock();
     public static final MapCodec<TrueLock> CODEC = MapCodec.unit(INSTANCE);
 
