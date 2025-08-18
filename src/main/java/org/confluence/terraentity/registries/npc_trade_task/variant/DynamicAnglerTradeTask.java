@@ -39,7 +39,8 @@ import java.util.stream.Collectors;
 public class DynamicAnglerTradeTask implements ITradeTask {
     public static final MapCodec<DynamicAnglerTradeTask> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.unboundedMap(TECodecs.INT_KEY, ItemStack.CODEC.listOf()).fieldOf("result_pool").forGetter(task -> task.resultPool),
-            Codec.unboundedMap(TECodecs.INT_KEY, ResourceKey.codec(Registries.LOOT_TABLE)).fieldOf("loot_table_pool").forGetter(task -> task.lootTablePool),ItemStack.CODEC.listOf().fieldOf("cost_pool").forGetter(task -> task.costPool),
+            Codec.unboundedMap(TECodecs.INT_KEY, ResourceKey.codec(Registries.LOOT_TABLE)).fieldOf("loot_table_pool").forGetter(task -> task.lootTablePool),
+            ItemStack.CODEC.listOf().fieldOf("cost_pool").forGetter(task -> task.costPool),
             ITradeLock.TYPED_CODEC.listOf().fieldOf("cost_lock").forGetter(task -> task.costLock),
             Codec.STRING.optionalFieldOf("title").forGetter(i -> Optional.ofNullable(i.title)),
             ItemTradeLootTable.CODEC.fieldOf("default_trade").forGetter(task -> task.defaultTrade),
