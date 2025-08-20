@@ -88,7 +88,7 @@ public class Piranha extends WaterAnimal implements Enemy, GeoEntity {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 15.0).add(Attributes.MOVEMENT_SPEED, 1.2000000476837158).add(Attributes.ATTACK_DAMAGE, 13.0);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 15.0).add(Attributes.ARMOR, 2).add(Attributes.MOVEMENT_SPEED, 1.2000000476837158).add(Attributes.ATTACK_DAMAGE, 13.0);
     }
 
     @Override

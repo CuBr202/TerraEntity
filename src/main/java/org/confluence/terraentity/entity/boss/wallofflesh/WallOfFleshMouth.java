@@ -44,7 +44,7 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> im
 
 
     public WallOfFleshMouth(EntityType<WallOfFleshMouth> entityType, Level level) {
-        super(entityType, level,WallOfFlesh.MAX_HEALTHS,4);
+        super(entityType, level,WallOfFlesh.MAX_HEALTHS,12);
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
         getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32f);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);

@@ -74,7 +74,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
 
     public EyeOfCthulhu(EntityType<EyeOfCthulhu> entityType, Level level) {
-        super(entityType, level,MAX_HEALTHS,2);
+        super(entityType, level,MAX_HEALTHS,12);
         //初始属性
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);

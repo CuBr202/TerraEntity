@@ -32,7 +32,7 @@ public class VisualNeuron extends AbstractMonster{
     // 0 为攻击， 1 为返回
     public int state = 1;
     public VisualNeuron(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(44,2,9,0,0,0.1f)
+        super(type, level, new AbstractPrefab(44,10,9,0,0,0.1f)
                 .getPrefab().setNoGravity());
         this.noPhysics = true;
         this.collisionProperties = new CollisionProperties(1,20,0.2F);

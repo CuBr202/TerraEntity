@@ -44,7 +44,7 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
     private int summonCD = summonCDAll;
 
     public WallOfFleshEye(EntityType<WallOfFleshEye> entityType, Level level) {
-        super(entityType, level,WallOfFlesh.MAX_HEALTHS,2);
+        super(entityType, level,WallOfFlesh.MAX_HEALTHS,0);
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
         getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);

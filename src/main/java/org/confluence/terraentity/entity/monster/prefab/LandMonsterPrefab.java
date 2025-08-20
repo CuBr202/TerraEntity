@@ -31,7 +31,7 @@ import static software.bernie.geckolib.constant.DefaultAnimations.genericWalkRun
 public class LandMonsterPrefab extends AbstractPrefab {
 
     public static Supplier<AttributeBuilder> FACE_MONSTER_BUILDER =
-            ()->new LandMonsterPrefab(36,2,13,64,0.7f,0.1f).getPrefab()
+            ()->new LandMonsterPrefab(36,10,13,64,0.7f,0.1f).getPrefab()
                     .setStepHeight(3.2f)
                     .setSpawnWithoutLight()
                     .setAmbientSound(TESounds.FACE_HOOT)
@@ -49,7 +49,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
             ;
 
     public static Supplier<AttributeBuilder> SPORE_ZOMBIE_BUILDER =
-            ()->new LandMonsterPrefab(93,2,20,60,0.6f,0.1f).getPrefab()
+            ()->new LandMonsterPrefab(93,10,20,60,0.6f,0.1f).getPrefab()
                     .setMovementSpeed(0.08f)
                     .setSpawnWithoutLight()
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
@@ -78,7 +78,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
                     });
 
     public static Supplier<AttributeBuilder> HAT_SPORE_ZOMBIE_BUILDER =
-            ()->new LandMonsterPrefab(114,4,19,60,0.6f,0.72f).getPrefab()
+            ()->new LandMonsterPrefab(114,16,19,60,0.6f,0.72f).getPrefab()
                     .setMovementSpeed(0.08f)
                     .setSpawnWithoutLight()
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
@@ -108,7 +108,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
 
 
     public static Supplier<AttributeBuilder> BLOOD_TUMORS =
-            ()->new LandMonsterPrefab(1,0,0,0,0,0,0).getPrefab()
+            ()->new LandMonsterPrefab(5,2,0,0,0,0,0).getPrefab()
                     .setSafeFall(80)
                     .setNoAttachAttack()
                     .setAttackDamage((int) (Math.random() * 60 + 100))
@@ -130,7 +130,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
             ;
 
     public static Supplier<AttributeBuilder> BLOOD_ZOMBIE_BUILDER =
-            ()->new LandMonsterPrefab(39,2,10,60,0.5f,0.1f).getPrefab()
+            ()->new LandMonsterPrefab(39,8,10,60,0.5f,0.1f).getPrefab()
                     .setMovementSpeed(0.15f)
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .addTarget((t,e)-> {
@@ -157,7 +157,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
                         g.addGoal(8, new LookAtPlayerGoal(e, Player.class, 6));
                     });
     public static Supplier<AttributeBuilder> SNOW_FLINX_BUILDER =
-            ()->new LandMonsterPrefab(36,3,13,60,0.1f,0.1f).getPrefab()
+            ()->new LandMonsterPrefab(36,12,13,60,0.1f,0.1f).getPrefab()
                     .addGoal((g,e)-> {
                         g.addGoal(2, new JumpOverBlockGoal(e));
                         g.addGoal(3, new MeleeAttackGoal(e,  0.8f, true));

@@ -36,7 +36,7 @@ import software.bernie.geckolib.animation.RawAnimation;
  */
 public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, IAngryMob {
     private static final int health = 1237;
-    private static final int armor = 2;
+    private static final int armor = 8;
 
     DashComponent dashComponent;
     public static final EntityDataAccessor<Boolean> DATA_ANGRY = SynchedEntityData.defineId(QueenBee.class, EntityDataSerializers.BOOLEAN);

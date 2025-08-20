@@ -24,7 +24,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     //在预制体上修改参数
     public static Supplier<AttributeBuilder> CRIMSON_KEMERA_BUILDER =
-            ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
+            ()->new FlyMonsterPrefab(20,6,11,30,0.5f,0.1f).getPrefab()
                     .setSpawnWithoutLight()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
@@ -33,7 +33,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
     public static final Supplier<AttributeBuilder> EATER_OF_SOULS_BUILDER =
-            ()->new FlyMonsterPrefab(20,2,11,30,0.5f,0.1f).getPrefab()
+            ()->new FlyMonsterPrefab(20,6,11,30,0.5f,0.1f).getPrefab()
                     .setSpawnWithoutLight()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
@@ -42,7 +42,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
     public static final Supplier<AttributeBuilder> DRIPPLER_BUILDER  =
-            ()->new FlyMonsterPrefab(26,3,14,64,0.5f,0.2f).getPrefab()
+            ()->new FlyMonsterPrefab(26,7,14,64,0.5f,0.2f).getPrefab()
                     .setHurtSound(TESounds.DRIPPLER_HURT)
                     .setDeathSound(TESounds.DRIPPLER_DEATH)
                     .addGoal((g,e)->{
@@ -114,7 +114,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
 
     public static Supplier<AttributeBuilder> BEE_BUILDER  =
-            ()->new AbstractPrefab(23,3,13,32,0,0.55f)
+            ()->new AbstractPrefab(23,6,13,32,0,0.55f)
                     .getPrefab()
                     .setNoAttachAttack()
                     .setMovementSpeed(0.5f)
@@ -123,7 +123,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
 
     public static final Supplier<AttributeBuilder> WANDERING_EYE_FISH_BUILDER =
-            ()->new FlyMonsterPrefab(156,4,15,60,1f,1f).getPrefab()
+            ()->new FlyMonsterPrefab(156,18,15,60,1f,1f).getPrefab()
                     .setMovementSpeed(2.2f)
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,2.2f,15));

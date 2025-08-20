@@ -97,7 +97,6 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.CURSED_SKULL.get(), "诅咒骷髅头");
         add(TEMonsterEntities.DARK_CASTER.get(), "暗黑法师");
         add(TEMonsterEntities.UNDEAD_VIKING.get(), "亡灵维京海盗");
-        add(TEMonsterEntities.THE_HUNGRY.get(), "饿鬼");
         add(TEMonsterEntities.ANTLION_SWARMER.get(), "蚁狮蜂");
         add(TEMonsterEntities.GIANT_ANTLION_SWARMER.get(), "巨型蚁狮蜂");
         add(TEMonsterEntities.GHOST.get(), "鬼魂");
@@ -122,6 +121,9 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBossEntities.WALL_OF_FLESH.get(), "血肉墙");
         add(TEBossEntities.WALL_OF_FLESH_EYE.get(), "血肉墙眼");
         add(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), "血肉墙口");
+        add(TEMonsterEntities.LEECH.get(), "血蛭");
+        add(TEMonsterEntities.THE_HUNGRY.get(), "饿鬼");
+        add(TEMonsterEntities.FLESH_SLIME.get(), "血肉史莱姆");
 
 
         // 召唤物

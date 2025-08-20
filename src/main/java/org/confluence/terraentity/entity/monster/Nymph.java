@@ -55,7 +55,7 @@ public class Nymph extends AbstractMonster {
     private static final EntityDataAccessor<Boolean> DATA_TAMED =  SynchedEntityData.defineId(Nymph.class, EntityDataSerializers.BOOLEAN);
 
     public Nymph(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(156,3,15,5,1,0.5f).getPrefab());
+        super(type, level, new AbstractPrefab(156,16,15,5,1,0.5f).getPrefab());
         this.xpReward = 20;
         _recoverTime = 75 + getRandom().nextInt(50);
     }
