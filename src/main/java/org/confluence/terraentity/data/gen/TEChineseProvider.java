@@ -436,6 +436,8 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEEffects.HELLFIRE.get(), "狱炎");
         add(TEEffects.FROST_BURN.get(), "霜冻");
         add(TEEffects.CRIMSON_STORM.get(), "猩红风暴");
+        add(TEEffects.HORRIFIED.get(), "惊恐");
+        add(TEEffects.THE_TONGUE.get(), "狂卷之舌");
 
 
         add(TEItems.HOUSE_DETECTOR.get(), "房屋探测器");
