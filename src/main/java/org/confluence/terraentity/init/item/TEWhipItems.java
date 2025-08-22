@@ -30,7 +30,7 @@ public class TEWhipItems {
             .setDurability(300)
             .setBlock(Blocks.BAMBOO::defaultBlockState)
     );
-    public static final DeferredItem<BaseWhipItem> RUBY_WHIP = registerWhip("ruby_whip", 12.8f, 1, 0.5f, 15,0.8f, p->p
+    public static final DeferredItem<BaseWhipItem> RUBY_WHIP = registerWhip("ruby_whip", 12.7f, 1, 0.5f, 15,0.8f, p->p
             .setDurability(760)
     );
     public static final DeferredItem<BaseWhipItem> AMBER_WHIP = registerWhip("amber_whip", 12.7f, 1, 0.5f, 15,0.8f, p->p
@@ -42,7 +42,7 @@ public class TEWhipItems {
     public static final DeferredItem<BaseWhipItem> JADE_WHIP = registerWhip("jade_whip",12.6f, 1, 0.5f, 15,0.8f, p->p
             .setDurability(900)
     );
-    public static final DeferredItem<BaseWhipItem> DIAMOND_WHIP = registerWhip("diamond_whip", 12.7f, 1, 0.5f, 15,0.8f, p->p
+    public static final DeferredItem<BaseWhipItem> DIAMOND_WHIP = registerWhip("diamond_whip", 12.8f, 1, 0.5f, 15,0.8f, p->p
             .setDurability(1000)
     );
     public static final DeferredItem<BaseWhipItem> SAPPHIRE_WHIP = registerWhip("sapphire_whip", 12.6f, 1, 0.5f, 15,0.8f, p->p
