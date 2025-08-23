@@ -9,6 +9,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -21,10 +22,12 @@ import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.api.npc.trade.ITradeLock;
 import org.confluence.terraentity.api.npc.trade.ITradeTask;
 import org.confluence.terraentity.data.codec.TECodecs;
+import org.confluence.terraentity.network.s2c.SetAnglerDialogPacketS2C;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeLootTable;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTypes;
+import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -122,12 +125,14 @@ public class DynamicAnglerTradeTask implements ITradeTask {
     }
 
     @Override
-    public void afterTrade(ITradeHolder npc, int index) {
+    public void afterTrade(ServerPlayer player, ITradeHolder npc, int index) {
         // 更新参数
         npc.getTradeParams().setIsReady(index, false);
         npc.syncTradeTasksParams();
         // 添加到脏数据
         npc.getTradeManager().addToBeSync(index);
+
+        AdapterUtils.sendToPlayer(player, new SetAnglerDialogPacketS2C(SetAnglerDialogPacketS2C.TASK_SUCCEED));
     }
 
     @Override

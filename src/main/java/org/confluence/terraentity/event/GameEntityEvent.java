@@ -44,6 +44,7 @@ import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
+import org.confluence.terraentity.network.s2c.SyncLevelNamePacketS2C;
 import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -281,9 +282,10 @@ public class GameEntityEvent {
 
 
     }
-//    @SubscribeEvent
-//    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)  {
-//
-//    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        SyncLevelNamePacketS2C.sendToClient((ServerPlayer) event.getEntity());
+    }
 
 }

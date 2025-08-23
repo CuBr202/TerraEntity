@@ -105,7 +105,6 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.WYVERN.get(), "飞龙");
 
 
-
         // boss
         add(TEBossEntities.KING_SLIME.get(), "史莱姆王");
         add(TEBossEntities.EYE_OF_CTHULHU.get(), "克苏鲁之眼");
@@ -268,7 +267,6 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEAnimals.PRISMATIC_LACEWING.get(), "七彩草蛉");
 
 
-
         // boss
         add(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get(), "史莱姆王刷怪蛋");
         add(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get(), "克苏鲁之眼刷怪蛋");
@@ -278,7 +276,6 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.SKELETRON_SPAWN_EGG.get(), "骷髅王刷怪蛋");
         add(TESpawnEggItems.DUNGEON_GUARDIAN_SPAWN_EGG.get(), "地牢守卫刷怪蛋");
         add(TESpawnEggItems.WALL_OF_FLESH_SPAWN_EGG.get(), "血肉墙刷怪蛋");
-
 
 
         add(TENpcEntities.GUIDE.get(), "向导");
@@ -344,7 +341,6 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.CARDINAL_SPAWN_EGG.get(), "红雀刷怪蛋");
 
 
-
         add(TESpawnEggItems.CRAB_SPAWN_EGG.get(), "螃蟹刷怪蛋");
         add(TESpawnEggItems.GLOWING_SNAIL_SPAWN_EGG.get(), "发光蜗牛刷怪蛋");
         add(TESpawnEggItems.GRUBBY_SPAWN_EGG.get(), "蛆虫刷怪蛋");
@@ -363,11 +359,6 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.LADYBUG_SPAWN_EGG.get(), "瓢虫刷怪蛋");
         add(TESpawnEggItems.SCORPION_SPAWN_EGG.get(), "蝎子刷怪蛋");
         add(TESpawnEggItems.WORM_SPAWN_EGG.get(), "蠕虫刷怪蛋");
-
-
-
-
-
 
 
         // 召唤杖
@@ -477,8 +468,6 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.npc_chat_bubble_style", "NPC聊天气泡样式");
 
 
-
-
         // Tooltip
         add("tooltic.terra_entity.summon_item.desc", "长按以解除所有召唤物");
 
@@ -507,8 +496,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("tooltip.terra_entity.chester.current", "当前容器");
 
 
-
-            // boomerang
+        // boomerang
         add("tooltip.terra_entity.boomerang.penetration", "穿透数量");
         add("tooltip.terra_entity.boomerang.on_hit_effects", "命中效果");
         add("tooltip.terra_entity.boomerang.max_count", "分身数量");
@@ -521,7 +509,6 @@ public class TEChineseProvider extends LanguageProvider {
 
         // rideable
         add("tooltip.terra_entity.rideable_item.desc", "按下快捷键以骑乘。默认 R 键");
-
 
 
         // attribute
@@ -609,6 +596,11 @@ public class TEChineseProvider extends LanguageProvider {
         add("enchantment.terra_entity.summoner_pact.desc", "召唤额外的仆从");
 
         // npc对话
+        add("dialogs.terra_entity.trade", "交易");
+        add("dialogs.terra_entity.summon", "召唤");
+        add("dialogs.terra_entity.dialog", "对话");
+        add("dialogs.terra_entity.quest", "任务");
+
         add("dialogs.terra_entity.guide.0", "我的工作是为你接下来的任务提供建议。建议你遇到任何困难时都来和我谈谈。");
         add("dialogs.terra_entity.guide.1", "他们说，有个人会告诉你如何在这地方上生存……哦等下。那个人就是我。");
         add("dialogs.terra_entity.guide.2", "晚上你应该呆在家里。黑夜在外面转悠非常危险。");
@@ -683,12 +675,34 @@ public class TEChineseProvider extends LanguageProvider {
         add("dialogs.terra_entity.dye_trader.4", "这些染料瓶？抱歉，亲爱的朋友，这些是非卖品。我只接受用最珍稀的植物来交换它们！");
         add("dialogs.terra_entity.dye_trader.5", "你以为可以骗过我的眼睛？我可不这么想！我只接受用最稀有的花来交换这些特别的瓶子。");
 
-        add("dialogs.terra_entity.angler.0", "谢谢，我想，谢谢你救了我之类的。你是个优秀的得力仆从！");
-        add("dialogs.terra_entity.angler.1", "啥？你是哪位？我绝对不是溺水之类的！");
-        add("dialogs.terra_entity.angler.2", "你救了我！你太好了，我可以使唤你……呃，我是说，雇你帮我做些了不起的事！");
+        add("dialogs.terra_entity.angler.0", "太可气了！有些鱼可能在我出生之前就灭绝了，真不公平！");
+        add("dialogs.terra_entity.angler.1", "什……么？！难道你没看见我在收钓鱼线吗？？");
+        add("dialogs.terra_entity.angler.2", "整个%s中都没有厨师，所以我不得不自己烹鱼！");
         add("dialogs.terra_entity.angler.3", "我没有妈妈，也没有爸爸，但我有很多鱼！这就够了！");
-        add("dialogs.terra_entity.angler.4", "嘿！当心！我设了许多陷阱，用来实施史上最大的恶作剧！没人会发觉！你敢告诉别人试试！");
+        add("dialogs.terra_entity.angler.4", "听听小孩的忠告吧，永远不要用舌头碰冰块！等一下，就当我没说，我就想看你这样做！");
         add("dialogs.terra_entity.angler.5", "听说过会叫的鱼吗？！我没听说过，只是想知道你听说过没！");
+        add("dialogs.terra_entity.angler.6", "嘿！当心！我设了许多陷阱，用来实施史上最大的恶作剧！没人会发觉！你敢告诉别人试试！");
+        add("dialogs.terra_entity.angler.7", "%s到处都是各种稀奇古怪的鱼！");
+        add("dialogs.terra_entity.angler.stat.0", "你知道我已经有了%s条超棒的鱼了吗！？那是因为在跑腿这件事上，你还是发挥了作用！");
+        add("dialogs.terra_entity.angler.stat.1", "喂！你打扰我好像有%s次了！如果不是每次都有很酷的鱼，我一定会发飙！");
+        add("dialogs.terra_entity.angler.wakeup.0", "谢谢，我想，谢谢你救了我之类的。你是个优秀的得力仆从！");
+        add("dialogs.terra_entity.angler.wakeup.1", "啥？你是哪位？我绝对不是溺水之类的！");
+        add("dialogs.terra_entity.angler.wakeup.2", "你救了我！你太好了，我可以使唤你……呃，我是说，雇你帮我做些了不起的事！");
+        add("dialogs.terra_entity.angler.task_ready.0", "嘿！我有一个活儿给你。不要以为你能拒绝，怎么都不行！");
+        add("dialogs.terra_entity.angler.task_ready.1", "我想要一条鱼，你去给我弄一条来！快问我细节！");
+        add("dialogs.terra_entity.angler.task_ready.2", "%1$s想让你正式成为%2$s的跑腿官！");
+        add("dialogs.terra_entity.angler.task_ready.3", "嘿！你就是我一直在找的牺……我是说称职的钓鱼大师！");
+        add("dialogs.terra_entity.angler.task_succeed.0", "哦！谢谢你抓来我要的鱼，可以滚了！");
+        add("dialogs.terra_entity.angler.task_succeed.1", "你这跑腿的活干得挺不错嘛！现在走开！");
+        add("dialogs.terra_entity.angler.task_succeed.2", "哈哈哈哈！你做到了！你竟然毫发无伤，真没劲！");
+        add("dialogs.terra_entity.angler.task_succeed.3", "哇！？你竟然完成了任务，还活了下来！不错，把它交上来，再滚远点！");
+        add("dialogs.terra_entity.angler.task_succeed.4", "抓到啦！一切都是按计划进行的！哈哈哈！");
+        add("dialogs.terra_entity.angler.task_finished.0", "我的鱼够了！我现在不需要你的帮助！");
+        add("dialogs.terra_entity.angler.task_finished.1", "你今天已经让我够开心了，可以走了。");
+        add("dialogs.terra_entity.angler.task_finished.2", "现在没有任务要分配给你。");
+        add("dialogs.terra_entity.angler.task_finished.3", "一天就一条鱼，请离开！");
+        add("dialogs.terra_entity.angler.task_finished.4", "你上次给我的鱼还没用呢。我不需要了。");
+        add("dialogs.terra_entity.angler.task_finished.5", "你完蛋了，伟大的%s会解雇你！");
 
         add("dialogs.terra_entity.old_man.0", "如果你不解除我的诅咒，我是不会让你进的。");
         add("dialogs.terra_entity.old_man.1", "陌生人，你是否拥有能打败我主人的力量？");

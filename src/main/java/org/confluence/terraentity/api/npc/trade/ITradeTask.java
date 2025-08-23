@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -70,6 +71,10 @@ public interface ITradeTask {
      */
     default void afterTrade(ITradeHolder npc, int index) {
         setNext(npc, index);
+    }
+
+    default void afterTrade(ServerPlayer player, ITradeHolder npc, int index) {
+        afterTrade(npc, index);
     }
 
     /**

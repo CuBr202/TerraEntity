@@ -187,6 +187,11 @@ public class TEEnglishProvider extends LanguageProvider {
 
 
         // npc
+        add("dialogs.terra_entity.trade", "Trade");
+        add("dialogs.terra_entity.summon", "Summon");
+        add("dialogs.terra_entity.dialog", "Dialog");
+        add("dialogs.terra_entity.quest", "Quest");
+
         add("dialogs.terra_entity.guide.0", "My job is to offer suggestions for your upcoming tasks. I recommend that you come and talk to me whenever you encounter any difficulties.");
         add("dialogs.terra_entity.guide.1", "They said there would be someone to tell you how to survive in this place... Oh, wait a moment. That person is me.");
         add("dialogs.terra_entity.guide.2", "You should stay at home at night. It's very dangerous to wander outside in the dark.");
@@ -260,12 +265,34 @@ public class TEEnglishProvider extends LanguageProvider {
         add("dialogs.terra_entity.dye_trader.4", "These dye bottles? Sorry, my dear friend, these are not for sale. I only accept the rarest plants in exchange for them!");
         add("dialogs.terra_entity.dye_trader.5", "You think you can fool my eyes? I don't think so! I only accept the rarest flowers in exchange for these special bottles.");
 
-        add("dialogs.terra_entity.angler.0", "Thanks, I guess, for saving me and all that. You're an excellent lackey!");
-        add("dialogs.terra_entity.angler.1", "What? Who are you? I definitely wasn't drowning or anything!");
-        add("dialogs.terra_entity.angler.2", "You saved me! You're so kind. I can boss you around... Uh, I mean, hire you to do some amazing things for me!");
-        add("dialogs.terra_entity.angler.3", "I don't have a mom or a dad, but I have a lot of fish! That's enough!");
-        add("dialogs.terra_entity.angler.4", "Hey! Watch out! I've set a lot of traps for the greatest prank in history! No one will notice! Try telling anyone and see what happens!");
-        add("dialogs.terra_entity.angler.5", "Have you ever heard of a fish that can make noise?! I haven't. I just want to know if you have!");
+        add("dialogs.terra_entity.angler.0", "I'm bummed out! There's probably been fish that have gone extinct before I even was born, and that's not fair!");
+        add("dialogs.terra_entity.angler.1", "Whaaaat?! Can't you see I'm winding up fishing line??");
+        add("dialogs.terra_entity.angler.2", "There's no chefs in all of %s, so I have to cook all this fish myself! ");
+        add("dialogs.terra_entity.angler.3", "I don't have a mommy or a daddy, but I have a lot of fish! It's close enough!");
+        add("dialogs.terra_entity.angler.4", "Let a kid give you some advice, never touch your tongue to an ice block! Wait, forget what I said, I totally want to see you do it!");
+        add("dialogs.terra_entity.angler.5", "Ever heard of a barking fish?! I haven't, I'm just wondering if you did!");
+        add("dialogs.terra_entity.angler.6", "Hey! Watch it! I'm setting up traps for my biggest prank ever! No one will see it coming! Don't you dare tell anyone!");
+        add("dialogs.terra_entity.angler.7", "%s is filled to the brim with the most outlandish kinds of fish!");
+        add("dialogs.terra_entity.angler.stat.0", "Did you know I have %s amazingly awesome fish now!? That's because as far as errand monkeys go, you're actually a bit useful!");
+        add("dialogs.terra_entity.angler.stat.1", "Wooow! You've bothered me, like, %s times! If I didn't have a cool fish for each time, I would be really mad!");
+        add("dialogs.terra_entity.angler.wakeup.0", "Thanks, I guess, for saving me or whatever. You'd be a great helper minion!");
+        add("dialogs.terra_entity.angler.wakeup.1", "Wha? Who might you be? I totally wasn't just drowning or anything!");
+        add("dialogs.terra_entity.angler.wakeup.2", "You saved me! You're awful nice, I could use you... er, I mean, totally hire you to do some awesome stuff for me!");
+        add("dialogs.terra_entity.angler.task_ready.0", "Psst! I might have a job for you. Don't think you can say no, either!");
+        add("dialogs.terra_entity.angler.task_ready.1", "I want a fish and you're going to find me one! Ask me about it!");
+        add("dialogs.terra_entity.angler.task_ready.2", "%1$s wants YOU as the official %2$s errand monkey!");
+        add("dialogs.terra_entity.angler.task_ready.3", "Hey! Just the sacrifi- I mean competent fishing master that I've been looking for! ");
+        add("dialogs.terra_entity.angler.task_succeed.0", "Oh! Thanks for the fish I asked for, now scram!");
+        add("dialogs.terra_entity.angler.task_succeed.1", "You make a great errand monkey! Now go away!");
+        add("dialogs.terra_entity.angler.task_succeed.2", "Muahahahahaha! You did it! You're still in one piece though, how boring!");
+        add("dialogs.terra_entity.angler.task_succeed.3", "Woah!? You actually did what I asked, and survived! Nice, hand it over and beat it!");
+        add("dialogs.terra_entity.angler.task_succeed.4", "Awesome catch! It's all going according to plan! He he he!");
+        add("dialogs.terra_entity.angler.task_finished.0", "I have enough fish! I don't need your help right now!");
+        add("dialogs.terra_entity.angler.task_finished.1", "You have entertained me enough for today, go.");
+        add("dialogs.terra_entity.angler.task_finished.2", "I don't have anything for you to do right now.");
+        add("dialogs.terra_entity.angler.task_finished.3", "一Only one fish a day, please go away!");
+        add("dialogs.terra_entity.angler.task_finished.4", "I haven't even used the last fish you gave me.  I don't need another.");
+        add("dialogs.terra_entity.angler.task_finished.5", "You are done, the grand %s dismisses you!");
 
         add("dialogs.terra_entity.old_man.0", "I cannot let you enter until you free me of my curse.");
         add("dialogs.terra_entity.old_man.1", "Stranger, do you possess the strength to defeat my master?");

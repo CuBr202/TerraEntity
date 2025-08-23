@@ -14,8 +14,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
-import org.confluence.terraentity.registries.npc_trade.*;
 import org.confluence.terraentity.api.npc.trade.ITradeTask;
+import org.confluence.terraentity.registries.npc_trade.TradeProperties;
+import org.confluence.terraentity.registries.npc_trade.TradeProvider;
+import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -75,7 +77,7 @@ public record TradeTask(ITradeTask task, TradeProperties properties) implements 
         ITrade selected = getSelected(npc, index);
         if(selected != null) {
             selected.onTrade(player, npc, index);
-            task().afterTrade(npc, index);
+            task().afterTrade(player, npc, index);
         }
 
     }

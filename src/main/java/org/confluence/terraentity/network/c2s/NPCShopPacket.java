@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public record NPCShopPacket(int tradeIndex, TradeParams params) implements CustomPacketPayload {
-    public static final Type<NPCShopPacket> TYPE = new Type<>(TerraEntity.space("npc_trade_packet_s2c"));
+    public static final Type<NPCShopPacket> TYPE = new Type<>(TerraEntity.space("npc_shop"));
     public static final StreamCodec<ByteBuf, NPCShopPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, NPCShopPacket::tradeIndex,
             TradeParams.STREAM_CODEC, NPCShopPacket::params,

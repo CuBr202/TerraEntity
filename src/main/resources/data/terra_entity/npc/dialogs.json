@@ -94,26 +94,6 @@
       "dialogs.terra_entity.dye_trader.5"
     ]
   },
-  "terra_entity:angler": {
-    "dialogs": [
-      "dialogs.terra_entity.angler.0",
-      "dialogs.terra_entity.angler.1",
-      "dialogs.terra_entity.angler.2",
-      "dialogs.terra_entity.angler.3",
-      "dialogs.terra_entity.angler.4",
-      "dialogs.terra_entity.angler.5"
-    ]
-  },
-  "terra_entity:female_angler": {
-    "dialogs": [
-      "dialogs.terra_entity.angler.0",
-      "dialogs.terra_entity.angler.1",
-      "dialogs.terra_entity.angler.2",
-      "dialogs.terra_entity.angler.3",
-      "dialogs.terra_entity.angler.4",
-      "dialogs.terra_entity.angler.5"
-    ]
-  },
   "terra_entity:old_man": {
     "dialogs": [
       "dialogs.terra_entity.old_man.0",

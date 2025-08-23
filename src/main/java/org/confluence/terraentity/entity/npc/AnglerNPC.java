@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,8 +15,10 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.npc.trade.ITrade;
+import org.confluence.terraentity.network.s2c.SetAnglerDialogPacketS2C;
 import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.variant.DynamicAnglerTradeTask;
+import org.confluence.terraentity.utils.AdapterUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -226,11 +228,11 @@ public class AnglerNPC extends AbstractTerraNPC {
 
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
-        if (!isWakeUp() && player.level() instanceof ServerLevel serverLevel) {
+        if (!isWakeUp() && player instanceof ServerPlayer serverPlayer) {
             setWakeUp(true);
-            this.refreshBrain(serverLevel);
-            // confluence mixin here
-            return InteractionResult.CONSUME;
+            this.refreshBrain(serverPlayer.serverLevel());
+            AdapterUtils.sendToPlayer(serverPlayer, new SetAnglerDialogPacketS2C(SetAnglerDialogPacketS2C.WAKEUP));
+            return InteractionResult.CONSUME; // confluence mixin here
         }
         return super.mobInteract(player, hand);
     }
@@ -242,6 +244,4 @@ public class AnglerNPC extends AbstractTerraNPC {
         }
         return super.getDefaultDimensions(pose);
     }
-
 }
-
