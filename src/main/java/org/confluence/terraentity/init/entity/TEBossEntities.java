@@ -24,6 +24,7 @@ import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshEye;
 import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouth;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
+import org.confluence.terraentity.entity.util.AttBuilder;
 import org.confluence.terraentity.init.TEEntities;
 
 public class TEBossEntities {
@@ -73,22 +74,22 @@ public class TEBossEntities {
 
 
         event.put(TEBossEntities.KING_SLIME.get(), KingSlime.createSlimeAttributes().build());
-        event.put(TEBossEntities.EYE_OF_CTHULHU.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.EATER_OF_WORLDS.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.BRAIN_OF_CTHULHU.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEMonsterEntities.VISUAL_NEURON.get(), AbstractMonster.createAttributes().build());
+        event.put(TEBossEntities.EYE_OF_CTHULHU.get(), AttBuilder.createBoss(728, 12).attack(4).build());
+        event.put(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), AttBuilder.createBoss(50, 1).build());
+        event.put(TEBossEntities.EATER_OF_WORLDS.get(), AttBuilder.createBoss(54, 0).attack(12.5).build());
+        event.put(TEBossEntities.BRAIN_OF_CTHULHU.get(), AttBuilder.createBoss(552, 14).attack(5).build());
+
         event.put(TEBossEntities.BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.QUEEN_BEE.get(), LibUtils.forMixin$ModifyExpression(AbstractTerraBossBase.createAttributes()).build());
-        event.put(TEBossEntities.SKELETRON.get(), LibUtils.forMixin$ModifyExpression(AbstractTerraBossBase.createAttributes()).build());
-        event.put(TEBossEntities.SKELETRON_HAND.get(), LibUtils.forMixin$ModifyExpression(AbstractTerraBossBase.createAttributes()).build());
+        event.put(TEBossEntities.QUEEN_BEE.get(), LibUtils.forMixin$ModifyExpression(AttBuilder.createBoss(1237, 8).attack(14).build()));
+        event.put(TEBossEntities.SKELETRON.get(), LibUtils.forMixin$ModifyExpression(AttBuilder.createBoss(2288, 10).attack(18.2).build()));
+        event.put(TEBossEntities.SKELETRON_HAND.get(), LibUtils.forMixin$ModifyExpression(AttBuilder.createBoss(405,4).attack(10).build()));
 
-        event.put(TEBossEntities.WALL_OF_FLESH.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.WALL_OF_FLESH_EYE.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.DUNGEON_GUARDIAN.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(TEBossEntities.WALL_OF_FLESH.get(), AttBuilder.createBoss(3096, 0).attack(39).build());
+        event.put(TEBossEntities.WALL_OF_FLESH_EYE.get(), AttBuilder.createBoss(3096, 0).attack(8).followRange(32).build());
+        event.put(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), AttBuilder.createBoss(3096, 12).attack(39).followRange(32).build());
+        event.put(TEBossEntities.DUNGEON_GUARDIAN.get(), AttBuilder.createBoss(9999,9999).attack(9999).build());
 
-        event.put(TEBossEntities.HILL_OF_FLESH.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(TEBossEntities.HILL_OF_FLESH.get(), AttBuilder.createBoss(3096, 0).build());
 
     }
 

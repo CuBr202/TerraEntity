@@ -46,6 +46,7 @@ public class TerraEntity {
         TEBiomes.register(modEventBus);
         TELoots.register(modEventBus);
         TEEnchantments.register(modEventBus);
+        modEventBus.addListener(TEDataMaps::registerDataMapTypes);
 
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 

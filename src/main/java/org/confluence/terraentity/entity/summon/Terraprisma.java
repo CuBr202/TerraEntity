@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.summon;
 
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -17,6 +18,8 @@ import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
 import org.confluence.terraentity.entity.ai.keyframe.animation.KeyframeAnimation;
 import org.confluence.terraentity.entity.util.KeyframeAnimationCounter;
 import org.confluence.terraentity.init.TEEntityDataSerializers;
+import org.confluence.terraentity.integration.ModChecker;
+import org.confluence.terraentity.integration.veil.VeilHelper;
 import org.confluence.terraentity.utils.OBB;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,25 +53,50 @@ public class Terraprisma extends SummonSword {
     protected static final EntityDataAccessor<KeyframeAnimationCounter> DATA_KEYFRAME_Y = SynchedEntityData.defineId(Terraprisma.class, TEEntityDataSerializers.KEYFRAME_ANIMATION_SERIALIZER.get());
     protected static final EntityDataAccessor<KeyframeAnimationCounter> DATA_KEYFRAME_Z = SynchedEntityData.defineId(Terraprisma.class, TEEntityDataSerializers.KEYFRAME_ANIMATION_SERIALIZER.get());
 
+    Object light = null;
+    @Override
+    public void recreateFromPacket(ClientboundAddEntityPacket clientboundAddEntityPacket) {
+        super.recreateFromPacket(clientboundAddEntityPacket);
+        if(ModChecker.veil.isLoaded()) {
+            VeilHelper.addLight(level(), light);
+        }
+    }
 
     public Terraprisma(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level, null, 0xFFFFFF, null, 0.25f);
 
         this.rgb = getRandomColor();
         this.entityData.set(DATA_COLOR, this.rgb);
+
+        if(ModChecker.veil.isLoaded()) {
+            light = VeilHelper.initLight(level);
+        }
+
+    }
+
+    @Override
+    public void onRemovedFromLevel(){
+        if(ModChecker.veil.isLoaded()) {
+            VeilHelper.removeLight(level(), light);
+        }
+        super.onRemovedFromLevel();
     }
 
     @Override
     public void tick() {
         super.tick();
         if(this.level().isClientSide){
+            if(ModChecker.veil.isLoaded()) {
+                VeilHelper.setLight(level(), light, this.getX(), this.getY(), this.getZ(), 0.01F, 17, this.rgb);
+            }
             float d = (getRandom().nextFloat() - 0.5f) * 0.05f;
 
             colorProgress = Mth.clamp(colorProgress + d + this.sliderProgress, 0, 1);
+            float speed = 0.01f;
             if(colorProgress >= 1){
-                this.sliderProgress = -0.003f;
+                this.sliderProgress = -speed;
             }else if(colorProgress <= 0){
-                this.sliderProgress = 0.003f;
+                this.sliderProgress = speed;
             }
             this.rgb = lerpColor(colorFrom, colorTo, colorProgress);
         }else{

@@ -24,7 +24,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     //在预制体上修改参数
     public static Supplier<AttributeBuilder> CRIMSON_KEMERA_BUILDER =
-            ()->new FlyMonsterPrefab(20,6,11,30,0.5f,0.1f).getPrefab()
+            ()->new FlyMonsterPrefab().getPrefab()
                     .setSpawnWithoutLight()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
@@ -33,7 +33,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
     public static final Supplier<AttributeBuilder> EATER_OF_SOULS_BUILDER =
-            ()->new FlyMonsterPrefab(20,6,11,30,0.5f,0.1f).getPrefab()
+            ()->new FlyMonsterPrefab().getPrefab()
                     .setSpawnWithoutLight()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,0.4f,15));
@@ -42,7 +42,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
     public static final Supplier<AttributeBuilder> DRIPPLER_BUILDER  =
-            ()->new FlyMonsterPrefab(26,7,14,64,0.5f,0.2f).getPrefab()
+            ()->new FlyMonsterPrefab().getPrefab()
                     .setHurtSound(TESounds.DRIPPLER_HURT)
                     .setDeathSound(TESounds.DRIPPLER_DEATH)
                     .addGoal((g,e)->{
@@ -52,7 +52,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
     public static Supplier<AttributeBuilder> FLYING_FISH_BUILDER  =
-            ()->new FlyMonsterPrefab(10,1,2,30,0.5f,0.3f).getPrefab()
+            ()->new FlyMonsterPrefab().getPrefab()
                 .addGoal((g,e)->{
                     g.addGoal(0, new DashGoal(e,0.95f,0.5f,15,
                             0.02f,5,10,45));
@@ -61,8 +61,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
     public static Supplier<AttributeBuilder> CAVE_BAT_BUILDER  =
-            ()->new FlyMonsterPrefab(8,1,4,60,0.2f,0.5f).getPrefab()
-                    .setFollowRange(16) // 蝙蝠是瞎子，检测距离近点
+            ()->new FlyMonsterPrefab().getPrefab()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,1f,0.5f,30,
                                 0.02f,20,20,45));
@@ -73,8 +72,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
     public static Supplier<AttributeBuilder> JUNGLE_BAT_BUILDER  =
-            ()->new FlyMonsterPrefab(17,1,8,60,0.2f,0.5f).getPrefab()
-                    .setFollowRange(16) // 蝙蝠是瞎子，检测距离近点
+            ()->new FlyMonsterPrefab().getPrefab()
                     .setSpawnWithoutLight()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,1f,0.5f,30,
@@ -84,7 +82,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                         e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));
                     })
             ;
-    public static Supplier<AttributeBuilder> HELL_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(23).setArmor(2).setAttackDamage(15)
+    public static Supplier<AttributeBuilder> HELL_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER)
             .setTicker(e->{
                 e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));
                 if(e.level().isClientSide){
@@ -98,8 +96,8 @@ public class FlyMonsterPrefab extends AbstractPrefab {
                     e.level().addParticle(ParticleTypes.LAVA, e.getX() - (double)f3, e.getY() + (double)f5, e.getZ() - (double)f4, 0.0, 0.0, 0.0);
                 }
             });
-    public static Supplier<AttributeBuilder> SPORE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(15).setAttackDamage(7);
-    public static Supplier<AttributeBuilder> ICE_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER).setHealth(15).setAttackDamage(7)
+    public static Supplier<AttributeBuilder> SPORE_BAT_BUILDER = ()-> copyFrom(CAVE_BAT_BUILDER);
+    public static Supplier<AttributeBuilder> ICE_BAT_BUILDER  = ()-> copyFrom(CAVE_BAT_BUILDER)
             .setTicker(e->{
                 e.addDeltaMovement(new Vec3(0, Math.sin(e.tickCount*0.2f) * 0.03f ,0));
                 if(e.level().isClientSide){
@@ -114,17 +112,15 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
 
     public static Supplier<AttributeBuilder> BEE_BUILDER  =
-            ()->new AbstractPrefab(23,6,13,32,0,0.55f)
+            ()->new AbstractPrefab()
                     .getPrefab()
                     .setNoAttachAttack()
-                    .setMovementSpeed(0.5f)
                     .setNoGravity()
             ;
 
 
     public static final Supplier<AttributeBuilder> WANDERING_EYE_FISH_BUILDER =
-            ()->new FlyMonsterPrefab(156,18,15,60,1f,1f).getPrefab()
-                    .setMovementSpeed(2.2f)
+            ()->new FlyMonsterPrefab().getPrefab()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,0.98f,2.2f,15));
 
@@ -137,11 +133,10 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
 
 
-    public FlyMonsterPrefab(int health,int armor,int attack,int followRange,float knockBack,float knockbackResistance) {
-        super(health,armor,attack,followRange,knockBack,knockbackResistance);
+    public FlyMonsterPrefab() {
+        super();
         modifier = (b)->b
                 .setNavigation((e)->new FlyingPathNavigation(e,e.level()))
-                .setSafeFall(1000)
                 .setNoGravity()
                 .setPushable(false)
                 .setNoFriction()

@@ -31,7 +31,7 @@ public class HillOfFleshMouse extends HillOfFleshPart {
 
     private TheHungry summonHungry(Vec3 hungryPos) {
         TheHungry hungry = TEUtils.spawnEntity(() -> new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),
-                new AbstractPrefab(60, 2, 15, 32, 0.75f, 1).getPrefab()) {
+                new AbstractPrefab().getPrefab()) {
             @Override
             protected boolean shouldDropLoot() {
                 return false;

@@ -13,9 +13,9 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
+import org.confluence.terraentity.registries.mappeddata.MappedDataLoader;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
 import org.confluence.terraentity.entity.animation.HillOfFleshModelAnimationTable;
-import org.confluence.terraentity.entity.boss.hillofflesh.HillOfFlesh;
 import org.confluence.terraentity.entity.npc.brain.ArmDealerNPCAi;
 import org.confluence.terraentity.entity.npc.brain.DemolitionistNPCAi;
 import org.confluence.terraentity.entity.npc.brain.NurseAi;
@@ -68,6 +68,8 @@ public class GameEvent {
         event.addListener(TradeModifiers.getInstance());
         event.addListener(ChatManager.Loader.getInstance());
         event.addListener(HillOfFleshModelAnimationTable.getInstance());
+        event.addListener(new MappedDataLoader());
+
     }
 
     @SubscribeEvent
@@ -96,4 +98,27 @@ public class GameEvent {
 
         event.register(TENpcEntities.OLD_MAN.get(), collector -> collector.setReplace(new OldManAi(collector.getNPC())));
     }
+
+//    @SubscribeEvent
+//    static void onDataMapsUpdated(DataMapsUpdatedEvent event) {
+//        event.ifRegistry(Registries.ITEM, (registry)->{
+//            registry.getDataMap(TEDataMaps.WHIP_DATA_MAP).forEach((item, data)->{
+//                if(BuiltInRegistries.ITEM.get(item) instanceof BaseWhipItem whip){
+//                    List<ItemAttributeModifiers.Entry> modifiers = new ArrayList<>(whip.components().get(DataComponents.ATTRIBUTE_MODIFIERS).modifiers());
+//                    int index = 0;
+//                    for(var modifier : modifiers){
+//                        if(modifier.matches(TEAttributes.SUMMON_DAMAGE, TerraEntity.space("whip_damage_modifier"))){
+//                            if(data.damage().isPresent()){
+//                                modifiers.set(index, new ItemAttributeModifiers.Entry(
+//                                        TEAttributes.SUMMON_DAMAGE,
+//                                        new AttributeModifier(TerraEntity.space("whip_damage_modifier"), data.damage().get(), modifier.modifier().operation()),
+//                                        modifier.slot()));
+//                            }
+//                        }
+//                        index++;
+//                    }
+//                }
+//            });
+//        });
+//    }
 }

@@ -30,8 +30,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * 世吞
  */
 public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implements Boss {
-    private static final float MAX_HEALTHS = 54f;
-    private static final float DAMAGE = 12.5f;//接触伤害
+
     private static final float projDamage = 3;
 
     private float segmentInternal = 2.8f;
@@ -61,7 +60,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
 
 
     public EaterOfWorlds(EntityType<? extends Monster> type, Level level) {
-        super(type, level,MAX_HEALTHS, 0);
+        super(type, level);
         if(!level.isClientSide){
             if(getTarget()!=null){
                 this.moveTo(getTarget().position());
@@ -199,7 +198,6 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     @Override
     public void onAddedToLevel(){
         super.onAddedToLevel();
-        this.setAttactDamage(DAMAGE);
     }
 
     @Override

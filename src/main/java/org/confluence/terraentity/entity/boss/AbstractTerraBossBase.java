@@ -74,18 +74,17 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     protected boolean dirty = true;
     protected ServerBossEvent bossEvent;
-    protected float baseHealth;
-    protected int baseArmor;
+
     protected DifficultSelector difficultSelector;
     public int stage = 1; //阶段
     private boolean consumeStageChange = false;
 
-    public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level, float health, int armor) {
+    public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level) {
         super(type, level);
         this.moveControl = new FlyingMoveControl(this, 10, false);
         setNoGravity(true);
-        this.baseHealth = health;
-        this.baseArmor = armor;
+//        this.baseHealth = health;
+//        this.baseArmor = armor;
         if(level().isClientSide){
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
         }
@@ -147,8 +146,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @javax.annotation.Nullable SpawnGroupData spawnGroupData) {
         spawnGroupData = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.baseHealth);
-        this.getAttribute(Attributes.ARMOR).setBaseValue(baseArmor);
+//        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.baseHealth);
+//        this.getAttribute(Attributes.ARMOR).setBaseValue(baseArmor);
         this.setHealth(this.getMaxHealth());
         return spawnGroupData;
     }
@@ -165,6 +164,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     }
 
+
+    // 尽量不要使用这个方法，应该使用modifier且使用最好使用乘法，以适配其他模组的属性
     protected void setAttactDamage(float damage){
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(damage);
     }

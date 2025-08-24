@@ -11,10 +11,12 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnimation;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -51,7 +53,19 @@ public class HillOfFleshModelAnimationTable extends SimplePreparableReloadListen
         if(file.isPresent()){
             try (Reader reader = file.get().openAsReader()) {
                 JsonObject jsonobject = GsonHelper.fromJson(GSON, reader, JsonObject.class);
-                return ModelPositionTable.CODEC.decode(JsonOps.INSTANCE, jsonobject).getOrThrow().getFirst();
+                ModelPositionTable animTable = ModelPositionTable.CODEC.decode(JsonOps.INSTANCE, jsonobject).getOrThrow().getFirst();
+                Map<String, Vec3KeyframeAnimation> positions = new HashMap<>();
+                // 填充首尾关键帧
+                for (Map.Entry<String, Vec3KeyframeAnimation> entry : animTable) {
+                    var anim = entry.getValue().copyFrame(0, 40);
+                    if (anim != null) {
+                        positions.put(entry.getKey(), anim);
+                    } else {
+                        positions.put(entry.getKey(), entry.getValue());
+                    }
+                }
+                animTable = new ModelPositionTable(positions);
+                return animTable;
             } catch (RuntimeException | IOException ioexception) {
                 TerraEntity.LOGGER.error("Failed to load Hill Of Flesh ModelAnimation Table {}", location, ioexception);
             }

@@ -29,8 +29,7 @@ import org.confluence.terraentity.init.entity.TEProjectileEntities;
  * 世吞体节
  */
 public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSegment> implements Boss {
-    private static final float MAX_HEALTHS = 50f;
-    private static final float DAMAGE = 5f;//接触伤害
+
 
     private int _shootTick = 100;
     private int shootTick = _shootTick;
@@ -69,9 +68,8 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     }
 
     public EaterOfWorldsSegment(EntityType<? extends Monster> type, Level level) {
-        super(type, level,MAX_HEALTHS, 1);
+        super(type, level);
         this.noPhysics = true;
-        setAttactDamage(DAMAGE);
 
         this.xpReward = 30;
     }

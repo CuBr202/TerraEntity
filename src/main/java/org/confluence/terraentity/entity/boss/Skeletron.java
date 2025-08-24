@@ -44,7 +44,7 @@ import java.util.List;
 public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss {
 
     private float projDamageFactor = 0.33f; // 弹幕伤害倍率，相对于攻击力
-    private float attackDamage = 18.2f; // 攻击伤害
+
     public int phase = 0;
     public boolean enraged = false;
     protected double acceleration;
@@ -56,8 +56,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
     public static final EntityDataAccessor<Boolean> DATA_SPINNING = SynchedEntityData.defineId(Skeletron.class, EntityDataSerializers.BOOLEAN);
 
     public Skeletron(EntityType<? extends Monster> entityType, Level level) {
-        super(entityType, level, 2288, 10);
-        this.setAttactDamage(attackDamage);
+        super(entityType, level);
         setDiscardFriction(true);
         if (ServerConfig.BOSS_NO_PHYSICS.get()) {
             noPhysics = true;

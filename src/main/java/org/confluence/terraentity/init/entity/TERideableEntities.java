@@ -7,9 +7,9 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
-import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.rideable.RideableBee;
 import org.confluence.terraentity.entity.rideable.RideableSlime;
+import org.confluence.terraentity.entity.util.AttBuilder;
 import org.confluence.terraentity.init.TEEntities;
 
 public class TERideableEntities {
@@ -26,8 +26,8 @@ public class TERideableEntities {
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(TERideableEntities.RIDEABLE_SLIME.get(), AbstractMonster.createAttributes().build());
-        event.put(TERideableEntities.RIDEABLE_BEE.get(), AbstractMonster.createAttributes().build());
+        event.put(TERideableEntities.RIDEABLE_SLIME.get(), AttBuilder.createAttributes().build());
+        event.put(TERideableEntities.RIDEABLE_BEE.get(), AttBuilder.createAttributes().build());
 
     }
     public static void register(){

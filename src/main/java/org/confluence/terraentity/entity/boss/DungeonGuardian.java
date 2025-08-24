@@ -18,9 +18,6 @@ public class DungeonGuardian extends Skeletron {
     int attackDelay = _attackDelay;
     public DungeonGuardian(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
-        this.setAttactDamage(9999);
-        this.baseArmor = 9999;
-        this.baseHealth = 9999;
 
     }
 

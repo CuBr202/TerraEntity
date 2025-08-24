@@ -6,6 +6,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.registries.mappeddata.MappedDataType;
 import org.confluence.terraentity.registries.chat.ChatElementProvider;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.registries.chat.ChatProviderTypes;
@@ -20,6 +21,7 @@ import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;
 import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
 import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProvider;
@@ -50,6 +52,7 @@ public class TERegistries {
     public static final Registry<TradeModifierProvider> TRADE_MODIFIER_PROVIDERS = createRegistry(Keys.TRADE_MODIFIER_PROVIDER);
     public static final Registry<ChatElementProvider> CHAT_ELEMENT_PROVIDERS = createRegistry(Keys.CHAT_ELEMENT_PROVIDER);
     public static final Registry<ChatConditionProvider> CHAT_CONDITION_PROVIDERS = createRegistry(Keys.CHAT_CONDITION_PROVIDER);
+    public static final Registry<MappedDataType> MAPPED_DATAS = createRegistry(Keys.MAPPED_DATA);
 
 
     private static  <T> Registry<T> createRegistry(ResourceKey<Registry<T>> key) {
@@ -70,6 +73,7 @@ public class TERegistries {
         public static final ResourceKey<Registry<TradeModifierProvider>> TRADE_MODIFIER_PROVIDER = createRegistryKey(TerraEntity.space("trade_modifier_provider"));
         public static final ResourceKey<Registry<ChatElementProvider>> CHAT_ELEMENT_PROVIDER = createRegistryKey(TerraEntity.space("chat_element"));
         public static final ResourceKey<Registry<ChatConditionProvider>> CHAT_CONDITION_PROVIDER = createRegistryKey(TerraEntity.space("chat_condition"));
+        public static final ResourceKey<Registry<MappedDataType>> MAPPED_DATA = createRegistryKey(TerraEntity.space("mapped_data_type"));
 
 
     }
@@ -90,6 +94,7 @@ public class TERegistries {
         event.register(TRADE_MODIFIER_PROVIDERS);
         event.register(CHAT_ELEMENT_PROVIDERS);
         event.register(CHAT_CONDITION_PROVIDERS);
+        event.register(MAPPED_DATAS);
 
     }
 
@@ -107,6 +112,7 @@ public class TERegistries {
         TradeModifierProviderTypes.TYPES.register(bus);
         ChatProviderTypes.TYPES.register(bus);
         ChatConditionProviderTypes.TYPES.register(bus);
+        MappedDataTypes.TYPES.register(bus);
 
     }
 

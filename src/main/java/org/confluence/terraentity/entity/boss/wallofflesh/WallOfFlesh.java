@@ -39,8 +39,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements Boss {
-    public static final float MAX_HEALTHS = 3096;
-    private static final float DAMAGE = 39f;
+
 
     static float moveSpeedBase = 0.15f;
 
@@ -70,7 +69,7 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
     public final ConcurrentHashMap<Vec3, TheHungry> theHungryMap = new ConcurrentHashMap<>();
 
     public WallOfFlesh(EntityType<? extends Monster> type, Level level) {
-        super(type, level,MAX_HEALTHS, 0);
+        super(type, level);
         this.noPhysics = true;
         this.noCulling = true;
         this.setNoGravity(true);
@@ -138,7 +137,7 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
             // 生成饿鬼
             for (Vec3 hungryPos : hungryPositions) {
                 TheHungry hungry = TEUtils.spawnEntity(() -> new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(), 
-                    new AbstractPrefab(60, 2, 15, 32, 0.75f, 1).getPrefab()) {
+                    new AbstractPrefab().getPrefab()) {
                             @Override
                             protected boolean shouldDropLoot() {
                                 return false;
@@ -390,7 +389,7 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
         for (Entity child : baseSegments) {
             child.moveTo(this.position().add(localOffsets.get(child)));
         }
-        this.setAttactDamage(DAMAGE);
+
     }
 
     @Override
@@ -411,7 +410,7 @@ public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements B
                 for (Vec3 theHungryPos : theHungryMap.keySet()) {
                     TheHungry hungry = theHungryMap.get(theHungryPos);
                     if (hungry.isAlive()) continue;
-                    TheHungry newHungry = TEUtils.spawnEntity(()->new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),new AbstractPrefab(60,2,15,32,0.75f,1).getPrefab()) {
+                    TheHungry newHungry = TEUtils.spawnEntity(()->new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),new AbstractPrefab().getPrefab()) {
                         @Override
                         protected boolean shouldDropLoot() {
                             return false;

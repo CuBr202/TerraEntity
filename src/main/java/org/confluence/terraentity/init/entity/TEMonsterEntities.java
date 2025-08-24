@@ -35,6 +35,7 @@ import org.confluence.terraentity.entity.monster.prefab.LandMonsterPrefab;
 import org.confluence.terraentity.entity.monster.skeleton.MeleeSkeleton;
 import org.confluence.terraentity.entity.monster.skeleton.RangeSkeleton;
 import org.confluence.terraentity.entity.monster.slime.*;
+import org.confluence.terraentity.entity.util.AttBuilder;
 import org.confluence.terraentity.entity.util.SpawnPlacementChecks;
 import org.confluence.terraentity.init.TEEntities;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -75,18 +76,18 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> WANDERING_EYE_FISH = registerSimpleMonster("wandering_eye_fish", FlyMonsterPrefab.WANDERING_EYE_FISH_BUILDER, 1.4f, 1.4f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER, 0.9F, 0.9F);
     public static final DeferredHolder<EntityType<?>, EntityType<VisualNeuron>> VISUAL_NEURON = TEEntities.registerMonster("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
-    public static final DeferredHolder<EntityType<?>, EntityType<Harpy>> HARPY = TEEntities.registerMonster("harpy", (e, l) -> new Harpy(e, l, new FlyMonsterPrefab(41, 8, 13, 32, 1f, 0.28f).getPrefab().setSpawnWithoutLight()), 1f, 2f);
-    public static final DeferredHolder<EntityType<?>, EntityType<Demon>> DEMON = TEEntities.registerMonster("demon", (e, l) -> new Demon(e, l, new FlyMonsterPrefab(62, 8, 20, 20, 1f, 0.28f).getPrefab().setSpawnWithoutLight().setNoFriction()), 1f, 2f);
-    public static final DeferredHolder<EntityType<?>, EntityType<Demon>> VOODOO_DEMON = TEEntities.registerMonster("voodoo_demon", (e, l) -> new Demon(e, l, new FlyMonsterPrefab(62, 8, 20, 32, 1f, 0.28f).getPrefab().setSpawnWithoutLight().setNoFriction()), 1f, 2f);
-    public static final DeferredHolder<EntityType<?>, EntityType<AntlionSwarmer>> ANTLION_SWARMER = TEEntities.registerMonster("antlion_swarmer", (e, l) -> new AntlionSwarmer(e, l, new FlyMonsterPrefab(31, 8, 15, 32, 1f, 0.55f).getPrefab()), 3f, 1.5f);
-    public static final DeferredHolder<EntityType<?>, EntityType<AntlionSwarmer>> GIANT_ANTLION_SWARMER = TEEntities.registerMonster("giant_antlion_swarmer", (e, l) -> new AntlionSwarmer(e, l, new FlyMonsterPrefab(46, 12, 17, 32, 1f, 0.73f).getPrefab()), 3.5f, 2f);
-    public static final DeferredHolder<EntityType<?>, EntityType<GraniteElemental>> GRANITE_ELEMENTAL = TEEntities.registerMonster("granite_elemental", (e, l) -> new GraniteElemental(e, l, new FlyMonsterPrefab(46, 8, 17, 32, 1f, 0.73f).getPrefab()), 1.5f, 1.5f);
+    public static final DeferredHolder<EntityType<?>, EntityType<Harpy>> HARPY = TEEntities.registerMonster("harpy", (e, l) -> new Harpy(e, l, new FlyMonsterPrefab().getPrefab().setSpawnWithoutLight()), 1f, 2f);
+    public static final DeferredHolder<EntityType<?>, EntityType<Demon>> DEMON = TEEntities.registerMonster("demon", (e, l) -> new Demon(e, l, new FlyMonsterPrefab().getPrefab().setSpawnWithoutLight().setNoFriction()), 1f, 2f);
+    public static final DeferredHolder<EntityType<?>, EntityType<Demon>> VOODOO_DEMON = TEEntities.registerMonster("voodoo_demon", (e, l) -> new Demon(e, l, new FlyMonsterPrefab().getPrefab().setSpawnWithoutLight().setNoFriction()), 1f, 2f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AntlionSwarmer>> ANTLION_SWARMER = TEEntities.registerMonster("antlion_swarmer", (e, l) -> new AntlionSwarmer(e, l, new FlyMonsterPrefab().getPrefab()), 3f, 1.5f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AntlionSwarmer>> GIANT_ANTLION_SWARMER = TEEntities.registerMonster("giant_antlion_swarmer", (e, l) -> new AntlionSwarmer(e, l, new FlyMonsterPrefab().getPrefab()), 3.5f, 2f);
+    public static final DeferredHolder<EntityType<?>, EntityType<GraniteElemental>> GRANITE_ELEMENTAL = TEEntities.registerMonster("granite_elemental", (e, l) -> new GraniteElemental(e, l, new FlyMonsterPrefab().getPrefab()), 1.5f, 1.5f);
 
     // 陆行怪
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> SPORE_SKELETON = TEEntities.registerMonster("spore_skeleton",(e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(31, 8, 11, 60, 0.5f, 0.28f).getPrefab().setSpawnWithoutLight()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> SPORE_SKELETON = TEEntities.registerMonster("spore_skeleton",(e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab().getPrefab().setSpawnWithoutLight()), 0.65F, 1.85F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> SPORE_ZOMBIE = registerSimpleMonster("spore_zombie", LandMonsterPrefab.SPORE_ZOMBIE_BUILDER, 0.75F, 1.95F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> HAT_SPORE_ZOMBIE = registerSimpleMonster("hat_spore_zombie", LandMonsterPrefab.HAT_SPORE_ZOMBIE_BUILDER, 0.75F, 1.95F);
-    public static final DeferredHolder<EntityType<?>, EntityType<RangeSkeleton>> DECAYEDER = TEEntities.registerMonster("decayeder", (e, l) -> new Decayeder(e, l, new AbstractPrefab(10, 6, 6).getPrefab().setSpawnWithoutLight()), 1, 1.8f);
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeSkeleton>> DECAYEDER = TEEntities.registerMonster("decayeder", (e, l) -> new Decayeder(e, l, new AbstractPrefab().getPrefab().setSpawnWithoutLight()), 1, 1.8f);
     public static final DeferredHolder<EntityType<?>, EntityType<BloodySpore>> BLOODY_SPORE = TEEntities.registerMonster("bloody_spore", BloodySpore::new, 1, 1.5f);
     public static final DeferredHolder<EntityType<?>, EntityType<BloodCrawler>> BLOOD_CRAWLER = TEEntities.registerMonster("blood_crawler", BloodCrawler::new, 1.8F, 1.2F);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FACE_MONSTER = registerSimpleMonster("face_monster", LandMonsterPrefab.FACE_MONSTER_BUILDER, 0.75F, 1.95F);
@@ -99,7 +100,7 @@ public class TEMonsterEntities {
 
 
     // 蜜蜂
-    public static final DeferredHolder<EntityType<?>, EntityType<Hornet>> HORNET = TEEntities.registerMonster("hornet", (e, l) -> new Hornet(e, l, FlyMonsterPrefab.BEE_BUILDER.get().setHealth(32)), 0.8f, 1.2f);
+    public static final DeferredHolder<EntityType<?>, EntityType<Hornet>> HORNET = TEEntities.registerMonster("hornet", (e, l) -> new Hornet(e, l, FlyMonsterPrefab.BEE_BUILDER.get()), 0.8f, 1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<LittleHornet>> LITTLE_HORNET = TEEntities.registerEntity("little_hornet", LittleHornet::new, MobCategory.CREATURE, 0.8f, 1.2f);
     // 蝙蝠
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CAVE_BAT = registerSimpleMonster("cave_bat", FlyMonsterPrefab.CAVE_BAT_BUILDER, 1.6f, 1.6f);
@@ -110,52 +111,52 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> ICE_BAT = registerSimpleMonster("ice_bat", FlyMonsterPrefab.ICE_BAT_BUILDER, 1.6f, 1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> SPORE_BAT = registerSimpleMonster("spore_bat", FlyMonsterPrefab.SPORE_BAT_BUILDER, 1.6f, 1.6f);
     // 蠕虫
-    public static final DeferredHolder<EntityType<?>, EntityType<BaseWorm<BaseWormPart>>> DEVOURER = TEEntities.registerMonster("devourer", (e, l) -> BaseWorm.simpleWorm(e, l, AbstractPrefab.WARM_BUILDER.get().setHealth(52).setAttackDamage(8).setArmor(2).setSpawnWithoutLight()), 2F, 2F);
-    public static final DeferredHolder<EntityType<?>, EntityType<BaseWorm<BaseWormPart>>> TOMB_CRAWLER = TEEntities.registerMonster("tomb_crawler", (e, l) -> BaseWorm.simpleWorm(e, l, AbstractPrefab.WARM_BUILDER.get().setHealth(16).setAttackDamage(4).setArmor(2)), 2F, 2F);
-    public static final DeferredHolder<EntityType<?>, EntityType<BaseWorm<BaseWormPart>>> GIANT_WORM = TEEntities.registerMonster("giant_worm", (e, l) -> BaseWorm.simpleWorm(e, l, AbstractPrefab.WARM_BUILDER.get().setHealth(31).setAttackDamage(9).setArmor(3)), 2F, 2F);
-    public static final DeferredHolder<EntityType<?>, EntityType<BaseWorm<BaseWormPart>>> LEECH = TEEntities.registerMonster("leech", (e, l) -> BaseWorm.simpleWorm(e, l, AbstractPrefab.WARM_BUILDER.get().setHealth(36).setAttackDamage(10).setArmor(4).setMovementSpeed(1.45F)), 2F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseWorm<BaseWormPart>>> DEVOURER = TEEntities.registerMonster("devourer", (e, l) -> BaseWorm.simpleWorm(e, l, AbstractPrefab.WARM_BUILDER.get().setSpawnWithoutLight()), 2F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseWorm<BaseWormPart>>> TOMB_CRAWLER = TEEntities.registerMonster("tomb_crawler", (e, l) -> BaseWorm.simpleWorm(e, l, AbstractPrefab.WARM_BUILDER.get()), 2F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseWorm<BaseWormPart>>> GIANT_WORM = TEEntities.registerMonster("giant_worm", (e, l) -> BaseWorm.simpleWorm(e, l, AbstractPrefab.WARM_BUILDER.get()), 2F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseWorm<BaseWormPart>>> LEECH = TEEntities.registerMonster("leech", (e, l) -> BaseWorm.simpleWorm(e, l, AbstractPrefab.WARM_BUILDER.get()), 2F, 2F);
     // 卷壳怪
     public static final DeferredHolder<EntityType<?>, EntityType<GiantShelly>> GIANT_SHELLY = TEEntities.registerMonster("giant_shelly", GiantShelly::new, 0.8F, 0.8F);
     // 宁芙
     public static final DeferredHolder<EntityType<?>, EntityType<Nymph>> NYMPH = TEEntities.registerMonster("nymph", Nymph::new, 0.8F, 1.95F);
     // 抓人草
-    public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> SNATCHER = TEEntities.registerMonster("snatcher", (e, l) -> new Snatcher(e, l, new AbstractPrefab(31, 10, 13, 20, 1, 1).getPrefab().setSpawnWithoutLight()), 1F, 1F);
-    public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> MAN_EATER = TEEntities.registerMonster("man_eater", (e, l) -> new Snatcher(e, l, new AbstractPrefab(57, 10, 15, 20, 1, 1).getPrefab()), 1F, 1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> SNATCHER = TEEntities.registerMonster("snatcher", (e, l) -> new Snatcher(e, l, new AbstractPrefab().getPrefab().setSpawnWithoutLight()), 1F, 1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Snatcher>> MAN_EATER = TEEntities.registerMonster("man_eater", (e, l) -> new Snatcher(e, l, new AbstractPrefab().getPrefab()), 1F, 1F);
     // 地牢骷髅
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BASE_BONES = TEEntities.registerMonster("base_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(41, 2, 13, 20, 1, 0.28f).getPrefab().setMovementSpeed(0.3f)), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BASE_BONES = TEEntities.registerMonster("base_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab().getPrefab()), 0.65F, 1.85F);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> ANGER_BONES = TEEntities.registerMonster("anger_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(41, 8, 13, 32, 1, 0.28f).getPrefab()), 0.65F, 1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> SHORT_BONES = TEEntities.registerMonster("short_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(37, 7, 12, 32, 1, 0.28f).getPrefab()), 0.55F, 1.65F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_BONES = TEEntities.registerMonster("big_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(52, 9, 17, 32, 1, 0.28f).getPrefab()), 0.85F, 2.25F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_ANGER_BONES = TEEntities.registerMonster("big_anger_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(36, 6, 17, 32, 1, 0.28f).getPrefab()), 0.9F, 2.4F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_MUSCLE_ANGER_BONES = TEEntities.registerMonster("big_muscle_anger_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(36, 12, 14, 32, 1, 0.28f).getPrefab()), 0.95F, 2.45F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_HELMET_ANGER_BONES = TEEntities.registerMonster("big_helmet_anger_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(62, 14, 12, 32, 1, 0.28f).getPrefab()), 1F, 2.6F);
-    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> UNDEAD_VIKING = TEEntities.registerMonster("undead_viking", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab(36, 10, 12, 32, 1, 0.28f).getPrefab()), 1F, 2.6F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> ANGER_BONES = TEEntities.registerMonster("anger_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab().getPrefab()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> SHORT_BONES = TEEntities.registerMonster("short_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab().getPrefab()), 0.55F, 1.65F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_BONES = TEEntities.registerMonster("big_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab().getPrefab()), 0.85F, 2.25F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_ANGER_BONES = TEEntities.registerMonster("big_anger_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab().getPrefab()), 0.9F, 2.4F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_MUSCLE_ANGER_BONES = TEEntities.registerMonster("big_muscle_anger_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab().getPrefab()), 0.95F, 2.45F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> BIG_HELMET_ANGER_BONES = TEEntities.registerMonster("big_helmet_anger_bones", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab().getPrefab()), 1F, 2.6F);
+    public static final DeferredHolder<EntityType<?>, EntityType<MeleeSkeleton>> UNDEAD_VIKING = TEEntities.registerMonster("undead_viking", (e, l) -> new MeleeSkeleton(e, l, new AbstractPrefab().getPrefab()), 1F, 2.6F);
     // 穿墙怪
-    public static final DeferredHolder<EntityType<?>, EntityType<CursedSkull>> CURSED_SKULL = TEEntities.registerMonster("cursed_skull", (e, l) -> new CursedSkull(e, l, new AbstractPrefab(21, 6, 18, 32, 1, 0.82f).getPrefab()), 1F, 1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<CursedSkull>> CURSED_SKULL = TEEntities.registerMonster("cursed_skull", (e, l) -> new CursedSkull(e, l, new AbstractPrefab().getPrefab()), 1F, 1F);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<Ghost>> GHOST = TEEntities.registerMonster("ghost", (e, l) -> new Ghost(e, l, new AbstractPrefab(26, 4, 8, 16, 0, 0.55f).getPrefab()), 1F, 1.8F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Ghost>> GHOST = TEEntities.registerMonster("ghost", (e, l) -> new Ghost(e, l, new AbstractPrefab().getPrefab()), 1F, 1.8F);
 
     // 远程法师
-    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> DARK_CASTER = TEEntities.registerMonster("dark_caster", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(26, 2, 10, 20, 1, 0.82f).getPrefab()), 0.65F, 1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> GOBLIN_SORCERER = TEEntities.registerMonster("goblin_sorcerer", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab(20, 2, 10, 32, 1, 0.46f).getPrefab()), 0.65F, 1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<FireImpEntity>> FIRE_IMP = TEEntities.registerMonster("fire_imp", (e, l) -> new FireImpEntity(e, l, TEProjectileEntities.FIRE_IMP_PROJ, new AbstractPrefab(36, 16, 15, 20, 1, 0.55f).getPrefab()), 0.65F, 1);
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> DARK_CASTER = TEEntities.registerMonster("dark_caster", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab().getPrefab()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<RangeShooter>> GOBLIN_SORCERER = TEEntities.registerMonster("goblin_sorcerer", (e, l) -> new RangeShooter(e, l, TEProjectileEntities.DARK_CASTER_PROJ, new AbstractPrefab().getPrefab()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<FireImpEntity>> FIRE_IMP = TEEntities.registerMonster("fire_imp", (e, l) -> new FireImpEntity(e, l, TEProjectileEntities.FIRE_IMP_PROJ, new AbstractPrefab().getPrefab()), 0.65F, 1);
 
     // 哥布林军队
-    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_ARCHER = TEEntities.registerMonster("goblin_archer", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab(41, 6, 11, 32, 1, 0.37f).asHumanoid().setMainHand(Items.BOW.getDefaultInstance()).setSpawnWithoutLight()), 0.65F, 1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_PEON = TEEntities.registerMonster("goblin_peon", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab(31, 4, 6, 32, 1, 0.2f).asHumanoid().setSpawnWithoutLight()), 0.65F, 1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_WARRIOR = TEEntities.registerMonster("goblin_warrior", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab(57, 8, 13, 32, 1, 0.6f).asHumanoid().setMainHand(Items.STONE_SWORD.getDefaultInstance()).setSpawnWithoutLight()), 0.65F, 1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_THIEF = TEEntities.registerMonster("goblin_thief", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab(41, 6, 10, 32, 1, 0.37f).asHumanoid().setSpawnWithoutLight()), 0.65F, 1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_SCOUT = TEEntities.registerMonster("goblin_scout", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab(41, 6, 10, 32, 1, 0.37f).asHumanoid().setSpawnWithoutLight()), 0.65F, 1.85F);
-    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> ANGER_GOBLIN = TEEntities.registerMonster("anger_goblin", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab(220, 0, 15, 32, 1, 0.88f).asHumanoid().setMainHand(Items.GOLDEN_SWORD.getDefaultInstance()).setSpawnWithoutLight()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_ARCHER = TEEntities.registerMonster("goblin_archer", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab().asHumanoid().setMainHand(Items.BOW.getDefaultInstance()).setSpawnWithoutLight()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_PEON = TEEntities.registerMonster("goblin_peon", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab().asHumanoid().setSpawnWithoutLight()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_WARRIOR = TEEntities.registerMonster("goblin_warrior", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab().asHumanoid().setMainHand(Items.STONE_SWORD.getDefaultInstance()).setSpawnWithoutLight()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_THIEF = TEEntities.registerMonster("goblin_thief", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab().asHumanoid().setSpawnWithoutLight()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> GOBLIN_SCOUT = TEEntities.registerMonster("goblin_scout", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab().asHumanoid().setSpawnWithoutLight()), 0.65F, 1.85F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> ANGER_GOBLIN = TEEntities.registerMonster("anger_goblin", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab().asHumanoid().setMainHand(Items.GOLDEN_SWORD.getDefaultInstance()).setSpawnWithoutLight()), 0.65F, 1.85F);
 
     //饿鬼
-    public static final DeferredHolder<EntityType<?>, EntityType<TheHungry>> THE_HUNGRY = TEEntities.registerMonster("the_hungry", (e, l) -> new TheHungry(e, l, new AbstractPrefab(30, 6, 16, 32, 0.75f, 0.28f).getPrefab()), 1F, 1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<TheHungry>> THE_HUNGRY = TEEntities.registerMonster("the_hungry", (e, l) -> new TheHungry(e, l, new AbstractPrefab().getPrefab()), 1F, 1F);
 
 
     /* *********肉后***************** */
-    public static final DeferredHolder<EntityType<?>, EntityType<Wyvern<BaseWormPart>>> WYVERN = TEEntities.registerMonster("wyvern", (e, l) -> new Wyvern<>(e, l, new AbstractPrefab(2080, 10, 41, 50, 1f, 0.28f).getPrefab().setSpawnWithoutLight().setNoGravity()), 1F, 1F);
-    public static final DeferredHolder<EntityType<?>, EntityType<Pixie>> PIXIE = TEEntities.registerMonster("pixie", (e, l) -> new Pixie(e, l, new AbstractPrefab(78, 20, 28, 16, 0.46f, 0.28f).getPrefab().setSpawnWithoutLight()), 1F, 1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Wyvern<BaseWormPart>>> WYVERN = TEEntities.registerMonster("wyvern", (e, l) -> new Wyvern<>(e, l, new AbstractPrefab().getPrefab().setSpawnWithoutLight().setNoGravity()), 1F, 1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Pixie>> PIXIE = TEEntities.registerMonster("pixie", (e, l) -> new Pixie(e, l, new AbstractPrefab().getPrefab().setSpawnWithoutLight()), 1F, 1F);
 
 
     @OnlyIn(Dist.CLIENT)
@@ -302,88 +303,90 @@ public class TEMonsterEntities {
 
         // land
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
-        event.put(SPORE_SKELETON.get(), AbstractMonster.createAttributes().build());
-        event.put(SPORE_ZOMBIE.get(), AbstractMonster.createAttributes().build());
-        event.put(HAT_SPORE_ZOMBIE.get(), AbstractMonster.createAttributes().build());
-        event.put(DECAYEDER.get(), RangeSkeleton.createAttributes().build());
+        event.put(SPORE_SKELETON.get(), AttBuilder.createAttributes(31, 8, 11, 60, 0.5f, 0.28f).build());
+        event.put(SPORE_ZOMBIE.get(), AttBuilder.createAttributes(93,10,20,60,0.6f,0.1f).moveSpeed(0.08f).build());
+        event.put(HAT_SPORE_ZOMBIE.get(), AttBuilder.createAttributes(114,16,19,60,0.6f,0.72f).moveSpeed(0.08f).build());
+        event.put(DECAYEDER.get(), AttBuilder.createAttributes(10, 6, 6).build());
         event.put(BLOODY_SPORE.get(), BloodySpore.createAttributes().build());
-        event.put(FACE_MONSTER.get(), AbstractMonster.createAttributes().build());
-        event.put(BLOOD_TUMORS.get(), AbstractMonster.createAttributes().build());
-        event.put(BLOOD_ZOMBIE.get(), AbstractMonster.createAttributes().build());
-        event.put(SNOW_FLINX.get(), AbstractMonster.createAttributes().build());
+        event.put(FACE_MONSTER.get(), AttBuilder.createAttributes(36,10,13).stepLength(3.2).jumpHeight(0.8).build());
+        event.put(BLOOD_TUMORS.get(), AttBuilder.createAttributes(5,2,0,0,0,0).moveSpeed(0).safeFall(100).build());
+        event.put(BLOOD_ZOMBIE.get(), AttBuilder.createAttributes(39,8,10,60,0.5f,0.1f).moveSpeed(0.15).build());
+        event.put(SNOW_FLINX.get(), AttBuilder.createAttributes(36,12,13,60,0.1f,0.1f).build());
 
-        event.put(GIANT_SHELLY.get(), AbstractMonster.createAttributes().build());
-        event.put(NYMPH.get(), AbstractMonster.createAttributes().build());
-        event.put(SNATCHER.get(), AbstractMonster.createAttributes().build());
-        event.put(MAN_EATER.get(), AbstractMonster.createAttributes().build());
-        event.put(THE_HUNGRY.get(), TheHungry.createAttributes().build());
+        event.put(GIANT_SHELLY.get(), AttBuilder.createAttributes(26,12,9,10,0,0.4f).moveSpeed(0.1).build());
+        event.put(NYMPH.get(), AttBuilder.createAttributes(156,16,15,5,1,0.5f).build());
+        event.put(SNATCHER.get(), AttBuilder.createAttributes(31, 10, 13, 20, 1, 1).build());
+        event.put(MAN_EATER.get(), AttBuilder.createAttributes(57, 10, 15, 20, 1, 1).build());
+        event.put(THE_HUNGRY.get(), AttBuilder.createAttributes(30,1,10,32,0.75f,1).build());
 
         // fly
         event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());
-        event.put(FLYING_FISH.get(), AbstractMonster.createAttributes().build());
-        event.put(CRIMSON_KEMERA.get(), AbstractMonster.createAttributes().build());
-        event.put(DRIPPLER.get(), AbstractMonster.createAttributes().build());
-        event.put(WANDERING_EYE_FISH.get(), AbstractMonster.createAttributes().build());
-        event.put(EATER_OF_SOULS.get(), AbstractMonster.createAttributes().build());
-        event.put(HARPY.get(), AbstractMonster.createAttributes().build());
-        event.put(DEMON.get(), AbstractMonster.createAttributes().build());
-        event.put(VOODOO_DEMON.get(), AbstractMonster.createAttributes().build());
-        event.put(ANTLION_SWARMER.get(), AbstractMonster.createAttributes().build());
-        event.put(GIANT_ANTLION_SWARMER.get(), AbstractMonster.createAttributes().build());
-        event.put(GRANITE_ELEMENTAL.get(), AbstractMonster.createAttributes().build());
+        event.put(FLYING_FISH.get(), AttBuilder.fly(AttBuilder.createAttributes(10,1,2,30,0.5f,0.3f)).build());
+        event.put(CRIMSON_KEMERA.get(), AttBuilder.fly(AttBuilder.createAttributes(20,6,11,30,0.5f,0.1f)).build());
+        event.put(DRIPPLER.get(), AttBuilder.fly(AttBuilder.createAttributes(26,7,14,64,0.5f,0.2f)).build());
+        event.put(WANDERING_EYE_FISH.get(), AttBuilder.fly(AttBuilder.createAttributes(156,18,15,60,1f,1f)).moveSpeed(2.2).build());
+        event.put(EATER_OF_SOULS.get(), AttBuilder.fly(AttBuilder.createAttributes(20,6,11,30,0.5f,0.1f)).build());
+        event.put(HARPY.get(), AttBuilder.fly(AttBuilder.createAttributes(41,8,13)).build());
+        event.put(DEMON.get(), AttBuilder.fly(AttBuilder.createAttributes(62, 8, 20, 20, 1f, 0.28f)).build());
+        event.put(VOODOO_DEMON.get(), AttBuilder.fly(AttBuilder.createAttributes(62, 8, 20, 20, 1f, 0.28f)).build());
+        event.put(ANTLION_SWARMER.get(), AttBuilder.fly(AttBuilder.createAttributes(31, 8, 15, 32, 1f, 0.55f)).build());
+        event.put(GIANT_ANTLION_SWARMER.get(), AttBuilder.fly(AttBuilder.createAttributes(46, 12, 17, 32, 1f, 0.73f)).build());
+        event.put(GRANITE_ELEMENTAL.get(), AttBuilder.fly(AttBuilder.createAttributes(46, 8, 17, 32, 1f, 0.73f)).build());
 
         // swim
-        event.put(PIRANHA.get(), AbstractMonster.createAttributes().build());
+        event.put(PIRANHA.get(), AttBuilder.createAttributes().build());
 
 
         // bat
-        event.put(CAVE_BAT.get(), AbstractMonster.createAttributes().build());
-        event.put(JUNGLE_BAT.get(), AbstractMonster.createAttributes().build());
-        event.put(HELL_BAT.get(), AbstractMonster.createAttributes().build());
-        event.put(ICE_BAT.get(), AbstractMonster.createAttributes().build());
-        event.put(SPORE_BAT.get(), AbstractMonster.createAttributes().build());
+        event.put(CAVE_BAT.get(), AttBuilder.fly(AttBuilder.createAttributes(8,1,4,16,0.2f,0.5f)).build());
+        event.put(JUNGLE_BAT.get(), AttBuilder.fly(AttBuilder.createAttributes(17,1,8,16,0.2f,0.5f)).build());
+        event.put(HELL_BAT.get(), AttBuilder.fly(AttBuilder.createAttributes(23,2,15,16,0.2f,0.5f)).build());
+        event.put(ICE_BAT.get(), AttBuilder.fly(AttBuilder.createAttributes(15,2,7,16,0.2f,0.5f)).build());
+        event.put(SPORE_BAT.get(), AttBuilder.fly(AttBuilder.createAttributes(15,2,7,16,0.2f,0.5f)).build());
         // worm
-        event.put(GIANT_WORM.get(), AbstractMonster.createAttributes().build());
-        event.put(LEECH.get(), AbstractMonster.createAttributes().build());
-        event.put(DEVOURER.get(), AbstractMonster.createAttributes().build());
-        event.put(TOMB_CRAWLER.get(), AbstractMonster.createAttributes().build());
+        event.put(GIANT_WORM.get(), AttBuilder.createAttributes(31,3,9).build());
+        event.put(LEECH.get(), AttBuilder.createAttributes(36,4,10).moveSpeed(0.145).build());
+        event.put(DEVOURER.get(), AttBuilder.createAttributes(52,2,8).build());
+        event.put(TOMB_CRAWLER.get(), AttBuilder.createAttributes(16,2,4).build());
 
         // bee
-        event.put(HORNET.get(), AbstractMonster.createAttributes().build());
-        event.put(LITTLE_HORNET.get(), AbstractMonster.createAttributes().build());
+        event.put(HORNET.get(), AttBuilder.fly(AttBuilder.createAttributes(32,6,13,32,0,0.55f).moveSpeed(0.5)).build());
+        event.put(LITTLE_HORNET.get(), AttBuilder.fly(AttBuilder.createAttributes(3,1,3,20,0,0.2f)).build());
 
         // 地牢骷髅
-        event.put(BASE_BONES.get(), AbstractMonster.createAttributes().build());
+        event.put(BASE_BONES.get(), AttBuilder.createAttributes(41, 2, 13, 20, 1, 0.28f).moveSpeed(0.3).build());
 
-        event.put(ANGER_BONES.get(), AbstractMonster.createAttributes().build());
-        event.put(SHORT_BONES.get(), AbstractMonster.createAttributes().build());
-        event.put(BIG_BONES.get(), AbstractMonster.createAttributes().build());
-        event.put(BIG_ANGER_BONES.get(), AbstractMonster.createAttributes().build());
-        event.put(BIG_MUSCLE_ANGER_BONES.get(), AbstractMonster.createAttributes().build());
-        event.put(BIG_HELMET_ANGER_BONES.get(), AbstractMonster.createAttributes().build());
-        event.put(UNDEAD_VIKING.get(), AbstractMonster.createAttributes().build());
+        event.put(ANGER_BONES.get(), AttBuilder.createAttributes(41, 8, 13).build());
+        event.put(SHORT_BONES.get(), AttBuilder.createAttributes(37, 7, 12).build());
+        event.put(BIG_BONES.get(), AttBuilder.createAttributes(52, 9, 17).build());
+        event.put(BIG_ANGER_BONES.get(), AttBuilder.createAttributes(36, 6, 17).build());
+        event.put(BIG_MUSCLE_ANGER_BONES.get(), AttBuilder.createAttributes(36, 12, 14).build());
+        event.put(BIG_HELMET_ANGER_BONES.get(), AttBuilder.createAttributes(62, 14, 12).build());
+        event.put(UNDEAD_VIKING.get(), AttBuilder.createAttributes(36, 10, 12).build());
 
         // 穿墙怪
-        event.put(CURSED_SKULL.get(), AbstractMonster.createAttributes().build());
+        event.put(CURSED_SKULL.get(), AttBuilder.createAttributes(21, 6, 18, 32, 1, 0.82f).build());
 
-        event.put(GHOST.get(), AbstractMonster.createAttributes().build());
+        event.put(GHOST.get(), AttBuilder.createAttributes(26, 4, 8, 16, 0, 0.55f).build());
 
         // 远程法师
-        event.put(DARK_CASTER.get(), AbstractMonster.createAttributes().build());
-        event.put(FIRE_IMP.get(), AbstractMonster.createAttributes().build());
+        event.put(DARK_CASTER.get(), AttBuilder.createAttributes(26, 2, 10, 20, 1, 0.82f).build());
+        event.put(FIRE_IMP.get(), AttBuilder.createAttributes(36, 16, 15, 20, 1, 0.55f).build());
 
         // 哥布林军队
-        event.put(GOBLIN_SORCERER.get(), AbstractMonster.createAttributes().build());
-        event.put(GOBLIN_PEON.get(), AbstractMonster.createAttributes().build());
-        event.put(GOBLIN_ARCHER.get(), AbstractMonster.createAttributes().build());
-        event.put(GOBLIN_WARRIOR.get(), AbstractMonster.createAttributes().build());
-        event.put(GOBLIN_THIEF.get(), AbstractMonster.createAttributes().build());
-        event.put(GOBLIN_SCOUT.get(), AbstractMonster.createAttributes().build());
-        event.put(ANGER_GOBLIN.get(), AbstractMonster.createAttributes().build());
+        event.put(GOBLIN_SORCERER.get(), AttBuilder.createAttributes(20, 2, 10, 32, 1, 0.46f).build());
+        event.put(GOBLIN_ARCHER.get(), AttBuilder.createAttributes(41, 6, 11, 32, 1, 0.37f).build());
+        event.put(GOBLIN_PEON.get(), AttBuilder.createAttributes(31, 4, 6, 32, 1, 0.2f).build());
+        event.put(GOBLIN_WARRIOR.get(), AttBuilder.createAttributes(57, 8, 13, 32, 1, 0.6f).build());
+        event.put(GOBLIN_THIEF.get(), AttBuilder.createAttributes(41, 6, 10, 32, 1, 0.37f).build());
+        event.put(GOBLIN_SCOUT.get(), AttBuilder.createAttributes(41, 6, 10, 32, 1, 0.37f).build());
+        event.put(ANGER_GOBLIN.get(), AttBuilder.createAttributes(220, 0, 15, 32, 1, 0.88f).build());
+
+        event.put(TEMonsterEntities.VISUAL_NEURON.get(), AttBuilder.createAttributes(44,10,9,0,0,0.1f).build());
 
         /* *********肉后***************** */
-        event.put(WYVERN.get(), AbstractMonster.createAttributes().build());
-        event.put(PIXIE.get(), AbstractMonster.createAttributes().build());
+        event.put(WYVERN.get(), AttBuilder.createAttributes(2080, 10, 41, 50, 1f, 0.28f).build());
+        event.put(PIXIE.get(), AttBuilder.createAttributes(78, 20, 28, 16, 0.46f, 0.28f).build());
 
     }
 
@@ -486,7 +489,7 @@ public class TEMonsterEntities {
         event.register(ANGER_GOBLIN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
         /* *********肉后***************** */
-        event.register(WYVERN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks.checkHardmode(SpawnPlacementChecks::checkHighLevelMonsterSpawn), RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(WYVERN.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks.checkHardmode(SpawnPlacementChecks::checkHighLevelMonsterSpawn), RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(PIXIE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks.checkHardmode(SpawnPlacementChecks::checkRoutineMonsterSpawn), RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
     }

@@ -99,7 +99,7 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh>  {
     }
 
     public HillOfFlesh(EntityType<? extends HillOfFlesh> type, Level level) {
-        super(type, level, 100, 10);
+        super(type, level);
         this.subEntities = new HillOfFleshPart[10];
         this.namePartMap = new HashMap<>();
         this.addPart(new HillOfFleshEye(this, "Eye0", 3, 3));

@@ -29,7 +29,7 @@ import java.util.UUID;
 public class SummonHornet extends Hornet implements ISummonMob<SummonHornet> {
 
     public SummonHornet(EntityType<? extends Monster> type, Level level) {
-        super(type, level, FlyMonsterPrefab.BEE_BUILDER.get().setFollowRange(20).setMovementSpeed(1));
+        super(type, level, FlyMonsterPrefab.BEE_BUILDER.get());
         this.attackInternal = 20;
     }
 

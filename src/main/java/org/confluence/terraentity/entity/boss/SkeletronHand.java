@@ -26,7 +26,6 @@ import java.util.UUID;
  */
 public class SkeletronHand extends Skeletron {
 
-    private float attackDamage = 10; // 攻击伤害
 
     public @Nullable Skeletron owner;
     public HandSide handSide;
@@ -43,11 +42,8 @@ public class SkeletronHand extends Skeletron {
     }
     public SkeletronHand(EntityType<? extends Monster> entityType, Level level, @Nullable Skeletron owner, HandSide handSide) {
         super(entityType, level);
-        // 重新设置属性
-        this.baseHealth = 405;
-        this.baseArmor = 4;
+
         this.stateMachine = new MultiBoneStateMachine<>(BoneStates.IDLE);
-        this.setAttactDamage(attackDamage);
 
         this.handSide = handSide;
         this.owner = owner;

@@ -38,15 +38,14 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
     private WallOfFlesh clientSideCachedParentMob;
     private static final EntityDataAccessor<Integer> DATA_ID_ATTACK_TARGET = SynchedEntityData.defineId(WallOfFleshEye.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_ID_PARENT_MOB = SynchedEntityData.defineId(WallOfFleshEye.class, EntityDataSerializers.INT);
-    private static final float DAMAGE = 8f;
+
 
     private static final int summonCDAll = 40;
     private int summonCD = summonCDAll;
 
     public WallOfFleshEye(EntityType<WallOfFleshEye> entityType, Level level) {
-        super(entityType, level,WallOfFlesh.MAX_HEALTHS,0);
-        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-        getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32);
+        super(entityType, level);
+
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.playSound(TESounds.ROAR.get());
         this.noPhysics = true;

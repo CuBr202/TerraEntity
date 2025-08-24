@@ -94,5 +94,20 @@ public interface ICollisionAttackEntity<T extends Entity>{
         public boolean canAttack() {
             return actualAttackInterval <= 0;
         }
+
+        public CollisionProperties setAttackInterval(int attackInterval){
+            this.attackInternal = attackInterval;
+            return this;
+        }
+
+        public CollisionProperties setDetectInterval(int detectInterval){
+            this.detectInternal = detectInterval;
+            return this;
+        }
+
+        public CollisionProperties setAttackRange(float attackRange) {
+            this.attackRangeExtent = attackRange;
+            return this;
+        }
     }
 }

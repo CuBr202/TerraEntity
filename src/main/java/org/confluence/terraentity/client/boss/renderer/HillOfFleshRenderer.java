@@ -21,6 +21,7 @@ import org.confluence.terraentity.entity.boss.hillofflesh.HillOfFlesh;
 import org.confluence.terraentity.entity.boss.hillofflesh.HillOfFleshPart;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.mixed.IShaderInstance;
+import org.confluence.terraentity.mixin.accessor.GeoRendererAccessor;
 import org.confluence.terraentity.utils.Easing;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
@@ -268,7 +269,7 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
             }
 
             RenderUtil.translateAwayFromPivotPoint(poseStack, bone);
-            buffer = checkAndRefreshBuffer(isReRender, buffer, bufferSource, renderType);
+            buffer = ((GeoRendererAccessor)this).callCheckAndRefreshBuffer(isReRender, buffer, bufferSource, renderType);
             renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, colour);
 
             if (!isReRender)

@@ -11,7 +11,6 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -123,22 +122,6 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     public float getAttributeMultiplier(Holder<Attribute> attribute){
         return getMultiple(level(), attribute);
 
-    }
-
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.ATTACK_DAMAGE)
-                .add(Attributes.MAX_HEALTH)
-                .add(Attributes.ARMOR)
-                .add(Attributes.MOVEMENT_SPEED, 0.25)
-                .add(Attributes.FOLLOW_RANGE)
-                .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE)
-                .add(Attributes.KNOCKBACK_RESISTANCE)
-                .add(Attributes.ATTACK_KNOCKBACK)
-                .add(Attributes.ATTACK_SPEED)
-                .add(Attributes.FLYING_SPEED)
-                ;
     }
 
 

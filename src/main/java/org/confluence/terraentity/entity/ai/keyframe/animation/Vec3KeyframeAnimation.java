@@ -8,6 +8,8 @@ import org.confluence.terraentity.api.entity.animation.IKeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Vec3KeyframeAnimation implements IKeyframeAnimation<Vec3> {
 
@@ -36,6 +38,7 @@ public class Vec3KeyframeAnimation implements IKeyframeAnimation<Vec3> {
         cache = new HashMap<>();
         this.endTime = Math.max(xInterpolator.getEndTime(), Math.max(yInterpolator.getEndTime(), zInterpolator.getEndTime()));
     }
+
 
     public static final Codec<Vec3KeyframeAnimation> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Keyframe.CODEC.listOf().fieldOf("x").forGetter(i->i.x),
@@ -69,6 +72,35 @@ public class Vec3KeyframeAnimation implements IKeyframeAnimation<Vec3> {
             builder.addKeyframe(new Keyframe(kf.timestamp() * 20, 0), new Vec3(kf.target()));
         });
         return builder.build();
+    }
+
+    public Vec3KeyframeAnimation copyFrame(double fromTime, double toTime){
+        AtomicReference<List<Keyframe>> x = new AtomicReference<>(new ArrayList<>());
+        AtomicReference<List<Keyframe>> y = new AtomicReference<>(new ArrayList<>());
+        AtomicReference<List<Keyframe>> z = new AtomicReference<>(new ArrayList<>());
+        AtomicBoolean hasElement = new AtomicBoolean(true);
+        this.x.stream().filter(kf -> kf.time == fromTime).findFirst().ifPresentOrElse(kf -> {
+            x.set(new ArrayList<>(this.x));
+            x.get().add(kf.copy().setTime(toTime));
+        }, () -> hasElement.set(false));
+        if(!hasElement.get()){
+            return null;
+        }
+        this.y.stream().filter(kf -> kf.time == fromTime).findFirst().ifPresentOrElse(kf -> {
+            y.set(new ArrayList<>(this.y));
+            y.get().add(kf.copy().setTime(toTime));
+        }, () -> hasElement.set(false));
+        if(!hasElement.get()){
+            return null;
+        }
+        this.z.stream().filter(kf -> kf.time == fromTime).findFirst().ifPresentOrElse(kf -> {
+            z.set(new ArrayList<>(this.z));
+            z.get().add(kf.copy().setTime(toTime));
+        }, () -> hasElement.set(false));
+        if(!hasElement.get()){
+            return null;
+        }
+        return new Vec3KeyframeAnimation(x.get(), y.get(), z.get());
     }
 
     /**

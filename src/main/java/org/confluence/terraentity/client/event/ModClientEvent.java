@@ -24,6 +24,7 @@ import org.confluence.terraentity.init.TEMenus;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.block.TEFigureBlocks;
 import org.confluence.terraentity.init.entity.*;
+import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.integration.sodium_dynamic_light.SDHelper;
 
 import static org.confluence.terraentity.client.util.RegisterUtils.registerModel;
@@ -37,7 +38,9 @@ public final class ModClientEvent {
         event.enqueueWork(() -> {
             ClientConfig.load();
             ItemInHandTrailAttachment.registerDefault();
-            SDHelper.registerDynamicLight();
+            if(ModChecker.sodiumdynamiclights.isLoaded()) {
+                SDHelper.registerDynamicLight();
+            }
         });
     }
 

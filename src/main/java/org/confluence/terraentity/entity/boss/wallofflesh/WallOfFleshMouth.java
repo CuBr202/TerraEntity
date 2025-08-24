@@ -34,7 +34,6 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> im
 
     public WallOfFlesh parentMob;
 
-    private static final float DAMAGE = 39f;
     private int pendingSpawns = 0;
     private int spawnInterval = 0;
 
@@ -44,9 +43,7 @@ public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> im
 
 
     public WallOfFleshMouth(EntityType<WallOfFleshMouth> entityType, Level level) {
-        super(entityType, level,WallOfFlesh.MAX_HEALTHS,12);
-        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-        getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32f);
+        super(entityType, level);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.playSound(TESounds.ROAR.get());
         this.noPhysics = true;

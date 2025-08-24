@@ -1,5 +1,7 @@
 package org.confluence.terraentity.entity.boss;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +20,7 @@ import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.IAutoLeaveMob;
 import org.confluence.terraentity.api.entity.blur.IMotionBlurHolder;
 import org.confluence.terraentity.config.ServerConfig;
+import org.confluence.terraentity.data.mappeddata.BossSkillMapDatas;
 import org.confluence.terraentity.entity.ai.fsm.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.blur.MotionBlurManager;
@@ -27,6 +30,7 @@ import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -38,18 +42,53 @@ import software.bernie.geckolib.animation.RawAnimation;
  */
 
 public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements GeoEntity, Boss, IAutoLeaveMob, IMotionBlurHolder<PosRotMotionBlurContext> {
-    private static final float MAX_HEALTHS = 728f;
-    private static final float DAMAGE = 4f;//一阶段接触伤害
-    private static final float CRAZY_DAMAGE = 6f;//二阶段接触伤害
-    private static final float MOVE_SPEED = 0.5f;
-    private static final float CRAZY_PERCENTAGE = 0.25f;
 
-    private final int followMinDistance = 16; //最近跟随距离的平方
-    private final int distanceAbove = 3; //悬在玩家blockPos上距离
-    private final float dashFactor = 1.5f; //冲刺增伤
+    private final float DAMAGE ;//一阶段接触伤害
+    private final float CRAZY_DAMAGE ;//二阶段接触伤害
+    private final float MOVE_SPEED ;
+
+    private final float dashFactor ; //冲刺增伤
+    private final float stage2SpeedFactor ; //二阶段加速加成
+    private final float minDashDistanceSqr;
+
     private float speedFactor = 2f; //冲刺加速
-    private final float stage2SpeedFactor = 1.5f; //二阶段加速加成
-    private final float minDashDistanceSqr = 20;
+
+    SkillParams skillParams;
+
+    public static class SkillParams{
+        private final float DAMAGE ;//一阶段接触伤害
+        private final float CRAZY_DAMAGE ;//二阶段接触伤害
+        private final float MOVE_SPEED ;
+
+        private final float dashFactor; //冲刺增伤
+        private final float stage2SpeedFactor; //二阶段加速加成
+        private final float minDashDistanceSqr;
+
+        SkillParams(float damage, float crazyDamage, float moveSpeed, float dashFactor, float stage2SpeedFactor, float minDashDistanceSqr){
+            this.DAMAGE = damage;
+            this.CRAZY_DAMAGE = crazyDamage;
+            this.MOVE_SPEED = moveSpeed;
+
+            this.dashFactor = dashFactor;
+            this.stage2SpeedFactor = stage2SpeedFactor;
+            this.minDashDistanceSqr = minDashDistanceSqr;
+        }
+
+        public static Codec<SkillParams> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                Codec.FLOAT.fieldOf("damage").forGetter(s->s.DAMAGE),
+                Codec.FLOAT.fieldOf("crazy_damage").forGetter(s->s.CRAZY_DAMAGE),
+                Codec.FLOAT.fieldOf("move_speed").forGetter(s->s.MOVE_SPEED),
+                Codec.FLOAT.fieldOf("dash_factor").forGetter(s->s.dashFactor),
+                Codec.FLOAT.fieldOf("stage2_speed_factor").forGetter(s->s.stage2SpeedFactor),
+                Codec.FLOAT.fieldOf("min_dash_distance_sqr").forGetter(s->s.minDashDistanceSqr)
+        ).apply(instance, SkillParams::new));
+
+        public static SkillParams getDefaultParams(){
+            return new EyeOfCthulhu.SkillParams(4, 6, 0.5f,
+                    1.5f, 1.5f, 20);
+        }
+
+    }
 
 
     //定义技能参数
@@ -74,9 +113,9 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
 
     public EyeOfCthulhu(EntityType<EyeOfCthulhu> entityType, Level level) {
-        super(entityType, level,MAX_HEALTHS,12);
+        super(entityType, level);
         //初始属性
-        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
+
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.playSound(TESounds.ROAR.get());
         if(ServerConfig.BOSS_NO_PHYSICS.get())
@@ -87,8 +126,15 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
         this.xpReward = 1000;
         dashComponent = new DashComponent(this);
-
+        this.skillParams = MappedDataTypes.BOSS_SKILL_MAP_DATAS.get().getData(BossSkillMapDatas.EYE_OF_CTHULHU_SKILL);
+        this.DAMAGE = skillParams.DAMAGE;
+        this.CRAZY_DAMAGE = skillParams.CRAZY_DAMAGE;
+        this.MOVE_SPEED = skillParams.MOVE_SPEED;
+        this.dashFactor = skillParams.dashFactor;
+        this.stage2SpeedFactor = skillParams.stage2SpeedFactor;
+        this.minDashDistanceSqr = skillParams.minDashDistanceSqr;
     }
+
 
     public EyeOfCthulhu(Level level) {
         this(TEBossEntities.EYE_OF_CTHULHU.get(), level);

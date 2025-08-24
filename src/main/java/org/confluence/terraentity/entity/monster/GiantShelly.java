@@ -37,9 +37,8 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
 
     static final ResourceLocation armorAddition = TerraEntity.space("shrink");
     public GiantShelly(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(26,12,9,10,0,0.4f)
+        super(type, level, new AbstractPrefab()
                 .getPrefab()
-                .setMovementSpeed(0.1f)
                 .setAttachIncrease(0.2f)
         );
         this.collisionProperties = new CollisionProperties(1,20,1);

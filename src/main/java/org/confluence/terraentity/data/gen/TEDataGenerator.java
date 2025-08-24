@@ -61,6 +61,9 @@ public class TEDataGenerator {
         generator.addProvider(server, new NPCNameProvider(output, lookup));
         generator.addProvider(server, new NPCMoodProvider(output, lookup));
         generator.addProvider(server, new NPCChatProvider(output, lookup));
+        generator.addProvider(server, new TEDataMapProvider(output, lookup));
+        generator.addProvider(server, new MappedDataProvider(output, lookup));
+
 
 //        generator.addProvider(server, new TENPCShopModifierProvider(output, lookup));  // 用来测试，发布时应该注释掉
 

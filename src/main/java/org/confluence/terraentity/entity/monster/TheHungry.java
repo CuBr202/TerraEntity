@@ -75,7 +75,7 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
     }
 
     public TheHungry(Level level,boolean isFree) {
-        this(TEMonsterEntities.THE_HUNGRY.get(), level,new AbstractPrefab(30,1,10,32,0.75f,1).getPrefab());
+        this(TEMonsterEntities.THE_HUNGRY.get(), level,new AbstractPrefab().getPrefab());
         this.isFree = isFree;
     }
 

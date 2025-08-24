@@ -3,6 +3,9 @@ package org.confluence.terraentity.client.event;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import foundry.veil.api.client.render.VeilLevelPerspectiveRenderer;
+import foundry.veil.api.client.render.VeilRenderSystem;
+import foundry.veil.api.client.render.framebuffer.AdvancedFbo;
 import net.irisshaders.iris.pipeline.programs.ExtendedShader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -62,11 +65,17 @@ public class RenderEvent {
     @SubscribeEvent
     public static void renderLevelStage(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
-            isIrisShader = ModChecker.iris.isLoaded() && RenderSystem.getShader() instanceof ExtendedShader;
             BrainTranslucent.render(event);
             DebugBlocksHelper.Singleton().render(event);
             //            NPCRenderer.target.blitToScreen(100,100);
             NPCChatBubbleBuffer.getInstance().render(event);
+//            if (!VeilLevelPerspectiveRenderer.isRenderingPerspective()) {
+//                if (VeilRenderSystem.drawLights(Minecraft.getInstance().level.getProfiler(), VeilRenderSystem.getCullingFrustum())) {
+//                    VeilRenderSystem.compositeLights(Minecraft.getInstance().level.getProfiler());
+//                } else {
+//                    AdvancedFbo.unbind();
+//                }
+//            }
 
             isAfterSky = false;
         } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
@@ -78,6 +87,8 @@ public class RenderEvent {
 
             isAfterSky = true;
         } else if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES){
+            isIrisShader = ModChecker.iris.isLoaded() && RenderSystem.getShader() instanceof ExtendedShader;
+
             DebugEntityHelper.INSTANCE.render(event);
         }
     }

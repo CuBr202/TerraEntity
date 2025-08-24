@@ -79,7 +79,9 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
                 }
              })
             .put(TypeEnum.RIDE_OR_LEAVE, (player)-> {
-                CuriosHelper.rideOrLeave(player);
+                if(ModChecker.curios.isLoaded()) {
+                    CuriosHelper.rideOrLeave(player);
+                }
             })
 
             .build());

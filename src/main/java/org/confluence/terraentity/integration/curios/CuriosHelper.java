@@ -39,24 +39,22 @@ public class CuriosHelper {
     }
 
     public static void rideOrLeave(Player player){
-        if(ModChecker.curios.isLoaded()){
-            Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(player);
-            if(!player.isPassenger()) {
-                curiosInventory.ifPresent(handler -> {
-                    ICurioStacksHandler itemStackHandler = handler.getCurios().get(CuriosHelper.MOUNT_KEY);
-                    if (itemStackHandler != null) {
-                        IDynamicStackHandler list = itemStackHandler.getStacks();
-                        if (list != null && list.getSlots() > 0) {
-                            ItemStack stack = list.getStackInSlot(0);
-                            if (stack.getItem() instanceof RideableItem<?> rideable) {
-                                rideable.summonRideableEntity(player);
-                            }
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(player);
+        if(!player.isPassenger()) {
+            curiosInventory.ifPresent(handler -> {
+                ICurioStacksHandler itemStackHandler = handler.getCurios().get(CuriosHelper.MOUNT_KEY);
+                if (itemStackHandler != null) {
+                    IDynamicStackHandler list = itemStackHandler.getStacks();
+                    if (list != null && list.getSlots() > 0) {
+                        ItemStack stack = list.getStackInSlot(0);
+                        if (stack.getItem() instanceof RideableItem<?> rideable) {
+                            rideable.summonRideableEntity(player);
                         }
                     }
-                });
-            }else{
-                player.stopRiding();
-            }
+                }
+            });
+        }else{
+            player.stopRiding();
         }
     }
 

@@ -35,18 +35,15 @@ import software.bernie.geckolib.animation.RawAnimation;
  * 蜂后
  */
 public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, IAngryMob {
-    private static final int health = 1237;
-    private static final int armor = 8;
 
     DashComponent dashComponent;
     public static final EntityDataAccessor<Boolean> DATA_ANGRY = SynchedEntityData.defineId(QueenBee.class, EntityDataSerializers.BOOLEAN);
 
     public QueenBee(EntityType<? extends Monster> type, Level level) {
-        super(type, level, health, armor);
+        super(type, level);
 
-        collisionProperties.detectInternal = 1;
+        this.collisionProperties.setDetectInterval(1);
         this.noPhysics = true;
-        this.setAttactDamage(14);
         this.xpReward = 1000;
         if(ServerConfig.BOSS_NO_PHYSICS.get())
             this.noPhysics = true;
@@ -56,6 +53,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
     public QueenBee(Level level) {
         this(TEBossEntities.QUEEN_BEE.get(), level);
     }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);

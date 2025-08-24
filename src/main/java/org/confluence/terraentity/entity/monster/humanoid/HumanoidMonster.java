@@ -99,7 +99,7 @@ public class HumanoidMonster extends AbstractMonster implements RangedAttackMob,
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "Walk/Idle", 5, state ->{
-            state.setControllerSpeed(builder.MOVEMENT_SPEED / 0.25f);
+            state.setControllerSpeed((float) (this.getAttributeValue(Attributes.MOVEMENT_SPEED) / 0.25f));
             return state.setAndContinue(state.isMoving() ? DefaultAnimations.WALK : DefaultAnimations.IDLE);
         }
         ));
@@ -295,7 +295,6 @@ public class HumanoidMonster extends AbstractMonster implements RangedAttackMob,
         private ItemStack mainHand = ItemStack.EMPTY;
 
         public HumanoidBuilder() {
-            this.MOVEMENT_SPEED = 0.25f;
         }
 
         public HumanoidBuilder setMainHand(ItemStack mainHand) {

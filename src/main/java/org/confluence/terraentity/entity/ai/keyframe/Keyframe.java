@@ -63,6 +63,29 @@ public class Keyframe {
         this.isInterpolated = true;
     }
 
+    public Keyframe setTime(double time){
+        this.time = time;
+        return this;
+    }
+
+    public String toString(){
+        if(!isInterpolated){
+            return "Keyframe{" +
+                    "time=" + time +
+                    ", value=" + value +
+                    '}';
+        }
+        return "Keyframe{" +
+                "time=" + time +
+                ", value=" + value +
+                ", k0=" + k0 +
+                ", tension0=" + tension0 +
+                ", k1=" + k1 +
+                ", tension1=" + tension1 +
+                ", isInterpolated=" + isInterpolated +
+                '}';
+    }
+
     public static KeyframeBuilder builder(double time, double value){
         return new KeyframeBuilder(time, value);
     }

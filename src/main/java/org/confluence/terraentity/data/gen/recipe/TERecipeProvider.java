@@ -40,6 +40,7 @@ public class TERecipeProvider extends AbstractRecipeProvider {
                 .save(recipeOutput);
 
         // 鞭子
+
         registerWhip(recipeOutput, TEWhipItems.LEATHER_WHIP.get(), Items.LEATHER, "has_leather");
         registerWhip(recipeOutput, TEWhipItems.SLUB_WHIP.get(), Items.BAMBOO, "has_bamboo");
         registerWhip(recipeOutput, TEWhipItems.AMBER_WHIP.get(), Items.COPPER_INGOT, "has_copper_ingot");
