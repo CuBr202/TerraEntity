@@ -133,7 +133,7 @@ public class GraniteElemental extends AbstractFSMMonster<GraniteElemental> imple
             if (index == 2) {
                 return !pSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY);
             }
-            if (this.difficultSelector.isExpertise() &&
+            if (this.difficultSelector.isExpert() &&
                     this.random.nextFloat() < 0.2f &&
                     index == 0) {
                 this.getSkills().forceEnd();

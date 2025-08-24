@@ -1,5 +1,7 @@
 package org.confluence.terraentity.entity.boss;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerBossEvent;
@@ -29,15 +31,19 @@ import org.confluence.lib.util.LibUtils;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.ai.IBossFSM;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
+import org.confluence.terraentity.data.codec.TECodecs;
+import org.confluence.terraentity.data.mappeddata.BossSkillMapDatas;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
+import org.confluence.terraentity.entity.util.DifficultSelector;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IBossEvent;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -55,20 +61,52 @@ import static org.confluence.terraentity.utils.TEUtils.switchByDifficulty;
  */
 @SuppressWarnings("all")
 public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss{
-    private static final int COLOR_INT = 0x73bcf4;
+
+    private final int COLOR_INT;
     // 缩小/膨胀时长，单位：刻
-    private static final int SHRINK_ENLARGE_DURATION = 20;
+    private final int SHRINK_ENLARGE_DURATION;
     // 大师 专家 普通
-    private static final int[] TOTAL_SPLITS = {30, 50, 75};
-    private static final float MAX_HEALTHS = 728f;
-    private static final float DAMAGE = 16.5f;
-    private static final float[] JUMP_SPEED_HORIZONTAL = {1.1f, 1.35f, 1.55f};
-    private static final float[] JUMP_SPEED_VERTICAL = {1.5f, 1.75f, 2f};
-    private static final float[] JUMP_SPEED_VERTICAL_THIRD = {2f, 2.25f, 2.5f};
-    private static final float[] SWIM_SPEED_HORIZONTAL = {0.1f, 0.15f, 0.2f};
-    private static final float FLOATING_ACCELERATION = 0.05f;
-    private static final FloatRGB COLOR = FloatRGB.fromInteger(COLOR_INT);
-    private static final float[] BLOOD_COLOR = COLOR.mixture(FloatRGB.ZERO, 0.5f).toArray();
+    private final int TOTAL_SPLITS;
+    private final float JUMP_SPEED_HORIZONTAL;
+    private final float JUMP_SPEED_VERTICAL ;
+    private final float JUMP_SPEED_VERTICAL_THIRD;
+    private final float SWIM_SPEED_HORIZONTAL;
+    private final float FLOATING_ACCELERATION;
+    private final FloatRGB COLOR;
+    private final float[] BLOOD_COLOR;
+
+    public record SkillParams(int xpReward, int color, int shrinkDuration,
+                              List<Integer> totalSplits,
+                              List<Float> jumpSpeedHorizontal,
+                              List<Float> jumpSpeedVertical,
+                              List<Float> jumpSpeedVerticalThird,
+                              List<Float> swimSpeedHorizontal,
+                              float floatingAcceleration
+    ) {
+
+        public static Codec<SkillParams> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.fieldOf("xp_reward").forGetter(SkillParams::xpReward),
+                Codec.INT.fieldOf("color").forGetter(SkillParams::color),
+                Codec.INT.fieldOf("shrink_duration").forGetter(SkillParams::shrinkDuration),
+                TECodecs.INT_LIST_CODEC.fieldOf("total_splits").forGetter(SkillParams::totalSplits),
+                TECodecs.FLOAT_LIST_CODEC.fieldOf("jump_speed_horizontal").forGetter(SkillParams::jumpSpeedHorizontal),
+                TECodecs.FLOAT_LIST_CODEC.fieldOf("jump_speed_vertical").forGetter(SkillParams::jumpSpeedVertical),
+                TECodecs.FLOAT_LIST_CODEC.fieldOf("jump_speed_vertical_third").forGetter(SkillParams::jumpSpeedVerticalThird),
+                TECodecs.FLOAT_LIST_CODEC.fieldOf("swim_speed_horizontal").forGetter(SkillParams::swimSpeedHorizontal),
+                Codec.FLOAT.fieldOf("floating_acceleration").forGetter(SkillParams::floatingAcceleration)
+        ).apply(instance, SkillParams::new));
+
+        public static SkillParams getDefaultParams(){
+            return new SkillParams(500, 0x73bcf4, 20,
+                    List.of(30, 50, 75, 100),
+                    List.of(1.1f, 1.35f, 1.55f, 1.80f),
+                    List.of(1.5f, 1.75f, 2f, 2.25f),
+                    List.of(2f, 2.25f, 2.5f, 2.75f),
+                    List.of(0.1f, 0.15f, 0.2f, 0.25f),
+                    0.05f);
+        }
+    }
+
     private static final State<KingSlime> STATE_NORMAL = new State<>() {
         private Vec3 horVel = Vec3.ZERO;
         @Override
@@ -98,8 +136,8 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                 double verticalAcc;
                 // 漂浮、移动
                 if (inLiquid) {
-                    horizontalSpd = SWIM_SPEED_HORIZONTAL[boss.difficultyIdx];
-                    verticalAcc = FLOATING_ACCELERATION;
+                    horizontalSpd = boss.SWIM_SPEED_HORIZONTAL;
+                    verticalAcc = boss.FLOATING_ACCELERATION;
                 }
                 // 跳跃
                 else {
@@ -116,8 +154,8 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                     }
                     switch (boss.indexAI) {
                         case 20, 40, 60 -> {
-                            horizontalSpd = JUMP_SPEED_HORIZONTAL[boss.difficultyIdx];
-                            verticalAcc = (boss.indexAI == 60 ? JUMP_SPEED_VERTICAL_THIRD : JUMP_SPEED_VERTICAL)[boss.difficultyIdx]
+                            horizontalSpd = boss.JUMP_SPEED_HORIZONTAL;
+                            verticalAcc = (boss.indexAI == 60 ? boss.JUMP_SPEED_VERTICAL_THIRD : boss.JUMP_SPEED_VERTICAL)
                                     * (boss.getSize() + 127) / 256; // 血量降低，跳跃高度减少
                         }
                         default -> {
@@ -156,10 +194,10 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
             // 更新BOSS大小
             int maxSize = boss.getMaxSize();
             int s = Mth.clamp(1, boss.getMaxSize() *
-                    (SHRINK_ENLARGE_DURATION - boss.indexAI) / SHRINK_ENLARGE_DURATION, maxSize);
+                    (boss.SHRINK_ENLARGE_DURATION - boss.indexAI) / boss.SHRINK_ENLARGE_DURATION, maxSize);
 
             boss.setSize( s, false );
-            if (boss.indexAI >= SHRINK_ENLARGE_DURATION) {
+            if (boss.indexAI >= boss.SHRINK_ENLARGE_DURATION) {
                 // BOSS脱战
                 if (boss.shouldDisappear) {
                     boss.discard();
@@ -192,8 +230,8 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
             int maxSize = boss.getMaxSize();
 
             boss.setSize( Mth.clamp(1, boss.getMaxSize() *
-                    boss.indexAI / SHRINK_ENLARGE_DURATION, maxSize), false );
-            if (boss.indexAI >= SHRINK_ENLARGE_DURATION) {
+                    boss.indexAI / boss.SHRINK_ENLARGE_DURATION, maxSize), false );
+            if (boss.indexAI >= boss.SHRINK_ENLARGE_DURATION) {
                 boss.toState(STATE_NORMAL);
             }
         }
@@ -202,16 +240,17 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     // 变量
     private final ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.NOTCHED_12).setPlayBossMusic(true);
     private int indexAI;
-    private final int difficultyIdx;
+//    private final int difficultyIdx;
     private boolean shouldDisappear;
     private State<KingSlime> AIState;
     // 重写跳跃-水平方向的移动
     private Vec3 horMoveDir;
-
+    SkillParams skillParams;
+    DifficultSelector difficultSelector;
     public KingSlime(EntityType<KingSlime> slime, Level level) {
         super(slime, level);
         this.shouldDisappear = false;
-        this.difficultyIdx = switchByDifficulty(level, 0, 1, 2);
+//        this.difficultyIdx = switchByDifficulty(level, 0, 1, 2);
         this.indexAI = 0;
         this.AIState = STATE_NORMAL;
 
@@ -223,18 +262,27 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         // 水平方向移动
         horMoveDir = Vec3.ZERO;
 
-        attrInit(this.getNearbyPlayers(100.0D));
-
         if(level().isClientSide){
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
         }
+        this.difficultSelector = new DifficultSelector(level);
 
-        this.xpReward = 500;
+        this.skillParams = MappedDataTypes.BOSS_SKILL_MAP_DATAS.get().getData(BossSkillMapDatas.KING_SLIME_PARAMS);
+        this.xpReward = skillParams.xpReward;
+        this.COLOR_INT = skillParams.color;
+        this.SHRINK_ENLARGE_DURATION = skillParams.shrinkDuration;
+        this.TOTAL_SPLITS = difficultSelector.switchBy(skillParams.totalSplits);
+        this.JUMP_SPEED_HORIZONTAL = difficultSelector.switchBy(skillParams.jumpSpeedHorizontal);
+        this.JUMP_SPEED_VERTICAL = difficultSelector.switchBy(skillParams.jumpSpeedVertical);
+        this.JUMP_SPEED_VERTICAL_THIRD = difficultSelector.switchBy(skillParams.jumpSpeedVerticalThird);
+        this.SWIM_SPEED_HORIZONTAL = difficultSelector.switchBy(skillParams.swimSpeedHorizontal);
+        this.FLOATING_ACCELERATION = skillParams.floatingAcceleration;
+
+        this.COLOR = FloatRGB.fromInteger(COLOR_INT);
+        this.BLOOD_COLOR = COLOR.mixture(FloatRGB.ZERO, 0.5f).toArray();
+
     }
 
-    public KingSlime(Level level) {
-        this(TEBossEntities.KING_SLIME.get(), level);
-    }
 
     @Override
     public void toState(State newState) {
@@ -253,13 +301,12 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     }
 
     public static AttributeSupplier.Builder createSlimeAttributes() {
-        return Mob.createMobAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 1.0)
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH,   728)
+            .add(Attributes.ATTACK_DAMAGE, 16.5)
             .add(Attributes.ATTACK_KNOCKBACK, 2.2)
             .add(Attributes.ARMOR, 10)
             .add(Attributes.KNOCKBACK_RESISTANCE, 1)
             .add(Attributes.FOLLOW_RANGE, 100.0)
-
                 ;
     }
 
@@ -280,12 +327,6 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         return Short.MAX_VALUE;
     }
 
-    private void attrInit(List<Player> nearbyPlayers) {
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(MAX_HEALTHS);
-        setHealth(MAX_HEALTHS);
-        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-    }
-
     private int getMaxSize() {
         return Math.round(getHealth() / getMaxHealth() * 10) + 6;
     }
@@ -299,9 +340,11 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         }
     }
 
+    @Override
     protected void registerGoals() {
         this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
         super.registerGoals();
+        this.goalSelector.removeAllGoals(g->g.getClass().getName().endsWith("SlimeFloatGoal"));
     }
 
     public float[] getBossEventProgress(){
@@ -364,7 +407,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     }
 
     private int getSlimesLeft() {
-        return (int) (getHealth() / getMaxHealth() * TOTAL_SPLITS[difficultyIdx]);
+        return (int) (getHealth() / getMaxHealth() * TOTAL_SPLITS);
     }
 
     private void spawnSlime(LivingEntity target) {

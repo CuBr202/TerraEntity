@@ -71,13 +71,14 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
         super(type, level);
         this.noPhysics = true;
 
-        this.xpReward = 30;
     }
 
     public EaterOfWorldsSegment(EaterOfWorlds head, Level level) {
         this(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), level);
         this.head = head;
         this._discardTimer = random.nextInt(25) + 100;
+
+        this.xpReward = head.getXpReward();
     }
 
     public Vec3 getNextPos(){
@@ -130,7 +131,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
                     if(projectile != null) {
                         projectile.setOwner(this);
                         projectile.setPos(position());
-                        projectile.setDamage((float) this.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
+                        projectile.setDamage(this.head.projDamage);
                         projectile.shoot(target.getX() - getX(), target.getY() + 1 - getY(), target.getZ() - getZ(), 0.3F, 3);
                         level().addFreshEntity(projectile);
                     }

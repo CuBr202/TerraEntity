@@ -53,7 +53,7 @@ public class DifficultSelector {
         return ftw;
     }
 
-    public boolean isExpertise() {
+    public boolean isExpert() {
         return expert;
     }
 

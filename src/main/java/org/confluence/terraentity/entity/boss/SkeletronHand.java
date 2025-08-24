@@ -54,14 +54,16 @@ public class SkeletronHand extends Skeletron {
                 getEntityData().set(DATA_OWNER, Optional.of(owner.getUUID()));
             }
         }
-        slapInterval = (expert ? 30 : 45)+level.random.nextInt(6);
-        slapSpeed = expert ? 1.2 : 1.0;
+        slapInterval = (this.isExpert() ? 30 : 45)+level.random.nextInt(6);
+        slapSpeed = this.isExpert() ? 1.2 : 1.0;
         slapTick = slapInterval;
 
         // 防止手卡位置导致动不了
         this.noPhysics = true;
         // 防止超出包围盒不渲染
         this.noCulling = true;
+
+        this.xpReward = (int) (0.3f * this.xpReward);
 
     }
 

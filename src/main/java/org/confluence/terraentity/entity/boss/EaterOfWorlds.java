@@ -1,6 +1,8 @@
 package org.confluence.terraentity.entity.boss;
 
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -16,8 +18,10 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.data.mappeddata.BossSkillMapDatas;
 import org.confluence.terraentity.entity.ai.fsm.MobSkill;
 import org.confluence.terraentity.init.entity.TEBossEntities;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.CameraShakeData;
 import org.confluence.terraentity.utils.CameraShakeManager;
 import org.confluence.terraentity.utils.TEUtils;
@@ -31,21 +35,21 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implements Boss {
 
-    private static final float projDamage = 3;
+    final float projDamage;
 
-    private float segmentInternal = 2.8f;
-    int segmentCount = 60;//体节长度
-    static float turnSpeedBase = 3f;//转向速度
-    static float moveSpeedBase = 0.6f;//移动速度
-    float wanderPosRadius = 10;//寻点半径
+    private final float segmentInternal;
+    int segmentCount;//体节长度
+    final float turnSpeedBase;//转向速度
+    final float moveSpeedBase;//移动速度
+    final float wanderPosRadius;//寻点半径
 
     boolean genSegments = true;//是否生成体节
     boolean ifBaseHead = false;
     boolean truthDie = false;
     int genTick = 5;//生成体节延迟
     boolean shouldMove = true;
-    float moveSpeed = moveSpeedBase;
-    float turnSpeed = turnSpeedBase;
+    float moveSpeed;
+    float turnSpeed;
     Vec3 targetPos = new Vec3(0, 0, 0);
     boolean shouldFollowTarget = true;
     LivingEntity target;
@@ -57,7 +61,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     public enum WonderType {UP,DOWN}
     private WonderType wanderType = WonderType.DOWN;
     public static final EntityDataAccessor<Integer> DATA_SEG_COUNT = SynchedEntityData.defineId(EaterOfWorlds.class, EntityDataSerializers.INT);
-
+    SkillParams skillParams;
 
     public EaterOfWorlds(EntityType<? extends Monster> type, Level level) {
         super(type, level);
@@ -68,11 +72,45 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         }
         this.noPhysics = true;
         this.xpReward = 30;
+
+        this.skillParams = MappedDataTypes.BOSS_SKILL_MAP_DATAS.get().getData(BossSkillMapDatas.EATER_OF_WORLDS_PARAMS);
+        this.projDamage = skillParams.projDamage;
+        this.turnSpeedBase = skillParams.turnSpeed;
+        this.moveSpeedBase = skillParams.moveSpeed;
+        this.wanderPosRadius = skillParams.wanderPosRadius;
+        this.segmentInternal = skillParams.segmentInternal;
+        this.segmentCount = skillParams.segmentCount;
+
+        this.moveSpeed = moveSpeedBase;
+        this.turnSpeed = turnSpeedBase;
+        this.xpReward = skillParams.xpReward;
+
     }
 
     public EaterOfWorlds(Level level, boolean genSegments) {
         this(TEBossEntities.EATER_OF_WORLDS.get(),level);
         this.genSegments = genSegments;
+    }
+
+    int getXpReward(){
+        return xpReward;
+    }
+
+    public record SkillParams(int segmentCount, float projDamage, float turnSpeed, float moveSpeed, float wanderPosRadius, float segmentInternal, int xpReward) {
+        public static Codec<SkillParams> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                Codec.INT.fieldOf("segment_count").forGetter(SkillParams::segmentCount),
+                Codec.FLOAT.fieldOf("proj_damage").forGetter(SkillParams::projDamage),
+                Codec.FLOAT.fieldOf("turn_speed").forGetter(SkillParams::turnSpeed),
+                Codec.FLOAT.fieldOf("move_speed").forGetter(SkillParams::moveSpeed),
+                Codec.FLOAT.fieldOf("wander_search_pos_radius").forGetter(SkillParams::wanderPosRadius),
+                Codec.FLOAT.fieldOf("segment_internal").forGetter(SkillParams::segmentInternal),
+                Codec.INT.fieldOf("xp_reward_per_segment").forGetter(s->s.xpReward)
+
+        ).apply(instance, SkillParams::new));
+
+        public static SkillParams getDefaultParams(){
+            return new SkillParams(60,5,3,0.6f,10,2.8f, 30);
+        }
     }
 
     private void genSegments(){

@@ -571,8 +571,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public void changeState(){
     }
 
-    protected boolean isExpertise(){
-        return this.difficultSelector.isExpertise();
+    protected boolean isExpert(){
+        return this.difficultSelector.isExpert();
     }
     protected boolean isMaster(){
         return this.difficultSelector.isMaster();

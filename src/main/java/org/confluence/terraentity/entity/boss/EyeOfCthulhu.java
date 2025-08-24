@@ -63,8 +63,9 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         private final float dashFactor; //冲刺增伤
         private final float stage2SpeedFactor; //二阶段加速加成
         private final float minDashDistanceSqr;
+        private final int xpReward;
 
-        SkillParams(float damage, float crazyDamage, float moveSpeed, float dashFactor, float stage2SpeedFactor, float minDashDistanceSqr){
+        SkillParams(float damage, float crazyDamage, float moveSpeed, float dashFactor, float stage2SpeedFactor, float minDashDistanceSqr, int xpReward){
             this.DAMAGE = damage;
             this.CRAZY_DAMAGE = crazyDamage;
             this.MOVE_SPEED = moveSpeed;
@@ -72,6 +73,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
             this.dashFactor = dashFactor;
             this.stage2SpeedFactor = stage2SpeedFactor;
             this.minDashDistanceSqr = minDashDistanceSqr;
+            this.xpReward = xpReward;
         }
 
         public static Codec<SkillParams> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
@@ -80,12 +82,14 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 Codec.FLOAT.fieldOf("move_speed").forGetter(s->s.MOVE_SPEED),
                 Codec.FLOAT.fieldOf("dash_factor").forGetter(s->s.dashFactor),
                 Codec.FLOAT.fieldOf("stage2_speed_factor").forGetter(s->s.stage2SpeedFactor),
-                Codec.FLOAT.fieldOf("min_dash_distance_sqr").forGetter(s->s.minDashDistanceSqr)
+                Codec.FLOAT.fieldOf("min_dash_distance_sqr").forGetter(s->s.minDashDistanceSqr),
+                Codec.INT.fieldOf("xp_reward").forGetter(s->s.xpReward)
+
         ).apply(instance, SkillParams::new));
 
         public static SkillParams getDefaultParams(){
             return new EyeOfCthulhu.SkillParams(4, 6, 0.5f,
-                    1.5f, 1.5f, 20);
+                    1.5f, 1.5f, 20, 1000);
         }
 
     }
@@ -124,7 +128,6 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         collisionProperties.attackInternal = 1;
         collisionProperties.detectInternal = 1;
 
-        this.xpReward = 1000;
         dashComponent = new DashComponent(this);
         this.skillParams = MappedDataTypes.BOSS_SKILL_MAP_DATAS.get().getData(BossSkillMapDatas.EYE_OF_CTHULHU_PARAMS);
         this.DAMAGE = skillParams.DAMAGE;
@@ -133,6 +136,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         this.dashFactor = skillParams.dashFactor;
         this.stage2SpeedFactor = skillParams.stage2SpeedFactor;
         this.minDashDistanceSqr = skillParams.minDashDistanceSqr;
+        this.xpReward = skillParams.xpReward;
     }
 
 
@@ -253,7 +257,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 },
                 terraBossBase -> {
                     if (getTarget() == null) return;
-                    if(!this.isExpertise() && getTarget().distanceTo(this) > 8 && this.getRandom().nextFloat() < 0.5f) {
+                    if(!this.isExpert() && getTarget().distanceTo(this) > 8 && this.getRandom().nextFloat() < 0.5f) {
                         skills.tick -= 1;
                     }
                     if(TEUtils.isFTWWorld((ServerLevel) level())){
@@ -274,7 +278,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 },
                 terraBossBase -> {
                     // 生成冲撞次数
-                    if(this.isExpertise()) {
+                    if(this.isExpert()) {
                         this.stage2_dashCount = (int) ((stage2_dashCount_base + 10 - this.getHealth() / (getMaxHealth() / 10)) * 1.5);
                         if (this.getHealth() / getMaxHealth() < 0.3f) {
                             this.stage2_dashCount_max = this.stage2_dashCount;
@@ -300,7 +304,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         this.playSound(TESounds.ROAR.get());
                     }
 
-                    if(this.isExpertise() && distanceTo(getTarget()) < 8){
+                    if(this.isExpert() && distanceTo(getTarget()) < 8){
                         skills.tick -= 1;
                     }
                 },
@@ -371,7 +375,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
     }
 
     private boolean isEnhanceDash(){
-        return this.isExpertise() && this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount <= stage2_dashCount_max;
+        return this.isExpert() && this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount <= stage2_dashCount_max;
     }
 
     public void tick() {
@@ -442,7 +446,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if(this.isExpertise()){
+        if(this.isExpert()){
             if(this.getHealthPercentage() < 0.4f){
                 pAmount += 15;
             }

@@ -142,6 +142,7 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> {
         this.innerRadius = skillParams.innerRadius;
         this.outerRadius = skillParams.outerRadius;
         this.height = (int) skillParams.height;
+        this.xpReward = skillParams.xpReward;
 
         if (!this.level().isClientSide) {
             this.summonLeechGoal.setMaxCount(this.summonLeechCount);
@@ -160,7 +161,8 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> {
                               float magicDamageAttach,
                               float outerRadius,
                               float innerRadius,
-                              float height
+                              float height,
+                              int xpReward
     ) {
         public static Codec<SkillParams> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
                 TECodecs.INT_LIST_CODEC.fieldOf("fire_pillar_damage").forGetter(SkillParams::firePillarDamage),
@@ -172,7 +174,9 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> {
                 Codec.FLOAT.fieldOf("magic_damage_attach").forGetter(SkillParams::magicDamageAttach),
                 Codec.FLOAT.fieldOf("outer_radius").forGetter(SkillParams::outerRadius),
                 Codec.FLOAT.fieldOf("inner_radius").forGetter(SkillParams::innerRadius),
-                Codec.FLOAT.fieldOf("height").forGetter(SkillParams::height)
+                Codec.FLOAT.fieldOf("height").forGetter(SkillParams::height),
+                Codec.INT.fieldOf("xp_reward").forGetter(s->s.xpReward)
+
         ).apply(instance, SkillParams::new));
 
         public static SkillParams getDefaultParams() {
@@ -181,9 +185,9 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> {
                     List.of(5, 6, 7, 8),
                     List.of(5, 6, 7, 8),
                     List.of(5, 6, 7, 8),
-                    1.0f, 1.0f, 1.0f,
+                    20.0f, 10.0f, 30.0f,
                     75.0f, 10.0f,
-                    100.0f
+                    100.0f, 5000
             );
         }
 

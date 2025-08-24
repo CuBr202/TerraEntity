@@ -75,9 +75,9 @@ public class TEBossEntities {
 
         event.put(TEBossEntities.KING_SLIME.get(), KingSlime.createSlimeAttributes().build());
         event.put(TEBossEntities.EYE_OF_CTHULHU.get(), AttBuilder.createBoss(728, 12).attack(4).build());
-        event.put(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), AttBuilder.createBoss(50, 1).build());
+        event.put(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), AttBuilder.createBoss(50, 1).attack(4).build());
         event.put(TEBossEntities.EATER_OF_WORLDS.get(), AttBuilder.createBoss(54, 0).attack(12.5).build());
-        event.put(TEBossEntities.BRAIN_OF_CTHULHU.get(), AttBuilder.createBoss(552, 14).attack(5).build());
+        event.put(TEBossEntities.BRAIN_OF_CTHULHU.get(), AttBuilder.createBoss(552, 14).attack(14).build());
 
         event.put(TEBossEntities.BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(TEBossEntities.QUEEN_BEE.get(), LibUtils.forMixin$ModifyExpression(AttBuilder.createBoss(1237, 8).attack(14).build()));
