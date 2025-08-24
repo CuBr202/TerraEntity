@@ -5,6 +5,8 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.utils.TEUtils;
 
+import java.util.List;
+
 public class DifficultSelector {
 
     private static boolean expert;
@@ -64,5 +66,16 @@ public class DifficultSelector {
             return master;
         }
         return ftw;
+    }
+
+    public <T> T switchBy(List<T> list){
+        if(!DifficultSelector.expert){
+            return list.get(0);
+        }else if(!DifficultSelector.master){
+            return list.get(1);
+        }else if(!this.ftw){
+            return list.get(2);
+        }
+        return list.get(3);
     }
 }

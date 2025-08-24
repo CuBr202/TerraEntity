@@ -5,6 +5,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 
+import java.util.List;
 import java.util.Locale;
 
 public class TECodecs {
@@ -27,5 +28,7 @@ public class TECodecs {
                 baker-> baker.name().toLowerCase(Locale.ROOT)
         );
     }
+
+    public static Codec<List<Integer>> INT_LIST_CODEC = Codec.INT.listOf();
 
 }

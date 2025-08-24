@@ -18,9 +18,15 @@ public class SDHelper {
             }
             return 0;
         });
-        DynamicLightHandlers.registerDynamicLightHandler(TEProjectileEntities.FIRE_IMP_PROJ.get(), o -> 10);
-        DynamicLightHandlers.registerDynamicLightHandler(TEProjectileEntities.DARK_CASTER_PROJ.get(), o -> 6);
-        DynamicLightHandlers.registerDynamicLightHandler(TEProjectileEntities.VILE_SPIT_PROJ.get(), o -> 6);
+        DynamicLightHandlers.registerDynamicLightHandler(TEProjectileEntities.FIRE_IMP_PROJ.get(), e -> 10);
+        DynamicLightHandlers.registerDynamicLightHandler(TEProjectileEntities.DARK_CASTER_PROJ.get(), e -> 6);
+        DynamicLightHandlers.registerDynamicLightHandler(TEProjectileEntities.VILE_SPIT_PROJ.get(), e -> 6);
+        DynamicLightHandlers.registerDynamicLightHandler(TEProjectileEntities.LAVA_PILLAR.get(), e -> {
+            if(e.isTriggered()){
+                return 12;
+            }
+            return 0;
+        });
 
     }
 }

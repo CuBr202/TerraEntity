@@ -12,5 +12,4 @@ public class MappedDataTypes {
     public static DeferredHolder<MappedDataType, MappedDataType> BOSS_SKILL_MAP_DATAS = TYPES.register("boss_skill_params",
             BossSkillMapDatas::buildType);
 
-
 }

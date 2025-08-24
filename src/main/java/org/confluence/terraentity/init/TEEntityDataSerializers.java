@@ -1,6 +1,9 @@
 package org.confluence.terraentity.init;
 
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.confluence.terraentity.TerraEntity;
@@ -11,6 +14,7 @@ import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.entity.util.KeyframeAnimationCounter;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 
@@ -24,6 +28,7 @@ public final class TEEntityDataSerializers {
 
     public static final Supplier<EntityDataSerializer<KeyframeAnimationCounter>> KEYFRAME_ANIMATION_SERIALIZER = SERIALIZERS.register("keyframe_animation", () -> EntityDataSerializer.forValueType(KeyframeAnimationCounter.STREAM_CODEC));
     public static final Supplier<EntityDataSerializer<NPCChat>> NPC_CHAT_SERIALIZER = SERIALIZERS.register("npc_chat", () -> EntityDataSerializer.forValueType(NPCChat.STREAM_CODEC));
+    public static final Supplier<EntityDataSerializer<List<Vec3>>> VEC3_LIST_SERIALIZER = SERIALIZERS.register("vec3_list", () -> EntityDataSerializer.forValueType(ByteBufCodecs.fromCodec(Vec3.CODEC.listOf())));
 
 
 }

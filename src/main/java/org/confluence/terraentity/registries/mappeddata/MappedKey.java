@@ -11,15 +11,22 @@ import java.util.function.Supplier;
  * @param <V> 指示值的类型，便于编译器检查
  */
 public class MappedKey<V> implements IAutoReloadable<V> {
+    // 唯一标识
     final String key;
+
+    // 唯一实例的额外数据
     Consumer<V> onReload;
     Supplier<V> defaultValue;
+    Codec<V> valueCodec;
+    Codec<MappedKey<?>> keyCodec;
 
+    static Codec<MappedKey<?>> ID_CODEC = Codec.STRING.xmap(MappedKey::new, MappedKey::getKey);
 
-    public MappedKey(String key) {
+    MappedKey(String key) {
         this.key = key;
     }
-    public MappedKey(ResourceLocation key) {
+
+    MappedKey(ResourceLocation key) {
         this.key = key.toString();
     }
 
@@ -33,7 +40,13 @@ public class MappedKey<V> implements IAutoReloadable<V> {
         return this;
     }
 
-    public static Codec<MappedKey<?>> CODEC = Codec.STRING.xmap(MappedKey::new, MappedKey::getKey);
+    public Codec<MappedKey<?>> getKeyCodec() {
+        return keyCodec;
+    }
+
+    public Codec<V> getValueCodec() {
+        return valueCodec;
+    }
 
     public String getKey() {
         return key;

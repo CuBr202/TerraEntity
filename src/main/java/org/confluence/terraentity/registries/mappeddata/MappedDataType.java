@@ -2,31 +2,30 @@ package org.confluence.terraentity.registries.mappeddata;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.resources.ResourceLocation;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 /**
  * MapCodec的类型，也是codecProvider
  */
-public class MappedDataType{
+public class MappedDataType {
 
     MapCodec<? extends MappedData> codec;
-    MappedData data;
-    Function<? super Map<MappedKey<?>, Object>, ? extends MappedData> constructor;
-    Map<MappedKey<?>, Codec<Object>> codecMap;
+    MappedData defaultData;
+    MappedDataConstructor constructor;
+    Set<MappedKey<?>> keySet;
 
 
     MappedDataType(MapCodec<? extends MappedData> codec,
-                   MappedData data,
-                   Function<? super Map<MappedKey<?>, Object>, ? extends MappedData> constructor,
-                   Map<MappedKey<?>, Codec<Object>> codecMap) {
+                   MappedData defaultData,
+                   MappedDataConstructor constructor,
+                   Set<MappedKey<?>> keySet) {
         this.codec = codec;
-        this.data = data;
+        this.defaultData = defaultData;
         this.constructor = constructor;
-        this.codecMap = codecMap;
+        this.keySet = keySet;
     }
 
     /**
@@ -43,7 +42,7 @@ public class MappedDataType{
      * @param <V> 值类型
      */
     public <V> V getData(MappedKey<V> key){
-        return data.getData(key);
+        return defaultData.getData(key);
     }
 
     /**
@@ -52,7 +51,7 @@ public class MappedDataType{
      */
     public void updateData(MappedData neoData){
         for(Map.Entry<MappedKey<?>, Object> entry : neoData.data.entrySet()){
-            data.put(entry.getKey(), entry.getValue());
+            defaultData.put(entry.getKey(), entry.getValue());
             entry.getKey().onReload(entry.getValue());
         }
     }
@@ -61,12 +60,12 @@ public class MappedDataType{
      * 获取默认的MappedData，用于一键数据生成默认的数据
      */
     public MappedData getDefaultValue(){
-        return generateDefaultValue(constructor, codecMap.keySet());
+        return generateDefaultValue(constructor, keySet);
     }
 
-    private static MappedData generateDefaultValue(Function<? super Map<MappedKey<?>, Object>, ? extends MappedData> constructor,
+    private static MappedData generateDefaultValue(MappedDataConstructor constructor,
                                                    Collection<MappedKey<?>> codecSet){
-        MappedData data = constructor.apply(new HashMap<>());
+        MappedData data = constructor.create(new HashMap<>());
         for(MappedKey<?> key : codecSet){
             Object defaultValue = key.defaultValue().get();
             if(defaultValue!= null){
@@ -82,10 +81,10 @@ public class MappedDataType{
 
     public static class Builder {
 
-        Map<MappedKey<?>, Codec<Object>> codecMap;
         Map<String, MappedKey<?>> keyMap;
+        Set<MappedKey<?>> keySet;
         public Builder() {
-            codecMap = new HashMap<>();
+            keySet = new HashSet<>();
             keyMap = new HashMap<>();
         }
 
@@ -93,13 +92,21 @@ public class MappedDataType{
          * 注册key对应的值的codec
          */
         public <V> MappedKey<V> registerCodec(String key, Codec<V> codec) {
-            MappedKey<V> mappedKey = new MappedKey<V>(key);
-            if(codecMap.containsKey(mappedKey)){
+            MappedKey<V> mappedKey = new MappedKey<>(key);
+            if(keySet.contains(mappedKey)){
                 throw new IllegalArgumentException("Codec already registered for key: " + key);
             }
-            codecMap.put(mappedKey, (Codec<Object>) codec);
             keyMap.put(mappedKey.toString(), mappedKey);
+            keySet.add(mappedKey);
+            mappedKey.valueCodec = codec;
             return mappedKey;
+        }
+
+        /**
+         * 注册key对应的值的codec
+         */
+        public <V> MappedKey<V> registerCodec(ResourceLocation key, Codec<V> codec) {
+            return registerCodec(key.toString(), codec);
         }
 
         /**
@@ -107,15 +114,20 @@ public class MappedDataType{
          * @param constructor MappedData的构造函数
          * @return 绑定后的MappedDataType
          */
-        public MappedDataType build(Function<? super Map<MappedKey<?>, Object>, ? extends MappedData> constructor) {
+        public MappedDataType build(MappedDataConstructor constructor) {
             // 为了获取唯一实例
-            Codec<MappedKey<?>> keyCodec = MappedKey.CODEC.xmap(i->keyMap.get(i.toString()), Function.identity());
-            MapCodec<? extends MappedData> codec = Codec.dispatchedMap(keyCodec, key->codecMap.get(key))
-                    .xmap(constructor, map->map.data).fieldOf("data");
-            MappedData data = generateDefaultValue(constructor, codecMap.keySet());
-            return new MappedDataType(codec, data, constructor, codecMap);
+            Codec<MappedKey<?>> keyCodec = MappedKey.ID_CODEC.xmap(i->keyMap.get(i.toString()), Function.identity());
+            MapCodec<? extends MappedData> codec = Codec.<MappedKey<?>, Object>dispatchedMap(keyCodec, MappedKey::getValueCodec)
+                    .xmap(constructor::create, map->map.data).fieldOf("data");
+            MappedData data = generateDefaultValue(constructor, keySet);
+            keySet.forEach(key -> key.keyCodec = keyCodec);
+            return new MappedDataType(codec, data, constructor, keySet);
         }
     }
 
+    @FunctionalInterface
+    public interface MappedDataConstructor {
+        MappedData create(Map<MappedKey<?>, Object> data);
+    }
 
 }

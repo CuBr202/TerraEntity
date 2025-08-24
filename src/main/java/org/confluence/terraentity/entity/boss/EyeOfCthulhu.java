@@ -126,7 +126,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
         this.xpReward = 1000;
         dashComponent = new DashComponent(this);
-        this.skillParams = MappedDataTypes.BOSS_SKILL_MAP_DATAS.get().getData(BossSkillMapDatas.EYE_OF_CTHULHU_SKILL);
+        this.skillParams = MappedDataTypes.BOSS_SKILL_MAP_DATAS.get().getData(BossSkillMapDatas.EYE_OF_CTHULHU_PARAMS);
         this.DAMAGE = skillParams.DAMAGE;
         this.CRAZY_DAMAGE = skillParams.CRAZY_DAMAGE;
         this.MOVE_SPEED = skillParams.MOVE_SPEED;
