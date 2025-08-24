@@ -9,17 +9,20 @@ import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 
 import java.util.Map;
 
-public class BossSkillMapDatas extends MappedData {
+public final class BossSkillMapDatas extends MappedData {
 
-    public BossSkillMapDatas(Map<MappedKey<?>, Object> data) {
-        super(data);
+    BossSkillMapDatas(Map<MappedKey<?>, Object> data, String comment) {
+        super(data, comment);
     }
+
     @Override
     public MappedDataType getType() {
         return MappedDataTypes.BOSS_SKILL_MAP_DATAS.get();
     }
 
-    static MappedDataType.Builder builder = MappedDataType.builder();
+    static MappedDataType.Builder builder = MappedDataType.builder()
+            .setComment("This file contains all default values for boss parameters. This can be customized by data packs. For lists containing 4 elements, " +
+                    "they may express the values different from the difficulty levels: (classic, expert, master, ftw), equivalent to (simple, normal, hard, ftw) .");
 
     public static MappedKey<EyeOfCthulhu.SkillParams> EYE_OF_CTHULHU_PARAMS = builder
             .registerCodec("eye_of_cthulhu_params", EyeOfCthulhu.SkillParams.CODEC)
@@ -28,10 +31,7 @@ public class BossSkillMapDatas extends MappedData {
             ;
     public static MappedKey<HillOfFlesh.SkillParams> HILL_OF_FLESH_PARAMS = builder
             .registerCodec("hill_of_flesh_params", HillOfFlesh.SkillParams.CODEC)
-            .withDefaultValue(HillOfFlesh.SkillParams::getDefaultParams)
-//            .withOnReload(data->System.out.println(data.toString()))
-            ;
-
+            .withDefaultValue(HillOfFlesh.SkillParams::getDefaultParams);
 
 
     public static MappedDataType buildType() {

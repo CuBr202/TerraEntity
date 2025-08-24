@@ -163,15 +163,15 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> {
                               float height
     ) {
         public static Codec<SkillParams> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-                TECodecs.INT_LIST_CODEC.fieldOf("firePillarDamage").forGetter(SkillParams::firePillarDamage),
-                TECodecs.INT_LIST_CODEC.fieldOf("summonLeechCount").forGetter(SkillParams::summonLeechCount),
-                TECodecs.INT_LIST_CODEC.fieldOf("summonFleshSlimeCount").forGetter(SkillParams::summonFleshSlimeCount),
-                TECodecs.INT_LIST_CODEC.fieldOf("summonFirePillarCount").forGetter(SkillParams::summonFirePillarCount),
-                Codec.FLOAT.fieldOf("magicDamageInner").forGetter(SkillParams::magicDamageInner),
-                Codec.FLOAT.fieldOf("magicDamageOuter").forGetter(SkillParams::magicDamageOuter),
-                Codec.FLOAT.fieldOf("magicDamageAttach").forGetter(SkillParams::magicDamageAttach),
-                Codec.FLOAT.fieldOf("outerRadius").forGetter(SkillParams::outerRadius),
-                Codec.FLOAT.fieldOf("innerRadius").forGetter(SkillParams::innerRadius),
+                TECodecs.INT_LIST_CODEC.fieldOf("fire_pillar_damage").forGetter(SkillParams::firePillarDamage),
+                TECodecs.INT_LIST_CODEC.fieldOf("summon_leech_count").forGetter(SkillParams::summonLeechCount),
+                TECodecs.INT_LIST_CODEC.fieldOf("summon_flesh_slime_count").forGetter(SkillParams::summonFleshSlimeCount),
+                TECodecs.INT_LIST_CODEC.fieldOf("summon_fire_pillar_count").forGetter(SkillParams::summonFirePillarCount),
+                Codec.FLOAT.fieldOf("magic_damage_inner").forGetter(SkillParams::magicDamageInner),
+                Codec.FLOAT.fieldOf("magic_damage_outer").forGetter(SkillParams::magicDamageOuter),
+                Codec.FLOAT.fieldOf("magic_damage_attach").forGetter(SkillParams::magicDamageAttach),
+                Codec.FLOAT.fieldOf("outer_radius").forGetter(SkillParams::outerRadius),
+                Codec.FLOAT.fieldOf("inner_radius").forGetter(SkillParams::innerRadius),
                 Codec.FLOAT.fieldOf("height").forGetter(SkillParams::height)
         ).apply(instance, SkillParams::new));
 

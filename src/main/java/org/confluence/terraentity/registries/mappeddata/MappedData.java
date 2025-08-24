@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import org.confluence.terraentity.registries.TERegistries;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -13,8 +14,14 @@ import java.util.Map;
 public abstract class MappedData implements Iterable<Map.Entry<MappedKey<?>, Object>> {
     Map<MappedKey<?>, Object> data;
 
-    public MappedData(Map<MappedKey<?>, Object> data) {
+    /**
+     * 只是为了生成数据提供信息，游戏中不需要使用
+     */
+    String comment;
+
+    protected MappedData(Map<MappedKey<?>, Object> data, @Nullable String comment) {
         this.data = data;
+        this.comment = comment;
     }
 
     public <V> V getData(MappedKey<V> key) {
@@ -52,5 +59,8 @@ public abstract class MappedData implements Iterable<Map.Entry<MappedKey<?>, Obj
         return data.containsValue(value);
     }
 
+    public String getComment() {
+        return comment;
+    }
 
 }

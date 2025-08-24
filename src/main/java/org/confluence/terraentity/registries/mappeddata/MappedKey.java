@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 
 /**
  * 键类型
+ *
+ * <p>一个键只可以绑定一个MappedDataType，以便从codec序列化得到唯一的数据</p>
  * @param <V> 指示值的类型，便于编译器检查
  */
 public class MappedKey<V> implements IAutoReloadable<V> {
@@ -18,7 +20,7 @@ public class MappedKey<V> implements IAutoReloadable<V> {
     Consumer<V> onReload;
     Supplier<V> defaultValue;
     Codec<V> valueCodec;
-    Codec<MappedKey<?>> keyCodec;
+    MappedDataType dataType;
 
     static Codec<MappedKey<?>> ID_CODEC = Codec.STRING.xmap(MappedKey::new, MappedKey::getKey);
 
@@ -41,7 +43,10 @@ public class MappedKey<V> implements IAutoReloadable<V> {
     }
 
     public Codec<MappedKey<?>> getKeyCodec() {
-        return keyCodec;
+        if(dataType == null){
+            throw new IllegalStateException("dataType is null");
+        }
+        return dataType.keyCodec;
     }
 
     public Codec<V> getValueCodec() {
