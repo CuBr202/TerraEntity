@@ -24,6 +24,7 @@ import org.confluence.terraentity.entity.ai.fsm.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.monster.LittleHornet;
 import org.confluence.terraentity.entity.proj.LineProj;
+import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
@@ -65,6 +66,10 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
         this.dashSpeedModifier = skillParams.dashSpeedModifier;
         this.angryDashSpeedModifier = skillParams.angryDashSpeedModifier;
         this.dashMaxRangeSqr = skillParams.dashMaxRange * skillParams.dashMaxRange;
+    }
+
+    public QueenBee(Level level) {
+        this(TEBossEntities.QUEEN_BEE.get(), level);
     }
 
     public record SkillParams(int xpReward, int summonBeeInterval, int summonProjInterval, float dashSpeedModifier, float angryDashSpeedModifier,

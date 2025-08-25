@@ -69,6 +69,10 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         _moveSpeed = MOVE_SPEED;
     }
 
+    public BrainOfCthulhu(Level level) {
+        this(TEBossEntities.BRAIN_OF_CTHULHU.get(), level);
+    }
+
     public record SkillParams(int xpReward, int minionsCount, List<Integer> minionsSummonInternal, int dashCount, int dashCountHealth30percent,  float moveSpeed) {
 
         public static Codec<SkillParams> CODEC = RecordCodecBuilder.create(instance -> instance.group(

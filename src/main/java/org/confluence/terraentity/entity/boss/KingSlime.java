@@ -54,7 +54,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import static org.confluence.terraentity.utils.TEUtils.isAtLeastExpert;
-import static org.confluence.terraentity.utils.TEUtils.switchByDifficulty;
 
 /**
  * 史王
@@ -281,6 +280,10 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         this.COLOR = FloatRGB.fromInteger(COLOR_INT);
         this.BLOOD_COLOR = COLOR.mixture(FloatRGB.ZERO, 0.5f).toArray();
 
+    }
+
+    public KingSlime(Level level) {
+        this(TEBossEntities.KING_SLIME.get(), level);
     }
 
 
