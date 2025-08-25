@@ -17,6 +17,7 @@ import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.item.*;
 import org.confluence.terraentity.item.DebugItem;
 import org.confluence.terraentity.item.HouseDetectItem;
+import org.confluence.terraentity.runtime.TERuntime;
 import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -40,7 +41,7 @@ public class TEItems {
                     .icon(()-> TESpawnEggItems.KING_SLIME_SPAWN_EGG.asItem().getDefaultInstance())
                     .displayItems((itemDisplayParameters, output) -> {
                         TESpawnEggItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                        if(!ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get()) {
+                        if(!ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get() || TERuntime.isDevMode()) {
                             TEBossSummonsItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                         }
                         TERideableItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));

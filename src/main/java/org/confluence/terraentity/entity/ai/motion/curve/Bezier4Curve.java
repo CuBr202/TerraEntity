@@ -1,11 +1,10 @@
 package org.confluence.terraentity.entity.ai.motion.curve;
 
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.api.entity.animation.Curve;
 
-public class Bezier4Curse implements Curve {
+public class Bezier4Curve extends UniformedCurve {
     protected double[][] P;
-    public Bezier4Curse(Vec3 start, Vec3 control1, Vec3 control2, Vec3 end){
+    public Bezier4Curve(Vec3 start, Vec3 control1, Vec3 control2, Vec3 end){
         P = new double[4][4];
         P[0][0] = start.x;      P[0][1] = start.y;      P[0][2] = start.z;
         P[1][0] = control1.x;   P[1][1] = control1.y;   P[1][2] = control1.z;

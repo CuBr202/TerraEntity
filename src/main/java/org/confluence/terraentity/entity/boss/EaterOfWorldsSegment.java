@@ -10,7 +10,6 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -31,8 +30,8 @@ import org.confluence.terraentity.init.entity.TEProjectileEntities;
 public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSegment> implements Boss {
 
 
-    private int _shootTick = 100;
-    private int shootTick = _shootTick;
+    private int _shootTick;
+    private int shootTick;
     public float segmentInternal = 2.8f;
     public EaterOfWorlds head;
     public AbstractTerraBossBase lastSegment;
@@ -79,6 +78,8 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
         this._discardTimer = random.nextInt(25) + 100;
 
         this.xpReward = head.getXpReward();
+        this.shootTick = head.shootInterval;
+        this._shootTick = this.shootTick;
     }
 
     public Vec3 getNextPos(){

@@ -22,11 +22,12 @@ public abstract class TEBossEvent extends Event implements IModBusEvent {
     public static class Summon extends TEBossEvent implements ICancellableEvent {
         Player player;
         boolean shouldChangeCamera = true;
-        float distance = 10.0f;
+        float distance;
 
-        public Summon(EntityType<?> entityType, Player player) {
+        public Summon(EntityType<?> entityType, Player player, float distance) {
             super(entityType);
             this.player = player;
+            this.distance = distance;
         }
 
         public Player getPlayer() {

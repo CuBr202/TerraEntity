@@ -130,8 +130,8 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 .add(ItemTradeItemList.builder().addCost(Items.DIAMOND, 3).addResult(Items.EMERALD, 1).build())
                 .add(ItemTradeItemList.builder().addCost(Items.EMERALD, 5).addResult(Items.NETHERITE_INGOT, 1).build())
 
-                .add(ItemTradeItemList.builder().addCost(Items.DIAMOND, 5).addCost(Items.EGG, 1).addResult(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get().getDefaultInstance()).build())
-                .add(ItemTradeItemList.builder().addCost(Items.REDSTONE, 20).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get().getDefaultInstance()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.DIAMOND, 5).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.KING_SLIME_SUMMONS.get().getDefaultInstance()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.REDSTONE, 20).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.EYE_OF_CTHULHU_SUMMONS.get().getDefaultInstance()).build())
 
                 .build());
 
@@ -216,20 +216,20 @@ public class TENPCShopProvider extends AbstractExistCodecProvider<NPCTradeManage
                 .add(TradeTask.create(new ProgressTradeTask(List.of(
                         ItemTradeItemList.builder().addCost(ItemTags.PLANKS, 4).addResult(Items.CRAFTING_TABLE).build(),
                         ItemTradeItemList.builder().addCost(Items.COAL, 10).addResult(Items.TORCH, 64).build(),
-                        ItemTradeItemList.builder().addCost(Items.DIAMOND, 5).addCost(Items.EGG, 1).addResult(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get()).build(),
-                        ItemTradeItemList.builder().addCost(Items.ENDER_EYE, 5).addCost(Items.REDSTONE, 20).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get()).build(),
-                        ItemTradeItemList.builder().addCost(Items.OBSIDIAN, 10).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG.get()).build(),
-                        ItemTradeItemList.builder().addCost(Items.SPIDER_EYE, 5).addCost(Items.ROTTEN_FLESH,5).addCost(Items.EGG, 1).addResult(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get()).build(),
-                        ItemTradeItemList.builder().addCost(Items.HONEY_BOTTLE, 5).addCost(Items.HONEYCOMB,5).addCost(Items.EGG, 1).addResult(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get()).build(),
-                        ItemTradeItemList.builder().addCost(Items.BONE, 8).addCost(Items.EGG, 1).addResult(TESpawnEggItems.SKELETRON_SPAWN_EGG.get()).build()
+                        ItemTradeItemList.builder().addCost(Items.DIAMOND, 5).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.KING_SLIME_SUMMONS.get()).build(),
+                        ItemTradeItemList.builder().addCost(Items.ENDER_EYE, 5).addCost(Items.REDSTONE, 20).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.EYE_OF_CTHULHU_SUMMONS.get()).build(),
+                        ItemTradeItemList.builder().addCost(Items.OBSIDIAN, 10).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.EATER_OF_WORLDS_SUMMONS.get()).build(),
+                        ItemTradeItemList.builder().addCost(Items.SPIDER_EYE, 5).addCost(Items.ROTTEN_FLESH,5).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.BRAIN_OF_CTHULHU_SUMMONS.get()).build(),
+                        ItemTradeItemList.builder().addCost(Items.HONEY_BOTTLE, 5).addCost(Items.HONEYCOMB,5).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.QUEEN_BEE_SUMMONS.get()).build(),
+                        ItemTradeItemList.builder().addCost(Items.BONE, 8).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.SKELETRON_SUMMONS.get()).build()
 
                 ))))
-                .add(ItemTradeItemList.builder().addCost(Items.DIAMOND, 8).addCost(Items.EGG, 1).addResult(TESpawnEggItems.KING_SLIME_SPAWN_EGG.get()).build())
-                .add(ItemTradeItemList.builder().addCost(Items.ENDER_EYE, 8).addCost(Items.REDSTONE, 20).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.KING_SLIME.get())).build()).build())
-                .add(ItemTradeItemList.builder().addCost(Items.OBSIDIAN, 15).addCost(Items.EGG, 1).addResult(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.EYE_OF_CTHULHU.get())).build()).build())
-                .add(ItemTradeItemList.builder().addCost(Items.SPIDER_EYE, 8).addCost(Items.ROTTEN_FLESH,8).addCost(Items.EGG, 1).addResult(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.EATER_OF_WORLDS.get())).build()).build())
-                .add(ItemTradeItemList.builder().addCost(Items.HONEY_BOTTLE, 8).addCost(Items.HONEYCOMB,8).addCost(Items.EGG, 1).addResult(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.BRAIN_OF_CTHULHU.get())).build()).build())
-                .add(ItemTradeItemList.builder().addCost(Items.BONE, 10).addCost(Items.EGG, 1).addResult(TESpawnEggItems.SKELETRON_SPAWN_EGG.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.BRAIN_OF_CTHULHU.get())).build()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.DIAMOND, 8).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.KING_SLIME_SUMMONS.get()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.ENDER_EYE, 8).addCost(Items.REDSTONE, 20).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.EYE_OF_CTHULHU_SUMMONS.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.KING_SLIME.get())).build()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.OBSIDIAN, 15).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.EATER_OF_WORLDS_SUMMONS.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.EYE_OF_CTHULHU.get())).build()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.SPIDER_EYE, 8).addCost(Items.ROTTEN_FLESH,8).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.BRAIN_OF_CTHULHU_SUMMONS.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.EATER_OF_WORLDS.get())).build()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.HONEY_BOTTLE, 8).addCost(Items.HONEYCOMB,8).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.QUEEN_BEE_SUMMONS.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.BRAIN_OF_CTHULHU.get())).build()).build())
+                .add(ItemTradeItemList.builder().addCost(Items.BONE, 10).addCost(Items.EGG, 1).addResult(TEBossSummonsItems.SKELETRON_SUMMONS.get()).setProperties(TradeProperties.builder().setLock(new KillEntityLock(TEBossEntities.BRAIN_OF_CTHULHU.get())).build()).build())
 
                 .add(TradeTask.create(new ProgressTradeTask(List.of(
                         ItemTradeItemList.builder().addCost(ItemTags.PLANKS, 2).addResult(Items.WOODEN_SWORD).build(),

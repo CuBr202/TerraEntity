@@ -15,7 +15,7 @@ import org.confluence.terraentity.api.entity.animation.Curve;
 import org.confluence.terraentity.data.codec.TECodecs;
 import org.confluence.terraentity.data.mappeddata.BossSkillMapDatas;
 import org.confluence.terraentity.entity.ai.fsm.MobSkill;
-import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
+import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curve;
 import org.confluence.terraentity.entity.monster.VisualNeuron;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
@@ -217,7 +217,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                         float theta = random.nextFloat() * 2 * (float) Math.PI;
                         Vec3 control = target.position().add(r * Math.sin(theta), 2, r * Math.cos(theta));
                         Vec3 end = control.add(0,3,0);
-                        curve = new Bezier3Curse(position(), control, end);
+                        curve = new Bezier3Curve(position(), control, end);
                     }
                 })
                 .onTick(e->{
@@ -239,7 +239,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                     if(skills.canTrigger()){
                         Vec3 control = target.position().add(random.nextFloat() - 0.5f, -2, random.nextFloat() - 0.5f);
                         Vec3 end = target.position().add(target.position().subtract(position()).normalize().multiply(10,0,10)).add(0,2,0);
-                        curve = new Bezier3Curse(position(), control, end);
+                        curve = new Bezier3Curve(position(), control, end);
                         playSound(TESounds.ROAR.get(),5,1);
                     }
                     if(skills.canContinue() && curve != null) {

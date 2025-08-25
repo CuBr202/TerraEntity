@@ -18,13 +18,17 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.api.entity.IHeightControlMob;
+import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.data.mappeddata.BossSkillMapDatas;
 import org.confluence.terraentity.entity.ai.fsm.MobSkill;
+import org.confluence.terraentity.entity.ai.goal.WormRandomWanderGoal;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.CameraShakeData;
 import org.confluence.terraentity.utils.CameraShakeManager;
 import org.confluence.terraentity.utils.TEUtils;
+import org.confluence.terraentity.utils.TaskScheduler;
 
 import java.util.List;
 import java.util.Objects;
@@ -33,9 +37,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * 世吞
  */
-public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implements Boss {
+public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implements Boss, IHeightControlMob.Empty {
 
     final float projDamage;
+    final int shootInterval;
 
     private final float segmentInternal;
     int segmentCount;//体节长度
@@ -46,7 +51,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     boolean genSegments = true;//是否生成体节
     boolean ifBaseHead = false;
     boolean truthDie = false;
-    int genTick = 5;//生成体节延迟
+    int genTick = 10;//生成体节延迟
     boolean shouldMove = true;
     float moveSpeed;
     float turnSpeed;
@@ -57,6 +62,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     public List<AbstractTerraBossBase>baseSegments = new CopyOnWriteArrayList<>();
     public List<Float>baseSegmentsHealth = new CopyOnWriteArrayList<>();
 
+    TaskScheduler generator;
 
     public enum WonderType {UP,DOWN}
     private WonderType wanderType = WonderType.DOWN;
@@ -84,6 +90,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         this.moveSpeed = moveSpeedBase;
         this.turnSpeed = turnSpeedBase;
         this.xpReward = skillParams.xpReward;
+        this.shootInterval = skillParams.shootInterval;
 
     }
 
@@ -92,11 +99,19 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         this.genSegments = genSegments;
     }
 
+    @Override
+    protected void registerRandomStrollGoal(){
+        if(ServerConfig.BOSS_KEEP_WANDERING.get()) {
+            this.goalSelector.addGoal(10, new WormRandomWanderGoal<>(this, 80, 40, 20, 40));
+        }
+    }
+
     int getXpReward(){
         return xpReward;
     }
 
-    public record SkillParams(int segmentCount, float projDamage, float turnSpeed, float moveSpeed, float wanderPosRadius, float segmentInternal, int xpReward) {
+    public record SkillParams(int segmentCount, float projDamage, float turnSpeed, float moveSpeed, float wanderPosRadius, float segmentInternal,
+                              int xpReward, int shootInterval) {
         public static Codec<SkillParams> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
                 Codec.INT.fieldOf("segment_count").forGetter(SkillParams::segmentCount),
                 Codec.FLOAT.fieldOf("proj_damage").forGetter(SkillParams::projDamage),
@@ -104,32 +119,50 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                 Codec.FLOAT.fieldOf("move_speed").forGetter(SkillParams::moveSpeed),
                 Codec.FLOAT.fieldOf("wander_search_pos_radius").forGetter(SkillParams::wanderPosRadius),
                 Codec.FLOAT.fieldOf("segment_internal").forGetter(SkillParams::segmentInternal),
-                Codec.INT.fieldOf("xp_reward_per_segment").forGetter(s->s.xpReward)
-
+                Codec.INT.fieldOf("xp_reward_per_segment").forGetter(s->s.xpReward),
+                Codec.INT.fieldOf("shoot_interval").forGetter(SkillParams::shootInterval)
         ).apply(instance, SkillParams::new));
 
         public static SkillParams getDefaultParams(){
-            return new SkillParams(60,5,3,0.6f,10,2.8f, 30);
+            return new SkillParams(60,5,3,0.6f,10,2.8f,
+                    30, 100);
         }
     }
 
     private void genSegments(){
-        Vec3 dir = this.getForward().normalize().scale(-segmentInternal);
-        EaterOfWorldsSegment temp = null;
+        Vec3 dir = this.getForward().multiply(1,0,1).normalize().scale(-segmentInternal);
+        final EaterOfWorldsSegment[] temp = {null};
         //segments.add(this);
         baseSegments.add(this);
         baseSegmentsHealth.add(this.getMaxHealth());
+
+        Vec3 lastPos = position();
+        this.generator = new TaskScheduler(this.tickCount);
         for(int i=1;i<=segmentCount;i++){
-            EaterOfWorldsSegment newSegment = TEUtils.spawnEntity(()->new EaterOfWorldsSegment(this,level()), (ServerLevel) level(),position().add(dir.scale(i*0.5)));
-            newSegment.setLastSegment(Objects.requireNonNullElse(temp, this));
-            temp = newSegment;
-            baseSegments.add(newSegment);
-            baseSegmentsHealth.add(newSegment.getMaxHealth());
+            Vec3 neoDir = dir.yRot((0.2f - i * 0.08f / segmentCount) * i );
+            lastPos = lastPos.add(neoDir);
+
+            Vec3 finalLastPos = lastPos;
+            int finalI = i;
+            generator.schedule(()->{
+                if(this.isAlive()) {
+                    EaterOfWorldsSegment newSegment = TEUtils.spawnEntity(() -> new EaterOfWorldsSegment(this, level()), (ServerLevel) level(),
+                            finalLastPos.add(0, finalI * -0.3, 0));
+                    if (newSegment != null) {
+                        newSegment.setLastSegment(Objects.requireNonNullElse(temp[0], this));
+                        temp[0] = newSegment;
+                        baseSegments.add(newSegment);
+                        baseSegmentsHealth.add(newSegment.getMaxHealth());
+                        if (finalI == segmentCount) {
+                            ((EaterOfWorldsSegment) baseSegments.get(segmentCount)).ifTail = true;
+                            baseSegments.get(segmentCount).getEntityData().set(EaterOfWorldsSegment.DATA_TAIL, true);
+                            ifBaseHead = true;
+                        }
+                    }
+                }
+            }, i);
         }
 
-        ((EaterOfWorldsSegment)baseSegments.get(segmentCount)).ifTail = true;
-        baseSegments.get(segmentCount).getEntityData().set(EaterOfWorldsSegment.DATA_TAIL,true);
-        ifBaseHead = true;
         Boss.sendBossSpawnMessage(this);
     }
 
@@ -262,6 +295,10 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     boolean isDashing = false;
     boolean firstWander = false;
 
+    public int getMaxHeadXRot() {
+        return 85;
+    }
+
     @Override
     public void aiStep() {
         super.aiStep();
@@ -281,6 +318,12 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                     200,
                     this.position(), 30));
 
+            }
+            if(this.generator != null){
+                this.generator.tick(1);
+                if(generator.getPendingTaskCount() == 0){
+                    this.generator = null;
+                }
             }
 
             //没有目标禁止行为

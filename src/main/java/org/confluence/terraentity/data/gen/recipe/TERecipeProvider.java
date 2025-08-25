@@ -12,10 +12,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
 import org.confluence.terraentity.init.TEItems;
-import org.confluence.terraentity.init.item.TEBoomerangItems;
-import org.confluence.terraentity.init.item.TESummonItems;
-import org.confluence.terraentity.init.item.TEWhipItems;
-import org.confluence.terraentity.init.item.TEYoyosItems;
+import org.confluence.terraentity.init.item.*;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -95,8 +92,14 @@ public class TERecipeProvider extends AbstractRecipeProvider {
         registerYoyo(recipeOutput, TEYoyosItems.RALLY.get(), Items.IRON_INGOT, "has_iron_ingot");
         registerYoyo(recipeOutput, TEYoyosItems.MALAISE.get(), Items.SHULKER_SHELL, "has_shulker_shell");
 
-
-
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, TEBossSummonsItems.HILL_OF_FLESH_SUMMONS)
+                .requires(TEBossSummonsItems.WALL_OF_FLESH_SUMMONS)
+                .unlockedBy("has_voodoo_doll", has(TEBossSummonsItems.WALL_OF_FLESH_SUMMONS))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, TEBossSummonsItems.WALL_OF_FLESH_SUMMONS)
+                .requires(TEBossSummonsItems.HILL_OF_FLESH_SUMMONS)
+                .unlockedBy("has_voodoo_doll", has(TEBossSummonsItems.HILL_OF_FLESH_SUMMONS))
+                .save(recipeOutput);
 
         /*
         ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, TESummonItems.TERRAPRISMA.get())

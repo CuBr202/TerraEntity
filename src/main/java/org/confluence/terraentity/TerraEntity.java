@@ -12,6 +12,7 @@ import org.confluence.terraentity.data.enchantment.TEEnchantments;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.registries.TERegistries;
+import org.confluence.terraentity.runtime.TERuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,7 @@ public class TerraEntity {
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 
         ModChecker.registerEvents();
+        TERuntime.getInstance().start();
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 }

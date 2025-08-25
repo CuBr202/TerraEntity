@@ -75,13 +75,13 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         Stream.of(TEMonsterEntities.BLUE_SLIME, TEMonsterEntities.GREEN_SLIME, TEMonsterEntities.CORRUPT_SLIME, TEMonsterEntities.DESERT_SLIME, TEMonsterEntities.JUNGLE_SLIME, TEMonsterEntities.EVIL_SLIME, TEMonsterEntities.ICE_SLIME, TEMonsterEntities.LAVA_SLIME, TEMonsterEntities.LUMINOUS_SLIME, TEMonsterEntities.CRIMSLIME, TEMonsterEntities.PURPLE_SLIME, TEMonsterEntities.RED_SLIME, TEMonsterEntities.TROPIC_SLIME, TEMonsterEntities.YELLOW_SLIME, TEMonsterEntities.HONEY_SLIME, TEMonsterEntities.BLACK_SLIME, TEMonsterEntities.SWAMP_SLIME, TEMonsterEntities.GREEN_DUMPLING_SLIME, TEMonsterEntities.CRIMSLIME
                 ).forEach(e->{
             this.add(e.get(), LootTable.lootTable()
-                    .withPool(singleItemPool(TESpawnEggItems.KING_SLIME_SPAWN_EGG, 0.01F))
+                    .withPool(singleItemPool(TEBossSummonsItems.KING_SLIME_SUMMONS.get(), 0.01F))
                     .withPool(singleItemPool(Items.SLIME_BALL, 0.2F))
                     .withPool(singleItemPool(TESummonItems.SLIME_STAFF, 0.001F))
             );
         });
         this.add(TEMonsterEntities.PINK_SLIME.get(), LootTable.lootTable()
-                .withPool(singleItemPool(TESpawnEggItems.KING_SLIME_SPAWN_EGG, 0.2F))
+                .withPool(singleItemPool(TEBossSummonsItems.KING_SLIME_SUMMONS.get(), 0.2F))
                 .withPool(weightLootPool(singleItemIncrease(Items.SLIME_BALL, 1,2),0.2F))
                 .withPool(singleItemPool(TESummonItems.SLIME_STAFF, 0.01F))
         );
@@ -96,20 +96,20 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
         // 克眼
         this.add(TEMonsterEntities.DEMON_EYE.get(), LootTable.lootTable()
-                .withPool(singleItemPool(TESpawnEggItems.EYE_OF_CTHULHU_SPAWN_EGG, 0.05F))
+                .withPool(singleItemPool(TEBossSummonsItems.EYE_OF_CTHULHU_SUMMONS, 0.05F))
                 .withPool(weightLootPool(singleItemIncrease(Items.ENDER_EYE, 1,1), 0.05f))
         );
 
         this.add(TEBossEntities.EYE_OF_CTHULHU.get(), LootTable.lootTable()
-                .withPool(singleItemPool(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.5F))
-                .withPool(singleItemPool(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG, 0.5F))
+                .withPool(singleItemPool(TEBossSummonsItems.BRAIN_OF_CTHULHU_SUMMONS, 0.5F))
+                .withPool(singleItemPool(TEBossSummonsItems.EATER_OF_WORLDS_SUMMONS, 0.5F))
                 .withPool(singleItemPool(TESummonItems.SLIME_STAFF, 1F))
         );
 
 
         // 克脑
         this.add(TEMonsterEntities.BLOODY_SPORE.get(), LootTable.lootTable()
-                .withPool(singleItemPool(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.2F))
+                .withPool(singleItemPool(TEBossSummonsItems.BRAIN_OF_CTHULHU_SUMMONS, 0.2F))
                 .withPool(singleItemPool(TEYoyosItems.ARTERY, 1F))
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
                         .add(LootItem.lootTableItem(Items.GUNPOWDER)
@@ -124,12 +124,12 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         Stream.of(TEMonsterEntities.BLOOD_CRAWLER, TEMonsterEntities.DRIPPLER, TEMonsterEntities.BLOOD_ZOMBIE, TEMonsterEntities.CRIMSON_KEMERA)
                 .forEach(e-> {
                     this.add(e.get(), LootTable.lootTable()
-                            .withPool(singleItemPool(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.05F))
+                            .withPool(singleItemPool(TEBossSummonsItems.BRAIN_OF_CTHULHU_SUMMONS, 0.05F))
                             .withPool(weightLootPool(singleItem(Items.RED_DYE,1,1), 0.5f))
                     );
                 });
         this.add(TEMonsterEntities.WANDERING_EYE_FISH.get(), LootTable.lootTable()
-                .withPool(singleItemPool(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.2F))
+                .withPool(singleItemPool(TEBossSummonsItems.BRAIN_OF_CTHULHU_SUMMONS, 0.2F))
                 .withPool(singleItemPool(Items.ENDER_EYE, 1,1))
                 .withPool(weightLootPool(singleItem(Items.RED_DYE,1,1), 1f))
         );
@@ -142,7 +142,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         Stream.of(TEMonsterEntities.EATER_OF_SOULS, TEMonsterEntities.DECAYEDER, TEMonsterEntities.DEVOURER)
                 .forEach(e-> {
                     this.add(e.get(), LootTable.lootTable()
-                            .withPool(singleItemPool(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG, 0.05F))
+                            .withPool(singleItemPool(TEBossSummonsItems.EATER_OF_WORLDS_SUMMONS, 0.05F))
                     );
                 });
 
@@ -153,7 +153,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
         // 蜂王
         this.add(TEMonsterEntities.HORNET.get(), LootTable.lootTable()
-                .withPool(singleItemPool(TESpawnEggItems.QUEEN_BEE_SPAWN_EGG, 0.05F))
+                .withPool(singleItemPool(TEBossSummonsItems.QUEEN_BEE_SUMMONS, 0.05F))
                 .withPool(singleItemPool(TEYoyosItems.HIVE_FIVE))
                 .withPool(weightLootPool(singleItemIncrease(Items.HONEY_BOTTLE, 1, 2), 1f))
         );
@@ -169,7 +169,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
                 TEMonsterEntities.CURSED_SKULL, TEMonsterEntities.SPORE_SKELETON, TEMonsterEntities.UNDEAD_VIKING).forEach(e->{
             this.add(e.get(), LootTable.lootTable()
                     .withPool(weightLootPool(singleItemIncrease(Items.BONE, 1, 3), 1f))
-                    .withPool(singleItemPool(TESpawnEggItems.SKELETRON_SPAWN_EGG,1, 0.05f))
+                    .withPool(singleItemPool(TEBossSummonsItems.SKELETRON_SUMMONS,1, 0.05f))
             );
         });
 
@@ -181,6 +181,13 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
         );
 
+        var table = LootTable.lootTable()
+                .withPool(singleItemPool(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF, 1,1f))
+                .withPool(singleItemPool(TEBoomerangItems.FLAMARANG, 1,1f));
+
+        // 肉山
+        this.add(TEBossEntities.HILL_OF_FLESH.get(), table);
+        this.add(TEBossEntities.WALL_OF_FLESH.get(), table);
 
 
     // 小怪
@@ -189,15 +196,17 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
 
         // 地狱怪
 
-            // 赤霄
-        Stream.of(TEMonsterEntities.VOODOO_DEMON, TEMonsterEntities.DEMON)
-                .forEach(e-> {
-                    this.add(e.get(), LootTable.lootTable()
-                            .withPool(singleItemPool(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF, 1,0.05f))
-                            .withPool(weightLootPool(singleItemIncrease(Items.BLAZE_POWDER, 1, 2), 1f))
-                            .withPool(weightLootPool(singleItemIncrease(TEYoyosItems.CASCADE, 1, 2), 0.003f))
-                    );
-                });
+        this.add(TEMonsterEntities.VOODOO_DEMON.get(), LootTable.lootTable()
+//                .withPool(singleItemPool(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF, 1,0.05f))
+                .withPool(weightLootPool(singleItemIncrease(Items.BLAZE_POWDER, 1, 2), 1f))
+                .withPool(weightLootPool(singleItemIncrease(TEYoyosItems.CASCADE, 1, 2), 0.003f))
+                .withPool(singleItemPool(TEBossSummonsItems.HILL_OF_FLESH_SUMMONS, 1, 0.2f))
+        );
+        this.add(TEMonsterEntities.DEMON.get(), LootTable.lootTable()
+//                .withPool(singleItemPool(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF, 1,0.05f))
+                .withPool(weightLootPool(singleItemIncrease(Items.BLAZE_POWDER, 1, 2), 1f))
+                .withPool(weightLootPool(singleItemIncrease(TEYoyosItems.CASCADE, 1, 2), 0.003f))
+        );
 
 
         Stream.of(TEMonsterEntities.HELL_BAT)

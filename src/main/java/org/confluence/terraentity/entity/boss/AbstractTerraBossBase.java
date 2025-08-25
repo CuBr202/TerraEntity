@@ -24,6 +24,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -183,11 +184,16 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
 
-
-        this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f, 0));
-
+        this.registerRandomStrollGoal();
     }
 
+    protected void registerRandomStrollGoal(){
+        if(ServerConfig.BOSS_KEEP_WANDERING.get()) {
+            this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this, 0.3f, 0));
+        }else{
+            this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 10, 1f));
+        }
+    }
 
 
 /* FSM */

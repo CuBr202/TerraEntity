@@ -81,11 +81,11 @@ public enum BossSpawnCameraManager {
             Vec3 startPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
             Vec3 dir = targetPos.subtract(startPos);
             Vec3 endPos = targetPos.subtract(dir.normalize().scale(distance));
-            var builder = Vec3KeyframeAnimation.builder();
             float tend = 15;
-            builder.addKeyframe(new Keyframe(0,0,0,tend,0,tend), startPos);
-            builder.addKeyframe(new Keyframe(30, 0, 0, tend, 0, tend), endPos);
-            builder.addKeyframe(45, endPos);
+            Vec3KeyframeAnimation.Builder builder = Vec3KeyframeAnimation.builder()
+                    .addKeyframe(new Keyframe(0,0,0,tend,0,tend), startPos)
+                    .addKeyframe(new Keyframe(30, 0, 0, tend, 0, tend), endPos)
+                    .addKeyframe(45, endPos);
             this.animation = builder.build();
             this.time = 0;
             this.backTime = 20;

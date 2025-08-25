@@ -9,24 +9,31 @@ public class AttBuilder extends AttributeSupplier.Builder {
     public AttBuilder(AttributeSupplier build) {
         super(build);
     }
+
     public AttBuilder() {
         super();
     }
+
     public static AttBuilder createBoss(double health, double armor){
+        return createBoss(1,health,armor);
+    }
+
+    public static AttBuilder createBoss(double attack, double health, double armor){
         return new AttBuilder(Mob.createMobAttributes()
-                .add(Attributes.ATTACK_DAMAGE)
+                .add(Attributes.ATTACK_DAMAGE, attack)
                 .add(Attributes.MAX_HEALTH, health)
                 .add(Attributes.ARMOR, armor)
                 .add(Attributes.MOVEMENT_SPEED, 0.25)
                 .add(Attributes.FOLLOW_RANGE, 200)
                 .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE)
-                .add(Attributes.KNOCKBACK_RESISTANCE)
+                .add(Attributes.KNOCKBACK_RESISTANCE,1)
                 .add(Attributes.ATTACK_KNOCKBACK)
                 .add(Attributes.ATTACK_SPEED)
                 .add(Attributes.FLYING_SPEED)
                 .add(Attributes.SAFE_FALL_DISTANCE, 8).build())
                 ;
     }
+
     public static AttBuilder createAttributes()  {
         return new AttBuilder(Mob.createMobAttributes()
                 .add(Attributes.ATTACK_DAMAGE)
@@ -88,6 +95,10 @@ public class AttBuilder extends AttributeSupplier.Builder {
     }
     public AttBuilder followRange(double followRange) {
         this.add(Attributes.FOLLOW_RANGE, followRange);
+        return this;
+    }
+    public AttBuilder knockResistance(double resistance) {
+        this.add(Attributes.KNOCKBACK_RESISTANCE, resistance);
         return this;
     }
 }

@@ -9,18 +9,21 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import org.confluence.terraentity.client.entity.model.GeoNormalModel;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.util.Color;
 
 public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRenderer<T> {
     protected boolean ifRotX;
     protected float scale;
     protected float offsetY;
     protected float motionAnimThreshold = 0.01F;
+    Color consumeColor;
 
     /**
      * @param path 实体文件位置 path.namespace/textures/entity/{name}.png
@@ -72,6 +75,13 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
     }
 
     @Override
+    @ApiStatus.Internal
+    public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+        consumeColor = null;
+    }
+
+    @Override
     public float getMotionAnimThreshold(T animatable) {
         return motionAnimThreshold;
     }
@@ -108,4 +118,17 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
         return this;
     }
 
+
+    @Override
+    public Color getRenderColor(T animatable, float partialTick, int packedLight) {
+        Color color = consumeColor;
+        if(color!= null){
+            return color;
+        }
+        return Color.WHITE;
+    }
+
+    public void setConsumeColor(Color consumeColor) {
+        this.consumeColor = consumeColor;
+    }
 }

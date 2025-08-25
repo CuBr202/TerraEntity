@@ -278,6 +278,16 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.WALL_OF_FLESH_SPAWN_EGG.get(), "血肉墙刷怪蛋");
 
 
+        add(TEBossSummonsItems.KING_SLIME_SUMMONS.get(), "史莱姆皇冠");
+        add(TEBossSummonsItems.EYE_OF_CTHULHU_SUMMONS.get(), "可疑眼球");
+        add(TEBossSummonsItems.EATER_OF_WORLDS_SUMMONS.get(), "蠕虫诱饵");
+        add(TEBossSummonsItems.BRAIN_OF_CTHULHU_SUMMONS.get(), "血腥脊椎");
+        add(TEBossSummonsItems.QUEEN_BEE_SUMMONS.get(), "憎恶之蜂");
+        add(TEBossSummonsItems.SKELETRON_SUMMONS.get(), "服装商巫毒娃娃");
+        add(TEBossSummonsItems.WALL_OF_FLESH_SUMMONS.get(), "向导巫毒娃娃(墙)");
+        add(TEBossSummonsItems.HILL_OF_FLESH_SUMMONS.get(), "向导巫毒娃娃(山)");
+
+
         add(TENpcEntities.GUIDE.get(), "向导");
         add(TENpcEntities.DEMOLITIONIST.get(), "爆破专家");
         add(TENpcEntities.GOBLIN_TINKERER.get(), "哥布林工匠");
@@ -446,6 +456,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.configuration.boss_attributes_multiplier_damage", "BOSS属性倍率-伤害");
         add("terra_entity.configuration.boss_no_physics", "BOSS能否穿墙");
         add("terra_entity.configuration.boss_leave_on_day", "特定的BOSS是否在白天离开");
+        add("terra_entity.configuration.boss_keep_wandering", "BOSS随机游走");
 
 
         add("terra_entity.configuration.display_summon_items", "在创造栏显示召唤物品");

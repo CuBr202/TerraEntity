@@ -78,14 +78,15 @@ public class TEBiomeModifier {
                 HolderSet.direct(biomeLookup.getOrThrow(Biomes.BEACH)),
                 HolderSet.direct(), 1,1,1);
 
-        register(context, createModifierKey("goblin_arm"), new BiomeModifiers.AddSpawnsBiomeModifier(
-                HolderSet.direct(biomeLookup.get(Biomes.PLAINS).get()), List.of(
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_WARRIOR.get(), 20,1,2),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_ARCHER.get(), 20,2,3),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_PEON.get(), 20,2,3),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_THIEF.get(), 20,1,1),
-                new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_SORCERER.get(), 20,1,1)
-        )));
+//        register(context, createModifierKey("goblin_arm"), new BiomeModifiers.AddSpawnsBiomeModifier(
+//                HolderSet.direct(biomeLookup.get(Biomes.PLAINS).get()), List.of(
+//                new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_WARRIOR.get(), 20,1,2),
+//                new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_ARCHER.get(), 20,2,3),
+//                new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_PEON.get(), 20,2,3),
+//                new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_THIEF.get(), 20,1,1),
+//                new MobSpawnSettings.SpawnerData(TEMonsterEntities.GOBLIN_SORCERER.get(), 20,1,1)
+//        )));
+
         register(context, createModifierKey("skeleton_arm"), new BiomeModifiers.AddSpawnsBiomeModifier(
                 biomeLookup.getOrThrow(BiomeTags.IS_OVERWORLD), List.of(
                 new MobSpawnSettings.SpawnerData(TEMonsterEntities.BIG_HELMET_ANGER_BONES.get(), 20,1,1),

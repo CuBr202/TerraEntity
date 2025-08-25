@@ -21,6 +21,7 @@ import java.util.function.*;
 public class BossSummonsItem<T extends Mob> extends Item {
     float maxSummonRange = 15;
     float offsetY = 0;
+    float cameraDistance = 10;
 
     private final Supplier<EntityType<T>> entityType;
     private Predicate<Player> condition;
@@ -42,7 +43,7 @@ public class BossSummonsItem<T extends Mob> extends Item {
                 return InteractionResultHolder.fail(player.getItemInHand(usedHand));
             }
 
-            TEBossEvent.Summon event = AdapterUtils.postEvent(new TEBossEvent.Summon(type,player));
+            TEBossEvent.Summon event = AdapterUtils.postEvent(new TEBossEvent.Summon(type,player, this.cameraDistance));
             if(event.isCanceled()){
                 return InteractionResultHolder.fail(player.getItemInHand(usedHand));
             }
@@ -90,8 +91,9 @@ public class BossSummonsItem<T extends Mob> extends Item {
         return this;
     }
 
-    public BossSummonsItem<T> setMaxSummonRange(float maxSummonRange) {
+    public BossSummonsItem<T> setMaxSummonRange(float maxSummonRange,float cameraDistance ) {
         this.maxSummonRange = maxSummonRange;
+        this.cameraDistance = cameraDistance;
         return this;
     }
 

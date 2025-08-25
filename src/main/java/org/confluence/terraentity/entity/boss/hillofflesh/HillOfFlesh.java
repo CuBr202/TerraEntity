@@ -388,8 +388,7 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> {
                     if (this.level().getEntity(id) instanceof LivingEntity living) {
                         this.subEntities[index].changeTarget(living);
                         if (living instanceof Player player) {
-                            player.getData(TEAttachments.UNSYNC).setFightingHillOfFlesh(this);
-                            player.addEffect(new MobEffectInstance(TEEffects.CRIMSON_STORM, -1, 0));
+                            this.applyCrimsonStorm(player);
                         }
                     } else {
                         this.subEntities[index].target = null;
@@ -408,8 +407,7 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> {
 //            this.goalSelector.addGoal(0, fsmGoal);
 //        }
         for (var entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(this.innerRadius))) {
-            entity.getData(TEAttachments.UNSYNC).setFightingHillOfFlesh(this);
-            entity.addEffect(new MobEffectInstance(TEEffects.CRIMSON_STORM, -1, 0), this);
+            this.applyCrimsonStorm(entity);
         }
     }
 
@@ -419,8 +417,7 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> {
             this.entityData.set(targetMap.inverse().get(index), target == null ? -1 : target.getId());
             if (target != null) {
                 this.innerEntities.add(target);
-                target.addEffect(new MobEffectInstance(TEEffects.CRIMSON_STORM, -1), this);
-                target.getData(TEAttachments.UNSYNC).setFightingHillOfFlesh(this);
+                this.applyCrimsonStorm(target);
             }
         }
     }
@@ -507,9 +504,16 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> {
         return super.addEffect(effectInstance, entity);
     }
 
+    private void applyCrimsonStorm(LivingEntity living) {
+        living.getData(TEAttachments.UNSYNC).setFightingHillOfFlesh(this);
+        living.addEffect(new MobEffectInstance(TEEffects.CRIMSON_STORM, -1, 0), this);
+    }
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
+        if(pSource.getDirectEntity() instanceof LivingEntity living){
+            this.applyCrimsonStorm(living);
+        }
         // 必须进入过肉山空间才能造成伤害
         if (pSource.getEntity() != null && !this.innerEntities.contains(pSource.getEntity())) {
             return false;

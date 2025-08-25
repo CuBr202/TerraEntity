@@ -66,9 +66,9 @@ public record TESubLoot(HolderLookup.Provider registries) implements LootTableSu
         consumer.accept(SPAWN_DIAMOND_SWORD_STAFF, LootTable.lootTable()
                 .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.get(), 0.05f))
         );
-        consumer.accept(SPAWN_NETHERITE_SWORD_STAFF, LootTable.lootTable()
-                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF.get(), 0.15f))
-        );
+//        consumer.accept(SPAWN_NETHERITE_SWORD_STAFF, LootTable.lootTable()
+//                .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SUMMON_NETHERITE_SWORD_STAFF.get(), 0.15f))
+//        );
         consumer.accept(SPAWN_SCULK_WISP_STAFF, LootTable.lootTable()
                 .withPool(TEEntityLootProvider.singleItemPool(TESummonItems.SCULK_WISP_STAFF.get(), 0.3f))
         );

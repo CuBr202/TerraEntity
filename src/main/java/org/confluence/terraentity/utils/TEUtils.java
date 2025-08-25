@@ -365,6 +365,13 @@ public final class TEUtils {
         return new Vec3(x, y, z);
     }
 
+
+    public static Vec3 circle(float r, float theta){
+        double x = r * Math.cos(theta);
+        double y = r * Math.sin(theta);
+        return new Vec3(x, 0, y);
+    }
+
     /**
      * 根据权重随机获取物品
      */

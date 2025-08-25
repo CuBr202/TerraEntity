@@ -59,10 +59,6 @@ public class ClientBoundEventPacket implements CustomPacketPayload{
         });
     }
 
-    private static void confluenceHook(AbstractTerraNPC npc) {
-        npc.discard(); // 这样不会肢解，但是不会触发死亡事件所以需要mixin
-    }
-
     @Override
     public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
         return TYPE;

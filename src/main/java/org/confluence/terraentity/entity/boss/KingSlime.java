@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,6 +46,7 @@ import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.AdapterUtils;
+import org.confluence.terraentity.utils.Easing;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -246,6 +248,14 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     private Vec3 horMoveDir;
     SkillParams skillParams;
     DifficultSelector difficultSelector;
+
+    // 客户端缓动
+    public int lastScale;
+    int shrinkDuration;
+    int shrinkDelta = 1;
+    float cacheTick = 0;
+    float cacheSize;
+
     public KingSlime(EntityType<KingSlime> slime, Level level) {
         super(slime, level);
         this.shouldDisappear = false;
@@ -260,7 +270,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         };
         // 水平方向移动
         horMoveDir = Vec3.ZERO;
-
+        this.setSize(getMaxSize(), false);
         if(level().isClientSide){
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
         }
@@ -280,6 +290,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         this.COLOR = FloatRGB.fromInteger(COLOR_INT);
         this.BLOOD_COLOR = COLOR.mixture(FloatRGB.ZERO, 0.5f).toArray();
 
+        this.shrinkDuration = this.SHRINK_ENLARGE_DURATION;
     }
 
     public KingSlime(Level level) {
@@ -372,6 +383,9 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
             ((IBossEvent)this.bossEvent).terra_enity$setBossHealth(datas[0]);
             ((IBossEvent)this.bossEvent).terra_enity$setBossMaxHealth(datas[1]);
             bossEvent.setProgress(datas[0] / datas[1]);
+        }else{
+            this.shrinkDuration = Mth.clamp(this.shrinkDuration + this.shrinkDelta, 0, this.SHRINK_ENLARGE_DURATION);
+
         }
 
         bossEvent.setName(getDisplayName());
@@ -484,6 +498,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     @Override
     public void setSize(int pSize, boolean pResetHealth) {
         int i = Mth.clamp(pSize, 1, 127);
+        this.lastScale = i;
         entityData.set(ID_SIZE, i);
         reapplyPosition();
 
@@ -528,6 +543,33 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                 this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
             }
         }
+    }
+
+    public float getClientSize(float partialTicks){
+        float cache = this.shrinkDuration + partialTicks * this.shrinkDelta;
+        if(cache == this.cacheTick){
+            return this.cacheSize;
+        }
+        this.cacheTick = cache;
+        this.cacheSize = (float) Easing.EASE_OUT_QUAD.transform(cache, 0, this.SHRINK_ENLARGE_DURATION, 0, getMaxSize());
+        return this.cacheSize;
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        if(key.equals(ID_SIZE) && level().isClientSide()){
+            if(this.getSize() == 15 && this.lastScale == 16){
+                // 缩小
+                this.shrinkDuration = this.SHRINK_ENLARGE_DURATION;
+                this.shrinkDelta = -1;
+            }else if(this.getSize() == 2 && this.lastScale == 1){
+                // 放大
+                this.shrinkDuration = 0;
+                this.shrinkDelta = 1;
+            }
+            this.lastScale = this.getSize();
+        }
+        super.onSyncedDataUpdated(key);
     }
 
     public static class HurtByTargetGoal extends TargetGoal {

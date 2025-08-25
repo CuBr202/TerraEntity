@@ -140,7 +140,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
         targetSelector.addGoal(1,new FloatGoal());
         targetSelector.addGoal(1,new SpinGoal());
         targetSelector.addGoal(1,new ShootSkullGoal());
-        goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f, 0));
+
+        this.registerRandomStrollGoal();
+
     }
 
     @Override
