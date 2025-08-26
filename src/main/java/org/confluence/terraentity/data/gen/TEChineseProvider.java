@@ -118,6 +118,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.LITTLE_HORNET.get(), "小黄蜂");
         add(TEBossEntities.SKELETRON.get(), "骷髅王");
         add(TEBossEntities.DUNGEON_GUARDIAN.get(), "地牢守卫");
+        add(TEBossEntities.HILL_OF_FLESH.get(), "血肉山");
         add(TEBossEntities.WALL_OF_FLESH.get(), "血肉墙");
         add(TEBossEntities.WALL_OF_FLESH_EYE.get(), "血肉墙眼");
         add(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), "血肉墙口");
@@ -277,6 +278,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.SKELETRON_SPAWN_EGG.get(), "骷髅王刷怪蛋");
         add(TESpawnEggItems.DUNGEON_GUARDIAN_SPAWN_EGG.get(), "地牢守卫刷怪蛋");
         add(TESpawnEggItems.WALL_OF_FLESH_SPAWN_EGG.get(), "血肉墙刷怪蛋");
+        add(TESpawnEggItems.HILL_OF_FLESH_SPAWN_EGG.get(), "血肉山刷怪蛋");
 
 
         add(TEBossSummonsItems.KING_SLIME_SUMMONS.get(), "史莱姆皇冠");
