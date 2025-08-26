@@ -8,6 +8,7 @@ import org.confluence.terraentity.api.entity.animation.IKeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -35,7 +36,7 @@ public class Vec3KeyframeAnimation implements IKeyframeAnimation<Vec3> {
         yInterpolator = new KeyframeAnimation(y);
         zInterpolator = new KeyframeAnimation(z);
         length = Math.min(xInterpolator.getLength(), Math.min(yInterpolator.getLength(), zInterpolator.getLength()));
-        cache = new HashMap<>();
+        cache = new ConcurrentHashMap<>();
         this.endTime = Math.max(xInterpolator.getEndTime(), Math.max(yInterpolator.getEndTime(), zInterpolator.getEndTime()));
     }
 

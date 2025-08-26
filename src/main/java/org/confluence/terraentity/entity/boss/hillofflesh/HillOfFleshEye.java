@@ -2,11 +2,10 @@ package org.confluence.terraentity.entity.boss.hillofflesh;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.RangedAttackMob;
-import org.confluence.terraentity.api.entity.ai.ISkill;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.proj.LineProj;
 import org.confluence.terraentity.entity.util.DifficultSelector;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
-import org.confluence.terraentity.utils.TEUtils;
 
 public class HillOfFleshEye extends HillOfFleshPart implements RangedAttackMob {
 
@@ -52,13 +51,14 @@ public class HillOfFleshEye extends HillOfFleshPart implements RangedAttackMob {
 
     @Override
     public void performRangedAttack(LivingEntity target, float v) {
-        LineProj proj = TEProjectileEntities.VILE_SPIT_PROJ.get().create(this.level());
+        LineProj proj = TEProjectileEntities.FIRE_BOUND_PROJ.get().create(this.level());
         if (proj != null) {
             proj.setOwner(this.parentMob);
-            proj.setPos(this.getX(), this.getY() + 0.5f, this.getZ());
-            double x = target.getX() - this.getX();
-            double y = target.getY() - this.getY();
-            double z = target.getZ() - this.getZ();
+            Vec3 pos = this.getBoundingBox().getCenter();
+            proj.setPos(pos.x(), pos.y(), pos.z());
+            double x = target.getX() - pos.x();
+            double y = target.getY() - pos.y();
+            double z = target.getZ() - pos.z();
             proj.shoot(x,y,z,v,1);
             proj.setDamage(this.shootDamage);
             this.level().addFreshEntity(proj);

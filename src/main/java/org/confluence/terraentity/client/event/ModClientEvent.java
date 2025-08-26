@@ -87,7 +87,7 @@ public final class ModClientEvent {
         event.registerSpriteSet(TEParticles.LEAVES.get(), BiomeColorParticle.Provider::new);
         event.registerSpriteSet(TEParticles.SPIT.get(), SpitParticle.Provider::new);
         event.registerSpriteSet(TEParticles.SPIT_GLOW.get(), SpitParticle.EmissiveProvider::new);
-
+        event.registerSpriteSet(TEParticles.FIRE_BOUND.get(), SpitParticle.EmissiveProvider::new);
     }
 
     @SubscribeEvent

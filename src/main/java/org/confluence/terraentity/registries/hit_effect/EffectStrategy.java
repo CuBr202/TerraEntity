@@ -26,7 +26,7 @@ import java.util.function.Function;
  * <p> 只用于 <b>PrefabEffect</b> 复杂效果，难以数据生成IEffectStrategy </p>
  * @author coffee
  */
-public class EffectStrategy {
+public class EffectStrategy implements IEffectStrategy {
 
     BiConsumer<LivingEntity, LivingEntity> complexEffect;
     IEffectStrategy effect;
@@ -55,9 +55,7 @@ public class EffectStrategy {
      */
     public EffectStrategy(IEffectStrategy effect) {
         this.effect = effect;
-        if(effect instanceof PrefabEffect effect1){
-            this.complexEffect = effect.getEffect();
-        }
+        this.complexEffect = effect.getEffect();
     }
 
     /**
@@ -66,6 +64,16 @@ public class EffectStrategy {
     public BiConsumer<LivingEntity, LivingEntity> getEffect() {
         if(complexEffect != null) return complexEffect;
         return effect.getEffect();
+    }
+
+    @Override
+    public String getName() {
+        return effect.getName();
+    }
+
+    @Override
+    public EffectStrategyProvider codec() {
+        return effect.codec();
     }
 
 

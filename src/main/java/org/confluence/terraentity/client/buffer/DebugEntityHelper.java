@@ -10,8 +10,6 @@ import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.post.BossSpawnCameraManager;
 import org.confluence.terraentity.item.BossSummonsItem;
 
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
-
 import java.awt.*;
 
 
@@ -42,6 +40,9 @@ public enum DebugEntityHelper{
             }
             Vec3 eyePos = summonsItem.getSummonPos(Minecraft.getInstance().player, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true));
             e.setPos(eyePos);
+            if(!summonsItem.canSummon(eyePos, Minecraft.getInstance().player)){
+                return false;
+            }
             return true;
         }
         return false;

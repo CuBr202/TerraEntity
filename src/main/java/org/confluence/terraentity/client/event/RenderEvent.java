@@ -39,9 +39,7 @@ import static org.confluence.terraentity.config.ClientConfig.bossBarStyle;
 public class RenderEvent {
     @SubscribeEvent
     public static void guiEvent( RenderGuiLayerEvent.Pre event){
-        if(BossSpawnCameraManager.INSTANCE.isAnimating()){
-            event.setCanceled(true);
-        }
+
 
     }
 

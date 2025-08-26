@@ -42,7 +42,7 @@ import java.util.UUID;
 /**
  * 饿鬼
  */
-public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Boss {
+public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Boss.BossPart {
     Mob owner;
     protected Vec3 initPos;
     boolean isFree = false;
@@ -382,10 +382,6 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return CACHE;
-    }
-
-    public boolean isMainBody(){
-        return false;
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.boss.EaterOfWorlds;
 import org.confluence.terraentity.entity.boss.EaterOfWorldsSegment;
 import org.confluence.terraentity.init.TEParticles;
@@ -38,7 +39,9 @@ public class ParticleLineProj extends LineProj {
                 float random = (this.random.nextFloat() - 0.5f) * 0.5F;
                 float random2 = (this.random.nextFloat() - 0.5f) * 0.5F;
                 float random3 = (this.random.nextFloat() - 0.5f) * 0.5F;
-                this.level().addParticle(particleOptions, this.getX() + random, this.getY() + random2, this.getZ() + random3, 0.0D, 0.0D, 0.0D);
+                Vec3 speed = this.getDeltaMovement();
+                this.level().addParticle(particleOptions, this.getX() + random, this.getY() + random2, this.getZ() + random3,
+                        speed.x,speed.y,speed.z);
             }
         }
     }

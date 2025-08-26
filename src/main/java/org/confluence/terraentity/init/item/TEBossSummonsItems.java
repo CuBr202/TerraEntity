@@ -32,7 +32,7 @@ public class TEBossSummonsItems {
             () -> new BossSummonsItem<>(new Item.Properties(), TEBossEntities.WALL_OF_FLESH).setMaxSummonRange(100, 80));
 
     public static DeferredItem<BossSummonsItem<?>> HILL_OF_FLESH_SUMMONS = ITEMS.register("guide_voodoo_doll_hill",
-            () -> new BossSummonsItem<>(new Item.Properties(), TEBossEntities.HILL_OF_FLESH).setMaxSummonRange(25, 15).setOffsetY(-10));
+            () -> new BossSummonsItem<>(new Item.Properties(), TEBossEntities.HILL_OF_FLESH).setMaxSummonRange(40, 15));
 
 
 

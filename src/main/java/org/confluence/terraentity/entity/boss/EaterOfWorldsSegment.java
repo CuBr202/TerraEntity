@@ -27,7 +27,7 @@ import org.confluence.terraentity.init.entity.TEProjectileEntities;
 /**
  * 世吞体节
  */
-public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSegment> implements Boss {
+public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSegment> implements Boss.BossPart {
 
 
     private int _shootTick;
@@ -183,8 +183,4 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
         return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA);
     }
 
-    @Override
-    public boolean isMainBody(){
-        return false;
-    }
 }

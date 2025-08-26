@@ -17,7 +17,7 @@ import org.confluence.terraentity.client.util.RegisterUtils;
 import org.confluence.terraentity.entity.proj.*;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
+import org.confluence.terraentity.init.TEParticles;
 
 public class TEProjectileEntities {
 
@@ -34,13 +34,15 @@ public class TEProjectileEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<ParticleLineProj>> DARK_CASTER_PROJ = registerProj("dark_caster_proj",(e, l)->
             (ParticleLineProj) new ParticleLineProj(e,l).setParticleOptions(ParticleTypes.SOUL).setCanBeHurt(),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<ParticleLineProj>> FIRE_IMP_PROJ = registerProj("fire_imp_proj",(e, l)->
-            (ParticleLineProj) new ParticleLineProj(e,l).setParticleOptions(ParticleTypes.FLAME).setCanBeHurt().setEffectStrategy(PrefabEffect.of("set_fire", TEEffectStrategies.SET_FIRE_EFFECT)),0.5F,0.5F);
+            (ParticleLineProj) new ParticleLineProj(e,l).setParticleOptions(ParticleTypes.FLAME).setCanBeHurt().setEffectStrategy(TEEffectStrategies.SET_FIRE_EFFECT.get()),0.5F,0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<ParticleLineProj>> FIRE_BOUND_PROJ = registerProj("fire_bound_proj",(e, l)->
+            (ParticleLineProj) new ParticleLineProj(e,l).setParticleOptions(TEParticles.FIRE_BOUND.get()).setEffectStrategy(TEEffectStrategies.SET_FIRE_EFFECT.get()),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<LineProj>> HARPY_FEATURE_PROJ = registerProj("harpy_feature",(e, l)->
             new LineProj(e,l).setCanBeHurt().setTexture(TerraEntity.space("textures/entity/model/harpy_feather_projectile.png")),0.5F,0.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<DemonScytheProj>> DEMON_SCYTHE_PROJ = registerProj("demon_scythe_proj",(e, l)->
             (DemonScytheProj) new DemonScytheProj(e,l, null).setTexture(TerraEntity.space("textures/entity/model/demon_scythe_projectile.png")),1.2F,1.2F);
     public static final DeferredHolder<EntityType<?>, EntityType<LavaPillar>> LAVA_PILLAR = registerProj("lava_pillar",(e, l)->
-            new LavaPillar(e,l).setEffectStrategy(PrefabEffect.of("set_fire", TEEffectStrategies.SET_FIRE_EFFECT)),1.2F,1.2F);
+            new LavaPillar(e,l).setEffectStrategy(TEEffectStrategies.SET_FIRE_EFFECT.get()),1.2F,1.2F);
 
     // 鞭子
     public static final DeferredHolder<EntityType<?>, EntityType<WhipEntity>> WHIP_PROJECTILE = TEEntities.ENTITIES.register("whip_projectile", () -> EntityType.Builder.<WhipEntity>of(WhipEntity::new, MobCategory.MISC).updateInterval(1).clientTrackingRange(1).sized(0.5F, 0.5F).build(TEEntities.Key("whip_projectile")));
@@ -66,6 +68,7 @@ public class TEProjectileEntities {
         RegisterUtils.registerBaseProjRenderer(event, VILE_SPIT_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION))); // 没有指定纹理，默认粒子弹幕
         RegisterUtils.registerBaseProjRenderer(event, DARK_CASTER_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         RegisterUtils.registerBaseProjRenderer(event, FIRE_IMP_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
+        RegisterUtils.registerBaseProjRenderer(event, FIRE_BOUND_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         RegisterUtils.registerBaseProjRenderer(event, HARPY_FEATURE_PROJ.get(), c->new HarpyFeatherProjectileModel<>(c.bakeLayer(HarpyFeatherProjectileModel.LAYER_LOCATION)));
 //        RegisterUtils.registerBaseProjRenderer(event, DEMON_SCYTHE_PROJ.get(), c->new DemonScytheModel<>(c.bakeLayer(DemonScytheModel.LAYER_LOCATION)));
 

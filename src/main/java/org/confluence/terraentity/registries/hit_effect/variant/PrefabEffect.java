@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 
 /**
  * 用于引用预制的效果策略的数据生成器
+ * <p>由于有时注册需要使用懒加载，使用这个可以包装EffectStrategy</p>
  */
 public class PrefabEffect implements IEffectStrategy {
 

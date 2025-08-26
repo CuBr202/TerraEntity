@@ -28,7 +28,7 @@ import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 
 import javax.annotation.Nullable;
 
-public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implements Boss {
+public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implements Boss.BossPart {
 
     public WallOfFlesh parentMob;
 
@@ -284,8 +284,4 @@ public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implem
         return false;
     }
 
-    @Override
-    public boolean isMainBody(){
-        return false;
-    }
 }

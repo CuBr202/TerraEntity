@@ -1,5 +1,6 @@
 package org.confluence.terraentity.item;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -15,11 +16,12 @@ import org.confluence.terraentity.api.event.TEBossEvent;
 import org.confluence.terraentity.network.s2c.SummonBossPacket;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.*;
 
 public class BossSummonsItem<T extends Mob> extends Item {
-    float maxSummonRange = 15;
+    float maxSummonRange = 30;
     float offsetY = 0;
     float cameraDistance = 10;
 
@@ -27,6 +29,7 @@ public class BossSummonsItem<T extends Mob> extends Item {
     private Predicate<Player> condition;
     private BiConsumer<Player, T> onSummon;
     private Function<Player, Vec3> summonPosFunc;
+    private BiPredicate<Vec3, Player> summonPosPredict = ((pos, player)-> TEUtils.canSeePos(player, pos));
 
     public BossSummonsItem(Properties properties, Supplier<EntityType<T>> entityType) {
         super(properties);
@@ -34,30 +37,42 @@ public class BossSummonsItem<T extends Mob> extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
         if(usedHand == InteractionHand.OFF_HAND) return InteractionResultHolder.fail(player.getItemInHand(usedHand));
         if (level instanceof ServerLevel serverLevel && (condition == null || condition.test(player))) {
+            Vec3 pos = summonPosFunc == null? this.getSummonPos(player, 0.5f) : summonPosFunc.apply(player);
+            if(!this.summonPosPredict.test(pos, player)){
+                return InteractionResultHolder.fail(player.getItemInHand(usedHand));
+            }
             EntityType<T> type = entityType.get();
-            T mob = TEUtils.spawnEntity(type, serverLevel, summonPosFunc == null? this.getSummonPos(player, 0.5f) : summonPosFunc.apply(player));
-            if (mob == null) {
+
+            T entity = type.create(level);
+            if (entity == null) {
                 return InteractionResultHolder.fail(player.getItemInHand(usedHand));
             }
 
-            TEBossEvent.Summon event = AdapterUtils.postEvent(new TEBossEvent.Summon(type,player, this.cameraDistance));
+            TEBossEvent.Summon event = AdapterUtils.postEvent(new TEBossEvent.Summon(type, player, this.cameraDistance));
             if(event.isCanceled()){
                 return InteractionResultHolder.fail(player.getItemInHand(usedHand));
             }
 
-            if (onSummon!= null) {
-                onSummon.accept(player, mob);
+            entity.moveTo(pos);
+            if(TEUtils.internalSpawnEntity(entity, serverLevel)){
+                serverLevel.addFreshEntityWithPassengers(entity);
             }
 
-            if(event.shouldChangeCamera()){
-                SummonBossPacket.sendTo((ServerPlayer) player, mob, event.getDistance());
+            if (onSummon!= null) {
+                onSummon.accept(player, entity);
             }
+
+            if(event.shouldChangeCamera()) {
+                SummonBossPacket.sendTo((ServerPlayer) player, entity, event.getDistance());
+            }
+
             if(!player.isCreative()) {
                 player.getItemInHand(usedHand).shrink(1);
             }
+
             return InteractionResultHolder.consume(player.getItemInHand(usedHand));
         }
         return InteractionResultHolder.fail(player.getItemInHand(usedHand));
@@ -67,9 +82,19 @@ public class BossSummonsItem<T extends Mob> extends Item {
         return entityType.get();
     }
 
+    public boolean canSummon(Vec3 pos, Player player){
+        return summonPosPredict.test(pos, player);
+    }
+
     public Vec3 getSummonPos(Player player, float partialTicks){
+        Vec3 pos = TEUtils.getEyeVec3(player, this.maxSummonRange, partialTicks).add(0, offsetY, 0);
+        int y = (int) pos.y();
+        BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos(pos.x(),y,pos.z());
+        while (!player.level().getBlockState(blockPos).isAir()){
+            blockPos.move(0,1,0);
+        }
         // todo 可以用轮滚控制
-        return TEUtils.getEyeVec3(player, this.maxSummonRange, partialTicks).add(0, offsetY, 0);
+        return new Vec3(pos.x(), blockPos.getY(), pos.z);
     }
 
     public boolean hasSpecificSummonPos(){
@@ -99,6 +124,11 @@ public class BossSummonsItem<T extends Mob> extends Item {
 
     public BossSummonsItem<T> setOffsetY(float offsetY) {
         this.offsetY = offsetY;
+        return this;
+    }
+
+    public BossSummonsItem<T> setSummonPosPredict(BiPredicate<Vec3, Player> predict){
+        this.summonPosPredict = predict;
         return this;
     }
 

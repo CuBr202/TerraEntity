@@ -458,6 +458,14 @@ public final class TEUtils {
         return entity.getEyePosition(partialTicks).add(entity.getLookAngle().normalize().scale(distance));
     }
 
+    /**
+     * 有无视线阻挡
+     */
+    public static boolean canSeePos(Entity entity, Vec3 pos){
+        return entity.level().clip(new ClipContext(entity.getEyePosition(), pos, ClipContext.Block.COLLIDER, net.minecraft.world.level.ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
+    }
+
+
     public static boolean isFTWWorld(ServerLevel level) {
         return false; // confluence mixin here
     }

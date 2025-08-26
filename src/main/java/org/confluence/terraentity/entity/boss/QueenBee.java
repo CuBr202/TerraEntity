@@ -138,12 +138,14 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                     }
                 })
                 .onTick(e->{
-                    lookAt(10);
+                    if(e.target != null) {
+                        lookAt(10);
 //                    dashComponent.hangOn(getTarget(), 5, 1.5f, getMoveSpeed());
-                    dashComponent.uniformMove(getMoveSpeed());
+                        dashComponent.uniformMove(getMoveSpeed());
 
-                    if(e.target != null && e.skills.tick > 10 && e.distanceToSqr(e.target) > e.dashMaxRangeSqr){
-                        e.skills.forceEnd();
+                        if (e.skills.tick > 10 && e.distanceToSqr(e.target) > e.dashMaxRangeSqr) {
+                            e.skills.forceEnd();
+                        }
                     }
                 })
         ;

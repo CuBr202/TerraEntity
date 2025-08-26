@@ -43,7 +43,6 @@ import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.monster.slime.FleshSlime;
 import org.confluence.terraentity.entity.proj.LavaPillar;
 import org.confluence.terraentity.init.TEAttachments;
-import org.confluence.terraentity.init.TEDataMaps;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
@@ -65,10 +64,10 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> {
     public float innerRadius = 10;
     public float outerRadius = 75;
     public int height = 100;
-    private float firePillarDamage;
-    private int summonFleshSlimeCount;
-    private int summonLeechCount;
-    private int summonFirePillarCount;
+    private final float firePillarDamage;
+    private final int summonFleshSlimeCount;
+    private final int summonLeechCount;
+    private final int summonFirePillarCount;
 
     float magicDamageInner;
     float magicDamageOuter;
@@ -778,7 +777,7 @@ public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> {
     private void destroyBlocks() {
         if (this.consumeBreakBlocks && this.tickCount == 75) {
             BlockPos pos = BlockPos.containing(this.getBoundingBox().getCenter());
-            this.task = new EfficientCylinderDestruction(level(), pos.getX(), pos.getZ(), this.blockPosition().getY(), pos.getY() + this.height, (int) this.outerRadius + 1);
+            this.task = new EfficientCylinderDestruction(level(), pos.getX(), pos.getZ(), this.blockPosition().getY()-1, pos.getY() + this.height-1, (int) this.outerRadius + 1);
             this.task.startDestruction();
         }
         if (this.task != null) {
