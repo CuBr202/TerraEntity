@@ -52,7 +52,7 @@ public class TERegistries {
     public static final Registry<TradeModifierProvider> TRADE_MODIFIER_PROVIDERS = createRegistry(Keys.TRADE_MODIFIER_PROVIDER);
     public static final Registry<ChatElementProvider> CHAT_ELEMENT_PROVIDERS = createRegistry(Keys.CHAT_ELEMENT_PROVIDER);
     public static final Registry<ChatConditionProvider> CHAT_CONDITION_PROVIDERS = createRegistry(Keys.CHAT_CONDITION_PROVIDER);
-    public static final Registry<MappedDataType> MAPPED_DATAS = createRegistry(Keys.MAPPED_DATA);
+    public static final Registry<MappedDataType<?,?>> MAPPED_DATAS = createRegistry(Keys.MAPPED_DATA);
 
 
     private static  <T> Registry<T> createRegistry(ResourceKey<Registry<T>> key) {
@@ -73,7 +73,7 @@ public class TERegistries {
         public static final ResourceKey<Registry<TradeModifierProvider>> TRADE_MODIFIER_PROVIDER = createRegistryKey(TerraEntity.space("trade_modifier_provider"));
         public static final ResourceKey<Registry<ChatElementProvider>> CHAT_ELEMENT_PROVIDER = createRegistryKey(TerraEntity.space("chat_element"));
         public static final ResourceKey<Registry<ChatConditionProvider>> CHAT_CONDITION_PROVIDER = createRegistryKey(TerraEntity.space("chat_condition"));
-        public static final ResourceKey<Registry<MappedDataType>> MAPPED_DATA = createRegistryKey(TerraEntity.space("mapped_data_type"));
+        public static final ResourceKey<Registry<MappedDataType<?,?>>> MAPPED_DATA = createRegistryKey(TerraEntity.space("mapped_data_type"));
 
 
     }

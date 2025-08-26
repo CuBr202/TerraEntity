@@ -50,6 +50,7 @@ import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
+import org.confluence.terraentity.data.mappeddata.NPCMappedDatas;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
@@ -59,6 +60,7 @@ import org.confluence.terraentity.entity.npc.chat.ChatManager;
 import org.confluence.terraentity.entity.npc.chat.NPCChat;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
+import org.confluence.terraentity.entity.npc.misc.InitialWeapons;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.Mood;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
@@ -69,6 +71,7 @@ import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.menu.SimpleTradeMenu;
 import org.confluence.terraentity.network.s2c.UpdateNPCTradePacket;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -104,7 +107,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     private final float moveSpeed = 0.15f;
     private NPCTradeManager trades;
     public Player tradingPlayer;
-    public House house = House.EMPTY;
+    private House house = House.EMPTY;
     private NPCMood mood;
 
 
@@ -197,6 +200,10 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public void setHouse(House house) {
         // confluence mixin here
         setHouseNoUpdate(house);
+    }
+
+    public House getHouse(){
+        return this.house;
     }
 
     public void setHouseNoUpdate(House house) {
@@ -769,6 +776,9 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
         spawnGroupData = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
         this.setLeftHanded(false);
+        InitialWeapons data = MappedDataTypes.getData(MappedDataTypes.NPC_MAP_DATAS, NPCMappedDatas.NPC_WEAPON);
+        ItemStack stack = data.getRandom(this.getType());
+        this.setItemSlot(EquipmentSlot.MAINHAND, stack);
         return spawnGroupData;
     }
 

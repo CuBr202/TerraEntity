@@ -6,7 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class DashComponent {
-    public Vec3 direction;
+    Vec3 direction;
     public Vec3 targetPos;
 
     public Entity owner;
@@ -24,6 +24,14 @@ public class DashComponent {
 
     public void setTargetPos(Vec3 targetPos) {
         this.targetPos = targetPos;
+    }
+
+    public Vec3 getDirection(){
+        return direction;
+    }
+
+    public Vec3 getTargetPos(){
+        return targetPos;
     }
 
     /**
@@ -59,6 +67,8 @@ public class DashComponent {
     public void setPredictDirection(Entity target){
         direction = target.position().add(0, 1, 0).add(target.getKnownMovement().scale(10)).subtract(owner.position());
     }
+
+
 
     /**
      * 获取目标相对直线位置

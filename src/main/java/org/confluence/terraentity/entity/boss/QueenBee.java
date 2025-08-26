@@ -47,6 +47,8 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
     private final float dashMaxRangeSqr;
 
     DashComponent dashComponent;
+    public int minionCount = 0;
+    final int _minionCount;
     public static final EntityDataAccessor<Boolean> DATA_ANGRY = SynchedEntityData.defineId(QueenBee.class, EntityDataSerializers.BOOLEAN);
     SkillParams skillParams;
     public QueenBee(EntityType<? extends Monster> type, Level level) {
@@ -66,26 +68,29 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
         this.dashSpeedModifier = skillParams.dashSpeedModifier;
         this.angryDashSpeedModifier = skillParams.angryDashSpeedModifier;
         this.dashMaxRangeSqr = skillParams.dashMaxRange * skillParams.dashMaxRange;
+        this._minionCount = skillParams.maxMinionCount;
     }
 
     public QueenBee(Level level) {
         this(TEBossEntities.QUEEN_BEE.get(), level);
     }
 
-    public record SkillParams(int xpReward, int summonBeeInterval, int summonProjInterval, float dashSpeedModifier, float angryDashSpeedModifier,
-                              float dashMaxRange
+    public record SkillParams(int xpReward, int summonBeeInterval, int summonProjInterval, int maxMinionCount,
+                              float dashSpeedModifier, float angryDashSpeedModifier, float dashMaxRange
                               ) {
         public static Codec<SkillParams> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.INT.fieldOf("xp_reward").forGetter(SkillParams::xpReward),
                 Codec.INT.fieldOf("summon_bee_interval").forGetter(SkillParams::summonBeeInterval),
                 Codec.INT.fieldOf("summon_proj_interval").forGetter(SkillParams::summonProjInterval),
+                Codec.INT.fieldOf("max_minion_count").forGetter(SkillParams::maxMinionCount),
                 Codec.FLOAT.fieldOf("dash_speed_modifier").forGetter(SkillParams::dashSpeedModifier),
                 Codec.FLOAT.fieldOf("angry_dash_speed_modifier").forGetter(SkillParams::angryDashSpeedModifier),
                 Codec.FLOAT.fieldOf("dash_max_range").forGetter(SkillParams::dashMaxRange)
         ).apply(instance, SkillParams::new));
 
         public static SkillParams getDefaultParams(){
-            return new SkillParams(1500,10, 10, 2f, 1.5f,
+            return new SkillParams(1500,10, 10, 10,
+                    2f, 1.5f,
                     15);
         }
     }
@@ -126,15 +131,29 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                         skills.forceStartIndex(1);
                 })
         ;
-        idle = new MobSkill<QueenBee>(idle_animation, 25, 0)
+        idle = new MobSkill<QueenBee>(idle_animation, 50, 0)
+                .onInit(e->{
+                    if(e.target != null) {
+                        dashComponent.setDirection(e.target.position().subtract(e.position()).normalize());
+                    }
+                })
                 .onTick(e->{
                     lookAt(10);
-                    dashComponent.hangOn(getTarget(), 5, 1.5f, getMoveSpeed());
+//                    dashComponent.hangOn(getTarget(), 5, 1.5f, getMoveSpeed());
+                    dashComponent.uniformMove(getMoveSpeed());
+
+                    if(e.target != null && e.skills.tick > 10 && e.distanceToSqr(e.target) > e.dashMaxRangeSqr){
+                        e.skills.forceEnd();
+                    }
                 })
         ;
 
         summon_bee = new MobSkill<QueenBee>(summon_animation, 60, 10)
                 .onTick(e->{
+                    if(e.minionCount >= this._minionCount){
+                        skills.forceEnd();
+                        return;
+                    }
                     lookAt(10);
                     dashComponent.hangOn(getTarget(), 5, 4, getMoveSpeed());
                     if(skills.tick % this.summonBeeInterval == 0) {
@@ -194,14 +213,16 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                 .onTick(e->{
                     setDeltaMovement(0,0,0);
                     if(target!=null) {
-                        // 预判冲
+//                        // 预判冲
                         dashComponent.setPredictDirection(target);
                         dashComponent.lookAtDirection();
                     }
                 })
                 .onOver(e->{
                     if(getTarget()!=null) {
-
+                        // 只在水平位置冲刺
+                        Vec3 pos = dashComponent.getDirection();
+                        dashComponent.setDirection(new Vec3(pos.x, 0, pos.z));
                     }
                 })
 
@@ -212,7 +233,7 @@ public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, I
                     if(getTarget() == null) return;
                     dashComponent.uniformMove(getMoveSpeed() * this.dashSpeedModifier
                             * (isAngry() && this.isExpert()? this.angryDashSpeedModifier : 1f));
-                    if(distanceToSqr(target) > this.dashMaxRangeSqr) skills.forceEnd();
+                    if(distanceToSqr(target) > this.dashMaxRangeSqr && skills.tick > 20) skills.forceEnd();
 
                 })
         ;

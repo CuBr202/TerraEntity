@@ -10,6 +10,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.neoforge.common.conditions.ConditionalOps;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.registries.TERegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -24,13 +25,13 @@ public class MappedDataLoader extends SimpleJsonResourceReloadListener {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> resourceLocationJsonElementMap, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+    protected void apply(Map<ResourceLocation, JsonElement> resourceLocationJsonElementMap, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
         ConditionalOps<JsonElement> ops = makeConditionalOps();
         resourceLocationJsonElementMap.forEach((location, jsonElement) -> {
             String path = location.getPath();
             MappedDataType type = TERegistries.MAPPED_DATAS.get(location.withPath(path.substring(0, path.length() - 5)));
             if(type != null){
-                DataResult<MappedData> data = MappedData.CODEC.parse(ops, jsonElement);
+                DataResult<MappedData<?>> data = MappedData.CODEC.parse(ops, jsonElement);
                 if(data.error().isPresent()){
                     TerraEntity.LOGGER.error("Error parsing {}: {}", location, data.error().get().message());
                 }else{
@@ -42,7 +43,7 @@ public class MappedDataLoader extends SimpleJsonResourceReloadListener {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Mapped Data Reloader";
     }
 }

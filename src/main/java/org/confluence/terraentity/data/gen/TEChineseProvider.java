@@ -2,6 +2,7 @@ package org.confluence.terraentity.data.gen;
 
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import org.confluence.terraentity.entity.npc.house.HouseDetectInfo;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEItems;
 import org.confluence.terraentity.init.entity.*;
@@ -498,10 +499,12 @@ public class TEChineseProvider extends LanguageProvider {
         add("tooltip.terra_entity.house_detect.mode.delete.success", "删除房屋成功!");
         add("tooltip.terra_entity.house_detect.not_npc", "这不是npc!");
         add("tooltip.terra_entity.house_detect.no_detect", "使用前先探测房屋!");
-        add("tooltip.terra_entity.house_detect.message.too_large", "这个房间太大了!");
-        add("tooltip.terra_entity.house_detect.message.too_small", "这个房间太小了!");
-        add("tooltip.terra_entity.house_detect.message.no_dynamic_light", "房间缺少光源!");
-        add("tooltip.terra_entity.house_detect.message.found_house", "这个房间很合适!");
+        add(HouseDetectInfo.DetectType.TOO_LARGE.getTranslationKey(), "这个房间太大了!");
+        add(HouseDetectInfo.DetectType.TOO_SMALL.getTranslationKey(), "这个房间太小了!");
+        add(HouseDetectInfo.DetectType.NO_DYNAMIC_LIGHT.getTranslationKey(), "房间缺少光源!");
+        add(HouseDetectInfo.DetectType.NO_CHAIR.getTranslationKey(), "房间缺少椅子!");
+        add(HouseDetectInfo.DetectType.NO_TABLE.getTranslationKey(), "房间缺少桌子!");
+        add(HouseDetectInfo.DetectType.FOUND_HOUSE.getTranslationKey(), "这个房间很合适!");
         add("tooltip.terra_entity.house_detect.info", "按下shift+右键 切换模式");
         add("tooltip.terra_entity.chester.desc", "按下shift+右键 切换目标容器. 你可以用它绑定一个容器");
         add("tooltip.terra_entity.chester.current", "当前容器");

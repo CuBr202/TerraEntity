@@ -42,6 +42,7 @@ public class HouseDetectItem extends Item {
         super(properties);
     }
 
+    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         if(level.isClientSide){
             if(usedHand == InteractionHand.OFF_HAND){

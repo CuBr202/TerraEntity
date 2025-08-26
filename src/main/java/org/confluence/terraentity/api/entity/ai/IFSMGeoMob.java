@@ -38,7 +38,7 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
     }
 
     default AnimationController<IFSMGeoMob<T>> fsmAnimationController() {
-        return new AnimationController<>(this, 0, state -> {
+        return new AnimationController<>(this, getTransitionTick(), state -> {
             Entity entity =  state.getData(DataTickets.ENTITY);
             if (!entity.isAlive()) return PlayState.STOP;
             if (getSkills().count() == 0) return PlayState.STOP;
@@ -54,6 +54,10 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
             }
             return PlayState.CONTINUE;
         });
+    }
+
+    default int getTransitionTick(){
+        return 5;
     }
 
     default void registerControllers(AnimatableManager.ControllerRegistrar controllers) {

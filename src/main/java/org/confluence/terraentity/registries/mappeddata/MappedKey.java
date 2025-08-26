@@ -10,9 +10,11 @@ import java.util.function.Supplier;
  * 键类型
  *
  * <p>一个键只可以绑定一个MappedDataType，以便从codec序列化得到唯一的数据</p>
- * @param <V> 指示值的类型，便于编译器检查
+ *
+ * @param <V> 指示值的类型，便于编译器检查，可以是任意类型的值
+ * @param <Y> type类型，不同的键不能混用
  */
-public class MappedKey<V> implements IAutoReloadable<V> {
+public class MappedKey<Y extends MappedDataType<Y, ?>, V> implements IAutoReloadable<V> {
     // 唯一标识
     final String key;
 
@@ -20,9 +22,9 @@ public class MappedKey<V> implements IAutoReloadable<V> {
     Consumer<V> onReload;
     Supplier<V> defaultValue;
     Codec<V> valueCodec;
-    MappedDataType dataType;
+    Y dataType;
 
-    static Codec<MappedKey<?>> ID_CODEC = Codec.STRING.xmap(MappedKey::new, MappedKey::getKey);
+    static Codec<MappedKey<?, ?>> ID_CODEC = Codec.STRING.xmap(MappedKey::new, MappedKey::getKey);
 
     MappedKey(String key) {
         this.key = key;
@@ -32,18 +34,18 @@ public class MappedKey<V> implements IAutoReloadable<V> {
         this.key = key.toString();
     }
 
-    public MappedKey<V> withOnReload(Consumer<V> onReload) {
+    public MappedKey<Y, V> withOnReload(Consumer<V> onReload) {
         this.onReload = onReload;
         return this;
     }
 
-    public MappedKey<V> withDefaultValue(Supplier<V> defaultValue) {
+    public MappedKey<Y, V> withDefaultValue(Supplier<V> defaultValue) {
         this.defaultValue = defaultValue;
         return this;
     }
 
-    public Codec<MappedKey<?>> getKeyCodec() {
-        if(dataType == null){
+    public Codec<MappedKey<Y, ?>> getKeyCodec() {
+        if (dataType == null) {
             throw new IllegalStateException("dataType is null");
         }
         return dataType.keyCodec;
@@ -70,7 +72,7 @@ public class MappedKey<V> implements IAutoReloadable<V> {
         if (obj == null || obj.getClass() != this.getClass()) {
             return false;
         }
-        MappedKey<?> other = (MappedKey<?>) obj;
+        MappedKey<?, ?> other = (MappedKey<?, ?>) obj;
         return key.equals(other.key);
     }
 

@@ -110,6 +110,14 @@ public class LittleHornet extends Hornet implements IMinion<LittleHornet> {
             return PlayState.CONTINUE;
         }));
     }
+
+    @Override
+    public void onRemovedFromLevel() {
+        super.onRemovedFromLevel();
+        if(this.owner!=null){
+            this.owner.minionCount --;
+        }
+    }
 }
 
 

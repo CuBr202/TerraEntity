@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
-public class MappedDataProvider extends AbstractExistCodecProvider<MappedData> {
+public class MappedDataProvider extends AbstractExistCodecProvider<MappedData<?>> {
 
     public MappedDataProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, lookupProvider);
@@ -44,7 +44,7 @@ public class MappedDataProvider extends AbstractExistCodecProvider<MappedData> {
     }
 
     @Override
-    protected Codec<MappedData> getCodec() {
+    protected Codec<MappedData<?>> getCodec() {
         return MappedData.CODEC;
     }
 

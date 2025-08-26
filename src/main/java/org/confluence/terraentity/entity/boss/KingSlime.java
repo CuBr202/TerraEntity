@@ -110,6 +110,17 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
 
     private static final State<KingSlime> STATE_NORMAL = new State<>() {
         private Vec3 horVel = Vec3.ZERO;
+        int epoch = 1;
+
+        @Override
+        public void enter(KingSlime boss) {
+            if(boss.difficultSelector.isExpert() && boss.getHealth() / boss.getMaxHealth() < 0.5f){
+                epoch = 2;
+            }else{
+                epoch = 1;
+            }
+        };
+
         @Override
         public void tick(KingSlime boss) {
             // 脱战
@@ -150,13 +161,15 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                         boss.indexAI = 40;
                     }else if(boss.indexAI > 60 - reduce && boss.indexAI <= 60){
                         boss.indexAI = 60;
+                    }else if(boss.indexAI > 80 - reduce && boss.indexAI <= 80){
+                        boss.indexAI = 80;
                     }else{
                         boss.indexAI += reduce;
                     }
                     switch (boss.indexAI) {
-                        case 20, 40, 60 -> {
+                        case 20, 40, 60, 80 -> {
                             horizontalSpd = boss.JUMP_SPEED_HORIZONTAL;
-                            verticalAcc = (boss.indexAI == 60 ? boss.JUMP_SPEED_VERTICAL_THIRD : boss.JUMP_SPEED_VERTICAL)
+                            verticalAcc = (boss.indexAI == 80 ? boss.JUMP_SPEED_VERTICAL_THIRD : boss.JUMP_SPEED_VERTICAL)
                                     * (boss.getSize() + 127) / 256; // 血量降低，跳跃高度减少
                         }
                         default -> {
@@ -173,12 +186,18 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                     boss.setDeltaMovement(motion);
                 }
 
-                // 下一阶段
-                if (boss.indexAI >= 65) {
-                    boss.toState(STATE_SHRINK);
+
+                if (boss.indexAI >= 85) {
+                    // 下一阶段
+                    if(--epoch <= 0 ){
+                        boss.toState(STATE_SHRINK);
+                    }else{
+                        boss.indexAI = 0;
+                    }
                 }
                 // 水平方向速度更新
                 boss.setHorizontalSpeed(horVel);
+
             }
             // 重置水平方向速度
             else {
@@ -187,6 +206,8 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         }
     };
     private static final State<KingSlime> STATE_SHRINK = new State<>() {
+
+
         @Override
         public void tick(KingSlime boss) {
             boss.indexAI ++;
@@ -207,14 +228,22 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                 // TP到玩家位置并开始膨胀
                 if (boss.level() instanceof ServerLevel serverLevel) {
                     Vec3 closestPlayerPos;
-                    if (serverLevel.getRandomPlayer() != null) {
+                    Player player = serverLevel.getRandomPlayer();
+                    if (player != null) {
                         if (boss.getTarget() != null){
                             closestPlayerPos = boss.getTarget().getOnPos().getCenter();
                         } else {
-                            closestPlayerPos = serverLevel.getRandomPlayer().getOnPos().getCenter();
+                            closestPlayerPos = player.getOnPos().getCenter();
                         }
                         serverLevel.addFreshEntity(new CrownOfKingSlimeModelEntity(serverLevel, boss.position().add(0.0, boss.getDimensions(boss.getPose()).height(), 0.0)));
-                        boss.teleportTo(closestPlayerPos.x, closestPlayerPos.y + 0.75F, closestPlayerPos.z);
+                        Vec3 side;
+                        if(!boss.difficultSelector.isExpert() && player != null){
+                            side = closestPlayerPos.add(player.getLookAngle().multiply(-1,0,-1).normalize().scale(5));
+                        }else{
+                            side = TEUtils.circle(10, boss.getRandom().nextFloat() * 3.14f).add(closestPlayerPos);
+                        }
+
+                        boss.teleportTo(side.x, side.y + 2F, side.z);
                     }
                 }
                 boss.toState(STATE_ENLARGE);
@@ -558,7 +587,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         if(key.equals(ID_SIZE) && level().isClientSide()){
-            if(this.getSize() == 15 && this.lastScale == 16){
+            if(this.getSize() == this.lastScale - 1 && this.lastScale == this.getMaxSize()){
                 // 缩小
                 this.shrinkDuration = this.SHRINK_ENLARGE_DURATION;
                 this.shrinkDelta = -1;

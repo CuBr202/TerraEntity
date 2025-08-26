@@ -4,6 +4,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.confluence.terraentity.entity.npc.house.HouseDetectInfo;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEItems;
@@ -117,10 +118,12 @@ public class TEEnglishProvider extends LanguageProvider {
         add("tooltip.terra_entity.house_detect.mode.delete.success", "Delete House success.");
         add("tooltip.terra_entity.house_detect.not_npc", "You should point at an NPC.");
         add("tooltip.terra_entity.house_detect.no_detect", "You should check before that.");
-        add("tooltip.terra_entity.house_detect.message.too_large", "House Too Large");
-        add("tooltip.terra_entity.house_detect.message.too_small", "House Too Small");
-        add("tooltip.terra_entity.house_detect.message.no_dynamic_light", "House No Dynamic Light");
-        add("tooltip.terra_entity.house_detect.message.found_house", "Found House");
+        add(HouseDetectInfo.DetectType.TOO_LARGE.getTranslationKey(), "House Too Large");
+        add(HouseDetectInfo.DetectType.TOO_SMALL.getTranslationKey(), "House Too Small");
+        add(HouseDetectInfo.DetectType.NO_DYNAMIC_LIGHT.getTranslationKey(), "House No Dynamic Light");
+        add(HouseDetectInfo.DetectType.NO_CHAIR.getTranslationKey(), "House No Chair");
+        add(HouseDetectInfo.DetectType.NO_TABLE.getTranslationKey(), "House No Table");
+        add(HouseDetectInfo.DetectType.FOUND_HOUSE.getTranslationKey(), "Found House");
         add("tooltip.terra_entity.house_detect.info", "Press shift and right click to switch mode.");
 
         add("tooltip.terra_entity.chester.desc", "Press shift and right click to switch target container. You can bind a container to it.");

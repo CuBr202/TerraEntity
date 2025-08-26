@@ -32,6 +32,11 @@ public class TETags {
 
     public static class Blocks {
         public static final TagKey<Block> HONEY = registerBlock("honey");
+        public static final TagKey<Block> NPC_HOUSE_CONSTITUTE = registerBlock("house_constitute");
+        public static final TagKey<Block> NPC_HOUSE_CHAIR = registerBlock("house_chair");
+        public static final TagKey<Block> NPC_HOUSE_TABLE = registerBlock("house_table");
+
+
     }
 
     public static class EntityTypes {
