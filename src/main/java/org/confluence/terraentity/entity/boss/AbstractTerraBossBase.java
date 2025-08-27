@@ -18,7 +18,6 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -557,12 +556,6 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     };
 
     @Override
-    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
-        // confluence mixin here
-        return super.addEffect(effectInstance, entity);
-    }
-
-    @Override
     public void lavaHurt() {
         if (!this.fireImmune()) {
             float v = LibUtils.switchByDifficulty(level(), blockPosition(), 0.25F, 0.15F, 0.05F);
@@ -594,7 +587,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public boolean isPushable() {
         return false;
     }
-    
+
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
         if(source.is(DamageTypes.LAVA)){

@@ -1,7 +1,5 @@
 package org.confluence.terraentity.entity.monster;
 
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,7 +8,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.utils.TEUtils;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animation.AnimatableManager;
 
 public class CursedSkull extends AbstractMonster {
@@ -18,35 +15,36 @@ public class CursedSkull extends AbstractMonster {
 
     int _phase = 200;
     int phase = _phase;
+
     public CursedSkull(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level, builder.setNoGravity());
         this.noPhysics = true;
 
     }
 
-    public void tick(){
+    public void tick() {
         super.tick();
-        if(getTarget() != null){
+        if (getTarget() != null) {
             phase--;
             this.lookAt(getTarget(), 10, 90);
             LivingEntity target = getTarget();
             Vec3 dir = target.getEyePosition().subtract(getEyePosition()).normalize();
             boolean aggro = phase < 80;
-            if(aggro || distanceTo(target) > 5  && phase < 150){
-                float speed = aggro? 0.05f : 0.02f;
+            if (aggro || distanceTo(target) > 5 && phase < 150) {
+                float speed = aggro ? 0.05f : 0.02f;
 
                 addDeltaMovement(dir.scale(speed));
-                if(getDeltaMovement().length() > 0.5){
+                if (getDeltaMovement().length() > 0.5) {
                     this.setDeltaMovement(getDeltaMovement().normalize().scale(0.5));
                 }
 
                 double angle = TEUtils.angleBetween(getDeltaMovement(), dir);
-                if(angle > 0.3f && aggro){
+                if (angle > 0.3f && aggro) {
                     this.phase = _phase;
                 }
 
             }
-        }else{
+        } else {
             phase = _phase;
         }
 
@@ -60,12 +58,5 @@ public class CursedSkull extends AbstractMonster {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
 
-    }
-
-    @Override
-    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
-        // confluence mixin here
-        if (effectInstance.is(MobEffects.POISON)) return false;
-        return super.addEffect(effectInstance, entity);
     }
 }

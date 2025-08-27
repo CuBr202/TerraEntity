@@ -13,7 +13,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -555,12 +554,6 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     @Override
     public boolean canAttack(LivingEntity target) {
         return super.canAttack(target) && !(target instanceof Slime);
-    }
-
-    @Override
-    public boolean addEffect(MobEffectInstance effectInstance, @org.jetbrains.annotations.Nullable Entity entity) {
-        // confluence mixin here
-        return super.addEffect(effectInstance, entity);
     }
 
     @Override
