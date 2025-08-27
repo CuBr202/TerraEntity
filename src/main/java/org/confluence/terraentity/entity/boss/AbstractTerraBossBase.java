@@ -76,7 +76,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     protected ServerBossEvent bossEvent;
 
     protected DifficultSelector difficultSelector;
-    public int stage = 1; //阶段
+//    public int stage = 1; //阶段
     private boolean consumeStageChange = false;
 
     public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level) {
@@ -126,6 +126,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         if(!level().isClientSide){
             if(dirty) {
                 firstSpawn();
+            }else{
+                aganinSpawn();
             }
             if(bossEvent!= null){
                 bossEvent.getPlayers().forEach(p->syncBossHealthBar(p));
@@ -138,7 +140,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             skills.forceStartIndex(0);
         }
         if(!this.level().isClientSide){
-            this.initStage(stage);
+            this.initStage(this.getStage());
         }
 
     }
@@ -216,15 +218,14 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_SKILL_INDEX, 0);
-        builder.define(DATA_STATUS_STATUS, 0);
+        builder.define(DATA_STATUS_STATUS, 1);
     }
+
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         syncSkills(DATA_SKILL_INDEX);
-        if(key == DATA_STATUS_STATUS){
-            this.stage = this.entityData.get(DATA_STATUS_STATUS);
-        }
+
     }
 
     public int getSkillIndex(){
@@ -398,7 +399,6 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
 
-        this.changeState();
 
         if(pSource.getEntity() instanceof IronGolem){
             pAmount *= ironGlomResistance;
@@ -407,7 +407,10 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             pAmount *= explosionResistance;
         }
 
-        return super.hurt(pSource,pAmount);
+        boolean flag = super.hurt(pSource, pAmount);
+        this.changeState();
+        return flag;
+
     }
 
     public boolean canAttack(LivingEntity entity) {
@@ -521,8 +524,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("dirty", false);
-        if(stage > 0) {
-            compound.putInt("Stage", stage);
+        if(getStage() > 0) {
+            compound.putInt("Stage", getStage());
         }
     }
 
@@ -536,7 +539,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             dirty = false;
         }
         if (tag.contains("Stage")) {
-            stage = tag.getInt("Stage");
+            this.setStage(tag.getInt("Stage"));
         }
     }
 

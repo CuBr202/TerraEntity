@@ -45,6 +45,7 @@ import java.util.UUID;
 public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Boss.BossPart {
     Mob owner;
     protected Vec3 initPos;
+    public Vec3 lastInitPos;
     boolean isFree = false;
 
     Vec3 initDir;
@@ -59,8 +60,10 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
     float maxDis = 35.0f; // 距离起始点的最大距离
     float v_speed = 1.15f;   // 回到起始方向的速度
     int switchTime = 5; // 切换方向的时间
+
     public DemonEyeSurroundTargetGoal surroundTargetGoal;
     public DemonEyeWanderGoal wanderGoal;
+
     private static final EntityDataAccessor<Vector3f> DATA_TRIGGER =  SynchedEntityData.defineId(TheHungry.class, EntityDataSerializers.VECTOR3);
 
     public TheHungry(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
@@ -141,6 +144,10 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
         super.move(pType, motion);
     }
 
+    public float getMaxDis(){
+        return maxDis;
+    }
+
     @Override
     public boolean canAttack(LivingEntity entity) {
         if(this.owner == null)
@@ -161,6 +168,7 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
                 this.kill();
             }
         }
+
         super.tick();
 
         phase++;
@@ -246,7 +254,7 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
             double distanceFromStart = position().distanceTo(initPos);
             Vec3 v_back;
 
-            if (distanceFromStart > maxDis) {
+            if (distanceFromStart > this.getMaxDis()) {
                 // 如果距离起始点太远，强制返回到最小距离位置
                 Vec3 minDisPos = initPos.add(initDir.scale(minDis));
                 v_back = minDisPos.subtract(position()).normalize().scale(backSpeed * 2.0f);
@@ -265,7 +273,9 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
             }
             this.setDeltaMovement(finalSpeed);
         }
+
     }
+
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
@@ -299,8 +309,10 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        if(key == DATA_TRIGGER && level().isClientSide){
-            this.initPos = new Vec3(this.entityData.get(DATA_TRIGGER));
+        if(level().isClientSide) {
+            if (key == DATA_TRIGGER) {
+                this.initPos = new Vec3(this.entityData.get(DATA_TRIGGER));
+            }
         }
     }
 
@@ -347,6 +359,12 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
             this.entityData.set(DATA_TRIGGER, initPos);
             this.initPos = new Vec3(initPos);
         }
+    }
+
+    // 对于不是运动的情景，不需要更新服务端位置
+    public void setClientInitPos(Vector3f initPos){
+        this.lastInitPos = this.initPos;
+        this.initPos = new Vec3(initPos);
     }
 
     public Vec3 getDir(){

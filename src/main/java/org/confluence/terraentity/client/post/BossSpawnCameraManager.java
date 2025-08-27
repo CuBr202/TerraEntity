@@ -84,8 +84,8 @@ public enum BossSpawnCameraManager {
             float tend = 15;
             Vec3KeyframeAnimation.Builder builder = Vec3KeyframeAnimation.builder()
                     .addKeyframe(new Keyframe(0,0,0,tend,0,tend), startPos)
-                    .addKeyframe(new Keyframe(30, 0, 0, tend, 0, tend), endPos)
-                    .addKeyframe(45, endPos);
+                    .addKeyframe(new Keyframe(50, 0, 0, tend, 0, tend), endPos)
+                    .addKeyframe(70, endPos);
             this.animation = builder.build();
             this.time = 0;
             this.backTime = 20;

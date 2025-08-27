@@ -62,7 +62,7 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
 
             height = Mth.lerp(progress * 2, 1, 20);
         }else{
-            radius = Mth.lerp(progress * 2 - 1, radius, animatable.outerRadius);
+            radius = animatable.getOutRadium();
             height = Mth.lerp(progress * 2 - 1, 20, height);
         }
 
@@ -73,14 +73,16 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
         }
     }
 
+    @Override
     protected void adjustPose(PoseStack poseStack, HillOfFlesh animatable, BakedGeoModel model, float partialTick){
         float progress = animatable.getSpawnProgress(partialTick);
         if(progress < 0.5f){
             float x = progress * 2;
             poseStack.translate(0, Easing.EASE_IN_OUT_QUAD.easeToRange(x, -15, 0), 0);
-//            float scale = (float) Mth.lerp(Math.pow(progress * 2, 5f), 0.5f, 1f);
-//            poseStack.scale(scale, scale, scale);
             poseStack.mulPose(Axis.YP.rotation((float) Mth.lerp( x, 0, Math.PI * 4)));
+        }else{
+//            float scale = animatable.getExpandingScale(partialTick);
+//            poseStack.scale(scale, scale, scale);
         }
 
     }
@@ -222,42 +224,12 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
             poseStack.pushPose();
             RenderUtil.translateMatrixToBone(poseStack, bone);
             RenderUtil.translateToPivotPoint(poseStack, bone);
-            RenderUtil.rotateMatrixAroundBone(poseStack, bone);
+//            RenderUtil.rotateMatrixAroundBone(poseStack, bone);
             RenderUtil.scaleMatrixForBone(poseStack, bone);
 
-
-            float[] yawPitch = this.extractYawPitch(poseStack.last().pose());
-            poseStack.mulPose(new Quaternionf().setFromNormalized(poseStack.last().pose()).conjugate());
-            if(animatable.deathTime > 0){
-                poseStack.translate(0,part.getDeathOffsetY(partialTick),0);
-            }
-
-            LivingEntity target = part.target;
-            if(target != null && animatable.deathTime <= 0){
-
-                Vector3d bonePos = bone.getWorldPosition();
-                Vec3 dist = new Vec3(target.xo, target.yo, target.zo)
-                        .lerp(target.position(), partialTick)
-                        .subtract(bonePos.x, bonePos.y, bonePos.z);
-
-                float yaw = (float) (Math.atan2(dist.z, dist.x));
-                float pitch = (float) (-Math.atan2(dist.y,
-                        Math.sqrt(dist.x * dist.x + dist.z * dist.z)));
-                part.stareYaw = (float) (Math.PI/2 - yaw);
-                part.starePitch = pitch;
-
-                poseStack.mulPose(Axis.YP.rotation(part.lerpYaw(partialTick)));
-                poseStack.mulPose(Axis.XP.rotation(part.lerpPitch(partialTick)));
-
-            }else{
-
-                part.stareStartYaw = yawPitch[0];
-                part.stareStartPitch = yawPitch[1];
-
-                poseStack.mulPose(Axis.YP.rotation(part.lerpYaw(-partialTick)));
-                poseStack.mulPose(Axis.XP.rotation(part.lerpPitch(-partialTick)));
-
-            }
+            float scale = (float) Math.sqrt(1 / animatable.currentScale); // 奇怪的缩放
+            poseStack.scale(scale,scale,scale);
+            adjustParts(poseStack, animatable, bone, partialTick, part);
 
             if (bone.isTrackingMatrices()) {
                 Matrix4f poseState = new Matrix4f(poseStack.last().pose());
@@ -275,11 +247,47 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
             if (!isReRender)
                 applyRenderLayersForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
 
+
             renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
             poseStack.popPose();
             return;
         }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+    }
+
+    private void adjustParts(PoseStack poseStack, HillOfFlesh animatable, GeoBone bone, float partialTick, HillOfFleshPart part) {
+        float[] yawPitch = this.extractYawPitch(poseStack.last().pose());
+        poseStack.mulPose(new Quaternionf().setFromNormalized(poseStack.last().pose()).conjugate());
+        if(animatable.deathTime > 0){
+            poseStack.translate(0, part.getDeathOffsetY(partialTick),0);
+        }
+
+        LivingEntity target = part.target;
+        if(target != null && animatable.deathTime <= 0){
+
+            Vector3d bonePos = bone.getWorldPosition();
+            Vec3 dist = new Vec3(target.xo, target.yo, target.zo)
+                    .lerp(target.position(), partialTick)
+                    .subtract(bonePos.x, bonePos.y, bonePos.z);
+
+            float yaw = (float) (Math.atan2(dist.z, dist.x));
+            float pitch = (float) (-Math.atan2(dist.y,
+                    Math.sqrt(dist.x * dist.x + dist.z * dist.z)));
+            part.stareYaw = (float) (Math.PI/2 - yaw);
+            part.starePitch = pitch;
+
+            poseStack.mulPose(Axis.YP.rotation(part.lerpYaw(partialTick)));
+            poseStack.mulPose(Axis.XP.rotation(part.lerpPitch(partialTick)));
+
+        }else{
+
+            part.stareStartYaw = yawPitch[0];
+            part.stareStartPitch = yawPitch[1];
+
+            poseStack.mulPose(Axis.YP.rotation(part.lerpYaw(-partialTick)));
+            poseStack.mulPose(Axis.XP.rotation(part.lerpPitch(-partialTick)));
+
+        }
     }
 
     /**

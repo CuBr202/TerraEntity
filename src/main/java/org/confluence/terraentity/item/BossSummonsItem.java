@@ -72,6 +72,7 @@ public class BossSummonsItem<T extends Mob> extends Item {
             if(!player.isCreative()) {
                 player.getItemInHand(usedHand).shrink(1);
             }
+            player.invulnerableTime = 100;
 
             return InteractionResultHolder.consume(player.getItemInHand(usedHand));
         }

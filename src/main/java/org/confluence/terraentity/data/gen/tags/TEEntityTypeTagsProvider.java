@@ -81,6 +81,7 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
                 TEMonsterEntities.LEECH.get(),
                 TEMonsterEntities.FLESH_SLIME.get(),
                 TEMonsterEntities.THE_HUNGRY.get(),
+                TEMonsterEntities.HILL_HUNGRY.get(),
                 TEBossEntities.HILL_OF_FLESH.get(),
                 TEBossEntities.WALL_OF_FLESH_MOUTH.get(),
                 TEBossEntities.WALL_OF_FLESH_EYE.get(),

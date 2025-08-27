@@ -1,8 +1,6 @@
 package org.confluence.terraentity.utils;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -29,11 +27,8 @@ public class EfficientCylinderDestruction {
     private final Map<Integer, Set<BlockPos2D>> layerEdges = new HashMap<>();
     // 存储所有已破坏的方块（防止重复处理）
     private final Set<BlockPos> destroyedBlocks = new HashSet<>();
-
-    // 每帧处理的最大层数
-    private static final int MAX_LAYERS_PER_FRAME = 4;
     // 每层处理的最大方块数（防止卡顿）
-    private static final int MAX_BLOCKS_PER_LAYER = 256;
+    private final int MAX_BLOCKS_PER_LAYER = 100;
     // 超时计数
     int outTime = 0;
     Level level;
@@ -145,6 +140,7 @@ public class EfficientCylinderDestruction {
 
         private void reset(int targetRadius){
             this.targetRadius = targetRadius;
+            currentRadius = Math.max(currentRadius, targetRadius);
             List<BlockPos2D> currentEdgeList = new ArrayList<>(layerEdges.get(yLevel));
             Collections.shuffle(currentEdgeList); // 增加随机性
             Set<BlockPos2D> currentEdge = new HashSet<>(currentEdgeList);
@@ -156,7 +152,7 @@ public class EfficientCylinderDestruction {
         public void run() {
             while (edgeIterator.hasNext() && blocksProcessedThisFrame < MAX_BLOCKS_PER_LAYER * 0.3D) {
                 BlockPos2D pos = edgeIterator.next();
-                blocksProcessedThisFrame++;
+
 
                 expandDirection(pos, 1, 0, newEdge);
                 expandDirection(pos, -1, 0, newEdge);
@@ -208,10 +204,14 @@ public class EfficientCylinderDestruction {
                 blockOperator.accept(newPos.x, yLevel, newPos.z);
                 destroyedBlocks.add(blockPos);
                 newEdge.add(newPos);
+                blocksProcessedThisFrame++;
             }
         }
     }
 
+    public int getCurrentRadius() {
+        return currentRadius;
+    }
 
     private void destroyBlock(int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
@@ -219,13 +219,14 @@ public class EfficientCylinderDestruction {
         if (state.getBlock() == Blocks.AIR || state.is(BlockTags.FEATURES_CANNOT_REPLACE)) {
             return;
         }
-        if(level.random.nextFloat() < 0.005f) {
-            level.levelEvent(2001, pos, getId(state));
-        }
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+
         if(level.random.nextFloat() < 0.01f) {
             level.playSound(null, pos, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 0.2f,0.6f);
-            ((ServerLevel)level).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 1, 0.5, 0.1,0,0);
+//            ((ServerLevel)level).sendParticles(ParticleTypes.EXPLOSION, pos.getX(), pos.getY(), pos.getZ(), 1, 0.5, 0.1,0,0);
+        }
+        if(level.random.nextFloat() < 0.005f) {
+            level.levelEvent(2001, pos, getId(state));
         }
     }
 

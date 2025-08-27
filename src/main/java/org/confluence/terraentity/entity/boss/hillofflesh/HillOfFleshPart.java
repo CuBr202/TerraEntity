@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 public abstract class HillOfFleshPart extends PartEntity<HillOfFlesh> {
     public final HillOfFlesh parentMob;
     public final String name;
-    private final EntityDimensions size;
+    private EntityDimensions size;
     public LivingEntity target;
     public Vec3 modelOffset;
     public int stareCount = 10;
@@ -34,6 +34,8 @@ public abstract class HillOfFleshPart extends PartEntity<HillOfFlesh> {
     public float stareStartYaw = 0;
     public float stareStartPitch = 0;
     float randomDeathSpeed ;
+    float width;
+    float height;
 
     public HillOfFleshPart(HillOfFlesh parentMob, String name, float width, float height) {
         super(parentMob);
@@ -42,6 +44,13 @@ public abstract class HillOfFleshPart extends PartEntity<HillOfFlesh> {
         this.parentMob = parentMob;
         this.name = name;
         this.randomDeathSpeed = this.getRandom().nextFloat() * 0.5f + 1f;
+        this.width = width;
+        this.height = height;
+    }
+
+    public void setScale(float scale){
+        this.size = EntityDimensions.scalable(this.width * scale, this.height * scale);
+        this.refreshDimensions();
     }
 
     @Override
@@ -85,19 +94,19 @@ public abstract class HillOfFleshPart extends PartEntity<HillOfFlesh> {
             }
         }else{
             if(this.getParent().tickCount % 25 == this.getId() % 25){
-                float r = this.getParent().outerRadius ;
+                float r = this.getParent().getOutRadium() ;
 
                 // 优先索敌玩家
                 LivingEntity living = null;
                 LivingEntity player = null;
                 for(LivingEntity e : this.getParent().nearbyLivings){
-                    boolean isPlayer = e instanceof Player;
+                    boolean isPlayer = e instanceof Player && e.canBeSeenAsEnemy();
                     if(!isPlayer){
                         if(!this.hasLineOfSight(e)) {
                             continue;
                         }
                     }
-                    double angle = TEUtils.angleBetween(this.modelOffset.add(0,-10,0), e.position().subtract(this.position()));
+                    double angle = TEUtils.angleBetween(this.modelOffset.add(0,-getParent().getBbHeight(),0), e.position().subtract(this.position()));
 
                     boolean isTarget = e.isAlive() && angle < Math.PI / 2
                             && e.position().distanceToSqr(this.getParent().position().add(0,10,0)) < r * r * 1.2
@@ -137,10 +146,10 @@ public abstract class HillOfFleshPart extends PartEntity<HillOfFlesh> {
 
     private float wrapRotation(float current, float target){
         while (target - current > Math.PI / 2){
-            current += Math.PI;
+            current += (float) Math.PI;
         }
         while (target - current < -Math.PI / 2){
-            current -= Math.PI;
+            current -= (float) Math.PI;
         }
         return current;
     }

@@ -227,7 +227,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 terraBossBase -> {
                     // 结束冲刺移除加成
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-                    if (stage == 1 ){
+                    if (this.getStage() == 1 ){
                         if(--stage1_dashCount <= 0) {
                             stage1_dashCount = 3;
                             skills.forceStartIndex(0);
@@ -417,12 +417,12 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
     @Override
     public void changeState(){
-        if(stage == 1 && this.getHealth() / getMaxHealth() < 0.5){
-            stage = 2;
+        if(this.getStage() == 1 && this.getHealth() / getMaxHealth() < 0.5){
+            this.setStage(2);
             skills.forceStartIndex(4);
             this.getAttribute(Attributes.ARMOR).setBaseValue(0); // 二阶段没有护甲
         }
-        this.syncStatus(stage);
+        this.syncStatus(this.getStage());
     }
 
     @Override
@@ -479,17 +479,4 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         return trails;
     }
 
-    @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putInt("Stage", stage);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        if (tag.contains("Stage")) {
-            stage = tag.getInt("Stage");
-        }
-    }
 }

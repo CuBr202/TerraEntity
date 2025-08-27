@@ -19,12 +19,16 @@ public interface IStateChangeableMob<T extends Entity> {
         return (T) this;
     }
 
-    default void syncStatus(int status) {
-        getSelf().getEntityData().set(get_DATA_STATUS_STATUS(), status);
+    default int getStage(){
+        return getSelf().getEntityData().get(get_DATA_STATUS_STATUS());
     }
 
-    default int getSyncedStatus() {
-        return getSelf().getEntityData().get(get_DATA_STATUS_STATUS());
+    default void setStage(int stage) {
+        getSelf().getEntityData().set(get_DATA_STATUS_STATUS(), stage);
+    }
+
+    default void syncStatus(int status) {
+        getSelf().getEntityData().set(get_DATA_STATUS_STATUS(), status);
     }
 
 }

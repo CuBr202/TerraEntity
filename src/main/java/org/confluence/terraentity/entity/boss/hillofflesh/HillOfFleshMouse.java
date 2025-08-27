@@ -3,8 +3,7 @@ package org.confluence.terraentity.entity.boss.hillofflesh;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
-import org.confluence.terraentity.entity.monster.TheHungry;
+import org.confluence.terraentity.entity.monster.HillHungry;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.monster.slime.FleshSlime;
 import org.confluence.terraentity.init.TETags;
@@ -14,23 +13,32 @@ import org.confluence.terraentity.utils.TEUtils;
 public class HillOfFleshMouse extends HillOfFleshPart {
 
     int summonHungryInterval = 256;
-    TheHungry hungry;
+    HillHungry hungry;
 
     public HillOfFleshMouse(HillOfFlesh parentMob, String name, float width, float height) {
         super(parentMob, name, width, height);
-//        hungry = this.summonHungry(this.modelOffset);
+
     }
 
     @Override
     protected void tickPart(double offsetX, double offsetY, double offsetZ, int index) {
         if(!this.level().isClientSide && (this.hungry == null || !this.hungry.isAlive())
                 && this.parentMob.tickCount % summonHungryInterval == this.getId() % summonHungryInterval){
-            this.hungry = this.summonHungry(this.position());
+            this.hungry = this.summonHungry(this.position(), index);
+            if (this.hungry != null) {
+                this.getParent().setTarget(index, this.hungry, false);
+            }
+        }
+        if(this.target != null && level().isClientSide){
+            if(this.target instanceof HillHungry hun){
+                this.hungry = hun;
+                hungry.setClientInitPos(this.getBoundingBox().getCenter().toVector3f());
+            }
         }
     }
 
-    private TheHungry summonHungry(Vec3 hungryPos) {
-        TheHungry hungry = TEUtils.spawnEntity(() -> new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),
+    private HillHungry summonHungry(Vec3 hungryPos, int index) {
+        HillHungry hungry = TEUtils.spawnEntity(() -> new HillHungry(TEMonsterEntities.HILL_HUNGRY.get(), level(),
                 new AbstractPrefab().getPrefab()) {
             @Override
             protected boolean shouldDropLoot() {
@@ -48,13 +56,17 @@ public class HillOfFleshMouse extends HillOfFleshPart {
             public boolean canAttack(LivingEntity entity) {
                 return !(entity.getType().is(TETags.EntityTypes.FLESH_ALLIANCE)) &&  super.canAttack(entity);
             }
-
+            @Override
+            public float getMaxDis() {
+                return super.getMaxDis() * HillOfFleshMouse.this.parentMob.currentScale;
+            }
         }, (ServerLevel) level(), hungryPos);
 
         if (hungry != null) {
             hungry.minion_setOwner(this.getParent());
             hungry.setYRot(this.getYRot());
             hungry.setInitPos(this.position().add(0,1,0).toVector3f());
+            hungry.index = index;
             return hungry;
         }
         return null;
@@ -63,4 +75,5 @@ public class HillOfFleshMouse extends HillOfFleshPart {
     public void onSummonFleshSlime(FleshSlime fleshSlime){
         fleshSlime.setDeltaMovement(this.modelOffset.normalize().scale(3f));
     }
+
 }

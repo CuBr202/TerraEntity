@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * 仆从接口
+ * 仆从接口，这个只适用于玩家的仆从或者仅服务端实体，因为客户端只知道玩家的UUID
  */
 public interface IMinion<T extends Mob> extends SelfGetter<T> {
 

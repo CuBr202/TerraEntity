@@ -102,7 +102,16 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     @Override
     protected void registerRandomStrollGoal(){
         if(ServerConfig.BOSS_KEEP_WANDERING.get()) {
-            this.goalSelector.addGoal(10, new WormRandomWanderGoal<>(this, 80, 40, 20, 40));
+            this.goalSelector.addGoal(10, new WormRandomWanderGoal<>(this, 80, 40, 20, 40){
+                @Override
+                public boolean canUse() {
+                    return super.canUse() || skills.index == 0;
+                }
+                @Override
+                public boolean canContinueToUse() {
+                    return super.canContinueToUse() && skills.index == 0;
+                }
+            });
         }
     }
 
@@ -125,7 +134,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
 
         public static SkillParams getDefaultParams(){
             return new SkillParams(60,5,3,0.6f,10,2.8f,
-                    30, 100);
+                    30, 200);
         }
     }
 
@@ -223,32 +232,33 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                     }
                     turnSpeed = 2;
                     moveSpeed = 0.4f;
-
+                    shouldMove = false;
                 },
                 (AbstractTerraBossBase)->{
                     shouldFollowTarget = false;
                     isDashing = false;
-                    if(target == null ) return;
-                    shouldMove = true;
-                    if(targetPos.distanceToSqr( target.position()) > 25 * 25){
-                        float random1 = random.nextFloat()*360;
-                        double random2 = wanderPosRadius * Math.sin(random1);
-                        double random3 = wanderPosRadius * Math.cos(random1);
-                        double h = 10 + random.nextFloat() * 4;
-                        if(wanderType ==WonderType.DOWN){
-                            targetPos = target.position().add(random2,-h,random3);
-                        }else if(wanderType ==WonderType.UP){
-                            targetPos = target.position().add(random2,h*0.5 ,random3);
-                        }else{
-                            targetPos = target.position().add(random1,random2,random3);
-                        }
-                    }
+//                    if(target == null ) return;
 
-                    //提前结束
+//                    if(targetPos.distanceToSqr( target.position()) > 25 * 25){
+//                        float random1 = random.nextFloat()*360;
+//                        double random2 = wanderPosRadius * Math.sin(random1);
+//                        double random3 = wanderPosRadius * Math.cos(random1);
+//                        double h = 10 + random.nextFloat() * 4;
+//                        if(wanderType ==WonderType.DOWN){
+//                            targetPos = target.position().add(random2,-h,random3);
+//                        }else if(wanderType ==WonderType.UP){
+//                            targetPos = target.position().add(random2,h*0.5 ,random3);
+//                        }else{
+//                            targetPos = target.position().add(random1,random2,random3);
+//                        }
+//                    }
+//
+//                    //提前结束
+//
+//                    if(distanceToSqr(targetPos)<=16){
+//                        skills.forceEnd();
+//                    }
 
-                    if(distanceToSqr(targetPos)<=16){
-                        skills.forceEnd();
-                    }
 
                 },
                 (AbstractTerraBossBase)->{
@@ -361,7 +371,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                 if (shouldFollowTarget) {
                     this.lookAt(target, turnSpeed, 80);
 
-                } else {
+                } else if(skills.index != 0){
                     this.lookAtPos(targetPos, turnSpeed, 80);
                 }
 

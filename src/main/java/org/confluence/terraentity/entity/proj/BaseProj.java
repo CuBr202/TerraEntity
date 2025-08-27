@@ -1,6 +1,7 @@
 package org.confluence.terraentity.entity.proj;
 
 import com.google.common.collect.Lists;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -11,17 +12,19 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.entity.*;
@@ -55,6 +58,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     protected float power = 0.4f;
     protected boolean canBeAttacked = true;
 
+
+
+    protected boolean canPenetrateBlock = false;
+
     public CollisionProperties getCollisionProperties(){
         return collisionProperties;
     }
@@ -67,6 +74,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     protected Vec3 initSpeed = Vec3.ZERO;
 
     protected static final EntityDataAccessor<Vector3f> DATA_INIT_SPEED = SynchedEntityData.defineId(BaseProj.class, EntityDataSerializers.VECTOR3);
+    protected static final EntityDataAccessor<Float> DATA_SCALE = SynchedEntityData.defineId(BaseProj.class, EntityDataSerializers.FLOAT);
 
     public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         this(pEntityType, pLevel, Lists.newArrayList());
@@ -121,7 +129,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         this.canBeAttacked = true;
         return (T) this;
     }
-
+    public T setCanPenetrateBlock(boolean canPenetrateBlock) {
+        this.canPenetrateBlock = canPenetrateBlock;
+        return (T) this;
+    }
 
     /**
      * 简单弹幕的贴图
@@ -160,6 +171,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_INIT_SPEED, new Vector3f(0, 0, 0));
+        builder.define(DATA_SCALE, 1.0f);
     }
 
     @Override
@@ -169,9 +181,25 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
             if (data == DATA_INIT_SPEED) {
                 this.initSpeed = new Vec3(this.entityData.get(DATA_INIT_SPEED));
                 this.setDeltaMovement(initSpeed);
+            }else if(data == DATA_SCALE){
+                this.refreshDimensions();
             }
         }
     }
+
+    public void setScale(float scale){
+        this.entityData.set(DATA_SCALE, scale);
+    }
+
+    public float getScale(){
+        return this.entityData.get(DATA_SCALE);
+    }
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pose) {
+        return super.getDimensions(pose).scale(this.entityData.get(DATA_SCALE));
+    }
+
     @Override
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
         super.shoot(x, y, z, velocity, inaccuracy);
@@ -184,7 +212,19 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         Entity entity = this.getOwner();
         if (this.level().isClientSide || (entity == null || !entity.isRemoved()) && this.level().hasChunkAt(this.blockPosition())) {
             super.tick();
+
+            HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity, ClipContext.Block.COLLIDER);
+            if (hitresult.getType() != HitResult.Type.MISS && !EventHooks.onProjectileImpact(this, hitresult)) {
+                if (hitresult.getType() == HitResult.Type.BLOCK) {
+                    BlockHitResult blockhitresult = (BlockHitResult) hitresult;
+                    this.onHitBlock(blockhitresult);
+                    BlockPos blockpos = blockhitresult.getBlockPos();
+                    this.level().gameEvent(GameEvent.PROJECTILE_LAND, blockpos, GameEvent.Context.of(this, this.level().getBlockState(blockpos)));
+                }
+            }
+
             this.checkInsideBlocks();
+
             Vec3 vec3 = this.getDeltaMovement();
             double d0 = this.getX() + vec3.x;
             double d1 = this.getY() + vec3.y;
@@ -204,9 +244,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
                 discard();
                 return;
             }
-            if(isInWall()){
-                discard();
-            }
+//            if(isInWall()){
+//                discard();
+//            }
         }else if(clientTickCallback!= null){
             clientTickCallback.accept(this);
         }
@@ -331,7 +371,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
-        if(!this.level().isClientSide()) discard();
+        if(!this.level().isClientSide() && !this.canPenetrateBlock) {
+            this.discard();
+        }
     }
 
     public boolean canBeAttacked(){

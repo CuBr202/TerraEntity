@@ -152,6 +152,7 @@ public class TEMonsterEntities {
 
     //饿鬼
     public static final DeferredHolder<EntityType<?>, EntityType<TheHungry>> THE_HUNGRY = TEEntities.registerMonster("the_hungry", (e, l) -> new TheHungry(e, l, new AbstractPrefab().getPrefab()), 1F, 1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HillHungry>> HILL_HUNGRY = TEEntities.registerMonster("hill_hungry", (e, l) -> new HillHungry(e, l, new AbstractPrefab().getPrefab()), 1F, 1F);
 
 
     /* *********肉后***************** */
@@ -240,6 +241,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.SNATCHER.get(), c -> new SnatcherRenderer<>(c, TEMonsterEntities.SNATCHER.getId()));
         event.registerEntityRenderer(TEMonsterEntities.MAN_EATER.get(), c -> new SnatcherRenderer<>(c, TEMonsterEntities.MAN_EATER.getId()));
         event.registerEntityRenderer(TEMonsterEntities.THE_HUNGRY.get(), c -> new TheHungryRenderer<>(c, TEMonsterEntities.THE_HUNGRY.getId()));
+        event.registerEntityRenderer(TEMonsterEntities.HILL_HUNGRY.get(), c -> new TheHungryRenderer<>(c, TEMonsterEntities.THE_HUNGRY.getId()));
 
         // 地牢骷髅
         event.registerEntityRenderer(TEMonsterEntities.BASE_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BASE_BONES.getId(), 0.9f, 0));
@@ -318,6 +320,7 @@ public class TEMonsterEntities {
         event.put(SNATCHER.get(), AttBuilder.createAttributes(31, 10, 13, 20, 1, 1).build());
         event.put(MAN_EATER.get(), AttBuilder.createAttributes(57, 10, 15, 20, 1, 1).build());
         event.put(THE_HUNGRY.get(), AttBuilder.createAttributes(30,1,10,32,0.75f,1).build());
+        event.put(HILL_HUNGRY.get(), AttBuilder.createAttributes(30,1,10,32,0.75f,1).build());
 
         // fly
         event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());

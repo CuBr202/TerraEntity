@@ -62,6 +62,8 @@ public class HillOfFleshEye extends HillOfFleshPart implements RangedAttackMob {
             proj.shoot(x,y,z,v,1);
             proj.setDamage(this.shootDamage);
             this.level().addFreshEntity(proj);
+            proj.setScale(parentMob.currentScale);
+            proj.refreshDimensions();
         }
     }
 
