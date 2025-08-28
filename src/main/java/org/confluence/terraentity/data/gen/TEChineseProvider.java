@@ -33,7 +33,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("key.terra_entity.ride", "使用坐骑(需要CuriosAPI)");
 
 
-        add(TEMonsterEntities.ICE_SLIME.get(), "冰冻史莱姆");
+        add(TEMonsterEntities.ICE_SLIME.get(), "冰雪史莱姆");
         add(TEMonsterEntities.BLUE_SLIME.get(), "蓝色史莱姆");
         add(TEMonsterEntities.RED_SLIME.get(), "红色史莱姆");
         add(TEMonsterEntities.PURPLE_SLIME.get(), "紫色史莱姆");
