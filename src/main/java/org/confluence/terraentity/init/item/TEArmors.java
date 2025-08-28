@@ -15,11 +15,11 @@ public class TEArmors {
 
     public static final MaterialArmorSuit POSSESSED_ARMOR = ArmorSuit.createSimpleWithMaterial(ITEMS, "possessed_armor", MATERIALS,
             SoundEvents.ARMOR_EQUIP_NETHERITE, ()-> Items.DIAMOND,
-            new int[]{3, 6, 8, 3}, new int[]{100,200,200,100}, 10, 2.0f, 0.1f);
+            new int[]{3, 6, 6, 3}, new int[]{100,200,200,100}, 10, 2.0f, 0.1f);
 
     public static final MaterialArmorSuit WRAITH_ARMOR = ArmorSuit.createSimpleWithMaterial(ITEMS, "wraith_armor", MATERIALS,
             SoundEvents.ARMOR_EQUIP_NETHERITE, ()-> Items.DIAMOND,
-            new int[]{3, 6, 8, 3}, new int[]{100,200,200,100}, 10, 2.0f, 0.0f);
+            new int[]{3, 5, 5, 3}, new int[]{300,500,500,300}, 10, 0.0f, 0.0f);
 
 
     public static void register(IEventBus eventBus) {

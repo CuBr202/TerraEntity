@@ -75,6 +75,7 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMSON_KEMERA = registerSimpleMonster("crimson_kemera", FlyMonsterPrefab.CRIMSON_KEMERA_BUILDER, 1.2f, 1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> EATER_OF_SOULS = registerSimpleMonster("eater_of_souls", FlyMonsterPrefab.EATER_OF_SOULS_BUILDER, 1.2f, 1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER, 1.6f, 1.6f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> SERVANT_OF_CTHULHU = registerSimpleMonster("servant_of_cthulhu", FlyMonsterPrefab.SERVANT_OF_CTHULHU_BUILDER, 1.1f, 1.1f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> WANDERING_EYE_FISH = registerSimpleMonster("wandering_eye_fish", FlyMonsterPrefab.WANDERING_EYE_FISH_BUILDER, 1.4f, 1.4f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> FLYING_FISH = registerSimpleMonster("flying_fish", FlyMonsterPrefab.FLYING_FISH_BUILDER, 0.9F, 0.9F);
     public static final DeferredHolder<EntityType<?>, EntityType<VisualNeuron>> VISUAL_NEURON = TEEntities.registerMonster("visual_neuron", VisualNeuron::new, 1.2f, 1.2f);
@@ -161,12 +162,13 @@ public class TEMonsterEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Wyvern<BaseWormPart>>> WYVERN = TEEntities.registerMonster("wyvern", (e, l) -> new Wyvern<>(e, l, new AbstractPrefab().getPrefab().setSpawnWithoutLight().setNoGravity()), 1F, 1F);
     public static final DeferredHolder<EntityType<?>, EntityType<Pixie>> PIXIE = TEEntities.registerMonster("pixie", (e, l) -> new Pixie(e, l, new AbstractPrefab().getPrefab().setSpawnWithoutLight()), 1F, 1F);
     public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> POSSESS_ARMOR = TEEntities.registerMonster("possess_armor", (e, l) -> new HumanoidMonster(e, l), 1F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> POSSESS_ARMOR_VOID_VESSEL = TEEntities.registerMonster("possess_armor_void_vessel", (e, l) -> new HumanoidMonster(e, l), 1F, 2F);
     public static final DeferredHolder<EntityType<?>, EntityType<Wraith>> WRAITH = TEEntities.registerMonster("wraith", (e, l) -> new Wraith(e, l), 1F, 2F);
 
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        ResourceLocation defaultHumanoidModel = TEMonsterEntities.GOBLIN_ARCHER.getId().withPrefix("goblin/");
+        ResourceLocation defaultHumanoidModel = TEMonsterEntities.POSSESS_ARMOR_VOID_VESSEL.getId();
 
         event.registerEntityRenderer(TEMonsterEntities.BLUE_SLIME.get(), c -> new CustomSlimeRenderer(c, "blue"));
         event.registerEntityRenderer(TEMonsterEntities.GREEN_SLIME.get(), c -> new CustomSlimeRenderer(c, "green"));
@@ -194,6 +196,7 @@ public class TEMonsterEntities {
 
         event.registerEntityRenderer(TEMonsterEntities.CRIMSON_KEMERA.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.CRIMSON_KEMERA.getId(), true));
         event.registerEntityRenderer(TEMonsterEntities.EATER_OF_SOULS.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.EATER_OF_SOULS.getId(), true));
+        event.registerEntityRenderer(TEMonsterEntities.SERVANT_OF_CTHULHU.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.SERVANT_OF_CTHULHU.getId(), true));
         event.registerEntityRenderer(TEMonsterEntities.DRIPPLER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.DRIPPLER.getId(), false, 2f, 0));
         event.registerEntityRenderer(TEMonsterEntities.WANDERING_EYE_FISH.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.WANDERING_EYE_FISH.getId(), false, 1.5f, 0));
         event.registerEntityRenderer(TEMonsterEntities.FLYING_FISH.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.FLYING_FISH.getId(), true, 0.75f, 0));
@@ -281,6 +284,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.WYVERN.get(), c -> new WyvernRenderer<>(c, TEMonsterEntities.WYVERN.getId()));
         event.registerEntityRenderer(TEMonsterEntities.PIXIE.get(), c -> new FairyRenderer<>(c, TEMonsterEntities.PIXIE.getId(), false, 1, 0).setBoneToGlow(List.of("Outline","Outline2","Outline3"), List.of("bone","bone2","bone3")));
         event.registerEntityRenderer(TEMonsterEntities.POSSESS_ARMOR.get(), c -> new HumanoidRenderer<>(c, defaultHumanoidModel));
+        event.registerEntityRenderer(TEMonsterEntities.POSSESS_ARMOR_VOID_VESSEL.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.POSSESS_ARMOR_VOID_VESSEL.getId()));
         event.registerEntityRenderer(TEMonsterEntities.WRAITH.get(), c -> new HumanoidRenderer<>(c, defaultHumanoidModel).setDisableRender());
 
     }
@@ -332,6 +336,7 @@ public class TEMonsterEntities {
 
         // fly
         event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());
+        event.put(SERVANT_OF_CTHULHU.get(), AttBuilder.fly(AttBuilder.createAttributes(10,1,3,30,0.5f,0.3f)).build());
         event.put(FLYING_FISH.get(), AttBuilder.fly(AttBuilder.createAttributes(10,1,2,30,0.5f,0.3f)).build());
         event.put(CRIMSON_KEMERA.get(), AttBuilder.fly(AttBuilder.createAttributes(20,6,11,30,0.5f,0.1f)).build());
         event.put(DRIPPLER.get(), AttBuilder.fly(AttBuilder.createAttributes(26,7,14,64,0.5f,0.2f)).build());
@@ -397,9 +402,10 @@ public class TEMonsterEntities {
 
         /* *********肉后***************** */
         event.put(WYVERN.get(), AttBuilder.createAttributes(2080, 10, 41, 50, 1f, 0.28f).build());
-        event.put(PIXIE.get(), AttBuilder.createAttributes(78, 20, 28, 16, 0.46f, 0.28f).build());
-        event.put(POSSESS_ARMOR.get(), AttBuilder.createAttributes(41, 6, 10, 32, 1, 0.37f).build());
-        event.put(WRAITH.get(), AttBuilder.createAttributes(41, 6, 10, 32, 1, 0.37f).gravity(0).build());
+        event.put(PIXIE.get(), AttBuilder.createAttributes(78, 20, 28, 16, 1, 0.46f).build());
+        event.put(POSSESS_ARMOR.get(), AttBuilder.createAttributes(135, 0, 28, 32, 1, 0.64f).build());
+        event.put(POSSESS_ARMOR_VOID_VESSEL.get(), AttBuilder.createAttributes(1, 0, 28, 32, 1, 0.64f).build());
+        event.put(WRAITH.get(), AttBuilder.createAttributes(83, 0, 33, 32, 1, 0.37f).gravity(0).build());
 
     }
 
@@ -426,9 +432,9 @@ public class TEMonsterEntities {
 
 
         // land
-        event.register(BLOOD_CRAWLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BloodCrawler::checkBloodCrawlerSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(BLOOD_CRAWLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BLOOD_ZOMBIE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(BLOODY_SPORE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BloodySpore::checkBloodySporeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(BLOODY_SPORE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(FACE_MONSTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(SPORE_SKELETON.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(SPORE_ZOMBIE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
@@ -441,7 +447,7 @@ public class TEMonsterEntities {
         event.register(SNOW_FLINX.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkUndergroundMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
         // fly
-        event.register(DEMON_EYE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DemonEye::checkDemonEyeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(DEMON_EYE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDemonEyeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(FLYING_FISH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkFlyingFishSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(CRIMSON_KEMERA.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(EATER_OF_SOULS.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
@@ -504,8 +510,8 @@ public class TEMonsterEntities {
         /* *********肉后***************** */
         event.register(WYVERN.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks.checkHardmode(SpawnPlacementChecks::checkHighLevelMonsterSpawn), RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(PIXIE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks.checkHardmode(SpawnPlacementChecks::checkRoutineMonsterSpawn), RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(POSSESS_ARMOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(WRAITH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(POSSESS_ARMOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks.checkHardmode(SpawnPlacementChecks::checkPossessArmorSpawnCondition), RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(WRAITH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,SpawnPlacementChecks.checkHardmode(SpawnPlacementChecks::checkDemonEyeSpawn), RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
 
     }

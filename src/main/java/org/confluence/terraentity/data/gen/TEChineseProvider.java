@@ -104,11 +104,15 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.GRANITE_ELEMENTAL.get(), "花岗精");
         add(TEMonsterEntities.PIXIE.get(), "妖精");
         add(TEMonsterEntities.WYVERN.get(), "飞龙");
+        add(TEMonsterEntities.POSSESS_ARMOR.get(), "装甲幻影魔");
+        add(TEMonsterEntities.POSSESS_ARMOR_VOID_VESSEL.get(), "装甲幻影魔-虚空载体");
+        add(TEMonsterEntities.WRAITH.get(), "幻灵");
 
 
         // boss
         add(TEBossEntities.KING_SLIME.get(), "史莱姆王");
         add(TEBossEntities.EYE_OF_CTHULHU.get(), "克苏鲁之眼");
+        add(TEMonsterEntities.SERVANT_OF_CTHULHU.get(), "克苏鲁之仆");
         add(TEBossEntities.EATER_OF_WORLDS.get(), "世界吞噬怪");
         add(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), "世界吞噬怪体节");
         add(TEBossEntities.BRAIN_OF_CTHULHU.get(), "克苏鲁之脑");
@@ -321,6 +325,9 @@ public class TEChineseProvider extends LanguageProvider {
         // 肉后怪物
         add(TESpawnEggItems.WYVERN_SPAWN_EGG.get(), "飞龙刷怪蛋");
         add(TESpawnEggItems.PIXIE_SPAWN_EGG.get(), "妖精刷怪蛋");
+
+        add(TESpawnEggItems.POSSESS_ARMOR_SPAWN_EGG.get(), "装甲幻影魔刷怪蛋");
+        add(TESpawnEggItems.WRAITH_SPAWN_EGG.get(), "幻灵刷怪蛋");
 
 
         add(TESpawnEggItems.GUIDE_SPAWN_EGG.get(), "向导刷怪蛋");

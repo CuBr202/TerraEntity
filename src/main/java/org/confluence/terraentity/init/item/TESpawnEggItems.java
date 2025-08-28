@@ -114,6 +114,8 @@ public class TESpawnEggItems {
     /* ********肉后怪物********* */
     public static final DeferredItem<SpawnEggItem> WYVERN_SPAWN_EGG = registerEgg("wyvern_spawn_egg", TEMonsterEntities.WYVERN, 0xffffff);
     public static final DeferredItem<SpawnEggItem> PIXIE_SPAWN_EGG = registerEgg("pixie_spawn_egg", TEMonsterEntities.PIXIE, 0xffffff);
+    public static final DeferredItem<SpawnEggItem> POSSESS_ARMOR_SPAWN_EGG = registerEgg("possess_armor_spawn_egg", TEMonsterEntities.POSSESS_ARMOR, 0xffffff);
+    public static final DeferredItem<SpawnEggItem> WRAITH_SPAWN_EGG = registerEgg("wraith_spawn_egg", TEMonsterEntities.WRAITH, 0xffffff);
 
 
     // NPC

@@ -122,18 +122,6 @@ public class BloodySpore extends Creeper implements GeoEntity {
         }
     }
 
-    public static boolean checkBloodySporeSpawn(EntityType<? extends BloodySpore> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
-            return false; // 如果 pLevel 不是 Level 的实例，返回 false
-        }
-
-        if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
-            return false; // 如果不满足基本生成规则，返回 false
-        }
-
-        int y = pPos.getY();
-        return y < 260; // 不能生成在 y = 260 或更高的位置
-    }
 
     @Override
     public float getSwelling(float pPartialTicks) {

@@ -63,22 +63,7 @@ public class BloodCrawler extends Spider implements GeoEntity {
             .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0.01)  // 召唤物品的几率
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.8);     // 击退抗性
     }
-    public static boolean checkBloodCrawlerSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
-            return false; // 如果 pLevel 不是 Level 的实例，返回 false
-        }
 
-        if (!checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
-            return false; // 如果不满足基本生成规则，返回 false
-        }
-
-        int y = pPos.getY();
-        if (y >= 260) {
-            return false; // 不能生成在 y = 260 或更高的位置
-        }
-
-        return true;
-    }
 
     @Override
     protected SoundEvent getDeathSound() {

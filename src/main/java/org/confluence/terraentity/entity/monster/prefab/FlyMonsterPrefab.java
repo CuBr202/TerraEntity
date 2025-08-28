@@ -50,6 +50,15 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
                     })
             ;
+    public static final Supplier<AttributeBuilder> SERVANT_OF_CTHULHU_BUILDER  =
+            ()->new FlyMonsterPrefab().getPrefab()
+                    .setHurtSound(TESounds.ROUTINE_HURT)
+                    .setDeathSound(TESounds.ROUTINE_DEATH)
+                    .addGoal((g,e)->{
+                        g.addGoal(0, new DashGoal(e,0.98f,0.4f,10));
+
+                    })
+            ;
 
     public static Supplier<AttributeBuilder> FLYING_FISH_BUILDER  =
             ()->new FlyMonsterPrefab().getPrefab()
