@@ -13,7 +13,9 @@ import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terraentity.api.npc.trade.IIngredientTrade;
 import org.confluence.terraentity.api.npc.trade.ITradeHealth;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
-import org.confluence.terraentity.registries.npc_trade.*;
+import org.confluence.terraentity.registries.npc_trade.TradeProperties;
+import org.confluence.terraentity.registries.npc_trade.TradeProvider;
+import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
 
 import java.util.List;
 import java.util.Optional;

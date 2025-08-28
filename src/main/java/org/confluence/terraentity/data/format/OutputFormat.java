@@ -1,7 +1,6 @@
 package org.confluence.terraentity.data.format;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

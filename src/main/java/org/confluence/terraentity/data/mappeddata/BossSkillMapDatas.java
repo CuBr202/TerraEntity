@@ -6,8 +6,8 @@ import org.confluence.terraentity.entity.boss.*;
 import org.confluence.terraentity.entity.boss.hillofflesh.HillOfFlesh;
 import org.confluence.terraentity.registries.mappeddata.MappedData;
 import org.confluence.terraentity.registries.mappeddata.MappedDataType;
-import org.confluence.terraentity.registries.mappeddata.MappedKey;
 import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
+import org.confluence.terraentity.registries.mappeddata.MappedKey;
 
 import java.util.Map;
 import java.util.Set;

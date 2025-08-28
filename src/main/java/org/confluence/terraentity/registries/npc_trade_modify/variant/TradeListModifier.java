@@ -5,9 +5,9 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.api.npc.trade.ITradeModifier;
+import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.registries.npc_trade_modify.TradeModifierProvider;
 import org.confluence.terraentity.registries.npc_trade_modify.TradeModifierProviderTypes;
 

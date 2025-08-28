@@ -13,7 +13,6 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
-import org.confluence.terraentity.registries.mappeddata.MappedDataLoader;
 import org.confluence.terraentity.data.saved_data.HouseStoreSaver;
 import org.confluence.terraentity.entity.animation.HillOfFleshModelAnimationTable;
 import org.confluence.terraentity.entity.npc.brain.ArmDealerNPCAi;
@@ -30,6 +29,7 @@ import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.network.s2c.SyncDataS2C;
 import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
+import org.confluence.terraentity.registries.mappeddata.MappedDataLoader;
 import org.confluence.terraentity.utils.AdapterUtils;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = TerraEntity.MODID)

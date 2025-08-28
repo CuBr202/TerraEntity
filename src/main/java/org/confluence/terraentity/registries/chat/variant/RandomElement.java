@@ -3,9 +3,9 @@ package org.confluence.terraentity.registries.chat.variant;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.util.RandomSource;
 import org.confluence.terraentity.api.npc.chat.IChatElement;
+import org.confluence.terraentity.api.npc.chat.IComplexChatElement;
 import org.confluence.terraentity.registries.chat.ChatElementProvider;
 import org.confluence.terraentity.registries.chat.ChatProviderTypes;
-import org.confluence.terraentity.api.npc.chat.IComplexChatElement;
 
 import java.util.List;
 

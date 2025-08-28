@@ -5,7 +5,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.npc.trade.ITrade;
 import org.confluence.terraentity.registries.TERegistries;
-import org.confluence.terraentity.registries.npc_trade.variant.*;
+import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeHealth;
+import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
+import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeLootTable;
+import org.confluence.terraentity.registries.npc_trade.variant.TradeTask;
 
 import java.util.function.Supplier;
 

@@ -3,7 +3,6 @@ package org.confluence.terraentity.mixin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.lib.mixed.SelfGetter;
-
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.spongepowered.asm.mixin.Mixin;

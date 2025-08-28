@@ -5,11 +5,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.Font;
 import net.minecraft.world.item.ItemStack;
+import org.confluence.terraentity.api.npc.chat.IChatElement;
+import org.confluence.terraentity.api.npc.chat.IChatRenderer;
 import org.confluence.terraentity.client.gui.renderer.chat.element.ChatItemRenderer;
 import org.confluence.terraentity.registries.chat.ChatElementProvider;
 import org.confluence.terraentity.registries.chat.ChatProviderTypes;
-import org.confluence.terraentity.api.npc.chat.IChatElement;
-import org.confluence.terraentity.api.npc.chat.IChatRenderer;
 
 import java.util.Optional;
 

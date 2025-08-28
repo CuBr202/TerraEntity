@@ -1,12 +1,8 @@
 package org.confluence.terraentity.integration;
 
-import com.google.common.base.Suppliers;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
 import org.confluence.terraentity.integration.curios.CuriosEvents;
 import org.confluence.terraentity.integration.iron_spell.IronSpellEvents;
-
-import java.util.function.Supplier;
 
 public class ModChecker {
 

@@ -1,12 +1,6 @@
 package org.confluence.terraentity.event;
 
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
@@ -15,19 +9,13 @@ import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.fluids.RegisterCauldronFluidContentEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.registries.datamaps.DataMapsUpdatedEvent;
 import org.confluence.lib.api.NameFixRegisterEvent;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.data.gen.TEDataMapProvider;
 import org.confluence.terraentity.init.TEAttributes;
-import org.confluence.terraentity.init.TEDataMaps;
 import org.confluence.terraentity.init.TEEntities;
-import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.integration.ItemComponentModify;
 import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.integration.curios.CuriosHelper;
-import org.confluence.terraentity.item.BaseWhipItem;
-import org.confluence.terraentity.item.Boomerang;
 import org.confluence.terraentity.network.NetworkHandler;
 
 import java.util.List;

@@ -20,7 +20,6 @@ import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.item.TESpawnEggItems;
 
-
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 

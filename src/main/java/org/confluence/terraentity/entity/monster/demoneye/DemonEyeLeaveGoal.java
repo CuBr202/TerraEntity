@@ -3,7 +3,6 @@ package org.confluence.terraentity.entity.monster.demoneye;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
 
 /** 白天的AI

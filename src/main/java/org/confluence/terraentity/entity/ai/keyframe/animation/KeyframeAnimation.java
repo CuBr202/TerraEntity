@@ -8,10 +8,12 @@ import net.minecraft.network.codec.StreamCodec;
 import org.confluence.terraentity.api.entity.animation.IKeyframeAnimation;
 import org.confluence.terraentity.api.entity.animation.IKeyframeBaker;
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
-import org.confluence.terraentity.entity.ai.keyframe.baker.AbstractKeyframeBaker;
 import org.confluence.terraentity.entity.ai.keyframe.baker.BakerEnum;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

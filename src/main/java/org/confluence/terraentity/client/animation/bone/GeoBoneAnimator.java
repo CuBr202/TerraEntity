@@ -1,9 +1,9 @@
 package org.confluence.terraentity.client.animation.bone;
 
 import org.confluence.terraentity.client.animation.api.animator.AbstractAnimator;
-import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.client.animation.api.context.AnimatorContext;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
+import org.confluence.terraentity.entity.animation.BoneStates;
 import software.bernie.geckolib.cache.object.GeoBone;
 
 /**

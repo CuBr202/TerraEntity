@@ -1,13 +1,11 @@
 package org.confluence.terraentity.entity.ai.keyframe.baker;
 
 import com.mojang.serialization.Codec;
-import org.confluence.terraentity.api.entity.animation.IInterpolator;
 import org.confluence.terraentity.api.entity.animation.IKeyframeBaker;
 import org.confluence.terraentity.data.codec.TECodecs;
 import org.confluence.terraentity.entity.ai.keyframe.interpolator.KeyframeLinearInterpolator;
 import org.confluence.terraentity.entity.ai.keyframe.interpolator.KeyframeSplineInterpolator;
 
-import java.util.Locale;
 import java.util.function.Supplier;
 
 public enum BakerEnum {

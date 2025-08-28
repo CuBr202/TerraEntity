@@ -18,7 +18,6 @@ import net.minecraft.world.entity.ai.behavior.StartAttacking;
 import net.minecraft.world.entity.ai.behavior.StopAttackingIfTargetInvalid;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
-
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.proj.BoomerangProjectile;
 import org.confluence.terraentity.init.TEAttachments;

@@ -7,9 +7,7 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.init.block.TEFigureBlocks;
 
-
 import java.util.Collections;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TEBlockLootProvider extends BlockLootSubProvider {

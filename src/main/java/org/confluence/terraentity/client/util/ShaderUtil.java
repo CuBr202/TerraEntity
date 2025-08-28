@@ -17,7 +17,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static net.minecraft.client.renderer.RenderStateShard.*;
-import static net.minecraft.client.renderer.RenderStateShard.TRANSLUCENT_TARGET;
 
 public class ShaderUtil {
 

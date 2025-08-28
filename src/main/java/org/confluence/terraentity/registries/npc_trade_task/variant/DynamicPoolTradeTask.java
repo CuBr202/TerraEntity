@@ -5,20 +5,18 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.api.npc.trade.ITrade;
+import org.confluence.terraentity.api.npc.trade.ITradeHolder;
+import org.confluence.terraentity.api.npc.trade.ITradeTask;
 import org.confluence.terraentity.data.codec.TECodecs;
 import org.confluence.terraentity.registries.npc_trade.variant.ItemTradeItemList;
-import org.confluence.terraentity.api.npc.trade.ITradeTask;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProvider;
 import org.confluence.terraentity.registries.npc_trade_task.TradeTaskProviderTypes;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 动态交易表，resultPool存放每个等级对应的固定奖励List，若不含这个等级，则使用默认奖励

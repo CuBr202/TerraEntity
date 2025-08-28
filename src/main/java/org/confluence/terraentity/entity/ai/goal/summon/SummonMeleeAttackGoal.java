@@ -5,7 +5,6 @@
 
 package org.confluence.terraentity.entity.ai.goal.summon;
 
-import java.util.EnumSet;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
 import org.confluence.terraentity.api.entity.ISummonMob;
+
+import java.util.EnumSet;
 
 public class SummonMeleeAttackGoal<T extends Mob & ISummonMob<T>> extends Goal {
     protected final T mob;

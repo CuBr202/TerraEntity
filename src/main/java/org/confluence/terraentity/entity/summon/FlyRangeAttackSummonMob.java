@@ -1,6 +1,5 @@
 package org.confluence.terraentity.entity.summon;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
@@ -14,7 +13,6 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import org.confluence.terraentity.entity.ai.goal.FlyRangeAttackGoal;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import software.bernie.geckolib.animation.AnimatableManager;

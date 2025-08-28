@@ -8,7 +8,6 @@ import org.confluence.terraentity.registries.TERegistries;
 import org.confluence.terraentity.registries.track.variant.BasisTrack;
 import org.confluence.terraentity.registries.track.variant.SimpleTrack;
 
-
 import java.util.function.Supplier;
 
 /**

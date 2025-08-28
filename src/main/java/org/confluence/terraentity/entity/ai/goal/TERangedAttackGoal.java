@@ -1,8 +1,6 @@
 
 package org.confluence.terraentity.entity.ai.goal;
 
-import java.util.EnumSet;
-
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -12,6 +10,8 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.utils.TEUtils;
+
+import java.util.EnumSet;
 
 /**
  * 不同于原版的远程攻击ai，怪物可以根据情况选择前进和后退

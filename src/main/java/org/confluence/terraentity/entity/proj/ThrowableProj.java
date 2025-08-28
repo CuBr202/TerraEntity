@@ -7,8 +7,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curve;
 import org.confluence.terraentity.api.entity.animation.Curve;
+import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curve;
 import org.joml.Vector3f;
 
 

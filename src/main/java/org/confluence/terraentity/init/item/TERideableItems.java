@@ -1,6 +1,5 @@
 package org.confluence.terraentity.init.item;
 
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;

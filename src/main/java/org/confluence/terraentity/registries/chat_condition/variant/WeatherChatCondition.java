@@ -4,11 +4,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.level.Level;
+import org.confluence.terraentity.api.npc.chat.IChatCondition;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.chat.ChatHolder;
 import org.confluence.terraentity.registries.chat_condition.ChatConditionProvider;
 import org.confluence.terraentity.registries.chat_condition.ChatConditionProviderTypes;
-import org.confluence.terraentity.api.npc.chat.IChatCondition;
 
 import java.util.Optional;
 

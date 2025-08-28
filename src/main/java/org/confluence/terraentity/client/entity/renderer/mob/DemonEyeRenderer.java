@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-
 import org.confluence.terraentity.client.entity.model.DemonEyeModel;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.jetbrains.annotations.Nullable;

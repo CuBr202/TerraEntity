@@ -1,13 +1,9 @@
 package org.confluence.terraentity.api.entity.animation;
 
 
-
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
-import org.confluence.terraentity.entity.ai.keyframe.interpolator.KeyframeLinearInterpolator;
-import org.confluence.terraentity.entity.ai.keyframe.interpolator.KeyframeSplineInterpolator;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * <h2>插值器接口</h2>

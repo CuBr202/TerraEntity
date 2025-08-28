@@ -10,8 +10,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.confluence.terraentity.attachment.SummonerAttachment;
 import org.confluence.terraentity.api.entity.ISummonMob;
+import org.confluence.terraentity.attachment.SummonerAttachment;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEAttributes;
 

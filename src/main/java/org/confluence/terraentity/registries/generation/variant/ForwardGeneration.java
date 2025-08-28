@@ -6,9 +6,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import org.confluence.terraentity.api.entity.IGeneration;
 import org.confluence.terraentity.registries.generation.GenerationProvider;
 import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
-import org.confluence.terraentity.api.entity.IGeneration;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;

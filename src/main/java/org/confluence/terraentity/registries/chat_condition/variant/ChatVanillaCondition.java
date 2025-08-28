@@ -2,11 +2,11 @@ package org.confluence.terraentity.registries.chat_condition.variant;
 
 import com.mojang.serialization.MapCodec;
 import net.neoforged.neoforge.common.conditions.ICondition;
+import org.confluence.terraentity.api.npc.chat.IChatCondition;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.entity.npc.chat.ChatHolder;
 import org.confluence.terraentity.registries.chat_condition.ChatConditionProvider;
 import org.confluence.terraentity.registries.chat_condition.ChatConditionProviderTypes;
-import org.confluence.terraentity.api.npc.chat.IChatCondition;
 
 public record ChatVanillaCondition(ICondition condition) implements IChatCondition {
 

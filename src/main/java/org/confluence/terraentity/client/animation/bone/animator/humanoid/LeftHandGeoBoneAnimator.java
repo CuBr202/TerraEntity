@@ -3,12 +3,12 @@ package org.confluence.terraentity.client.animation.bone.animator.humanoid;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
-import org.confluence.terraentity.client.animation.bone.GeoBoneAnimator;
+import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.client.animation.api.context.AnimatorContext;
-import org.confluence.terraentity.entity.animation.BoneStates;
+import org.confluence.terraentity.client.animation.bone.GeoBoneAnimator;
 import org.confluence.terraentity.client.animation.bone.GeoBoneState;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
-import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
+import org.confluence.terraentity.entity.animation.BoneStates;
 import software.bernie.geckolib.cache.object.GeoBone;
 
 import java.util.EnumMap;

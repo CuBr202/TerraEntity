@@ -3,7 +3,6 @@ package org.confluence.terraentity.integration.curios;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.init.item.TERideableItems;
-import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.item.RideableItem;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;

@@ -1,7 +1,6 @@
 package org.confluence.terraentity.entity.npc.brain.behavior;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import org.confluence.terraentity.entity.ai.brain.behavior.range.RangeAttackBrain;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.init.TEAi;

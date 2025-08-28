@@ -1,7 +1,7 @@
 package org.confluence.terraentity.entity.ai.keyframe.baker;
 
-import org.confluence.terraentity.api.entity.animation.IKeyframeBaker;
 import org.confluence.terraentity.api.entity.animation.IInterpolator;
+import org.confluence.terraentity.api.entity.animation.IKeyframeBaker;
 
 /**
  * 使用插值器烘焙关键帧的关键帧烘焙器

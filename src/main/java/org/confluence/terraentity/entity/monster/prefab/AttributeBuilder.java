@@ -2,7 +2,6 @@ package org.confluence.terraentity.entity.monster.prefab;
 
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import org.confluence.terraentity.entity.monster.AbstractMonster;

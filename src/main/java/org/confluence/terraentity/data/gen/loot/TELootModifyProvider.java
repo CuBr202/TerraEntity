@@ -14,7 +14,6 @@ import net.neoforged.neoforge.common.loot.AddTableLootModifier;
 import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terraentity.TerraEntity;
-import twilightforest.data.LootModifierGenerator;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;

@@ -5,13 +5,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
 import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshEye;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animation.Animation;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
-import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
 
 @SuppressWarnings("removal")
 public class WallOfFleshEyeModel extends DefaultedEntityGeoModel<WallOfFleshEye> {
