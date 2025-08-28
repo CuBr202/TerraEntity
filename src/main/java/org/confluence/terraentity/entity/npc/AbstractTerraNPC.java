@@ -60,7 +60,7 @@ import org.confluence.terraentity.entity.npc.chat.ChatManager;
 import org.confluence.terraentity.entity.npc.chat.NPCChat;
 import org.confluence.terraentity.entity.npc.house.House;
 import org.confluence.terraentity.entity.npc.house.HouseManager;
-import org.confluence.terraentity.entity.npc.misc.InitialWeapons;
+import org.confluence.terraentity.entity.config.InitialWeapons;
 import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.Mood;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;

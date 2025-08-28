@@ -80,6 +80,10 @@ public class AttBuilder extends AttributeSupplier.Builder {
         this.add(Attributes.SAFE_FALL_DISTANCE, safeFall);
         return this;
     }
+    public AttBuilder gravity(double gravity) {
+        this.add(Attributes.GRAVITY, gravity);
+        return this;
+    }
     public AttBuilder moveSpeed(double moveSpeed) {
         this.add(Attributes.MOVEMENT_SPEED, moveSpeed);
         return this;

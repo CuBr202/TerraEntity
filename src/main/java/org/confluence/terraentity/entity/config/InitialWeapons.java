@@ -1,4 +1,4 @@
-package org.confluence.terraentity.entity.npc.misc;
+package org.confluence.terraentity.entity.config;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;

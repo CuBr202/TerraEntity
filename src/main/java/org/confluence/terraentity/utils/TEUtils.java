@@ -1,5 +1,6 @@
 package org.confluence.terraentity.utils;
 
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -46,15 +47,14 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static net.minecraft.world.item.Item.getPlayerPOVHitResult;
 
@@ -967,5 +967,9 @@ public final class TEUtils {
             return (float) ((IAttributeInstance) instance).terraentity$getPercentage();
         }
         return 1;
+    }
+
+    public static <K, V> Map<K,V> listToMap(Stream<? extends Pair<K, V>> pairs){
+        return pairs.collect(Collectors.toMap(Pair::left, Pair::right));
     }
 }

@@ -2,7 +2,7 @@ package org.confluence.terraentity.data.mappeddata;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import org.confluence.terraentity.entity.npc.misc.InitialWeapons;
+import org.confluence.terraentity.entity.config.InitialWeapons;
 import org.confluence.terraentity.registries.mappeddata.MappedData;
 import org.confluence.terraentity.registries.mappeddata.MappedDataType;
 import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;

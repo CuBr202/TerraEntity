@@ -2,6 +2,7 @@ package org.confluence.terraentity.init.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -28,6 +29,7 @@ import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.entity.monster.*;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.monster.humanoid.HumanoidMonster;
+import org.confluence.terraentity.entity.monster.humanoid.Wraith;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
@@ -158,10 +160,14 @@ public class TEMonsterEntities {
     /* *********肉后***************** */
     public static final DeferredHolder<EntityType<?>, EntityType<Wyvern<BaseWormPart>>> WYVERN = TEEntities.registerMonster("wyvern", (e, l) -> new Wyvern<>(e, l, new AbstractPrefab().getPrefab().setSpawnWithoutLight().setNoGravity()), 1F, 1F);
     public static final DeferredHolder<EntityType<?>, EntityType<Pixie>> PIXIE = TEEntities.registerMonster("pixie", (e, l) -> new Pixie(e, l, new AbstractPrefab().getPrefab().setSpawnWithoutLight()), 1F, 1F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> POSSESS_ARMOR = TEEntities.registerMonster("possess_armor", (e, l) -> new HumanoidMonster(e, l), 1F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Wraith>> WRAITH = TEEntities.registerMonster("wraith", (e, l) -> new Wraith(e, l), 1F, 2F);
 
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        ResourceLocation defaultHumanoidModel = TEMonsterEntities.GOBLIN_ARCHER.getId().withPrefix("goblin/");
+
         event.registerEntityRenderer(TEMonsterEntities.BLUE_SLIME.get(), c -> new CustomSlimeRenderer(c, "blue"));
         event.registerEntityRenderer(TEMonsterEntities.GREEN_SLIME.get(), c -> new CustomSlimeRenderer(c, "green"));
         event.registerEntityRenderer(TEMonsterEntities.PINK_SLIME.get(), c -> new CustomSlimeRenderer(c, "pink"));
@@ -274,6 +280,8 @@ public class TEMonsterEntities {
         /* *********肉后***************** */
         event.registerEntityRenderer(TEMonsterEntities.WYVERN.get(), c -> new WyvernRenderer<>(c, TEMonsterEntities.WYVERN.getId()));
         event.registerEntityRenderer(TEMonsterEntities.PIXIE.get(), c -> new FairyRenderer<>(c, TEMonsterEntities.PIXIE.getId(), false, 1, 0).setBoneToGlow(List.of("Outline","Outline2","Outline3"), List.of("bone","bone2","bone3")));
+        event.registerEntityRenderer(TEMonsterEntities.POSSESS_ARMOR.get(), c -> new HumanoidRenderer<>(c, defaultHumanoidModel));
+        event.registerEntityRenderer(TEMonsterEntities.WRAITH.get(), c -> new HumanoidRenderer<>(c, defaultHumanoidModel).setDisableRender());
 
     }
 
@@ -370,7 +378,7 @@ public class TEMonsterEntities {
         // 穿墙怪
         event.put(CURSED_SKULL.get(), AttBuilder.createAttributes(21, 6, 18, 32, 1, 0.82f).build());
 
-        event.put(GHOST.get(), AttBuilder.createAttributes(26, 4, 8, 16, 0, 0.55f).build());
+        event.put(GHOST.get(), AttBuilder.createAttributes(26, 4, 8, 16, 0, 0.55f).gravity(0).build());
 
         // 远程法师
         event.put(DARK_CASTER.get(), AttBuilder.createAttributes(26, 2, 10, 20, 1, 0.82f).build());
@@ -390,6 +398,8 @@ public class TEMonsterEntities {
         /* *********肉后***************** */
         event.put(WYVERN.get(), AttBuilder.createAttributes(2080, 10, 41, 50, 1f, 0.28f).build());
         event.put(PIXIE.get(), AttBuilder.createAttributes(78, 20, 28, 16, 0.46f, 0.28f).build());
+        event.put(POSSESS_ARMOR.get(), AttBuilder.createAttributes(41, 6, 10, 32, 1, 0.37f).build());
+        event.put(WRAITH.get(), AttBuilder.createAttributes(41, 6, 10, 32, 1, 0.37f).gravity(0).build());
 
     }
 
@@ -494,6 +504,9 @@ public class TEMonsterEntities {
         /* *********肉后***************** */
         event.register(WYVERN.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks.checkHardmode(SpawnPlacementChecks::checkHighLevelMonsterSpawn), RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(PIXIE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks.checkHardmode(SpawnPlacementChecks::checkRoutineMonsterSpawn), RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(POSSESS_ARMOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(WRAITH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
 
     }
 

@@ -9,10 +9,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -50,18 +47,8 @@ public class HumanoidMonster extends AbstractMonster implements RangedAttackMob,
     BoneStateMachine<BoneStates> leftArmBoneStateMachine;
     BoneStateMachine<BoneStates> rightArmBoneStateMachine;
     AttributeBuilder builder;
-    private final TERangedAttackGoal<HumanoidMonster> bowGoal = new TERangedAttackGoal<>(this, 1.0, 50, 15.0F);
-    private final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.2, false) {
-        public void stop() {
-            super.stop();
-            HumanoidMonster.this.setAggressive(false);
-        }
-
-        public void start() {
-            super.start();
-            HumanoidMonster.this.setAggressive(true);
-        }
-    };
+    protected final TERangedAttackGoal<?> bowGoal = this.createBowGoal();
+    protected final Goal meleeGoal = this.createMeleeGoal();
 
     public HumanoidMonster(EntityType<? extends HumanoidMonster> entityType, Level level, AttributeBuilder builder) {
         super(entityType, level, builder);
@@ -71,6 +58,10 @@ public class HumanoidMonster extends AbstractMonster implements RangedAttackMob,
             rightArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
         }
         this.builder = builder;
+    }
+
+    public HumanoidMonster(EntityType<? extends HumanoidMonster> entityType, Level level) {
+        this(entityType, level, new HumanoidBuilder());
     }
 
     @Override
@@ -204,7 +195,24 @@ public class HumanoidMonster extends AbstractMonster implements RangedAttackMob,
                 this.goalSelector.addGoal(4, this.meleeGoal);
             }
         }
+    }
 
+    protected Goal createMeleeGoal() {
+        return new MeleeAttackGoal(this, 1.2, false) {
+            public void stop() {
+                super.stop();
+                HumanoidMonster.this.setAggressive(false);
+            }
+
+            public void start() {
+                super.start();
+                HumanoidMonster.this.setAggressive(true);
+            }
+        };
+    }
+
+    protected TERangedAttackGoal<?> createBowGoal() {
+        return new TERangedAttackGoal<>(this, 1.0, 50, 15.0F);
     }
 
     protected int getHardAttackInterval() {

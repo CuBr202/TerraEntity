@@ -48,7 +48,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
 
     public AbstractMonster(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level);
-        this.builder = builder.setSpawnWithoutLight();
+        this.builder = builder;
         if (!level.isClientSide) {
             // 防止重复注册ai
             this.goalSelector.removeAllGoals(g->true);
@@ -60,6 +60,10 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
 
         this.xpReward = builder.xpReward;
         this.difficultSelector = new DifficultSelector(level());
+    }
+
+    public AbstractMonster(EntityType<? extends Monster> type, Level level) {
+        this(type, level, new AttributeBuilder());
     }
 
 //    @Override

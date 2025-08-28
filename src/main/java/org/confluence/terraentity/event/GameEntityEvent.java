@@ -32,6 +32,8 @@ import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.api.npc.trade.ITradeHolder;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
+import org.confluence.terraentity.data.mappeddata.MonsterMappedDatas;
+import org.confluence.terraentity.entity.config.InitialArmors;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
@@ -45,6 +47,7 @@ import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
 import org.confluence.terraentity.network.s2c.SyncLevelNamePacketS2C;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -173,54 +176,7 @@ public class GameEntityEvent {
     public static void entityInteract(PlayerInteractEvent.EntityInteract event) {
         // 打开商店
         if (event.getTarget() instanceof ITradeHolder holder) {
-
             ((IPlayer) event.getEntity()).terra_entity$setTradeHolder(holder);
-//            return;
-//        }
-//        ItemStack item = event.getItemStack();
-//        if (!(event.getTarget() instanceof LivingEntity entity)) return;
-//        Player player = event.getEntity();
-//        Level level = event.getLevel();
-//        if (entity.getType().equals(TEMonsterEntities.BLUE_SLIME.get()) ||
-//                entity.getType().equals(TEMonsterEntities.GREEN_SLIME.get()) ||
-//                entity.getType().equals(TEMonsterEntities.PURPLE_SLIME.get())) {
-//            if (item.is(TETags.Items.HONEY_TRANSLATION_BUCKET)) {
-//                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
-//                if (slime != null) {
-//                    item.shrink(1);
-//                    player.addItem(new ItemStack(Items.BUCKET));
-//                    slime.setSize(2, true);
-//                    slime.setPos(entity.position());
-//                    slime.setXRot(entity.getXRot());
-//                    slime.setYRot(entity.getYRot());
-//                    level.addFreshEntity(slime);
-//                }
-//                entity.remove(Entity.RemovalReason.DISCARDED);
-//            } else if (item.is(TETags.Items.HONEY_TRANSLATION)) {
-//                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
-//                if (slime != null) {
-//                    item.shrink(1);
-//                    slime.setSize(2, true);
-//                    slime.setPos(entity.position());
-//                    slime.setXRot(entity.getXRot());
-//                    slime.setYRot(entity.getYRot());
-//                    level.addFreshEntity(slime);
-//                }
-//                entity.remove(Entity.RemovalReason.DISCARDED);
-//            } else if (item.is(TETags.Items.HONEY_TRANSLATION_NOT_CONSUMED)) {
-//                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
-//                if (slime != null) {
-//                    slime.setSize(2, true);
-//                    slime.setPos(entity.position());
-//                    slime.setXRot(entity.getXRot());
-//                    slime.setYRot(entity.getYRot());
-//                    level.addFreshEntity(slime);
-//                }
-//                entity.remove(Entity.RemovalReason.DISCARDED);
-//                event.setCanceled(true);
-//                return;
-//            }
-//            event.setCanceled(true);
         }
     }
 
@@ -254,6 +210,10 @@ public class GameEntityEvent {
         if(mob instanceof Boss boss && boss.shouldEnhanceMultiplayer()) {
             TEUtils.multiplePlayerEnhance(mob);
         }
+
+        InitialArmors data = MappedDataTypes.getData(MappedDataTypes.MONSTER_MAP_DATAS, MonsterMappedDatas.MONSTER_ARMOR);
+        data.getRandom(mob.getType()).accept(mob);
+//        BuiltInRegistries.ENTITY_TYPE.getData(null, BuiltInRegistries.ENTITY_TYPE.getResourceKey(mob.getType()).get())
 
     }
     // 貌似没必要使用这个，重写monster的方法就行

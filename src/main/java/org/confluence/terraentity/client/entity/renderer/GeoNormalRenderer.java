@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.Color;
@@ -23,6 +24,7 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
     protected float scale;
     protected float offsetY;
     protected float motionAnimThreshold = 0.01F;
+    protected boolean disableRenderModel;
     Color consumeColor;
 
     /**
@@ -45,10 +47,6 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
         this.shadowRadius = 0.25F;
     }
 
-    public GeoNormalRenderer<T> setMotionAnimThreshold(float threshold) {
-        this.motionAnimThreshold = threshold;
-        return this;
-    }
 
     @Override
     public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
@@ -86,6 +84,33 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
         return motionAnimThreshold;
     }
 
+    public GeoNormalRenderer<T> setMotionAnimThreshold(float threshold) {
+        this.motionAnimThreshold = threshold;
+        return this;
+    }
+
+    @Override
+    public void renderCubesOfBone(PoseStack poseStack, GeoBone bone, VertexConsumer buffer, int packedLight,
+                                  int packedOverlay, int colour) {
+        if (this.disableRenderModel){
+            return;
+        }
+        super.renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, colour);
+    }
+
+    @Override
+    public Color getRenderColor(T animatable, float partialTick, int packedLight) {
+        Color color = consumeColor;
+        if(color!= null){
+            return color;
+        }
+        return Color.WHITE;
+    }
+
+    public void setConsumeColor(Color consumeColor) {
+        this.consumeColor = consumeColor;
+    }
+
     public GeoNormalRenderer<T> setShadowRadius(float shadowRadius) {
         this.shadowRadius = shadowRadius;
         return this;
@@ -117,18 +142,12 @@ public class GeoNormalRenderer<T extends Entity & GeoEntity> extends GeoEntityRe
         this.ifRotX = ifRotX;
         return this;
     }
-
-
-    @Override
-    public Color getRenderColor(T animatable, float partialTick, int packedLight) {
-        Color color = consumeColor;
-        if(color!= null){
-            return color;
-        }
-        return Color.WHITE;
+    public GeoNormalRenderer<T> setDisableRender() {
+        this.disableRenderModel = true;
+        return this;
     }
 
-    public void setConsumeColor(Color consumeColor) {
-        this.consumeColor = consumeColor;
-    }
+
+
+
 }

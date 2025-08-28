@@ -14,8 +14,7 @@ import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 
-import static org.confluence.terraentity.client.entity.renderer.mob.HumanoidRenderer.LEFT_HAND;
-import static org.confluence.terraentity.client.entity.renderer.mob.HumanoidRenderer.RIGHT_HAND;
+import static org.confluence.terraentity.client.entity.layer.ArmorLayer.*;
 
 /**
  * 人形怪的Geo模型
@@ -47,10 +46,10 @@ public class GeoHumanoidModel<T extends LivingEntity & GeoEntity & IUseItemAnima
             handleBone(animatable.getLeftArmBoneStateMachine(), animatable, leftArmAnimator, partialTick, context);
         }
         if(animatable.getVehicle() != null) {
-            this.getBone("LeftLeg").ifPresent(bone -> {
+            this.getBone(LEFT_ARMOR_LEG).ifPresent(bone -> {
                 bone.setRotX(1.5707963F);
             });
-            this.getBone("RightLeg").ifPresent(bone -> {
+            this.getBone(RIGHT_ARMOR_LEG).ifPresent(bone -> {
                 bone.setRotX(1.5707963F);
             });
         }
