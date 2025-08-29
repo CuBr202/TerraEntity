@@ -7,6 +7,8 @@ import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import org.confluence.lib.mixed.SelfGetter;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -18,7 +20,8 @@ public interface IMinion<T extends Mob> extends SelfGetter<T> {
 
     EntityDataAccessor<Optional<UUID>> getDATA_OWNER_UUID();
 
-    default UUID minion_getOwnerUUID() {
+    @Contract(pure = true)
+    default @Nullable UUID minion_getOwnerUUID() {
         return (confluence$self().getEntityData().get(getDATA_OWNER_UUID())).orElse(null);
     }
 
