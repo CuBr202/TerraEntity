@@ -1,5 +1,7 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -8,6 +10,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.ai.goal.FloatAiGoal;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.init.TESounds;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
@@ -28,5 +32,9 @@ public class Ghost extends AbstractMonster {
         targetSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 5));
     }
 
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.SOUL_DEATH.get();
+    }
 }
 

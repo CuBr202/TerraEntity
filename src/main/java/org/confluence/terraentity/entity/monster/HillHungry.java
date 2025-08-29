@@ -2,11 +2,14 @@ package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.boss.hillofflesh.HillOfFlesh;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.init.TESounds;
 import org.jetbrains.annotations.NotNull;
 
 // 必须注册新的实体类型才能在客户端使用类型推断
@@ -38,4 +41,13 @@ public class HillHungry extends TheHungry {
         tag.putInt("mouth_index", index);
     }
 
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return TESounds.THE_HUNGRY_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.THE_HUNGRY_DEATH.get();
+    }
 }

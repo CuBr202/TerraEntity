@@ -48,6 +48,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
     public static Supplier<AttributeBuilder> SPORE_ZOMBIE_BUILDER =
             ()->new LandMonsterPrefab().getPrefab()
                     .setSpawnWithoutLight()
+                    .setAmbientSound(TESounds.TR_ZOMBIE_FREE)
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .addTarget((t,e)-> {
                         t.addGoal(1,new AccelerateOnSeeingGoal(e,0.25f));
@@ -75,6 +76,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
     public static Supplier<AttributeBuilder> HAT_SPORE_ZOMBIE_BUILDER =
             ()->new LandMonsterPrefab().getPrefab()
                     .setSpawnWithoutLight()
+                    .setAmbientSound(TESounds.TR_ZOMBIE_FREE)
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .addTarget((t,e)-> {
                         t.addGoal(1,new AccelerateOnSeeingGoal(e,0.25f));
@@ -121,6 +123,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
 
     public static Supplier<AttributeBuilder> BLOOD_ZOMBIE_BUILDER =
             ()->new LandMonsterPrefab().getPrefab()
+                    .setAmbientSound(TESounds.TR_ZOMBIE_FREE)
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .addTarget((t,e)-> {
                         t.addGoal(1,new AccelerateOnSeeingGoal(e,0.25f));

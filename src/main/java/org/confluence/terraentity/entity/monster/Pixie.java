@@ -1,6 +1,8 @@
 package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -12,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.confluence.terraentity.entity.animal.Bird;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -79,5 +82,20 @@ public class Pixie extends AbstractMonster implements FlyingAnimal {
     }
 
     protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return TESounds.PIXIE_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound(){
+        return TESounds.PIXIE_FREE.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.PIXIE_DEATH.get();
     }
 }

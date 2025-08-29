@@ -77,6 +77,9 @@ public class TESpawnEggItems {
     public static final DeferredItem<SpawnEggItem> SNOW_FLINX_SPAWN_EGG = registerEgg("snow_flinx_spawn_egg", TEMonsterEntities.SNOW_FLINX, 0xffffff, 0xffffff);
 
     public static final DeferredItem<SpawnEggItem> PIRANHA_SPAWN_EGG = registerEgg("piranha_spawn_egg", TEMonsterEntities.PIRANHA, 0xffffff, 0xffffff);
+    public static final DeferredItem<SpawnEggItem> BLUE_JELLYFISH_SPAWN_EGG = registerEgg("blue_jellyfish_spawn_egg", TEMonsterEntities.BLUE_JELLYFISH, 0xffffff, 0xffffff);
+    public static final DeferredItem<SpawnEggItem> PINK_JELLYFISH_SPAWN_EGG = registerEgg("pink_jellyfish_spawn_egg", TEMonsterEntities.PINK_JELLYFISH, 0xffffff, 0xffffff);
+    public static final DeferredItem<SpawnEggItem> GREEN_JELLYFISH_SPAWN_EGG = registerEgg("green_jellyfish_spawn_egg", TEMonsterEntities.GREEN_JELLYFISH, 0xffffff, 0xffffff);
 
     // BOSS
     public static final DeferredItem<SpawnEggItem> KING_SLIME_SPAWN_EGG = registerEgg("king_slime_spawn_egg", TEBossEntities.KING_SLIME, 0xffffff, 0xffffff);

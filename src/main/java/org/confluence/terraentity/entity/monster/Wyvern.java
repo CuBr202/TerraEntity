@@ -3,7 +3,9 @@ package org.confluence.terraentity.entity.monster;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,6 +22,8 @@ import org.confluence.terraentity.api.entity.IHeightControlMob;
 import org.confluence.terraentity.entity.ai.goal.ComeAndBackDashAttackGoal;
 import org.confluence.terraentity.entity.ai.goal.MutableRangeNearestAttackableTargetGoal;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.init.TESounds;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
@@ -235,4 +239,13 @@ public class Wyvern<S extends BaseWormPart> extends BaseWorm<S> implements IDisc
         return y + 10; // 至少离地面10格高
     }
 
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return TESounds.WYVERN_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.WYVERN_DEATH.get();
+    }
 }

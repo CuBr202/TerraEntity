@@ -1,5 +1,7 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -10,6 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.mixin.accessor.EntityAccessor;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -102,5 +105,19 @@ public class AntlionSwarmer extends AbstractMonster {
 
         setDeltaMovement(motion);
         super.move(pType, motion);
+    }
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return TESounds.ANTLION_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound(){
+        return TESounds.ANTLION_SWARMER_FREE.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.ANTLION_SWARMER_DEATH.get();
     }
 }

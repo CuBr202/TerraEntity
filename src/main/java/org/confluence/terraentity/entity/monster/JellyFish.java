@@ -5,8 +5,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -24,6 +26,8 @@ import org.confluence.terraentity.api.entity.ai.IFSMGeoMob;
 import org.confluence.terraentity.entity.ai.fsm.CircleMobSkills;
 import org.confluence.terraentity.entity.ai.fsm.MobSkill;
 import org.confluence.terraentity.entity.ai.goal.FSMGoal;
+import org.confluence.terraentity.init.TESounds;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -206,5 +210,20 @@ public class JellyFish extends WaterAnimal implements GeoEntity, IFSMGeoMob  {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return TESounds.JELLYFISH_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound(){
+        return TESounds.JELLYFISH_FREE.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.JELLYFISH_DEATH.get();
     }
 }

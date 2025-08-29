@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -24,6 +25,7 @@ import org.confluence.terraentity.entity.monster.demoneye.DemonEyeSurroundTarget
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeWanderGoal;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixin.accessor.EntityAccessor;
 import org.confluence.terraentity.utils.TEUtils;
@@ -405,5 +407,15 @@ public class TheHungry extends AbstractMonster implements IMinion, Boss.BossPart
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         return false;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return TESounds.THE_HUNGRY_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.THE_HUNGRY_DEATH.get();
     }
 }

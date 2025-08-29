@@ -63,6 +63,9 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEMonsterEntities.SNOW_FLINX.get(), "小雪怪");
 
         add(TEMonsterEntities.PIRANHA.get(), "食人鱼");
+        add(TEMonsterEntities.BLUE_JELLYFISH.get(), "蓝水母");
+        add(TEMonsterEntities.PINK_JELLYFISH.get(), "粉水母");
+        add(TEMonsterEntities.GREEN_JELLYFISH.get(), "绿水母");
 
         add(TEMonsterEntities.WANDERING_EYE_FISH.get(), "游荡眼球怪鱼");
         add(TEMonsterEntities.BLOOD_CRAWLER.get(), "血爬虫");
@@ -215,6 +218,9 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.SNOW_FLINX_SPAWN_EGG.get(), "小雪怪刷怪蛋");
 
         add(TESpawnEggItems.PIRANHA_SPAWN_EGG.get(), "食人鱼刷怪蛋");
+        add(TESpawnEggItems.BLUE_JELLYFISH_SPAWN_EGG.get(), "蓝水母刷怪蛋");
+        add(TESpawnEggItems.PINK_JELLYFISH_SPAWN_EGG.get(), "粉水母刷怪蛋");
+        add(TESpawnEggItems.GREEN_JELLYFISH_SPAWN_EGG.get(), "绿水母刷怪蛋");
 
 
         add(TESpawnEggItems.EATER_OF_SOULS_SPAWN_EGG.get(), "噬魂怪刷怪蛋");
@@ -599,6 +605,47 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.subtitle.summon_hornet", "黄蜂：召唤");
         add("terra_entity.subtitle.summon_eye", "飞行召唤物：召唤");
         add("terra_entity.subtitle.summon_imp", "小鬼：召唤");
+        add("terra_entity.subtitle.summon_money_trough", "存钱罐：召唤");
+        add("terra_entity.subtitle.antlion_death", "蚁狮：死亡");
+        add("terra_entity.subtitle.antlion_hurt", "蚁狮：受伤");
+        add("terra_entity.subtitle.antlion_free", "蚁狮：活动");
+        add("terra_entity.subtitle.antlion_swarmer_death", "蚁狮蜂：死亡");
+        add("terra_entity.subtitle.antlion_swarmer_free", "蚁狮蜂：移动");
+        add("terra_entity.subtitle.bat_death", "蝙蝠：死亡");
+        add("terra_entity.subtitle.beetle_death", "胭脂虫：死亡");
+        add("terra_entity.subtitle.blood_jelly_death", "血水母：死亡");
+        add("terra_entity.subtitle.blood_jelly_free", "血水母：漂浮");
+        add("terra_entity.subtitle.bone_serpent_death", "骨蛇：死亡");
+        add("terra_entity.subtitle.demon_death", "恶魔：死亡");
+        add("terra_entity.subtitle.demon_free", "恶魔：嘶吼");
+        add("terra_entity.subtitle.demon_hurt", "恶魔：受伤");
+        add("terra_entity.subtitle.dungeon_spirit_death", "地牢幽灵：消散");
+        add("terra_entity.subtitle.dungeon_spirit_free", "地牢幽灵：飘动");
+        add("terra_entity.subtitle.dungeon_spirit_hurt", "地牢幽灵：受击");
+        add("terra_entity.subtitle.granite_golem_death", "花岗岩巨人：崩塌");
+        add("terra_entity.subtitle.granite_golem_hurt", "花岗岩巨人：受损");
+        add("terra_entity.subtitle.granite_golem_free", "花岗岩巨人：行走");
+        add("terra_entity.subtitle.jellyfish_death", "水母：爆裂");
+        add("terra_entity.subtitle.jellyfish_free", "水母：游动");
+        add("terra_entity.subtitle.jellyfish_hurt", "水母：受刺激");
+        add("terra_entity.subtitle.pixie_death", "妖精：消失");
+        add("terra_entity.subtitle.pixie_free", "妖精：飞舞");
+        add("terra_entity.subtitle.pixie_hurt", "妖精：受惊");
+        add("terra_entity.subtitle.sand_shoot", "沙子：喷射");
+        add("terra_entity.subtitle.soul_death", "灵体：湮灭");
+        add("terra_entity.subtitle.tr_zombie_free", "僵尸：嘶吼");
+        add("terra_entity.subtitle.unicorn_death", "独角兽：悲鸣");
+        add("terra_entity.subtitle.unicorn_hurt", "独角兽：痛鸣");
+        add("terra_entity.subtitle.wyvern_death", "飞龙：坠落");
+        add("terra_entity.subtitle.wyvern_hurt", "飞龙：咆哮");
+        add("terra_entity.subtitle.the_hungry_death", "饿鬼：消亡");
+        add("terra_entity.subtitle.the_hungry_hurt", "饿鬼：受击");
+        add("terra_entity.subtitle.wall_of_flesh_hurt", "血肉：受创");
+        add("terra_entity.subtitle.wall_of_flesh_roar", "血肉：咆哮");
+        add("terra_entity.subtitle.wall_of_flesh_summon", "血肉：呕吐");
+
+
+
 
         // 车万女仆
         add("task.terra_entity.boomerang_attack", "回旋镖攻击");

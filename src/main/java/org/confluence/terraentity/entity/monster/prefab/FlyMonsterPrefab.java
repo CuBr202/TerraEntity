@@ -70,7 +70,10 @@ public class FlyMonsterPrefab extends AbstractPrefab {
             ;
 
     public static Supplier<AttributeBuilder> CAVE_BAT_BUILDER  =
+
             ()->new FlyMonsterPrefab().getPrefab()
+                    .setHurtSound(TESounds.ROUTINE_HURT)
+                    .setDeathSound(TESounds.BAT_DEATH)
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,1f,0.5f,30,
                                 0.02f,20,20,45));
@@ -82,6 +85,8 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     public static Supplier<AttributeBuilder> JUNGLE_BAT_BUILDER  =
             ()->new FlyMonsterPrefab().getPrefab()
+                    .setHurtSound(TESounds.ROUTINE_HURT)
+                    .setDeathSound(TESounds.BAT_DEATH)
                     .setSpawnWithoutLight()
                     .addGoal((g,e)->{
                         g.addGoal(0, new DashGoal(e,1f,0.5f,30,

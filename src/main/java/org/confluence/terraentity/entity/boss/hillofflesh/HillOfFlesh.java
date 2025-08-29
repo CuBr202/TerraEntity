@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -52,6 +53,7 @@ import org.confluence.terraentity.entity.monster.slime.FleshSlime;
 import org.confluence.terraentity.entity.proj.LavaPillar;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEEffects;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
@@ -927,4 +929,15 @@ public class HillOfFlesh extends AbstractTerraBossBase implements Boss {
             this.setOutRadium(this.getOutRadium());
         }
     }
+
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return TESounds.WALL_OF_FLESH_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.WALL_OF_FLESH_ROAR.get();
+    }
+
 }

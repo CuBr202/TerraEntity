@@ -38,6 +38,7 @@ import org.confluence.terraentity.entity.monster.slime.*;
 import org.confluence.terraentity.entity.util.AttBuilder;
 import org.confluence.terraentity.entity.util.SpawnPlacementChecks;
 import org.confluence.terraentity.init.TEEntities;
+import org.confluence.terraentity.init.TESounds;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 import java.util.List;
@@ -162,8 +163,8 @@ public class TEMonsterEntities {
     /* *********肉后***************** */
     public static final DeferredHolder<EntityType<?>, EntityType<Wyvern<BaseWormPart>>> WYVERN = TEEntities.registerMonster("wyvern", (e, l) -> new Wyvern<>(e, l, new AbstractPrefab().getPrefab().setSpawnWithoutLight().setNoGravity()), 1F, 1F);
     public static final DeferredHolder<EntityType<?>, EntityType<Pixie>> PIXIE = TEEntities.registerMonster("pixie", (e, l) -> new Pixie(e, l, new AbstractPrefab().getPrefab().setSpawnWithoutLight()), 1F, 1F);
-    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> POSSESS_ARMOR = TEEntities.registerMonster("possess_armor", (e, l) -> new HumanoidMonster(e, l), 1F, 2F);
-    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> POSSESS_ARMOR_VOID_VESSEL = TEEntities.registerMonster("possess_armor_void_vessel", (e, l) -> new HumanoidMonster(e, l), 1F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> POSSESS_ARMOR = TEEntities.registerMonster("possess_armor", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab().getPrefab().setDeathSound(TESounds.SOUL_DEATH).setHurtSound(TESounds.METAL_HURT)), 1F, 2F);
+    public static final DeferredHolder<EntityType<?>, EntityType<HumanoidMonster>> POSSESS_ARMOR_VOID_VESSEL = TEEntities.registerMonster("possess_armor_void_vessel", (e, l) -> new HumanoidMonster(e, l, new AbstractPrefab().getPrefab().setDeathSound(TESounds.SOUL_DEATH).setHurtSound(TESounds.METAL_HURT)), 1F, 2F);
     public static final DeferredHolder<EntityType<?>, EntityType<Wraith>> WRAITH = TEEntities.registerMonster("wraith", (e, l) -> new Wraith(e, l), 1F, 2F);
 
 
@@ -354,10 +355,10 @@ public class TEMonsterEntities {
         event.put(GRANITE_ELEMENTAL.get(), AttBuilder.fly(AttBuilder.createAttributes(46, 8, 17, 32, 1f, 0.73f)).build());
 
         // swim
-        event.put(PIRANHA.get(), AttBuilder.createAttributes().build());
-        event.put(BLUE_JELLYFISH.get(), AttBuilder.createAttributes().build());
-        event.put(PINK_JELLYFISH.get(), AttBuilder.createAttributes().build());
-        event.put(GREEN_JELLYFISH.get(), AttBuilder.createAttributes().build());
+        event.put(PIRANHA.get(), AttBuilder.createAttributes(15,2,13,16,0.1f,0.5f).build());
+        event.put(BLUE_JELLYFISH.get(), AttBuilder.createAttributes(17,4,13,16,0.1f,0.5f).build());
+        event.put(PINK_JELLYFISH.get(), AttBuilder.createAttributes(36,6,15,16,0.1f,0.5f).build());
+        event.put(GREEN_JELLYFISH.get(), AttBuilder.createAttributes(62,18,41,20,0.1f,0.5f).build());
 
 
         // bat
@@ -469,7 +470,7 @@ public class TEMonsterEntities {
         event.register(PIRANHA.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BLUE_JELLYFISH.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(PINK_JELLYFISH.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(GREEN_JELLYFISH.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GREEN_JELLYFISH.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks.checkHardmode(WaterAnimal::checkSurfaceWaterAnimalSpawnRules), RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
 
         // worm
