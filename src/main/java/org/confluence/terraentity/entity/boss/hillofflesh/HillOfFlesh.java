@@ -67,7 +67,7 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.*;
 
-public class HillOfFlesh extends AbstractTerraBossBase<HillOfFlesh> implements Boss {
+public class HillOfFlesh extends AbstractTerraBossBase implements Boss {
 
     public final float innerRadius;
     public final float outerRadius;

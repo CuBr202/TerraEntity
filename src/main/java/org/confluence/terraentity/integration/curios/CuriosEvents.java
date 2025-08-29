@@ -22,7 +22,7 @@ public class CuriosEvents {
             if(!from.isEmpty()){
                 List<Entity> entities = event.getEntity().getData(TEAttachments.SUMMONER_STORAGE).getEntities(event.getEntity().level());
                 for(Entity entity : entities){
-                    if(entity instanceof IPetMob<?> pet){
+                    if(entity instanceof IPetMob pet){
                         pet.asEntity().discard();
                     }
                 }

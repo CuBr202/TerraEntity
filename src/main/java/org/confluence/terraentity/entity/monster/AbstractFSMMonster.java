@@ -4,6 +4,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
@@ -15,10 +16,10 @@ import org.confluence.terraentity.entity.ai.goal.FSMGoal;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import software.bernie.geckolib.animation.AnimatableManager;
 
-public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extends AbstractMonster implements IFSMGeoMob<T> {
+public abstract class AbstractFSMMonster extends AbstractMonster implements IFSMGeoMob {
 
     protected ClientBoundAnimationMessage clientBoundAnimationMessage = new ClientBoundAnimationMessage();
-    FSMGoal fsmGoal;
+    FSMGoal<?> fsmGoal;
 
     protected static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractFSMMonster.class, EntityDataSerializers.INT);
 
@@ -26,6 +27,10 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
         super(type, level, builder);
 
         fsmGoal = createFSMGoal(DATA_SKILL_INDEX);
+    }
+
+    public AbstractFSMMonster(EntityType<? extends Monster> type, Level level) {
+        this(type, level, new AttributeBuilder());
     }
 
     @Override
@@ -36,7 +41,7 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
 
     }
 
-    protected abstract FSMGoal<T> createFSMGoal(EntityDataAccessor<Integer> data);
+    protected abstract FSMGoal<?> createFSMGoal(EntityDataAccessor<Integer> data);
 
     @Override
     public void tick() {
@@ -74,7 +79,7 @@ public abstract class AbstractFSMMonster<T extends AbstractFSMMonster<T>> extend
     }
 
     @Override
-    public CircleMobSkills<T> getSkills() {
+    public CircleMobSkills getSkills() {
         return fsmGoal.getSkills();
     }
 

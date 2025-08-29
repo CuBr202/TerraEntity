@@ -65,7 +65,7 @@ import static org.confluence.terraentity.utils.TEUtils.getMultiple;
  * @param <T> Boss类型
  */
 @SuppressWarnings("all")
-public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackEntity<T>, IStateChangeableMob<AbstractTerraBossBase> {
+public abstract class AbstractTerraBossBase extends Monster implements GeoEntity, IFSMGeoMob, ICollisionAttackEntity, IStateChangeableMob {
 
 /* 属性 */
 

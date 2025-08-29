@@ -17,7 +17,7 @@ import org.confluence.terraentity.init.TEAttributes;
 
 import java.util.List;
 
-public class SentryItem<T extends Mob & ISummonMob<T>> extends SummonItem<T> {
+public class SentryItem<T extends Mob & ISummonMob> extends SummonItem<T> {
 
     public SentryItem(Properties properties, DeferredHolder<EntityType<?>, EntityType<T>> entityType, int consume, float baseAttackDamage, List<Component> tooltip) {
         super(properties, entityType, consume, baseAttackDamage, TEAttachments.SENTRY_STORAGE, tooltip);

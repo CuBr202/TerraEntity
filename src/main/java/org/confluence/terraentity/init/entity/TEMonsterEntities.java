@@ -18,10 +18,8 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.confluence.terraentity.client.entity.model.DemonModel;
-import org.confluence.terraentity.client.entity.model.GeoNormalModel;
-import org.confluence.terraentity.client.entity.model.NymphModel;
-import org.confluence.terraentity.client.entity.model.VariantTexModel;
+import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.client.entity.model.*;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.TheHungryRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.*;
@@ -100,6 +98,9 @@ public class TEMonsterEntities {
 
     // 水怪
     public static final DeferredHolder<EntityType<?>, EntityType<Piranha>> PIRANHA = TEEntities.registerMonster("piranha", (e, l)->new Piranha(e,l), 0.5F, 0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<JellyFish>> BLUE_JELLYFISH = TEEntities.registerMonster("blue_jellyfish", (e, l)->new JellyFish(e,l), 0.5F, 0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<JellyFish>> PINK_JELLYFISH = TEEntities.registerMonster("pink_jellyfish", (e, l)->new JellyFish(e,l), 0.5F, 0.5F);
+    public static final DeferredHolder<EntityType<?>, EntityType<JellyFish>> GREEN_JELLYFISH = TEEntities.registerMonster("green_jellyfish", (e, l)->new JellyFish(e,l), 0.5F, 0.5F);
 
 
     // 蜜蜂
@@ -229,6 +230,9 @@ public class TEMonsterEntities {
         });
 
         event.registerEntityRenderer(TEMonsterEntities.PIRANHA.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.PIRANHA.getId(), true));
+        event.registerEntityRenderer(TEMonsterEntities.BLUE_JELLYFISH.get(), c -> new JellyFishRenderer(c, new GeoModelTextureDecoration<>(new GeoNormalModel<>(TerraEntity.space("jellyfish")), TerraEntity.space("blue_jellyfish") )));
+        event.registerEntityRenderer(TEMonsterEntities.PINK_JELLYFISH.get(), c -> new JellyFishRenderer(c, new GeoModelTextureDecoration<>(new GeoNormalModel<>(TerraEntity.space("jellyfish")), TerraEntity.space("pink_jellyfish") )));
+        event.registerEntityRenderer(TEMonsterEntities.GREEN_JELLYFISH.get(), c -> new JellyFishRenderer(c, new GeoModelTextureDecoration<>(new GeoNormalModel<>(TerraEntity.space("jellyfish")), TerraEntity.space("green_jellyfish") )));
 
         event.registerEntityRenderer(TEMonsterEntities.DEVOURER.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.DEVOURER.getId(), 2.0f, 0.0f));
         event.registerEntityRenderer(TEMonsterEntities.GIANT_WORM.get(), c -> new GeoWormRenderer<>(c, TEMonsterEntities.GIANT_WORM.getId(), 2.0f, 0.0f));
@@ -351,6 +355,9 @@ public class TEMonsterEntities {
 
         // swim
         event.put(PIRANHA.get(), AttBuilder.createAttributes().build());
+        event.put(BLUE_JELLYFISH.get(), AttBuilder.createAttributes().build());
+        event.put(PINK_JELLYFISH.get(), AttBuilder.createAttributes().build());
+        event.put(GREEN_JELLYFISH.get(), AttBuilder.createAttributes().build());
 
 
         // bat
@@ -460,6 +467,9 @@ public class TEMonsterEntities {
 
         // swim
         event.register(PIRANHA.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(BLUE_JELLYFISH.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(PINK_JELLYFISH.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(GREEN_JELLYFISH.get(), SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 
 
         // worm

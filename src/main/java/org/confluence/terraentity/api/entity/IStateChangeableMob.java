@@ -6,7 +6,7 @@ import net.minecraft.world.entity.Entity;
 /**
  * 受伤或再次生成时自动切换状态
  */
-public interface IStateChangeableMob<T extends Entity> {
+public interface IStateChangeableMob {
 
     EntityDataAccessor<Integer> get_DATA_STATUS_STATUS();
 
@@ -15,8 +15,8 @@ public interface IStateChangeableMob<T extends Entity> {
      */
     void changeState();
 
-    private T getSelf() {
-        return (T) this;
+    private Entity getSelf() {
+        return (Entity) this;
     }
 
     default int getStage(){

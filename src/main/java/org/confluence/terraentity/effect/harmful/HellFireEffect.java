@@ -53,7 +53,7 @@ public class HellFireEffect extends MobEffect {
 
                     @Override
                     public float getEntityDamageAmount(Explosion explosion, Entity entity) {
-                        if (!(entity instanceof Enemy || entity instanceof AbstractTerraBossBase<?>)) return 0;
+                        if (!(entity instanceof Enemy || entity instanceof AbstractTerraBossBase)) return 0;
                         return 3 + amplifier * 3;
                     }
 

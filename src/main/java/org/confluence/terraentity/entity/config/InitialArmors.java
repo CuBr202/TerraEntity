@@ -19,15 +19,24 @@ import org.confluence.terraentity.init.item.TEArmors;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
-public class InitialArmors  {
+/**
+ * 初始化怪物的盔甲，使用{@link org.confluence.terraentity.data.mappeddata.MonsterMappedDatas#MONSTER_ARMOR MonsterMappedDatas数据包}来配置套装权重
+ */
+public class InitialArmors implements Consumer<LivingEntity> {
+
     final Map<EntityType<?>, List<InitialArmors.Weight>> weightMap;
     final Map<EntityType<?>, Map<List<Suit>, Float>> weightMapMap;
+
+    public static Codec<InitialArmors> CODEC = Codec.unboundedMap(BuiltInRegistries.ENTITY_TYPE.byNameCodec(), InitialArmors.Weight.CODEC.listOf())
+            .xmap(InitialArmors::new, InitialArmors::weightMap);
+
+    private Map<EntityType<?>, List<InitialArmors.Weight>> weightMap() {
+        return this.weightMap;
+    }
     InitialArmors(Map<EntityType<?>, List<InitialArmors.Weight>> weightMap){
         this.weightMap = weightMap;
         this.weightMapMap = new HashMap<>();
@@ -35,6 +44,15 @@ public class InitialArmors  {
             Map<List<Suit>, Float> wt = TEUtils.listToMap(weights.stream());
             weightMapMap.put(type, wt);
         });
+    }
+
+    /**
+     * 应用随机套装
+     * @param entity 实体类型
+     */
+    @Override
+    public void accept(LivingEntity entity) {
+        this.getRandom(entity.getType()).accept(entity);
     }
 
     record Weight(List<Suit> suits, float chance) implements Pair<List<Suit>, Float> {
@@ -79,7 +97,7 @@ public class InitialArmors  {
         }
     }
 
-    public record Suit(EquipmentSlot slot, ItemStack stack) {
+    record Suit(EquipmentSlot slot, ItemStack stack) {
         static Codec<Suit> CODEC = RecordCodecBuilder.create(instance-> instance.group(
                 EquipmentSlot.CODEC.fieldOf("slot").forGetter(ins->ins.slot),
                 ItemStack.CODEC.fieldOf("item").forGetter(ins->ins.stack)
@@ -113,10 +131,13 @@ public class InitialArmors  {
         static Codec<List<Suit>> LIST_CODEC = TECodecs.alternativeCodec(_LIST_CODEC, Codec.list(Suit.CODEC),
                 list -> {
                     if (list.size() == 4) {
-                        return Either.left(list);
-                    } else {
-                        return Either.right(list);
+                        Set<EquipmentSlot> set = list.stream().map(i->i.slot).collect(Collectors.toSet());
+                        if(set.contains(EquipmentSlot.HEAD) && set.contains(EquipmentSlot.CHEST) &&
+                        set.contains(EquipmentSlot.LEGS) && set.contains(EquipmentSlot.FEET)) {
+                            return Either.left(list);
+                        }
                     }
+                    return Either.right(list);
                 }
         );
 
@@ -128,15 +149,12 @@ public class InitialArmors  {
 
     }
 
-    public static Codec<InitialArmors> CODEC = Codec.unboundedMap(BuiltInRegistries.ENTITY_TYPE.byNameCodec(), InitialArmors.Weight.CODEC.listOf())
-            .xmap(InitialArmors::new, InitialArmors::weightMap);
-
-    private Map<EntityType<?>, List<InitialArmors.Weight>> weightMap() {
-        return this.weightMap;
-    }
-
-
-    public SuitList getRandom(EntityType<?> type){
+    /**
+     * 按权重选择套装
+     * @param type 实体类型
+     * @return 盔甲套装
+     */
+    SuitList getRandom(EntityType<?> type){
         Map<List<Suit>, Float> map = weightMapMap.get(type);
         if(map  == null){
             return SuitList.empty();
@@ -144,7 +162,11 @@ public class InitialArmors  {
         return SuitList.of(TEUtils.getRandomByWeight(map));
     }
 
-    public record SuitList(List<Suit> suits) implements Consumer<LivingEntity>, Iterable<Suit> {
+    /**
+     * 盔甲套装
+     * @param suits
+     */
+    record SuitList(List<Suit> suits) implements Consumer<LivingEntity> {
 
         @Override
         public void accept(LivingEntity entity) {
@@ -160,10 +182,6 @@ public class InitialArmors  {
             return new SuitList(List.of());
         }
 
-        @Override
-        public @NotNull Iterator<Suit> iterator() {
-            return suits.iterator();
-        }
     }
 
     public static InitialArmors getDefaultParams(){

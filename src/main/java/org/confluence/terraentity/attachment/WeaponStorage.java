@@ -14,7 +14,7 @@ public class WeaponStorage implements INBTSerializable<CompoundTag> {
     private final Map<Item , Integer> boomerangCounter = new HashMap<>();
     public boolean bowFullPull = false;
     public boolean leftClicking = false;
-    public YoyosEntity<?> yoyosEntity = null;
+    public YoyosEntity yoyosEntity = null;
 
 
     public int tryReduce(Item item){

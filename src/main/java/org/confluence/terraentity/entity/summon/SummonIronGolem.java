@@ -25,7 +25,7 @@ import org.confluence.terraentity.entity.ai.goal.summon.SummonMeleeAttackGoal;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SummonIronGolem extends IronGolem implements ISummonMob<SummonIronGolem> {
+public class SummonIronGolem extends IronGolem implements ISummonMob {
 
     static ResourceLocation moveSpeedModify = TerraEntity.space("summon");
     public SummonIronGolem(EntityType<? extends IronGolem> entityType, Level level) {

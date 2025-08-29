@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.constant.DefaultAnimations;
 
-public class SummonFinch  extends AbstractSummonMob<SummonFinch> implements FlyingAnimal {
+public class SummonFinch  extends AbstractSummonMob implements FlyingAnimal {
 
     int cooledDown;
 

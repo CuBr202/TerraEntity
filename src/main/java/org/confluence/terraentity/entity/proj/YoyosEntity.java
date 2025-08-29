@@ -32,7 +32,7 @@ import software.bernie.geckolib.animation.AnimatableManager;
 /**
  * 悠悠球
  */
-public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> implements ILeftClickReceiver {
+public class YoyosEntity extends AbstractSummonMob implements ILeftClickReceiver {
 
     boolean isBacking = false;
     int maxRetrieveTicks = 40;
@@ -43,7 +43,7 @@ public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> 
 
     protected static final EntityDataAccessor<ItemStack> DATA_WEAPON_ITEM = SynchedEntityData.defineId(YoyosEntity.class, EntityDataSerializers.ITEM_STACK);
 
-    public YoyosEntity(EntityType<? extends YoyosEntity<?>> pEntityType, Level pLevel) {
+    public YoyosEntity(EntityType<? extends YoyosEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
 
     }

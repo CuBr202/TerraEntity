@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class Chester extends AbstractSummonMob<Chester> implements IPetMob<Chester> {
+public class Chester extends AbstractSummonMob implements IPetMob {
 
     Player opener;
     ChesterItemHandler itemHandler = new ChesterItemHandler(27);

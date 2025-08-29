@@ -43,7 +43,6 @@ public class Piranha extends WaterAnimal implements Enemy, GeoEntity {
         super(entityType, level);
         this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.1F, true);
         this.lookControl = new SmoothSwimmingLookControl(this, 10);
-        this.setCanPickUpLoot(true);
     }
 
     @Nullable
@@ -55,24 +54,6 @@ public class Piranha extends WaterAnimal implements Enemy, GeoEntity {
 
     @Override
     protected void handleAirSupply(int airSupply) {
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        super.defineSynchedData(builder);
-
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-
     }
 
     @Override

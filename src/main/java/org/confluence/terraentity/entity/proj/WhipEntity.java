@@ -270,7 +270,7 @@ public class WhipEntity extends Projectile {
                             hitEntities.put(entity, hitCooldown);
                             trigger = doHurt(owner, hurter, hurter);
                         }
-                        if(hurter instanceof ISummonMob<?>){
+                        if(hurter instanceof ISummonMob){
                             if(hiteffect_beneficial != null){
                                 hiteffect_beneficial.applyAll(owner, hurter);
                             }

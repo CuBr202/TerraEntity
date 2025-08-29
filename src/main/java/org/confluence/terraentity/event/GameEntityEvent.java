@@ -105,8 +105,6 @@ public class GameEntityEvent {
 
     @SubscribeEvent
     public static void livingDamageEntity(LivingDamageEvent.Post event) {
-        // LivingEntity e = (LivingEntity) event.getSource().getEntity();
-        // Caused by: java.lang.ClassCastException: class net.minecraft.world.entity.projectile.Arrow cannot be cast to class net.minecraft.world.entity.LivingEntity
         LivingEntity e1 = event.getEntity();
         Level level = event.getEntity().level();
         Entity attacker = event.getSource().getEntity();
@@ -144,14 +142,14 @@ public class GameEntityEvent {
         LivingEntity hurter = event.getEntity();
         Entity attacker = event.getSource().getEntity();
 
-        if (damageSource.is(TETags.DamageTypes.SUMMONER) || attacker instanceof ISummonMob<?> summoner) {
+        if (damageSource.is(TETags.DamageTypes.SUMMONER) || attacker instanceof ISummonMob summoner) {
             // 召唤物集火伤害加成
             if (hurter.hasEffect(TEEffects.SUMMON_FOCUS)) {
                 amount = amount + 2;
 
             }
             // 召唤物标记伤害增加
-            if (attacker instanceof ISummonMob<?> summoner) {
+            if (attacker instanceof ISummonMob summoner) {
                 LivingEntity owner = summoner.summon_getOwner();
                 if (owner != null) {
                     var att = owner.getAttribute(TEAttributes.MARK_DAMAGE);
@@ -203,7 +201,7 @@ public class GameEntityEvent {
             holder.getAttributeBuilder().modify(mob);
         }
         TEAttributeModifierConfig.getInstance().modify(mob);
-        if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
+        if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob))
             TEUtils.monsterEnhance(living);
         else if (event.getEntity() instanceof Slime slime)
             TEUtils.monsterEnhance(slime);
@@ -212,8 +210,7 @@ public class GameEntityEvent {
         }
 
         InitialArmors data = MappedDataTypes.getData(MappedDataTypes.MONSTER_MAP_DATAS, MonsterMappedDatas.MONSTER_ARMOR);
-        data.getRandom(mob.getType()).accept(mob);
-//        BuiltInRegistries.ENTITY_TYPE.getData(null, BuiltInRegistries.ENTITY_TYPE.getResourceKey(mob.getType()).get())
+        data.accept(mob);
 
     }
     // 貌似没必要使用这个，重写monster的方法就行

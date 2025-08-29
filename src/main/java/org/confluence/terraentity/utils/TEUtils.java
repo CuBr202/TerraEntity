@@ -270,7 +270,7 @@ public final class TEUtils {
     }
 
     public static void monsterEnhance(LivingEntity entity) {
-        if(entity instanceof Boss || entity instanceof AbstractTerraBossBase<?> || entity instanceof ISummonMob<?> ) return;
+        if(entity instanceof Boss || entity instanceof AbstractTerraBossBase || entity instanceof ISummonMob ) return;
         if(!ServerConfig.ENHANCE_ALL_MONSTER.get() && !BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getNamespace().equals(TerraEntity.MODID)) return;
         if(!entity.level().isClientSide) {
             float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
@@ -676,7 +676,7 @@ public final class TEUtils {
                         (
                                 entityHitResult.getEntity() instanceof LivingEntity livingEntity &&
                                         livingEntity instanceof Enemy &&
-                                        !(livingEntity instanceof ISummonMob<?>)
+                                        !(livingEntity instanceof ISummonMob)
                         )) {
                     return livingEntity;
                 }
@@ -722,7 +722,7 @@ public final class TEUtils {
         ){
             return false;
         }
-        if(target instanceof ISummonMob<?>) {
+        if(target instanceof ISummonMob) {
             return false;
         }
 
@@ -734,7 +734,7 @@ public final class TEUtils {
      */
     public static BiPredicate<Projectile, Entity> projectileCanHurtEntityTest = (projectile, target)-> {
 
-        if(target instanceof IAttackableProjectile<?> projectile1 && projectile1.canBeAttacked()){
+        if(target instanceof IAttackableProjectile projectile1 && projectile1.canBeAttacked()){
             return true;
         }
 
@@ -766,7 +766,7 @@ public final class TEUtils {
         // 不能攻击主人
         if(entity == target) return false;
 
-        if(target instanceof IAttackableProjectile<?> projectile1 && projectile1.canBeAttacked()){
+        if(target instanceof IAttackableProjectile projectile1 && projectile1.canBeAttacked()){
             return true;
         }
 
@@ -972,4 +972,10 @@ public final class TEUtils {
     public static <K, V> Map<K,V> listToMap(Stream<? extends Pair<K, V>> pairs){
         return pairs.collect(Collectors.toMap(Pair::left, Pair::right));
     }
+
+    public static Vec3 entityLerpMovement(Entity entity, float partialTick){
+        return new Vec3(entity.xo, entity.yo, entity.zo).lerp(entity.position(), partialTick);
+//        return new Vec3(entity.getX())
+    }
+
 }

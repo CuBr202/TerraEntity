@@ -20,7 +20,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 /**
  * 蠕虫体节
  */
-public class BaseWormPart extends PartEntity<BaseWorm> implements GeoEntity, ICollisionAttackEntity<BaseWormPart> {
+public class BaseWormPart extends PartEntity<BaseWorm> implements GeoEntity, ICollisionAttackEntity {
 
     private final EntityDimensions size;
     CollisionProperties collisionProperties = new CollisionProperties(10,20,0);

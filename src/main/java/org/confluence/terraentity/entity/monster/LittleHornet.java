@@ -29,7 +29,7 @@ import java.util.UUID;
 /**
  * 蜂后召唤的蜜蜂
  */
-public class LittleHornet extends Hornet implements IMinion<LittleHornet> {
+public class LittleHornet extends Hornet implements IMinion {
     QueenBee owner;
 
     public LittleHornet(EntityType<? extends Monster> type, Level level) {

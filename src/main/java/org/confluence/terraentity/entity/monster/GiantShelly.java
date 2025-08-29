@@ -30,7 +30,7 @@ import java.util.Random;
 /**
  * 巨大卷壳虫
  */
-public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVanillaVariant<Integer> {
+public class GiantShelly extends AbstractFSMMonster implements IVanillaVariant<Integer> {
 
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(GiantShelly.class, EntityDataSerializers.INT);
 
@@ -55,7 +55,7 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
             Vec3 cachedTarget = null;
 
             @Override
-            public void init(CircleMobSkills<GiantShelly> skills) {
+            public void init(CircleMobSkills skills) {
                 free = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("free"), 40, 0)
                         .onInit(e->{
                             if(e.getAttribute(Attributes.ARMOR).hasModifier(armorAddition)){

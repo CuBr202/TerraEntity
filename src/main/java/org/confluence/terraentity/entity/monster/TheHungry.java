@@ -42,7 +42,7 @@ import java.util.UUID;
 /**
  * 饿鬼
  */
-public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Boss.BossPart {
+public class TheHungry extends AbstractMonster implements IMinion, Boss.BossPart {
     Mob owner;
     protected Vec3 initPos;
     public Vec3 lastInitPos;

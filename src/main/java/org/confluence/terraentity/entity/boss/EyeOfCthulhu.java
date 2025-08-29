@@ -39,7 +39,7 @@ import software.bernie.geckolib.animation.RawAnimation;
  * 克眼
  */
 
-public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements GeoEntity, Boss, IAutoLeaveMob, IMotionBlurHolder<PosRotMotionBlurContext> {
+public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Boss, IAutoLeaveMob, IMotionBlurHolder<PosRotMotionBlurContext> {
 
     private final float DAMAGE ;//一阶段接触伤害
     private final float CRAZY_DAMAGE ;//二阶段接触伤害

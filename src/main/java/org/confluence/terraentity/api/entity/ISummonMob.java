@@ -44,16 +44,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * 召唤物接口
+ * 召唤物接口，必须由Mob实现
  */
 @SuppressWarnings({"unchecked", "rawtypes", "unused"})
-public interface ISummonMob<T extends Mob> extends OwnableEntity {
+public interface ISummonMob extends OwnableEntity {
     int getCost();
 
     void setCost(int cost);
 
-    default T asEntity() {
-        return (T) this;
+    default Mob asEntity() {
+        return (Mob) this;
     }
 
     /**
@@ -203,7 +203,7 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
         summon_setTame(true, true);
         if (stack.getItem() instanceof SummonItem<?> summonItem)
             asEntity().getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(summonItem.baseAttackDamage);
-        AdapterUtils.postGameEvent(new SummonEvent<>(player, stack, this));
+        AdapterUtils.postGameEvent(new SummonEvent(player, stack, this));
     }
 
     /* Attack API */

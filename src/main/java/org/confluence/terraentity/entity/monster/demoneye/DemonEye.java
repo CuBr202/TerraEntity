@@ -38,7 +38,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.Optional;
 import java.util.UUID;
 
-public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVariant>, GeoEntity, DeathAnimOptions, IMinion<DemonEye> {
+public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVariant>, GeoEntity, DeathAnimOptions, IMinion {
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(DemonEye.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
     public Vec3 moveTargetPoint;

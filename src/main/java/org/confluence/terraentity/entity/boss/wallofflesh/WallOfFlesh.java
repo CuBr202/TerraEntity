@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-public class WallOfFlesh extends AbstractTerraBossBase<WallOfFlesh> implements Boss {
+public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
 
 
     static float moveSpeedBase = 0.15f;

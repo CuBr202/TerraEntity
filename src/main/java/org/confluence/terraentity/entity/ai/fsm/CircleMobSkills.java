@@ -7,20 +7,21 @@ import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class CircleMobSkills<T extends Entity> {
-    public T owner;
+public class CircleMobSkills {
+    public Entity owner;
     protected final List<AbstractMobSkill> mobSkills = new ArrayList<>();
-
+    AbstractMobSkill cur;
     public int tick = 0;
     public int index = 0;
     public EntityDataAccessor<Integer> skillIndexData;
-    public CircleMobSkills(T owner, @Nullable EntityDataAccessor<Integer> skillIndexData){
+    public CircleMobSkills(Entity owner, @Nullable EntityDataAccessor<Integer> skillIndexData){
         this.owner = owner;
         this.skillIndexData = skillIndexData;
     }
 
-    public CircleMobSkills(T owner){
+    public CircleMobSkills(Entity owner){
         this.owner = owner;
     }
 
@@ -34,15 +35,21 @@ public class CircleMobSkills<T extends Entity> {
 
     public void tick(){
         if(owner.level().isClientSide()) {
+            cur = mobSkills.get(index);
             this.tick++;
             return;
         }
-        if(mobSkills.isEmpty()) return ;
+        if(mobSkills.isEmpty()) {
+            return ;
+        }
         this.tick++;
 
-        mobSkills.get(index).tick(owner, tick);
+        cur = mobSkills.get(index);
+        cur.tick(owner, tick);
 
-        if(mobSkills.isEmpty())return;
+        if(mobSkills.isEmpty()){
+            return;
+        }
         if(mobSkills.get(index).timeContinue < tick) {
             forceEnd();
             forceStartIndex(index);
@@ -73,6 +80,10 @@ public class CircleMobSkills<T extends Entity> {
         }
     }
 
+    public void syncForce(int index){
+        owner.getEntityData().set(skillIndexData, index);
+    }
+
 
     /** tick == triggerTime **/
     public boolean canTrigger(){
@@ -95,6 +106,8 @@ public class CircleMobSkills<T extends Entity> {
         return -1;
     }
 
-
+    public Optional<Integer> getCurContinue(){
+        return this.cur==null? Optional.empty() : Optional.of(cur.timeContinue);
+    }
 
 }

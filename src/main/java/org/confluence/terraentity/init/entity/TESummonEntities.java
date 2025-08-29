@@ -49,7 +49,7 @@ public class TESummonEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<PiggyBank>> PIGGY_BANK = TEEntities.registerCreature("piggy_bank", (e,l)->new PiggyBank(e,l), 1F,1F);
 
     // 悠悠球
-    public static final DeferredHolder<EntityType<?>,EntityType<YoyosEntity<?>>> YOYOS_ENTITY = TEEntities.registerCreature("yoyos_projectile", (e, l)->new YoyosEntity<>(e,l) ,  0.5f, 0.5f);
+    public static final DeferredHolder<EntityType<?>,EntityType<YoyosEntity>> YOYOS_ENTITY = TEEntities.registerCreature("yoyos_projectile", (e, l)->new YoyosEntity(e,l) ,  0.5f, 0.5f);
 
 
 //    Color c = new Color(0xFF714C11, true);  // 删掉注释查看颜色

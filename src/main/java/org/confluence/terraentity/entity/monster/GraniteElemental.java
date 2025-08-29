@@ -24,7 +24,7 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 /**
  * 花岗精
  */
-public class GraniteElemental extends AbstractFSMMonster<GraniteElemental> implements FlyingAnimal {
+public class GraniteElemental extends AbstractFSMMonster implements FlyingAnimal {
 
     public GraniteElemental(EntityType<? extends GraniteElemental> type, Level level, AttributeBuilder builder) {
         super(type, level, builder);
@@ -54,7 +54,7 @@ public class GraniteElemental extends AbstractFSMMonster<GraniteElemental> imple
         }
 
         @Override
-        public void init(CircleMobSkills<GraniteElemental> skills) {
+        public void init(CircleMobSkills skills) {
             AbstractMobSkill<GraniteElemental> walk = new AbstractMobSkill<>(DefaultAnimations.WALK, 9999999, 0) {
                 @Override
                 public void start(GraniteElemental mob) {

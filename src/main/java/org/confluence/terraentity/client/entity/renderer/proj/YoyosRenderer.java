@@ -23,36 +23,36 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class YoyosRenderer extends GeoEntityRenderer<YoyosEntity<?>> {
+public class YoyosRenderer extends GeoEntityRenderer<YoyosEntity> {
 
 
     public YoyosRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new GeoModel<>(){
 
             @Override
-            public ResourceLocation getModelResource(YoyosEntity<?> animatable) {
+            public ResourceLocation getModelResource(YoyosEntity animatable) {
                 return TerraEntity.space("geo/entity/yoyos.geo.json");
             }
 
             @Override
-            public ResourceLocation getTextureResource(YoyosEntity<?> animatable) {
+            public ResourceLocation getTextureResource(YoyosEntity animatable) {
                 return animatable.texture;
             }
 
             @Override
-            public ResourceLocation getAnimationResource(YoyosEntity<?> animatable) {
+            public ResourceLocation getAnimationResource(YoyosEntity animatable) {
                 return null;
             }
         });
     }
 
     @Override
-    public boolean shouldRender(YoyosEntity<?> livingEntity, Frustum camera, double camX, double camY, double camZ) {
+    public boolean shouldRender(YoyosEntity livingEntity, Frustum camera, double camX, double camY, double camZ) {
         return true;
     }
 
     @Override
-    public void render(YoyosEntity<?> entity, float entityYaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int packedLight) {
+    public void render(YoyosEntity entity, float entityYaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int packedLight) {
         LivingEntity living = entity.getOwner();
         if(entity.texture == null){
             return;

@@ -27,7 +27,7 @@ import org.confluence.terraentity.init.entity.TEProjectileEntities;
 /**
  * 世吞体节
  */
-public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSegment> implements Boss.BossPart {
+public class EaterOfWorldsSegment extends AbstractTerraBossBase implements Boss.BossPart {
 
 
     private int _shootTick;

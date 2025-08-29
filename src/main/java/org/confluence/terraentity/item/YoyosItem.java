@@ -76,7 +76,7 @@ public class YoyosItem<T extends BaseProj<?>> extends Item implements ILeftClick
             return;
         }
         Level level = player.level();
-        YoyosEntity<?> proj = TESummonEntities.YOYOS_ENTITY.get().create(level);
+        YoyosEntity proj = TESummonEntities.YOYOS_ENTITY.get().create(level);
         if(proj!= null){
             player.getCooldowns().addCooldown(itemStack.getItem(), (int) (this.existTime * 20));
             weaponStorage.yoyosEntity = proj;

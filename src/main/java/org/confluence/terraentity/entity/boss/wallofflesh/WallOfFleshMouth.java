@@ -29,7 +29,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 import javax.annotation.Nullable;
 
 @SuppressWarnings("all")
-public class WallOfFleshMouth extends AbstractTerraBossBase<WallOfFleshMouth> implements Boss.BossPart {
+public class WallOfFleshMouth extends AbstractTerraBossBase implements Boss.BossPart {
 
     public WallOfFlesh parentMob;
 

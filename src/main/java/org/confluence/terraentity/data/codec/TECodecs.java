@@ -14,6 +14,10 @@ public class TECodecs {
 
     public static Codec<List<Integer>> INT_LIST_CODEC = Codec.INT.listOf();
     public static Codec<List<Float>> FLOAT_LIST_CODEC = Codec.FLOAT.listOf();
+
+    /**
+     * 将int作为字符串序列化，可以作为Map的key
+     */
     public static final Codec<Integer> INT_KEY = new PrimitiveCodec<>() {
         @Override
         public <T> DataResult<Integer> read(DynamicOps<T> ops, T input) {
@@ -26,6 +30,9 @@ public class TECodecs {
         }
     };
 
+    /**
+     * 快速创建枚举的codec
+     */
     public static<T extends Enum<T>> Codec<T> createEnumCodec(Class<T> enumClass) {
         return Codec.STRING.xmap(
                 name->Enum.valueOf(enumClass, name.toUpperCase()),
@@ -34,15 +41,17 @@ public class TECodecs {
     }
 
     /**
-     * 修复Decode总是选择left的codec
+     * 修复Encode总是选择left的codec
      *
-     * <p>{@link Codec#withAlternative(Codec, Codec)} 在Decode时总是选择left，这是不对的</p>
-     * @param defaultCodec 默认的codec
-     * @param alternativeCodec 备用codec
+     * <p>{@link Codec#withAlternative(Codec, Codec)} 在Encode时总是选择left，如果需要数据驱动，这是不对的</p>
+     * @param primary 默认的codec
+     * @param alternative 备用codec
      * @param chooser 根据情况选择left或者right
+     * @param <T> 抽象类型
+     * @param <S> 具体类型
      */
-    public static <T> Codec<T> alternativeCodec(Codec<T> defaultCodec, Codec<T> alternativeCodec, Function<T, Either<T, T>> chooser) {
-        return Codec.either(defaultCodec, alternativeCodec).xmap(Either::unwrap, chooser);
+    public static <T, S extends T> Codec<T> alternativeCodec(final Codec<T> primary, final Codec<S> alternative, Function<T, Either<T, S>> chooser) {
+        return Codec.either(primary, alternative).xmap(Either::unwrap, chooser);
     }
 
 }

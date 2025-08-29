@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
-public class AbstractMonster extends Monster implements GeoEntity , ICollisionAttackEntity<AbstractMonster>, IAttributeHolder {
+public class AbstractMonster extends Monster implements GeoEntity, ICollisionAttackEntity, IAttributeHolder {
 
     protected CollisionProperties collisionProperties = new CollisionProperties(10, 20, 0);
     public AttributeBuilder builder;

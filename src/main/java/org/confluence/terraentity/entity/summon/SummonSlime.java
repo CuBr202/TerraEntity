@@ -16,7 +16,7 @@ import java.util.EnumSet;
 
 import static software.bernie.geckolib.constant.DefaultAnimations.*;
 
-public class SummonSlime extends AbstractSummonMob<SummonSlime> {
+public class SummonSlime extends AbstractSummonMob {
 
 
     private float distanceToFlyToOwner = 25.0f;

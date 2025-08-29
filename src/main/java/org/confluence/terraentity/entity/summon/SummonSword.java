@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class SummonSword extends AbstractSummonMob<SummonSword> implements IOriented, FlyingAnimal {
+public class SummonSword extends AbstractSummonMob implements IOriented, FlyingAnimal {
 
     public SummonSwordTrail trail;
 

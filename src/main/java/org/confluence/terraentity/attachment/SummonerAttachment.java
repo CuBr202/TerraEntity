@@ -136,7 +136,7 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
             if(entity == null || !entity.isAlive()){
                 this.getIds().remove(id);
             }
-            if(entity instanceof ISummonMob<?> mob){
+            if(entity instanceof ISummonMob mob){
                 occupied += mob.getCost();
             }
         }
@@ -185,7 +185,7 @@ public class SummonerAttachment implements INBTSerializable<CompoundTag> {
     }
 
     public void removeLast(Player player, int cost){
-        List<Entity> summons = getEntities(player.level()).stream().filter(entity -> entity instanceof ISummonMob<?> mob && !mob.isPet()).toList();
+        List<Entity> summons = getEntities(player.level()).stream().filter(entity -> entity instanceof ISummonMob mob && !mob.isPet()).toList();
         if(!summons.isEmpty()){
             Entity entity = summons.getLast();
             if(entity!= null && entity.isAlive()){

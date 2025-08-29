@@ -1,11 +1,9 @@
 package org.confluence.terraentity.api.entity;
 
-import net.minecraft.world.entity.Mob;
-
 /**
  * 宠物接口
  */
-public interface IPetMob<T extends Mob> extends ISummonMob<T> {
+public interface IPetMob extends ISummonMob {
 
     @Override
     default int getCost(){

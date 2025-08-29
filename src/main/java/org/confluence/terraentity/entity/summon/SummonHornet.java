@@ -26,7 +26,7 @@ import org.confluence.terraentity.utils.TEUtils;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SummonHornet extends Hornet implements ISummonMob<SummonHornet> {
+public class SummonHornet extends Hornet implements ISummonMob {
 
     public SummonHornet(EntityType<? extends Monster> type, Level level) {
         super(type, level, FlyMonsterPrefab.BEE_BUILDER.get());

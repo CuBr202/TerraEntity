@@ -28,7 +28,7 @@ import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 
 import javax.annotation.Nullable;
 
-public class WallOfFleshEye extends AbstractTerraBossBase<WallOfFleshEye> implements Boss.BossPart {
+public class WallOfFleshEye extends AbstractTerraBossBase implements Boss.BossPart {
 
     public WallOfFlesh parentMob;
 

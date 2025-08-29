@@ -9,14 +9,14 @@ import net.minecraft.world.entity.projectile.Projectile;
  * 很多弹幕命中后会消失
  * @param <T> 弹幕类型
  */
-public interface IAttackableProjectile<T extends Projectile> {
+public interface IAttackableProjectile{
 
     default boolean canBeAttacked(){
         return false;
     }
 
     static boolean canHit(Entity projectile, DamageSource damageSource){
-        if(projectile instanceof IAttackableProjectile<?> projectile1){
+        if(projectile instanceof IAttackableProjectile projectile1){
             if(!projectile1.canBeAttacked()){
                 return false;
             }

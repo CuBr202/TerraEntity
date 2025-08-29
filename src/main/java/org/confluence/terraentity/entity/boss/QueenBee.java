@@ -38,7 +38,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 /**
  * 蜂后
  */
-public class QueenBee extends AbstractTerraBossBase<QueenBee> implements Boss, IAngryMob {
+public class QueenBee extends AbstractTerraBossBase implements Boss, IAngryMob {
 
     private final int summonBeeInterval;
     private final int summonProjInterval;

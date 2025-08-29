@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Mob;
 import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terraentity.entity.ai.fsm.CircleMobSkills;
 import org.confluence.terraentity.entity.ai.fsm.MobSkill;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -16,9 +17,9 @@ import software.bernie.geckolib.constant.DataTickets;
 /**
  * 适配Geo动画的状态机接口
  */
-public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
+public interface IFSMGeoMob extends GeoEntity {
 
-    CircleMobSkills<T> getSkills();
+    CircleMobSkills getSkills();
 
     ClientBoundAnimationMessage getAnimationMessage();
 
@@ -29,15 +30,16 @@ public interface IFSMGeoMob<T extends Mob> extends GeoEntity , SelfGetter<T> {
     }
 
     default void syncSkills(EntityDataAccessor<?> key) {
-        CircleMobSkills<T> skills = getSkills();
-        if(confluence$self().level().isClientSide() && skills!= null && key == skills.skillIndexData){
-            skills.index = confluence$self().getEntityData().get(skills.skillIndexData);
-            getAnimationMessage().lastSkillTick = confluence$self().tickCount;
+        CircleMobSkills skills = getSkills();
+        Entity self = (Entity) this;
+        if(self.level().isClientSide() && skills!= null && key == skills.skillIndexData){
+            skills.index = self.getEntityData().get(skills.skillIndexData);
+            getAnimationMessage().lastSkillTick = self.tickCount;
             skills.tick = 0;
         }
     }
 
-    default AnimationController<IFSMGeoMob<T>> fsmAnimationController() {
+    default AnimationController<GeoAnimatable> fsmAnimationController() {
         return new AnimationController<>(this, getTransitionTick(), state -> {
             Entity entity =  state.getData(DataTickets.ENTITY);
             if (!entity.isAlive()) return PlayState.STOP;

@@ -19,7 +19,7 @@ import java.util.function.Predicate;
  * 以玩家为中心的OBB弹幕碰撞器
  * @param <T>
  */
-public interface IOBBProjectile<T extends Projectile> extends ICollisionAttackEntity<T>, IOriented {
+public interface IOBBProjectile extends ICollisionAttackEntity, IOriented {
 
 
     /**
@@ -27,7 +27,10 @@ public interface IOBBProjectile<T extends Projectile> extends ICollisionAttackEn
      */
     float lengthScale();
 
-
+    @Override
+    default Projectile collision$getSelf(){
+        return (Projectile) this;
+    }
 
     @Override
     default void doCollisionAttack(Predicate<Entity> filter, Consumer<Entity> attackCallback){
@@ -80,7 +83,7 @@ public interface IOBBProjectile<T extends Projectile> extends ICollisionAttackEn
     Vec3 getModelPosition(int time);
 
     default void updateObb(){
-        T self = collision$getSelf();
+        Projectile self = collision$getSelf();
         if (self.getOwner() != null) {
             self.xRotO = self.getXRot();
             self.yRotO = self.getYRot();

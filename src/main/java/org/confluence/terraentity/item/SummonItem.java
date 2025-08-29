@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @ParametersAreNonnullByDefault
-public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
+public class SummonItem<T extends Mob & ISummonMob> extends Item {
     public final DeferredHolder<EntityType<?>, EntityType<T>> entityType;
     public final int consume;
 

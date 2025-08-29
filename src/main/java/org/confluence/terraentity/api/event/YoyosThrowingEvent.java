@@ -7,9 +7,9 @@ import org.confluence.terraentity.entity.proj.YoyosEntity;
 
 public class YoyosThrowingEvent extends PlayerEvent {
     private final ItemStack yoyosItem;
-    private final YoyosEntity<?> yoyosEntity;
+    private final YoyosEntity yoyosEntity;
 
-    public YoyosThrowingEvent(Player player, ItemStack yoyosItem, YoyosEntity<?> yoyosEntity) {
+    public YoyosThrowingEvent(Player player, ItemStack yoyosItem, YoyosEntity yoyosEntity) {
         super(player);
         this.yoyosItem = yoyosItem;
         this.yoyosEntity = yoyosEntity;
@@ -19,7 +19,7 @@ public class YoyosThrowingEvent extends PlayerEvent {
         return yoyosItem;
     }
 
-    public YoyosEntity<?> getYoyosEntity() {
+    public YoyosEntity getYoyosEntity() {
         return yoyosEntity;
     }
 }

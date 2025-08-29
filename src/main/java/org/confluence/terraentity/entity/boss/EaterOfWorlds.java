@@ -37,7 +37,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * 世吞
  */
-public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implements Boss, IHeightControlMob.Empty {
+public class EaterOfWorlds extends AbstractTerraBossBase implements Boss, IHeightControlMob.Empty {
 
     final float projDamage;
     final int shootInterval;

@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * 克脑
  */
-public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implements GeoEntity, Boss {
+public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Boss {
 
     private final float MOVE_SPEED;
     private final float MOVE_SPEED_STAGE_2 = 0.5f;

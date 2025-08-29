@@ -21,7 +21,7 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 
 import java.util.function.Supplier;
 
-public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSummonMob<FlyRangeAttackSummonMob<P>> implements FlyingAnimal, RangedAttackMob {
+public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSummonMob implements FlyingAnimal, RangedAttackMob {
 
     int _attackTicks;
     int delayAttackTicks = -1;

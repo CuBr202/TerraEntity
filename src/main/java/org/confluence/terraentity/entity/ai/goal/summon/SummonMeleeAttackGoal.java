@@ -17,7 +17,7 @@ import org.confluence.terraentity.api.entity.ISummonMob;
 
 import java.util.EnumSet;
 
-public class SummonMeleeAttackGoal<T extends Mob & ISummonMob<T>> extends Goal {
+public class SummonMeleeAttackGoal<T extends Mob & ISummonMob> extends Goal {
     protected final T mob;
     private final double speedModifier;
     private final boolean followingTargetEvenIfNotSeen;

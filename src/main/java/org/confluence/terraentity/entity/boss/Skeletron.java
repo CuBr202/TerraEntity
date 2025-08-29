@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * 骷髅王
  */
-public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss {
+public class Skeletron extends AbstractTerraBossBase implements Boss {
 
     private final int shootCooldown;
     private final float projDamage; // 弹幕伤害

@@ -19,7 +19,7 @@ import java.util.Queue;
 /**
  * OBB拖尾剑气
  */
-public class TrailSwordProj<T extends TrailSwordProj<T>> extends BaseProj<T> implements IOBBProjectile<T> {
+public class TrailSwordProj<T extends TrailSwordProj<T>> extends BaseProj<T> implements IOBBProjectile {
 
     public SwordTrail trail;
     public Queue<Vec3> trailQueue;
