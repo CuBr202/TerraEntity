@@ -88,7 +88,7 @@ public class TEBossEntities {
         event.put(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), AttBuilder.createBoss(39,3096, 12).followRange(32).build());
         event.put(TEBossEntities.DUNGEON_GUARDIAN.get(), AttBuilder.createBoss(9999,9999,9999).build());
 
-        event.put(TEBossEntities.HILL_OF_FLESH.get(), AttBuilder.createBoss(3096, 0).build());
+        event.put(TEBossEntities.HILL_OF_FLESH.get(), AttBuilder.createBoss(5824, 0).build());
 
     }
 
