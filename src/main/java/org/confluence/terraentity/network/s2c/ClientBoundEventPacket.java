@@ -1,7 +1,6 @@
 package org.confluence.terraentity.network.s2c;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -48,10 +47,10 @@ public class ClientBoundEventPacket implements CustomPacketPayload{
 
     public static void handle(ClientBoundEventPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            Player player = Minecraft.getInstance().player;
+//            Player player = Minecraft.getInstance().player;
             ClientBoundEventPacket.TypeEnum type = packet._type;
             if (handlers.containsKey(type)) {
-                handlers.get(type).accept(player);
+                handlers.get(type).accept(context.player());
             }else{
                 TerraEntity.LOGGER.warn("Unknown client-bound event packet type: {}", type);
             }
