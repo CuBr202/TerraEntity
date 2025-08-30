@@ -210,11 +210,11 @@ public class HillOfFlesh extends AbstractTerraBossBase implements Boss {
 
         public static SkillParams getDefaultParams() {
             return new SkillParams(
-                    List.of(8, 10, 12, 15),
+                    List.of(9, 13, 16, 20),
                     List.of(5, 6, 7, 8),
                     List.of(5, 6, 7, 8),
                     List.of(5, 6, 7, 8),
-                    20.0f, 10.0f, 30.0f,
+                    40.0f, 40.0f, 50.0f,
                     75.0f, 10.0f,
                     100.0f, 5000
             );

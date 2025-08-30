@@ -318,7 +318,7 @@ public class TEMonsterEntities {
         event.put(SWAMP_SLIME.get(), BaseSlime.createSlimeAttributes(5.0F, 1, 25.0F).build());
         event.put(BLACK_SLIME.get(), Monster.createMonsterAttributes().add(Attributes.WATER_MOVEMENT_EFFICIENCY, BaseSlime.slimeWaterMoveSpeed).build()); // 由finalizeSpawn设置
         event.put(GOLDEN_SLIME.get(), GoldenSlime.createSlimeAttributes().build());
-        event.put(FLESH_SLIME.get(), BaseSlime.createSlimeAttributes(7.0F, 2, 25.0F).build());
+        event.put(FLESH_SLIME.get(), BaseSlime.createSlimeAttributes(8.0F, 6, 50.0F).build());
 
         // land
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
