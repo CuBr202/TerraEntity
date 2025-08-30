@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.boss.wallofflesh;
 
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
@@ -24,6 +25,7 @@ import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.TheHungry;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.init.TEEffects;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.utils.CameraShakeData;
 import org.confluence.terraentity.utils.CameraShakeManager;
@@ -422,6 +424,7 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
                         newHungry.minion_setOwner(this);
                         newHungry.setInitPos(this.position().add(theHungryPos).toVector3f());
                         addChildSegment(newHungry, theHungryPos);
+                        level().playSound(null, newHungry.blockPosition(), TESounds.WALL_OF_FLESH_SUMMON.get(), SoundSource.HOSTILE, 1, 1);
                     }
 
                 }

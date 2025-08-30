@@ -1,11 +1,13 @@
 package org.confluence.terraentity.entity.boss.hillofflesh;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.monster.HillHungry;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.monster.slime.FleshSlime;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.utils.TEUtils;
@@ -67,6 +69,7 @@ public class HillOfFleshMouse extends HillOfFleshPart {
             hungry.setYRot(this.getYRot());
             hungry.setInitPos(this.position().add(0,1,0).toVector3f());
             hungry.index = index;
+            hungry.level().playSound(null, hungry.blockPosition(), TESounds.WALL_OF_FLESH_SUMMON.get(), SoundSource.HOSTILE, 1, 1);
             return hungry;
         }
         return null;

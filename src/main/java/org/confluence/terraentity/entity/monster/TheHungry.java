@@ -46,11 +46,11 @@ import java.util.UUID;
  */
 public class TheHungry extends AbstractMonster implements IMinion, Boss.BossPart {
     Mob owner;
-    protected Vec3 initPos;
-    public Vec3 lastInitPos;
+    protected Vec3 initPos = Vec3.ZERO;
+    public Vec3 lastInitPos = Vec3.ZERO;
     boolean isFree = false;
 
-    Vec3 initDir;
+    Vec3 initDir = Vec3.ZERO;
     int phase = 0;
     int _phase = 60;
 

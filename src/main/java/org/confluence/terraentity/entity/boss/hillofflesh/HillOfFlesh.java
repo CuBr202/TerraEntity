@@ -14,6 +14,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -290,6 +291,7 @@ public class HillOfFlesh extends AbstractTerraBossBase implements Boss {
             minion.getAttribute(Attributes.FOLLOW_RANGE).addPermanentModifier(new AttributeModifier(
                     TerraEntity.space("hill"), 50, AttributeModifier.Operation.ADD_VALUE
             ));
+            minion.level().playSound(null, minion.blockPosition(), TESounds.WALL_OF_FLESH_SUMMON.get(), SoundSource.HOSTILE, 1, 1);
         }
 
         @Override
@@ -337,6 +339,7 @@ public class HillOfFlesh extends AbstractTerraBossBase implements Boss {
             currentMouse.onSummonFleshSlime(minion);
             minion.getAttribute(Attributes.MAX_HEALTH).setBaseValue(minion.getMaxHealth() * Math.round(this.mob.currentScale));
             minion.setHealth(minion.getMaxHealth());
+            minion.level().playSound(null, minion.blockPosition(), TESounds.WALL_OF_FLESH_SUMMON.get(), SoundSource.HOSTILE, 1, 1);
         }
 
         @Override
