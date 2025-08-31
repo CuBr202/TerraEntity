@@ -1,3 +1,4 @@
+/**
 package org.confluence.terraentity.client.boss.model;
 
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +36,7 @@ public class WallOfFleshEyeModel extends DefaultedEntityGeoModel<WallOfFleshEye>
                         return;
                     }
 
-                    WallOfFlesh parentMob = animatable.getParentMob();
+                    WallOfFlesh parentMob = animatable.parentMob;
                     if (parentMob == null || !parentMob.isAlive()) {
                         return;
                     }
@@ -56,10 +57,10 @@ public class WallOfFleshEyeModel extends DefaultedEntityGeoModel<WallOfFleshEye>
                         pitch = Mth.clamp(pitch, -45.0F, 45.0F);
 
                         // 计算偏航角（左右看的角度）
-                        float yaw = (float) Math.toDegrees(Math.atan2(toTarget.z, toTarget.x));
+                        float yaw = (float) Math.toDegrees(Math.atan2(-toTarget.x, toTarget.z));
                         
                         // 计算墙体的偏航角
-                        float wallYaw = (float) Math.toDegrees(Math.atan2(wallForward.z, wallForward.x));
+                        float wallYaw = (float) Math.toDegrees(Math.atan2(-wallForward.x, wallForward.z));
                         
                         // 计算相对于墙体的角度差
                         float relativeYaw = yaw - wallYaw;
@@ -103,4 +104,4 @@ public class WallOfFleshEyeModel extends DefaultedEntityGeoModel<WallOfFleshEye>
     public @Nullable Animation getAnimation(WallOfFleshEye animatable, String name) {
         return null;
     }
-}
+}*/

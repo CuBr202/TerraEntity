@@ -1,80 +1,47 @@
 package org.confluence.terraentity.entity.boss.wallofflesh;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.api.entity.Boss;
-import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.proj.TrailProjectile;
-import org.confluence.terraentity.init.TESounds;
-import org.confluence.terraentity.init.entity.TEBossEntities;
+import org.confluence.terraentity.entity.util.DifficultSelector;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 
-import javax.annotation.Nullable;
+public class WallOfFleshEye extends WallOfFleshPart implements RangedAttackMob {
 
-public class WallOfFleshEye extends AbstractTerraBossBase implements Boss.BossPart {
-
-    public WallOfFlesh parentMob;
-
-    @Nullable
-    private LivingEntity clientSideCachedAttackTarget;
-    @Nullable
-    private WallOfFlesh clientSideCachedParentMob;
-    private static final EntityDataAccessor<Integer> DATA_ID_ATTACK_TARGET = SynchedEntityData.defineId(WallOfFleshEye.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> DATA_ID_PARENT_MOB = SynchedEntityData.defineId(WallOfFleshEye.class, EntityDataSerializers.INT);
-
+    int shootDamage;
 
     private static final int summonCDAll = 40;
     private int summonCD = summonCDAll;
 
-    public WallOfFleshEye(EntityType<WallOfFleshEye> entityType, Level level) {
-        super(entityType, level);
+    public float calculatedYaw = 0.0f;
+    public float calculatedPitch = 0.0f;
 
-        SingletonGeoAnimatable.registerSyncedAnimatable(this);
-        this.playSound(TESounds.ROAR.get());
-        this.noPhysics = true;
-        collisionProperties.attackInternal = 1;
-        collisionProperties.detectInternal = 1;
+    public WallOfFleshEye(WallOfFlesh parentMob, String name, float width, float height) {
+        super(parentMob, name, width, height);
+        DifficultSelector difficultSelector = parentMob.getDifficultSelector();
+        this.shootDamage = difficultSelector.switchBy(8,10,12,15);
     }
-
-    public WallOfFleshEye(Level level) {
-        this(TEBossEntities.WALL_OF_FLESH_EYE.get(), level);
-    }
-
-    @Override
-    public boolean canAttack(LivingEntity entity) {
-        if(this.parentMob == null)
-            return super.canAttack(entity);
-        else return this.parentMob.canAttack(entity);
-    }
-
+    
     protected boolean canShoot(Entity target,float range) {
-        return target!= null && TEUtils.angleBetween(this.getLookAngle(), target.position().subtract(this.position())) < range;
+        LivingEntity currentTarget = this.target;
+        return currentTarget != null && TEUtils.angleBetween(this.getLookAngle(), currentTarget.position().subtract(this.position())) < range;
     }
 
     @Override
-    protected void registerGoals() {
-        //this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 45F));
-        //this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
-        //this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
     }
 
     @Override
@@ -82,35 +49,7 @@ public class WallOfFleshEye extends AbstractTerraBossBase implements Boss.BossPa
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if(WallOfFlesh.isWallOfFleshMob(pSource.getEntity())||WallOfFlesh.isWallOfFleshMob(pSource.getDirectEntity()))
-            return false;
-        boolean flag = parentMob!=null && parentMob.isAlive();
-     return super.hurt(pSource, pAmount) &&  flag && parentMob.hurt(pSource,pAmount);
-    }
-
-    public void setParent(WallOfFlesh parent){
-        this.parentMob = parent;
-        if (!this.level().isClientSide && parent != null) {
-            this.entityData.set(DATA_ID_PARENT_MOB, parent.getId());
-        }
-    }
-    
-    public WallOfFlesh getParentMob() {
-        if (this.level().isClientSide) {
-            if (this.clientSideCachedParentMob != null) {
-                return this.clientSideCachedParentMob;
-            } else {
-                Entity entity = this.level().getEntity(this.entityData.get(DATA_ID_PARENT_MOB));
-                if (entity instanceof WallOfFlesh wallOfFlesh) {
-                    this.clientSideCachedParentMob = wallOfFlesh;
-                    return this.clientSideCachedParentMob;
-                } else {
-                    return null;
-                }
-            }
-        } else {
-            return this.parentMob;
-        }
+        return super.hurt(pSource, pAmount) && parentMob.hurt(this,pSource,pAmount);
     }
 
     @Override
@@ -118,45 +57,91 @@ public class WallOfFleshEye extends AbstractTerraBossBase implements Boss.BossPa
         if(this.parentMob != null)return this.parentMob.shouldBeSaved();
         return  false;
     }
-
-    @Override
-    public boolean requiresCustomPersistence() {
-        return true;
-    }
-
+    
     @Override
     public float getYRot() {
-        if(this.parentMob!=null)return this.parentMob.getYRot();
-        return super.getYRot();
+        if(this.parentMob!=null) {
+            // 返回父实体的偏航角加上计算出的眼睛偏航角
+            return this.parentMob.getYRot() + (this.calculatedYaw * 180.0f / (float)Math.PI);
+        }
+        return super.getYRot() + (this.calculatedYaw * 180.0f / (float)Math.PI);
     }
 
     @Override
     public float getXRot() {
-        if(this.parentMob!=null)return this.parentMob.getXRot();
-        return super.getXRot();
+        if(this.parentMob!=null) {
+            return this.parentMob.getXRot() + (this.calculatedPitch * 180.0f / (float)Math.PI);
+        }
+        return super.getXRot() + (this.calculatedPitch * 180.0f / (float)Math.PI);
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void tickPart(double offsetX, double offsetY, double offsetZ) {
+        this.findTarget();
         if (this.parentMob== null || !this.parentMob.isAlive()) return;
 
         Vec3 forward = this.parentMob.getForward().normalize();
-        if(getTarget() !=null && getTarget().isAlive()) {
-            Vec3 toTarget = getTarget().position().subtract(this.parentMob.position());
-            if(this.hasActiveAttackTarget()&&getTarget() != this.getActiveAttackTarget()) {
-                this.setActiveAttackTarget(getTarget().getId());
-            }else if (forward.dot(new Vec3(toTarget.x, 0, toTarget.z).normalize()) >= 0) {
-                this.setActiveAttackTarget(getTarget().getId());
-            }else this.setActiveAttackTarget(0);
-        }else if(this.getActiveAttackTarget()!=null && this.getActiveAttackTarget() instanceof Player player && (player.isCreative() || player.isSpectator())) this.setActiveAttackTarget(0);
+
+
+        // 检查目标是否为创造模式或观察者模式的玩家
+        if(this.target != null && this.target instanceof Player player) {
+            if(player.isCreative() || player.isSpectator()) {
+                this.target = null;
+            }
+        }
+        
+        // 计算眼睛旋转角度
+        if (this.target != null && this.target.isAlive() && !this.target.isRemoved()) {
+            WallOfFlesh parentMob = this.parentMob;
+            if (parentMob != null && parentMob.isAlive()) {
+                Vec3 wallForward = parentMob.getForward();
+                Vec3 targetPos = this.target.getEyePosition();
+                Vec3 entityPos = this.getEyePosition();
+
+                // 计算到目标的方向向量
+                Vec3 toTarget = targetPos.subtract(entityPos);
+
+                // 计算水平距离
+                double horizontalDistance = Math.sqrt(toTarget.x * toTarget.x + toTarget.z * toTarget.z);
+
+                if (horizontalDistance > 0.001) {
+                    // 计算俯仰角（上下看的角度）
+                    float pitch = (float) Math.toDegrees(Math.atan2(-toTarget.y, horizontalDistance));
+                    pitch = Mth.clamp(pitch, -45.0F, 45.0F);
+
+                    // 计算偏航角（左右看的角度）
+                    float yaw = (float) Math.toDegrees(Math.atan2(-toTarget.x, toTarget.z));
+
+                    // 计算墙体的偏航角
+                    float wallYaw = (float) Math.toDegrees(Math.atan2(-wallForward.x, wallForward.z));
+
+                    // 计算相对于墙体的角度差
+                    float relativeYaw = yaw - wallYaw;
+                    relativeYaw = Mth.wrapDegrees(relativeYaw);
+
+                    // 限制头部转动范围
+                    relativeYaw = Mth.clamp(relativeYaw, -60.0F, 60.0F);
+
+                    this.calculatedYaw = relativeYaw * 0.017453292F;
+                    this.calculatedPitch = pitch * 0.017453292F;
+                } else {
+                    this.calculatedYaw = 0.0f;
+                    this.calculatedPitch = 0.0f;
+                }
+            } else {
+                this.calculatedYaw = 0.0f;
+                this.calculatedPitch = 0.0f;
+            }
+        } else {
+            this.calculatedYaw = 0.0f;
+            this.calculatedPitch = 0.0f;
+        }
+        
         if (!this.level().isClientSide) {
-
-            if(this.getHealth()!= parentMob.getHealth())this.setHealth(parentMob.getHealth());
-
             if (--summonCD > 0) return;
             float healthPercent = parentMob.getHealthPercentage();
-            if (canShoot(this.getTarget(),0.75F) && getTarget().isAlive()) {
+
+            if (canShoot(this.target,0.75F) && this.target.isAlive()) {
                 int randomCD = summonCDAll + random.nextInt(4) * 10;
                 summonCD = healthPercent < 0.5f ? (int) (randomCD * Math.clamp(healthPercent, 0.2F, 1.0f)) : randomCD;
                 TrailProjectile proj = new TrailProjectile(TEProjectileEntities.TRAIL_PROJECTILE.get(), this.level()) {
@@ -167,13 +152,13 @@ public class WallOfFleshEye extends AbstractTerraBossBase implements Boss.BossPa
                     }
 
                 };
-                proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
+                proj.setDamage(shootDamage);
                 proj.setExistTick(200);
-                proj.setOwner(this);
+                proj.setOwner(this.parentMob);
                 proj.setTrailColor(ChatFormatting.DARK_PURPLE.getColor());
                 proj.setPos(this.position());
                 proj.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST));
-                Vec3 dir = getTarget().getEyePosition().subtract(this.position());
+                Vec3 dir = this.target.getEyePosition().subtract(this.position());
 
                 /*
                     AimUtils.AimHelperOptions aimOptions = new AimUtils.AimHelperOptions()
@@ -192,12 +177,7 @@ public class WallOfFleshEye extends AbstractTerraBossBase implements Boss.BossPa
     }
 
     public double getEyeY() {
-        return this.position().y + this.getHitbox().getYsize() / 2;
-    }
-
-    @Override
-    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
-        return this.parentMob==null?super.addEffect(effectInstance, entity):this.parentMob.addEffect(effectInstance, entity);
+        return this.position().y + this.getBbHeight() / 2;
     }
 
     @Override
@@ -213,81 +193,18 @@ public class WallOfFleshEye extends AbstractTerraBossBase implements Boss.BossPa
         return super.isInvulnerableTo(source);
     }
 
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_ID_ATTACK_TARGET, 0);
-        builder.define(DATA_ID_PARENT_MOB, 0);
+
+    /**
+     * 设置计算出的旋转角度（用于网络同步）
+     */
+    public void setCalculatedRotation(float yaw, float pitch) {
+        this.calculatedYaw = yaw;
+        this.calculatedPitch = pitch;
     }
 
-    void setActiveAttackTarget(int activeAttackTargetId) {
-        this.entityData.set(DATA_ID_ATTACK_TARGET, activeAttackTargetId);
-    }
-
-    public boolean hasActiveAttackTarget() {
-        return this.entityData.get(DATA_ID_ATTACK_TARGET) != 0;
-    }
-
-    @Nullable
-    public LivingEntity getActiveAttackTarget() {
-        if (!this.hasActiveAttackTarget()) {
-            return null;
-        } else if (this.level().isClientSide) {
-            if (this.clientSideCachedAttackTarget != null) {
-                return this.clientSideCachedAttackTarget;
-            } else {
-                Entity entity = this.level().getEntity(this.entityData.get(DATA_ID_ATTACK_TARGET));
-                if (entity instanceof LivingEntity living) {
-                    this.clientSideCachedAttackTarget = living;
-                    return this.clientSideCachedAttackTarget;
-                } else {
-                    return null;
-                }
-            }
-        } else {
-            if(this.getTarget() !=null && this.getTarget().isAlive()) {
-                return this.getTarget();
-            }else if (this.clientSideCachedAttackTarget != null) {
-                return this.clientSideCachedAttackTarget;
-            } else {
-                Entity entity = this.level().getEntity(this.entityData.get(DATA_ID_ATTACK_TARGET));
-                if (entity instanceof LivingEntity living) {
-                    this.clientSideCachedAttackTarget = living;
-                    return this.clientSideCachedAttackTarget;
-                } else {
-                    return null;
-                }
-            }
-        }
-    }
 
     @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
-        super.onSyncedDataUpdated(key);
-        if (DATA_ID_ATTACK_TARGET.equals(key)) {
-            this.clientSideCachedAttackTarget = null;
-        }
-        if (DATA_ID_PARENT_MOB.equals(key)) {
-            this.clientSideCachedParentMob = null;
-        }
+    public void performRangedAttack(LivingEntity livingEntity, float v) {
+        
     }
-
-    @Override
-    public void addSkills() {}
-
-    @Override
-    public boolean shouldEscape() {
-        return false;
-    }
-
-    @Override
-    public boolean shouldShowBossBar(){
-        return false;
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
-        return TESounds.THE_HUNGRY_HURT.get();
-    }
-
 }

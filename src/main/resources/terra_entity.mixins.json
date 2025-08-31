@@ -6,6 +6,7 @@
   "refmap": "confluence.refmap.json",
   "mixins": [
     "AttributeInstanceMixin",
+    "BlockStateBaseMixin",
     "BossEventMixin",
     "FileLoaderMixin",
     "PlayerMixin",

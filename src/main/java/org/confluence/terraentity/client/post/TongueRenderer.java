@@ -4,23 +4,26 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import org.confluence.terraentity.client.init.model.EntityBlockModelRegister;
 import org.confluence.terraentity.effect.harmful.TheTongueEffect;
-import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouth;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouse;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.utils.TEUtils;
@@ -35,9 +38,8 @@ public class TongueRenderer {
             for (Player player : Minecraft.getInstance().level.players()) {
                 if (player.hasEffect(TEEffects.THE_TONGUE)) {
                     MobEffect rawEffect = player.getEffect(TEEffects.THE_TONGUE).getEffect().value();
-                    if (rawEffect instanceof TheTongueEffect) {
-                        TheTongueEffect effect = (TheTongueEffect) rawEffect;
-                        WallOfFleshMouth mouth = effect.getWallOfFleshMouth();
+                    if (rawEffect instanceof TheTongueEffect effect) {
+                        WallOfFleshMouse mouth = effect.getWallOfFleshMouth();
                         if (mouth != null && mouth.isAlive() && player.isAlive()) {
                             renderTongueEffect(mouth, player, event);
                         }
@@ -57,7 +59,7 @@ public class TongueRenderer {
         if (livingEntity.hasEffect(TEEffects.THE_TONGUE)) {
             MobEffect rawEffect = livingEntity.getEffect(TEEffects.THE_TONGUE).getEffect().value();
             if (rawEffect instanceof TheTongueEffect effect) {
-                WallOfFleshMouth mouth = effect.getWallOfFleshMouth();
+                WallOfFleshMouse mouth = effect.getWallOfFleshMouth();
                 if (mouth != null && mouth.isAlive() && livingEntity.isAlive()) {
                     Vec3 init = mouth.position();
 
@@ -104,7 +106,7 @@ public class TongueRenderer {
                         poseStack.translate(-0.5f, 0.5f, -0.5f);
                         poseStack.translate(pos.x, pos.y, pos.z);
 //            poseStack.translate(offset.x, offset.y, offset.z);
-                        poseStack.translate(0.5, 0, 0.5);
+                        poseStack.translate(0.5, 0.45, 0.5);
 
                         poseStack.mulPose(rotate);
                         poseStack.translate(-0.5, 0, -0.5);
@@ -125,12 +127,19 @@ public class TongueRenderer {
             }
         }
     }
-    private static void renderTongueEffect(WallOfFleshMouth mouth, Player player, RenderLevelStageEvent event) {
+
+    private static void renderTongueEffect(WallOfFleshMouse mouth, Player player, RenderLevelStageEvent event) {
         Vec3 init = mouth.position();
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         PoseStack poseStack = event.getPoseStack();
+
         float partialTick = event.getPartialTick().getGameTimeDeltaTicks();
-        int packedLight = 15728880;
+        Vec3 targetLightPos = new Vec3(init.x, player.level().getMaxBuildHeight() + 1, init.z);
+        BlockPos lightPos = new BlockPos((int) targetLightPos.x, (int) targetLightPos.y, (int) targetLightPos.z);
+        int skyLight = player.level().getBrightness(LightLayer.SKY, lightPos);
+        int blockLight = player.level().getBrightness(LightLayer.BLOCK, lightPos);
+        int packedLight = LightTexture.pack(skyLight, blockLight);
+
         boolean isFirstPerson = Minecraft.getInstance().player == player && Minecraft.getInstance().options.getCameraType().isFirstPerson();
         if(!isFirstPerson)return;
 
@@ -160,7 +169,7 @@ public class TongueRenderer {
             
             poseStack.translate(-0.5f, 0.5f, -0.5f);
             poseStack.translate(pos.x, pos.y, pos.z);
-            poseStack.translate(0.5, -0.75, 0);
+            poseStack.translate(0.5, -0.75, 1.5);
             poseStack.mulPose(rotate);
             //poseStack.mulPose(Axis.YN.rotation(i * 0.3f));
             poseStack.translate(-0.5, -0.5, -0.5);

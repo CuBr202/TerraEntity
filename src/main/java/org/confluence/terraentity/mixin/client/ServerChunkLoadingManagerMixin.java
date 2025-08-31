@@ -5,8 +5,6 @@ import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.GenerationChunkHolder;
 import net.minecraft.world.entity.Entity;
 import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
-import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshEye;
-import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouth;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin({ChunkMap.class})
 public abstract class ServerChunkLoadingManagerMixin {
-    @Shadow public abstract void releaseGeneration(GenerationChunkHolder chunk);
 
     public ServerChunkLoadingManagerMixin() {
     }
@@ -25,30 +22,11 @@ public abstract class ServerChunkLoadingManagerMixin {
             ordinal = 0
     )
     private int replaceDistance(int distance, Entity entity) {
-        if (entity != null && entity.isAlive() && WallOfFlesh.isWallOfFlesh(entity)) {
-            WallOfFlesh wallOfFlesh = null;
-            int bonus = 750;
-
-            switch (entity) {
-                case WallOfFlesh wall -> wallOfFlesh = wall;
-                case WallOfFleshEye eye -> {
-                    wallOfFlesh = eye.parentMob;
-                    bonus = 250;
-                }
-                case WallOfFleshMouth mouth -> {
-                    wallOfFlesh = mouth.parentMob;
-                    bonus = 250;
-                }
-                default -> {
-                    break;
-                }
-            }
-
-            if (wallOfFlesh != null) {
-                return (int)(wallOfFlesh.getGridSizeX() *
-                        wallOfFlesh.getGridSizeY() *
-                        wallOfFlesh.gridSpacing) + bonus;
-            }
+        if (entity instanceof WallOfFlesh wallOfFlesh && entity.isAlive()) {
+            int bonus = 1000;
+            return (int) (wallOfFlesh.getGridSizeX() *
+                    wallOfFlesh.getGridSizeY() *
+                    wallOfFlesh.gridSpacing) + bonus;
         }
         return distance;
     }
