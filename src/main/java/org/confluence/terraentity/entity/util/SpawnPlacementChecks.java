@@ -6,7 +6,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.confluence.terraentity.config.ServerConfig;
 
@@ -15,7 +14,7 @@ import static net.minecraft.world.entity.Mob.checkMobSpawnRules;
 public class SpawnPlacementChecks {
 
     public static boolean checkTEMonsterWithConfig(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
+        if (!(pLevel instanceof Level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
         }
 
@@ -27,7 +26,7 @@ public class SpawnPlacementChecks {
     }
 
     public static boolean checkTEMonster(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
+        if (!(pLevel instanceof Level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
         }
 
@@ -98,6 +97,7 @@ public class SpawnPlacementChecks {
 
         return level.isDay();
     }
+
     public static boolean checkDemonEyeSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!(pLevel instanceof Level level)) {
             return false;
@@ -119,6 +119,7 @@ public class SpawnPlacementChecks {
         }
         return false;
     }
+
     public static boolean checkPossessArmorSpawnCondition(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         if (!(pLevel instanceof Level level)) {
             return false;
@@ -134,8 +135,7 @@ public class SpawnPlacementChecks {
                 }
             }
             return true;
-        }
-        else if (y >= 40 && y < 260 && level.isNight()) {
+        } else if (y >= 40 && y < 260 && level.isNight()) {
             for (BlockPos.MutableBlockPos blockPos = pPos.mutable(); blockPos.getY() < level.getMaxBuildHeight(); blockPos.move(0, 1, 0)) {
                 if (level.getBlockState(blockPos).isCollisionShapeFullBlock(level, blockPos)) {
                     return false;
@@ -152,7 +152,7 @@ public class SpawnPlacementChecks {
 
 
     public static boolean checkUndergroundMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
+        if (!(pLevel instanceof Level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
         }
 
@@ -169,7 +169,7 @@ public class SpawnPlacementChecks {
     }
 
     public static boolean checkCaveMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
+        if (!(pLevel instanceof Level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
         }
 
@@ -186,7 +186,7 @@ public class SpawnPlacementChecks {
     }
 
     public static boolean checkDungeonMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
+        if (!(pLevel instanceof Level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
         }
 
@@ -203,7 +203,7 @@ public class SpawnPlacementChecks {
     }
 
     public static boolean checkHighLevelMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
+        if (!(pLevel instanceof Level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
         }
 
@@ -220,7 +220,7 @@ public class SpawnPlacementChecks {
     }
 
     public static boolean checkNetherMonsterSpawn(EntityType<? extends Mob> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
+        if (!(pLevel instanceof Level)) {
             return false; // 如果 pLevel 不是 Level 的实例，返回 false
         }
 

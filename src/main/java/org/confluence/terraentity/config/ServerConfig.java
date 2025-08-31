@@ -3,27 +3,25 @@ package org.confluence.terraentity.config;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ServerConfig {
-    public static ModConfigSpec.ConfigValue<Boolean> BOSS_CLEAR_WHEN_NO_TARGET;
-    public static ModConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_HEALTH;
-    public static ModConfigSpec.ConfigValue<Double> BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE ;
-    public static ModConfigSpec.ConfigValue<Boolean> BOSS_NO_PHYSICS;
-    public static ModConfigSpec.ConfigValue<Boolean> BOSS_LEAVE_ON_DAY;
-    public static ModConfigSpec.ConfigValue<Boolean> BOSS_KEEP_WANDERING;
+    public static ModConfigSpec.BooleanValue BOSS_CLEAR_WHEN_NO_TARGET;
+    public static ModConfigSpec.DoubleValue BOSS_ATTRIBUTES_MULTIPLIER_HEALTH;
+    public static ModConfigSpec.DoubleValue BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE;
+    public static ModConfigSpec.BooleanValue BOSS_NO_PHYSICS;
+    public static ModConfigSpec.BooleanValue BOSS_LEAVE_ON_DAY;
+    public static ModConfigSpec.BooleanValue BOSS_KEEP_WANDERING;
 
-//    public static ModConfigSpec.ConfigValue<Boolean> RESPAWN_PROTECT;
-
-
+//    public static ModConfigSpec.BooleanValue RESPAWN_PROTECT;
 
 
-    public static ModConfigSpec.ConfigValue<Boolean> ENHANCE_ALL_MONSTER;
-    public static ModConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH;
-    public static ModConfigSpec.ConfigValue<Double> MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE ;
+    public static ModConfigSpec.BooleanValue ENHANCE_ALL_MONSTER;
+    public static ModConfigSpec.DoubleValue MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH;
+    public static ModConfigSpec.DoubleValue MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE;
 
-    public static ModConfigSpec.ConfigValue<Boolean> SPAWN_WITHOUT_LIGHT;
+    public static ModConfigSpec.BooleanValue SPAWN_WITHOUT_LIGHT;
 
-    public static ModConfigSpec.ConfigValue<Double> CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD;
-    public static ModConfigSpec.ConfigValue<Double> ENEMY_SPAWN_CHANCE;
-    public static ModConfigSpec.ConfigValue<Boolean> ENEMY_SPAWN_CHANCE_APPLY_ALL;
+    public static ModConfigSpec.DoubleValue CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD;
+    public static ModConfigSpec.DoubleValue ENEMY_SPAWN_CHANCE;
+    public static ModConfigSpec.BooleanValue ENEMY_SPAWN_CHANCE_APPLY_ALL;
     public static ModConfigSpec init(){
         final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 

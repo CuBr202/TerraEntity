@@ -23,7 +23,6 @@ import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.confluence.terraentity.api.entity.Boss;
@@ -127,7 +126,7 @@ public class GameEntityEvent {
             }
         }
         if (attacker != null && (attacker.getType() == TEMonsterEntities.CRIMSLIME.get() || attacker.getType() == TEMonsterEntities.CORRUPT_SLIME.get())) {
-            if (e1.getRandom().nextFloat() <= 0.25f){
+            if (e1.getRandom().nextFloat() <= 0.25f) {
                 e1.addEffect(new MobEffectInstance(
                         MobEffects.DARKNESS, 300
                 ), attacker);
@@ -182,9 +181,9 @@ public class GameEntityEvent {
     public static void mobFinalizeSpawn(FinalizeSpawnEvent event) {
         Mob mob = event.getEntity();
 
-        if(mob instanceof Enemy && event.getEntity().getRandom().nextFloat() >= ServerConfig.ENEMY_SPAWN_CHANCE.get()
-                && event.getSpawnType() == MobSpawnType.NATURAL){
-            if(ServerConfig.ENEMY_SPAWN_CHANCE_APPLY_ALL.get() || BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).getNamespace().equals(MODID)){
+        if (mob instanceof Enemy && event.getEntity().getRandom().nextFloat() >= ServerConfig.ENEMY_SPAWN_CHANCE.get()
+                && event.getSpawnType() == MobSpawnType.NATURAL) {
+            if (ServerConfig.ENEMY_SPAWN_CHANCE_APPLY_ALL.get() || BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).getNamespace().equals(MODID)) {
                 event.setSpawnCancelled(true);
                 return;
             }
@@ -197,7 +196,7 @@ public class GameEntityEvent {
             blackSlime.finalizeSpawn(randomSource, event.getDifficulty());
         }
 
-        if(mob instanceof IAttributeHolder holder){
+        if (mob instanceof IAttributeHolder holder) {
             holder.getAttributeBuilder().modify(mob);
         }
         TEAttributeModifierConfig.getInstance().modify(mob);
@@ -205,7 +204,7 @@ public class GameEntityEvent {
             TEUtils.monsterEnhance(living);
         else if (event.getEntity() instanceof Slime slime)
             TEUtils.monsterEnhance(slime);
-        if(mob instanceof Boss boss && boss.shouldEnhanceMultiplayer()) {
+        if (mob instanceof Boss boss && boss.shouldEnhanceMultiplayer()) {
             TEUtils.multiplePlayerEnhance(mob);
         }
 
@@ -229,7 +228,7 @@ public class GameEntityEvent {
         if (event.isInvulnerable() || !(event.getEntity() instanceof LivingEntity living)) return;
 
         DamageSource damageSource = event.getSource();
-        if(damageSource.is(DamageTypes.IN_WALL) && living.hasEffect(TEEffects.THE_TONGUE)) {
+        if (damageSource.is(DamageTypes.IN_WALL) && living.hasEffect(TEEffects.THE_TONGUE)) {
             event.setInvulnerable(true);
         } else if (living.getType() == TEMonsterEntities.FLYING_FISH.get() && damageSource.is(DamageTypes.FALL)) {
             event.setInvulnerable(true);
@@ -237,14 +236,7 @@ public class GameEntityEvent {
     }
 
     @SubscribeEvent
-    public static void onCheckSpawnPosition(MobSpawnEvent.SpawnPlacementCheck event)  {
-
-
-    }
-
-    @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         SyncLevelNamePacketS2C.sendToClient((ServerPlayer) event.getEntity());
     }
-
 }
