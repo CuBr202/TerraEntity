@@ -46,6 +46,7 @@ public abstract class HillOfFleshPart extends PartEntity<HillOfFlesh> {
         this.randomDeathSpeed = this.getRandom().nextFloat() * 0.5f + 1f;
         this.width = width;
         this.height = height;
+        this.modelOffset = Vec3.ZERO;
     }
 
     public void setScale(float scale){

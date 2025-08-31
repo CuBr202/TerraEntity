@@ -59,12 +59,9 @@ public class TEWhipItems {
             )));
 
     public static DeferredItem<BaseWhipItem> registerWhip(String name,float damage,float markDamage, float attackSpeed,int cooldown,float range, Function<BaseWhipItem.WhipProperties, Item.Properties> whipFactory){
-
-        var event = AdapterUtils.postEvent(new WhipRegisterModifyEvent(damage, markDamage, attackSpeed, cooldown, range, name));
-        if(event.isCanceled()){
-            return null;
-        }
+        WhipRegisterModifyEvent event = AdapterUtils.postEvent(new WhipRegisterModifyEvent(damage, markDamage, attackSpeed, cooldown, range, name));
         return ITEMS.register(event.getName(), ()->new BaseWhipItem(((BaseWhipItem.WhipProperties)whipFactory.apply(new BaseWhipItem.WhipProperties())).buildProperties(),
                 event.getDamage() * WhipRegisterModifyEvent.damageFactor, event.getMarkDamage(), event.getAttackSpeed(), event.getCooldown(), event.getRange()));
     }
+
 }

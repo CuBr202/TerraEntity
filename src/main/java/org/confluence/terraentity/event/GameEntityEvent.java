@@ -39,12 +39,10 @@ import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
 import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
-import org.confluence.terraentity.init.TEAttachments;
-import org.confluence.terraentity.init.TEAttributes;
-import org.confluence.terraentity.init.TEEffects;
-import org.confluence.terraentity.init.TETags;
+import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
+import org.confluence.terraentity.mixin.accessor.MobAccessor;
 import org.confluence.terraentity.network.s2c.SyncLevelNamePacketS2C;
 import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.TEUtils;
@@ -210,6 +208,11 @@ public class GameEntityEvent {
 
         InitialArmors data = MappedDataTypes.getData(MappedDataTypes.MONSTER_MAP_DATAS, MonsterMappedDatas.MONSTER_ARMOR);
         data.accept(mob);
+        //
+        Integer xp = BuiltInRegistries.ENTITY_TYPE.getData(TEDataMaps.ENTITY_XP_DATA_MAP, mob.getType().builtInRegistryHolder().getKey());
+        if(xp != null){
+            ((MobAccessor)mob).setXpReward(xp);
+        }
 
     }
     // 貌似没必要使用这个，重写monster的方法就行

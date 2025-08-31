@@ -1,4 +1,4 @@
-package org.confluence.terraentity.data.mappeddata;
+package org.confluence.terraentity.data.mappeddata.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

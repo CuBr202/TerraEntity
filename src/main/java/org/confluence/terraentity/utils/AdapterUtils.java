@@ -24,7 +24,15 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * 适配多版本的适配器工具类
+ */
 public class AdapterUtils {
+
+    private AdapterUtils(){
+        throw new UnsupportedOperationException("can't create util class object");
+    }
+
     public static void sendToPlayer(ServerPlayer player, CustomPacketPayload payload){
         PacketDistributor.sendToPlayer(player, payload);
 
@@ -62,6 +70,10 @@ public class AdapterUtils {
     }
 
     public static <T> @Nullable T getDataComponent(ItemStack itemStack, DataComponentType<T> dataComponentType){
+        return itemStack.get(dataComponentType);
+    }
+
+    public static <T> @Nullable T getDataComponent(ItemStack itemStack, Supplier<DataComponentType<T>> dataComponentType){
         return itemStack.get(dataComponentType);
     }
 }
