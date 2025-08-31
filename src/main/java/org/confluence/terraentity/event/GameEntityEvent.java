@@ -231,6 +231,8 @@ public class GameEntityEvent {
         DamageSource damageSource = event.getSource();
         if(damageSource.is(DamageTypes.IN_WALL) && living.hasEffect(TEEffects.THE_TONGUE)) {
             event.setInvulnerable(true);
+        } else if (living.getType() == TEMonsterEntities.FLYING_FISH.get() && damageSource.is(DamageTypes.FALL)) {
+            event.setInvulnerable(true);
         }
     }
 

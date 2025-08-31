@@ -52,6 +52,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase implements Boss.
          }
     }
 
+    @Override
     protected void registerGoals() {
         //this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 100F));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
@@ -89,6 +90,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase implements Boss.
         return newPos;
     }
 
+    @Override
     public boolean isNoGravity(){
         return true;
     }
@@ -180,7 +182,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase implements Boss.
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA);
+        return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA) || source.is(DamageTypes.DROWN);
     }
 
 }

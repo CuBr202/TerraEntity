@@ -305,6 +305,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase implements Boss, IHeigh
     boolean isDashing = false;
     boolean firstWander = false;
 
+    @Override
     public int getMaxHeadXRot() {
         return 85;
     }
@@ -654,11 +655,13 @@ public class EaterOfWorlds extends AbstractTerraBossBase implements Boss, IHeigh
         return ifBaseHead;
     }
 
+    @Override
     protected BossEvent.BossBarColor getBossBarColor(){
         return BossEvent.BossBarColor.PURPLE;
     };
 
+    @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA);
+        return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA) || source.is(DamageTypes.DROWN);
     }
 }
