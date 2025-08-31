@@ -127,8 +127,6 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEBossEntities.DUNGEON_GUARDIAN.get(), "地牢守卫");
         add(TEBossEntities.HILL_OF_FLESH.get(), "血肉山");
         add(TEBossEntities.WALL_OF_FLESH.get(), "血肉墙");
-        add(TEBossEntities.WALL_OF_FLESH_EYE.get(), "血肉墙眼");
-        add(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), "血肉墙口");
         add(TEMonsterEntities.LEECH.get(), "血蛭");
         add(TEMonsterEntities.THE_HUNGRY.get(), "饿鬼");
         add(TEMonsterEntities.FLESH_SLIME.get(), "血肉史莱姆");

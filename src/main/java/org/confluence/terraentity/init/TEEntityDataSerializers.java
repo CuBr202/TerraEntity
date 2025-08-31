@@ -3,6 +3,9 @@ package org.confluence.terraentity.init;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.util.Tuple;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.confluence.terraentity.TerraEntity;
@@ -12,6 +15,8 @@ import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.entity.npc.trade.TradeParams;
 import org.confluence.terraentity.entity.util.KeyframeAnimationCounter;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -29,5 +34,16 @@ public final class TEEntityDataSerializers {
     public static final Supplier<EntityDataSerializer<NPCChat>> NPC_CHAT_SERIALIZER = SERIALIZERS.register("npc_chat", () -> EntityDataSerializer.forValueType(NPCChat.STREAM_CODEC));
     public static final Supplier<EntityDataSerializer<List<Vec3>>> VEC3_LIST_SERIALIZER = SERIALIZERS.register("vec3_list", () -> EntityDataSerializer.forValueType(ByteBufCodecs.fromCodec(Vec3.CODEC.listOf())));
 
-
+    public static final Supplier<EntityDataSerializer<List<Tuple<Integer, Vec3>>>> TUPLE_INT_VEC3_LIST_SERIALIZER = SERIALIZERS.register("tuple_int_vec3_list", () -> EntityDataSerializer.forValueType(ByteBufCodecs.fromCodec(
+        RecordCodecBuilder.<Tuple<Integer, Vec3>>create(instance -> instance.group(
+            Codec.INT.fieldOf("first").forGetter(Tuple::getA),
+            Vec3.CODEC.fieldOf("second").forGetter(Tuple::getB)
+        ).apply(instance, Tuple::new)).listOf()
+    )));
+    public static final Supplier<EntityDataSerializer<List<Tuple<Vec3, Integer>>>> TUPLET_VEC3_INT_LIST_SERIALIZER = SERIALIZERS.register("tuple_vec3_int_list", () -> EntityDataSerializer.forValueType(ByteBufCodecs.fromCodec(
+            RecordCodecBuilder.<Tuple<Vec3, Integer>>create(instance -> instance.group(
+                    Vec3.CODEC.fieldOf("first").forGetter(Tuple::getA),
+                    Codec.INT.fieldOf("second").forGetter(Tuple::getB)
+            ).apply(instance, Tuple::new)).listOf()
+    )));
 }

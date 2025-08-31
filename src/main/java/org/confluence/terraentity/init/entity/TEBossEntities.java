@@ -10,7 +10,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
-import org.confluence.terraentity.client.boss.model.WallOfFleshEyeModel;
 import org.confluence.terraentity.client.boss.renderer.*;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
 import org.confluence.terraentity.client.entity.renderer.GeoMotionBlurRenderer;
@@ -20,9 +19,8 @@ import org.confluence.terraentity.entity.blur.PosRotMotionBlurRenderer;
 import org.confluence.terraentity.entity.boss.*;
 import org.confluence.terraentity.entity.boss.hillofflesh.HillOfFlesh;
 import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
-import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshEye;
-import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouth;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
+import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.util.AttBuilder;
 import org.confluence.terraentity.init.TEEntities;
 
@@ -39,8 +37,6 @@ public class TEBossEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Skeletron>> SKELETRON = TEEntities.registerMonster("skeletron", Skeletron::new, 2.3F, 2.3F);
     public static final DeferredHolder<EntityType<?>, EntityType<SkeletronHand>> SKELETRON_HAND = TEEntities.registerMonster("skeletron_hand", SkeletronHand::new, 2F, 2F);
     public static final DeferredHolder<EntityType<?>, EntityType<WallOfFlesh>> WALL_OF_FLESH = TEEntities.registerMonster("wall_of_flesh", WallOfFlesh::new, 0.1F,0.1F);
-    public static final DeferredHolder<EntityType<?>, EntityType<WallOfFleshEye>> WALL_OF_FLESH_EYE = TEEntities.registerMonster("wall_of_flesh_eye", WallOfFleshEye::new, 4.15F, 4.15F);
-    public static final DeferredHolder<EntityType<?>, EntityType<WallOfFleshMouth>> WALL_OF_FLESH_MOUTH = TEEntities.registerMonster("wall_of_flesh_mouth", WallOfFleshMouth::new, 4.15F, 4.15F);
     public static final DeferredHolder<EntityType<?>, EntityType<DungeonGuardian>> DUNGEON_GUARDIAN = TEEntities.registerMonster("dungeon_guardian", DungeonGuardian::new, 2.5F, 2.5F);
     public static final DeferredHolder<EntityType<?>, EntityType<HillOfFlesh>> HILL_OF_FLESH = TEEntities.registerMonster("hill_of_flesh", HillOfFlesh::new, 10F,10F);
 
@@ -62,9 +58,6 @@ public class TEBossEntities {
         event.registerEntityRenderer(TEBossEntities.DUNGEON_GUARDIAN.get(), c->new SkeletronRenderer(c,new GeoBossModel<>(TEBossEntities.SKELETRON)));
 
         event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH.get(), WallOfFleshRenderer::new);
-        event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH_EYE.get(), c->new GeoNormalRenderer<>(c,new WallOfFleshEyeModel(WALL_OF_FLESH_EYE.getId()), true,2,0.5f));
-        event.registerEntityRenderer(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), c->new GeoNormalRenderer<>(c,new GeoBossModel<>(WALL_OF_FLESH_MOUTH), true,2,0.5f));
-
         event.registerEntityRenderer(TEBossEntities.HILL_OF_FLESH.get(), HillOfFleshRenderer::new);
 
     }
@@ -84,9 +77,7 @@ public class TEBossEntities {
         event.put(TEBossEntities.SKELETRON_HAND.get(), LibUtils.forMixin$ModifyExpression(AttBuilder.createBoss(10,405,4).build()));
 
         event.put(TEBossEntities.WALL_OF_FLESH.get(), AttBuilder.createBoss(39,3096, 0).build());
-        event.put(TEBossEntities.WALL_OF_FLESH_EYE.get(), AttBuilder.createBoss(8,3096, 0).followRange(32).build());
-        event.put(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), AttBuilder.createBoss(39,3096, 12).followRange(32).build());
-        event.put(TEBossEntities.DUNGEON_GUARDIAN.get(), AttBuilder.createBoss(9999,9999,9999).build());
+         event.put(TEBossEntities.DUNGEON_GUARDIAN.get(), AttBuilder.createBoss(9999,9999,9999).build());
 
         event.put(TEBossEntities.HILL_OF_FLESH.get(), AttBuilder.createBoss(5824, 0).build());
 

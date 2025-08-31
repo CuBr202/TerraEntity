@@ -6,12 +6,12 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
-import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouth;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouse;
 import org.confluence.terraentity.init.TEEffects;
 
 
 public class TheTongueEffect extends MobEffect {
-    private WallOfFleshMouth mouth;
+    private WallOfFleshMouse mouth;
 
     public TheTongueEffect() {
         super(MobEffectCategory.HARMFUL, 0xAB1122);
@@ -42,7 +42,7 @@ public class TheTongueEffect extends MobEffect {
 
                     if (living.tickCount % 10 == 0) {
                         float damage = 2;
-                        living.hurt(living.level().damageSources().mobAttack(mouth), damage);
+                        living.hurt(living.level().damageSources().mobAttack(mouth.parentMob), damage);
                     }
                 }
         }else if(living.tickCount % 60 == 0){
@@ -56,18 +56,18 @@ public class TheTongueEffect extends MobEffect {
         super.onEffectStarted(livingEntity, amplifier);
         if(this.getWallOfFleshMouth() == null||!this.getWallOfFleshMouth().isAlive()) {
             livingEntity.hurt(livingEntity.level().damageSources().mobAttack(livingEntity), 4);
-        }else livingEntity.hurt(livingEntity.level().damageSources().mobAttack(mouth), 4);
+        }else livingEntity.hurt(livingEntity.level().damageSources().mobAttack(mouth.parentMob), 4);
     }
 
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 
-    public WallOfFleshMouth getWallOfFleshMouth() {
+    public WallOfFleshMouse getWallOfFleshMouth() {
         return this.mouth;
     }
 
-    public void setWallOfFleshMouth(WallOfFleshMouth mouth) {
+    public void setWallOfFleshMouth(WallOfFleshMouse mouth) {
         this.mouth = mouth;
     }
 }
