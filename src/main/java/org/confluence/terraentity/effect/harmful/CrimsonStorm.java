@@ -23,7 +23,8 @@ public class CrimsonStorm extends MobEffect {
         UnSyncableAttachment data = livingEntity.getData(TEAttachments.UNSYNC);
         HillOfFlesh flesh = data.getFightingHillOfFlesh();
         if(flesh == null || !flesh.isAlive()){
-            livingEntity.removeEffect(TEEffects.CRIMSON_STORM);
+            // 不能直接移除，会cme
+//            livingEntity.removeEffect(TEEffects.CRIMSON_STORM);
             data.setFightingHillOfFlesh(null);
             return false;
         }

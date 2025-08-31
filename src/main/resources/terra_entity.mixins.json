@@ -13,6 +13,7 @@
     "ServerBossEventMixin",
     "accessor.EntityAccessor",
     "accessor.GeoRendererAccessor",
+    "accessor.MobAccessor",
     "accessor.ProjectileWeaponAccessor",
     "accessor.SlimeAccessor",
     "azurelib.AzurelibFileLoaderMixin",

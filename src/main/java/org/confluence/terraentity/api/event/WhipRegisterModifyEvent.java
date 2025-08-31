@@ -1,10 +1,9 @@
 package org.confluence.terraentity.api.event;
 
 import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.fml.event.IModBusEvent;
 
-public class WhipRegisterModifyEvent extends Event implements IModBusEvent, ICancellableEvent {
+public class WhipRegisterModifyEvent extends Event implements IModBusEvent {
     public static float damageFactor = 0.5f;
     private float damage;
     private float markDamage;

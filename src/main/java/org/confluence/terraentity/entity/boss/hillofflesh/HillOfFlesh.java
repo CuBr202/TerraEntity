@@ -604,7 +604,7 @@ public class HillOfFlesh extends AbstractTerraBossBase implements Boss {
 
     private void applyCrimsonStorm(LivingEntity living) {
         living.getData(TEAttachments.UNSYNC).setFightingHillOfFlesh(this);
-        living.addEffect(new MobEffectInstance(TEEffects.CRIMSON_STORM, -1, 0), this);
+        living.addEffect(new MobEffectInstance(TEEffects.CRIMSON_STORM, 200, 0), this);
     }
 
     @Override

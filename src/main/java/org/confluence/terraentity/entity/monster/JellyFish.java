@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,7 +35,7 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class JellyFish extends WaterAnimal implements GeoEntity, IFSMGeoMob  {
+public class JellyFish extends WaterAnimal implements GeoEntity, IFSMGeoMob, Enemy {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     ClientBoundAnimationMessage message = new ClientBoundAnimationMessage();

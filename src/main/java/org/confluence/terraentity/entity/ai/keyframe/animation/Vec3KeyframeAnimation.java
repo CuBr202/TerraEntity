@@ -47,6 +47,8 @@ public class Vec3KeyframeAnimation implements IKeyframeAnimation<Vec3> {
             Keyframe.CODEC.listOf().fieldOf("z").forGetter(i->i.z)
     ).apply(instance, Vec3KeyframeAnimation::new));
 
+    public static Codec<List<Vec3KeyframeAnimation>> LIST_CODEC = CODEC.listOf();
+
     public double getEndTime() {
         return endTime;
     }
