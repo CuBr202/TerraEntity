@@ -120,7 +120,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Bo
 
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.playSound(TESounds.ROAR.get());
-        if(ServerConfig.BOSS_NO_PHYSICS.get())
+        if (ServerConfig.bossNoPhysics())
             this.noPhysics = true;
 
         collisionProperties.attackInternal = 1;

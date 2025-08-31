@@ -6,7 +6,7 @@ public class ServerConfig {
     public static ModConfigSpec.BooleanValue BOSS_CLEAR_WHEN_NO_TARGET;
     public static ModConfigSpec.DoubleValue BOSS_ATTRIBUTES_MULTIPLIER_HEALTH;
     public static ModConfigSpec.DoubleValue BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE;
-    public static ModConfigSpec.BooleanValue BOSS_NO_PHYSICS;
+    private static ModConfigSpec.BooleanValue BOSS_NO_PHYSICS;
     public static ModConfigSpec.BooleanValue BOSS_LEAVE_ON_DAY;
     public static ModConfigSpec.BooleanValue BOSS_KEEP_WANDERING;
 
@@ -22,6 +22,9 @@ public class ServerConfig {
     public static ModConfigSpec.DoubleValue CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD;
     public static ModConfigSpec.DoubleValue ENEMY_SPAWN_CHANCE;
     public static ModConfigSpec.BooleanValue ENEMY_SPAWN_CHANCE_APPLY_ALL;
+
+    private static ModConfigSpec spec;
+
     public static ModConfigSpec init(){
         final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
@@ -75,6 +78,12 @@ public class ServerConfig {
         ENEMY_SPAWN_CHANCE_APPLY_ALL = BUILDER
                 .comment("Should the chance to spawn a monster apply to all monsters?")
                 .define("enemy_spawn_chance_apply_all", false);
-        return BUILDER.build();
+        return spec = BUILDER.build();
+    }
+
+    public static boolean bossNoPhysics() {
+        if (spec == null) return true;
+        if (spec.isLoaded()) return BOSS_NO_PHYSICS.get();
+        return true;
     }
 }

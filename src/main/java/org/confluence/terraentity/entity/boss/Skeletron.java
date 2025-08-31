@@ -59,7 +59,7 @@ public class Skeletron extends AbstractTerraBossBase implements Boss {
     public Skeletron(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
         setDiscardFriction(true);
-        if (ServerConfig.BOSS_NO_PHYSICS.get()) {
+        if (ServerConfig.bossNoPhysics()) {
             noPhysics = true;
         }
 

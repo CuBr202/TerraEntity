@@ -57,7 +57,7 @@ public class QueenBee extends AbstractTerraBossBase implements Boss, IAngryMob {
         this.collisionProperties.setDetectInterval(1);
         this.noPhysics = true;
 
-        if(ServerConfig.BOSS_NO_PHYSICS.get())
+        if (ServerConfig.bossNoPhysics())
             this.noPhysics = true;
 
         this.dashComponent = new DashComponent(this);
