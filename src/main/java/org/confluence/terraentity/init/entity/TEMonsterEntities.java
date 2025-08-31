@@ -348,8 +348,8 @@ public class TEMonsterEntities {
         event.put(WANDERING_EYE_FISH.get(), AttBuilder.fly(AttBuilder.createAttributes(156,18,15,60,1f,1f)).moveSpeed(2.2).build());
         event.put(EATER_OF_SOULS.get(), AttBuilder.fly(AttBuilder.createAttributes(20,6,11,30,0.5f,0.1f)).build());
         event.put(HARPY.get(), AttBuilder.fly(AttBuilder.createAttributes(41,8,13)).build());
-        event.put(DEMON.get(), AttBuilder.fly(AttBuilder.createAttributes(62, 8, 20, 20, 1f, 0.28f)).build());
-        event.put(VOODOO_DEMON.get(), AttBuilder.fly(AttBuilder.createAttributes(62, 8, 20, 20, 1f, 0.28f)).build());
+        event.put(DEMON.get(), AttBuilder.fly(AttBuilder.createAttributes(62, 8, 20, 16, 1f, 0.28f)).build());
+        event.put(VOODOO_DEMON.get(), AttBuilder.fly(AttBuilder.createAttributes(62, 8, 20, 16, 1f, 0.28f)).build());
         event.put(ANTLION_SWARMER.get(), AttBuilder.fly(AttBuilder.createAttributes(31, 8, 15, 32, 1f, 0.55f)).build());
         event.put(GIANT_ANTLION_SWARMER.get(), AttBuilder.fly(AttBuilder.createAttributes(46, 12, 17, 32, 1f, 0.73f)).build());
         event.put(GRANITE_ELEMENTAL.get(), AttBuilder.fly(AttBuilder.createAttributes(46, 8, 17, 32, 1f, 0.73f)).build());
