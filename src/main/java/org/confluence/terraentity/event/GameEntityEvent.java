@@ -209,7 +209,7 @@ public class GameEntityEvent {
         InitialArmors data = MappedDataTypes.getData(MappedDataTypes.MONSTER_MAP_DATAS, MonsterMappedDatas.MONSTER_ARMOR);
         data.accept(mob);
         //
-        Integer xp = BuiltInRegistries.ENTITY_TYPE.getData(TEDataMaps.ENTITY_XP_DATA_MAP, mob.getType().builtInRegistryHolder().getKey());
+        Integer xp = BuiltInRegistries.ENTITY_TYPE.getData(TEDataMaps.ENTITY_XP_DATA_MAP, mob.getType().builtInRegistryHolder().unwrapKey().orElseThrow());
         if(xp != null){
             ((MobAccessor)mob).setXpReward(xp);
         }

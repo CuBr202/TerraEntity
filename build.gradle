@@ -227,8 +227,8 @@ dependencies {
 
     // iris
 
-    compileOnly "curse.maven:irisshaders-455508:6213632"
-    runtimeOnly "curse.maven:irisshaders-455508:6213632"
+    compileOnly "curse.maven:irisshaders-455508:6661598"
+    runtimeOnly "curse.maven:irisshaders-455508:6661598"
 //
 //    // sodium
     compileOnly "curse.maven:sodium-394468:6382651"
