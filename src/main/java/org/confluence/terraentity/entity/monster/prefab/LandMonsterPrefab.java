@@ -123,6 +123,7 @@ public class LandMonsterPrefab extends AbstractPrefab {
 
     public static Supplier<AttributeBuilder> BLOOD_ZOMBIE_BUILDER =
             ()->new LandMonsterPrefab().getPrefab()
+                    .setSpawnWithoutLight()
                     .setAmbientSound(TESounds.TR_ZOMBIE_FREE)
                     .setDeathSound(TESounds.TR_ZOMBIE_DEATH)
                     .addTarget((t,e)-> {

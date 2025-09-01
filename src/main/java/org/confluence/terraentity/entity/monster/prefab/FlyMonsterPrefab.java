@@ -43,6 +43,7 @@ public class FlyMonsterPrefab extends AbstractPrefab {
 
     public static final Supplier<AttributeBuilder> DRIPPLER_BUILDER  =
             ()->new FlyMonsterPrefab().getPrefab()
+                    .setSpawnWithoutLight()
                     .setHurtSound(TESounds.DRIPPLER_HURT)
                     .setDeathSound(TESounds.DRIPPLER_DEATH)
                     .addGoal((g,e)->{
