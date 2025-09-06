@@ -16,18 +16,17 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 import java.util.Map;
 
-public class Fairy extends BirdVariantAnimal {
+public class WallOfFairy extends Fairy {
 
-    public Fairy(EntityType<? extends Fairy> entityType, Level level, Map<Integer, ResourceLocation> texturesMap) {
+    final BlockPos guidePos;
+
+    public WallOfFairy(EntityType<? extends WallOfFairy> entityType, Level level, Map<Integer, ResourceLocation> texturesMap, BlockPos guidePos) {
         super(entityType, level, texturesMap);
+        this.guidePos = guidePos;
         this.noPhysics = true;
     }
 
-    protected void registerGoals() {
-        super.registerGoals();
-        this.addGoals();
-    }
-
+    @Override
     protected void addGoals() {
         this.goalSelector.addGoal(0, new GuidePlayerGoal(this));
         this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -37,13 +36,13 @@ public class Fairy extends BirdVariantAnimal {
     static class GuidePlayerGoal extends Goal {
         BlockPos guidePos;
         Player target;
-        Mob mob;
+        WallOfFairy mob;
         boolean isFollowing;
         float angle = 0;
         float radius = 3;
         float height = 3;
 
-        public GuidePlayerGoal(Mob mob) {
+        public GuidePlayerGoal(WallOfFairy mob) {
             this.setFlags(EnumSet.of(Goal.Flag.MOVE));
             this.mob = mob;
 
@@ -86,29 +85,14 @@ public class Fairy extends BirdVariantAnimal {
                 this.moveToTarget(targetPos, mobPos);
                 return;
             }
-            if(this.mob.distanceTo(this.target) > 30){
+            if(this.mob.distanceTo(this.target) > 60){
                 // 玩家离开了，停止跟随
                 this.isFollowing = false;
                 this.target = null;
                 return;
             }
             if(this.guidePos == null) {
-                // 寻找附近的箱子作为导航点
-                int offset = 1;
-                for (int i = -offset; i <= offset; i++) {
-                    for (int j = -offset; j <= offset; j++) {
-                        Map<BlockPos, BlockEntity> entities = this.mob.level().getChunkAt(this.mob.blockPosition()).getBlockEntities();
-                        if (!entities.isEmpty()) {
-                            for (Map.Entry<BlockPos, BlockEntity> entry : entities.entrySet()) {
-                                if (entry.getValue() instanceof ChestBlockEntity) {
-                                    this.guidePos = entry.getKey();
-                                    return;
-                                }
-                            }
-
-                        }
-                    }
-                }
+                this.guidePos = this.mob.guidePos;
             }
             if(this.guidePos == null){
                 this.moveToTarget(targetPos, mobPos);
@@ -119,7 +103,7 @@ public class Fairy extends BirdVariantAnimal {
             double dist = delta.length();
             if(dist > 10){
                 guidePos = targetPos.add(delta.normalize().scale(10));
-                if(dist > 30){
+                if(dist > 60){
                     // 距离过远，重新寻找
                     this.guidePos = null;
                 }
@@ -131,7 +115,7 @@ public class Fairy extends BirdVariantAnimal {
         protected void moveToTarget(Vec3 targetPos, Vec3 mobPos){
             double distance = mobPos.distanceTo(targetPos);
             Vec3 pos = targetPos.add(new Vec3(Math.sin(this.angle) * this.radius, 0, Math.cos(this.angle) * this.radius));
-            this.mob.getNavigation().moveTo(pos.x, pos.y + height, pos.z, 1.0 + distance);
+            this.mob.getNavigation().moveTo(pos.x, pos.y + height, pos.z, 0.5 + distance * 0.3);
 
             if(distance < 3f){
                 this.isFollowing = true;

@@ -23,10 +23,12 @@ public abstract class ServerChunkLoadingManagerMixin {
     )
     private int replaceDistance(int distance, Entity entity) {
         if (entity instanceof WallOfFlesh wallOfFlesh && entity.isAlive()) {
-            int bonus = 1000;
-            return (int) (wallOfFlesh.getGridSizeX() *
-                    wallOfFlesh.getGridSizeY() *
-                    wallOfFlesh.gridSpacing) + bonus;
+            double width = wallOfFlesh.getGridSizeX() * wallOfFlesh.gridSpacing;
+            double height = wallOfFlesh.getGridSizeY() * wallOfFlesh.gridSpacing;
+            double diagonalDistance = Math.sqrt(width * width + height * height);
+            int bonusDistance = 2000;
+
+            return Math.min((int) (diagonalDistance + bonusDistance), 10000);
         }
         return distance;
     }

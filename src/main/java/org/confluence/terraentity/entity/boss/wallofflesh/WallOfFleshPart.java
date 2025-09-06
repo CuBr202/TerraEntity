@@ -19,6 +19,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
+import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import org.confluence.terraentity.network.s2c.SyncWallOfFleshTargetPacket;
@@ -27,7 +28,7 @@ import org.confluence.terraentity.utils.AdapterUtils;
 import javax.annotation.Nullable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class WallOfFleshPart extends PartEntity<WallOfFlesh> {
+public abstract class WallOfFleshPart extends PartEntity<WallOfFlesh> implements ICollisionAttackEntity {
     public final WallOfFlesh parentMob;
     public final String name;
     private final EntityDimensions size;
@@ -46,6 +47,7 @@ public abstract class WallOfFleshPart extends PartEntity<WallOfFlesh> {
         this.parentMob = parentMob;
         this.name = name;
         this.randomDeathSpeed = this.getRandom().nextFloat() * 0.5f + 1f;
+        collisionProperties.detectInternal = 1;
     }
 
     @Override
@@ -62,12 +64,11 @@ public abstract class WallOfFleshPart extends PartEntity<WallOfFlesh> {
         this.target = target;
 
         if (!this.level().isClientSide()) {
-            // 获取自己在父实体subEntities中的索引
             int partIndex = this.parentMob.subEntities.indexOf(this);
             if (partIndex >= 0) {
                 AdapterUtils.sendToAllPlayers(new SyncWallOfFleshTargetPacket(
-                    this.parentMob.getId(), 
-                    partIndex, 
+                    this.parentMob.getId(),
+                    partIndex,
                     target != null ? target.getId() : 0
                 ));
             }
@@ -81,6 +82,22 @@ public abstract class WallOfFleshPart extends PartEntity<WallOfFlesh> {
     }
     public float lerpPitch(float partialTick){
         return Mth.lerp(Mth.clamp(this.stareCount + partialTick, 0, 10) / 10,  this.stareStartPitch, this.starePitch);
+    }
+
+    @Override
+    public float getYRot() {
+        if(this.parentMob!=null) {
+            return this.parentMob.getYRot();
+        }
+        return super.getYRot();
+    }
+
+    @Override
+    public float getXRot() {
+        if(this.parentMob!=null) {
+            return this.parentMob.getXRot();
+        }
+        return super.getXRot();
     }
 
     public boolean hasLineOfSight(Entity entity){
@@ -99,20 +116,14 @@ public abstract class WallOfFleshPart extends PartEntity<WallOfFlesh> {
             }
         }else{
             if(this.getParent().tickCount % 25 == this.getId() % 25){
-                float r = 80;
+                float r = 120;
 
-                // 优先索敌玩家
-                LivingEntity living = null;
-                LivingEntity player = null;
+                LivingEntity living = null;;
                 for(LivingEntity e : this.getParent().nearbyLivings){
                     boolean isPlayer = e instanceof Player;
-                    if(!isPlayer){
-                        if(!this.hasLineOfSight(e)) {
-                            continue;
-                        }
+                    if(e instanceof Player player && (player.isCreative() || player.isSpectator())){
+                        continue;
                     }
-                    double angle = TEUtils.angleBetween(this.position(), e.position().subtract(this.position()));
-
                     Vec3 forwardDir = this.parentMob.getForward();
                     Vec3 toTargetHorizontal = e.position().subtract(this.position()).normalize();
 
@@ -122,20 +133,18 @@ public abstract class WallOfFleshPart extends PartEntity<WallOfFlesh> {
                             && e.position().subtract(this.position()).horizontalDistanceSqr() <= r * r;
                     if(isTarget){
                         if(isPlayer){
-                            player = e;
-                            break;
-                        }else{
                             living = e;
+                            break;
                         }
                     }
                 }
-                if(player!= null){
-                    this.changeTarget(player);
-                }else{
-                    this.changeTarget(living);
-                }
+                this.changeTarget(living);
             }
 
+            doCollisionAttack(
+                    e-> e instanceof LivingEntity  living  && e!= this && living.canBeSeenAsEnemy(),
+                    parentMob::doHurtTarget
+            );
             if(this.target == null){
                 if(this.getParent().deathTime <= 0) {
                     this.stareCount = Math.max(0, this.stareCount - 1);
@@ -179,7 +188,6 @@ public abstract class WallOfFleshPart extends PartEntity<WallOfFlesh> {
         return !this.isInvulnerableTo(source) && this.parentMob.hurt(this, source, amount * this.getHurtFactor(source));
     }
 
-
     protected float getHurtFactor(@NotNull DamageSource source){
         return 2.0f;
     }
@@ -202,6 +210,18 @@ public abstract class WallOfFleshPart extends PartEntity<WallOfFlesh> {
     @Override
     public boolean shouldBeSaved() {
         return false;
+    }
+
+    protected ICollisionAttackEntity.CollisionProperties collisionProperties = new ICollisionAttackEntity.CollisionProperties(5, 20, 0);
+
+    @Override
+    public ICollisionAttackEntity.CollisionProperties getCollisionProperties() {
+        return collisionProperties;
+    }
+
+    @Override
+    public boolean shouldDoCollision(){
+        return  this.isAlive();
     }
 
     protected void onParentChangeState(int state){

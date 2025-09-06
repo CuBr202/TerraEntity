@@ -23,6 +23,7 @@ import org.confluence.terraentity.client.buffer.NPCChatBubbleBuffer;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.client.post.BossSpawnCameraManager;
 import org.confluence.terraentity.client.post.BrainTranslucent;
+import org.confluence.terraentity.client.post.WallOfFleshTranslucent;
 import org.confluence.terraentity.client.post.TongueRenderer;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.integration.ModChecker;
@@ -61,6 +62,7 @@ public class RenderEvent {
     public static void renderLevelStage(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
             BrainTranslucent.render(event);
+            WallOfFleshTranslucent.render(event);
             DebugBlocksHelper.Singleton().render(event);
             //            NPCRenderer.target.blitToScreen(100,100);
             NPCChatBubbleBuffer.getInstance().render(event);
@@ -75,15 +77,12 @@ public class RenderEvent {
             isAfterSky = false;
         } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
             TongueRenderer.renderFirstPerson(event);
-
-
         } else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SKY) {
 //            NPCChatBubbleBuffer.getInstance().refresh();
 
             isAfterSky = true;
         } else if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES){
             isIrisShader = ModChecker.iris.isLoaded() && RenderSystem.getShader() instanceof ExtendedShader;
-
             DebugEntityHelper.INSTANCE.render(event);
         }
     }
