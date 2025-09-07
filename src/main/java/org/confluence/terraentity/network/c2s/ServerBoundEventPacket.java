@@ -12,8 +12,8 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.item.ILeftClickStateItem;
+import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
-import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TENpcEntities;
 import org.confluence.terraentity.integration.ModChecker;
@@ -46,14 +46,14 @@ public class ServerBoundEventPacket implements CustomPacketPayload{
                 }
             })
             .put(TypeEnum.MOUSE_LEFT_CLICK, (player)-> {
-                player.getData(TEAttachments.WEAPON_STORAGE.get()).leftClicking = true;
+                WeaponStorage.of(player).leftClicking = true;
                 ItemStack stack = player.getMainHandItem();
                 if(stack.getItem() instanceof ILeftClickStateItem item){
                     item.onLeftClick(player, stack);
                 }
             })
             .put(TypeEnum.MOUSE_RELEASE, (player)-> {
-                player.getData(TEAttachments.WEAPON_STORAGE.get()).leftClicking = false;
+                WeaponStorage.of(player).leftClicking = false;
                 ItemStack stack = player.getMainHandItem();
                 if(stack.getItem() instanceof ILeftClickStateItem item){
                     item.onLeftRelease(player, stack);

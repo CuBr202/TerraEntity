@@ -19,8 +19,8 @@ import net.minecraft.world.entity.ai.behavior.StopAttackingIfTargetInvalid;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.entity.proj.BoomerangProjectile;
-import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.item.TEBoomerangItems;
 import org.confluence.terraentity.item.Boomerang;
@@ -42,7 +42,7 @@ public class TaskBoomerangAttack implements IRangedAttackTask {
     public void performRangedAttack(EntityMaid entityMaid, LivingEntity livingEntity, float distanceFactor) {
         ItemStack stack = entityMaid.getItemBySlot(EquipmentSlot.MAINHAND);
         if (stack.getItem() instanceof Boomerang boomerang) {
-            var data = entityMaid.getData(TEAttachments.WEAPON_STORAGE);
+            var data = WeaponStorage.of(entityMaid);
             data.tryIncrease(boomerang);
             entityMaid.level().playSound(entityMaid, entityMaid.blockPosition(),  TESounds.WAVING.get(), SoundSource.AMBIENT, 1.0F, 1.0F);
             Projectile projectile = new BoomerangProjectile(entityMaid, boomerang.boomerangModifier, stack);

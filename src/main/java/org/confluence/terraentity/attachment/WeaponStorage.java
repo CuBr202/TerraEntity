@@ -3,8 +3,10 @@ package org.confluence.terraentity.attachment;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.confluence.terraentity.entity.proj.YoyosEntity;
+import org.confluence.terraentity.init.TEAttachments;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashMap;
@@ -42,5 +44,9 @@ public class WeaponStorage implements INBTSerializable<CompoundTag> {
 //            Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(key));
 //            boomerangCounter.put(item, compoundTag.getInt(key));
 //        }
+    }
+
+    public static WeaponStorage of(IAttachmentHolder holder) {
+        return holder.getData(TEAttachments.WEAPON_STORAGE);
     }
 }

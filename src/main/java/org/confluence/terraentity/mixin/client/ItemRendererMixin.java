@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.client.init.model.AdditionalItemRegister;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.item.TESummonItems;
@@ -40,7 +41,7 @@ public class ItemRendererMixin {
             if(item instanceof BaseWhipItem && player.getCooldowns().isOnCooldown(item)){
                 return;
             }
-            if(item instanceof YoyosItem && player.getData(TEAttachments.WEAPON_STORAGE.get()).yoyosEntity != null){
+            if (item instanceof YoyosItem && WeaponStorage.of(player).yoyosEntity != null) {
                 return;
             }
 

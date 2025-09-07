@@ -23,7 +23,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.item.ILeftClickReceiver;
 import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.entity.summon.AbstractSummonMob;
-import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.item.YoyosItem;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.TEUtils;
@@ -152,9 +151,9 @@ public class YoyosEntity extends AbstractSummonMob implements ILeftClickReceiver
             }
         }else if(DATA_OWNERUUID_ID.equals(key)){
             Entity owner = getOwner();
-            WeaponStorage data = null;
+            WeaponStorage data;
             if (owner != null) {
-                data = owner.getData(TEAttachments.WEAPON_STORAGE);
+                data = WeaponStorage.of(owner);
                 data.yoyosEntity = this;
             }
         }
@@ -174,7 +173,7 @@ public class YoyosEntity extends AbstractSummonMob implements ILeftClickReceiver
         super.onRemovedFromLevel();
         Entity owner = getOwner();
         if (owner != null) {
-            WeaponStorage data = owner.getData(TEAttachments.WEAPON_STORAGE);
+            WeaponStorage data = WeaponStorage.of(owner);
             data.yoyosEntity = null;
             if(owner instanceof  Player player){
                 player.getCooldowns().removeCooldown(item);

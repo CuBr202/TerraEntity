@@ -15,7 +15,6 @@ import org.confluence.terraentity.api.item.IProjectileModifier;
 import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.entity.proj.BaseProj;
 import org.confluence.terraentity.entity.proj.YoyosEntity;
-import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.entity.TESummonEntities;
 import org.confluence.terraentity.registries.hit_effect.IEffectStrategy;
 import org.confluence.terraentity.utils.AdapterUtils;
@@ -70,7 +69,7 @@ public class YoyosItem<T extends BaseProj<?>> extends Item implements ILeftClick
 
     @Override
     public void onLeftClick(Player player, ItemStack itemStack) {
-        WeaponStorage weaponStorage = player.getData(TEAttachments.WEAPON_STORAGE.get());
+        WeaponStorage weaponStorage = WeaponStorage.of(player);
         if(weaponStorage.yoyosEntity != null && weaponStorage.yoyosEntity.isAlive()){
             weaponStorage.yoyosEntity.onReceiveLeftClick(player, itemStack);
             return;
@@ -90,7 +89,7 @@ public class YoyosItem<T extends BaseProj<?>> extends Item implements ILeftClick
 
     @Override
     public void onLeftRelease(Player player, ItemStack itemStack) {
-        WeaponStorage weaponStorage = player.getData(TEAttachments.WEAPON_STORAGE.get());
+        WeaponStorage weaponStorage = WeaponStorage.of(player);
         if(weaponStorage.yoyosEntity != null && weaponStorage.yoyosEntity.isAlive()){
             weaponStorage.yoyosEntity.onReceiveLeftRelease(player, itemStack);
         }
@@ -104,7 +103,7 @@ public class YoyosItem<T extends BaseProj<?>> extends Item implements ILeftClick
 
     @Override
     public void onWhellScroll(Player player, ItemStack itemStack, int scrollAmount){
-        WeaponStorage weaponStorage = player.getData(TEAttachments.WEAPON_STORAGE.get());
+        WeaponStorage weaponStorage = WeaponStorage.of(player);
         if(weaponStorage.yoyosEntity != null && weaponStorage.yoyosEntity.isAlive()){
             weaponStorage.yoyosEntity.onReceiveWhellScroll(player, itemStack, scrollAmount);
         }

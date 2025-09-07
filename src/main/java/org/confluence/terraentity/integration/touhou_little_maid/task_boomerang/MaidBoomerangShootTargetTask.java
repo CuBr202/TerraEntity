@@ -9,7 +9,7 @@ import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.item.Item;
-import org.confluence.terraentity.init.TEAttachments;
+import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.item.Boomerang;
 
 import java.util.Optional;
@@ -51,7 +51,7 @@ public class MaidBoomerangShootTargetTask extends Behavior<EntityMaid> {
             if(mainHandItem instanceof Boomerang boomerang) {
                 --attackTime;
                 if (canSee) {
-                    var data = owner.getData(TEAttachments.WEAPON_STORAGE);
+                    var data = WeaponStorage.of(owner);
                     int count = data.getCount(mainHandItem);
                     int maxCount = boomerang.boomerangModifier.maxCount;
                     if (count == 0 || count < maxCount && attackTime <= 0) {

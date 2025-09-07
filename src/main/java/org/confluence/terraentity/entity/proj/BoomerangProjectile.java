@@ -28,10 +28,10 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.event.EventHooks;
 import org.confluence.terraentity.api.entity.IAttackableProjectile;
+import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.data.component.SingleBooleanComponent;
 import org.confluence.terraentity.entity.util.trail.BoomerangTrail;
-import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEDataComponentTypes;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.item.Boomerang;
@@ -280,7 +280,7 @@ public class BoomerangProjectile extends Projectile {
         if(!level().isClientSide && !weapon.isEmpty() && getOwner() != null) {
             Boomerang.setBacked(weapon, SingleBooleanComponent.TRUE);
 
-            getOwner().getData(TEAttachments.WEAPON_STORAGE).tryReduce(weapon.getItem());
+            WeaponStorage.of(getOwner()).tryReduce(weapon.getItem());
             //  提前部署
             if(getOwner() instanceof Player player
 //                    && (modifier.shouldWaitForBack && !modifier.shouldApplyCd || modifier.maxCount - 1 == count)

@@ -13,7 +13,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
 import org.confluence.terraentity.api.item.ILeftClickStateItem;
 import org.confluence.terraentity.attachment.WeaponStorage;
-import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.item.BaseWhipItem;
 import org.confluence.terraentity.network.c2s.ServerBoundEventPacket;
@@ -47,7 +46,7 @@ public class GameInputEvent {
                 }
             }
 
-            if (!item1.canSwitchWithoutRelease(player, stack) && player.getData(TEAttachments.WEAPON_STORAGE).leftClicking) {
+            if (!item1.canSwitchWithoutRelease(player, stack) && WeaponStorage.of(player).leftClicking) {
                 event.setCanceled(true);
             }
         }
@@ -57,7 +56,7 @@ public class GameInputEvent {
     public static void mouseClick(InputEvent.MouseButton.Pre event) {
         Player player = Minecraft.getInstance().player;
         if (player != null && !Minecraft.getInstance().isPaused() && Minecraft.getInstance().screen == null && !player.isSpectator()) {
-            WeaponStorage data = player.getData(TEAttachments.WEAPON_STORAGE);
+            WeaponStorage data = WeaponStorage.of(player);
             boolean clicking = data.leftClicking;
             if (event.getButton() == GLFW.GLFW_MOUSE_BUTTON_1) { // 左键
                 if (event.getAction() == InputConstants.RELEASE) { // 松开

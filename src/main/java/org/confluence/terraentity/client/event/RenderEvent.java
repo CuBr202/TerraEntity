@@ -17,6 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.client.buffer.DebugEntityHelper;
 import org.confluence.terraentity.client.buffer.NPCChatBubbleBuffer;
@@ -24,7 +25,6 @@ import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.client.post.BossSpawnCameraManager;
 import org.confluence.terraentity.client.post.BrainTranslucent;
 import org.confluence.terraentity.client.post.TongueRenderer;
-import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.item.BaseWhipItem;
 import org.confluence.terraentity.item.YoyosItem;
@@ -121,7 +121,7 @@ public class RenderEvent {
 
             Item item = player.getMainHandItem().getItem();
             // 使用有悠悠球时渲染手臂
-            if(item instanceof YoyosItem && player.getData(TEAttachments.WEAPON_STORAGE.get()).yoyosEntity != null) {
+            if (item instanceof YoyosItem && WeaponStorage.of(player).yoyosEntity != null) {
 
                 PlayerRenderer playerrenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(player);
                 PoseStack poseStack = event.getPoseStack();
