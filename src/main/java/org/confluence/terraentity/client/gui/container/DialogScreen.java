@@ -54,7 +54,7 @@ public class DialogScreen extends Screen {
             addRenderableWidget(dialogButton = Button.builder(Component.translatable("dialogs.terra_entity.dialog"), b -> initDialog(npc)
             ).width(50).pos(width / 2, height / 2 + 25).build());
 
-            if (LibDateUtils.isNight(LibDateUtils.getDayTime(npc.level())) && npc.getType() == TENpcEntities.OLD_MAN.get()) {
+            if (LibDateUtils.isNight(npc.level()) && npc.getType() == TENpcEntities.OLD_MAN.get()) {
                 summonButton = Button.builder(Component.translatable("dialogs.terra_entity.summon"), p -> {
                     ServerBoundEventPacket.summonSkeletron();
                     Minecraft.getInstance().setScreen(null); // 关闭对话框
