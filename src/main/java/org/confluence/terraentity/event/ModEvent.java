@@ -9,7 +9,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.fluids.RegisterCauldronFluidContentEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import org.confluence.lib.api.NameFixRegisterEvent;
+import org.confluence.lib.event.NameFixRegisterEvent;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TEAttributes;
 import org.confluence.terraentity.init.TEEntities;
