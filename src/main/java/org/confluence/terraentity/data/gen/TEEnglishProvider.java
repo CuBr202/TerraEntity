@@ -334,6 +334,16 @@ public class TEEnglishProvider extends LanguageProvider {
         add("dialogs.terra_entity.clothier.5", "Being cursed was lonely, so I once made a friend out of leather. I named him Wilson.");
         add("dialogs.terra_entity.clothier.6", "I keep having vague memories of tying up a woman and throwing her in a dungeon.");
 
+        add("dialogs.terra_entity.zoologist.0", "I collected critters like you once, then I took a cursed fox bite to the knee!");
+        add("dialogs.terra_entity.zoologist.1", "I may not know, like, a whole lot...but I can talk your head off about nature and critters and animals and wildlife and...");
+        add("dialogs.terra_entity.zoologist.2", "My older bro calls me a lycanthrope. It means I'm like, part animal or something. He'd know, though, because he spends all his time outside!");
+        add("dialogs.terra_entity.zoologist.3", "I love animals, like, a lot! I tried to pet this weird looking fox one time, he sooo bit me, and now I became like one! Rad!");
+        add("dialogs.terra_entity.zoologist.4", "Staahp pulling on my tail, bro, it's totally real, and like...totally hurts when you pull on it!");
+        add("dialogs.terra_entity.zoologist.5", "Oh, THESE ears? Haha, totes better to hear you with, my dear!");
+        add("dialogs.terra_entity.zoologist.6", "This one time, at critter camp, I woke up one morning and everything was torn apart! Like, wow, how did I sleep through THAT?!");
+        add("dialogs.terra_entity.zoologist.7", "Wow, like, I've never seen a full moon. For some reason, it's like I pass out every time one's around!");
+        add("dialogs.terra_entity.zoologist.8", "I have noooo idea how I got here, but it's mega rad.");
+
         add("dialogs.terra_entity.party_girl.0", "We have to talk. It's... it's about parties.");
         add("dialogs.terra_entity.party_girl.1", "I can't decide what I like more: parties, or after-parties.");
         add("dialogs.terra_entity.party_girl.2", "We should set up a blinkroot party, and we should also set up an after-party.");
@@ -355,6 +365,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("mood.terra_entity.goblin_tinkerer.dislike.clothier", "I detect eerie vibes from <name of Clothier>, as if they contain dark secrets. I don't like the feeling.");
         add("mood.terra_entity.guide.hate.painter", "I hate that Painter is around. The world is fine the way it was made!");
         add("mood.terra_entity.guide.like.clothier", "I'm quite fond of Clothier, we have a lot in common.");
+        add("mood.terra_entity.guide.like.zoologist", "I'm quite fond of Zoologist, we have a lot in common.");
         add("mood.terra_entity.arms_dealer.hate.demolitionist", "I'd REALLY like to use the Demolitionist as a range target sometime.");
         add("mood.terra_entity.arms_dealer.love.nurse", "Think Nurse the Nurse ever, ya know, checks me out?");
         add("mood.terra_entity.angler.like.demolitionist", "the Demolitionist actually knows what they're doing, unlike some OTHER people! I kinda like that!");
@@ -379,6 +390,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("mood.terra_entity.nurse.love.arms_dealer", "What? Arms Dealer? I don't have a crush! I don't! Shut up!");
         add("mood.terra_entity.nurse.dislike.dryad", "I don't like Dryad that much, kinda weirds me out.");
         add("mood.terra_entity.nurse.dislike.party_girl", "I don't like Party Girl that much, kinda weirds me out.");
+        add("mood.terra_entity.nurse.hate.zoologist", "Oh, I hate treating Zoologist , so difficult!");
         add("mood.terra_entity.truffle.love.guide", "I love Guide for being able to talk to me without mysteriously getting hungry.");
         add("mood.terra_entity.truffle.like.dye_trader", " Dryad treats me with respect, as though I'm a true part of nature. I don't know how to feel about that, except I like it.");
         add("mood.terra_entity.truffle.dislike.clothier", " Clothier has tried to eat me so many times. I swear, one time they weren't even human! I, obviously, dislike it.");
@@ -387,6 +399,7 @@ public class TEEnglishProvider extends LanguageProvider {
         add("mood.terra_entity.clothier.dislike.nurse", "For some reason, being around Nurse makes me feel uneasy.");
         add("mood.terra_entity.clothier.hate.mechanic", "I hate Mechanic and I don't know why.");
         add("mood.terra_entity.party_girl.dislike.merchant", "I think Merchant is a killjoy at parties.");
+        add("mood.terra_entity.party_girl.love.zoologist", "I love that Zoologist always dazzles at my parties.");
         add("mood.terra_entity.witch_doctor.like.dryad", "the Dryad is a kindred spirit of nature, my soul is at peace in their presence.");
         add("mood.terra_entity.witch_doctor.like.guide", "the Guide is a kindred spirit of nature, my soul is at peace in their presence.");
         add("mood.terra_entity.witch_doctor.dislike.nurse", "I dislike the practices of the Nurse. True healing cannot come from metal and glass.");
@@ -394,6 +407,10 @@ public class TEEnglishProvider extends LanguageProvider {
         add("mood.terra_entity.mechanic.love.goblin_tinkerer", "Umm...Goblin Tinkerer makes my heart flutter, I need to get that checked!");
         add("mood.terra_entity.mechanic.dislike.arms_dealer", "I don't really like that Arms Dealer won't leave me alone!");
         add("mood.terra_entity.mechanic.hate.clothier", "I hate how Clothier doesn't know how to treat a woman!");
+        add("mood.terra_entity.zoologist.love.witch_doctor", "I can't explain it. I have like, a thing for Witch Doctor. Is it because of the tail?");
+        add("mood.terra_entity.zoologist.dislike.angler", "I don't like how cruel Angler is!");
+        add("mood.terra_entity.zoologist.like.female_angler", "She didn't really hurt them.");
+        add("mood.terra_entity.zoologist.hate.arms_dealer", "I really totally hate what Arms Dealer does to animals!");
         // sound
         add("terra_entity.subtitle.routine_hurt", "Mob: Hurt");
         add("terra_entity.subtitle.routine_death", "Mob: Death");

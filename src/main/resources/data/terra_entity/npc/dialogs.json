@@ -155,6 +155,19 @@
       "dialogs.terra_entity.clothier.6"
     ]
   },
+  "terra_entity:zoologist": {
+    "dialogs": [
+      "dialogs.terra_entity.zoologist.0",
+      "dialogs.terra_entity.zoologist.1",
+      "dialogs.terra_entity.zoologist.2",
+      "dialogs.terra_entity.zoologist.3",
+      "dialogs.terra_entity.zoologist.4",
+      "dialogs.terra_entity.zoologist.5",
+      "dialogs.terra_entity.zoologist.6",
+      "dialogs.terra_entity.zoologist.7",
+      "dialogs.terra_entity.zoologist.8"
+    ]
+  },
   "terra_entity:truffle": {
     "dialogs": [
       "dialogs.terra_entity.truffle.0",

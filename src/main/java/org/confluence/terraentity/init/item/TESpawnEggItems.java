@@ -138,6 +138,7 @@ public class TESpawnEggItems {
     public static final DeferredItem<SpawnEggItem> WITCH_DOCTOR_SPAWN_EGG = registerEgg("witch_doctor_spawn_egg", TENpcEntities.WITCH_DOCTOR, 0xffffff);
     public static final DeferredItem<SpawnEggItem> PARTY_GIRL_SPAWN_EGG = registerEgg("party_girl_spawn_egg", TENpcEntities.PARTY_GIRL, 0xffffff);
     public static final DeferredItem<SpawnEggItem> CLOTHIER_SPAWN_EGG = registerEgg("clothier_spawn_egg", TENpcEntities.CLOTHIER, 0xffffff);
+    public static final DeferredItem<SpawnEggItem> ZOOLOGIST_SPAWN_EGG = registerEgg("zoologist_spawn_egg", TENpcEntities.ZOOLOGIST, 0xffffff);
     public static final DeferredItem<SpawnEggItem> TRUFFLE_SPAWN_EGG = registerEgg("truffle_spawn_egg", TENpcEntities.TRUFFLE, 0xffffff);
 
 

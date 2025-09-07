@@ -82,6 +82,10 @@ public class TENpcEntities {
      */
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> CLOTHIER = TEEntities.registerEntity("clothier", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
     /**
+     * 动物学家
+     */
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> ZOOLOGIST = TEEntities.registerEntity("zoologist", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
+    /**
      * 松露人
      */
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractTerraNPC>> TRUFFLE = TEEntities.registerEntity("truffle", SimpleNPC::new, MobCategory.CREATURE, 0.6f, 1.85f);
@@ -107,6 +111,7 @@ public class TENpcEntities {
         event.registerEntityRenderer(PARTY_GIRL.get(), c -> new NPCRenderer<>(c, PARTY_GIRL.getId()));
         event.registerEntityRenderer(CLOTHIER.get(), c -> new NPCRenderer<>(c, CLOTHIER.getId()));
         event.registerEntityRenderer(TRUFFLE.get(), c -> new NPCRenderer<>(c, TRUFFLE.getId()));
+        event.registerEntityRenderer(ZOOLOGIST.get(), c -> new NPCRenderer<>(c, ZOOLOGIST.getId()));
     }
 
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -128,6 +133,7 @@ public class TENpcEntities {
         event.put(PARTY_GIRL.get(), AbstractTerraNPC.createAttributes().build());
         event.put(CLOTHIER.get(), AbstractTerraNPC.createAttributes().build());
         event.put(TRUFFLE.get(), AbstractTerraNPC.createAttributes().build());
+        event.put(ZOOLOGIST.get(), AbstractTerraNPC.createAttributes().build());
     }
 
     public static void spawnPlacementRegister(RegisterSpawnPlacementsEvent event) {
@@ -149,6 +155,7 @@ public class TENpcEntities {
         event.register(PARTY_GIRL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(CLOTHIER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(TRUFFLE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ZOOLOGIST.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractTerraNPC::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     public static void register() {
