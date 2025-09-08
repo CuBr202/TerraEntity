@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.confluence.terra_furniture.common.init.TFTags;
 import org.confluence.terraentity.init.TETags;
 import org.jetbrains.annotations.Nullable;
 
