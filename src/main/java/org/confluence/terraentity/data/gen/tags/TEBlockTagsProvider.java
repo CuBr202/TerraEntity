@@ -2,14 +2,12 @@ package org.confluence.terraentity.data.gen.tags;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.confluence.mod.common.init.ModTags;
 import org.confluence.terra_furniture.common.init.TFTags;
 import org.confluence.terraentity.init.TETags;
 import org.jetbrains.annotations.Nullable;
@@ -34,16 +32,15 @@ public class TEBlockTagsProvider extends BlockTagsProvider {
                         Blocks.PEARLESCENT_FROGLIGHT,Blocks.OCHRE_FROGLIGHT,Blocks.VERDANT_FROGLIGHT,
                         Blocks.VERDANT_FROGLIGHT,Blocks.REDSTONE_LAMP,Blocks.COPPER_BULB,Blocks.EXPOSED_COPPER_BULB,
                         Blocks.OXIDIZED_COPPER_BULB,Blocks.WAXED_COPPER_BULB,Blocks.WEATHERED_COPPER_BULB,Blocks.WAXED_EXPOSED_COPPER_BULB,
-                        Blocks.WAXED_OXIDIZED_COPPER_BULB,Blocks.WAXED_WEATHERED_COPPER_BULB)
-                .addOptionalTag(ModTags.Blocks.HOUSE_CONSTITUTE);
+                        Blocks.WAXED_OXIDIZED_COPPER_BULB,Blocks.WAXED_WEATHERED_COPPER_BULB);
 
         this.tag(TETags.Blocks.NPC_HOUSE_CHAIR)
-                .addTag(BlockTags.BEDS)
-                .addOptionalTag(TFTags.HOUSE_CHAIR);
+                .addTag(BlockTags.BEDS);
+                // .addOptionalTag(TFTags.HOUSE_CHAIR);
 
         this.tag(TETags.Blocks.NPC_HOUSE_TABLE)
-                .add(Blocks.CRAFTING_TABLE)
-                .addOptionalTag(TFTags.HOUSE_TABLE);
+                .add(Blocks.CRAFTING_TABLE);
+                // .addOptionalTag(TFTags.HOUSE_TABLE);
     }
 
     @Override
