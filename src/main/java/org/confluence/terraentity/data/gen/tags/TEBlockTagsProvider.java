@@ -2,6 +2,7 @@ package org.confluence.terraentity.data.gen.tags;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -10,7 +11,6 @@ import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.init.TETags;
 import org.jetbrains.annotations.Nullable;
-
 
 import java.util.concurrent.CompletableFuture;
 
@@ -32,14 +32,22 @@ public class TEBlockTagsProvider extends BlockTagsProvider {
                         Blocks.PEARLESCENT_FROGLIGHT,Blocks.OCHRE_FROGLIGHT,Blocks.VERDANT_FROGLIGHT,
                         Blocks.VERDANT_FROGLIGHT,Blocks.REDSTONE_LAMP,Blocks.COPPER_BULB,Blocks.EXPOSED_COPPER_BULB,
                         Blocks.OXIDIZED_COPPER_BULB,Blocks.WAXED_COPPER_BULB,Blocks.WEATHERED_COPPER_BULB,Blocks.WAXED_EXPOSED_COPPER_BULB,
-                        Blocks.WAXED_OXIDIZED_COPPER_BULB,Blocks.WAXED_WEATHERED_COPPER_BULB
-                );
+                        Blocks.WAXED_OXIDIZED_COPPER_BULB,Blocks.WAXED_WEATHERED_COPPER_BULB)
+                .addOptional(ResourceLocation.parse("confluence:white_paper_pane_lamp"))
+                .addOptional(ResourceLocation.parse("confluence:malachite_paper_pane_lamp"));
 
         this.tag(TETags.Blocks.NPC_HOUSE_CHAIR)
-                .addTag(BlockTags.BEDS);
+                .addTag(BlockTags.BEDS)
+                .addOptional(ResourceLocation.parse("terra_furniture:plastic_chair"))
+                .addOptional(ResourceLocation.parse("terra_furniture:glass_chair"))
+                .addOptional(ResourceLocation.parse("terra_furniture:blue_brick_sofa"))
+                .addOptional(ResourceLocation.parse("terra_furniture:glass_sofa"))
+                .addOptional(ResourceLocation.parse("terra_furniture:blue_brick_chair"));
 
         this.tag(TETags.Blocks.NPC_HOUSE_TABLE)
-                .add(Blocks.CRAFTING_TABLE);
+                .add(Blocks.CRAFTING_TABLE)
+                .addOptional(ResourceLocation.parse("terra_furniture:glass_table"))
+                .addOptional(ResourceLocation.parse("terra_furniture:blue_brick_table"));
     }
 
     @Override
