@@ -2,6 +2,7 @@ package org.confluence.terraentity.data.gen.tags;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -34,12 +35,12 @@ public class TEBlockTagsProvider extends BlockTagsProvider {
                         Blocks.WAXED_OXIDIZED_COPPER_BULB,Blocks.WAXED_WEATHERED_COPPER_BULB);
 
         this.tag(TETags.Blocks.NPC_HOUSE_CHAIR)
-                .addTag(BlockTags.BEDS);
-                // .addOptionalTag(TFTags.HOUSE_CHAIR);
+                .addTag(BlockTags.BEDS)
+                .addOptional(ResourceLocation.parse("terra_furniture:house_chair"));
 
         this.tag(TETags.Blocks.NPC_HOUSE_TABLE)
-                .add(Blocks.CRAFTING_TABLE);
-                // .addOptionalTag(TFTags.HOUSE_TABLE);
+                .add(Blocks.CRAFTING_TABLE)
+                .addOptional(ResourceLocation.parse("terra_furniture:house_table"));
     }
 
     @Override
