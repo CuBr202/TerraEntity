@@ -9,6 +9,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import org.confluence.mod.common.init.ModTags;
+import org.confluence.terra_furniture.common.init.TFTags;
 import org.confluence.terraentity.init.TETags;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,21 +35,15 @@ public class TEBlockTagsProvider extends BlockTagsProvider {
                         Blocks.VERDANT_FROGLIGHT,Blocks.REDSTONE_LAMP,Blocks.COPPER_BULB,Blocks.EXPOSED_COPPER_BULB,
                         Blocks.OXIDIZED_COPPER_BULB,Blocks.WAXED_COPPER_BULB,Blocks.WEATHERED_COPPER_BULB,Blocks.WAXED_EXPOSED_COPPER_BULB,
                         Blocks.WAXED_OXIDIZED_COPPER_BULB,Blocks.WAXED_WEATHERED_COPPER_BULB)
-                .addOptional(ResourceLocation.parse("confluence:white_paper_pane_lamp"))
-                .addOptional(ResourceLocation.parse("confluence:malachite_paper_pane_lamp"));
+                .addOptionalTag(ModTags.Blocks.HOUSE_CONSTITUTE);
 
         this.tag(TETags.Blocks.NPC_HOUSE_CHAIR)
                 .addTag(BlockTags.BEDS)
-                .addOptional(ResourceLocation.parse("terra_furniture:plastic_chair"))
-                .addOptional(ResourceLocation.parse("terra_furniture:glass_chair"))
-                .addOptional(ResourceLocation.parse("terra_furniture:blue_brick_sofa"))
-                .addOptional(ResourceLocation.parse("terra_furniture:glass_sofa"))
-                .addOptional(ResourceLocation.parse("terra_furniture:blue_brick_chair"));
+                .addOptionalTag(TFTags.HOUSE_CHAIR);
 
         this.tag(TETags.Blocks.NPC_HOUSE_TABLE)
                 .add(Blocks.CRAFTING_TABLE)
-                .addOptional(ResourceLocation.parse("terra_furniture:glass_table"))
-                .addOptional(ResourceLocation.parse("terra_furniture:blue_brick_table"));
+                .addOptionalTag(TFTags.HOUSE_TABLE);
     }
 
     @Override
