@@ -15,7 +15,7 @@ import org.confluence.terraentity.entity.proj.BaseProj;
 public class SculkWisp extends FlyRangeAttackSummonMob<BaseProj<?>> {
 
     public SculkWisp(EntityType<? extends SculkWisp> entityType, Level level) {
-        super(entityType, level, 40,20,25,20, null);
+        super(entityType, level, 30,20,20,20, null);
     }
 
     @Override
