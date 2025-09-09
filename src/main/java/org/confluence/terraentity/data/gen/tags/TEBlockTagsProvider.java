@@ -36,11 +36,11 @@ public class TEBlockTagsProvider extends BlockTagsProvider {
 
         this.tag(TETags.Blocks.NPC_HOUSE_CHAIR)
                 .addTag(BlockTags.BEDS)
-                .addOptional(ResourceLocation.parse("terra_furniture:house_chair"));
+                .addOptionalTag(ResourceLocation.parse("terra_furniture:house_chair"));
 
         this.tag(TETags.Blocks.NPC_HOUSE_TABLE)
                 .add(Blocks.CRAFTING_TABLE)
-                .addOptional(ResourceLocation.parse("terra_furniture:house_table"));
+                .addOptionalTag(ResourceLocation.parse("terra_furniture:house_table"));
     }
 
     @Override
