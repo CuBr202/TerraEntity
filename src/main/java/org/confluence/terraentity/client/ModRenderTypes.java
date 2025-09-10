@@ -22,6 +22,7 @@ public final class ModRenderTypes {
         public static ShaderInstance dissolveBlitShader;
         public static ShaderInstance pixelStyleShader;
         public static ShaderInstance floatFireShader;
+        public static ShaderInstance dissolveBlitLagerShader;
 
 
         @SubscribeEvent
@@ -56,6 +57,8 @@ public final class ModRenderTypes {
                         dissolveBlitShader = shader;
                     }
             );
+
+
             event.registerShader(new ShaderInstance(resourceProvider,
                             TerraEntity.space("pixel_style_dissolve"),
                             DefaultVertexFormat.POSITION_TEX),
@@ -68,6 +71,13 @@ public final class ModRenderTypes {
                             DefaultVertexFormat.POSITION_TEX),
                     shader -> {
                         floatFireShader = shader;
+                    }
+            );
+            event.registerShader(new ShaderInstance(resourceProvider,
+                            TerraEntity.space("dissolve_blit_lager"),
+                            DefaultVertexFormat.BLIT_SCREEN),
+                    shader -> {
+                        dissolveBlitLagerShader = shader;
                     }
             );
         }
@@ -89,12 +99,20 @@ public final class ModRenderTypes {
         return Shaders.dissolveBlitShader;
     }
 
+
+
+
+
     public static ShaderInstance getPixelStyleShader() {
         return Shaders.pixelStyleShader;
     }
 
     public static ShaderInstance getFloatFireShader() {
         return Shaders.floatFireShader;
+    }
+
+    public static ShaderInstance getDissolveBlitLagerShader() {
+        return Shaders.dissolveBlitLagerShader;
     }
 
 }

@@ -14,15 +14,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.proj.TrailProjectile;
 import org.confluence.terraentity.entity.util.DifficultSelector;
-import org.confluence.terraentity.init.entity.TEProjectileEntities;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class WallOfFleshEye extends WallOfFleshPart implements RangedAttackMob {
 
     int shootDamage;
+    int _shootDelay = 10;
+    int _shootInterval = 40;
+    final int __shootInterval = _shootInterval;
+    int _shootCount = 1;
+    int shootDelay;
+    int shootCount;
 
-    private static final int summonCDAll = 40;
+    private static final int summonCDAll = 60;
     private int summonCD = summonCDAll;
 
     public float calculatedYaw = 0.0f;
@@ -32,11 +38,19 @@ public class WallOfFleshEye extends WallOfFleshPart implements RangedAttackMob {
         super(parentMob, name, width, height);
         DifficultSelector difficultSelector = parentMob.getDifficultSelector();
         this.shootDamage = difficultSelector.switchBy(8,10,12,15);
+        this.shootCount = _shootCount;
+        this.shootDelay = _shootDelay;
     }
     
-    protected boolean canShoot(Entity target,float range) {
+    protected boolean canShoot(Entity target, float range) {
         LivingEntity currentTarget = this.target;
-        return currentTarget != null && TEUtils.angleBetween(this.getLookAngle(), currentTarget.position().subtract(this.position())) < range;
+        if (currentTarget == null) return false;
+
+        Vec3 lookAngle = this.getLookAngle().normalize();
+        Vec3 toTarget = target.position().subtract(this.position()).normalize();
+        double angleDiff = Math.toDegrees(Math.acos(lookAngle.dot(toTarget)));
+        return Math.abs(angleDiff) <= Math.toDegrees(range) || 
+               this.distanceTo(target) <= 150;
     }
 
     @Override
@@ -57,23 +71,6 @@ public class WallOfFleshEye extends WallOfFleshPart implements RangedAttackMob {
         if(this.parentMob != null)return this.parentMob.shouldBeSaved();
         return  false;
     }
-    
-    @Override
-    public float getYRot() {
-        if(this.parentMob!=null) {
-            // 返回父实体的偏航角加上计算出的眼睛偏航角
-            return this.parentMob.getYRot() + (this.calculatedYaw * 180.0f / (float)Math.PI);
-        }
-        return super.getYRot() + (this.calculatedYaw * 180.0f / (float)Math.PI);
-    }
-
-    @Override
-    public float getXRot() {
-        if(this.parentMob!=null) {
-            return this.parentMob.getXRot() + (this.calculatedPitch * 180.0f / (float)Math.PI);
-        }
-        return super.getXRot() + (this.calculatedPitch * 180.0f / (float)Math.PI);
-    }
 
     @Override
     public void tickPart(double offsetX, double offsetY, double offsetZ) {
@@ -81,10 +78,10 @@ public class WallOfFleshEye extends WallOfFleshPart implements RangedAttackMob {
         if (this.parentMob== null || !this.parentMob.isAlive()) return;
 
         Vec3 forward = this.parentMob.getForward().normalize();
-
-
+        
         // 检查目标是否为创造模式或观察者模式的玩家
-        if(this.target != null && this.target instanceof Player player) {
+        if(this.target != null && this.target instanceof Player) {
+            Player player = (Player) this.target;
             if(player.isCreative() || player.isSpectator()) {
                 this.target = null;
             }
@@ -93,7 +90,7 @@ public class WallOfFleshEye extends WallOfFleshPart implements RangedAttackMob {
         // 计算眼睛旋转角度
         if (this.target != null && this.target.isAlive() && !this.target.isRemoved()) {
             WallOfFlesh parentMob = this.parentMob;
-            if (parentMob != null && parentMob.isAlive()) {
+            if (parentMob.isAlive()) {
                 Vec3 wallForward = parentMob.getForward();
                 Vec3 targetPos = this.target.getEyePosition();
                 Vec3 entityPos = this.getEyePosition();
@@ -139,45 +136,30 @@ public class WallOfFleshEye extends WallOfFleshPart implements RangedAttackMob {
         
         if (!this.level().isClientSide) {
             if (--summonCD > 0) return;
-            float healthPercent = parentMob.getHealthPercentage();
-
-            if (canShoot(this.target,0.75F) && this.target.isAlive()) {
-                int randomCD = summonCDAll + random.nextInt(4) * 10;
-                summonCD = healthPercent < 0.5f ? (int) (randomCD * Math.clamp(healthPercent, 0.2F, 1.0f)) : randomCD;
-                TrailProjectile proj = new TrailProjectile(TEProjectileEntities.TRAIL_PROJECTILE.get(), this.level()) {
-
-                    @Override
-                    protected boolean canHitEntity(@NotNull Entity target) {
-                        return super.canHitEntity(target) && !WallOfFlesh.isWallOfFleshMob(target);
-                    }
-
-                };
-                proj.setDamage(shootDamage);
-                proj.setExistTick(200);
-                proj.setOwner(this.parentMob);
-                proj.setTrailColor(ChatFormatting.DARK_PURPLE.getColor());
-                proj.setPos(this.position());
-                proj.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST));
-                Vec3 dir = this.target.getEyePosition().subtract(this.position());
-
-                /*
-                    AimUtils.AimHelperOptions aimOptions = new AimUtils.AimHelperOptions()
-                            .setProjectileSpeed(0.4)
-                            .setProjectileSpeedMulti(1.1)
-                            .setProjectileGravity(0)
-                            .setTicksTotal(20)
-                            .setRandomOffsetRadius(0)
-                            .setEpoch(3);
-                     */
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    proj.shoot(dir.x, dir.y, dir.z, 1.5f, 0.015f);
-                level().addFreshEntity(proj);
+            if (canShoot(this.target,0.75F) && this.target.isAlive() && this.stareCount >= 10) {
+                this.shoot(this.target);
             }
         }
     }
 
     public double getEyeY() {
         return this.position().y + this.getBbHeight() / 2;
+    }
+
+    private void shoot(LivingEntity target){
+        if(--this.shootDelay <= 0){
+            --this.shootCount;
+
+            if(this.shootCount <= 0){
+                this.shootCount = _shootCount;
+                this.shootDelay = _shootInterval + this.getRandom().nextInt(20);
+
+                this.performRangedAttack(target, 1.0f); // 最后一击增加射速
+            }else{
+                this.shootDelay = _shootDelay;
+                this.performRangedAttack(target, 0.5f);
+            }
+        }
     }
 
     @Override
@@ -193,18 +175,41 @@ public class WallOfFleshEye extends WallOfFleshPart implements RangedAttackMob {
         return super.isInvulnerableTo(source);
     }
 
-
-    /**
-     * 设置计算出的旋转角度（用于网络同步）
-     */
-    public void setCalculatedRotation(float yaw, float pitch) {
-        this.calculatedYaw = yaw;
-        this.calculatedPitch = pitch;
-    }
-
-
     @Override
     public void performRangedAttack(LivingEntity livingEntity, float v) {
-        
+        TrailProjectile proj = new TrailProjectile(this.level(),ChatFormatting.DARK_PURPLE.getColor()) {
+
+            @Override
+            protected boolean canHitEntity(@NotNull Entity target) {
+                return super.canHitEntity(target) && !target.getType().is(TETags.EntityTypes.FLESH_ALLIANCE);
+            }
+
+        };
+        proj.setDamage(shootDamage);
+        proj.setExistTick(200);
+        proj.setOwner(this.parentMob);
+        proj.setPos(this.position());
+        proj.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST));
+        Vec3 dir = this.target.getEyePosition().subtract(this.position());
+        /*
+            AimUtils.AimHelperOptions aimOptions = new AimUtils.AimHelperOptions()
+                    .setProjectileSpeed(0.4)
+                    .setProjectileSpeedMulti(1.1)
+                    .setProjectileGravity(0)
+                    .setTicksTotal(20)
+                    .setRandomOffsetRadius(0)
+                    .setEpoch(3);
+        */
+        proj.shoot(dir.x, dir.y, dir.z, 1.5f, 0.015f);
+        level().addFreshEntity(proj);
+    }
+
+    @Override
+    protected void onParentChangeState(int state){
+        if(state == 2){
+            this._shootInterval = (int) (this.__shootInterval * 0.7f);
+            this._shootCount = 3;
+            float healthPercent = parentMob.getHealthPercentage();
+        }
     }
 }

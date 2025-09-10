@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -24,13 +25,14 @@ public class TrailProjectile extends LineProj {
         this.setExistTick(20*8);
     }
 
-    public TrailProjectile(LivingEntity shooter, int trailColor) {
-        this(TEProjectileEntities.TRAIL_PROJECTILE.get(),shooter.level());
+    public TrailProjectile(Level level, int trailColor) {
+        this(TEProjectileEntities.TRAIL_PROJECTILE.get(),level);
         setTrailColor(trailColor);
     }
 
     @Override
     public void tick() {
+        // 客户端轨迹渲染
         if (this.level().isClientSide) {
             if (trails.isEmpty()) {
                 trails.add(this.position());
@@ -73,4 +75,4 @@ public class TrailProjectile extends LineProj {
     public List<Vec3> getTrails() {
         return trails;
     }
-}
+} 

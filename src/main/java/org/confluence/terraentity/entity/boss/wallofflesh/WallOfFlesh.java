@@ -1,66 +1,73 @@
 package org.confluence.terraentity.entity.boss.wallofflesh;
 
 import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
 import org.confluence.terraentity.effect.harmful.HorrifiedEffect;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.TheHungry;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
+import org.confluence.terraentity.init.entity.TEAnimals;
+import org.confluence.terraentity.entity.animal.WallOfFairy;
+import org.confluence.terraentity.entity.animal.VariantsTextureMaps;
+import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.utils.CameraShakeData;
 import org.confluence.terraentity.utils.CameraShakeManager;
 import org.confluence.terraentity.utils.TEUtils;
+import org.confluence.terraentity.utils.world.WorldChunksManager;
 import org.jetbrains.annotations.NotNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Objects;
 
 import static org.confluence.terraentity.init.TEEntityDataSerializers.TUPLET_VEC3_INT_LIST_SERIALIZER;
 import static org.confluence.terraentity.init.TEEntityDataSerializers.TUPLE_INT_VEC3_LIST_SERIALIZER;
 
 public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
-    private static final float DAMAGE = 39f;
-    static float moveSpeedBase = 0.15f;
-
     boolean genSegments = true;
     int genTick = 20;
     boolean shouldMove = true;
-
-    float inverseFactor = Mth.clamp(0.5F - getHealthPercentage(),0.0F,1.0F);
-    float moveSpeed = getHealthPercentage()<=0.5f ? moveSpeedBase * 1.5f + moveSpeedBase * inverseFactor : moveSpeedBase;
+    final float baseMoveSpeed = 0.125f;
     Vec3 InitPos = Vec3.ZERO;
 
     public AABB insideCollisionBox;
     public AABB outsideCollisionBox;
 
-    private final int gridSizeX = 50;
+    private final int gridSizeX = 40;
     private final int gridSizeY = 30;
     public float gridSpacing = 15.0f;
 
@@ -81,13 +88,18 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
     private static final EntityDataAccessor<List<Tuple<Vec3, Integer>>> DATA_HUNGRY_OFFSETS =
             SynchedEntityData.defineId(WallOfFlesh.class, TUPLET_VEC3_INT_LIST_SERIALIZER.get());
 
+
     public WallOfFlesh(EntityType<? extends Monster> type, Level level) {
         super(type, level);
-        this.noPhysics = true;
-        this.noCulling = true;
         this.nearbyLivings = new ArrayList<>();
-        this.setNoGravity(true);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(baseMoveSpeed);
         genGridWall();
+        explosionResistance = switch (this.level().getDifficulty()) {
+            case EASY -> 0.25f;
+            case NORMAL -> 0.15f;
+            case HARD -> 0.05f;
+            default -> 1.0f;
+        };
     }
 
     @Override
@@ -95,6 +107,7 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
         super.defineSynchedData(builder);
         builder.define(DATA_LOCAL_OFFSETS, new CopyOnWriteArrayList<>());
         builder.define(DATA_HUNGRY_OFFSETS, new CopyOnWriteArrayList<>());
+
     }
 
     public List<Tuple<Integer, Vec3>> getLocalOffsets() {
@@ -104,7 +117,7 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
     public void setLocalOffsets(int entityId, Vec3 offset) {
         if (!this.level().isClientSide) {
             this.localOffsets.add(new Tuple<>(entityId, offset));
-            this.entityData.set(DATA_LOCAL_OFFSETS, new CopyOnWriteArrayList<>(this.localOffsets));
+            this.entityData.set(DATA_LOCAL_OFFSETS, this.localOffsets);
         }
     }
 
@@ -114,8 +127,19 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
 
     public void setHungryOffsets(Vec3 offset,int entityId) {
         if (!this.level().isClientSide) {
-            this.theHungryList.add(new Tuple<>(offset, entityId));
-            this.entityData.set(DATA_HUNGRY_OFFSETS, new CopyOnWriteArrayList<>(this.theHungryList));
+            // 检查是否已经存在相同的实体ID，避免重复添加
+            boolean exists = false;
+            for (Tuple<Vec3, Integer> tuple : this.theHungryList) {
+                if (tuple.getB().equals(entityId)) {
+                    exists = true;
+                    break;
+                }
+            }
+            
+            if (!exists) {
+                this.theHungryList.add(new Tuple<>(offset, entityId));
+                this.entityData.set(DATA_HUNGRY_OFFSETS, this.theHungryList);
+            }
         }
     }
 
@@ -136,19 +160,32 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
             }
         }else if(child instanceof TheHungry hungry && !this.level().isClientSide){
             this.setHungryOffsets(localOffset, hungry.getId());
+            hungry.setInitPos(this.position().add(localOffset).toVector3f());
         }
-
         child.setPos(this.position().add(localOffset));
     }
 
     private void genGridWall() {
         Vec3 baseOffset = this.getForward().scale(7.0F);
 
+        final int MAX_DEPTH = 6;
+        final double EYE_CHANCE = 0.4;
+        final double MOUTH_CHANCE = 0.2;
+        final double HUNGRY_CHANCE = 0.3;
+        final double SUBDIVISION_CHANCE = 0.85; // 细分概率
+
+        // 存储生成的位置
         List<Vec3> eyePositions = new ArrayList<>();
         List<Vec3> mouthPositions = new ArrayList<>();
         List<Vec3> hungryPositions = new ArrayList<>();
 
-        generateSimpleGrid(eyePositions, mouthPositions, hungryPositions, baseOffset);
+        // 使用四叉树生成眼睛、嘴巴和饿鬼位置
+        generateAllEntitiesQuadTree(0, 0, gridSizeX, gridSizeY, 0, MAX_DEPTH,
+                                  EYE_CHANCE, MOUTH_CHANCE, HUNGRY_CHANCE, SUBDIVISION_CHANCE,
+                                  eyePositions, mouthPositions, hungryPositions, baseOffset);
+
+        // 额外在眼睛之间生成嘴巴
+        generateMouthsBetweenEyes(eyePositions, mouthPositions, hungryPositions, baseOffset);
 
         // 生成眼睛
         for (int i = 0; i < eyePositions.size(); i++) {
@@ -165,7 +202,9 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
             addChild(mouth, pos);
             mouth.setYRot(this.getYRot());
         }
-        if (!this.level().isClientSide && this.level() instanceof ServerLevel serverLevel) {
+
+        // 生成饿鬼
+        if (this.level() instanceof ServerLevel serverLevel) {
             for (Vec3 pos : hungryPositions) {
                 TheHungry hungry = TEUtils.spawnEntity(() -> new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),
                     new AbstractPrefab().getPrefab()) {
@@ -177,10 +216,8 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
 
                 if (hungry != null) {
                     addChild(hungry, pos);
-                    this.theHungryList.add(new Tuple<>(pos, hungry.getId()));
                     hungry.minion_setOwner(this);
                     hungry.setYRot(this.getYRot());
-                    hungry.setInitPos(this.position().add(pos).toVector3f());
                 }
             }
         }
@@ -188,87 +225,218 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
         this.setId(ENTITY_COUNTER.getAndAdd(this.subEntities.size() + 1) + 1);
     }
 
-    private void generateSimpleGrid(List<Vec3> eyePositions, List<Vec3> mouthPositions, List<Vec3> hungryPositions, Vec3 baseOffset) {
-        final int EYE_CHANCE = 40;
-        final int MOUTH_CHANCE = 25;
-        final int HUNGRY_CHANCE = 15;
+    //四叉树
+    private void generateAllEntitiesQuadTree(int x, int y, int width, int height, int depth, int maxDepth,
+                                           double eyeChance, double mouthChance, double hungryChance, double subdivisionChance,
+                                           List<Vec3> eyePositions, List<Vec3> mouthPositions, List<Vec3> hungryPositions, Vec3 baseOffset) {
 
-        final double halfGridX = gridSizeX / 2.0;
-        final double halfGridY = gridSizeY / 2.0;
-        final double spacing = gridSpacing;
-        final double conflictDistanceSqr = spacing * spacing * 0.6;
+        if (width <= 0 || height <= 0) {
+            return;
+        }
 
-        final long seed = random.nextLong();
+        int centerX = x + width / 2;
+        int centerY = y + height / 2;
 
-        for (int x = 0; x < gridSizeX; x++) {
-            for (int y = 0; y < gridSizeY; y++) {
-                long hash = x * 73856093L + y * 19349663L + seed;
-                hash = hash ^ (hash >>> 16);
-                hash = hash * 0x85ebca6bL;
-                hash = hash ^ (hash >>> 13);
-                hash = hash * 0xc2b2ae35L;
-                hash = hash ^ (hash >>> 16);
-                double noise = (hash & 0xFFFFFFFFL) / 4294967296.0;
+        double maxOffset = gridSpacing * 0.8;
+        double offsetX = (random.nextDouble() - 0.5) * maxOffset;
+        double offsetY = (random.nextDouble() - 0.5) * maxOffset;
 
-                if (noise > 0.8) continue;
+        Vec3 worldPos;
+        if (isMovingAlongX()) {
+            worldPos = new Vec3(
+                0,
+                (centerY - gridSizeY / 2.0) * gridSpacing + offsetY,
+                (centerX - gridSizeX / 2.0) * gridSpacing + offsetX
+            ).add(baseOffset);
+        } else {
+            worldPos = new Vec3(
+                (centerX - gridSizeX / 2.0) * gridSpacing + offsetX,
+                (centerY - gridSizeY / 2.0) * gridSpacing + offsetY,
+                0
+            ).add(baseOffset);
+        }
 
-                int rand = random.nextInt(100);
-                if (rand >= 80) continue;
+        boolean shouldSubdivide = depth < maxDepth &&
+                                width > 1 && height > 1 &&
+                                random.nextDouble() < subdivisionChance;
 
-                double offsetX = (random.nextDouble() - 0.5) * spacing * 0.4;
-                double offsetY = (random.nextDouble() - 0.5) * spacing * 0.4;
+        if (depth < 3 && random.nextDouble() < 0.95) {
+            shouldSubdivide = true;
+        }
 
-                Vec3 worldPos;
-                if (isMovingAlongX()) {
-                    worldPos = new Vec3(0,
-                                       (y - halfGridY) * spacing + offsetY,
-                                       (x - halfGridX) * spacing + offsetX)
-                                       .add(baseOffset);
-                } else {
-                    worldPos = new Vec3((x - halfGridX) * spacing + offsetX,
-                                       (y - halfGridY) * spacing + offsetY,
-                                       0).add(baseOffset);
+        if (shouldSubdivide) {
+            int halfWidth = width / 2;
+            int halfHeight = height / 2;
+
+            generateAllEntitiesQuadTree(x, y, halfWidth, halfHeight, depth + 1, maxDepth,
+                                      eyeChance, mouthChance, hungryChance, subdivisionChance * 0.95,
+                                      eyePositions, mouthPositions, hungryPositions, baseOffset);
+
+            generateAllEntitiesQuadTree(x + halfWidth, y, width - halfWidth, halfHeight, depth + 1, maxDepth,
+                                      eyeChance, mouthChance, hungryChance, subdivisionChance * 0.95,
+                                      eyePositions, mouthPositions, hungryPositions, baseOffset);
+
+            generateAllEntitiesQuadTree(x, y + halfHeight, halfWidth, height - halfHeight, depth + 1, maxDepth,
+                                      eyeChance, mouthChance, hungryChance, subdivisionChance * 0.95,
+                                      eyePositions, mouthPositions, hungryPositions, baseOffset);
+
+            generateAllEntitiesQuadTree(x + halfWidth, y + halfHeight, width - halfWidth, height - halfHeight, depth + 1, maxDepth,
+                                      eyeChance, mouthChance, hungryChance, subdivisionChance * 0.95,
+                                      eyePositions, mouthPositions, hungryPositions, baseOffset);
+        } else {
+            double rand = random.nextDouble();
+
+            boolean hasConflict = false;
+            double conflictDistance = gridSpacing * 0.6;
+
+            for (Vec3 existingPos : eyePositions) {
+                if (existingPos.distanceToSqr(worldPos) < conflictDistance * conflictDistance) {
+                    hasConflict = true;
+                    break;
                 }
+            }
 
-                boolean hasConflict = false;
-                int maxCheck = 4;
-
-                for (int i = Math.max(0, eyePositions.size() - maxCheck); i < eyePositions.size(); i++) {
-                    if (eyePositions.get(i).distanceToSqr(worldPos) < conflictDistanceSqr) {
+            if (!hasConflict) {
+                for (Vec3 existingPos : mouthPositions) {
+                    if (existingPos.distanceToSqr(worldPos) < conflictDistance * conflictDistance) {
                         hasConflict = true;
                         break;
                     }
                 }
+            }
 
-                if (!hasConflict) {
-                    for (int i = Math.max(0, mouthPositions.size() - maxCheck); i < mouthPositions.size(); i++) {
-                        if (mouthPositions.get(i).distanceToSqr(worldPos) < conflictDistanceSqr) {
-                            hasConflict = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!hasConflict) {
-                    for (int i = Math.max(0, hungryPositions.size() - maxCheck); i < hungryPositions.size(); i++) {
-                        if (hungryPositions.get(i).distanceToSqr(worldPos) < conflictDistanceSqr) {
-                            hasConflict = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!hasConflict) {
-                    if (rand < EYE_CHANCE) {
-                        eyePositions.add(worldPos);
-                    } else if (rand < EYE_CHANCE + MOUTH_CHANCE) {
-                        mouthPositions.add(worldPos);
-                    } else {
-                        hungryPositions.add(worldPos);
+            if (!hasConflict) {
+                for (Vec3 existingPos : hungryPositions) {
+                    if (existingPos.distanceToSqr(worldPos) < conflictDistance * conflictDistance) {
+                        hasConflict = true;
+                        break;
                     }
                 }
             }
+
+            if (!hasConflict) {
+                if (rand < eyeChance) {
+                    eyePositions.add(worldPos);
+                } else if (rand < eyeChance + mouthChance) {
+                    mouthPositions.add(worldPos);
+                } else if (rand < eyeChance + mouthChance + hungryChance) {
+                    hungryPositions.add(worldPos);
+                }
+            }
         }
+    }
+
+    /**
+     * 在上下相邻且空间足够的眼睛中间生成嘴巴
+     */
+    private void generateMouthsBetweenEyes(List<Vec3> eyePositions, List<Vec3> mouthPositions, List<Vec3> hungryPositions, Vec3 baseOffset) {
+        Map<Integer, List<Vec3>> eyesByGridX = new HashMap<>();
+
+        for (Vec3 eyePos : eyePositions) {
+            int gridX;
+            if (isMovingAlongX()) {
+                gridX = (int) Math.round((eyePos.z - baseOffset.z) / gridSpacing + gridSizeX / 2.0);
+            } else {
+                gridX = (int) Math.round((eyePos.x - baseOffset.x) / gridSpacing + gridSizeX / 2.0);
+            }
+
+            if (gridX >= 0 && gridX < gridSizeX) {
+                eyesByGridX.computeIfAbsent(gridX, k -> new ArrayList<>()).add(eyePos);
+            }
+        }
+
+        eyesByGridX.forEach((gridX, eyesInColumn) -> {
+            eyesInColumn.sort(Comparator.comparingDouble(a -> a.y));
+
+            // 检查连续3个眼睛，将中间的眼睛替换为嘴巴
+            for (int i = 0; i < eyesInColumn.size() - 2; i++) {
+                Vec3 eye1 = eyesInColumn.get(i);
+                Vec3 eye2 = eyesInColumn.get(i + 1);
+                Vec3 eye3 = eyesInColumn.get(i + 2);
+
+                double distance1 = Math.abs(eye2.y - eye1.y);
+                double distance2 = Math.abs(eye3.y - eye2.y);
+
+                            // 将Y轴距离判断范围 扩大到 gridSpacing * 3.75
+                            if (Math.abs(eye2.x - eye1.x) < gridSpacing * 0.1 &&
+                                    Math.abs(eye2.z - eye1.z) < gridSpacing * 0.1 &&
+                                    distance1 <= gridSpacing * 3.75 &&
+                                    distance2 <= gridSpacing * 3.75) {
+
+                    eyePositions.removeIf(existingEye -> 
+                        existingEye.distanceToSqr(eye2) < gridSpacing * gridSpacing * 0.1);
+
+                    boolean hasExistingMouth = false;
+                    for (Vec3 existingMouth : mouthPositions) {
+                        if (existingMouth.distanceToSqr(eye2) < gridSpacing * gridSpacing * 0.5) {
+                            hasExistingMouth = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!hasExistingMouth) {
+                        mouthPositions.add(eye2);
+                    }
+                }
+            }
+
+            for (int i = 0; i < eyesInColumn.size() - 1; i++) {
+                Vec3 eye1 = eyesInColumn.get(i);
+                Vec3 eye2 = eyesInColumn.get(i + 1);
+
+                double distance = Math.abs(eye2.y - eye1.y);
+                if (distance >= gridSpacing * 1.5) {
+                    double midY = (eye1.y + eye2.y) / 2.0;
+
+                    Vec3 mouthPos;
+                    if (isMovingAlongX()) {
+                        mouthPos = new Vec3(
+                            0,
+                            midY,
+                            (gridX - gridSizeX / 2.0) * gridSpacing
+                        ).add(baseOffset);
+                    } else {
+                        mouthPos = new Vec3(
+                            (gridX - gridSizeX / 2.0) * gridSpacing,
+                            midY,
+                            0
+                        ).add(baseOffset);
+                    }
+
+                    double conflictDistance = gridSpacing * 0.6;
+                    
+                    boolean hasExistingMouth = false;
+                    for (Vec3 existingMouth : mouthPositions) {
+                        if (existingMouth.distanceToSqr(mouthPos) < conflictDistance * conflictDistance) {
+                            hasExistingMouth = true;
+                            break;
+                        }
+                    }
+                    
+                    if (hasExistingMouth) {
+                        continue;
+                    }
+                    
+                    eyePositions.removeIf(existingEye -> 
+                        existingEye.distanceToSqr(mouthPos) < conflictDistance * conflictDistance);
+                    
+                    hungryPositions.removeIf(existingHungry -> 
+                        existingHungry.distanceToSqr(mouthPos) < conflictDistance * conflictDistance);
+
+                    boolean hasConflict = false;
+                    for (Vec3 existingMouth : mouthPositions) {
+                        if (existingMouth.distanceToSqr(mouthPos) < gridSpacing * gridSpacing * 0.5) {
+                            hasConflict = true;
+                            break;
+                        }
+                    }
+
+                    if (!hasConflict && random.nextDouble() < 0.8) {
+                        mouthPositions.add(mouthPos);
+                    }
+                }
+            }
+        });
     }
 
     protected void dropAllDeathLoot(ServerLevel level, DamageSource damageSource) {
@@ -276,13 +444,41 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
 
         BlockPos centerPos = this.blockPosition().below(1);
 
+        Block targetBlock = Blocks.OBSIDIAN;
+        if (ModChecker.confluence.isLoaded()) {
+            // 猩红和魔矿砖对半概率
+            String targetResource = this.random.nextBoolean() ?
+                    "confluence:demonite_ore_bricks" :
+                    "confluence:crimtane_ore_bricks";
+            targetBlock = BuiltInRegistries.BLOCK.getOptional(
+                    ResourceLocation.parse(targetResource)
+            ).orElse(Blocks.OBSIDIAN);
+        }
+        Block block = targetBlock;
+
         for (int x = -4; x <= 4; x++) {
             for (int y = -4; y <= 4; y++) {
                 for (int z = -4; z <= 4; z++) {
                     BlockPos framePos = centerPos.offset(x, y, z);
                     if ((Math.abs(x) == 4 || Math.abs(y) == 4 || Math.abs(z) == 4) && level.getBlockState(framePos).isAir()) {
-                        level.setBlockAndUpdate(framePos, Blocks.OBSIDIAN.defaultBlockState());
+                        level.setBlockAndUpdate(framePos, block.defaultBlockState());
                     }
+                }
+            }
+        }
+
+        for(LivingEntity nearbyLiving : nearbyLivings) {
+            if(nearbyLiving instanceof Player player) {
+                double distance = player.distanceToSqr(centerPos.getX(), centerPos.getY(), centerPos.getZ());
+                if(distance > 10000) { // 100^2 = 10000
+                    WallOfFairy wallOfFairy = new WallOfFairy(
+                            TEAnimals.WALL_OF_FAIRY.get(),
+                            level,
+                            VariantsTextureMaps.fairyTextures,
+                            centerPos
+                    );
+                    wallOfFairy.setPos(player.getX(), player.getY() + 2, player.getZ());
+                    level.addFreshEntity(wallOfFairy);
                 }
             }
         }
@@ -296,6 +492,11 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
     @Override
     public boolean isPickable() {
         return false;
+    }
+
+    @Override
+    public boolean shouldDoCollision(){
+        return getTarget() != null && this.isAlive();
     }
 
     public boolean isMovingAlongX() {
@@ -331,7 +532,7 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
                     break;
                 }
             }
-            
+
             Vec3 childPos = this.position().add(localOffset);
             Vec3 vec3 = hungry.position().subtract(hungry.getInitPos());
             Vec3 summonPos = childPos.add(vec3);
@@ -339,8 +540,7 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
             hungry.setInitPos(childPos.toVector3f());
         } else if (child instanceof WallOfFleshPart part) {
             int childIndex = subEntities.indexOf(child);
-            Vec3 localOffset = (childIndex >= 0 && childIndex < syncedOffsets.size()) ? 
-                    syncedOffsets.get(childIndex).getB() : Vec3.ZERO;
+            Vec3 localOffset = (childIndex >= 0 && childIndex < syncedOffsets.size()) ? syncedOffsets.get(childIndex).getB() : Vec3.ZERO;
             Vec3 childPos = this.position().add(localOffset);
             part.moveTo(childPos);
         }
@@ -353,11 +553,10 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
         this.noCulling = true;
         this.setNoGravity(true);
         double summonDir = 50;
-
+        this.setForward(Direction.NORTH);
         Vec3 summonPos = new Vec3(this.position().x, this.level().getMinBuildHeight() + (gridSizeY * gridSpacing)/2, this.position().z).add(getForward().scale(-summonDir));
         this.moveTo(summonPos);
         this.InitPos = summonPos;
-        this.setAttactDamage(DAMAGE);
     }
 
     @Override
@@ -384,30 +583,103 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide && !this.isDeadOrDying()) {
+            if (this.tickCount % 5 == 0) {
+                handleChunkLoading();
+            }
+
             if (--summonCD <= 0) {
                  summonCD = summonCDAll;
+                List<Integer> deadHungryIndices = new ArrayList<>();
                 for (int i = 0; i < theHungryList.size(); i++) {
                     Tuple<Vec3, Integer> tuple = theHungryList.get(i);
-                    Vec3 theHungryPos = tuple.getA();
                     Integer hungryId = tuple.getB();
-                    TheHungry hungry = (TheHungry) level().getEntity(hungryId);
-                    if (hungry != null && hungry.isAlive()) continue;
-                    TheHungry newHungry = TEUtils.spawnEntity(()->new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),new AbstractPrefab().getPrefab()) {
-                        @Override
-                        protected boolean shouldDropLoot() {
-                            return false;
-                        }
-                    }, (ServerLevel)level(), theHungryPos);
-
-                    if (newHungry != null) {
-                        this.theHungryList.set(i, new Tuple<>(theHungryPos, newHungry.getId()));
-                        newHungry.minion_setOwner(this);
-                        newHungry.setInitPos(this.position().add(theHungryPos).toVector3f());
-                        addChild(newHungry, theHungryPos);
-                        level().playSound(null, newHungry.blockPosition(), TESounds.WALL_OF_FLESH_SUMMON.get(), SoundSource.HOSTILE, 1, 1);
+                    Entity hungry =  level().getEntity(hungryId);
+                    if (hungry == null || !hungry.isAlive()) {
+                        deadHungryIndices.add(i);
                     }
                 }
+
+                for (int index : deadHungryIndices) {
+                    // 40%概率重新生成饿鬼
+                    if (random.nextFloat() < 0.4f) {
+                        Tuple<Vec3, Integer> tuple = theHungryList.get(index);
+                        Vec3 theHungryPos = tuple.getA();
+                        TheHungry newHungry = TEUtils.spawnEntity(()->new TheHungry(TEMonsterEntities.THE_HUNGRY.get(), level(),new AbstractPrefab().getPrefab()) {
+                            @Override
+                            protected boolean shouldDropLoot() {
+                                return false;
+                            }
+                        }, (ServerLevel)level(), theHungryPos);
+
+                        if (newHungry != null) {
+                            this.theHungryList.set(index, new Tuple<>(theHungryPos, newHungry.getId()));
+                            newHungry.minion_setOwner(this);
+                            newHungry.setInitPos(this.position().add(theHungryPos).toVector3f());
+                            newHungry.setPos(this.position().add(theHungryPos));
+                            level().playSound(null, newHungry.blockPosition(), TESounds.WALL_OF_FLESH_SUMMON.get(), SoundSource.HOSTILE, 1, 1);
+                        }
+                    }
+                }
+            }
+
+            if (this.tickCount % 5 == 0 && this.getInsideBox() != null && this.getOutsideCollisionBox() != null ) {
+                List<Player> nearbyPlayers = level().getEntitiesOfClass(Player.class,
+                        this.getOutsideCollisionBox());
+
+                List<Player> nearbyTargets = level().getEntitiesOfClass(Player.class,
+                        this.getInsideBox());
+
+                this.nearbyLivings.clear();
+                this.nearbyLivings.addAll(nearbyTargets);
+
+                DeferredHolder<MobEffect, HorrifiedEffect> horrifiedHolder = TEEffects.HORRIFIED;
+                MobEffectInstance horrifiedEffect = new MobEffectInstance(horrifiedHolder, 200, 3, false, true);
+
+                nearbyPlayers.stream()
+                    .filter(LivingEntity::canBeSeenByAnyone)
+                    .filter(e -> !(e instanceof Player p && (p.isCreative() || p.isSpectator())))
+                    .forEach(player -> {
+                        horrifiedHolder.get().setWallOfFlesh(this);
+                        player.addEffect(horrifiedEffect);
+                    });
+            }
+
+            for (LivingEntity nearbyLiving : this.nearbyLivings) {
+                for (WallOfFleshPart part : this.subEntities) {
+                    double distanceSqr = part.position().distanceToSqr(nearbyLiving.position());
+                    if (distanceSqr <= 120 * 120) {
+                        Vec3 localOffset = part.position();
+                        part.tickPart(localOffset.x, localOffset.y, localOffset.z);
+                    }
+                }
+            }
+            if (shouldMove && this.isAlive()) {
+                Vec3 forward = this.getForward();
+                float yaw = (float) Math.toDegrees(
+                        Math.atan2(-forward.x, forward.z)
+                );
+
+                float alignedYaw = Math.round(yaw / 90.0f) * 90.0f;
+
+                this.setYRot(Mth.wrapDegrees(alignedYaw));
+                Vec3 moveDirection = this.getForward();
+                Vec3 currentOffset = this.position().subtract(InitPos);
+                double progress = currentOffset.dot(moveDirection);
+
+                // 四方向终点判断
+                if ((moveDirection.x > 0 && progress >= FINISH_LINE_DISTANCE) || // 东方向
+                        (moveDirection.x < 0 && progress <= -FINISH_LINE_DISTANCE) || // 西方向
+                        (moveDirection.z > 0 && progress >= FINISH_LINE_DISTANCE) || // 南方向
+                        (moveDirection.z < 0 && progress <= -FINISH_LINE_DISTANCE) || // 北方向
+                        !this.level().getWorldBorder().isWithinBounds(this.position())) {
+                    //如果血肉墙到达了地图的另一边，它会消失，且所有受到惊恐减益影响的玩家会死亡
+                    nearbyLivings.stream().filter(entity -> entity.hasEffect(TEEffects.HORRIFIED)).forEach(LivingEntity::kill);
+                    theHungryList.stream().map(tuple -> level().getEntity(tuple.getB())).filter(Objects::nonNull).forEach(Entity::discard);
+                    this.discard();
+                    return;
+                }
+                this.addDeltaMovement(getForward().scale(this.getMoveSpeed()).scale(0.125F));
             }
         }
 
@@ -418,58 +690,29 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
                 CameraShakeManager.addCameraShake(new CameraShakeData(300, this.position(), 180));
             }
         }
+    }
 
-        if (shouldMove && this.isAlive()) {
-            Vec3 forward = this.getForward();
-            float yaw = (float) Math.toDegrees(
-                    Math.atan2(-forward.x, forward.z)
-            );
+    @Override
+    protected void tickDeath() {
+        ++this.deathTime;
 
-            float alignedYaw = Math.round(yaw / 90.0f) * 90.0f;
-
-            this.setYRot(Mth.wrapDegrees(alignedYaw));
-            Vec3 moveDirection = this.getForward();
-            Vec3 currentOffset = this.position().subtract(InitPos);
-            double progress = currentOffset.dot(moveDirection);
-
-            // 四方向终点判断
-            if ((moveDirection.x > 0 && progress >= FINISH_LINE_DISTANCE) || // 东方向
-                    (moveDirection.x < 0 && progress <= -FINISH_LINE_DISTANCE) || // 西方向
-                    (moveDirection.z > 0 && progress >= FINISH_LINE_DISTANCE) || // 南方向
-                    (moveDirection.z < 0 && progress <= -FINISH_LINE_DISTANCE) || // 北方向
-                    !this.level().getWorldBorder().isWithinBounds(this.position())) {
-                this.discard();
-            }
-            this.addDeltaMovement(getForward().scale(moveSpeed).scale(0.15F));
+        if (this.deathTime == this.getMaxDeathTime() && this.level() instanceof ServerLevel) {
+            subEntities.forEach(Entity::discard);
+            localOffsets.clear();
+            theHungryList.stream().map(tuple -> level().getEntity(tuple.getB())).filter(Objects::nonNull).forEach(Entity::discard);
+            theHungryList.clear();
+            this.remove(RemovalReason.KILLED);
+            this.gameEvent(GameEvent.ENTITY_DIE);
         }
+    }
 
-        if (this.getInsideBox()!= null&&this.getOutsideCollisionBox()!= null) {
-            List<Player> nearbyPlayers = level().getEntitiesOfClass(Player.class,
-                    this.getOutsideCollisionBox());
+    public int getMaxDeathTime() {
+        return 120;
+    }
 
-            List<Player> nearbyTargets= level().getEntitiesOfClass(Player.class,
-                    this.getInsideBox());
-
-            this.nearbyLivings.clear();
-            this.nearbyLivings.addAll(nearbyTargets);
-            nearbyPlayers.stream().filter(LivingEntity::canBeSeenByAnyone).forEach(player -> {
-                DeferredHolder<MobEffect, HorrifiedEffect> horrifiedHolder = TEEffects.HORRIFIED;
-                horrifiedHolder.get().setWallOfFlesh(this);
-                player.addEffect(new MobEffectInstance(horrifiedHolder, 200, 3, false, true));
-            });
-        }
-
-        if (true) {
-            for (LivingEntity nearbyLiving : this.nearbyLivings) {
-                for (WallOfFleshPart part : this.subEntities) {
-                    double distanceSqr = part.position().distanceToSqr(nearbyLiving.position());
-                    if (distanceSqr <= 60 * 60) {
-                        Vec3 localOffset = part.position();
-                        part.tickPart(localOffset.x, localOffset.y, localOffset.z);
-                    }
-                }
-            }
-        }
+    public float getFadeProgress() {
+        float deathProgress = (float) this.deathTime / this.getMaxDeathTime();
+        return 1.0f - Math.min(deathProgress, 1.0f);
     }
 
     public AABB getInsideBox() {
@@ -489,7 +732,7 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
             double z = completion;
             insideCollisionBox = new AABB(
                     this.position().subtract(x + gridSpacing / 2, y, z),
-                    this.position().add(x, y, z + 150 * this.getForward().z - gridSpacing / 2));
+                    this.position().add(x, y, z + 120 * this.getForward().z - gridSpacing / 2));
         }
         return this.insideCollisionBox;
     }
@@ -506,7 +749,7 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
                     this.position().subtract(x, y, z + gridSpacing / 2),
                     this.position().add(x, y, z - gridSpacing / 2));
         }else {
-            double x = gridSizeX * gridSpacing / 2 + 150;
+            double x = gridSizeX * gridSpacing / 2 + 120;
             double y = gridSizeY * gridSpacing/2 + 150;
             double z = completion1;
             outsideCollisionBox = new AABB(
@@ -527,6 +770,8 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
         if(!this.isAlive()){
             subEntities.forEach(Entity::discard);
             localOffsets.clear();
+            theHungryList.stream().map(tuple -> level().getEntity(tuple.getB())).filter(Objects::nonNull).forEach(Entity::discard);
+            theHungryList.clear();
         }
         this.bossEvent.removeAllPlayers();
         super.onRemovedFromLevel();
@@ -549,35 +794,44 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
         }
         return super.isInvulnerableTo(source);
     }
-
+    
     public boolean hurt(WallOfFleshPart wallOfFleshPart, @NotNull DamageSource source, float damage) {
+        if (!source.is(DamageTypeTags.BYPASSES_ARMOR) && wallOfFleshPart instanceof WallOfFleshMouse) {
+            this.hurtArmor(source, damage);
+            damage = CombatRules.getDamageAfterAbsorb(this, damage, source, 12, (float)this.getAttributeValue(Attributes.ARMOR_TOUGHNESS));
+        }
         return this.hurt(source, damage);
     }
 
     public boolean hurt(DamageSource source, float amount) {
-        if (source.is(DamageTypes.EXPLOSION)) {
-            float resistance = switch (this.level().getDifficulty()) {
-                case EASY -> 0.75f;   // 简单75%
-                case NORMAL -> 0.85f; // 普通85%
-                case HARD -> 0.95f;   // 困难95%
-                default -> 0.85f;
-            };
-            amount *= (1.0f - resistance);
-        }
+
         return super.hurt(source, amount);
     }
 
     @Override
     public void die(DamageSource damageSource) {
-        subEntities.forEach(Entity::discard);
-        localOffsets.clear();
-        for (Tuple<Vec3, Integer> tuple : theHungryList) {
-            Entity hungry = level().getEntity(tuple.getB());
-            if (hungry != null) {
-                hungry.discard();
+        super.die(damageSource);
+    }
+
+    @Override
+    public void changeState(){
+        if(this.getStage() == 1 && this.getHealth() / getMaxHealth() < 0.5){
+            this.setStage(2);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(this.getMoveSpeed() * 1.45F);
+            for (WallOfFleshPart part : this.getParts()) {
+                part.onParentChangeState(this.getStage());
             }
         }
-        super.die(damageSource);
+        this.syncStatus(this.getStage());
+    }
+
+    @Override
+    protected void initStage(int stage) {
+        if (stage == 2) {
+            for (WallOfFleshPart part : this.getParts()) {
+                part.onParentChangeState(stage);
+            }
+        }
     }
 
     @Override
@@ -630,10 +884,6 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
         return false;
     }
 
-    public float getMoveSpeed(){
-        return this.moveSpeed;
-    }
-
     public int getGridSizeX() {
         return gridSizeX;
     }
@@ -650,23 +900,34 @@ public class WallOfFlesh extends AbstractTerraBossBase implements Boss {
         }
     }
 
-    public static boolean isWallOfFlesh(Entity entity) {
-        return entity instanceof WallOfFlesh || entity instanceof WallOfFleshEye || entity instanceof WallOfFleshMouse;
-    }
-
-    public static boolean isWallOfFleshMob(Entity entity) {
-        if (entity == null) {
-            return false;
+    /**
+     * 区块加载
+     */
+    private void handleChunkLoading() {
+        if (!(this.level() instanceof ServerLevel)) {
+            return;
         }
-        return entity instanceof WallOfFlesh || 
-               entity instanceof WallOfFleshEye || 
-               entity instanceof WallOfFleshMouse ||
-               entity instanceof TheHungry || 
-               entity.getType() == TEMonsterEntities.LEECH.get();
-    }
+        ServerLevel serverLevel = (ServerLevel) this.level();
 
-    public void recreateFromPacket(ClientboundAddEntityPacket packet) {
-        super.recreateFromPacket(packet);
-       // WallOfFleshPart.assignPartIDs(this);
+        WorldChunksManager.loadPersistentChunksForWorld(serverLevel);
+
+        int gridSizeX = this.getGridSizeX();
+        float gridSpacing = this.gridSpacing;
+
+        int minX = (int) Math.floor((this.getX() - gridSizeX * gridSpacing / 2) / 16.0);
+        int maxX = (int) Math.ceil((this.getX() + gridSizeX * gridSpacing / 2) / 16.0);
+        int minZ = (int) Math.floor((this.getZ() - gridSizeX * gridSpacing / 2) / 16.0);
+        int maxZ = (int) Math.ceil((this.getZ() + gridSizeX * gridSpacing / 2) / 16.0);
+
+        for (int chunkX = minX; chunkX <= maxX; chunkX++) {
+            for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++) {
+                net.minecraft.world.level.ChunkPos chunkPos = new net.minecraft.world.level.ChunkPos(chunkX, chunkZ);
+                org.confluence.terraentity.utils.world.WorldChunksManager.forceLoadChunk(serverLevel, chunkPos);
+            }
+        }
+
+        if (this.tickCount % 180 == 0) {
+            org.confluence.terraentity.utils.world.WorldChunksManager.freeChunks(serverLevel);
+        }
     }
-}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
