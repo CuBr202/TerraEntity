@@ -1,5 +1,6 @@
 package org.confluence.terraentity.init.entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
@@ -22,7 +23,6 @@ import org.confluence.terraentity.client.entity.model.VariantTexModel;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.FairyRenderer;
 import org.confluence.terraentity.entity.animal.*;
-import net.minecraft.core.BlockPos;
 import org.confluence.terraentity.init.TEEntities;
 
 import java.util.List;
@@ -71,9 +71,9 @@ public class TEAnimals {
         event.registerEntityRenderer(BIRD.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<Bird>(BIRD.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(BLUE_JAY.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<Bird>(BLUE_JAY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(CARDINAL.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<Bird>(CARDINAL.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
+        event.registerEntityRenderer(CRAB.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<SimpleAnimal>(CRAB.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
 
         // 昆虫
-        event.registerEntityRenderer(CRAB.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<SimpleAnimal>(CRAB.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(GLOWING_SNAIL.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<SimpleAnimal>(GLOWING_SNAIL.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(GRUBBY.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<SimpleAnimal>(GRUBBY.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
         event.registerEntityRenderer(MAGGOT.get(), c-> new GeoNormalRenderer<>(c, new GeoNormalModel<SimpleAnimal>(MAGGOT.getId().withPrefix("animal/"), true).setHeadName("head"), false, 1, 0));
@@ -105,9 +105,9 @@ public class TEAnimals {
         event.put(BIRD.get(), Bird.createAttributes().build());
         event.put(BLUE_JAY.get(), Bird.createAttributes().build());
         event.put(CARDINAL.get(), Bird.createAttributes().build());
+        event.put(CRAB.get(), SimpleAnimal.createInsectAttributes().build());
 
         // 昆虫
-        event.put(CRAB.get(), SimpleAnimal.createInsectAttributes().build());
         event.put(GLOWING_SNAIL.get(), SimpleAnimal.createInsectAttributes().build());
         event.put(GRUBBY.get(), SimpleAnimal.createInsectAttributes().build());
         event.put(MAGGOT.get(), SimpleAnimal.createInsectAttributes().build());
@@ -138,8 +138,8 @@ public class TEAnimals {
         event.register(BIRD.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(BLUE_JAY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(CARDINAL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-
         event.register(CRAB.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+
         event.register(GLOWING_SNAIL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(GRUBBY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(MAGGOT.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
