@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 public class JewelBunny extends Bunny implements IVariant<Integer> {
+    public static final String VARIANT_KEY = "TEVariant";
     private boolean initializedVariant = false;
 
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(JewelBunny.class, EntityDataSerializers.INT);
@@ -43,14 +44,14 @@ public class JewelBunny extends Bunny implements IVariant<Integer> {
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.putInt("TEVariant", this.getTEVariant());
+        pCompound.putInt(VARIANT_KEY, this.getTEVariant());
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        if(pCompound.contains("TEVariant")) {
-            this.setTEVariant(pCompound.getInt("TEVariant"));
+        if(pCompound.contains(VARIANT_KEY)) {
+            this.setTEVariant(pCompound.getInt(VARIANT_KEY));
             this.initializedVariant = true;
         }
     }
@@ -69,12 +70,13 @@ public class JewelBunny extends Bunny implements IVariant<Integer> {
         }
     }
 
-    static Map<Integer, ResourceLocation> textures = new Int2ObjectOpenHashMap<>(Map.of(
+    public static final int GOLDEN_ID = 4;
+    static final Map<Integer, ResourceLocation> textures = new Int2ObjectOpenHashMap<>(Map.of(
             0, TerraEntity.space("textures/entity/animal/bunny/amber_bunny.png"),
             1, TerraEntity.space("textures/entity/animal/bunny/amethyst_bunny.png"),
             2, TerraEntity.space("textures/entity/animal/bunny/diamond_bunny.png"),
             3, TerraEntity.space("textures/entity/animal/bunny/emerald_bunny.png"),
-            4, TerraEntity.space("textures/entity/animal/bunny/golden_bunny.png"),
+            GOLDEN_ID, TerraEntity.space("textures/entity/animal/bunny/golden_bunny.png"),
             5, TerraEntity.space("textures/entity/animal/bunny/ruby_bunny.png"),
             6, TerraEntity.space("textures/entity/animal/bunny/sapphire_bunny.png"),
             7, TerraEntity.space("textures/entity/animal/bunny/topaz_bunny.png")

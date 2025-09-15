@@ -11,10 +11,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.init.TETags;
-import org.confluence.terraentity.init.entity.TEBossEntities;
-import org.confluence.terraentity.init.entity.TEMonsterEntities;
-import org.confluence.terraentity.init.entity.TERideableEntities;
-import org.confluence.terraentity.init.entity.TESummonEntities;
+import org.confluence.terraentity.init.entity.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -87,6 +84,27 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
                 TEMonsterEntities.HILL_HUNGRY.get(),
                 TEBossEntities.HILL_OF_FLESH.get(),
                 TEBossEntities.WALL_OF_FLESH.get()
+        );
+        tag(TETags.EntityTypes.NPC).add(
+                TENpcEntities.GUIDE.get(),
+                TENpcEntities.DEMOLITIONIST.get(),
+                TENpcEntities.GOBLIN_TINKERER.get(),
+                TENpcEntities.ARMS_DEALER.get(),
+                TENpcEntities.NURSE.get(),
+                TENpcEntities.MERCHANT.get(),
+                TENpcEntities.PAINTER.get(),
+                TENpcEntities.ANGLER.get(),
+                TENpcEntities.FEMALE_ANGLER.get(),
+                TENpcEntities.DRYAD.get(),
+                TENpcEntities.DYE_TRADER.get(),
+                TENpcEntities.OLD_MAN.get(),
+                TENpcEntities.MECHANIC.get(),
+                TENpcEntities.TRAVELING_MERCHANT.get(),
+                TENpcEntities.WITCH_DOCTOR.get(),
+                TENpcEntities.PARTY_GIRL.get(),
+                TENpcEntities.CLOTHIER.get(),
+                TENpcEntities.ZOOLOGIST.get(),
+                TENpcEntities.TRUFFLE.get()
         );
     }
 
