@@ -70,16 +70,23 @@ public class JewelBunny extends Bunny implements IVariant<Integer> {
         }
     }
 
+    public static final int AMBER_ID = 0;
+    public static final int AMETHYST_ID = 1;
+    public static final int DIAMOND_ID = 2;
+    public static final int EMERALD_ID = 3;
     public static final int GOLDEN_ID = 4;
+    public static final int RUBY_ID = 5;
+    public static final int SAPPHIRE_ID = 6;
+    public static final int TOPAZ_ID = 7;
     static final Map<Integer, ResourceLocation> textures = new Int2ObjectOpenHashMap<>(Map.of(
-            0, TerraEntity.space("textures/entity/animal/bunny/amber_bunny.png"),
-            1, TerraEntity.space("textures/entity/animal/bunny/amethyst_bunny.png"),
-            2, TerraEntity.space("textures/entity/animal/bunny/diamond_bunny.png"),
-            3, TerraEntity.space("textures/entity/animal/bunny/emerald_bunny.png"),
+            AMBER_ID, TerraEntity.space("textures/entity/animal/bunny/amber_bunny.png"),
+            AMETHYST_ID, TerraEntity.space("textures/entity/animal/bunny/amethyst_bunny.png"),
+            DIAMOND_ID, TerraEntity.space("textures/entity/animal/bunny/diamond_bunny.png"),
+            EMERALD_ID, TerraEntity.space("textures/entity/animal/bunny/emerald_bunny.png"),
             GOLDEN_ID, TerraEntity.space("textures/entity/animal/bunny/golden_bunny.png"),
-            5, TerraEntity.space("textures/entity/animal/bunny/ruby_bunny.png"),
-            6, TerraEntity.space("textures/entity/animal/bunny/sapphire_bunny.png"),
-            7, TerraEntity.space("textures/entity/animal/bunny/topaz_bunny.png")
+            RUBY_ID, TerraEntity.space("textures/entity/animal/bunny/ruby_bunny.png"),
+            SAPPHIRE_ID, TerraEntity.space("textures/entity/animal/bunny/sapphire_bunny.png"),
+            TOPAZ_ID, TerraEntity.space("textures/entity/animal/bunny/topaz_bunny.png")
     ));
 
 

@@ -49,8 +49,8 @@ public class TEAnimals {
     public static final DeferredHolder<EntityType<?>, EntityType<SimpleAnimal>> SNAIL = TEEntities.registerCreature("snail", SimpleAnimal::new, 0.5F, 0.3F);
 
     public static final DeferredHolder<EntityType<?>, EntityType<BirdVariantAnimal>> BUTTERFLY = TEEntities.registerCreature("butterfly", (e, l)-> new BirdVariantAnimal(e, l, VariantsTextureMaps.butterflyTextures), 0.5F, 0.3F);
-    public static final DeferredHolder<EntityType<?>, EntityType<Bird>> HELL_BUTTERFLY = TEEntities.registerCreature("hell_butterfly", (e, l)-> new Bird(e, l), 0.5F, 0.3F);
-    public static final DeferredHolder<EntityType<?>, EntityType<Bird>> PRISMATIC_LACEWING = TEEntities.registerCreature("prismatic_lacewing", (e, l)-> new Bird(e, l), 0.5F, 0.3F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Bird>> HELL_BUTTERFLY = TEEntities.registerCreature("hell_butterfly", Bird::new, 0.5F, 0.3F);
+    public static final DeferredHolder<EntityType<?>, EntityType<Bird>> PRISMATIC_LACEWING = TEEntities.registerCreature("prismatic_lacewing", Bird::new, 0.5F, 0.3F);
     public static final DeferredHolder<EntityType<?>, EntityType<BirdVariantAnimal>> DRAGONFLY = TEEntities.registerCreature("dragonfly",  (e, l)-> new BirdVariantAnimal(e, l, VariantsTextureMaps.dragonflyTextures), 0.5F, 0.3F);
     public static final DeferredHolder<EntityType<?>, EntityType<Fairy>> FAIRY = TEEntities.registerCreature("fairy", (e,l)-> new Fairy(e, l, VariantsTextureMaps.fairyTextures), 0.5F, 0.3F);
     public static final DeferredHolder<EntityType<?>, EntityType<Fairy>> FEALING = TEEntities.registerCreature("fealing", (e,l)-> new Fairy(e, l, VariantsTextureMaps.fealingTextures), 0.5F, 0.3F);

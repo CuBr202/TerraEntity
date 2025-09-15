@@ -83,6 +83,8 @@ public class VariantsTextureMaps {
             TerraEntity.space("gold_ladybug.png"),
             TerraEntity.space("ladybug.png")
     ));
+    public static final int BLACK_SCORPION_ID = 0;
+    public static final int SCORPION_ID = 1;
     public static final Map<Integer, ResourceLocation> scorpionTextures = makeAnimalTextureMap("scorpion", List.of(
             TerraEntity.space("black_scorpion.png"),
             TerraEntity.space("scorpion.png")
