@@ -71,7 +71,7 @@ public class TEMonsterEntities {
 
     // 飞行怪
     public static final DeferredHolder<EntityType<?>, EntityType<DemonEye>> DEMON_EYE = TEEntities.registerMonster("demon_eye", DemonEye::new, 1.1F, 1.1F);
-    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMSON_KEMERA = registerSimpleMonster("crimson_kemera", FlyMonsterPrefab.CRIMSON_KEMERA_BUILDER, 1.2f, 1.2f);
+    public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> CRIMERA = registerSimpleMonster("crimera", FlyMonsterPrefab.CRIMERA_BUILDER, 1.2f, 1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> EATER_OF_SOULS = registerSimpleMonster("eater_of_souls", FlyMonsterPrefab.EATER_OF_SOULS_BUILDER, 1.2f, 1.2f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> DRIPPLER = registerSimpleMonster("drippler", FlyMonsterPrefab.DRIPPLER_BUILDER, 1.6f, 1.6f);
     public static final DeferredHolder<EntityType<?>, EntityType<AbstractMonster>> SERVANT_OF_CTHULHU = registerSimpleMonster("servant_of_cthulhu", FlyMonsterPrefab.SERVANT_OF_CTHULHU_BUILDER, 1.1f, 1.1f);
@@ -196,7 +196,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.FLESH_SLIME.get(), c -> new CustomSlimeRenderer(c, "flesh"));
 
 
-        event.registerEntityRenderer(TEMonsterEntities.CRIMSON_KEMERA.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.CRIMSON_KEMERA.getId(), true));
+        event.registerEntityRenderer(TEMonsterEntities.CRIMERA.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.CRIMERA.getId(), true));
         event.registerEntityRenderer(TEMonsterEntities.EATER_OF_SOULS.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.EATER_OF_SOULS.getId(), true));
         event.registerEntityRenderer(TEMonsterEntities.SERVANT_OF_CTHULHU.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.SERVANT_OF_CTHULHU.getId(), true));
         event.registerEntityRenderer(TEMonsterEntities.DRIPPLER.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.DRIPPLER.getId(), false, 2f, 0));
@@ -343,7 +343,7 @@ public class TEMonsterEntities {
         event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());
         event.put(SERVANT_OF_CTHULHU.get(), AttBuilder.fly(AttBuilder.createAttributes(10,1,3,30,0.5f,0.3f)).build());
         event.put(FLYING_FISH.get(), AttBuilder.fly(AttBuilder.createAttributes(10,1,2,30,0.5f,0.3f)).build());
-        event.put(CRIMSON_KEMERA.get(), AttBuilder.fly(AttBuilder.createAttributes(20,6,11,30,0.5f,0.1f)).build());
+        event.put(CRIMERA.get(), AttBuilder.fly(AttBuilder.createAttributes(20,6,11,30,0.5f,0.1f)).build());
         event.put(DRIPPLER.get(), AttBuilder.fly(AttBuilder.createAttributes(26,7,14,64,0.5f,0.2f)).build());
         event.put(WANDERING_EYE_FISH.get(), AttBuilder.fly(AttBuilder.createAttributes(156,18,15,60,1f,1f)).moveSpeed(2.2).build());
         event.put(EATER_OF_SOULS.get(), AttBuilder.fly(AttBuilder.createAttributes(20,6,11,30,0.5f,0.1f)).build());
@@ -457,7 +457,7 @@ public class TEMonsterEntities {
         // fly
         event.register(DEMON_EYE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkDemonEyeSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(FLYING_FISH.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkFlyingFishSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(CRIMSON_KEMERA.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(CRIMERA.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(DRIPPLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkGroundSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(EATER_OF_SOULS.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkRoutineMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(HARPY.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpawnPlacementChecks::checkHighLevelMonsterSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
