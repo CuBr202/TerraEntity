@@ -237,7 +237,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TESpawnEggItems.UNDEAD_VIKING_SPAWN_EGG.get(), "亡灵维京海盗刷怪蛋");
 
 
-        add(TEMonsterEntities.GOBLIN_SORCERER.get(), "哥布林术士");
+        add(TEMonsterEntities.GOBLIN_SORCERER.get(), "哥布林巫士");
         add(TEMonsterEntities.GOBLIN_ARCHER.get(), "哥布林弓箭手");
         add(TEMonsterEntities.GOBLIN_PEON.get(), "哥布林苦力");
         add(TEMonsterEntities.GOBLIN_WARRIOR.get(), "哥布林战士");
