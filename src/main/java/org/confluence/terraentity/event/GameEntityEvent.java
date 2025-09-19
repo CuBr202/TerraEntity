@@ -42,6 +42,7 @@ import org.confluence.terraentity.entity.monster.slime.BlackSlime;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
+import org.confluence.terraentity.mixed.IZombie;
 import org.confluence.terraentity.mixin.accessor.MobAccessor;
 import org.confluence.terraentity.network.s2c.SyncLevelNamePacketS2C;
 import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
@@ -69,6 +70,7 @@ public class GameEntityEvent {
 //                slime.finalizeSpawn(level, event.getDifficulty(), MobSpawnType.JOCKEY, null);
                 level.addFreshEntity(slime);
                 slime.startRiding(zombie);
+                IZombie.of(zombie).terra_entity$setSlimeZombie();
             }
         }
     }
