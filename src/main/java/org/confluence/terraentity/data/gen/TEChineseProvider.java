@@ -250,7 +250,7 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEAnimals.BUNNY.get(), "兔兔");
         add(TEAnimals.JEWEL_SQUIRREL.get(), "宝石松鼠");
         add(TEAnimals.JEWEL_BUNNY.get(), "宝石兔");
-        add(TEAnimals.BOOM_BUNNY.get(), "爆炸兔");
+        add(TEAnimals.EXPLOSIVE_BUNNY.get(), "爆炸兔");
         add(TEAnimals.DUCK.get(), "鸭子");
         add(TEAnimals.BIRD.get(), "鸟");
         add(TEAnimals.BLUE_JAY.get(), "冠蓝鸦");
@@ -358,7 +358,7 @@ public class TEChineseProvider extends LanguageProvider {
         // 动物
         add(TESpawnEggItems.SQUIRREL_SPAWN_EGG.get(), "松鼠刷怪蛋");
         add(TESpawnEggItems.JEWEL_SQUIRREL_SPAWN_EGG.get(), "宝石松鼠刷怪蛋");
-        add(TESpawnEggItems.BOOM_BUNNY_SPAWN_EGG.get(), "炸弹兔刷怪蛋");
+        add(TESpawnEggItems.EXPLOSIVE_BUNNY_SPAWN_EGG.get(), "炸弹兔刷怪蛋");
         add(TESpawnEggItems.BUNNY_SPAWN_EGG.get(), "兔兔刷怪蛋");
         add(TESpawnEggItems.JEWEL_BUNNY_SPAWN_EGG.get(), "宝石兔刷怪蛋");
         add(TESpawnEggItems.DUCK_SPAWN_EGG.get(), "鸭子刷怪蛋");

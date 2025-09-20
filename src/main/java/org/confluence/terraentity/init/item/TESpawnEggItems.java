@@ -147,7 +147,7 @@ public class TESpawnEggItems {
     public static final DeferredItem<SpawnEggItem> JEWEL_SQUIRREL_SPAWN_EGG = registerEgg("jewel_squirrel_spawn_egg", TEAnimals.JEWEL_SQUIRREL, 0xffffff);
     public static final DeferredItem<SpawnEggItem> BUNNY_SPAWN_EGG = registerEgg("bunny_spawn_egg", TEAnimals.BUNNY, 0xffffff);
     public static final DeferredItem<SpawnEggItem> JEWEL_BUNNY_SPAWN_EGG = registerEgg("jewel_bunny_spawn_egg", TEAnimals.JEWEL_BUNNY, 0xffffff);
-    public static final DeferredItem<SpawnEggItem> BOOM_BUNNY_SPAWN_EGG = registerEgg("boom_bunny_spawn_egg", TEAnimals.BOOM_BUNNY, 0xffffff);
+    public static final DeferredItem<SpawnEggItem> EXPLOSIVE_BUNNY_SPAWN_EGG = registerEgg("explosive_bunny_spawn_egg", TEAnimals.EXPLOSIVE_BUNNY, 0xffffff);
     public static final DeferredItem<SpawnEggItem> DUCK_SPAWN_EGG = registerEgg("duck_spawn_egg", TEAnimals.DUCK, 0xffffff);
     public static final DeferredItem<SpawnEggItem> BIRD_SPAWN_EGG = registerEgg("bird_spawn_egg", TEAnimals.BIRD, 0xffffff);
     public static final DeferredItem<SpawnEggItem> BLUE_JAY_SPAWN_EGG = registerEgg("blue_jay_spawn_egg", TEAnimals.BLUE_JAY, 0xffffff);
