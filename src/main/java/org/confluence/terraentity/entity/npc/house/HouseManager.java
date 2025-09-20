@@ -137,7 +137,6 @@ public record HouseManager(Map<UUID, House> houses) {
         houses.clear();
     }
 
-    public static Codec<HouseManager> CODEC = Codec.unboundedMap(Codec.STRING.xmap(UUID::fromString, UUID::toString), House.CODEC)
+    public static final Codec<HouseManager> CODEC = Codec.unboundedMap(Codec.STRING.xmap(UUID::fromString, UUID::toString), House.CODEC)
             .xmap(HouseManager::new, HouseManager::houses);
-
 }
