@@ -1,17 +1,17 @@
 package org.confluence.terraentity.entity.npc.house;
 
-import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.*;
+import com.mojang.serialization.codecs.OptionalFieldCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
 
 /**
  * 房子类,未来可能扩展不同的房子类型
@@ -33,10 +33,28 @@ public record House(Optional<UUID> uuid, BlockPos min, BlockPos max, BlockPos ce
         return pos.getX() >= min.getX() && pos.getX() <= max.getX() && pos.getZ() >= min.getZ() && pos.getZ() <= max.getZ();
     }
 
+    // 早该用UUIDUtil.CODEC的
+    @Deprecated(since = "1.2.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.3.0")
+    private static final MapCodec<Optional<UUID>> FIXED_UUID_CODEC = new OptionalFieldCodec<>("uuid", UUIDUtil.CODEC, false) {
+        @Override
+        public <T> DataResult<Optional<UUID>> decode(DynamicOps<T> ops, MapLike<T> input) {
+            DataResult<Optional<UUID>> result = super.decode(ops, input);
+            if (result.isError()) {
+                Optional<UUID> uuid = ops.getStringValue(input.get("uuid")).result().flatMap(s -> {
+                    try {
+                        return Optional.of(UUID.fromString(s));
+                    } catch (Exception e) {
+                        return Optional.empty();
+                    }
+                });
+                return DataResult.success(uuid, Lifecycle.stable());
+            }
+            return result;
+        }
+    };
     public static final Codec<House> CODEC = RecordCodecBuilder.create((builder) -> builder.group(
-            Codec.either(Codec.STRING, UUIDUtil.CODEC).xmap(
-                    either -> either.map(UUID::fromString, Function.identity()), Either::right
-            ).optionalFieldOf("uuid").forGetter(House::uuid),
+            FIXED_UUID_CODEC.forGetter(House::uuid),
             BlockPos.CODEC.fieldOf("min").forGetter(House::min),
             BlockPos.CODEC.fieldOf("max").forGetter(House::max),
             BlockPos.CODEC.fieldOf("center").forGetter(House::center)
