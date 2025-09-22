@@ -39,6 +39,7 @@ import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
 import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.monster.slime.BlackSlime;
+import org.confluence.terraentity.entity.npc.AbstractTerraNPC;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
@@ -55,14 +56,15 @@ public class GameEntityEvent {
     @SubscribeEvent
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
         // 生成信息
-        Boss.sendBossSpawnMessage(event.getEntity());
+        Entity entity = event.getEntity();
+        Boss.sendBossSpawnMessage(entity);
 //        if(event.getEntity() instanceof ServerPlayer player){
 //            player.addItem(new ItemStack(TERiddenItems.HONEYED_GOGGLES.get()));
 //        }
 
         Level level = event.getLevel();
 
-        if (!level.isClientSide && event.getEntity() instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < ServerConfig.CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD.get()) {
+        if (!level.isClientSide && entity instanceof Zombie zombie && !zombie.isBaby() && !zombie.isVehicle() && zombie.getRandom().nextFloat() < ServerConfig.CHANCE_TO_SPAWN_SLIME_ON_ZOMBIE_HEAD.get()) {
             BaseSlime slime = (zombie instanceof ZombifiedPiglin ? TEMonsterEntities.LAVA_SLIME.get() : TEMonsterEntities.BLUE_SLIME.get()).create(level);
             if (slime != null) {
                 Vec3 position = zombie.getPassengerRidingPosition(slime);
@@ -72,6 +74,10 @@ public class GameEntityEvent {
                 slime.startRiding(zombie);
                 IZombie.of(zombie).terra_entity$setSlimeZombie();
             }
+        }
+
+        if (!level.isClientSide && entity instanceof AbstractTerraNPC npc && npc.getSpawnAtPos() == null) {
+            npc.setSpawnAtPos(entity.blockPosition());
         }
     }
 
