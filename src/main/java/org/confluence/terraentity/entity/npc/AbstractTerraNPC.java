@@ -510,7 +510,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
             // 由于NPCHouseBehaviors#walkToHouse疑似不能触发，于是在tick里判断
             // 过远时传送回自己的出生点
-            if (spawnAtPos != null && level().getGameTime() % 100 == 2) {
+            if (spawnAtPos != null && level().getGameTime() % 100 == 2 && level().players().stream().noneMatch(player -> player.distanceToSqr(this) < 32 * 32)) {
                 double sqr = blockPosition().distSqr(spawnAtPos);
                 if (sqr > 64 * 64 || (sqr > 500 && LibDateUtils.isNight(level()))) {
                     teleportTo(spawnAtPos.getX(), spawnAtPos.getY(), spawnAtPos.getZ());
