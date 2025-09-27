@@ -107,26 +107,8 @@ public class   TheHungry extends AbstractMonster implements IMinion, Boss.BossPa
     }
 
     @Override
-    public void move(@NotNull MoverType pType, @NotNull Vec3 motion) {
-        if (dead) {
-            super.move(pType, motion);
-            return;
-        }
-
-        Vec3 collide = ((EntityAccessor) this).callCollide(motion);
-        if (collide.x != motion.x) {
-            motion = new Vec3(motion.x < 0 ? 0.22 : -0.22, motion.y, motion.z);
-        }
-        if (collide.y != motion.y) {
-            boolean downward = motion.y < 0;
-            motion = new Vec3(motion.x, downward ? Mth.clamp(-motion.y, 0.1, 0.22) : Mth.clamp(-motion.y, -0.22, -0.1), motion.z);
-        }
-        if (collide.z != motion.z) {
-            motion = new Vec3(motion.x, motion.y, motion.z < 0 ? 0.3 : -0.3);
-        }
-
-        setDeltaMovement(motion);
-        super.move(pType, motion);
+    public void move(@NotNull MoverType pType, @NotNull Vec3 pos) {
+        this.setPos(this.getX() + pos.x, this.getY() + pos.y, this.getZ() + pos.z);
     }
 
     public float getMaxDis(){
@@ -145,7 +127,7 @@ public class   TheHungry extends AbstractMonster implements IMinion, Boss.BossPa
         double maxDis = this.getMaxDis();
         double maxHorizontalDis = maxDis;
         double maxVerticalDis = maxDis * 2.0;
-        
+
         // 使用椭圆方程：水平距离/水平限制 + 垂直距离/垂直限制 > 1 时超出范围
         return horizontalDistance / maxHorizontalDis + verticalDistance / maxVerticalDis > 1.0;
     }
@@ -169,168 +151,216 @@ public class   TheHungry extends AbstractMonster implements IMinion, Boss.BossPa
             } else {
                 this.discard();
             }
+            return;
         }
 
         super.tick();
+        phase = (phase + 1) % _phase;
 
-        phase++;
-        if (phase >= _phase) {
-            phase = 0;
-        }
-
-        if (this.owner instanceof LivingEntity wall && !this.isFree) {
-            Vec3 testDir = this.initDirection(wall);
-            if(this.initDir == null || !this.initDir.equals(testDir)){
-                initDir = testDir;
-            }
-        }else if(this.isFree){
-            Vec3 pos = position();
-            setTarget(level().getNearestPlayer(pos.x, pos.y, pos.z, 40, true));
-            TEUtils.updateEntityRotation(this, this.getDeltaMovement().multiply(1, -1, 1));
-        }
-
-        if (initPos != null && initDir != null && !this.isFree) {
-            Vec3 speed = Vec3.ZERO;
-            LivingEntity target = getTarget();
-
-            if (target != null) {
-                Vec3 targetPos = getTarget().position().add(0,getTarget().getEyeHeight() * 0.5f,0);
-
-                this.lookControl.setLookAt(target, 200, 85);
-                this.lookAt(target, 200, 85);
-
-                Vec3 c = targetPos.subtract(initPos);
-
-                // 计算朝向目标的速度，避免垂直方向速度不一致的问题
-                Vec3 toTarget = targetPos.subtract(position()).normalize();
-                Vec3 toStart = initPos.subtract(position()).normalize();
-                
-                // 混合方向：既朝向目标，又保持在起始点附近
-                Vec3 mixedDir = toTarget.add(toStart.scale(0.3f)).normalize();
-                // 有目标且不超出范围时加大移动效率，包括垂直方向
-                boolean hasTargetInRange = !isOutOfRange();
-                Vec3 v_v = mixedDir.scale(v_speed * (hasTargetInRange ? 2.0f : 1.0f));
-                
-                speed = speed.add(v_v);
-                Vec3 newDir = c.normalize();
-                if (initDir != null) {
-                    initDir = initDir.lerp(newDir, 0.3f);
-                } else {
-                    initDir = newDir;
+        if (!this.level().isClientSide) {
+            if (this.owner instanceof LivingEntity wall && !this.isFree) {
+                Vec3 testDir = this.initDirection(wall);
+                if (this.initDir == null || !this.initDir.equals(testDir)) {
+                    initDir = testDir;
                 }
-            } else {
-                if (--switchTime <= 0) {
-                    switchTime = random.nextInt(20) + 10;
+            } else if (this.isFree) {
+                Vec3 pos = position();
+                setTarget(this.level().getNearestPlayer(pos.x, pos.y, pos.z, 40, true));
+                TEUtils.updateEntityRotation(this, this.getDeltaMovement().multiply(1, -1, 1));
+            }
+        }
 
-                    if (this.owner instanceof WallOfFlesh wall) {
-                        Vec3 baseDir = wall.getForward().normalize();
-                        this.setYRot((float) Math.toDegrees(Math.atan2(-baseDir.x, baseDir.z)));
+        Vec3 currentInitPos = this.initPos;
+        Vec3 currentInitDir = this.initDir;
 
-                        Vec3 testDir = new Vec3(Math.random() - 0.5f, Math.random() - 0.5f, Math.random() - 0.5f).normalize();
-                        BlockPos testPos = BlockPos.containing(
-                                testDir.scale(5).add(position())
-                        );
+        if (currentInitPos != null && currentInitDir != null) {
+            processMovement(currentInitPos, currentInitDir);
+        }
+    }
 
-                        if (level().getBlockState(testPos).isAir() && testPos.getY() > level().getMinBuildHeight()) {
-                            if (initDir != null) {
-                                initDir = initDir.lerp(testDir, 0.4f);
-                            } else {
-                                initDir = testDir;
-                            }
+    @Override
+    protected void pushEntities() {
+    }
+
+    private void processMovement(Vec3 initPos, Vec3 initDir) {
+        LivingEntity target = getTarget();
+        boolean hasTarget = target != null;
+        boolean isFree = this.isFree;
+        boolean targetInRange = hasTarget && !isOutOfRange();
+        float flag = hasTarget ? 2.0f : 1.0f;
+
+        Vec3 speed = Vec3.ZERO;
+        Vec3 finalSpeed;
+
+        if (hasTarget) {
+            Vec3 targetPos = target.position().add(0, target.getEyeHeight() * 0.5f, 0);
+
+            this.lookControl.setLookAt(target, 200, 85);
+            this.lookAt(target, 200, 85);
+
+            double tx = targetPos.x - initPos.x;
+            double ty = targetPos.y - initPos.y;
+            double tz = targetPos.z - initPos.z;
+
+            Vec3 currentPos = position();
+            double dx = targetPos.x - currentPos.x;
+            double dy = targetPos.y - currentPos.y;
+            double dz = targetPos.z - currentPos.z;
+
+            double distToTarget = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            if (distToTarget > 0) {
+                dx /= distToTarget;
+                dy /= distToTarget;
+                dz /= distToTarget;
+            }
+
+            double sx = initPos.x - currentPos.x;
+            double sy = initPos.y - currentPos.y;
+            double sz = initPos.z - currentPos.z;
+            double distToStart = Math.sqrt(sx * sx + sy * sy + sz * sz);
+            if (distToStart > 0) {
+                sx /= distToStart;
+                sy /= distToStart;
+                sz /= distToStart;
+            }
+
+            double mixedX = dx + sx * 0.3f;
+            double mixedY = dy + sy * 0.3f;
+            double mixedZ = dz + sz * 0.3f;
+            double mixedLen = Math.sqrt(mixedX * mixedX + mixedY * mixedY + mixedZ * mixedZ);
+            if (mixedLen > 0) {
+                mixedX /= mixedLen;
+                mixedY /= mixedLen;
+                mixedZ /= mixedLen;
+            }
+
+            double velocityScale = isFree ? v_speed : v_speed * (targetInRange ? 2.0f : 1.0f);
+            speed = new Vec3(mixedX * velocityScale, mixedY * velocityScale, mixedZ * velocityScale);
+
+            if (!isFree) {
+                double newDirLen = Math.sqrt(tx * tx + ty * ty + tz * tz);
+                if (newDirLen > 0) {
+                    double newDirX = tx / newDirLen;
+                    double newDirY = ty / newDirLen;
+                    double newDirZ = tz / newDirLen;
+
+                    if (this.initDir != null) {
+                        this.initDir = this.initDir.lerp(new Vec3(newDirX, newDirY, newDirZ), 0.3f);
+                    } else {
+                        this.initDir = new Vec3(newDirX, newDirY, newDirZ);
+                    }
+                }
+            }
+        } else if (!isFree) {
+            if (--switchTime <= 0) {
+                switchTime = random.nextInt(20) + 10;
+
+                if (this.owner instanceof WallOfFlesh wall) {
+                    Vec3 baseDir = wall.getForward().normalize();
+                    this.setYRot((float) Math.toDegrees(Math.atan2(-baseDir.x, baseDir.z)));
+
+                    double rx = Math.random() - 0.5f;
+                    double ry = Math.random() - 0.5f;
+                    double rz = Math.random() - 0.5f;
+                    double len = Math.sqrt(rx * rx + ry * ry + rz * rz);
+                    if (len > 0) {
+                        rx /= len;
+                        ry /= len;
+                        rz /= len;
+                    }
+
+                    Vec3 testDir = new Vec3(rx, ry, rz);
+                    Vec3 currentPos = position();
+                    BlockPos testPos = BlockPos.containing(
+                            testDir.x * 5 + currentPos.x,
+                            testDir.y * 5 + currentPos.y,
+                            testDir.z * 5 + currentPos.z
+                    );
+
+                    if (level().getBlockState(testPos).isAir() && testPos.getY() > level().getMinBuildHeight()) {
+                        if (initDir != null) {
+                            initDir = initDir.lerp(testDir, 0.4f);
+                        } else {
+                            initDir = testDir;
                         }
                     }
                 }
             }
-
-            float flag = target == null ? 1 : 2;
-            float sinValueX = (float) Math.sin(this.tickCount * forwardFreq * flag * 0.7f);
-            float sinValueY = (float) Math.sin(this.tickCount * forwardFreq * flag * 1.3f);
-            float sinValueZ = (float) Math.sin(this.tickCount * forwardFreq * flag);
-
-            Vec3 shakeOffset = new Vec3(
-                sinValueX * forwardSpeed * 0.35f,
-                sinValueY * forwardSpeed * 0.45f,
-                sinValueZ * forwardSpeed * 0.3f
-            );
-            
-            // 有目标且不超出范围时减少正弦运动影响
-            boolean hasTargetInRange = target != null && !isOutOfRange();
-            float shakeMultiplier = hasTargetInRange ? 0.3f : 1.0f;
-            Vec3 forward = initDir.normalize().scale(forwardSpeed * (1.0f + (hasTargetInRange ? 0.5f : 0.0f))).add(shakeOffset.scale(shakeMultiplier));
-            Vec3 v_back;
-
-            if (isOutOfRange()) {
-                // 如果距离起始点太远，强制返回到最小距离位置
-                Vec3 minDisPos = initPos.add(initDir.scale(minDis));
-                v_back = minDisPos.subtract(position()).normalize().scale(backSpeed * 2.0f);
-            } else {
-                Vec3 minDisPos = initPos.add(initDir.scale(minDis));
-                float backOffset = backLen * 0.5f * (2.25f + (float) Math.sin(this.tickCount * 0.05 * flag));
-                Vec3 backPos = minDisPos.add(initDir.scale(backOffset));
-                
-                // 没有目标或超出范围时使用原本力度，否则使用一半力度
-                float backMultiplier = (target == null || isOutOfRange()) ? 1.0f : 0.5f;
-                v_back = backPos.subtract(position()).scale(backSpeed * backMultiplier);
-            }
-
-            Vec3 finalSpeed = speed.add(forward).add(v_back);
-            double len = finalSpeed.length();
-            if (len > 0.35f) {
-                finalSpeed = finalSpeed.scale(0.35f / len);
-            }
-            this.setDeltaMovement(finalSpeed);
-        }else if(this.isFree){
-            Vec3 speed = Vec3.ZERO;
-            LivingEntity target = getTarget();
-
-            if (target != null) {
-                Vec3 targetPos = getTarget().position().add(0,getTarget().getEyeHeight() * 0.5f,0);
-
-                this.lookControl.setLookAt(target, 200, 85);
-                this.lookAt(target, 200, 85);
-
-                Vec3 c = targetPos.subtract(initPos);
-
-                // 计算朝向目标的速度，避免垂直方向速度不一致的问题
-                Vec3 toTarget = targetPos.subtract(position()).normalize();
-                Vec3 toStart = initPos.subtract(position()).normalize();
-
-                // 混合方向：既朝向目标，又保持在起始点附近
-                Vec3 mixedDir = toTarget.add(toStart.scale(0.3f)).normalize();
-                // 有目标且不超出范围时加大移动效率，包括垂直方向
-                Vec3 v_v = mixedDir.scale(v_speed);
-
-                speed = speed.add(v_v);
-                Vec3 newDir = c.normalize();
-                if (initDir != null) {
-                    initDir = initDir.lerp(newDir, 0.3f);
-                } else {
-                    initDir = newDir;
-                }
-            }
-
-            float flag = 2;
-
-            // 有目标且不超出范围时减少正弦运动影响
-            Vec3 forward = initDir.normalize().scale(forwardSpeed * (1.25f));
-            Vec3 v_back;
-
-            Vec3 minDisPos = initPos.add(initDir.scale(minDis));
-                float backOffset = backLen * 0.5f * (2.25f + (float) Math.sin(this.tickCount * 0.05 * flag));
-                Vec3 backPos = minDisPos.add(initDir.scale(backOffset));
-
-                // 没有目标或超出范围时使用原本力度，否则使用一半力度
-                float backMultiplier = 0f;
-                v_back = backPos.subtract(position()).scale(backSpeed * backMultiplier);
-
-
-            Vec3 finalSpeed = speed.add(forward).add(v_back);
-            double len = finalSpeed.length();
-            if (len > 0.35f) {
-                finalSpeed = finalSpeed.scale(0.35f / len);
-            }
-            this.setDeltaMovement(finalSpeed);
         }
+
+        Vec3 forward;
+        if (!isFree) {
+            double sinFactor = tickCount * forwardFreq * flag;
+            float sinValueX = (float) Math.sin(sinFactor * 0.7f);
+            float sinValueY = (float) Math.sin(sinFactor * 1.3f);
+            float sinValueZ = (float) Math.sin(sinFactor);
+            float shakeMultiplier = targetInRange ? 0.3f : 1.0f;
+            double shakeX = sinValueX * forwardSpeed * 0.35f * shakeMultiplier;
+            double shakeY = sinValueY * forwardSpeed * 0.45f * shakeMultiplier;
+            double shakeZ = sinValueZ * forwardSpeed * 0.3f * shakeMultiplier;
+            double forwardMultiplier = forwardSpeed * (1.0f + (targetInRange ? 0.5f : 0.0f));
+            double dirX = initDir.x * forwardMultiplier + shakeX;
+            double dirY = initDir.y * forwardMultiplier + shakeY;
+            double dirZ = initDir.z * forwardMultiplier + shakeZ;
+
+            forward = new Vec3(dirX, dirY, dirZ);
+        } else {
+            double forwardMultiplier = forwardSpeed * 1.25;
+            double dirX = initDir.x * forwardMultiplier;
+            double dirY = initDir.y * forwardMultiplier;
+            double dirZ = initDir.z * forwardMultiplier;
+
+            forward = new Vec3(dirX, dirY, dirZ);
+        }
+        Vec3 v_back;
+        if (isFree) {
+            v_back = Vec3.ZERO;
+        } else if (isOutOfRange()) {
+            double minDisX = initPos.x + initDir.x * minDis;
+            double minDisY = initPos.y + initDir.y * minDis;
+            double minDisZ = initPos.z + initDir.z * minDis;
+
+            Vec3 currentPos = position();
+            double backX = minDisX - currentPos.x;
+            double backY = minDisY - currentPos.y;
+            double backZ = minDisZ - currentPos.z;
+
+            double backLen = Math.sqrt(backX * backX + backY * backY + backZ * backZ);
+            if (backLen > 0) {
+                double scale = backSpeed * 2.0f / backLen;
+                v_back = new Vec3(backX * scale, backY * scale, backZ * scale);
+            } else {
+                v_back = Vec3.ZERO;
+            }
+        } else {
+            double backOffset = backLen * 0.5f * (2.25f + Math.sin(tickCount * 0.05 * flag));
+            double backPosX = initPos.x + initDir.x * (minDis + backOffset);
+            double backPosY = initPos.y + initDir.y * (minDis + backOffset);
+            double backPosZ = initPos.z + initDir.z * (minDis + backOffset);
+
+            Vec3 currentPos = position();
+            double backX = backPosX - currentPos.x;
+            double backY = backPosY - currentPos.y;
+            double backZ = backPosZ - currentPos.z;
+
+            float backMultiplier = (!hasTarget || isOutOfRange()) ? 1.0f : 0.5f;
+            double scale = backSpeed * backMultiplier;
+            v_back = new Vec3(backX * scale, backY * scale, backZ * scale);
+        }
+
+        double finalX = speed.x + forward.x + v_back.x;
+        double finalY = speed.y + forward.y + v_back.y;
+        double finalZ = speed.z + forward.z + v_back.z;
+
+        double len = Math.sqrt(finalX * finalX + finalY * finalY + finalZ * finalZ);
+        if (len > 0.35f) {
+            double scale = 0.35f / len;
+            finalSpeed = new Vec3(finalX * scale, finalY * scale, finalZ * scale);
+        } else {
+            finalSpeed = new Vec3(finalX, finalY, finalZ);
+        }
+
+        this.setDeltaMovement(finalSpeed);
     }
 
 

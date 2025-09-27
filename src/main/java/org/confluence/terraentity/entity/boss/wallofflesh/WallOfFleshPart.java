@@ -47,7 +47,7 @@ public abstract class WallOfFleshPart extends PartEntity<WallOfFlesh> implements
         this.parentMob = parentMob;
         this.name = name;
         this.randomDeathSpeed = this.getRandom().nextFloat() * 0.5f + 1f;
-        collisionProperties.detectInternal = 1;
+        collisionProperties.detectInternal = 10;
     }
 
     @Override
@@ -140,7 +140,6 @@ public abstract class WallOfFleshPart extends PartEntity<WallOfFlesh> implements
                 }
                 this.changeTarget(living);
             }
-
             doCollisionAttack(
                     e-> e instanceof LivingEntity  living  && e!= this && living.canBeSeenAsEnemy(),
                     parentMob::doHurtTarget
