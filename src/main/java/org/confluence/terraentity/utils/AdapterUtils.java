@@ -1,10 +1,11 @@
 package org.confluence.terraentity.utils;
 
+import com.github.edg_thexu.cafelib.api.datacomponent.IDataComponentType;
+import com.github.edg_thexu.cafelib.data.codec.DataComponentProvider;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.FireworkRocketItem;
@@ -21,7 +22,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.confluence.terraentity.network.NetworkHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Supplier;
 
 
 public class AdapterUtils {
@@ -70,5 +71,13 @@ public class AdapterUtils {
 
     public static void setFirework(ItemStack stack, int duration){
         FireworkRocketItem.setDuration(stack, (byte)duration);
+    }
+
+    public static <T extends IDataComponentType<T>> @Nullable T getDataComponent(ItemStack itemStack, DataComponentProvider<T> dataComponentType){
+        return IDataComponentType.getData(itemStack, dataComponentType);
+    }
+
+    public static <T extends IDataComponentType<T>> @Nullable T getDataComponent(ItemStack itemStack, Supplier<DataComponentProvider<T>> dataComponentType){
+        return IDataComponentType.getData(itemStack, dataComponentType);
     }
 }

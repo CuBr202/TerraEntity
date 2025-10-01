@@ -24,6 +24,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
 import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.data.mappeddata.MonsterMappedDatas;
 import org.confluence.terraentity.entity.monster.AbstractMonster;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeVariant;
@@ -35,6 +36,7 @@ import org.confluence.terraentity.api.entity.ISummonMob;
 import org.confluence.terraentity.init.*;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixed.IPlayer;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
@@ -93,9 +95,10 @@ public class GameEntityEvent {
             player.getCapability(TEAttachments.SUMMONER_STORAGE).resolve().ifPresent(data->data.clear(player));
         }
     }
-
+static int count = 0;
     @SubscribeEvent
     public static void livingDamageEntity(LivingDamageEvent event) {
+        System.out.println(count++);
         // LivingEntity e = (LivingEntity) event.getSource().getEntity();
         // Caused by: java.lang.ClassCastException: class net.minecraft.world.entity.projectile.Arrow cannot be cast to class net.minecraft.world.entity.LivingEntity
         LivingEntity e1 = event.getEntity();
@@ -135,25 +138,25 @@ public class GameEntityEvent {
         LivingEntity hurter = event.getEntity();
         Entity attacker = event.getSource().getEntity();
 
-        if (damageSource.is(TETags.DamageTypes.SUMMONER) || attacker instanceof ISummonMob<?> summoner) {
+        if (damageSource.is(TETags.DamageTypes.SUMMONER) || attacker instanceof ISummonMob summoner) {
             // 召唤物集火伤害加成
             if (hurter.hasEffect(TEEffects.SUMMON_FOCUS.get())) {
                 amount = amount + 2;
 
             }
             // 召唤物标记伤害增加
-            if(attacker instanceof ISummonMob<?> summoner){
+            if (attacker instanceof ISummonMob summoner) {
                 LivingEntity owner = summoner.summon_getOwner();
-                if(owner != null){
+                if (owner != null) {
                     var att = owner.getAttribute(TEAttributes.MARK_DAMAGE.get());
-                    if(att!= null){
+                    if (att != null) {
                         double damage = att.getValue();
                         amount += (float) damage;
                     }
                 }
             } else if (attacker instanceof LivingEntity owner) {
                 var att = owner.getAttribute(TEAttributes.MARK_DAMAGE.get());
-                if(att!= null){
+                if (att != null) {
                     double damage = att.getValue();
                     amount += (float) damage;
                 }
@@ -164,58 +167,11 @@ public class GameEntityEvent {
     }
 
     @SubscribeEvent
-    public static void entityInteract(PlayerInteractEvent.EntityInteract event){
+    public static void entityInteract(PlayerInteractEvent.EntityInteract event) {
         // 打开商店
         if (event.getTarget() instanceof ITradeHolder holder) {
-
             ((IPlayer) event.getEntity()).terra_entity$setTradeHolder(holder);
-            return;
         }
-        ItemStack item = event.getItemStack();
-        if (!(event.getTarget() instanceof LivingEntity entity)) return;
-        Player player = event.getEntity();
-        Level level = event.getLevel();
-//        if (entity.getType().equals(TEMonsterEntities.BLUE_SLIME.get()) ||
-//                entity.getType().equals(TEMonsterEntities.GREEN_SLIME.get()) ||
-//                entity.getType().equals(TEMonsterEntities.PURPLE_SLIME.get())) {
-//            if (item.is(TETags.Items.HONEY_TRANSLATION_BUCKET)) {
-//                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
-//                if (slime != null) {
-//                    item.shrink(1);
-//                    player.addItem(new ItemStack(Items.BUCKET));
-//                    slime.setSize(2, true);
-//                    slime.setPos(entity.position());
-//                    slime.setXRot(entity.getXRot());
-//                    slime.setYRot(entity.getYRot());
-//                    level.addFreshEntity(slime);
-//                }
-//                entity.remove(Entity.RemovalReason.DISCARDED);
-//            } else if (item.is(TETags.Items.HONEY_TRANSLATION)) {
-//                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
-//                if (slime != null) {
-//                    item.shrink(1);
-//                    slime.setSize(2, true);
-//                    slime.setPos(entity.position());
-//                    slime.setXRot(entity.getXRot());
-//                    slime.setYRot(entity.getYRot());
-//                    level.addFreshEntity(slime);
-//                }
-//                entity.remove(Entity.RemovalReason.DISCARDED);
-//            } else if (item.is(TETags.Items.HONEY_TRANSLATION_NOT_CONSUMED)) {
-//                HoneySlime slime = TEMonsterEntities.HONEY_SLIME.get().create(level);
-//                if (slime != null) {
-//                    slime.setSize(2, true);
-//                    slime.setPos(entity.position());
-//                    slime.setXRot(entity.getXRot());
-//                    slime.setYRot(entity.getYRot());
-//                    level.addFreshEntity(slime);
-//                }
-//                entity.remove(Entity.RemovalReason.DISCARDED);
-//                event.setCanceled(true);
-//                return;
-//            }
-//            event.setCanceled(true);
-//        }
     }
 
     @SubscribeEvent
@@ -237,18 +193,20 @@ public class GameEntityEvent {
             blackSlime.finalizeSpawn(randomSource, event.getDifficulty());
         }
 
-        if(mob instanceof IAttributeHolder holder){
+        if (mob instanceof IAttributeHolder holder) {
             holder.getAttributeBuilder().modify(mob);
         }
         TEAttributeModifierConfig.getInstance().modify(mob);
-        if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob<?>))
+        if (event.getEntity() instanceof Monster living && !(event.getEntity() instanceof ISummonMob))
             TEUtils.monsterEnhance(living);
         else if (event.getEntity() instanceof Slime slime)
             TEUtils.monsterEnhance(slime);
-        if(mob instanceof Boss boss && boss.shouldEnhanceMultiplayer()) {
+        if (mob instanceof Boss boss && boss.shouldEnhanceMultiplayer()) {
             TEUtils.multiplePlayerEnhance(mob);
         }
 
+//        InitialArmors data = MappedDataTypes.getData(MappedDataTypes.MONSTER_MAP_DATAS, MonsterMappedDatas.MONSTER_ARMOR);
+//        data.accept(mob);
     }
 
     @SubscribeEvent
@@ -256,5 +214,4 @@ public class GameEntityEvent {
 
 
     }
-
 }

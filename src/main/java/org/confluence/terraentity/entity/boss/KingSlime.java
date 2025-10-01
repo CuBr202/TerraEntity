@@ -1,14 +1,18 @@
 package org.confluence.terraentity.entity.boss;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -19,21 +23,28 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
+
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.ai.IBossFSM;
+import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
+import org.confluence.terraentity.data.codec.TECodecs;
+import org.confluence.terraentity.data.mappeddata.BossSkillMapDatas;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
 import org.confluence.terraentity.entity.monster.slime.BaseSlime;
 import org.confluence.terraentity.entity.util.DeathAnimOptions;
+import org.confluence.terraentity.entity.util.DifficultSelector;
 import org.confluence.terraentity.init.TEParticles;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.confluence.terraentity.mixin.accessor.SlimeAccessor;
 import org.confluence.terraentity.mixed.IBossEvent;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.AdapterUtils;
+import org.confluence.terraentity.utils.Easing;
 import org.confluence.terraentity.utils.FloatRGB;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -51,22 +62,65 @@ import static org.confluence.terraentity.utils.TEUtils.switchByDifficulty;
  */
 @SuppressWarnings("all")
 public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss{
-    private static final int COLOR_INT = 0x73bcf4;
+
+    private final int COLOR_INT;
     // 缩小/膨胀时长，单位：刻
-    private static final int SHRINK_ENLARGE_DURATION = 20;
+    private final int SHRINK_ENLARGE_DURATION;
     // 大师 专家 普通
-    private static final int[] TOTAL_SPLITS = {30, 50, 75};
-    private static final float MAX_HEALTHS = 728f;
-    private static final float DAMAGE = 16.5f;
-    private static final float[] JUMP_SPEED_HORIZONTAL = {1.1f, 1.35f, 1.55f};
-    private static final float[] JUMP_SPEED_VERTICAL = {1.5f, 1.75f, 2f};
-    private static final float[] JUMP_SPEED_VERTICAL_THIRD = {2f, 2.25f, 2.5f};
-    private static final float[] SWIM_SPEED_HORIZONTAL = {0.1f, 0.15f, 0.2f};
-    private static final float FLOATING_ACCELERATION = 0.05f;
-    private static final FloatRGB COLOR = FloatRGB.fromInteger(COLOR_INT);
-    private static final float[] BLOOD_COLOR = COLOR.mixture(FloatRGB.ZERO, 0.5f).toArray();
+    private final int TOTAL_SPLITS;
+    private final float JUMP_SPEED_HORIZONTAL;
+    private final float JUMP_SPEED_VERTICAL ;
+    private final float JUMP_SPEED_VERTICAL_THIRD;
+    private final float SWIM_SPEED_HORIZONTAL;
+    private final float FLOATING_ACCELERATION;
+    private final FloatRGB COLOR;
+    private final float[] BLOOD_COLOR;
+
+    public record SkillParams(int xpReward, int color, int shrinkDuration,
+                              List<Integer> totalSplits,
+                              List<Float> jumpSpeedHorizontal,
+                              List<Float> jumpSpeedVertical,
+                              List<Float> jumpSpeedVerticalThird,
+                              List<Float> swimSpeedHorizontal,
+                              float floatingAcceleration
+    ) {
+
+        public static Codec<SkillParams> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.fieldOf("xp_reward").forGetter(SkillParams::xpReward),
+                Codec.INT.fieldOf("color").forGetter(SkillParams::color),
+                Codec.INT.fieldOf("shrink_duration").forGetter(SkillParams::shrinkDuration),
+                TECodecs.INT_LIST_CODEC.fieldOf("total_splits").forGetter(SkillParams::totalSplits),
+                TECodecs.FLOAT_LIST_CODEC.fieldOf("jump_speed_horizontal").forGetter(SkillParams::jumpSpeedHorizontal),
+                TECodecs.FLOAT_LIST_CODEC.fieldOf("jump_speed_vertical").forGetter(SkillParams::jumpSpeedVertical),
+                TECodecs.FLOAT_LIST_CODEC.fieldOf("jump_speed_vertical_third").forGetter(SkillParams::jumpSpeedVerticalThird),
+                TECodecs.FLOAT_LIST_CODEC.fieldOf("swim_speed_horizontal").forGetter(SkillParams::swimSpeedHorizontal),
+                Codec.FLOAT.fieldOf("floating_acceleration").forGetter(SkillParams::floatingAcceleration)
+        ).apply(instance, SkillParams::new));
+
+        public static SkillParams getDefaultParams(){
+            return new SkillParams(500, 0x73bcf4, 20,
+                    List.of(30, 50, 75, 100),
+                    List.of(1.1f, 1.35f, 1.55f, 1.80f),
+                    List.of(1.5f, 1.75f, 2f, 2.25f),
+                    List.of(2f, 2.25f, 2.5f, 2.75f),
+                    List.of(0.1f, 0.15f, 0.2f, 0.25f),
+                    0.05f);
+        }
+    }
+
     private static final State<KingSlime> STATE_NORMAL = new State<>() {
         private Vec3 horVel = Vec3.ZERO;
+        int epoch = 1;
+
+        @Override
+        public void enter(KingSlime boss) {
+            if(boss.difficultSelector.isExpert() && boss.getHealth() / boss.getMaxHealth() < 0.5f){
+                epoch = 2;
+            }else{
+                epoch = 1;
+            }
+        };
+
         @Override
         public void tick(KingSlime boss) {
             // 脱战
@@ -94,8 +148,8 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                 double verticalAcc;
                 // 漂浮、移动
                 if (inLiquid) {
-                    horizontalSpd = SWIM_SPEED_HORIZONTAL[boss.difficultyIdx];
-                    verticalAcc = FLOATING_ACCELERATION;
+                    horizontalSpd = boss.SWIM_SPEED_HORIZONTAL;
+                    verticalAcc = boss.FLOATING_ACCELERATION;
                 }
                 // 跳跃
                 else {
@@ -107,13 +161,15 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                         boss.indexAI = 40;
                     }else if(boss.indexAI > 60 - reduce && boss.indexAI <= 60){
                         boss.indexAI = 60;
+                    }else if(boss.indexAI > 80 - reduce && boss.indexAI <= 80){
+                        boss.indexAI = 80;
                     }else{
                         boss.indexAI += reduce;
                     }
                     switch (boss.indexAI) {
-                        case 20, 40, 60 -> {
-                            horizontalSpd = JUMP_SPEED_HORIZONTAL[boss.difficultyIdx];
-                            verticalAcc = (boss.indexAI == 60 ? JUMP_SPEED_VERTICAL_THIRD : JUMP_SPEED_VERTICAL)[boss.difficultyIdx]
+                        case 20, 40, 60, 80 -> {
+                            horizontalSpd = boss.JUMP_SPEED_HORIZONTAL;
+                            verticalAcc = (boss.indexAI == 80 ? boss.JUMP_SPEED_VERTICAL_THIRD : boss.JUMP_SPEED_VERTICAL)
                                     * (boss.getSize() + 127) / 256; // 血量降低，跳跃高度减少
                         }
                         default -> {
@@ -130,12 +186,18 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                     boss.setDeltaMovement(motion);
                 }
 
-                // 下一阶段
-                if (boss.indexAI >= 65) {
-                    boss.toState(STATE_SHRINK);
+
+                if (boss.indexAI >= 85) {
+                    // 下一阶段
+                    if(--epoch <= 0 ){
+                        boss.toState(STATE_SHRINK);
+                    }else{
+                        boss.indexAI = 0;
+                    }
                 }
                 // 水平方向速度更新
                 boss.setHorizontalSpeed(horVel);
+
             }
             // 重置水平方向速度
             else {
@@ -144,6 +206,8 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         }
     };
     private static final State<KingSlime> STATE_SHRINK = new State<>() {
+
+
         @Override
         public void tick(KingSlime boss) {
             boss.indexAI ++;
@@ -152,10 +216,10 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
             // 更新BOSS大小
             int maxSize = boss.getMaxSize();
             int s = Mth.clamp(1, boss.getMaxSize() *
-                    (SHRINK_ENLARGE_DURATION - boss.indexAI) / SHRINK_ENLARGE_DURATION, maxSize);
+                    (boss.SHRINK_ENLARGE_DURATION - boss.indexAI) / boss.SHRINK_ENLARGE_DURATION, maxSize);
 
             boss.setSize( s, false );
-            if (boss.indexAI >= SHRINK_ENLARGE_DURATION) {
+            if (boss.indexAI >= boss.SHRINK_ENLARGE_DURATION) {
                 // BOSS脱战
                 if (boss.shouldDisappear) {
                     boss.discard();
@@ -164,14 +228,22 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
                 // TP到玩家位置并开始膨胀
                 if (boss.level() instanceof ServerLevel serverLevel) {
                     Vec3 closestPlayerPos;
-                    if (serverLevel.getRandomPlayer() != null) {
+                    Player player = serverLevel.getRandomPlayer();
+                    if (player != null) {
                         if (boss.getTarget() != null){
                             closestPlayerPos = boss.getTarget().getOnPos().getCenter();
                         } else {
-                            closestPlayerPos = serverLevel.getRandomPlayer().getOnPos().getCenter();
+                            closestPlayerPos = player.getOnPos().getCenter();
                         }
                         serverLevel.addFreshEntity(new CrownOfKingSlimeModelEntity(serverLevel, boss.position().add(0.0, boss.getDimensions(boss.getPose()).height, 0.0)));
-                        boss.teleportTo(closestPlayerPos.x, closestPlayerPos.y + 0.75F, closestPlayerPos.z);
+                        Vec3 side;
+                        if(!boss.difficultSelector.isExpert() && player != null){
+                            side = closestPlayerPos.add(player.getLookAngle().multiply(-1,0,-1).normalize().scale(5));
+                        }else{
+                            side = TEUtils.circle(10, boss.getRandom().nextFloat() * 3.14f).add(closestPlayerPos);
+                        }
+
+                        boss.teleportTo(side.x, side.y + 2F, side.z);
                     }
                 }
                 boss.toState(STATE_ENLARGE);
@@ -188,8 +260,8 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
             int maxSize = boss.getMaxSize();
 
             boss.setSize( Mth.clamp(1, boss.getMaxSize() *
-                    boss.indexAI / SHRINK_ENLARGE_DURATION, maxSize), false );
-            if (boss.indexAI >= SHRINK_ENLARGE_DURATION) {
+                    boss.indexAI / boss.SHRINK_ENLARGE_DURATION, maxSize), false );
+            if (boss.indexAI >= boss.SHRINK_ENLARGE_DURATION) {
                 boss.toState(STATE_NORMAL);
             }
         }
@@ -198,16 +270,25 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     // 变量
     private final ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.NOTCHED_12).setPlayBossMusic(true);
     private int indexAI;
-    private final int difficultyIdx;
+//    private final int difficultyIdx;
     private boolean shouldDisappear;
     private State<KingSlime> AIState;
     // 重写跳跃-水平方向的移动
     private Vec3 horMoveDir;
+    SkillParams skillParams;
+    DifficultSelector difficultSelector;
+
+    // 客户端缓动
+    public int lastScale;
+    int shrinkDuration;
+    int shrinkDelta = 1;
+    float cacheTick = 0;
+    float cacheSize;
 
     public KingSlime(EntityType<KingSlime> slime, Level level) {
         super(slime, level);
         this.shouldDisappear = false;
-        this.difficultyIdx = switchByDifficulty(level, 0, 1, 2);
+//        this.difficultyIdx = switchByDifficulty(level, 0, 1, 2);
         this.indexAI = 0;
         this.AIState = STATE_NORMAL;
 
@@ -218,19 +299,33 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         };
         // 水平方向移动
         horMoveDir = Vec3.ZERO;
-
-        attrInit(this.getNearbyPlayers(100.0D));
-
+        this.setSize(getMaxSize(), false);
         if(level().isClientSide){
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
         }
+        this.difficultSelector = new DifficultSelector(level);
 
-        this.xpReward = 500;
+        this.skillParams = MappedDataTypes.BOSS_SKILL_MAP_DATAS.get().getData(BossSkillMapDatas.KING_SLIME_PARAMS);
+        this.xpReward = skillParams.xpReward;
+        this.COLOR_INT = skillParams.color;
+        this.SHRINK_ENLARGE_DURATION = skillParams.shrinkDuration;
+        this.TOTAL_SPLITS = difficultSelector.switchBy(skillParams.totalSplits);
+        this.JUMP_SPEED_HORIZONTAL = difficultSelector.switchBy(skillParams.jumpSpeedHorizontal);
+        this.JUMP_SPEED_VERTICAL = difficultSelector.switchBy(skillParams.jumpSpeedVertical);
+        this.JUMP_SPEED_VERTICAL_THIRD = difficultSelector.switchBy(skillParams.jumpSpeedVerticalThird);
+        this.SWIM_SPEED_HORIZONTAL = difficultSelector.switchBy(skillParams.swimSpeedHorizontal);
+        this.FLOATING_ACCELERATION = skillParams.floatingAcceleration;
+
+        this.COLOR = FloatRGB.fromInteger(COLOR_INT);
+        this.BLOOD_COLOR = COLOR.mixture(FloatRGB.ZERO, 0.5f).toArray();
+
+        this.shrinkDuration = this.SHRINK_ENLARGE_DURATION;
     }
 
     public KingSlime(Level level) {
         this(TEBossEntities.KING_SLIME.get(), level);
     }
+
 
     @Override
     public void toState(State newState) {
@@ -250,12 +345,11 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
 
     public static AttributeSupplier.Builder createSlimeAttributes() {
         return Mob.createMobAttributes()
-            .add(Attributes.ATTACK_DAMAGE, 1.0)
+            .add(Attributes.ATTACK_DAMAGE, 16.5)
             .add(Attributes.ATTACK_KNOCKBACK, 2.2)
-            .add(Attributes.ARMOR, 2)
+            .add(Attributes.ARMOR, 10)
             .add(Attributes.KNOCKBACK_RESISTANCE, 1)
             .add(Attributes.FOLLOW_RANGE, 100.0)
-
                 ;
     }
 
@@ -276,13 +370,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         return Short.MAX_VALUE;
     }
 
-    private void attrInit(List<Player> nearbyPlayers) {
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(MAX_HEALTHS);
-        setHealth(MAX_HEALTHS);
-        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-    }
-
-    private int getMaxSize() {
+    public int getMaxSize() {
         return Math.round(getHealth() / getMaxHealth() * 10) + 6;
     }
 
@@ -295,9 +383,11 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
         }
     }
 
+    @Override
     protected void registerGoals() {
         this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
         super.registerGoals();
+        this.goalSelector.removeAllGoals(g->g.getClass().getName().endsWith("SlimeFloatGoal"));
     }
 
     public float[] getBossEventProgress(){
@@ -322,6 +412,9 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
             ((IBossEvent)this.bossEvent).terra_enity$setBossHealth(datas[0]);
             ((IBossEvent)this.bossEvent).terra_enity$setBossMaxHealth(datas[1]);
             bossEvent.setProgress(datas[0] / datas[1]);
+        }else{
+            this.shrinkDuration = Mth.clamp(this.shrinkDuration + this.shrinkDelta, 0, this.SHRINK_ENLARGE_DURATION);
+
         }
 
         bossEvent.setName(getDisplayName());
@@ -360,7 +453,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     }
 
     private int getSlimesLeft() {
-        return (int) (getHealth() / getMaxHealth() * TOTAL_SPLITS[difficultyIdx]);
+        return (int) (getHealth() / getMaxHealth() * TOTAL_SPLITS);
     }
 
     private void spawnSlime(LivingEntity target) {
@@ -435,6 +528,7 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     @Override
     public void setSize(int pSize, boolean pResetHealth) {
         int i = Mth.clamp(pSize, 1, 127);
+        this.lastScale = i;
         entityData.set(ID_SIZE, i);
         reapplyPosition();
 
@@ -450,8 +544,8 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
 //        invalidateCaps();
     }
 
-    protected int calculateFallDamage(float pFallDistance, float pDamageMultiplier) {
-        return 0;
+    @Override
+    protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
     }
 
     @Override
@@ -465,21 +559,42 @@ public class KingSlime extends Slime implements DeathAnimOptions, IBossFSM, Boss
     }
 
     @Override
-    public boolean addEffect(MobEffectInstance effectInstance, @org.jetbrains.annotations.Nullable Entity entity) {
-        // confluence mixin here
-        return super.addEffect(effectInstance, entity);
+    public void lavaHurt() {
+        if (!this.fireImmune()) {
+            float v = TEUtils.switchByDifficulty(level(), 0.25F, 0.15F, 0.05F);
+//            this.igniteForSeconds(15.0F * v);
+            if (this.hurt(this.damageSources().lava(), 4.0F * v)) {
+                this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
+            }
+        }
     }
 
-//    @Override
-//    public void lavaHurt() {
-//        if (!this.fireImmune()) {
-//            float v = LibUtils.switchByDifficulty(level(), blockPosition(), 0.25F, 0.15F, 0.05F);
-//            this.igniteForSeconds(15.0F * v);
-//            if (this.hurt(this.damageSources().lava(), 4.0F * v)) {
-//                this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
-//            }
-//        }
-//    }
+    public float getClientSize(float partialTicks){
+        float cache = this.shrinkDuration + partialTicks * this.shrinkDelta;
+        if(cache == this.cacheTick){
+            return this.cacheSize;
+        }
+        this.cacheTick = cache;
+        this.cacheSize = (float) Easing.EASE_OUT_QUAD.transform(cache, 0, this.SHRINK_ENLARGE_DURATION, 0, getMaxSize());
+        return this.cacheSize;
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        if(key.equals(ID_SIZE) && level().isClientSide()){
+            if(this.getSize() == this.lastScale - 1 && this.lastScale == this.getMaxSize()){
+                // 缩小
+                this.shrinkDuration = this.SHRINK_ENLARGE_DURATION;
+                this.shrinkDelta = -1;
+            }else if(this.getSize() == 2 && this.lastScale == 1){
+                // 放大
+                this.shrinkDuration = 0;
+                this.shrinkDelta = 1;
+            }
+            this.lastScale = this.getSize();
+        }
+        super.onSyncedDataUpdated(key);
+    }
 
     public static class HurtByTargetGoal extends TargetGoal {
         private static final TargetingConditions HURT_BY_TARGETING = TargetingConditions.forCombat().ignoreLineOfSight().ignoreInvisibilityTesting();

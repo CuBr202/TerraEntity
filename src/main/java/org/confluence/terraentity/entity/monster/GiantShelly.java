@@ -15,8 +15,9 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.ai.CircleMobSkills;
-import org.confluence.terraentity.entity.ai.MobSkill;
+import org.confluence.terraentity.api.entity.IVanillaVariant;
+import org.confluence.terraentity.entity.ai.fsm.CircleMobSkills;
+import org.confluence.terraentity.entity.ai.fsm.MobSkill;
 import org.confluence.terraentity.entity.ai.goal.FSMGoal;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.api.entity.IVanillaVariant;
@@ -31,25 +32,19 @@ import java.util.UUID;
 /**
  * 巨大卷壳虫
  */
-public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVanillaVariant<Integer> {
+public class GiantShelly extends AbstractFSMMonster implements IVanillaVariant<Integer> {
 
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(GiantShelly.class, EntityDataSerializers.INT);
     AttributeModifier armorAdditionModifier = new AttributeModifier(UUID.fromString("5a4cc4f4-f848-4af8-9854-abb034b1e8ac"),"armor_enhance", 2, AttributeModifier.Operation.ADDITION);
-    Vec3 cachedTarget = null;
+
     static final ResourceLocation armorAddition = TerraEntity.space("shrink");
     public GiantShelly(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(26,3,9,10,0,0.4f)
+        super(type, level, new AbstractPrefab()
                 .getPrefab()
-                .setMovementSpeed(0.1f)
                 .setAttachIncrease(0.2f)
         );
         this.collisionProperties = new CollisionProperties(1,20,1);
     }
-
-    @Override
-    public void addSkills() {
-    }
-
 
     @Override
     protected FSMGoal<GiantShelly> createFSMGoal(EntityDataAccessor<Integer> data) {
@@ -59,9 +54,10 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
             MobSkill<GiantShelly> shrinking_shell;
             MobSkill<GiantShelly> turn;
             MobSkill<GiantShelly> turn2;
+            Vec3 cachedTarget = null;
 
             @Override
-            public void init(CircleMobSkills<GiantShelly> skills) {
+            public void init(CircleMobSkills skills) {
                 free = new MobSkill<GiantShelly>(RawAnimation.begin().thenLoop("free"), 40, 0)
                         .onInit(e->{
                             if(e.getAttribute(Attributes.ARMOR).hasModifier(armorAdditionModifier)){
@@ -115,7 +111,10 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
                             }
                         })
                 ;
-                turn2 = new MobSkill<>(RawAnimation.begin().thenPlay("turn2"), 20, 0);
+                turn2 = new MobSkill<>(RawAnimation.begin().thenPlay("turn2"), 15, 0)
+
+
+                ;
 
                 this.addSkill(free);
                 this.addSkill(walk);
@@ -125,7 +124,10 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
             }
         };
     }
-    /* Variant */
+
+
+
+/* Variant */
 
     @Override
     public void onAddedToWorld(){
@@ -188,5 +190,10 @@ public class GiantShelly extends AbstractFSMMonster<GiantShelly> implements IVan
     @Override
     public Map<Integer, ResourceLocation> getTexturesMap() {
         return textures;
+    }
+
+    @Override
+    public boolean shouldDoCollision() {
+        return this.getSkills().index > 1;
     }
 }

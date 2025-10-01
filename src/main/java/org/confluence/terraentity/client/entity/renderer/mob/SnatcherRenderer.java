@@ -52,34 +52,37 @@ public class SnatcherRenderer<T extends Snatcher> extends GeoNormalRenderer<T> {
                 Mth.lerp(partialTick, entity.xOld, entity.getX()),
                 Mth.lerp(partialTick, entity.yOld, entity.getY()),
                 Mth.lerp(partialTick, entity.zOld, entity.getZ())
-        );
+        ).add(0, entity.getBbHeight() * 0.5F , 0); // 让渲染中心在实体的正中央
 
-        Vec3 _diff = lerpPos.subtract(init);
+        Vec3 _diff = lerpPos.subtract(init); // initPos -> entity
         Vec3 diffNorm = _diff.normalize();
 
-        // 让叶子紧贴实体
+        // 渲染n段只需要偏移n-1次
         Vec3 offset = diffNorm.scale(-1);
-        Vec3 diff = _diff.subtract(offset);
+        Vec3 diff = _diff.add(offset);
         int count = 10;
-        double dx = diff.x / count;
-        double dy = diff.y / count;
-        double dz = diff.z / count;
-        Quaternionf rotate = TEUtils.rotateFromV1ToV2(new Vector3f(0,1,0),new Vector3f((float) dx, (float) dy, (float) dz));
+        double dx = diff.x / (count-1);
+        double dy = diff.y / (count-1);
+        double dz = diff.z / (count-1);
+        Quaternionf rotate = TEUtils.rotateFromV1ToV2(
+                new Vector3f(0, 1, 0),
+                new Vector3f((float) diff.x, (float) diff.y + entity.getBbHeight() * 0.5F, (float) diff.z)); // 这里加一个高度偏移方向才正确，不知道为什么
         BakedModel model = Minecraft.getInstance().getModelManager().getModel(EntityBlockModelRegister.getInstance().getModelResourceLocation(entity.getType()));;
         for (int i = 0; i < count; i++) {
-            Vec3 pos = new Vec3(-i * dx + offset.x, -i * dy + offset.y, -i * dz + offset.z);
+            // 每一段的偏移量加上初始时包围盒y上的偏移
+            Vec3 pos = new Vec3(
+                    -i * dx ,
+                    -i * dy + (1 - i * 1.0f / count) * entity.getBbHeight() * 0.5F ,
+                    -i * dz );
             poseStack.pushPose();
-            poseStack.translate(-0.5f,0.5f,-0.5f);
-            poseStack.translate(pos.x, pos.y, pos.z);
-//            poseStack.translate(offset.x, offset.y, offset.z);
-            poseStack.translate(0.5,0,0.5);
 
+            poseStack.translate(pos.x, pos.y, pos.z);
 
             poseStack.mulPose(rotate);
             poseStack.mulPose(Axis.YN.rotation(i * 0.5f));
             poseStack.translate(-0.5,0,-0.5);
-
-//            poseStack.translate(-0.5,0,0);
+            // 为了计算方便，需要从实体位置出发渲染，所以y轴取反
+            poseStack.scale(1,-1,1);
 
             ItemStack stack = TEBoomerangItems.WOOD_BOOMERANG.get().getDefaultInstance();
             for (RenderType rendertype : model.getRenderTypes(stack, false)) {

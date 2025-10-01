@@ -30,12 +30,11 @@ import org.confluence.terraentity.init.entity.TEProjectileEntities;
 /**
  * 世吞体节
  */
-public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSegment> implements Boss {
-    private static final float MAX_HEALTHS = 50f;
-    private static final float DAMAGE = 5f;//接触伤害
+public class EaterOfWorldsSegment extends AbstractTerraBossBase implements Boss.BossPart {
 
-    private int _shootTick = 100;
-    private int shootTick = _shootTick;
+
+    private int _shootTick;
+    private int shootTick;
     public float segmentInternal = 2.8f;
     public EaterOfWorlds head;
     public AbstractTerraBossBase lastSegment;
@@ -56,6 +55,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
          }
     }
 
+    @Override
     protected void registerGoals() {
         //this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 100F));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
@@ -71,17 +71,19 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
     }
 
     public EaterOfWorldsSegment(EntityType<? extends Monster> type, Level level) {
-        super(type, level,MAX_HEALTHS, 1);
+        super(type, level);
         this.noPhysics = true;
-        setAttactDamage(DAMAGE);
 
-        this.xpReward = 30;
     }
 
     public EaterOfWorldsSegment(EaterOfWorlds head, Level level) {
         this(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), level);
         this.head = head;
         this._discardTimer = random.nextInt(25) + 100;
+
+        this.xpReward = head.getXpReward();
+        this.shootTick = head.shootInterval;
+        this._shootTick = this.shootTick;
     }
 
     public Vec3 getNextPos(){
@@ -91,6 +93,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
         return newPos;
     }
 
+    @Override
     public boolean isNoGravity(){
         return true;
     }
@@ -150,15 +153,6 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
         return super.canAttack(entity) && !(entity instanceof EaterOfWorldsSegment)  && !(entity instanceof EaterOfWorlds);
     }
 
-
-    @Override // 受伤音效
-    protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return TESounds.ROUTINE_DEATH.get();
-    }
-
     @Override
     public void die(DamageSource damageSource) {
         if (!ForgeHooks.onLivingDeath(this, damageSource)) {
@@ -191,11 +185,7 @@ public class EaterOfWorldsSegment extends AbstractTerraBossBase<EaterOfWorldsSeg
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA);
+        return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA) || source.is(DamageTypes.DROWN);
     }
 
-    @Override
-    public boolean isMainBody(){
-        return false;
-    }
 }

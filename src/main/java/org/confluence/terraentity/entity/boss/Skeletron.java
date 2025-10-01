@@ -1,5 +1,7 @@
 package org.confluence.terraentity.entity.boss;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -9,9 +11,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,12 +23,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.api.entity.Boss;
+import org.confluence.terraentity.data.codec.TECodecs;
+import org.confluence.terraentity.data.mappeddata.BossSkillMapDatas;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
 import org.confluence.terraentity.entity.proj.SkullProjectile;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -41,43 +44,54 @@ import java.util.List;
 /**
  * 骷髅王
  */
-public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss {
+public class Skeletron extends AbstractTerraBossBase implements Boss {
 
-    private float projDamageFactor = 0.33f; // 弹幕伤害倍率，相对于攻击力
-    private float attackDamage = 18.2f; // 攻击伤害
-    public int phase = 0;
-    public boolean enraged = false;
+    private final int shootCooldown;
+    private final float projDamage; // 弹幕伤害
     protected double acceleration;
     protected double maxSpeed;
-    protected boolean expert = false;
-    private boolean ftw;
+
+    public int phase = 0;
+    public boolean enraged = false;
     public final List<SkeletronHand> hands = new ArrayList<>();
     public final List<SkeletronHand> _hands = new ArrayList<>(); // 用于计算boss总血量
     public static final EntityDataAccessor<Boolean> DATA_SPINNING = SynchedEntityData.defineId(Skeletron.class, EntityDataSerializers.BOOLEAN);
 
+    SkillParams skillParams ;
     public Skeletron(EntityType<? extends Monster> entityType, Level level) {
-        super(entityType, level, 2288, 10);
-        this.setAttactDamage(attackDamage);
+        super(entityType, level);
         setDiscardFriction(true);
-        if (ServerConfig.BOSS_NO_PHYSICS.get()) {
+        if (ServerConfig.bossNoPhysics()) {
             noPhysics = true;
         }
-        if(!(level instanceof ServerLevel serverLevel)) return;
-        if (serverLevel.getDifficulty() == Difficulty.EASY) {
-            acceleration = 0.07;
-            maxSpeed = 0.7;
-        }else {
-            acceleration = 0.1;
-            maxSpeed = 1;
-            expert = true;
-        }
-        if (TEUtils.isFTWWorld(serverLevel)) {
-            acceleration = 0.16;
-            maxSpeed = 2;
-            expert = true;
-            ftw = true;
-        }
+
         collisionProperties = new CollisionProperties(1,1,0.5f);
+        this.skillParams = MappedDataTypes.BOSS_SKILL_MAP_DATAS.get().getData(BossSkillMapDatas.SKELETRON_PARAMS);
+        this.xpReward = skillParams.xpReward;
+        this.projDamage = skillParams.projDamage;
+        this.shootCooldown = skillParams.shootCooldown;
+        this.acceleration = this.difficultSelector.switchBy(skillParams.acceleration);
+        this.maxSpeed = this.difficultSelector.switchBy(skillParams.maxSpeed);
+
+    }
+
+    public record SkillParams(int xpReward, float projDamage, int shootCooldown,
+                              List<Float> acceleration, List<Float> maxSpeed
+                              ){
+        public static Codec<SkillParams> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.fieldOf("xp_reward").forGetter(SkillParams::xpReward),
+                Codec.FLOAT.fieldOf("proj_damage").forGetter(SkillParams::projDamage),
+                Codec.INT.fieldOf("shoot_cooldown").forGetter(SkillParams::shootCooldown),
+                TECodecs.FLOAT_LIST_CODEC.fieldOf("acceleration").forGetter(SkillParams::acceleration),
+                TECodecs.FLOAT_LIST_CODEC.fieldOf("max_speed").forGetter(SkillParams::maxSpeed)
+        ).apply(instance, SkillParams::new));
+
+        public static SkillParams getDefaultParams(){
+            return new SkillParams(2000, 6f, 20,
+                    List.of(0.07f, 0.1f, 0.1f, 0.16f),
+                    List.of(0.7f, 1f, 1f, 2f)
+            );
+        }
     }
 
     @Override
@@ -125,7 +139,9 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
         targetSelector.addGoal(1,new FloatGoal());
         targetSelector.addGoal(1,new SpinGoal());
         targetSelector.addGoal(1,new ShootSkullGoal());
-        goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f, 0));
+
+        this.registerRandomStrollGoal();
+
     }
 
     @Override
@@ -228,12 +244,6 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
         _hands.add(hand);
     }
 
-    @Override
-    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
-        // confluence mixin here
-        return super.addEffect(effectInstance, entity);
-    }
-
     public class FloatGoal extends Goal {
         boolean crazy = false;
         @Override
@@ -302,10 +312,10 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
             Vec3 vec = getTarget().position().subtract(position());
             if (enraged) { // 白天最快
                 setDeltaMovement(vec.normalize().scale(1));
-            }else if (expert) { // 专家以上越远越快
+            }else if (Skeletron.this.isExpert()) { // 专家以上越远越快
                 double distance = vec.length();
                 double speed = Mth.clamp(0.01 * distance + 0.16, 0.22, 0.48);
-                if (ftw) {
+                if (Skeletron.this.isFtw()) {
                     speed *= 1.3;
                 }
                 int handCount = hands.size();
@@ -334,7 +344,7 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
         @Override
         public boolean canUse() {
 //            return true;
-            return expert && getTarget() != null && !getEntityData().get(DATA_SPINNING) && (getHealth() / getMaxHealth() < 0.75 || hands.size() < 2);
+            return Skeletron.this.isExpert() && getTarget() != null && !getEntityData().get(DATA_SPINNING) && (getHealth() / getMaxHealth() < 0.75 || hands.size() < 2);
         }
 
         @Override
@@ -342,13 +352,13 @@ public class Skeletron extends AbstractTerraBossBase<Skeletron> implements Boss 
             if(getTarget() == null){
                 return;
             }
-            int interval = hands.isEmpty() ? 7 : 13;
-            if (ftw) {
+            int interval = hands.isEmpty() ? (int) (Skeletron.this.shootCooldown * 0.5f) : Skeletron.this.shootCooldown;
+            if (Skeletron.this.isFtw()) {
                 interval = (int) (interval * 0.8);
             }
             if (tickCount % interval == 0) {
                 SkullProjectile skull = new SkullProjectile(TEProjectileEntities.SKULL.get(), level(), getTarget());
-                skull.addDamage((float) getAttribute(Attributes.ATTACK_DAMAGE).getValue() * projDamageFactor);
+                skull.addDamage(projDamage);
                 skull.setPos(position());
                 skull.setOwner(Skeletron.this);
                 skull.setDeltaMovement(getTarget().position().subtract(position()).normalize().scale(0.001));

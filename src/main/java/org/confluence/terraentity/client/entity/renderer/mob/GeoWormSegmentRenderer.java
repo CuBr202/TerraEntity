@@ -9,24 +9,25 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.confluence.terraentity.client.entity.model.GeoNormalModel;
-import org.confluence.terraentity.entity.monster.BaseWarmPart;
+import org.confluence.terraentity.entity.monster.BaseWormPart;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 
-public class GeoWormSegmentRenderer<T extends BaseWarmPart> extends GeoEntityRenderer<T> {
+public class GeoWormSegmentRenderer<S extends BaseWormPart, R extends GeoWormRenderer> extends GeoEntityRenderer<S> {
 
     float scale;
     float offsetY;
 
-    GeoNormalModel<T> tailModel;
-    GeoWormRenderer parent;
+    GeoNormalModel<S> tailModel;
+    R parent;
 
-    public GeoWormSegmentRenderer(EntityRendererProvider.Context renderManager, GeoWormRenderer parent,  ResourceLocation body, ResourceLocation tail) {
+    public GeoWormSegmentRenderer(EntityRendererProvider.Context renderManager, R parent,  ResourceLocation body, ResourceLocation tail) {
         this(renderManager, parent, body, tail,1,0);
     }
-    public GeoWormSegmentRenderer(EntityRendererProvider.Context renderManager, GeoWormRenderer parent,  ResourceLocation body, ResourceLocation tail, float scale, float offsetY) {
+    public GeoWormSegmentRenderer(EntityRendererProvider.Context renderManager, R parent,  ResourceLocation body, ResourceLocation tail, float scale, float offsetY) {
         super(renderManager, new GeoNormalModel<>(body, false));
         this.scale=scale;
         this.offsetY=offsetY;
@@ -36,11 +37,11 @@ public class GeoWormSegmentRenderer<T extends BaseWarmPart> extends GeoEntityRen
 
 
     @Override
-    public void render(T part, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(S part, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int packedLight) {
 
-        double lerpx = Mth.lerp(partialTick, part.xxo, part.getX());
-        double lerpy = Mth.lerp(partialTick, part.yyo, part.getY());
-        double lerpz = Mth.lerp(partialTick, part.zzo, part.getZ());
+        double lerpx = Mth.lerp(partialTick, part.xo, part.getX());
+        double lerpy = Mth.lerp(partialTick, part.yo, part.getY());
+        double lerpz = Mth.lerp(partialTick, part.zo, part.getZ());
         poseStack.translate(lerpx - parent.lerpx, lerpy - parent.lerpy, lerpz - parent.lerpz);
 
         poseStack.mulPose(Axis.YN.rotationDegrees(entityYaw));
@@ -55,18 +56,18 @@ public class GeoWormSegmentRenderer<T extends BaseWarmPart> extends GeoEntityRen
     }
 
     @Override
-    public RenderType getRenderType(T animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(S animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityCutoutNoCull(texture);
 
     }
 
     @Override
-    public GeoModel<T> getGeoModel() {
+    public GeoModel<S> getGeoModel() {
         return this.animatable!=null && this.animatable.isTail? tailModel : this.model;
     }
 
     @Override
-    public int getPackedOverlay(T animatable, float u, float partialTick) {
+    public int getPackedOverlay(S animatable, float u, float partialTick) {
 
         return OverlayTexture.pack(OverlayTexture.u(u),
                 OverlayTexture.v(animatable.hurtTime > 0 || animatable.deathTime > 0));

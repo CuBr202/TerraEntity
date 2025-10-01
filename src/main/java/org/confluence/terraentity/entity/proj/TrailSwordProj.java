@@ -19,7 +19,7 @@ import java.util.Queue;
 /**
  * OBB拖尾剑气
  */
-public class TrailSwordProj<T extends TrailSwordProj<T>> extends BaseProj<T> implements IOBBProjectile<T> {
+public class TrailSwordProj<T extends TrailSwordProj<T>> extends BaseProj<T> implements IOBBProjectile {
 
     public SwordTrail trail;
     public Queue<Vec3> trailQueue;
@@ -43,11 +43,11 @@ public class TrailSwordProj<T extends TrailSwordProj<T>> extends BaseProj<T> imp
         this.noPhysics = true;
         this.trail = new SwordTrail(1, 0.15f, 0xc1d236);
 
-        this.posAnimation = Vec3KeyframeAnimation.Builder()
+        this.posAnimation = Vec3KeyframeAnimation.builder()
                 .addKeyframe(0, new Vec3(-0.8,0.3,1))
                 .addKeyframe(10, new Vec3(1.5,-0.4,1))
                 .build();
-        this.rotAnimation = Vec3KeyframeAnimation.Builder()
+        this.rotAnimation = Vec3KeyframeAnimation.builder()
                 .addKeyframe(0, new Vec3(0,70,120))
                 .addKeyframe(10, new Vec3(0,-70,120))
                 .build();

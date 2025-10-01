@@ -39,7 +39,7 @@ import org.confluence.terraentity.client.init.model.EntityBlockModelRegister;
 import org.confluence.terraentity.client.post.BrainTranslucent;
 import org.confluence.terraentity.config.ClientConfig;
 import org.confluence.terraentity.effect.harmful.TheTongueEffect;
-import org.confluence.terraentity.entity.boss.WallOfFleshMouth;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouse;
 import org.confluence.terraentity.init.TEAttachments;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
@@ -107,7 +107,7 @@ public class RenderEvent {
         if (livingEntity.hasEffect(TEEffects.THE_TONGUE.get())) {
             MobEffect rawEffect = livingEntity.getEffect(TEEffects.THE_TONGUE.get()).getEffect();
             if (rawEffect instanceof TheTongueEffect effect) {
-                WallOfFleshMouth mouth = effect.getWallOfFleshMouth();
+                WallOfFleshMouse mouth = effect.getWallOfFleshMouth();
                 if (mouth != null && mouth.isAlive() && livingEntity.isAlive()) {
                     Vec3 init = mouth.position();
 

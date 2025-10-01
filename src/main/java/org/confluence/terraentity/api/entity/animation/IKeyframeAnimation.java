@@ -9,4 +9,7 @@ public interface IKeyframeAnimation<V> {
     V cal(double t);
 
     double getLength();
+
+    double getEndTime();
+
 }

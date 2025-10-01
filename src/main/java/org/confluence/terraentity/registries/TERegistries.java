@@ -19,6 +19,8 @@ import org.confluence.terraentity.registries.generation.GenerationProviderTypes;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategy;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProvider;
 import org.confluence.terraentity.registries.hit_effect.EffectStrategyProviderTypes;
+import org.confluence.terraentity.registries.mappeddata.MappedDataType;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.registries.npc_trade.TradeProvider;
 import org.confluence.terraentity.registries.npc_trade.TradeProviderTypes;
 import org.confluence.terraentity.registries.npc_trade_list.TradeGeneratorProvider;
@@ -69,6 +71,7 @@ public class TERegistries {
         public static final ResourceKey<Registry<TradeModifierProvider>> TRADE_MODIFIER_PROVIDER = createRegistryKey(TerraEntity.space("trade_modifier_provider"));
         public static final ResourceKey<Registry<ChatElementProvider>> CHAT_ELEMENT_PROVIDER = createRegistryKey(TerraEntity.space("chat_element"));
         public static final ResourceKey<Registry<ChatConditionProvider>> CHAT_CONDITION_PROVIDER = createRegistryKey(TerraEntity.space("chat_condition"));
+        public static final ResourceKey<Registry<MappedDataType<?,?>>> MAPPED_DATA = createRegistryKey(TerraEntity.space("mapped_data_type"));
 
 
     }
@@ -106,6 +109,7 @@ public class TERegistries {
         TradeModifierProviderTypes.TYPES.register(bus);
         ChatProviderTypes.TYPES.register(bus);
         ChatConditionProviderTypes.TYPES.register(bus);
+        MappedDataTypes.TYPES.register(bus);
 
         TEDataComponentTypes.register(bus);
     }

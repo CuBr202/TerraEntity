@@ -69,7 +69,6 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
                 defaultAction.accept(npc, player);
             }
         }
-
     }
 
     /**
@@ -177,16 +176,18 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
      * <p>用于替换npc的brain
      * <p>因此所有的ai必须继承自{@link NPCAi}
      */
-    public static class NPCBrainCollector  {
+    public static class NPCBrainCollector {
+        private NPCAi replace;
+        private final AbstractTerraNPC npc;
 
-        NPCAi replace;
-        AbstractTerraNPC npc;
         public NPCBrainCollector(AbstractTerraNPC npc) {
             this.npc = npc;
         }
+
         public AbstractTerraNPC getNPC() {
             return npc;
         }
+
         /**
          * 设置替换brain，当replace不为空时，使用这个brain
          */
@@ -197,7 +198,6 @@ public abstract class NPCEvent  extends Event implements IModBusEvent {
         public NPCAi getReplace() {
             return replace;
         }
-
     }
 
     /**

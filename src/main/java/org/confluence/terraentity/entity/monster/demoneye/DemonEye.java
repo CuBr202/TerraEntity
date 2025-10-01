@@ -38,7 +38,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.Optional;
 import java.util.UUID;
 
-public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVariant>, GeoEntity, DeathAnimOptions, IMinion<DemonEye> {
+public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVariant>, GeoEntity, DeathAnimOptions, IMinion {
     private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(DemonEye.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
     public Vec3 moveTargetPoint;
@@ -48,10 +48,10 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-            .add(Attributes.MAX_HEALTH)
-            .add(Attributes.ATTACK_DAMAGE)
-            .add(Attributes.ARMOR)
-            .add(Attributes.MOVEMENT_SPEED);
+                .add(Attributes.MAX_HEALTH)
+                .add(Attributes.ATTACK_DAMAGE)
+                .add(Attributes.ARMOR)
+                .add(Attributes.MOVEMENT_SPEED);
     }
 
     public DemonEye(EntityType<? extends Monster> entityType, Level level) {
@@ -61,27 +61,7 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
 
     }
 
-    public static boolean checkDemonEyeSpawn(EntityType<? extends Mob> type, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        if (!(pLevel instanceof Level level)) {
-            return false;
-        }
-        if (checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom)) {
-            // 新月100%，其他80%
-            if (pPos.getY() >= 60 && pPos.getY() < 260 && level.isNight()) {
-                if (level.getMoonPhase() == 4) {
-                    for (BlockPos.MutableBlockPos blockPos = pPos.mutable(); blockPos.getY() < level.getMaxBuildHeight(); blockPos.move(0, 1, 0)) {
-                        if (level.getBlockState(blockPos).isCollisionShapeFullBlock(level, blockPos)) {
-                            return false;
-                        }
-                    }
-                    return true;
-                } else {
-                    return level.random.nextInt(99) < 80;
-                }
-            }
-        }
-        return false;
-    }
+
 
     @Override
     protected void defineSynchedData() {
@@ -231,6 +211,11 @@ public class DemonEye extends Monster implements Enemy, VariantHolder<DemonEyeVa
             minion_setOwnerUUID(owner.getUUID());
             this.owner = eye;
         }
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        return super.hurt(source, amount);
     }
 }
 

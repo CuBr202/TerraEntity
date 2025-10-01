@@ -6,45 +6,49 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.RegistryObject;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.client.boss.model.SkeletronHandModel;
 import org.confluence.terraentity.client.boss.model.WallOfFleshEyeModel;
 import org.confluence.terraentity.client.boss.renderer.*;
 import org.confluence.terraentity.client.entity.renderer.CrownOfKingSlimeModelRenderer;
+import org.confluence.terraentity.client.entity.renderer.GeoMotionBlurRenderer;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.KingSlimeRenderer;
+import org.confluence.terraentity.entity.blur.PosRotMotionBlurRenderer;
 import org.confluence.terraentity.entity.boss.*;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshEye;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouse;
 import org.confluence.terraentity.entity.model.CrownOfKingSlimeModelEntity;
-import org.confluence.terraentity.entity.monster.AbstractMonster;
+import org.confluence.terraentity.entity.util.AttBuilder;
 import org.confluence.terraentity.init.TEEntities;
 
 public class TEBossEntities {
 
     public static final RegistryObject<EntityType<KingSlime>> KING_SLIME = TEEntities.ENTITIES.register("king_slime", () -> EntityType.Builder.<KingSlime>of(KingSlime::new, MobCategory.MONSTER).sized(2.04F, 2.04F).clientTrackingRange(10).build(TEEntities.Key("king_slime")));
     public static final RegistryObject<EntityType<CrownOfKingSlimeModelEntity>> CROWN_OF_KING_SLIME_MODEL = TEEntities.ENTITIES.register("crown_of_king_slime_model", () -> EntityType.Builder.<CrownOfKingSlimeModelEntity>of(CrownOfKingSlimeModelEntity::new, MobCategory.MISC).sized(0.0F, 0.0F).clientTrackingRange(10).build(TEEntities.Key("crown_of_king_slime_model")));
-    public static final RegistryObject<EntityType<EyeOfCthulhu>> EYE_OF_CTHULHU = TEEntities.registerEntity("eye_of_cthulhu", EyeOfCthulhu::new, 2.04F, 2.04F);
-    public static final RegistryObject<EntityType<EaterOfWorldsSegment>> EATER_OF_WORLDS_SEGMENT = TEEntities.registerEntity("eater_of_worlds_segment", EaterOfWorldsSegment::new, 2F, 2F);
-    public static final RegistryObject<EntityType<EaterOfWorlds>> EATER_OF_WORLDS = TEEntities.registerEntity("eater_of_worlds", EaterOfWorlds::new, 3F, 2F);
-    public static final RegistryObject<EntityType<BrainOfCthulhu>> BRAIN_OF_CTHULHU = TEEntities.registerEntity("brain_of_cthulhu", BrainOfCthulhu::new, 4F, 4F);
-    public static final RegistryObject<EntityType<BrainFake>> BRAIN_FAKE = TEEntities.registerEntity("brain_fake", BrainFake::new, 4F, 4F);
-    public static final RegistryObject<EntityType<QueenBee>> QUEEN_BEE = TEEntities.registerEntity("queen_bee", QueenBee::new, 2.5F, 2.5F);
-    public static final RegistryObject<EntityType<Skeletron>> SKELETRON = TEEntities.registerEntity("skeletron", Skeletron::new, 2.3F, 2.3F);
-    public static final RegistryObject<EntityType<SkeletronHand>> SKELETRON_HAND = TEEntities.registerEntity("skeletron_hand", SkeletronHand::new, 2F, 2F);
-    public static final RegistryObject<EntityType<WallOfFlesh>> WALL_OF_FLESH = TEEntities.registerEntity("wall_of_flesh", WallOfFlesh::new, 0.1F,0.1F);
-    public static final RegistryObject<EntityType<WallOfFleshEye>> WALL_OF_FLESH_EYE = TEEntities.registerEntity("wall_of_flesh_eye", WallOfFleshEye::new, 4.15F, 4.15F);
-    public static final RegistryObject<EntityType<WallOfFleshMouth>> WALL_OF_FLESH_MOUTH = TEEntities.registerEntity("wall_of_flesh_mouth", WallOfFleshMouth::new, 4.15F, 4.15F);
-    public static final RegistryObject<EntityType<DungeonGuardian>> DUNGEON_GUARDIAN = TEEntities.registerEntity("dungeon_guardian", DungeonGuardian::new, 2.5F, 2.5F);
+    public static final RegistryObject<EntityType<EyeOfCthulhu>> EYE_OF_CTHULHU = TEEntities.registerMonster("eye_of_cthulhu", EyeOfCthulhu::new, 2.04F, 2.04F);
+    public static final RegistryObject<EntityType<EaterOfWorldsSegment>> EATER_OF_WORLDS_SEGMENT = TEEntities.registerMonster("eater_of_worlds_segment", EaterOfWorldsSegment::new, 2F, 2F);
+    public static final RegistryObject<EntityType<EaterOfWorlds>> EATER_OF_WORLDS = TEEntities.registerMonster("eater_of_worlds", EaterOfWorlds::new, 3F, 2F);
+    public static final RegistryObject<EntityType<BrainOfCthulhu>> BRAIN_OF_CTHULHU = TEEntities.registerMonster("brain_of_cthulhu", BrainOfCthulhu::new, 4F, 4F);
+    public static final RegistryObject<EntityType<BrainFake>> BRAIN_FAKE = TEEntities.registerMonster("brain_fake", BrainFake::new, 4F, 4F);
+    public static final RegistryObject<EntityType<QueenBee>> QUEEN_BEE = TEEntities.registerMonster("queen_bee", QueenBee::new, 2.5F, 2.5F);
+    public static final RegistryObject<EntityType<Skeletron>> SKELETRON = TEEntities.registerMonster("skeletron", Skeletron::new, 2.3F, 2.3F);
+    public static final RegistryObject<EntityType<SkeletronHand>> SKELETRON_HAND = TEEntities.registerMonster("skeletron_hand", SkeletronHand::new, 2F, 2F);
+    public static final RegistryObject<EntityType<WallOfFlesh>> WALL_OF_FLESH = TEEntities.registerMonster("wall_of_flesh", WallOfFlesh::new, 0.1F,0.1F);
+    public static final RegistryObject<EntityType<WallOfFleshEye>> WALL_OF_FLESH_EYE = TEEntities.registerMonster("wall_of_flesh_eye", WallOfFleshEye::new, 4.15F, 4.15F);
+    public static final RegistryObject<EntityType<WallOfFleshMouse>> WALL_OF_FLESH_MOUTH = TEEntities.registerMonster("wall_of_flesh_mouth", WallOfFleshMouse::new, 4.15F, 4.15F);
+    public static final RegistryObject<EntityType<DungeonGuardian>> DUNGEON_GUARDIAN = TEEntities.registerMonster("dungeon_guardian", DungeonGuardian::new, 2.5F, 2.5F);
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(TEBossEntities.CROWN_OF_KING_SLIME_MODEL.get(), CrownOfKingSlimeModelRenderer::new);
 
         event.registerEntityRenderer(TEBossEntities.KING_SLIME.get(), KingSlimeRenderer::new);
-        event.registerEntityRenderer(TEBossEntities.EYE_OF_CTHULHU.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(TEBossEntities.EYE_OF_CTHULHU),1,0.5f, true));
+        event.registerEntityRenderer(TEBossEntities.EYE_OF_CTHULHU.get(), c->new GeoMotionBlurRenderer<>(c,new GeoBossModel<>(TEBossEntities.EYE_OF_CTHULHU), true,1,0.5f).setMotionBlurRenderer(r->new PosRotMotionBlurRenderer<>(r.isIfRotX(), r.getOffsetY())));
         event.registerEntityRenderer(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), c-> new EaterOfWorldSegmentRenderer(c,2.2f, 0f));
-        event.registerEntityRenderer(TEBossEntities.EATER_OF_WORLDS.get(), c->new GeoBossRenderer<>(c,new GeoBossModel<>(TEBossEntities.EATER_OF_WORLDS),2.2f,0, true));
+        event.registerEntityRenderer(TEBossEntities.EATER_OF_WORLDS.get(), c->new GeoNormalRenderer<>(c,new GeoBossModel<>(TEBossEntities.EATER_OF_WORLDS), true,2.2f,0));
         event.registerEntityRenderer(TEBossEntities.BRAIN_OF_CTHULHU.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(TEBossEntities.BRAIN_OF_CTHULHU)));
         event.registerEntityRenderer(TEMonsterEntities.VISUAL_NEURON.get(), c->new GeoNormalRenderer<>(c, TEMonsterEntities.VISUAL_NEURON.getId(),true));
         event.registerEntityRenderer(TEBossEntities.BRAIN_FAKE.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(TEBossEntities.BRAIN_OF_CTHULHU)));
@@ -63,20 +67,21 @@ public class TEBossEntities {
 
 
         event.put(TEBossEntities.KING_SLIME.get(), KingSlime.createSlimeAttributes().build());
-        event.put(TEBossEntities.EYE_OF_CTHULHU.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.EATER_OF_WORLDS.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.BRAIN_OF_CTHULHU.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEMonsterEntities.VISUAL_NEURON.get(), AbstractMonster.createAttributes().build());
-        event.put(TEBossEntities.BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.QUEEN_BEE.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.SKELETRON.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.SKELETRON_HAND.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(TEBossEntities.EYE_OF_CTHULHU.get(), AttBuilder.createBoss(4,728, 12).build());
+        event.put(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), AttBuilder.createBoss(4,50, 1).build());
+        event.put(TEBossEntities.EATER_OF_WORLDS.get(), AttBuilder.createBoss(12.5,54, 0).build());
+        event.put(TEBossEntities.BRAIN_OF_CTHULHU.get(), AttBuilder.createBoss(14,552, 14).knockResistance(0.5f).build());
 
-        event.put(TEBossEntities.WALL_OF_FLESH.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(TEBossEntities.BRAIN_FAKE.get(), AbstractTerraBossBase.createAttributes().build());
+        event.put(TEBossEntities.QUEEN_BEE.get(), AttBuilder.createBoss(14,1237, 8).build());
+        event.put(TEBossEntities.SKELETRON.get(), AttBuilder.createBoss(18.2,2288, 10).build());
+        event.put(TEBossEntities.SKELETRON_HAND.get(), AttBuilder.createBoss(10,405,4).build());
+
+        event.put(TEBossEntities.DUNGEON_GUARDIAN.get(), AttBuilder.createBoss(9999,9999,9999).build());
+
+        event.put(TEBossEntities.WALL_OF_FLESH.get(), AttBuilder.createBoss(39,3096, 0).build());
         event.put(TEBossEntities.WALL_OF_FLESH_EYE.get(), AbstractTerraBossBase.createAttributes().build());
         event.put(TEBossEntities.WALL_OF_FLESH_MOUTH.get(), AbstractTerraBossBase.createAttributes().build());
-        event.put(TEBossEntities.DUNGEON_GUARDIAN.get(), AbstractTerraBossBase.createAttributes().build());
     }
 
     public static void register(){

@@ -39,7 +39,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 
-public abstract class BaseProj<T extends BaseProj<T>> extends Projectile implements ICollisionAttackEntity<T>, IAttackableProjectile<T> {
+public abstract class BaseProj<T extends BaseProj<T>> extends Projectile implements ICollisionAttackEntity, IAttackableProjectile {
     public float damage = 1;
     private final Set<UUID> hitList = new HashSet<>();
     public int penetration =1;
@@ -291,7 +291,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     }
 
     public DamageSource getDamageSource(LivingEntity hurter){
-        if(getOwner() instanceof ISummonMob<?> mob) {
+        if(getOwner() instanceof ISummonMob mob) {
             return TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMONER, mob.summon_getOwner());
         }
         if(getOwner() != null && getOwner() instanceof LivingEntity living){

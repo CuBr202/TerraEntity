@@ -24,7 +24,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class AbstractSummonMob<T extends Mob> extends TamableAnimal implements GeoEntity, ISummonMob<T>, ICollisionAttackEntity<T> {
+public abstract class AbstractSummonMob extends TamableAnimal implements GeoEntity, ISummonMob, ICollisionAttackEntity {
 
     protected float distanceToOwner;
 

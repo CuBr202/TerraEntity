@@ -100,7 +100,7 @@ public class TEEntityLootProvider extends EntityLootSubProvider {
         this.add(TEBossEntities.EYE_OF_CTHULHU.get(), LootTable.lootTable()
                 .withPool(singleItemPool(TESpawnEggItems.BRAIN_OF_CTHULHU_SPAWN_EGG, 0.5F))
                 .withPool(singleItemPool(TESpawnEggItems.EATER_OF_WORLD_SPAWN_EGG, 0.5F))
-                .withPool(singleItemPool(TESummonItems.SLIME_STAFF, 1F))
+                .withPool(singleItemPool(TESummonItems.SUMMON_WOODEN_SWORD_STAFF,  1F))
         );
 
 

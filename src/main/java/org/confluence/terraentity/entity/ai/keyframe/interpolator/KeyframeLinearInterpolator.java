@@ -2,6 +2,7 @@ package org.confluence.terraentity.entity.ai.keyframe.interpolator;
 
 import org.confluence.terraentity.api.entity.animation.IInterpolator;
 import org.confluence.terraentity.entity.ai.keyframe.Keyframe;
+
 import java.util.List;
 
 import static org.confluence.terraentity.entity.ai.keyframe.FrameUtil.linearInterpolateBetween;

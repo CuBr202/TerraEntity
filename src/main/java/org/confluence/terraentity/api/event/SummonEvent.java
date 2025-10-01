@@ -11,8 +11,8 @@ import org.confluence.terraentity.api.entity.ISummonMob;
 public class SummonEvent<T extends Mob> extends Event implements IModBusEvent {
     ItemStack itemStack;
     Player player;
-    ISummonMob<T> summon;
-    public SummonEvent(Player player, ItemStack itemStack, ISummonMob<T> summon) {
+    ISummonMob summon;
+    public SummonEvent(Player player, ItemStack itemStack, ISummonMob summon) {
         this.itemStack = itemStack;
         this.player = player;
         this.summon = summon;
@@ -26,7 +26,7 @@ public class SummonEvent<T extends Mob> extends Event implements IModBusEvent {
         return player;
     }
 
-    public ISummonMob<T> getSummonMob() {
+    public ISummonMob getSummonMob() {
         return summon;
     }
 

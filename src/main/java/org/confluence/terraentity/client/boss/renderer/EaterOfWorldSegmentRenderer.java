@@ -1,7 +1,6 @@
 package org.confluence.terraentity.client.boss.renderer;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.entity.boss.EaterOfWorldsSegment;

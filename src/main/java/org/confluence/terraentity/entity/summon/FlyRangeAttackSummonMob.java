@@ -2,7 +2,6 @@ package org.confluence.terraentity.entity.summon;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
@@ -25,7 +24,7 @@ import software.bernie.geckolib.core.animation.AnimationController;
 
 import java.util.function.Supplier;
 
-public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSummonMob<FlyRangeAttackSummonMob<P>> implements FlyingAnimal, RangedAttackMob {
+public class FlyRangeAttackSummonMob<P extends BaseProj<?>> extends AbstractSummonMob implements FlyingAnimal, RangedAttackMob {
 
     int _attackTicks;
     int delayAttackTicks = -1;

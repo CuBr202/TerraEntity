@@ -15,6 +15,9 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -24,6 +27,7 @@ import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.entity.monster.prefab.IAttributeHolder;
+import org.confluence.terraentity.entity.util.DifficultSelector;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
 import org.jetbrains.annotations.NotNull;
@@ -36,15 +40,16 @@ import javax.annotation.Nullable;
 
 import static org.confluence.terraentity.utils.TEUtils.getMultiple;
 
-public class AbstractMonster extends Monster implements GeoEntity , ICollisionAttackEntity<AbstractMonster>, IAttributeHolder {
+public class AbstractMonster extends Monster implements GeoEntity, ICollisionAttackEntity, IAttributeHolder {
 
     protected CollisionProperties collisionProperties = new CollisionProperties(10, 20, 0);
     public AttributeBuilder builder;
     protected boolean dirty = true;
+    protected DifficultSelector difficultSelector;
 
     public AbstractMonster(EntityType<? extends Monster> type, Level level, AttributeBuilder builder) {
         super(type, level);
-        this.builder = builder.setSpawnWithoutLight();
+        this.builder = builder;
         if (!level.isClientSide) {
             // 防止重复注册ai
             this.goalSelector.removeAllGoals(g->true);
@@ -55,6 +60,11 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
 //        this.builder.modify(this);
 
         this.xpReward = builder.xpReward;
+        this.difficultSelector = new DifficultSelector(level());
+    }
+
+    public AbstractMonster(EntityType<? extends Monster> type, Level level) {
+        this(type, level, new AttributeBuilder());
     }
 
 //    @Override
@@ -108,7 +118,7 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     public void onAddedToWorld(){
         super.onAddedToWorld();
         if(!level().isClientSide && !ignoreAttributeModify()){
-            if(dirty && !ServerConfig.DISABLE_BUILTIN_MODIFIER.get()){
+            if(dirty){
                 this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.getMaxHealth());
                 this.setHealth(getMaxHealth());
                 firstSpawn();
@@ -119,25 +129,6 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     public float getAttributeMultiplier(Attribute attribute){
         return getMultiple(level(), attribute);
 
-    }
-
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.ATTACK_DAMAGE)
-                .add(Attributes.MAX_HEALTH)
-                .add(Attributes.ARMOR)
-                .add(Attributes.MOVEMENT_SPEED, 0.25f)
-                .add(Attributes.FOLLOW_RANGE)
-                .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE)
-                .add(Attributes.KNOCKBACK_RESISTANCE)
-                .add(Attributes.ATTACK_KNOCKBACK)
-                .add(Attributes.ATTACK_SPEED)
-                .add(Attributes.FLYING_SPEED)
-                .add(ForgeMod.STEP_HEIGHT_ADDITION.get())
-                .add(ForgeMod.ENTITY_GRAVITY.get(),0.08f)
-                .add(Attributes.JUMP_STRENGTH, 0)
-                ;
     }
 
 
@@ -207,14 +198,16 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     @Override
     protected int calculateFallDamage(float p_21237_, float p_21238_) {
         int damage = super.calculateFallDamage(p_21237_, p_21238_);
-        if(builder != null && builder.SAFE_FALL > 0)
-            damage -= (int) (builder.SAFE_FALL);
+//        if(builder != null && builder.SAFE_FALL > 0)
+//            damage -= (int) (builder.SAFE_FALL);
         return damage;
     }
 
     @Override
     public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
-        return super.causeFallDamage(p_147187_, p_147188_, p_147189_) && builder.SAFE_FALL < p_147187_;
+        return super.causeFallDamage(p_147187_, p_147188_, p_147189_)
+//                && builder.SAFE_FALL < p_147187_
+                ;
     }
 
     public void tick(){
@@ -266,6 +259,9 @@ public class AbstractMonster extends Monster implements GeoEntity , ICollisionAt
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         pSpawnData = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
         this.setLeftHanded(false);
+//        ItemStack helmet = Items.DIAMOND_HELMET.getDefaultInstance();
+//        helmet.enchant(Enchantments.THORNS, 3);
+//        this.setItemSlot(EquipmentSlot.HEAD, helmet);
         return pSpawnData;
     }
 }

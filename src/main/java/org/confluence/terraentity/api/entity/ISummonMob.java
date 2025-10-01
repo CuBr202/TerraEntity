@@ -42,69 +42,74 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * 召唤物接口
+ * 召唤物接口，必须由Mob实现
  */
-public interface ISummonMob<T extends Mob> extends OwnableEntity {
-
+@SuppressWarnings({"unchecked", "rawtypes", "unused"})
+public interface ISummonMob extends OwnableEntity {
     int getCost();
 
     void setCost(int cost);
-    
-    default T asEntity(){
-        return (T) this;
+
+    default Mob asEntity() {
+        return (Mob) this;
+    }
+
+    /**
+     * 区分是否为宠物，这样不需要再进行一次类型检查
+     */
+    default boolean isPet(){
+        return false;
     }
 
     /*Tamed Animals**/
 
     EntityDataAccessor<Optional<UUID>> get_DATA_OWNERUUID_ID();
 
-    default LivingEntity summon_getOwner(){
+    default LivingEntity summon_getOwner() {
         UUID uuid = this.summon_getOwnerUUID();
         return uuid == null ? null : asEntity().level().getPlayerByUUID(uuid);
     }
 
-    default void summon_setOwnerUUID(@Nullable UUID uuid){
+    default void summon_setOwnerUUID(@Nullable UUID uuid) {
         asEntity().getEntityData().set(get_DATA_OWNERUUID_ID(), Optional.ofNullable(uuid));
     }
 
     @Nullable
-    default UUID getOwnerUUID(){
+    default UUID getOwnerUUID() {
         return summon_getOwnerUUID();
     }
 
     EntityGetter level();
 
-    default UUID summon_getOwnerUUID(){
-        return (UUID)((Optional) asEntity().getEntityData().get(get_DATA_OWNERUUID_ID())).orElse(null);
+    default UUID summon_getOwnerUUID() {
+        return (UUID) ((Optional) asEntity().getEntityData().get(get_DATA_OWNERUUID_ID())).orElse(null);
     }
 
-    default boolean summon_unableToMoveToOwner(){
+    default boolean summon_unableToMoveToOwner() {
         return this.summon_getOwner() != null && this.summon_getOwner().isSpectator();
     }
 
-    default boolean summon_shouldTryTeleportToOwner(){
+    default boolean summon_shouldTryTeleportToOwner() {
         LivingEntity livingentity = summon_getOwner();
         return livingentity != null && asEntity().distanceToSqr(summon_getOwner()) >= summon_getDistanceToTeleportToOwner();
     }
 
-    default void summon_tryToTeleportToOwner(boolean canFly){
+    default void summon_tryToTeleportToOwner(boolean canFly) {
         LivingEntity livingentity = summon_getOwner();
         if (livingentity != null) {
             this.summon_teleportToAroundBlockPos(livingentity.blockPosition(), canFly);
         }
     }
 
-    default boolean summon_wantsToAttack(LivingEntity ownerLastHurtBy, LivingEntity livingentity){
+    default boolean summon_wantsToAttack(LivingEntity ownerLastHurtBy, LivingEntity livingentity) {
         return true;
     }
 
-    default boolean summon_isTame(){
+    default boolean summon_isTame() {
         return true;
     }
 
-
-    default void summon_setTame(boolean tame, boolean applyTamingSideEffects){
-    }
+    default void summon_setTame(boolean tame, boolean applyTamingSideEffects) {}
 
     default void summon_addData(CompoundTag compound) {
         if (this.summon_getOwnerUUID() != null) {
@@ -115,13 +120,13 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
     }
 
     default void summon_readData(CompoundTag compound) {
-        UUID uuid=null;
+        UUID uuid = null;
         if (compound.hasUUID("Owner")) {
             uuid = compound.getUUID("Owner");
         } else {
             String s = compound.getString("Owner");
             MinecraftServer server = asEntity().getServer();
-            if(server!=null) {
+            if (server != null) {
                 uuid = OldUsersConverter.convertMobOwnerIfNecessary(server, s);
             }
         }
@@ -136,19 +141,19 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
     /**
      * 当距离平方超过这个数时，会尝试传送到owner附近
      */
-    default float summon_getDistanceToTeleportToOwner(){
+    default float summon_getDistanceToTeleportToOwner() {
         return 16 * 16;
     }
 
     /**
      * 当距离平方超过这个数时，会尝试移动到owner附近
      */
-    default float summon_getStartDistanceToOwner(){
+    default float summon_getStartDistanceToOwner() {
         return 10 * 10;
     }
 
     default void summon_teleportToAroundBlockPos(BlockPos pos, boolean canFly) {
-        for(int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 10; ++i) {
             int j = asEntity().getRandom().nextIntBetweenInclusive(-3, 3);
             int k = asEntity().getRandom().nextIntBetweenInclusive(-3, 3);
             if (Math.abs(j) >= 2 || Math.abs(k) >= 2) {
@@ -164,7 +169,7 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
         if (!this.summon_canTeleportTo(new BlockPos(x, y, z), canFly)) {
             return false;
         } else {
-            asEntity().moveTo((double)x + 0.5, y, (double)z + 0.5, asEntity().getYRot(), asEntity().getXRot());
+            asEntity().moveTo((double) x + 0.5, y, (double) z + 0.5, asEntity().getYRot(), asEntity().getXRot());
             asEntity().getNavigation().stop();
             return true;
         }
@@ -185,11 +190,8 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
         }
     }
 
-    default boolean summon_canFlyToOwner(){
-        if(asEntity() instanceof FlyingAnimal){
-            return true;
-        }
-        return false;
+    default boolean summon_canFlyToOwner() {
+        return asEntity() instanceof FlyingAnimal;
     }
 
     /* Summoning API */
@@ -197,7 +199,7 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
     default void summon(Player player, ItemStack stack) {
         summon_setOwnerUUID(player.getUUID());
         summon_setTame(true, true);
-        if(stack.getItem() instanceof SummonItem<?> summonItem)
+        if (stack.getItem() instanceof SummonItem<?> summonItem)
             asEntity().getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(summonItem.baseAttackDamage);
         ModLoader.get().postEvent(new SummonEvent<>(player, stack, this));
     }
@@ -212,11 +214,13 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
         return f;
     }
 
-    default DamageSource summon_getDamageSource(){
+    default DamageSource summon_getDamageSource() {
         return TETags.DamageTypes.of(asEntity().level(), TETags.DamageTypes.SUMMONER, summon_getOwner());
     }
 
-    /**简单攻击*/
+    /**
+     * 简单攻击
+     */
     default boolean summon_doHurtTarget(LivingEntity me , Entity entity) {
         float f = 0;
         DamageSource damagesource = summon_getDamageSource();
@@ -244,12 +248,11 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
             asEntity().setLastHurtMob(entity);
 //            asEntity().playAttackSound();
         }
-
         return flag;
     }
 
     default float summon_getKnockback(Entity attacker, DamageSource damageSource) {
-        float f = (float)asEntity().getAttributeValue(Attributes.ATTACK_KNOCKBACK);
+        float f = (float) asEntity().getAttributeValue(Attributes.ATTACK_KNOCKBACK);
         Level var5 = asEntity().level();
         float var10000;
         if (var5 instanceof ServerLevel && attacker instanceof LivingEntity living) {
@@ -261,26 +264,21 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
         return var10000;
     }
 
-
-
-
     /* 以下方法需要被写入对应重写方法 */
 
-    default void summon_registerCommonGoals(){
+    default void summon_registerCommonGoals() {
         summon_registerMoveGoal();
         asEntity().goalSelector.addGoal(10, new LookAtPlayerGoal(asEntity(), Player.class, 8.0F));
         asEntity().goalSelector.addGoal(10, new RandomLookAroundGoal(asEntity()));
         summon_registerTargetGoals();
-
     }
 
-    default void summon_registerTargetGoals(){
+    default void summon_registerTargetGoals() {
         asEntity().targetSelector.addGoal(1, new SummonPriorAttackGoal<>(asEntity(), false));
         asEntity().targetSelector.addGoal(2, new SummonOwnerHurtByTargetGoal(asEntity()));
         asEntity().targetSelector.addGoal(3, new SummonOwnerHurtTargetGoal(asEntity()));
         asEntity().targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(asEntity(), Monster.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
         asEntity().targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(asEntity(), Slime.class, 10, true, true, living -> (living instanceof Enemy && !(living instanceof NeutralMob))));
-
     }
 
     default void summon_registerMoveGoal(){
@@ -288,8 +286,8 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
     }
 
     default void summon_onAddedToLevel() {
-        if(!asEntity().level().isClientSide){
-            if(summon_getOwner()== null) {
+        if (!asEntity().level().isClientSide) {
+            if (summon_getOwner() == null) {
                 asEntity().discard();
                 return;
             }
@@ -298,7 +296,6 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
             });
         }
     }
-
 
     default void summon_onRemovedFromLevel() {
         if(summon_getOwner() instanceof ServerPlayer owner){
@@ -312,16 +309,15 @@ public interface ISummonMob<T extends Mob> extends OwnableEntity {
         }
     }
 
-    default boolean summon_discardWhenOwnerDie(){
-        if(asEntity().level().isClientSide) return false;
-        if(summon_getOwner() != null) {
+    default boolean summon_discardWhenOwnerDie() {
+        if (asEntity().level().isClientSide) return false;
+        if (summon_getOwner() != null) {
             Entity entity = asEntity().level().getEntity(summon_getOwner().getId());
-            if(entity == null || !entity.isAlive()) {
+            if (entity == null || !entity.isAlive()) {
                 asEntity().discard();
                 return true;
             }
         }
         return false;
     }
-
 }

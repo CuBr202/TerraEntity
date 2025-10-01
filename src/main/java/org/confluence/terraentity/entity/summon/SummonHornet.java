@@ -26,10 +26,10 @@ import org.confluence.terraentity.utils.TEUtils;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SummonHornet extends Hornet implements ISummonMob<SummonHornet> {
+public class SummonHornet extends Hornet implements ISummonMob {
 
     public SummonHornet(EntityType<? extends Monster> type, Level level) {
-        super(type, level, FlyMonsterPrefab.BEE_BUILDER.get().setMovementSpeed(1));
+        super(type, level, FlyMonsterPrefab.BEE_BUILDER.get());
         this.attackInternal = 20;
     }
 
@@ -48,6 +48,13 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet> {
         registerTargetGoal(this.targetSelector);
     }
 
+    public void tick() {
+        super.tick();
+        if(getTarget() != null){
+            this.lookAt(getTarget(), 10, 85);
+        }
+    }
+
     protected void registerTargetGoal(GoalSelector targetSelector){
         summon_registerCommonGoals();
     }
@@ -57,7 +64,7 @@ public class SummonHornet extends Hornet implements ISummonMob<SummonHornet> {
     }
 
     public void summon_registerMoveGoal(){
-        goalSelector.addGoal(6, new SummonFlyFlowOwnerGoal<>(this, 1.0, 2.0F));
+        goalSelector.addGoal(6, new SummonFlyFlowOwnerGoal<>(this, 1.0,  2.0F));
     }
 
 

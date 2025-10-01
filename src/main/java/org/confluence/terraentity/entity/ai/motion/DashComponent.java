@@ -6,7 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class DashComponent {
-    public Vec3 direction;
+    Vec3 direction;
     public Vec3 targetPos;
 
     public Entity owner;
@@ -26,6 +26,14 @@ public class DashComponent {
         this.targetPos = targetPos;
     }
 
+    public Vec3 getDirection(){
+        return direction;
+    }
+
+    public Vec3 getTargetPos(){
+        return targetPos;
+    }
+
     /**
      * 悬挂在目标实体目标位置
      * @param target 目标实体
@@ -38,6 +46,9 @@ public class DashComponent {
             setNearestTargetPos(target, distance, height);
             direction = targetPos.subtract(owner.position());
             owner.addDeltaMovement(direction.scale(speed * 0.01f));
+            if(owner.distanceToSqr(target)<2){
+                owner.setDeltaMovement(owner.getDeltaMovement().scale(0.95f));
+            }
         }
     }
 
@@ -56,6 +67,8 @@ public class DashComponent {
     public void setPredictDirection(Entity target){
         direction = target.position().add(0, 1, 0).add(target.getDeltaMovement().scale(10)).subtract(owner.position());
     }
+
+
 
     /**
      * 获取目标相对直线位置

@@ -62,6 +62,7 @@ public class Hornet extends AbstractMonster implements FlyingAnimal{
         registerTargetGoal(this.targetSelector);
     }
 
+    @Override
     protected void registerTargetGoal(GoalSelector targetSelector){
         targetSelector.addGoal(1, new HurtByTargetGoal(this));
         targetSelector.addGoal(2,new NearestAttackableTargetGoal<>(this, Player.class, false));

@@ -1,12 +1,13 @@
 package org.confluence.terraentity.entity.boss;
 
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -17,12 +18,17 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
-import org.confluence.terraentity.entity.ai.MobSkill;
-import org.confluence.terraentity.init.TESounds;
+import org.confluence.terraentity.api.entity.IHeightControlMob;
+import org.confluence.terraentity.config.ServerConfig;
+import org.confluence.terraentity.data.mappeddata.BossSkillMapDatas;
+import org.confluence.terraentity.entity.ai.fsm.MobSkill;
+import org.confluence.terraentity.entity.ai.goal.WormRandomWanderGoal;
 import org.confluence.terraentity.init.entity.TEBossEntities;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.CameraShakeData;
 import org.confluence.terraentity.utils.CameraShakeManager;
 import org.confluence.terraentity.utils.TEUtils;
+import org.confluence.terraentity.utils.TaskScheduler;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,24 +37,24 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * 世吞
  */
-public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implements Boss {
-    private static final float MAX_HEALTHS = 54f;
-    private static final float DAMAGE = 12.5f;//接触伤害
-    private static final float projDamage = 3;
+public class EaterOfWorlds extends AbstractTerraBossBase implements Boss, IHeightControlMob.Empty {
 
-    private float segmentInternal = 2.8f;
-    int segmentCount = 60;//体节长度
-    static float turnSpeedBase = 3f;//转向速度
-    static float moveSpeedBase = 0.6f;//移动速度
-    float wanderPosRadius = 10;//寻点半径
+    final float projDamage;
+    final int shootInterval;
+
+    private final float segmentInternal;
+    int segmentCount;//体节长度
+    final float turnSpeedBase;//转向速度
+    final float moveSpeedBase;//移动速度
+    final float wanderPosRadius;//寻点半径
 
     boolean genSegments = true;//是否生成体节
     boolean ifBaseHead = false;
     boolean truthDie = false;
-    int genTick = 5;//生成体节延迟
+    int genTick = 10;//生成体节延迟
     boolean shouldMove = true;
-    float moveSpeed = moveSpeedBase;
-    float turnSpeed = turnSpeedBase;
+    float moveSpeed;
+    float turnSpeed;
     Vec3 targetPos = new Vec3(0, 0, 0);
     boolean shouldFollowTarget = true;
     LivingEntity target;
@@ -56,14 +62,15 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     public List<AbstractTerraBossBase>baseSegments = new CopyOnWriteArrayList<>();
     public List<Float>baseSegmentsHealth = new CopyOnWriteArrayList<>();
 
+    TaskScheduler generator;
 
     public enum WonderType {UP,DOWN}
     private WonderType wanderType = WonderType.DOWN;
     public static final EntityDataAccessor<Integer> DATA_SEG_COUNT = SynchedEntityData.defineId(EaterOfWorlds.class, EntityDataSerializers.INT);
-
+    SkillParams skillParams;
 
     public EaterOfWorlds(EntityType<? extends Monster> type, Level level) {
-        super(type, level,MAX_HEALTHS, 0);
+        super(type, level);
         if(!level.isClientSide){
             if(getTarget()!=null){
                 this.moveTo(getTarget().position());
@@ -71,6 +78,20 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         }
         this.noPhysics = true;
         this.xpReward = 30;
+
+        this.skillParams = MappedDataTypes.BOSS_SKILL_MAP_DATAS.get().getData(BossSkillMapDatas.EATER_OF_WORLDS_PARAMS);
+        this.projDamage = skillParams.projDamage;
+        this.turnSpeedBase = skillParams.turnSpeed;
+        this.moveSpeedBase = skillParams.moveSpeed;
+        this.wanderPosRadius = skillParams.wanderPosRadius;
+        this.segmentInternal = skillParams.segmentInternal;
+        this.segmentCount = skillParams.segmentCount;
+
+        this.moveSpeed = moveSpeedBase;
+        this.turnSpeed = turnSpeedBase;
+        this.xpReward = skillParams.xpReward;
+        this.shootInterval = skillParams.shootInterval;
+
     }
 
     public EaterOfWorlds(Level level, boolean genSegments) {
@@ -78,23 +99,79 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         this.genSegments = genSegments;
     }
 
+    @Override
+    protected void registerRandomStrollGoal(){
+        if(ServerConfig.BOSS_KEEP_WANDERING.get()) {
+            this.goalSelector.addGoal(10, new WormRandomWanderGoal<>(this, 80, 40, 20, 40){
+                @Override
+                public boolean canUse() {
+                    return super.canUse() || skills.index == 0;
+                }
+                @Override
+                public boolean canContinueToUse() {
+                    return super.canContinueToUse() && skills.index == 0;
+                }
+            });
+        }
+    }
+
+    int getXpReward(){
+        return xpReward;
+    }
+
+    public record SkillParams(int segmentCount, float projDamage, float turnSpeed, float moveSpeed, float wanderPosRadius, float segmentInternal,
+                              int xpReward, int shootInterval) {
+        public static Codec<SkillParams> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                Codec.INT.fieldOf("segment_count").forGetter(SkillParams::segmentCount),
+                Codec.FLOAT.fieldOf("proj_damage").forGetter(SkillParams::projDamage),
+                Codec.FLOAT.fieldOf("turn_speed").forGetter(SkillParams::turnSpeed),
+                Codec.FLOAT.fieldOf("move_speed").forGetter(SkillParams::moveSpeed),
+                Codec.FLOAT.fieldOf("wander_search_pos_radius").forGetter(SkillParams::wanderPosRadius),
+                Codec.FLOAT.fieldOf("segment_internal").forGetter(SkillParams::segmentInternal),
+                Codec.INT.fieldOf("xp_reward_per_segment").forGetter(s->s.xpReward),
+                Codec.INT.fieldOf("shoot_interval").forGetter(SkillParams::shootInterval)
+        ).apply(instance, SkillParams::new));
+
+        public static SkillParams getDefaultParams(){
+            return new SkillParams(60,5,3,0.6f,10,2.8f,
+                    30, 200);
+        }
+    }
+
     private void genSegments(){
-        Vec3 dir = this.getForward().normalize().scale(-segmentInternal);
-        EaterOfWorldsSegment temp = null;
+        Vec3 dir = this.getForward().multiply(1,0,1).normalize().scale(-segmentInternal);
+        final EaterOfWorldsSegment[] temp = {null};
         //segments.add(this);
         baseSegments.add(this);
         baseSegmentsHealth.add(this.getMaxHealth());
+
+        Vec3 lastPos = position();
+        this.generator = new TaskScheduler(this.tickCount);
         for(int i=1;i<=segmentCount;i++){
-            EaterOfWorldsSegment newSegment = TEUtils.spawnEntity(()->new EaterOfWorldsSegment(this,level()), (ServerLevel) level(),position().add(dir.scale(i*0.5)));
-            newSegment.setLastSegment(Objects.requireNonNullElse(temp, this));
-            temp = newSegment;
-            baseSegments.add(newSegment);
-            baseSegmentsHealth.add(newSegment.getMaxHealth());
+            Vec3 neoDir = dir.yRot((0.2f - i * 0.08f / segmentCount) * i );
+            lastPos = lastPos.add(neoDir);
+
+            Vec3 finalLastPos = lastPos;
+            int finalI = i;
+            generator.schedule(()->{
+                if(this.isAlive()) {
+                    EaterOfWorldsSegment newSegment = TEUtils.spawnEntity(() -> new EaterOfWorldsSegment(this, level()), (ServerLevel) level(),
+                            finalLastPos.add(0, finalI * -0.3, 0));
+                    if (newSegment != null) {
+                        newSegment.setLastSegment(Objects.requireNonNullElse(temp[0], this));
+                        temp[0] = newSegment;
+                        baseSegments.add(newSegment);
+                        baseSegmentsHealth.add(newSegment.getMaxHealth());
+                        if (finalI == segmentCount) {
+                            ((EaterOfWorldsSegment) baseSegments.get(segmentCount)).ifTail = true;
+                            baseSegments.get(segmentCount).getEntityData().set(EaterOfWorldsSegment.DATA_TAIL, true);
+                            ifBaseHead = true;
+                        }
+                    }
+                }
+            }, i);
         }
 
-        ((EaterOfWorldsSegment)baseSegments.get(segmentCount)).ifTail = true;
-        baseSegments.get(segmentCount).getEntityData().set(EaterOfWorldsSegment.DATA_TAIL,true);
-        ifBaseHead = true;
         Boss.sendBossSpawnMessage(this);
     }
 
@@ -111,7 +188,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                 (AbstractTerraBossBase)->{
                     isDashing = true;
 
-                    if(difficult) moveSpeed = moveSpeedBase * 2f;
+                    if(this.isFtw()) moveSpeed = moveSpeedBase * 2f; // ftw 神吞的冲刺加速
                     else moveSpeed = moveSpeedBase * 1.5f;
 
                     turnSpeed = 5F;
@@ -155,32 +232,33 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                     }
                     turnSpeed = 2;
                     moveSpeed = 0.4f;
-
+                    shouldMove = false;
                 },
                 (AbstractTerraBossBase)->{
                     shouldFollowTarget = false;
                     isDashing = false;
-                    if(target == null ) return;
-                    shouldMove = true;
-                    if(targetPos.distanceToSqr( target.position()) > 25 * 25){
-                        float random1 = random.nextFloat()*360;
-                        double random2 = wanderPosRadius * Math.sin(random1);
-                        double random3 = wanderPosRadius * Math.cos(random1);
-                        double h = 10 + random.nextFloat() * 4;
-                        if(wanderType ==WonderType.DOWN){
-                            targetPos = target.position().add(random2,-h,random3);
-                        }else if(wanderType ==WonderType.UP){
-                            targetPos = target.position().add(random2,h*0.5 ,random3);
-                        }else{
-                            targetPos = target.position().add(random1,random2,random3);
-                        }
-                    }
+//                    if(target == null ) return;
 
-                    //提前结束
+//                    if(targetPos.distanceToSqr( target.position()) > 25 * 25){
+//                        float random1 = random.nextFloat()*360;
+//                        double random2 = wanderPosRadius * Math.sin(random1);
+//                        double random3 = wanderPosRadius * Math.cos(random1);
+//                        double h = 10 + random.nextFloat() * 4;
+//                        if(wanderType ==WonderType.DOWN){
+//                            targetPos = target.position().add(random2,-h,random3);
+//                        }else if(wanderType ==WonderType.UP){
+//                            targetPos = target.position().add(random2,h*0.5 ,random3);
+//                        }else{
+//                            targetPos = target.position().add(random1,random2,random3);
+//                        }
+//                    }
+//
+//                    //提前结束
+//
+//                    if(distanceToSqr(targetPos)<=16){
+//                        skills.forceEnd();
+//                    }
 
-                    if(distanceToSqr(targetPos)<=16){
-                        skills.forceEnd();
-                    }
 
                 },
                 (AbstractTerraBossBase)->{
@@ -201,7 +279,6 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     @Override
     public void onAddedToWorld(){
         super.onAddedToWorld();
-        this.setAttactDamage(DAMAGE);
     }
 
     @Override
@@ -229,6 +306,11 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
     boolean firstWander = false;
 
     @Override
+    public int getMaxHeadXRot() {
+        return 85;
+    }
+
+    @Override
     public void aiStep() {
         super.aiStep();
 
@@ -247,6 +329,12 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                     200,
                     this.position(), 30));
 
+            }
+            if(this.generator != null){
+                this.generator.tick(1);
+                if(generator.getPendingTaskCount() == 0){
+                    this.generator = null;
+                }
             }
 
             //没有目标禁止行为
@@ -284,7 +372,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                 if (shouldFollowTarget) {
                     this.lookAt(target, turnSpeed, 80);
 
-                } else {
+                } else if(skills.index != 0){
                     this.lookAtPos(targetPos, turnSpeed, 80);
                 }
 
@@ -385,7 +473,7 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
                         EaterOfWorldsSegment curSeg = (EaterOfWorldsSegment)current;
 
                         //TODO 被区块刷新掉的体节重现
-                        if(current.isRemoved() && tickCount % 50 == 0){
+                        if(current.isRemoved()){
 /*
                             curSeg = new EaterOfWorld_Segment(newHead,level());
                             curSeg.setPos(newHead.position());
@@ -517,13 +605,6 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         this.bossEvent.removePlayer(player);
     }
 
-    @Override // 受伤音效
-    protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return TESounds.ROUTINE_DEATH.get();
-    }
     public void removeBossEvent(){
         this.bossEvent.removeAllPlayers();
     }
@@ -574,11 +655,13 @@ public class EaterOfWorlds extends AbstractTerraBossBase<EaterOfWorlds> implemen
         return ifBaseHead;
     }
 
+    @Override
     protected BossEvent.BossBarColor getBossBarColor(){
         return BossEvent.BossBarColor.PURPLE;
     };
 
+    @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA);
+        return super.isInvulnerableTo(source) || source.is(DamageTypes.LAVA) || source.is(DamageTypes.DROWN);
     }
 }

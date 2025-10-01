@@ -10,7 +10,7 @@ import org.confluence.terraentity.init.TEEffects;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SummonPriorAttackGoal <T extends Mob & ISummonMob<T>> extends TargetGoal {
+public class SummonPriorAttackGoal <T extends Mob & ISummonMob> extends TargetGoal {
 
     LivingEntity target;
 

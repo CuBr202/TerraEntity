@@ -99,10 +99,11 @@ public class BlackSlime extends Slime implements DeathAnimOptions {
         assert attackDamage != null && maxHealth != null;
         if (size == 2) {
             attackDamage.setBaseValue(6.0F);
+            Objects.requireNonNull(getAttribute(Attributes.ARMOR)).setBaseValue(4);
             maxHealth.setBaseValue(25.0F);
         } else {
             attackDamage.setBaseValue(10.0F);
-            Objects.requireNonNull(getAttribute(Attributes.ARMOR)).setBaseValue(2);
+            Objects.requireNonNull(getAttribute(Attributes.ARMOR)).setBaseValue(7);
             maxHealth.setBaseValue(58.0F);
         }
         setHealth(getMaxHealth());

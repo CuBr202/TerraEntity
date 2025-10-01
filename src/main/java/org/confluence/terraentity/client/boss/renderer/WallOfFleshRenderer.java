@@ -15,7 +15,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.client.boss.model.GeoBossModel;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
-import org.confluence.terraentity.entity.boss.WallOfFlesh;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
 import software.bernie.geckolib.model.GeoModel;
 
 import java.util.HashMap;
@@ -30,19 +30,21 @@ public class WallOfFleshRenderer extends GeoNormalRenderer<WallOfFlesh> {
     GeoBossModel<WallOfFlesh> currentModel;
     private static final String[] MODEL_NAMES = {
             "wall_of_flesh0",
-            "wall_of_flesh1",
-            "wall_of_flesh2",
-            "wall_of_flesh3",
-            "wall_of_flesh4"
-    };
-    private static final int[] MODEL_WEIGHTS = {
-            1,  // wall_of_flesh0
-            1,  // wall_of_flesh1
-            1,  // wall_of_flesh2
-            1,  // wall_of_flesh3
-            5   // wall_of_flesh4
-    };
-    private final Map<String, GeoBossModel<WallOfFlesh>> modelCache = new HashMap<>();
+           "wall_of_flesh1",
+           "wall_of_flesh2",
+           "wall_of_flesh3",
+           "wall_of_flesh4"
+   };
+
+   private static final int[] MODEL_WEIGHTS = {
+           1,  // wall_of_flesh0
+           1,  // wall_of_flesh1
+           1,  // wall_of_flesh2
+           1,  // wall_of_flesh3
+           5   // wall_of_flesh4
+   };
+
+   private final Map<String, GeoBossModel<WallOfFlesh>> modelCache = new HashMap<>();
 
     @Override
     public void render(WallOfFlesh wall, float entityYaw, float partialTick,

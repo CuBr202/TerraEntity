@@ -15,6 +15,8 @@ public class ClientConfig {
 
     public static ForgeConfigSpec.EnumValue<BubbleConfig> NPC_CHAT_BUBBLE_STYLE;
 
+    public static ForgeConfigSpec.BooleanValue ENABLE_ENTITY_MOTION_BLUR;
+
     public static ForgeConfigSpec SPEC;
 
     public static ForgeConfigSpec.Builder init(ForgeConfigSpec.Builder BUILDER){
@@ -36,6 +38,8 @@ public class ClientConfig {
         ENABLE_NON_SPIDER_MODEL = BUILDER.define("enableNonSpiderModel", false);
         NPC_CHAT_BUBBLE_STYLE = BUILDER.comment("NPC Chat Bubble Style.")
                 .defineEnum("npc_chat_bubble_style", BubbleConfig.RECT);
+        ENABLE_ENTITY_MOTION_BLUR = BUILDER.comment("Enable Entity Motion Blur.")
+                .define("enable_entity_motion_blur", true);
         SPEC = BUILDER.build();
         BUILDER.pop();
         return BUILDER;

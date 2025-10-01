@@ -7,14 +7,14 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.entity.boss.WallOfFlesh;
-import org.confluence.terraentity.entity.boss.WallOfFleshMouth;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouse;
 import org.confluence.terraentity.init.TEEffects;
 import org.confluence.terraentity.mixed.IMobEffectExtension;
 
 
 public class TheTongueEffect extends MobEffect  implements IMobEffectExtension {
-    private WallOfFleshMouth mouth;
+    private WallOfFleshMouse mouth;
 
     public TheTongueEffect() {
         super(MobEffectCategory.HARMFUL, 0xAB1122);
@@ -68,11 +68,11 @@ public class TheTongueEffect extends MobEffect  implements IMobEffectExtension {
         return true;
     }
 //
-    public WallOfFleshMouth getWallOfFleshMouth() {
+    public WallOfFleshMouse getWallOfFleshMouth() {
         return this.mouth;
     }
 //
-    public void setWallOfFleshMouth(WallOfFleshMouth mouth) {
+    public void setWallOfFleshMouth(WallOfFleshMouse mouth) {
         this.mouth = mouth;
     }
 }

@@ -16,12 +16,12 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -33,14 +33,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.entity.ICollisionAttackEntity;
+import org.confluence.terraentity.api.entity.IStateChangeableMob;
 import org.confluence.terraentity.api.entity.ai.IFSMGeoMob;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
-import org.confluence.terraentity.entity.ai.*;
+import org.confluence.terraentity.entity.ai.fsm.CircleMobSkills;
 import org.confluence.terraentity.entity.ai.goal.LookForwardWanderFlyGoal;
+import org.confluence.terraentity.entity.util.DifficultSelector;
+import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.mixed.IBossEvent;
 import org.confluence.terraentity.network.s2c.SyncBossEventHealthPacket;
 import org.confluence.terraentity.utils.AdapterUtils;
+import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -60,34 +64,43 @@ import static org.confluence.terraentity.utils.TEUtils.getMultiple;
  * @param <T> Boss类型
  */
 @SuppressWarnings("all")
-public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> extends Monster implements GeoEntity, IFSMGeoMob<T>, ICollisionAttackEntity<T> {
+public abstract class AbstractTerraBossBase extends Monster implements GeoEntity, IFSMGeoMob, ICollisionAttackEntity, IStateChangeableMob {
 
 /* 属性 */
 
     public float ironGlomResistance = 0.4f;
     public float explosionResistance = 0.5f;
-    protected boolean difficult = true; // 困难模式
+
     protected boolean dirty = true;
     protected ServerBossEvent bossEvent;
-    protected float baseHealth;
-    protected int baseArmor;
 
-    public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level, float health, int armor) {
+    protected DifficultSelector difficultSelector;
+//    public int stage = 1; //阶段
+    private boolean consumeStageChange = false;
+
+    public AbstractTerraBossBase(EntityType<? extends Monster> type, Level level) {
         super(type, level);
         this.moveControl = new FlyingMoveControl(this, 10, false);
         setNoGravity(true);
-        this.baseHealth = health;
-        this.baseArmor = armor;
+//        this.baseHealth = health;
+//        this.baseArmor = armor;
         if(level().isClientSide){
             CustomizeBossHealthBar.registerBossHealthBar(getDisplayName().getString(),this.getType());
         }
-        if(level.getDifficulty().equals(level.getDifficulty().EASY)
-                || level.getDifficulty().equals(level.getDifficulty().NORMAL)
-        ){
-            difficult = false;
-        }
+
+        difficultSelector = new DifficultSelector(level);
         this.addSkills();
+
+
         bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), getBossBarColor(), BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(true).setPlayBossMusic(true);
+    }
+
+    /**
+     * 再次进入游戏需要同步BOSS阶段
+     * @param stage
+     */
+    protected void initStage(int stage){
+
     }
 
     public float getAttributeMultiplier(Attribute attribute){
@@ -99,6 +112,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
      */
     public void firstSpawn(){};
 
+    public void aganinSpawn(){};
+
+
     @Override
     protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
     }
@@ -107,24 +123,32 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public void onAddedToWorld(){
 
         if(!level().isClientSide){
-            if(dirty)
+            if(dirty) {
                 firstSpawn();
+            }else{
+                aganinSpawn();
+            }
             if(bossEvent!= null){
                 bossEvent.getPlayers().forEach(p->syncBossHealthBar(p));
 
             }
+
         }
         super.onAddedToWorld();
-
-        if(skills.count() > 0)
+        if(skills.count() > 0) {
             skills.forceStartIndex(0);
+        }
+        if(!this.level().isClientSide){
+            this.initStage(this.getStage());
+        }
+
     }
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
         spawnGroupData = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, tag);
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.baseHealth);
-        this.getAttribute(Attributes.ARMOR).setBaseValue(baseArmor);
+//        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(this.baseHealth);
+//        this.getAttribute(Attributes.ARMOR).setBaseValue(baseArmor);
         this.setHealth(this.getMaxHealth());
         return spawnGroupData;
     }
@@ -141,6 +165,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     }
 
+
+    // 尽量不要使用这个方法，应该使用modifier且使用最好使用乘法，以适配其他模组的属性
     protected void setAttactDamage(float damage){
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(damage);
     }
@@ -158,16 +184,22 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, false));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
 
-
-        this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this,0.3f, 0));
-
+        this.registerRandomStrollGoal();
     }
 
+    protected void registerRandomStrollGoal(){
+        if(ServerConfig.BOSS_KEEP_WANDERING.get()) {
+            this.goalSelector.addGoal(10, new LookForwardWanderFlyGoal(this, 0.3f, 0));
+        }else{
+            this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 10, 1f));
+        }
+    }
 
 
 /* FSM */
 
     public CircleMobSkills skills = new CircleMobSkills(this, DATA_SKILL_INDEX);
+    public static final EntityDataAccessor<Integer> DATA_STATUS_STATUS = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> DATA_SKILL_INDEX = SynchedEntityData.defineId(AbstractTerraBossBase.class, EntityDataSerializers.INT);
     protected ClientBoundAnimationMessage skillMessage = new ClientBoundAnimationMessage();
     protected int lastSkillTick;
@@ -185,18 +217,28 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_SKILL_INDEX, 0);
-//        builder.define(DATA_SKILL_TICK, 0);
+        this.entityData.define(DATA_STATUS_STATUS, 1);
     }
+
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
         syncSkills(DATA_SKILL_INDEX);
+
     }
 
+    public int getSkillIndex(){
+        return this.entityData.get(DATA_SKILL_INDEX);
+    }
+
+    @Override
+    public EntityDataAccessor<Integer> get_DATA_STATUS_STATUS(){
+        return DATA_STATUS_STATUS;
+    }
 
 /* Collision */
 
-    CollisionProperties collisionProperties = new CollisionProperties(5, 20, 0);
+    protected CollisionProperties collisionProperties = new CollisionProperties(5, 20, 0);
 
     @Override
     public CollisionProperties getCollisionProperties() {
@@ -210,7 +252,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
 /* discard */
 
-    LivingEntity target;
+    protected LivingEntity target;
     protected static final int DISCARD_TICK = 100;
     protected int discardTick = 0;
     boolean isCreativePlayer; // 如果附近有创造模式玩家，则不清除
@@ -224,6 +266,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             if(this.isAlive())
                 skills.tick();
             //没有目标禁止行为
+
 
             if (target == null || !target.isAlive() || !target.canBeSeenAsEnemy()) {
                 var entity = findTarget();
@@ -254,6 +297,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             if(shouldOverPlayer() && target!= null && position().y < target.getY()){
                 addDeltaMovement(new Vec3(0,0.02f,0));
             }
+        }else{
+            this.skills.tick += 1;
         }
 
         if (!shouldDiscardFriction()) {
@@ -300,6 +345,7 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             if(!isCreativePlayer && !player.canBeSeenAsEnemy()){
                 isCreativePlayer = true;
             }
+            this.noActionTime = 0; // 防止某些站桩boss被刷新
         }
         return players;
     }
@@ -351,6 +397,8 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
+
+
         if(pSource.getEntity() instanceof IronGolem){
             pAmount *= ironGlomResistance;
         }
@@ -358,7 +406,10 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
             pAmount *= explosionResistance;
         }
 
-        return super.hurt(pSource,pAmount);
+        boolean flag = super.hurt(pSource, pAmount);
+        this.changeState();
+        return flag;
+
     }
 
     public boolean canAttack(LivingEntity entity) {
@@ -444,8 +495,11 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     }
 
     @Override // 受伤音效
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.SKELETON_HURT;
+    protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.ROUTINE_DEATH.get();
     }
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -469,6 +523,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("dirty", false);
+        if(getStage() > 0) {
+            compound.putInt("Stage", getStage());
+        }
     }
 
     @Override
@@ -479,6 +536,9 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
         }
         if (tag.contains("dirty")) {
             dirty = false;
+        }
+        if (tag.contains("Stage")) {
+            this.setStage(tag.getInt("Stage"));
         }
     }
 
@@ -498,19 +558,45 @@ public abstract class AbstractTerraBossBase<T extends AbstractTerraBossBase> ext
     };
 
     @Override
-    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
-        // confluence mixin here
-        return super.addEffect(effectInstance, entity);
+    public void lavaHurt() {
+        if (!this.fireImmune()) {
+            float v = TEUtils.switchByDifficulty(level(), 0.25F, 0.15F, 0.05F);
+//            this.igniteForSeconds(15.0F * v);
+            if (this.hurt(this.damageSources().lava(), 4.0F * v)) {
+                this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
+            }
+        }
     }
 
-//    @Override
-//    public void lavaHurt() {
-//        if (!this.fireImmune()) {
-//            float v = LibUtils.switchByDifficulty(level(), blockPosition(), 0.25F, 0.15F, 0.05F);
-//            this.igniteForSeconds(15.0F * v);
-//            if (this.hurt(this.damageSources().lava(), 4.0F * v)) {
-//                this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
-//            }
-//        }
-//    }
+    @Override
+    public void changeState(){
+    }
+
+    protected boolean isExpert(){
+        return this.difficultSelector.isExpert();
+    }
+    protected boolean isMaster(){
+        return this.difficultSelector.isMaster();
+    }
+    protected boolean isFtw(){
+        return this.difficultSelector.isFtw();
+    }
+    public DifficultSelector getDifficultSelector(){
+        return this.difficultSelector;
+    }
+
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        if(source.is(DamageTypes.LAVA)){
+            return true;
+        }
+        return super.isInvulnerableTo(source);
+    }
+
+
 }

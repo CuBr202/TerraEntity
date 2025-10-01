@@ -1,9 +1,13 @@
 package org.confluence.terraentity.entity.boss;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -11,15 +15,21 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.IAutoLeaveMob;
-import org.confluence.terraentity.entity.ai.MobSkill;
+import org.confluence.terraentity.api.entity.blur.IMotionBlurHolder;
+import org.confluence.terraentity.config.ServerConfig;
+import org.confluence.terraentity.data.mappeddata.BossSkillMapDatas;
+import org.confluence.terraentity.entity.ai.fsm.MobSkill;
 import org.confluence.terraentity.entity.ai.motion.DashComponent;
+import org.confluence.terraentity.entity.blur.MotionBlurManager;
+import org.confluence.terraentity.entity.blur.PosRotMotionBlurContext;
+import org.confluence.terraentity.entity.blur.PosRotMotionBlurManager;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEye;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.TEUtils;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -28,21 +38,60 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 /**
  * 克眼
  */
-@SuppressWarnings("all")
-public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements GeoEntity, Boss, IAutoLeaveMob {
-    private static final float MAX_HEALTHS = 728f;
-    private static final float DAMAGE = 4f;//一阶段接触伤害
-    private static final float CRAZY_DAMAGE = 6f;//二阶段接触伤害
-    private static final float MOVE_SPEED = 0.5f;
-    private static final float CRAZY_PERCENTAGE = 0.25f;
 
-    private final int followMinDistance = 16; //最近跟随距离的平方
-    private final int distanceAbove = 3; //悬在玩家blockPos上距离
-    private final float dashFactor = 1.5f; //冲刺增伤
+public class EyeOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Boss, IAutoLeaveMob, IMotionBlurHolder<PosRotMotionBlurContext> {
+
+    private final float DAMAGE ;//一阶段接触伤害
+    private final float CRAZY_DAMAGE ;//二阶段接触伤害
+    private final float MOVE_SPEED ;
+
+    private final float dashFactor ; //冲刺增伤
+    private final float stage2SpeedFactor ; //二阶段加速加成
+    private final float minDashDistanceSqr;
+
     private float speedFactor = 2f; //冲刺加速
-    private final float stage2SpeedFactor = 1.5f; //二阶段加速加成
-    private final float minDashDistanceSqr = 20;
-    public int stage = 1; //阶段
+
+    SkillParams skillParams;
+
+    public static class SkillParams{
+        private final float DAMAGE ;//一阶段接触伤害
+        private final float CRAZY_DAMAGE ;//二阶段接触伤害
+        private final float MOVE_SPEED ;
+
+        private final float dashFactor; //冲刺增伤
+        private final float stage2SpeedFactor; //二阶段加速加成
+        private final float minDashDistanceSqr;
+        private final int xpReward;
+
+        SkillParams(float damage, float crazyDamage, float moveSpeed, float dashFactor, float stage2SpeedFactor, float minDashDistanceSqr, int xpReward){
+            this.DAMAGE = damage;
+            this.CRAZY_DAMAGE = crazyDamage;
+            this.MOVE_SPEED = moveSpeed;
+
+            this.dashFactor = dashFactor;
+            this.stage2SpeedFactor = stage2SpeedFactor;
+            this.minDashDistanceSqr = minDashDistanceSqr;
+            this.xpReward = xpReward;
+        }
+
+        public static Codec<SkillParams> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                Codec.FLOAT.fieldOf("damage").forGetter(s->s.DAMAGE),
+                Codec.FLOAT.fieldOf("crazy_damage").forGetter(s->s.CRAZY_DAMAGE),
+                Codec.FLOAT.fieldOf("move_speed").forGetter(s->s.MOVE_SPEED),
+                Codec.FLOAT.fieldOf("dash_factor").forGetter(s->s.dashFactor),
+                Codec.FLOAT.fieldOf("stage2_speed_factor").forGetter(s->s.stage2SpeedFactor),
+                Codec.FLOAT.fieldOf("min_dash_distance_sqr").forGetter(s->s.minDashDistanceSqr),
+                Codec.INT.fieldOf("xp_reward").forGetter(s->s.xpReward)
+
+        ).apply(instance, SkillParams::new));
+
+        public static SkillParams getDefaultParams(){
+            return new EyeOfCthulhu.SkillParams(4, 6, 0.5f,
+                    1.5f, 1.5f, 20, 1000);
+        }
+
+    }
+
 
     //定义技能参数
     private int summonCDAll = 20; //仆从召唤cd
@@ -60,29 +109,45 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
     DashComponent dashComponent;
 
+    public PosRotMotionBlurManager trails = new PosRotMotionBlurManager(20);
+
+    private static final EntityDataAccessor<Boolean> DATA_ENABLE_TRAILS = SynchedEntityData.defineId(EyeOfCthulhu.class, EntityDataSerializers.BOOLEAN);
 
 
     public EyeOfCthulhu(EntityType<EyeOfCthulhu> entityType, Level level) {
-        super(entityType, level,MAX_HEALTHS,2);
+        super(entityType, level);
         //初始属性
-        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
+
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
         this.playSound(TESounds.ROAR.get());
-        if(ServerConfig.BOSS_NO_PHYSICS.get())
+        if (ServerConfig.bossNoPhysics())
             this.noPhysics = true;
 
         collisionProperties.attackInternal = 1;
         collisionProperties.detectInternal = 1;
 
-        this.xpReward = 1000;
         dashComponent = new DashComponent(this);
-
+        this.skillParams = MappedDataTypes.BOSS_SKILL_MAP_DATAS.get().getData(BossSkillMapDatas.EYE_OF_CTHULHU_PARAMS);
+        this.DAMAGE = skillParams.DAMAGE;
+        this.CRAZY_DAMAGE = skillParams.CRAZY_DAMAGE;
+        this.MOVE_SPEED = skillParams.MOVE_SPEED;
+        this.dashFactor = skillParams.dashFactor;
+        this.stage2SpeedFactor = skillParams.stage2SpeedFactor;
+        this.minDashDistanceSqr = skillParams.minDashDistanceSqr;
+        this.xpReward = skillParams.xpReward;
     }
+
 
     public EyeOfCthulhu(Level level) {
         this(TEBossEntities.EYE_OF_CTHULHU.get(), level);
     }
 
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_ENABLE_TRAILS, false);
+//        builder.define(DATA_SKILL_TICK, 0);
+    }
 
     // 定义技能类型
     MobSkill stage1_stare;
@@ -102,7 +167,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
         // 定义技能实现
         // 定格在玩家正上方
-        this.stage1_stare = new MobSkill( type1, 5 * 20, 0,
+        this.stage1_stare = new MobSkill<>( type1, 5 * 20, 0,
                 terraBossBase -> {},
                 terraBossBase -> {
                     if (getTarget() == null) return;
@@ -130,7 +195,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 terraBossBase -> {}
         );
         // 延迟20tick冲刺10tick
-        this.state1_dash = new MobSkill( type1run, 30, 20,
+        this.state1_dash = new MobSkill<>( type1run, 30, 20,
                 terraBossBase -> {},
                 terraBossBase -> {
                     // 延迟冲刺
@@ -142,7 +207,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
 
                         this.addDeltaMovement(new Vec3(0, 0.02, 0));
                         // 不精准度
-                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(RandomSource.create(), 1);
+                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(this.getRandom(), 1);
                         dashDir = dashPos.subtract(position());
                         return;
                     }
@@ -160,7 +225,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 terraBossBase -> {
                     // 结束冲刺移除加成
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-                    if (stage == 1 ){
+                    if (this.getStage() == 1 ){
                         if(--stage1_dashCount <= 0) {
                             stage1_dashCount = 3;
                             skills.forceStartIndex(0);
@@ -170,7 +235,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 }
         );
         // 转换阶段
-        this.switch_1_to_2 = new MobSkill(switching, 23, 0,
+        this.switch_1_to_2 = new MobSkill<>(switching, 23, 0,
                 terraBossBase -> {
 
                     summonCD = 0;
@@ -185,13 +250,23 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE);
 
                 });
-        this.stage2_stare = new MobSkill(type2, 3 * 20, 0,
+        this.stage2_stare = new MobSkill<>(type2, 3 * 20, 0,
                 terraBossBase -> {
                 },
                 terraBossBase -> {
                     if (getTarget() == null) return;
-                    if(difficult && getTarget().distanceTo(this) > 8)
+                    if(!this.isExpert() && getTarget().distanceTo(this) > 8 && this.getRandom().nextFloat() < 0.5f) {
                         skills.tick -= 1;
+                    }
+                    if(TEUtils.isFTWWorld((ServerLevel) level())){
+                        if(this.getHealthPercentage() < 0.15f) { // 天顶世界接近无限冲刺
+                            skills.tick += 1;
+                        }
+                        for(int i = 0; i < 2; i++) {
+                            this.spawnMinions(getTarget()); // 天顶世界生成仆从
+                        }
+                    }
+
                     lookAt(10);
 
                     // 向玩家正上方移动
@@ -201,15 +276,21 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                 },
                 terraBossBase -> {
                     // 生成冲撞次数
-                    this.stage2_dashCount = (int) ((stage2_dashCount_base + 10 - this.getHealth() / (getMaxHealth() / 10)) * 1.5);
-                    this.stage2_dashCount_max = this.stage2_dashCount - 3;
+                    if(this.isExpert()) {
+                        this.stage2_dashCount = (int) ((stage2_dashCount_base + 10 - this.getHealth() / (getMaxHealth() / 10)) * 1.5);
+                        if (this.getHealth() / getMaxHealth() < 0.3f) {
+                            this.stage2_dashCount_max = this.stage2_dashCount;
+                        }
+                    }else{
+                        this.stage2_dashCount = 3;
+                    }
                     getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE);
                 }
         );
-        this.state2_dash = new MobSkill(type2run, 30, 20,
+        this.state2_dash = new MobSkill<>(type2run, 30, 20,
                 terraBossBase -> {
                     if (getTarget() == null) return;
-                    if(this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount <= stage2_dashCount_max){
+                    if(this.isEnhanceDash()){
                         state2_dash.timeTrigger = 10;
                         state2_dash.timeContinue = 20;
                         speedFactor = 3;
@@ -221,28 +302,46 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         this.playSound(TESounds.ROAR.get());
                     }
 
-                    if(difficult && distanceTo(getTarget()) < 8){
+                    if(this.isExpert() && distanceTo(getTarget()) < 8){
                         skills.tick -= 1;
                     }
                 },
                 terraBossBase -> {
                     // 延迟冲刺
                     if (getTarget() == null) return;
-                    lookAt(360);
+//                    lookAt(360);
+                    boolean isEnhance = isEnhanceDash();
                     if (!skills.canContinue()) {
                         // 调整方向
 
                         this.addDeltaMovement(new Vec3(0, 0.02, 0));
-                        float inaccuracy = (float) getTarget().getDeltaMovement().length();
+                        float inaccuracy = (float) getTarget().getDeltaMovement().length() * 10;
+                        if(isEnhance){
+                            inaccuracy *= 6;// 疯狗冲刺非常不准确
+                            if(this.getRandom().nextFloat() < 0.3f){ // 触发时间可以提前
+                                skills.tick++;
+                            }
+                        }
                         // 不精准度
-                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(RandomSource.create(), inaccuracy * 10);
+                        dashPos = getTarget().position().add(0, 1, 0).offsetRandom(this.getRandom(), inaccuracy);
                         dashDir = dashPos.subtract(position());
+                        dashPos = dashPos.add(dashDir.normalize().scale(20));
                         //冲撞距离过小则后退
-                        if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashPos.normalize().scale(-1));
+                        if(distanceToSqr(getTarget()) < minDashDistanceSqr) setDeltaMovement(dashDir.normalize().scale(-1));
                         return;
+                    }else{
+                        if(isEnhance){ // 疯狗冲刺时间不稳定
+                            if(skills.tick > 23 && this.getRandom().nextFloat() < 0.2f){
+                                skills.forceEnd();
+                            }
+                        }
                     }
                     if(dashPos != null && dashDir != null) {
+
+                        this.setMotionBlurEnabled(this.isEnhanceDash());
+
                         this.lookControl.setLookAt(dashPos);
+                        this.lookAt(EntityAnchorArgument.Anchor.EYES, dashPos);
                         // 冲刺增加伤害
                         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(CRAZY_DAMAGE * dashFactor);
                         this.setDeltaMovement(dashDir.normalize().scale(MOVE_SPEED * speedFactor * stage2SpeedFactor));
@@ -255,6 +354,7 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
                         // 冲刺完
                         stage2_dashCount = stage2_dashCount_base;
                         skills.forceStartIndex(5);
+                        this.setMotionBlurEnabled(false);
                     } else {
                         //继续冲刺
                         skills.forceStartIndex(6);
@@ -268,13 +368,22 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         addSkill(state1_dash); // 3
         addSkill(switch_1_to_2); // 4
         addSkill(stage2_stare); // 5
+
         addSkill(state2_dash); // 6
+    }
+
+    private boolean isEnhanceDash(){
+        return this.isExpert() && this.getHealth()/getMaxHealth()<0.3f && stage2_dashCount <= stage2_dashCount_max;
     }
 
     public void tick() {
          super.tick();
          if(!this.level().isClientSide && shouldLeave()){
              doLeave();
+         }
+         if(this.level().isClientSide){
+
+             this.trails.update(this, this.position(), this.getXRot(), this.getYRot());
          }
     }
 
@@ -301,24 +410,25 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         }
     }
 
-    @Override // 受伤音效
-    protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return TESounds.ROUTINE_DEATH.get();
-    }
     @Override
     public boolean isNoGravity(){ return true; }
 
-    // 转换阶段
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        if (this.getHealth() / getMaxHealth() < 0.5 && stage == 1) {
-            stage = 2;
-            skills.forceStartIndex(4); // 强制执行技能序列
+    public void changeState(){
+        if(this.getStage() == 1 && this.getHealth() / getMaxHealth() < 0.5){
+            this.setStage(2);
+            skills.forceStartIndex(4);
+            this.getAttribute(Attributes.ARMOR).setBaseValue(0); // 二阶段没有护甲
         }
-        return super.hurt(pSource, pAmount);
+        this.syncStatus(this.getStage());
+    }
+
+    @Override
+    protected void initStage(int stage){
+        if(stage == 2){
+            skills.forceStartIndex(4);
+            this.getAttribute(Attributes.ARMOR).setBaseValue(0);
+        }
     }
 
     @Override
@@ -332,6 +442,18 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
         dashComponent.uniformMove(1);
     }
 
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if(this.isExpert()){
+            if(this.getHealthPercentage() < 0.4f){
+                pAmount += 15;
+            }
+            if(this.getHealthPercentage() < 0.12f) {
+                pAmount += 7;
+            }
+        }
+        return super.hurt(pSource,pAmount);
+    }
     protected BossEvent.BossBarColor getBossBarColor(){
         return BossEvent.BossBarColor.RED;
     };
@@ -339,4 +461,20 @@ public class EyeOfCthulhu extends AbstractTerraBossBase<EyeOfCthulhu> implements
     protected boolean shouldOverPlayer(){
         return true;
     }
+
+    @Override
+    public boolean isMotionBlurEnabled() {
+        return this.entityData.get(DATA_ENABLE_TRAILS);
+    }
+
+    @Override
+    public void setMotionBlurEnabled(boolean enabled) {
+        this.entityData.set(DATA_ENABLE_TRAILS, enabled);
+    }
+
+    @Override
+    public MotionBlurManager<PosRotMotionBlurContext> getMotionBlurManager() {
+        return trails;
+    }
+
 }

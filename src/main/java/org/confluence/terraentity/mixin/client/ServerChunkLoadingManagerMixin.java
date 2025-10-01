@@ -3,9 +3,9 @@ package org.confluence.terraentity.mixin.client;
 
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.entity.Entity;
-import org.confluence.terraentity.entity.boss.WallOfFlesh;
-import org.confluence.terraentity.entity.boss.WallOfFleshEye;
-import org.confluence.terraentity.entity.boss.WallOfFleshMouth;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshEye;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -31,7 +31,7 @@ public abstract class ServerChunkLoadingManagerMixin {
                 wallOfFlesh = eye.parentMob;
                 bonus = 250;
 
-            }else if(entity instanceof WallOfFleshMouth mouth){
+            }else if(entity instanceof WallOfFleshMouse mouth){
                 wallOfFlesh = mouth.parentMob;
                 bonus = 250;
             }

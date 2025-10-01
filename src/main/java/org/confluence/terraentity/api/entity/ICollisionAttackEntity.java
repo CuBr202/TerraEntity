@@ -7,13 +7,13 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * <h1>包围盒碰撞接口</h1>
- * @param <T> 实体类型
+ * <h3>包围盒碰撞接口</h3>
+ * 必须由Entity实现
  */
-public interface ICollisionAttackEntity<T extends Entity>{
+public interface ICollisionAttackEntity {
 
-    default T collision$getSelf(){
-        return (T) this;
+    default Entity collision$getSelf(){
+        return (Entity) this;
     }
 
     CollisionProperties getCollisionProperties();
@@ -93,6 +93,21 @@ public interface ICollisionAttackEntity<T extends Entity>{
          */
         public boolean canAttack() {
             return actualAttackInterval <= 0;
+        }
+
+        public CollisionProperties setAttackInterval(int attackInterval){
+            this.attackInternal = attackInterval;
+            return this;
+        }
+
+        public CollisionProperties setDetectInterval(int detectInterval){
+            this.detectInternal = detectInterval;
+            return this;
+        }
+
+        public CollisionProperties setAttackRange(float attackRange) {
+            this.attackRangeExtent = attackRange;
+            return this;
         }
     }
 }

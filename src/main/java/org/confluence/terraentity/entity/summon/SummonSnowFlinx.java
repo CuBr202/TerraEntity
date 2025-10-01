@@ -10,7 +10,7 @@ import org.confluence.terraentity.entity.ai.goal.JumpOverBlockGoal;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 
-public class SummonSnowFlinx extends AbstractSummonMob<SummonSnowFlinx> {
+public class SummonSnowFlinx extends AbstractSummonMob {
 
     int dashCd = 20;
 

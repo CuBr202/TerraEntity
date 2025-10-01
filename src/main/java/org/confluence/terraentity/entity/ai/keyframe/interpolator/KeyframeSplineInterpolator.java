@@ -14,6 +14,7 @@ public class KeyframeSplineInterpolator implements IInterpolator {
 
     PolynomialSplineFunction spline;
 
+    @Override
     public void init(List<Keyframe> keyframes, int position) {
         SplineInterpolator splineInterpolator = new SplineInterpolator();
         double[] x = new double[keyframes.size()];
@@ -25,7 +26,7 @@ public class KeyframeSplineInterpolator implements IInterpolator {
         spline = splineInterpolator.interpolate(x, y);
     }
 
-
+    @Override
     public double cal(double t) {
         return spline.value(t);
     }

@@ -20,7 +20,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.IMinion;
-import org.confluence.terraentity.entity.boss.WallOfFlesh;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeSurroundTargetGoal;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeWanderGoal;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
@@ -42,7 +42,7 @@ import java.util.UUID;
 /**
  * 饿鬼
  */
-public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Boss {
+public class TheHungry extends AbstractMonster implements IMinion, Boss {
     Mob owner;
     protected Vec3 initPos;
     boolean isFree = false;
@@ -70,7 +70,7 @@ public class TheHungry extends AbstractMonster implements IMinion<TheHungry>, Bo
     }
 
     public TheHungry(Level level,boolean isFree) {
-        this(TEMonsterEntities.THE_HUNGRY.get(), level,new AbstractPrefab(30,1,10,32,0.75f,1).getPrefab());
+        this(TEMonsterEntities.THE_HUNGRY.get(), level,new AbstractPrefab().getPrefab());
         this.isFree = isFree;
     }
 

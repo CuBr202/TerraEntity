@@ -33,6 +33,7 @@ public class RideableBee extends AbstractRideableEntity implements IFlyRideableM
     @Override
     public void tick(){
         super.tick();
+
         if(!level().isClientSide){
             if(getOwner() != null && isInWater()) {
                 this.getOwner().stopRiding();

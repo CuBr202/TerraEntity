@@ -53,10 +53,12 @@ import net.minecraftforge.common.Tags;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
+import org.confluence.terraentity.data.mappeddata.NPCMappedDatas;
 import org.confluence.terraentity.entity.ai.goal.NPCTradeGoal;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
+import org.confluence.terraentity.entity.config.InitialWeapons;
 import org.confluence.terraentity.entity.npc.brain.NPCAi;
 import org.confluence.terraentity.entity.npc.chat.ChatArranger;
 import org.confluence.terraentity.entity.npc.chat.ChatManager;
@@ -76,6 +78,7 @@ import org.confluence.terraentity.item.HouseDetectItem;
 import org.confluence.terraentity.menu.SimpleTradeMenu;
 import org.confluence.terraentity.network.s2c.UpdateNPCTradePacket;
 import org.confluence.terraentity.registries.chat.variant.SpriteChatElement;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.AdapterUtils;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
@@ -467,6 +470,7 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
         super.tick();
         this.updateSwingTime();
 
+
 //        if(level().isClientSide){
 //            if(mood.getValue() != 100){
 //                System.out.println(mood..getValue()); // debug
@@ -789,17 +793,19 @@ public abstract class AbstractTerraNPC extends PathfinderMob implements GeoEntit
 
     }
 
-
-
-
-
-
+//    @Override
+//    public Vec3 getVehicleAttachmentPoint(Entity entity) {
+//        return super.getVehicleAttachmentPoint(entity).add(0,0.65,0);
+//    }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        pSpawnData = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
+        spawnGroupData = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, tag);
         this.setLeftHanded(false);
-        return pSpawnData;
+        InitialWeapons data = MappedDataTypes.getData(MappedDataTypes.NPC_MAP_DATAS, NPCMappedDatas.NPC_WEAPON);
+        ItemStack stack = data.getRandom(this.getType());
+        this.setItemSlot(EquipmentSlot.MAINHAND, stack);
+        return spawnGroupData;
     }
 
     public void setChat(NPCChat chat){

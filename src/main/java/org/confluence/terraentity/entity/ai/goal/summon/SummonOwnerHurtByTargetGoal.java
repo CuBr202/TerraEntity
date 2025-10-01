@@ -8,7 +8,7 @@ import org.confluence.terraentity.api.entity.ISummonMob;
 
 import java.util.EnumSet;
 
-public class SummonOwnerHurtByTargetGoal<T extends Mob & ISummonMob<T>> extends TargetGoal {
+public class SummonOwnerHurtByTargetGoal<T extends Mob & ISummonMob> extends TargetGoal {
     private final T tameAnimal;
     private LivingEntity ownerLastHurtBy;
     private int timestamp;

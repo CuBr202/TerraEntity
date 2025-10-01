@@ -9,6 +9,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -55,6 +56,7 @@ public class BoomerangProjectile extends Projectile {
 
     public Queue<Vec3> trailQueue;
     public Queue<Vec3> trailQueue2;
+
 
     public BoomerangProjectile(EntityType<? extends Projectile> entityType, Level level) {
         super(entityType, level);
@@ -125,9 +127,14 @@ public class BoomerangProjectile extends Projectile {
                         data.applyAll((LivingEntity) this.getOwner(), living);
                     }
                     owner.setLastHurtMob(actualHurter);
-                    actualHurter.hurt(this.damageSources().mobProjectile(this, owner), damage);
-                    //击退
-                    doKnockback(living);
+                    if(actualHurter.hurt(this.damageSources().mobProjectile(this, owner), damage)){
+                        //击退
+                        this.doKnockback(living);
+                        if(owner instanceof ServerPlayer player) {
+                            this.weapon.hurt(1, this.random, player);
+                        }
+
+                    }
                 }
 
                 IAttackableProjectile.tryHit(hurter, source);
@@ -239,7 +246,7 @@ public class BoomerangProjectile extends Projectile {
                     entityData.set(DATA_BACKING, true);
                 }
             }else{
-                Vec3 distinct = living.position().add(0,1F,0);
+                Vec3 distinct = living.position().add(0,living.getBbHeight() * 0.5f,0);
                 Vec3 dir = distinct.subtract(this.position()).normalize();
                 int delta = 10;
                 double actualSpeed = Math.min(Mth.lerp((float) (tickCount - backTime) / delta,backSpeed+0.01F,modifier.backSpeed),modifier.backSpeed);

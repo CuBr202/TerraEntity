@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-public class SummonItem<T extends Mob & ISummonMob<?>> extends Item {
+public class SummonItem<T extends Mob & ISummonMob> extends Item {
     public final RegistryObject<EntityType<T>> entityType;
     public final int consume;
 

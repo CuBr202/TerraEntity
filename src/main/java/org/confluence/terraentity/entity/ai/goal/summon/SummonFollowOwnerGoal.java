@@ -12,7 +12,7 @@ import org.confluence.terraentity.api.entity.ISummonMob;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class SummonFollowOwnerGoal<T extends Mob & ISummonMob<?>> extends Goal {
+public class SummonFollowOwnerGoal<T extends Mob & ISummonMob> extends Goal {
     protected final T tamable;
     @Nullable
     protected LivingEntity owner;

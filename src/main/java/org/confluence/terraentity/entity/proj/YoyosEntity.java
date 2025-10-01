@@ -32,7 +32,7 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 /**
  * 悠悠球
  */
-public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob<T> implements ILeftClickReceiver {
+public class YoyosEntity<T extends YoyosEntity<T>> extends AbstractSummonMob implements ILeftClickReceiver {
 
     boolean isBacking = false;
     int maxRetrieveTicks = 40;

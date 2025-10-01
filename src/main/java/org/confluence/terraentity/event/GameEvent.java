@@ -3,12 +3,14 @@ package org.confluence.terraentity.event;
 import net.minecraft.server.level.ServerPlayer;
 
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.DifficultyChangeEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.event.NPCEvent;
 import org.confluence.terraentity.config.TEAttributeModifierConfig;
@@ -19,8 +21,10 @@ import org.confluence.terraentity.entity.npc.misc.NPCNames;
 import org.confluence.terraentity.entity.npc.mood.NPCMood;
 import org.confluence.terraentity.entity.npc.trade.NPCTradeManager;
 import org.confluence.terraentity.entity.npc.trade.TradeModifiers;
+import org.confluence.terraentity.entity.util.DifficultSelector;
 import org.confluence.terraentity.network.s2c.SyncDataS2C;
 import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
+import org.confluence.terraentity.registries.mappeddata.MappedDataLoader;
 import org.confluence.terraentity.utils.AdapterUtils;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, modid = TerraEntity.MODID)
@@ -61,5 +65,8 @@ public class GameEvent {
         event.addListener(NPCNames.Loader.getInstance());
         event.addListener(NPCMood.Loader.getInstance());
         event.addListener(NPCDialogs.Loader.getInstance());
+        event.addListener(new MappedDataLoader());
+
     }
+
 }

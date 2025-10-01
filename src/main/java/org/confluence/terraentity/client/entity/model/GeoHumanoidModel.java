@@ -14,8 +14,8 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 
-import static org.confluence.terraentity.client.entity.renderer.mob.HumanoidRenderer.LEFT_HAND;
-import static org.confluence.terraentity.client.entity.renderer.mob.HumanoidRenderer.RIGHT_HAND;
+import static org.confluence.terraentity.client.entity.layer.ArmorLayer.*;
+
 
 /**
  * 人形怪的Geo模型

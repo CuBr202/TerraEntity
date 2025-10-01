@@ -5,7 +5,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.entity.boss.WallOfFleshEye;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshEye;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animation.Animation;

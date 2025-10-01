@@ -14,7 +14,8 @@ import org.confluence.terraentity.utils.FloatRGB;
  * <p>
  * 所有boss都应该实现这个接口
  */
-public interface Boss extends Enemy {
+public interface Boss extends Enemy, IDiscardWhenRespawnEntity{
+
     default boolean shouldShowMessage(){
         return isMainBody();
     }
@@ -25,6 +26,13 @@ public interface Boss extends Enemy {
 
     default boolean shouldEnhanceMultiplayer(){
         return true;
+    }
+
+    interface BossPart extends Boss {
+        @Override
+        default boolean isMainBody(){
+            return false;
+        }
     }
 
     static void sendBossSpawnMessage(Entity entity){

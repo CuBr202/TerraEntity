@@ -59,6 +59,7 @@ public abstract class TETradesMenu extends AbstractContainerMenu {
             public boolean mayPlace(ItemStack stack) {
                 return false;
             }
+
             @Override
             public void onTake(Player player, ItemStack stack){
 //                var d  = ((IPlayer)playerInventory.player).terra_entity$getDaveTrades();

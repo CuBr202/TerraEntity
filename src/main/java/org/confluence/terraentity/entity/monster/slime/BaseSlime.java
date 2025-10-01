@@ -1,6 +1,5 @@
 package org.confluence.terraentity.entity.monster.slime;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -19,7 +18,6 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -48,6 +46,8 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
     static FloatRGB SlimeColor_Blue = FloatRGB.fromInteger(0x73bcf4);
     static FloatRGB SlimeColor_Purple = FloatRGB.fromInteger(0xf334f8);
 
+    public static float slimeWaterMoveSpeed = 0.2f;
+
     private final int size;
     private final FloatRGB color;
     private int honeySoakTime;
@@ -62,9 +62,8 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
         }
         this.color = FloatRGB.fromInteger(color);
         this.honeySoakTime = 0;
+
     }
-
-
 
     Predicate<FloatRGB> colorTest = c->c.equals(SlimeColor_Green) || c.equals(SlimeColor_Blue) || c.equals(SlimeColor_Purple);
 
@@ -178,13 +177,15 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
     }
 
     @Override
-    public void setSize(int pSize, boolean pResetHealth) {
+    public void setSize(int pSize, boolean resetHealth) {
         int i = Mth.clamp(size, 1, 127);
         entityData.set(ID_SIZE, i);
         reapplyPosition();
         refreshDimensions();
         getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.2F + 0.1F * i);
-
+        if (resetHealth) {
+            this.setHealth(this.getMaxHealth());
+        }
         this.xpReward = i;
     }
 
@@ -222,8 +223,7 @@ public class BaseSlime extends Slime implements DeathAnimOptions {
     @Override
     protected void dealDamage(@NotNull LivingEntity pLivingEntity) {
         if (isAlive()) {
-            int i = getSize();
-            if (distanceToSqr(pLivingEntity) < 0.5 * (double) i && hasLineOfSight(pLivingEntity) && pLivingEntity.hurt(damageSources().mobAttack(this), getAttackDamage())) {
+            if (this.isAlive() && this.isWithinMeleeAttackRange(pLivingEntity) && this.hasLineOfSight(pLivingEntity) && pLivingEntity.hurt(damageSources().mobAttack(this), getAttackDamage())) {
                 playSound(SoundEvents.SLIME_ATTACK, 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
                 DamageSource damagesource = this.damageSources().mobAttack(this);
                 if (this.level() instanceof ServerLevel serverlevel)

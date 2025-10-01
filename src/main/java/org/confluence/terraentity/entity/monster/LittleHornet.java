@@ -29,11 +29,11 @@ import java.util.UUID;
 /**
  * 蜂后召唤的蜜蜂
  */
-public class LittleHornet extends Hornet implements IMinion<LittleHornet> {
+public class LittleHornet extends Hornet implements IMinion {
     QueenBee owner;
 
     public LittleHornet(EntityType<? extends Monster> type, Level level) {
-        super(type, level, new AbstractPrefab(3,1,3,20,0,0.2f)
+        super(type, level, new AbstractPrefab()
                 .getPrefab()
                 .setNoAttachAttack()
                 .setNoGravity()

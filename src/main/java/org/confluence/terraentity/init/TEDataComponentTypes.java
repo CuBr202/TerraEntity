@@ -9,6 +9,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
+import org.confluence.terraentity.data.component.ResourceLocationComponent;
 
 import java.util.function.Supplier;
 
@@ -27,6 +28,8 @@ public final class TEDataComponentTypes {
     public static final Supplier<DataComponentProvider<SingleBooleanComponent>> BOOMERANG_READY =
             register("boomerang_ready", SingleBooleanComponent.CODEC);
 
+    public static final Supplier<DataComponentProvider<ResourceLocationComponent>> WHIP_PATH =
+            register("whip_path", ResourceLocationComponent.CODEC);
 
 
     private static <T extends IDataComponentType<T>> Supplier<DataComponentProvider<T>> register(String location, Supplier<Codec<T>> codec) {

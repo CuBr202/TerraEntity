@@ -1,6 +1,5 @@
 package org.confluence.terraentity.entity.ai.keyframe;
 
-import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;

@@ -3,7 +3,6 @@ package org.confluence.terraentity.entity.ai.goal;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.util.AirRandomPos;
-import net.minecraft.world.entity.ai.util.RandomPos;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.monster.demoneye.DemonEyeWanderGoal;
 

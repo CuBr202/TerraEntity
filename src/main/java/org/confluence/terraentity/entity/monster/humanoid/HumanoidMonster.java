@@ -23,6 +23,8 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
+import org.confluence.terraentity.entity.ai.goal.TERangedAttackGoal;
 import org.confluence.terraentity.entity.animation.BoneStateMachine;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
@@ -45,18 +47,8 @@ public class HumanoidMonster extends AbstractMonster implements RangedAttackMob,
     BoneStateMachine<BoneStates> leftArmBoneStateMachine;
     BoneStateMachine<BoneStates> rightArmBoneStateMachine;
     AttributeBuilder builder;
-    private final RangedBowAttackGoal<HumanoidMonster> bowGoal = new RangedBowAttackGoal<>(this, 1.0, 20, 15.0F);
-    private final MeleeAttackGoal meleeGoal = new MeleeAttackGoal(this, 1.2, false) {
-        public void stop() {
-            super.stop();
-            HumanoidMonster.this.setAggressive(false);
-        }
-
-        public void start() {
-            super.start();
-            HumanoidMonster.this.setAggressive(true);
-        }
-    };
+    protected final TERangedAttackGoal<?> bowGoal = this.createBowGoal();
+    protected final Goal meleeGoal = this.createMeleeGoal();
 
     public HumanoidMonster(EntityType<? extends HumanoidMonster> entityType, Level level, AttributeBuilder builder) {
         super(entityType, level, builder);
@@ -66,6 +58,10 @@ public class HumanoidMonster extends AbstractMonster implements RangedAttackMob,
             rightArmBoneStateMachine = new BoneStateMachine<>(BoneStates.IDLE);
         }
         this.builder = builder;
+    }
+
+    public HumanoidMonster(EntityType<? extends HumanoidMonster> entityType, Level level) {
+        this(entityType, level, new HumanoidBuilder());
     }
 
     @Override
@@ -97,7 +93,7 @@ public class HumanoidMonster extends AbstractMonster implements RangedAttackMob,
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "Walk/Idle", 5, state ->{
-            state.setControllerSpeed(builder.MOVEMENT_SPEED / 0.25f);
+            state.setControllerSpeed((float) (this.getAttributeValue(Attributes.MOVEMENT_SPEED) / 0.25f));
             return state.setAndContinue(state.isMoving() ? DefaultAnimations.WALK : DefaultAnimations.IDLE);
         }
         ));
@@ -198,7 +194,24 @@ public class HumanoidMonster extends AbstractMonster implements RangedAttackMob,
                 this.goalSelector.addGoal(4, this.meleeGoal);
             }
         }
+    }
 
+    protected Goal createMeleeGoal() {
+        return new MeleeAttackGoal(this, 1.2, false) {
+            public void stop() {
+                super.stop();
+                HumanoidMonster.this.setAggressive(false);
+            }
+
+            public void start() {
+                super.start();
+                HumanoidMonster.this.setAggressive(true);
+            }
+        };
+    }
+
+    protected TERangedAttackGoal<?> createBowGoal() {
+        return new TERangedAttackGoal<>(this, 1.0, 50, 15.0F);
     }
 
     protected int getHardAttackInterval() {
@@ -277,11 +290,15 @@ public class HumanoidMonster extends AbstractMonster implements RangedAttackMob,
         return false;
     }
 
+//    @Override
+//    public Vec3 getVehicleAttachmentPoint(Entity entity) {
+//        return super.getVehicleAttachmentPoint(entity).add(0,0.65,0);
+//    }
+
     public static class HumanoidBuilder extends AttributeBuilder {
         private ItemStack mainHand = ItemStack.EMPTY;
 
         public HumanoidBuilder() {
-            this.MOVEMENT_SPEED = 0.25f;
         }
 
         public HumanoidBuilder setMainHand(ItemStack mainHand) {

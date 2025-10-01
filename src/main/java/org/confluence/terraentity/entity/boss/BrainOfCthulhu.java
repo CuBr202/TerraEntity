@@ -1,7 +1,8 @@
 package org.confluence.terraentity.entity.boss;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -10,13 +11,16 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
-import org.confluence.terraentity.entity.ai.MobSkill;
-import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curse;
 import org.confluence.terraentity.api.entity.animation.Curve;
+import org.confluence.terraentity.data.codec.TECodecs;
+import org.confluence.terraentity.data.mappeddata.BossSkillMapDatas;
+import org.confluence.terraentity.entity.ai.fsm.MobSkill;
+import org.confluence.terraentity.entity.ai.motion.curve.Bezier3Curve;
 import org.confluence.terraentity.entity.monster.VisualNeuron;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEBossEntities;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.TEUtils;
 import org.joml.Quaternionf;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -29,40 +33,61 @@ import java.util.List;
 /**
  * 克脑
  */
-public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implements GeoEntity, Boss {
-    private static final float MAX_HEALTHS = 552f;
-    private static final float DAMAGE = 14f;//接触伤害
-    private static final float MOVE_SPEED = 0.3f;
-    private int minionsCount = 20; // 随从数量
-    private int minionsSummonInternal = 10; // 随从攻击间隔
-    private int dashCount = 2; // 冲刺次数, 血量低于30%时冲刺3次
+public class BrainOfCthulhu extends AbstractTerraBossBase implements GeoEntity, Boss {
+
+    private final float MOVE_SPEED;
+    private final float MOVE_SPEED_STAGE_2 = 0.5f;
+    private int minionsCount; // 随从数量
+    private final int minionsSummonInternal; // 随从攻击间隔
+    private int dashCount; // 冲刺次数
+    private final int dashCountHealth30percent; // 血量低于30%时冲刺3次
 
     private float _dashCount = dashCount;
-    private float _moveSpeed = MOVE_SPEED;
+    private float _moveSpeed;
     private final List<VisualNeuron> minions = new LinkedList<>(); // 随从实体
     private final List<Vec3> homePoses = new ArrayList<>(); // 随从初始位置
 
     public int stage = 1; //阶段
     private Vec3 inertia = Vec3.ZERO;
     private Curve curve;
-
+    SkillParams skillParams;
     public BrainOfCthulhu(EntityType<? extends BrainOfCthulhu> entityType, Level level) {
-        super(entityType, level, MAX_HEALTHS, 3);
-        //初始属性
-        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DAMAGE);
-//        SingletonGeoAnimatable.registerSyncedAnimatable(this);
+        super(entityType, level);
+
         this.playSound(TESounds.ROAR.get());
         collisionProperties.detectInternal = 1;
         this.noPhysics = true;
+        this.skillParams = MappedDataTypes.BOSS_SKILL_MAP_DATAS.get().getData(BossSkillMapDatas.BRAIN_OF_CTHULHU_PARAMS);
 
-        this.xpReward = 2000;
-        if(difficult){
-            minionsSummonInternal = 6;
-        }
+        this.xpReward = skillParams.xpReward;
+        this.minionsSummonInternal = this.difficultSelector.switchBy(skillParams.minionsSummonInternal);
+        this.minionsCount = skillParams.minionsCount;
+        this.dashCount = skillParams.dashCount;
+        this.dashCountHealth30percent = skillParams.dashCountHealth30percent;
+        this.MOVE_SPEED = skillParams.moveSpeed;
+
+        _moveSpeed = MOVE_SPEED;
     }
 
     public BrainOfCthulhu(Level level) {
         this(TEBossEntities.BRAIN_OF_CTHULHU.get(), level);
+    }
+
+    public record SkillParams(int xpReward, int minionsCount, List<Integer> minionsSummonInternal, int dashCount, int dashCountHealth30percent,  float moveSpeed) {
+
+        public static Codec<SkillParams> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.fieldOf("xp_reward").forGetter(SkillParams::xpReward),
+                Codec.INT.fieldOf("minions_count").forGetter(SkillParams::minionsCount),
+                TECodecs.INT_LIST_CODEC.fieldOf("minions_summon_internal").forGetter(SkillParams::minionsSummonInternal),
+                Codec.INT.fieldOf("dash_count").forGetter(SkillParams::dashCount),
+                Codec.INT.fieldOf("dash_count_health_30percent").forGetter(SkillParams::dashCountHealth30percent),
+                Codec.FLOAT.fieldOf("move_speed").forGetter(SkillParams::moveSpeed)
+        ).apply(instance, SkillParams::new));
+
+        public static SkillParams getDefaultParams() {
+            return new SkillParams(2000, 20, List.of(10, 6, 6, 5),
+                    2, 3, 0.3f);
+        }
     }
 
     // 定义技能类型
@@ -147,7 +172,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         stage1_fade_out = new MobSkill<BrainOfCthulhu>(close, 40, 0)
                 .onInit(e->{
                     if(getTarget() != null) {
-                        float r = random.nextFloat() + (difficult ? 6 : 8);
+                        float r = random.nextFloat() + (this.isExpert() ? 6 : 8);
 
                         float theta = random.nextFloat() * 2 * (float) Math.PI;
                         float beta = random.nextFloat() * (float) Math.PI;
@@ -173,7 +198,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                     lookAt(10);
                 })
                 .onOver(e->{
-                    _moveSpeed = 0.5f;
+                    _moveSpeed = MOVE_SPEED_STAGE_2 ;
                     noPhysics = true;
                     for(int i=1;i<4;i++){
                         BrainFake fake = TEBossEntities.BRAIN_FAKE.get().create(level());
@@ -192,7 +217,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                         float theta = random.nextFloat() * 2 * (float) Math.PI;
                         Vec3 control = target.position().add(r * Math.sin(theta), 2, r * Math.cos(theta));
                         Vec3 end = control.add(0,3,0);
-                        curve = new Bezier3Curse(position(), control, end);
+                        curve = new Bezier3Curve(position(), control, end);
                     }
                 })
                 .onTick(e->{
@@ -214,7 +239,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                     if(skills.canTrigger()){
                         Vec3 control = target.position().add(random.nextFloat() - 0.5f, -2, random.nextFloat() - 0.5f);
                         Vec3 end = target.position().add(target.position().subtract(position()).normalize().multiply(10,0,10)).add(0,2,0);
-                        curve = new Bezier3Curse(position(), control, end);
+                        curve = new Bezier3Curve(position(), control, end);
                         playSound(TESounds.ROAR.get(),5,1);
                     }
                     if(skills.canContinue() && curve != null) {
@@ -224,7 +249,7 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
                 })
                 .onOver(e->{
                     if(getHealth() / getMaxHealth() < 0.3f)
-                        dashCount = 3;
+                        dashCount = dashCountHealth30percent;
                     if(_dashCount > 0){
                         _dashCount--;
                         skills.forceStartIndex(5);
@@ -304,8 +329,8 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
 
     public boolean canAttack(LivingEntity target) {
         return super.canAttack(target) && !(target instanceof VisualNeuron) && (
-                //大师始终可以攻击，非大师瞬移后短时间不攻击
-                difficult || !(skills.index == 3 && skills.tick < 25))
+                //ftw 始终可以攻击，非ftw瞬移后短时间不攻击
+                this.isFtw() || !(skills.index == 3 && skills.tick < 25))
                 ;
 
     }
@@ -351,14 +376,6 @@ public class BrainOfCthulhu extends AbstractTerraBossBase<BrainOfCthulhu> implem
         return new float[]{ hp , maxHp};
     }
 
-
-    @Override // 受伤音效
-    protected SoundEvent getHurtSound(DamageSource damageSource) {return TESounds.ROUTINE_HURT.get();}
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return TESounds.ROUTINE_DEATH.get();
-    }
     @Override
     public boolean isNoGravity(){ return true; }
 

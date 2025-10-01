@@ -39,7 +39,7 @@ public class HellFireEffect extends MobEffect implements IMobEffectExtension {
                 new CustomExplodeCalculator() {
                     @Override
                     public float getEntityDamageAmount(Explosion explosion, Entity entity, double original) {
-                        if(!( entity instanceof Enemy || entity instanceof AbstractTerraBossBase<?>)) return 0;
+                        if(!( entity instanceof Enemy || entity instanceof AbstractTerraBossBase)) return 0;
                         return 3 + amplifier*3;
                     }
 

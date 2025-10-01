@@ -58,12 +58,6 @@ public class RangeSkeleton extends AbstractSkeleton implements GeoEntity, IUseIt
 //        builder.modify(this);
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.25)
-                .add(Attributes.MAX_HEALTH, 10)
-                .add(Attributes.ATTACK_DAMAGE, 6);
-    }
 
     @Override
     protected SoundEvent getStepSound() {

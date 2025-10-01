@@ -1,5 +1,6 @@
 package org.confluence.terraentity.entity.monster;
 
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -13,6 +14,7 @@ import org.confluence.terraentity.entity.proj.DemonScytheProj;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.entity.TEProjectileEntities;
 
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -79,5 +81,20 @@ public class Demon extends Harpy {
             proj.setDamage((float) this.getAttributeValue(Attributes.ATTACK_DAMAGE));
             level().addFreshEntity(proj);
         }
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return TESounds.DEMON_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound(){
+        return TESounds.DEMON_FREE.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return TESounds.DEMON_DEATH.get();
     }
 }

@@ -6,8 +6,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
 import net.minecraftforge.registries.RegistryObject;
-import org.confluence.terraentity.entity.boss.WallOfFlesh;
-import org.confluence.terraentity.entity.boss.WallOfFleshMouth;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
+import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshMouse;
 import org.confluence.terraentity.init.TEEffects;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,9 +27,9 @@ public class HorrifiedEffect extends MobEffect {
             if(!living.getBoundingBox().intersects(wall.getOutsideCollisionBox())&&!living.getBoundingBox().intersects(wall.getInsideBox())||living.level().dimension()!=(wall.level().dimension())){
                 living.kill();
             }else if(living.getBoundingBox().intersects(wall.getOutsideCollisionBox())&&!living.getBoundingBox().intersects(wall.getInsideBox())){
-                Optional<WallOfFleshMouth> nearestMouth = wall.baseSegments.stream()
-                        .filter(segment -> segment instanceof WallOfFleshMouth && segment.getY() > segment.level().getMinBuildHeight())
-                        .map(segment -> (WallOfFleshMouth) segment)
+                Optional<WallOfFleshMouse> nearestMouth = wall.baseSegments.stream()
+                        .filter(segment -> segment instanceof WallOfFleshMouse && segment.getY() > segment.level().getMinBuildHeight())
+                        .map(segment -> (WallOfFleshMouse) segment)
                         .min(Comparator.comparingDouble(mouth ->
                                 mouth.distanceToSqr(living)
                         ));

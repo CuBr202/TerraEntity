@@ -6,8 +6,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
@@ -16,8 +14,8 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.entity.animation.MultiBoneStateMachine;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,7 +24,6 @@ import java.util.UUID;
  */
 public class SkeletronHand extends Skeletron {
 
-    private float attackDamage = 10; // 攻击伤害
 
     public @Nullable Skeletron owner;
     public HandSide handSide;
@@ -43,11 +40,8 @@ public class SkeletronHand extends Skeletron {
     }
     public SkeletronHand(EntityType<? extends Monster> entityType, Level level, @Nullable Skeletron owner, HandSide handSide) {
         super(entityType, level);
-        // 重新设置属性
-        this.baseHealth = 405;
-        this.baseArmor = 4;
+
         this.stateMachine = new MultiBoneStateMachine<>(BoneStates.IDLE);
-        this.setAttactDamage(attackDamage);
 
         this.handSide = handSide;
         this.owner = owner;
@@ -58,14 +52,16 @@ public class SkeletronHand extends Skeletron {
                 getEntityData().set(DATA_OWNER, Optional.of(owner.getUUID()));
             }
         }
-        slapInterval = (expert ? 30 : 45)+level.random.nextInt(6);
-        slapSpeed = expert ? 1.2 : 1.0;
+        slapInterval = (this.isExpert() ? 30 : 45)+level.random.nextInt(6);
+        slapSpeed = this.isExpert() ? 1.2 : 1.0;
         slapTick = slapInterval;
 
         // 防止手卡位置导致动不了
         this.noPhysics = true;
         // 防止超出包围盒不渲染
         this.noCulling = true;
+
+        this.xpReward = (int) (0.3f * this.xpReward);
 
     }
 
@@ -149,12 +145,6 @@ public class SkeletronHand extends Skeletron {
         }
         super.tick();
         yBodyRot = yHeadRot;
-    }
-
-    @Override
-    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
-        // confluence mixin here
-        return super.addEffect(effectInstance, entity);
     }
 
     public class StandbyGoal extends Skeletron.FloatGoal {

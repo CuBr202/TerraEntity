@@ -1,10 +1,10 @@
 package org.confluence.terraentity.utils;
 
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -25,28 +25,24 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.entity.PartEntity;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
-import net.minecraftforge.network.event.EventNetworkChannel;
 import org.confluence.terraentity.api.entity.IAttackableProjectile;
 import org.confluence.terraentity.config.ServerConfig;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.entity.boss.AbstractTerraBossBase;
 import org.confluence.terraentity.api.entity.ISummonMob;
+import org.confluence.terraentity.mixed.IAttributeInstance;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -55,9 +51,15 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public final class TEUtils {
+
+    private TEUtils() {
+    }
+
     public static float nextFloat(RandomSource randomSource, float origin, float bound) {
         if (origin >= bound) {
             throw new IllegalArgumentException("bound - origin is non positive");
@@ -229,9 +231,9 @@ public final class TEUtils {
      */
     public static float getMultiple(Level level, Attribute attribute) {
         if(attribute == Attributes.MAX_HEALTH)
-            return switchByDifficulty(level, 0.66F, 1F,1.5F);
+            return switchByDifficulty(level, 0.66f, 1f, 1.5f);
         else if(attribute == Attributes.ATTACK_DAMAGE)
-            return switchByDifficulty(level, 0.66F, 1F,1.5F);
+            return switchByDifficulty(level, 0.66f, 1f, 1.5f);
         else return 1f;
     }
 
@@ -241,9 +243,9 @@ public final class TEUtils {
     static String difficultyDamageKey = "difficulty_modifier_attack_damage";
 
     static Supplier<AttributeModifier> boss_healthModifier = ()->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),healthKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
-    static Supplier<AttributeModifier> boss_damageModifier = ()->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
-    static Function<Float,AttributeModifier> difficultyDamageModifier = (f)->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),difficultyDamageKey, f - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
-    static Function<Float,AttributeModifier> difficultyHealthModifier = (f)->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),difficultyHealthKey, f - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Supplier<AttributeModifier> boss_damageModifier = ()->new AttributeModifier(UUID.fromString("0228bce8-38f8-41dc-8e3b-ed8f8adbb850"),damageKey, ServerConfig.BOSS_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Function<Float,AttributeModifier> difficultyDamageModifier = (f)->new AttributeModifier(UUID.fromString("0d59c75d-bf9d-487e-9332-759bcbfd4d8f"),difficultyDamageKey, f - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Function<Float,AttributeModifier> difficultyHealthModifier = (f)->new AttributeModifier(UUID.fromString("e4acb5ea-eae7-4615-8a74-195f095f651c"),difficultyHealthKey, f - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
     public static void multiplePlayerEnhance(LivingEntity entity) {
         if(!entity.level().isClientSide) {
             float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
@@ -267,12 +269,12 @@ public final class TEUtils {
         }
     }
 
-    static Supplier<AttributeModifier> monster_healthModifier = ()->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),healthKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
-    static Supplier<AttributeModifier> monster_damageModifier = ()->new AttributeModifier(UUID.fromString("d65f6f0e-6881-47eb-8beb-722c340805eb"),damageKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Supplier<AttributeModifier> monster_healthModifier = ()->new AttributeModifier(UUID.fromString("a2378da0-59a4-4c76-823d-47250a326858"),healthKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_HEALTH.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    static Supplier<AttributeModifier> monster_damageModifier = ()->new AttributeModifier(UUID.fromString("1983c535-c32a-425a-a5d5-e761cd4949d8"),damageKey, ServerConfig.MONSTER_ATTRIBUTES_MULTIPLIER_DAMAGE.get() - 1, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     public static void monsterEnhance(LivingEntity entity) {
 
-        if(entity instanceof Boss || entity instanceof AbstractTerraBossBase<?> || entity instanceof ISummonMob<?> ) return;
+        if(entity instanceof Boss || entity instanceof AbstractTerraBossBase || entity instanceof ISummonMob ) return;
         if(!ServerConfig.ENHANCE_ALL_MONSTER.get() && !BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getNamespace().equals(TerraEntity.MODID)) return;
         if(!entity.level().isClientSide) {
             float multiplier = getMultiple(entity.level(), Attributes.MAX_HEALTH);
@@ -367,6 +369,13 @@ public final class TEUtils {
         return new Vec3(x, y, z);
     }
 
+
+    public static Vec3 circle(float r, float theta){
+        double x = r * Math.cos(theta);
+        double y = r * Math.sin(theta);
+        return new Vec3(x, 0, y);
+    }
+
     /**
      * 根据权重随机获取物品
      */
@@ -431,7 +440,7 @@ public final class TEUtils {
      * @param distance
      * @return
      */
-    public static EntityHitResult getEyeTraceHitResult(Entity entity, double distance){
+    public static @Nullable EntityHitResult getEyeTraceHitResult(Entity entity, double distance){
         AABB aabb = entity.getBoundingBox().inflate(distance);
         Vec3 from = entity.getEyePosition();
         Vec3 to = entity.getEyePosition().add(entity.getLookAngle().scale(distance));
@@ -448,8 +457,23 @@ public final class TEUtils {
         return result.getBlockPos();
     }
 
+    /**
+     * 获取视角前方的位置
+     */
+    public static Vec3 getEyeVec3(Entity entity, float distance, float partialTicks){
+        return entity.getEyePosition(partialTicks).add(entity.getLookAngle().normalize().scale(distance));
+    }
+
+    /**
+     * 有无视线阻挡
+     */
+    public static boolean canSeePos(Entity entity, Vec3 pos){
+        return entity.level().clip(new ClipContext(entity.getEyePosition(), pos, ClipContext.Block.COLLIDER, net.minecraft.world.level.ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
+    }
+
+
     public static boolean isFTWWorld(ServerLevel level) {
-        return false; // confluence mixed here
+        return false; // confluence mixin here
     }
 
     /**
@@ -658,7 +682,7 @@ public final class TEUtils {
                         (
                                 entityHitResult.getEntity() instanceof LivingEntity livingEntity &&
                                         livingEntity instanceof Enemy &&
-                                        !(livingEntity instanceof ISummonMob<?>)
+                                        !(livingEntity instanceof ISummonMob)
                         )) {
                     return livingEntity;
                 }
@@ -704,7 +728,7 @@ public final class TEUtils {
         ){
             return false;
         }
-        if(target instanceof ISummonMob<?>) {
+        if(target instanceof ISummonMob) {
             return false;
         }
 
@@ -716,7 +740,7 @@ public final class TEUtils {
      */
     public static BiPredicate<Projectile, Entity> projectileCanHurtEntityTest = (projectile, target)-> {
 
-        if(target instanceof IAttackableProjectile<?> projectile1 && projectile1.canBeAttacked()){
+        if(target instanceof IAttackableProjectile projectile1 && projectile1.canBeAttacked()){
             return true;
         }
 
@@ -748,7 +772,7 @@ public final class TEUtils {
         // 不能攻击主人
         if(entity == target) return false;
 
-        if(target instanceof IAttackableProjectile<?> projectile1 && projectile1.canBeAttacked()){
+        if(target instanceof IAttackableProjectile projectile1 && projectile1.canBeAttacked()){
             return true;
         }
 
@@ -884,11 +908,11 @@ public final class TEUtils {
         boolean hasBoss = hasBoss(Short.MAX_VALUE, player.level(),
                 player.getBoundingBox());
         if (hasBoss) {
-            return player.getRandom().nextInt(ModConfigs.BOSS_RESPAWN_TIME_MIN.getPrefab()
-                    , ModConfigs.BOSS_RESPAWN_TIME_MAX.getPrefab());
+            return player.getRandom().nextInt(ModConfigs.BOSS_RESPAWN_TIME_MIN.get()
+                    , ModConfigs.BOSS_RESPAWN_TIME_MAX.get());
         } else {
-            return player.getRandom().nextInt(ModConfigs.DEFAULT_RESPAWN_TIME_MIN.getPrefab(),
-                    ModConfigs.DEFAULT_RESPAWN_TIME_MAX.getPrefab());
+            return player.getRandom().nextInt(ModConfigs.DEFAULT_RESPAWN_TIME_MIN.get(),
+                    ModConfigs.DEFAULT_RESPAWN_TIME_MAX.get());
         }
     }*/
 
@@ -932,6 +956,28 @@ public final class TEUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * 获取百分比增伤
+     * <p>E.G</p>
+     * <p>1.2 -> +20%</p>
+     */
+    public static float getAttributePercent(Attribute attribute, LivingEntity entity){
+        AttributeInstance instance = entity.getAttribute(attribute);
+        if(instance!= null){
+            return (float) ((IAttributeInstance) instance).terraentity$getPercentage();
+        }
+        return 1;
+    }
+
+    public static <K, V> Map<K,V> listToMap(Stream<? extends Pair<K, V>> pairs){
+        return pairs.collect(Collectors.toMap(Pair::key, Pair::value));
+    }
+
+    public static Vec3 entityLerpMovement(Entity entity, float partialTick){
+        return new Vec3(entity.xo, entity.yo, entity.zo).lerp(entity.position(), partialTick);
+//        return new Vec3(entity.getX())
     }
 
 }

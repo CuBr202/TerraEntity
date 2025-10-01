@@ -7,23 +7,31 @@ import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import org.confluence.terraentity.mixed.SelfGetter;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * 仆从接口
+ * 仆从接口，这个只适用于玩家的仆从或者仅服务端实体，因为客户端只知道玩家的UUID
+ * <p>必须由Entity实现</p>
  */
-public interface IMinion<T extends Mob> extends SelfGetter<T> {
+public interface IMinion {
 
     EntityDataAccessor<Optional<UUID>> getDATA_OWNER_UUID();
 
-    default UUID minion_getOwnerUUID() {
-        return (te$getSelf().getEntityData().get(getDATA_OWNER_UUID())).orElse(null);
+    default Entity asEntity(){
+        return (Entity) this;
+    }
+
+    @Contract(pure = true)
+    default @Nullable UUID minion_getOwnerUUID() {
+        return (asEntity().getEntityData().get(getDATA_OWNER_UUID())).orElse(null);
     }
 
     default void minion_setOwnerUUID(UUID uuid) {
-        te$getSelf().getEntityData().set(getDATA_OWNER_UUID(), Optional.ofNullable(uuid));
+        asEntity().getEntityData().set(getDATA_OWNER_UUID(), Optional.ofNullable(uuid));
     }
 
     default void minion_setOwner(Entity owner){
@@ -40,13 +48,13 @@ public interface IMinion<T extends Mob> extends SelfGetter<T> {
         UUID uuid=null;
         if (compound.hasUUID("Owner")) {
             uuid = compound.getUUID("Owner");
-        } else if(te$getSelf().getServer()!=null) {
+        } else if(asEntity().getServer()!=null) {
             String s = compound.getString("Owner");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(te$getSelf().getServer(), s);
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(asEntity().getServer(), s);
         }
         if(uuid!=null) {
             this.minion_setOwnerUUID(uuid);
-            if (te$getSelf().level() instanceof ServerLevel sl) {
+            if (asEntity().level() instanceof ServerLevel sl) {
                 Entity owner = sl.getEntity(uuid);
                 if(owner != null)
                     minion_setOwner(owner);

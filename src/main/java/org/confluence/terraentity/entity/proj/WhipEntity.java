@@ -22,6 +22,8 @@ import org.confluence.terraentity.api.entity.IAttackableProjectile;
 import org.confluence.terraentity.data.component.EffectStrategyComponent;
 import org.confluence.terraentity.data.enchantment.TEEnchantmentHelper;
 import org.confluence.terraentity.data.enchantment.TEEnchantments;
+import org.confluence.terraentity.data.mappeddata.WeaponMappedDatas;
+import org.confluence.terraentity.data.mappeddata.data.WhipPathManager;
 import org.confluence.terraentity.entity.ai.keyframe.animation.Vec3KeyframeAnimation;
 import org.confluence.terraentity.entity.ai.keyframe.dynamic_curve.SplineKeyframeDynamicCurve;
 import org.confluence.terraentity.api.entity.ISummonMob;
@@ -31,7 +33,9 @@ import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.item.TEWhipItems;
 import org.confluence.terraentity.item.BaseWhipItem;
+import org.confluence.terraentity.registries.mappeddata.MappedDataTypes;
 import org.confluence.terraentity.utils.TEUtils;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -42,19 +46,38 @@ import java.util.List;
 import java.util.Map;
 
 public class WhipEntity extends Projectile {
+    /**
+     * 伤害衰减的最小伤害值
+     */
+    protected final float _damageMin = 1f; // 最小伤害
 
-    Map<Entity, Integer> hitEntities = new HashMap<>();
+    /**
+     * 每次命中一次敌人，伤害乘以_damageDecline
+     */
+    protected final float _damageDecline = 0.8f; // 伤害衰减
 
-    int existTick = 22;
-    int _existTick = 22; // 基础存在时间
+    /**
+     * 从bb的坐标转到mc坐标的系数
+     */
+    protected final float _rangeFactor = 0.1f; // 基础鞭范围
+    /**
+     * 记录命中的怪物，同一怪物短时间不能多次判定
+     * <p>Value: hitCooldown</p>
+     */
+    final Map<Entity, Integer> hitEntities = new HashMap<>();
+    /**
+     * 命中同一怪物伤害判定的间隔
+     */
+    public int hitCooldown = 5; // 击中冷却时间
+    /**
+     * 存在时间参考值
+     */
+    final int _existTick = 22; // 基础存在时间
+
+    int existTick = _existTick;
     int drawBackTick = 10; // 返回到player的过渡时间
-
-    protected float _damageDeclineStep = 0.1f; // 基础伤害衰减系数
-    protected float _damageDeclineMax = 0.5f; // 最大伤害衰减系数
     protected float damageDecline = 1f; // 伤害衰减
 
-    protected float _rangeFactor = 0.1f; // 基础鞭范围
-    public int hitCooldown = 5; // 击中冷却时间
     public EffectStrategyComponent hiteffect; // 击中特效
     public EffectStrategyComponent hiteffect_beneficial; // 农场主增益
 
@@ -71,7 +94,7 @@ public class WhipEntity extends Projectile {
     List<Vec3KeyframeAnimation> parts;
     // 关键点插值器
     public SplineKeyframeDynamicCurve<Vec3KeyframeAnimation> interpolator;
-    Vec3KeyframeAnimation tail;
+
     // 攻速
     public double speed = 1;
     float weepDamage = 1;
@@ -87,18 +110,6 @@ public class WhipEntity extends Projectile {
 
     public WhipEntity(EntityType<? extends WhipEntity> entityType, Level level) {
         super(entityType, level);
-
-//        try {
-            // 这里只能单人测试用，发布版本要改用服务端builder!
-//        tail = Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone1").getFirst());
-//        parts = List.of(
-//                tail,
-//                Vec3KeyframeAnimation.fromAnimation(LashAnimation.animation.boneAnimations().get("bone4").getFirst())
-//        );
-
-//        }catch (NoClassDefFoundError e){
-//            TerraEntity.LOGGER.warn("You Forget To Change Debug Code To Release Version!\n", e);
-//        }
 
         this.noPhysics = true;
         this.noCulling = true;
@@ -125,49 +136,14 @@ public class WhipEntity extends Projectile {
     }
 
     private void updateWeapon(ItemStack weapon, boolean sweep){
-        int sweepLevel = TEEnchantmentHelper.getEnchantmentLevel(TEEnchantments.WHIP_SWEEP.get(), weapon);
+        int sweepLevel = TEEnchantmentHelper.getEnchantmentLevel(TEEnchantments.WHIP_SWEEP, weapon);
+        WhipPathManager.WhipPath path1 = MappedDataTypes.getData(MappedDataTypes.WEAPON_MAP_DATAS, WeaponMappedDatas.WHIP_PATHS).getWhipPath(weapon);
         if(sweepLevel > 0 && sweep) {
-
             // 横扫之鞭
-            parts = List.of(
-                    Vec3KeyframeAnimation.Builder()
-                            .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
-                            .addKeyframeTimeStamp(0.1667, new Vec3(-3, 1, 4))
-                            .addKeyframeTimeStamp(0.375, new Vec3(-9, 2, 4))
-                            .addKeyframeTimeStamp(0.5417, new Vec3(-15, 1, 0))
-                            .addKeyframeTimeStamp(0.7083, new Vec3(-9, 0, -4))
-                            .addKeyframeTimeStamp(0.875, new Vec3(-3, 0, -4))
-                            .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
-                            .build(),
-                    Vec3KeyframeAnimation.Builder()
-                            .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
-                            .addKeyframeTimeStamp(0.1667, new Vec3(-1, 0, 2))
-                            .addKeyframeTimeStamp(0.375, new Vec3(-2, 1, 3))
-                            .addKeyframeTimeStamp(0.5417, new Vec3(-5, 1, 1))
-                            .addKeyframeTimeStamp(0.7083, new Vec3(-3, -1, -3))
-                            .addKeyframeTimeStamp(0.875, new Vec3(-1, 0, -1))
-                            .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
-                            .build()
-            );
+            parts = path1.sweep;
             this.weepDamage += sweepLevel * 0.2f;
         }else {
-            parts = List.of(
-                    Vec3KeyframeAnimation.Builder()
-                            .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
-                            .addKeyframeTimeStamp(0.25, new Vec3(-4, 3, 0))
-                            .addKeyframeTimeStamp(0.5, new Vec3(-14, 3, 0))
-                            .addKeyframeTimeStamp(0.75, new Vec3(-16, -4, 0))
-                            .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
-                            .build(),
-                    Vec3KeyframeAnimation.Builder()
-                            .addKeyframeTimeStamp(0, new Vec3(0, 0, 0))
-                            .addKeyframeTimeStamp(0.25, new Vec3(-1, 0, 0))
-                            .addKeyframeTimeStamp(0.5, new Vec3(-4, 0, 0))
-                            .addKeyframeTimeStamp(0.75, new Vec3(-5, 0, 0))
-                            .addKeyframeTimeStamp(1, new Vec3(0, 0, 0))
-                            .build()
-
-            );
+            parts = path1.keys;
         }
         keyPositions = new ArrayList<>();
         keyPositionsO = new ArrayList<>();
@@ -225,11 +201,12 @@ public class WhipEntity extends Projectile {
             }
         }
 
-        if(existTick * 0.3f == tickCount){
+        if((int)(existTick * 0.3f) == tickCount){
             if(this.getOwner() != null) {
                 this.getOwner().playSound(TESounds.WHIP_ATTACK.get(), 0.6F + this.random.nextFloat() * 0.2f, 1.0F);
             }
         }
+
 
         if(parts == null || parts.isEmpty()) return;
         this.speed = (double) _existTick / this.existTick;
@@ -271,7 +248,7 @@ public class WhipEntity extends Projectile {
                             hitEntities.put(entity, hitCooldown);
                             trigger = doHurt(owner, hurter, hurter);
                         }
-                        if(hurter instanceof ISummonMob<?>){
+                        if(hurter instanceof ISummonMob){
                             if(hiteffect_beneficial != null){
                                 hiteffect_beneficial.applyAll(owner, hurter);
                             }
@@ -340,7 +317,7 @@ public class WhipEntity extends Projectile {
             owner.setLastHurtMob(hurter); // 让召唤物可以攻击敌人
             trigger = true;
             damage *= damageDecline;
-            damageDecline = Math.max(_damageDeclineMax, damageDecline - _damageDeclineStep);
+            damageDecline = Math.max(_damageMin, damageDecline * _damageDecline);
             if (hiteffect != null) {
                 hiteffect.applyAll( owner, hurter);
             }
@@ -356,7 +333,7 @@ public class WhipEntity extends Projectile {
                 return false;
             }
         }
-        actualHurter.hurt(TETags.DamageTypes.of(level(), TETags.DamageTypes.SUMMON,  owner), (float) damage * weepDamage);
+        actualHurter.hurt(getDamageSource(), (float) damage * weepDamage);
         return trigger;
     }
 
@@ -441,8 +418,9 @@ public class WhipEntity extends Projectile {
     }
 
     @Override
-    protected boolean canHitEntity(Entity target) {
+    protected boolean canHitEntity(@NotNull Entity target) {
         return false;
     }
+
 
 }
