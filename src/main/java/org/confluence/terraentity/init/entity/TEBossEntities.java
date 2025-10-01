@@ -28,7 +28,7 @@ public class TEBossEntities {
 
     public static final DeferredHolder<EntityType<?>, EntityType<KingSlime>> KING_SLIME = TEEntities.ENTITIES.register("king_slime", () -> EntityType.Builder.<KingSlime>of(KingSlime::new, MobCategory.MONSTER).sized(0.6f, 0.6f).clientTrackingRange(10).build(TEEntities.Key("king_slime")));
     public static final DeferredHolder<EntityType<?>, EntityType<CrownOfKingSlimeModelEntity>> CROWN_OF_KING_SLIME_MODEL = TEEntities.ENTITIES.register("crown_of_king_slime_model", () -> EntityType.Builder.<CrownOfKingSlimeModelEntity>of(CrownOfKingSlimeModelEntity::new, MobCategory.MISC).sized(0.0F, 0.0F).clientTrackingRange(10).build(TEEntities.Key("crown_of_king_slime_model")));
-    public static final DeferredHolder<EntityType<?>, EntityType<EyeOfCthulhu>> EYE_OF_CTHULHU = TEEntities.registerMonster("eye_of_cthulhu", EyeOfCthulhu::new, 2.04F, 2.04F);
+    public static final DeferredHolder<EntityType<?>, EntityType<EyeOfCthulhu>> EYE_OF_CTHULHU = TEEntities.registerMonster("eye_of_cthulhu", EyeOfCthulhu::new, 2.6F, 2.6F);
     public static final DeferredHolder<EntityType<?>, EntityType<EaterOfWorldsSegment>> EATER_OF_WORLDS_SEGMENT = TEEntities.registerMonster("eater_of_worlds_segment", EaterOfWorldsSegment::new, 2F, 2F);
     public static final DeferredHolder<EntityType<?>, EntityType<EaterOfWorlds>> EATER_OF_WORLDS = TEEntities.registerMonster("eater_of_worlds", EaterOfWorlds::new, 3F, 2F);
     public static final DeferredHolder<EntityType<?>, EntityType<BrainOfCthulhu>> BRAIN_OF_CTHULHU = TEEntities.registerMonster("brain_of_cthulhu", BrainOfCthulhu::new, 4F, 4F);
@@ -46,7 +46,7 @@ public class TEBossEntities {
         event.registerEntityRenderer(TEBossEntities.CROWN_OF_KING_SLIME_MODEL.get(), CrownOfKingSlimeModelRenderer::new);
 
         event.registerEntityRenderer(TEBossEntities.KING_SLIME.get(), KingSlimeRenderer::new);
-        event.registerEntityRenderer(TEBossEntities.EYE_OF_CTHULHU.get(), c->new GeoMotionBlurRenderer<>(c,new GeoBossModel<>(TEBossEntities.EYE_OF_CTHULHU), true,1,0.5f).setMotionBlurRenderer(r->new PosRotMotionBlurRenderer<>(r.isIfRotX(), r.getOffsetY())));
+        event.registerEntityRenderer(TEBossEntities.EYE_OF_CTHULHU.get(), c->new GeoMotionBlurRenderer<>(c,new GeoBossModel<>(TEBossEntities.EYE_OF_CTHULHU), true,1,1.5f).setMotionBlurRenderer(r->new PosRotMotionBlurRenderer<>(r.isIfRotX(), r.getOffsetY())));
         event.registerEntityRenderer(TEBossEntities.EATER_OF_WORLDS_SEGMENT.get(), c-> new EaterOfWorldSegmentRenderer(c,2.2f, 0f));
         event.registerEntityRenderer(TEBossEntities.EATER_OF_WORLDS.get(), c->new GeoNormalRenderer<>(c,new GeoBossModel<>(TEBossEntities.EATER_OF_WORLDS), true,2.2f,0));
         event.registerEntityRenderer(TEBossEntities.BRAIN_OF_CTHULHU.get(), c->new BrainOfCthulhuRenderer(c,new GeoBossModel<>(TEBossEntities.BRAIN_OF_CTHULHU)));
