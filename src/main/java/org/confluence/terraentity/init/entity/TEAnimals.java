@@ -108,12 +108,12 @@ public class TEAnimals {
         event.put(CRAB.get(), SimpleAnimal.createInsectAttributes().build());
 
         // 昆虫
-        event.put(GLOWING_SNAIL.get(), SimpleAnimal.createInsectAttributes().build());
-        event.put(GRUBBY.get(), SimpleAnimal.createInsectAttributes().build());
-        event.put(MAGGOT.get(), SimpleAnimal.createInsectAttributes().build());
-        event.put(MAGMA_SNAIL.get(), SimpleAnimal.createInsectAttributes().build());
-        event.put(SLUGGY.get(), SimpleAnimal.createInsectAttributes().build());
-        event.put(SNAIL.get(), SimpleAnimal.createInsectAttributes().build());
+        event.put(GLOWING_SNAIL.get(), SimpleAnimal.createInsectAttributes().add(Attributes.FALL_DAMAGE_MULTIPLIER, 0).build());
+        event.put(GRUBBY.get(), SimpleAnimal.createInsectAttributes().add(Attributes.FALL_DAMAGE_MULTIPLIER, 0).build());
+        event.put(MAGGOT.get(), SimpleAnimal.createInsectAttributes().add(Attributes.FALL_DAMAGE_MULTIPLIER, 0).build());
+        event.put(MAGMA_SNAIL.get(), SimpleAnimal.createInsectAttributes().add(Attributes.FALL_DAMAGE_MULTIPLIER, 0).build());
+        event.put(SLUGGY.get(), SimpleAnimal.createInsectAttributes().add(Attributes.FALL_DAMAGE_MULTIPLIER, 0).build());
+        event.put(SNAIL.get(), SimpleAnimal.createInsectAttributes().add(Attributes.FALL_DAMAGE_MULTIPLIER, 0).build());
 
         event.put(BUTTERFLY.get(), Bird.createInspectAttributes().build());
         event.put(HELL_BUTTERFLY.get(), Bird.createInspectAttributes().build());
@@ -122,10 +122,10 @@ public class TEAnimals {
         event.put(FAIRY.get(), Bird.createInspectAttributes().build());
         event.put(FEALING.get(), Bird.createInspectAttributes().build());
         event.put(WALL_OF_FAIRY.get(), Bird.createInspectAttributes().build());
-        event.put(GRASSHOPPER.get(), SimpleAnimal.createInsectAttributes().build());
+        event.put(GRASSHOPPER.get(), SimpleAnimal.createInsectAttributes().add(Attributes.FALL_DAMAGE_MULTIPLIER, 0).build());
         event.put(LADYBUG.get(), Bird.createInspectAttributes().build());
-        event.put(SCORPION.get(), SimpleAnimal.createInsectAttributes().build());
-        event.put(WORM.get(), SimpleAnimal.createInsectAttributes().build());
+        event.put(SCORPION.get(), SimpleAnimal.createInsectAttributes().add(Attributes.FALL_DAMAGE_MULTIPLIER, 0).build());
+        event.put(WORM.get(), SimpleAnimal.createInsectAttributes().add(Attributes.FALL_DAMAGE_MULTIPLIER, 0).build());
     }
 
     public static void spawnPlacementRegister(RegisterSpawnPlacementsEvent event) {
