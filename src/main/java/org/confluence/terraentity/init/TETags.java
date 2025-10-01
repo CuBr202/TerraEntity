@@ -3,7 +3,6 @@ package org.confluence.terraentity.init;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -34,6 +33,7 @@ public class TETags {
         public static final TagKey<EntityType<?>> SLIME = registerEntityType("slime");
         public static final TagKey<EntityType<?>> CORRUPT = registerEntityType("corrupt");
         public static final TagKey<EntityType<?>> NPC = registerEntityType("npc"); // 用于控制生成位置必须在玩家附近
+        public static final TagKey<EntityType<?>> FLESH_ALLIANCE = registerEntityType("flesh_alliance");
         /**
          * 拥有这个标签的mob不会控制其他mob的行动
          */

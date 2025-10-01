@@ -7,7 +7,6 @@ import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.confluence.terraentity.TerraEntity;
@@ -74,6 +73,22 @@ public class TEEntityTypeTagsProvider extends EntityTypeTagsProvider {
         };
         tag(Tags.EntityTypes.BOSSES).add(bosses);
         tag(TagKey.create(Registries.ENTITY_TYPE, TerraEntity.fromSpaceAndPath("ars_nouveau", "jar_blacklist"))).add(bosses);
+//        tag(EntityTypeTags.ARTHROPOD).add(
+//                TERideableEntities.RIDEABLE_BEE.get(),
+//                TESummonEntities.SUMMON_HORNET.get(),
+//                TEBossEntities.QUEEN_BEE.get(),
+//                TEMonsterEntities.HORNET.get(),
+//                TEMonsterEntities.LITTLE_HORNET.get(),
+//                TEMonsterEntities.GIANT_SHELLY.get()
+//        );
+        tag(TETags.EntityTypes.FLESH_ALLIANCE).add(
+                TEMonsterEntities.LEECH.get(),
+                TEMonsterEntities.FLESH_SLIME.get(),
+                TEMonsterEntities.THE_HUNGRY.get(),
+                TEMonsterEntities.HILL_HUNGRY.get(),
+                TEBossEntities.HILL_OF_FLESH.get(),
+                TEBossEntities.WALL_OF_FLESH.get()
+        );
     }
 
 }

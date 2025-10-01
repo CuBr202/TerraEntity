@@ -63,7 +63,7 @@ public class BrainFake extends BrainOfCthulhu {
     @Override
     public void addSkills() {
         RawAnimation open = RawAnimation.begin().thenPlay("open");
-        first_spawn = new MobSkill<>(open, 50, 20);
+        first_spawn = new MobSkill<BrainFake>(open, 50, 20);
         addSkill(first_spawn);
     }
 

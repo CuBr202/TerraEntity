@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.function.TriFunction;
+import org.confluence.terraentity.api.item.IProjectileModifier;
 import org.confluence.terraentity.init.TEEffectStrategies;
 import org.confluence.terraentity.registries.hit_effect.variant.PrefabEffect;
 import org.confluence.terraentity.utils.TEUtils;
@@ -17,13 +18,14 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * <h1>攻击时给敌人施加的效果或回调</h1>
  * <p> 只用于 <b>PrefabEffect</b> 复杂效果，难以数据生成IEffectStrategy </p>
  * @author coffee
  */
-public class EffectStrategy {
+public class EffectStrategy implements IEffectStrategy {
 
     BiConsumer<LivingEntity, LivingEntity> complexEffect;
     IEffectStrategy effect;
@@ -75,6 +77,16 @@ public class EffectStrategy {
         return effect.getEffect();
     }
 
+    @Override
+    public String getName() {
+        return effect.getName();
+    }
+
+    @Override
+    public Supplier<EffectStrategyProvider> getCodec() {
+        return effect.getCodec();
+    }
+
 
     /**BASE: 最广泛的接口，可以派生出其他效果
      * <p>effect 效果</p>
@@ -122,6 +134,9 @@ public class EffectStrategy {
         Projectile projectile = supplier.apply(owner.level());
         projectile.setOwner(owner);
         projectile.setPos(entity.position().add(entity.getRandom().nextFloat()*0.2f, entity.getEyeHeight()*0.5f, entity.getRandom().nextFloat()*0.2f));
+        if(owner.getMainHandItem().getItem() instanceof IProjectileModifier modifier){
+            modifier.modifyProjectile(owner.level(), owner, projectile);
+        }
         owner.level().addFreshEntity(projectile);
     };
 

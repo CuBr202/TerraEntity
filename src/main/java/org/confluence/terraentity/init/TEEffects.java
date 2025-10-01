@@ -17,4 +17,6 @@ public class TEEffects {
     public static final RegistryObject<MobEffect> HELLFIRE = EFFECTS.register("hellfire", HellFireEffect::new);
     public static final RegistryObject<HorrifiedEffect> HORRIFIED = EFFECTS.register("horrified", HorrifiedEffect::new);
     public static final RegistryObject<TheTongueEffect> THE_TONGUE = EFFECTS.register("the_tongue", TheTongueEffect::new);
+    public static final RegistryObject<CrimsonStorm> CRIMSON_STORM = EFFECTS.register("crimson_storm", CrimsonStorm::new);
+
 }

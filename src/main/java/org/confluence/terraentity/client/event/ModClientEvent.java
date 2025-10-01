@@ -1,7 +1,6 @@
 package org.confluence.terraentity.client.event;
 
 import net.minecraft.client.gui.screens.MenuScreens;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
@@ -20,7 +19,6 @@ import org.confluence.terraentity.client.init.model.EntityBlockModelRegister;
 import org.confluence.terraentity.client.init.model.WhipModelRegister;
 import org.confluence.terraentity.client.particle.BiomeColorParticle;
 import org.confluence.terraentity.client.particle.SpitParticle;
-import org.confluence.terraentity.client.util.RegisterUtils;
 import org.confluence.terraentity.init.TEEntities;
 import org.confluence.terraentity.init.TEMenus;
 import org.confluence.terraentity.init.TEParticles;
@@ -52,9 +50,9 @@ public final class ModClientEvent {
     @SubscribeEvent
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
 //        event.registerLayerDefinition(CrownOfKingSlimeModel.LAYER_LOCATION, CrownOfKingSlimeModel::createBodyLayer);
-        RegisterUtils.registerModel(event, CrownOfKingSlimeModel.class);
-        RegisterUtils.registerModel(event, CabbageProjModel.class);
-        RegisterUtils.registerModel(event, Stinger.class);
+        registerModel(event, CrownOfKingSlimeModel.class);
+        registerModel(event, CabbageProjModel.class);
+        registerModel(event, Stinger.class);
         registerModel(event, HarpyFeatherProjectileModel.class);
         registerModel(event, DemonScytheModel.class);
 //        registerModel(event, TerraprismaModel.class);
@@ -83,7 +81,7 @@ public final class ModClientEvent {
         event.registerSpriteSet(TEParticles.LEAVES.get(), BiomeColorParticle.Provider::new);
         event.registerSpriteSet(TEParticles.SPIT.get(), SpitParticle.Provider::new);
         event.registerSpriteSet(TEParticles.SPIT_GLOW.get(), SpitParticle.EmissiveProvider::new);
-
+        event.registerSpriteSet(TEParticles.FIRE_BOUND.get(), SpitParticle.EmissiveProvider::new);
     }
 
     @SubscribeEvent

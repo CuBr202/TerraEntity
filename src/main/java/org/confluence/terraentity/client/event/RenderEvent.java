@@ -29,9 +29,11 @@ import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.confluence.terraentity.TerraEntity;
+import org.confluence.terraentity.attachment.WeaponStorage;
 import org.confluence.terraentity.client.buffer.DebugBlocksHelper;
 import org.confluence.terraentity.client.buffer.NPCChatBubbleBuffer;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
@@ -201,7 +203,8 @@ public class RenderEvent {
 
             Item item = player.getMainHandItem().getItem();
             // 使用有悠悠球时渲染手臂
-            if(item instanceof YoyosItem && player.getCapability(TEAttachments.WEAPON_STORAGE).orElseGet(null).yoyosEntity != null) {
+            LazyOptional<WeaponStorage> cap = player.getCapability(TEAttachments.WEAPON_STORAGE);
+            if(item instanceof YoyosItem && cap.isPresent() && cap.orElseThrow(RuntimeException::new).yoyosEntity != null) {
 
                 PlayerRenderer playerrenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(player);
                 PoseStack poseStack = event.getPoseStack();

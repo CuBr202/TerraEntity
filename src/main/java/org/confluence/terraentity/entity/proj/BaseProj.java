@@ -11,15 +11,14 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.registries.RegistryObject;
@@ -55,6 +54,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     protected float power = 0.4f;
     protected boolean canBeAttacked = true;
 
+
+
+    protected boolean canPenetrateBlock = false;
+
     public CollisionProperties getCollisionProperties(){
         return collisionProperties;
     }
@@ -67,6 +70,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     protected Vec3 initSpeed = Vec3.ZERO;
 
     protected static final EntityDataAccessor<Vector3f> DATA_INIT_SPEED = SynchedEntityData.defineId(BaseProj.class, EntityDataSerializers.VECTOR3);
+    protected static final EntityDataAccessor<Float> DATA_SCALE = SynchedEntityData.defineId(BaseProj.class, EntityDataSerializers.FLOAT);
 
     public BaseProj(EntityType<? extends Projectile> pEntityType, Level pLevel) {
         this(pEntityType, pLevel, Lists.newArrayList());
@@ -121,7 +125,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         this.canBeAttacked = true;
         return (T) this;
     }
-
+    public T setCanPenetrateBlock(boolean canPenetrateBlock) {
+        this.canPenetrateBlock = canPenetrateBlock;
+        return (T) this;
+    }
 
     /**
      * 简单弹幕的贴图
@@ -169,9 +176,25 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
             if (data == DATA_INIT_SPEED) {
                 this.initSpeed = new Vec3(this.entityData.get(DATA_INIT_SPEED));
                 this.setDeltaMovement(initSpeed);
+            }else if(data == DATA_SCALE){
+                this.refreshDimensions();
             }
         }
     }
+
+    public void setScale(float scale){
+        this.entityData.set(DATA_SCALE, scale);
+    }
+
+    public float getScale(){
+        return this.entityData.get(DATA_SCALE);
+    }
+
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pose) {
+        return super.getDimensions(pose).scale(this.entityData.get(DATA_SCALE));
+    }
+
     @Override
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
         super.shoot(x, y, z, velocity, inaccuracy);
@@ -184,7 +207,14 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
         Entity entity = this.getOwner();
         if (this.level().isClientSide || (entity == null || !entity.isRemoved()) && this.level().hasChunkAt(this.blockPosition())) {
             super.tick();
+
+            HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+            if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
+                this.onHit(hitresult);
+            }
+
             this.checkInsideBlocks();
+
             Vec3 vec3 = this.getDeltaMovement();
             double d0 = this.getX() + vec3.x;
             double d1 = this.getY() + vec3.y;
@@ -204,9 +234,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
                 discard();
                 return;
             }
-            if(isInWall()){
-                discard();
-            }
+//            if(isInWall()){
+//                discard();
+//            }
         }else if(clientTickCallback!= null){
             clientTickCallback.accept(this);
         }
@@ -227,10 +257,10 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     public void onAddedToWorld(){
         super.onAddedToWorld();
         if(!level().isClientSide()){
-            if(getOwner()==null){
-                discard();
-                return;
-            }
+//            if(getOwner()==null){
+////                discard();
+//                return;
+//            }
             this.damage += defaultDamage();
         }
     }
@@ -331,7 +361,9 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     @Override
     protected void onHitBlock(@NotNull BlockHitResult pResult) {
         super.onHitBlock(pResult);
-        if(!this.level().isClientSide()) discard();
+        if(!this.level().isClientSide() && !this.canPenetrateBlock) {
+            this.discard();
+        }
     }
 
     public boolean canBeAttacked(){

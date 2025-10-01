@@ -3,21 +3,19 @@ package org.confluence.terraentity.client.buffer;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.client.ModRenderTypes;
 import org.confluence.terraentity.mixed.IShaderInstance;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL11C;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
@@ -75,7 +73,7 @@ public class NPCChatBubbleBuffer extends AbstractBufferManager {
                 RenderSystem.setShader(setShader());
                 RenderSystem.setShaderTexture(0, data.target.getColorTextureId());
                 RenderSystem.setShaderTexture(1, TerraEntity.space("textures/gui/noise.png"));
-                IShaderInstance shader = (IShaderInstance) ModRenderTypes.Shaders.pixelStyleBlitShader;
+                IShaderInstance shader = (IShaderInstance) ModRenderTypes.Shaders.pixelStyleShader;
                 shader.getTerra_entity$Progress().set(data.progress);
                 shader.getTerra_entity$PixelSize().set(32f);
 //                    int light = data.light;
@@ -122,7 +120,7 @@ public class NPCChatBubbleBuffer extends AbstractBufferManager {
 
     @Override
     protected Supplier<ShaderInstance> setShader(){
-        return ()->ModRenderTypes.Shaders.pixelStyleBlitShader;
+        return ()->ModRenderTypes.Shaders.pixelStyleShader;
     }
 
     @Override

@@ -5,7 +5,7 @@
         "dstrgb": "1-srcalpha"
     },
     "vertex": "position_tex",
-    "fragment": "terra_entity:pixel_style_blit",
+    "fragment": "terra_entity:pixel_style_dissolve",
     "attributes": [
         "Position",
         "Color",

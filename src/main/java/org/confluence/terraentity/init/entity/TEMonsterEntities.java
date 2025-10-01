@@ -6,7 +6,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.Items;
@@ -17,7 +16,10 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
-import org.confluence.terraentity.client.entity.model.*;
+import org.confluence.terraentity.client.entity.model.DemonModel;
+import org.confluence.terraentity.client.entity.model.GeoNormalModel;
+import org.confluence.terraentity.client.entity.model.NymphModel;
+import org.confluence.terraentity.client.entity.model.VariantTexModel;
 import org.confluence.terraentity.client.entity.renderer.GeoNormalRenderer;
 import org.confluence.terraentity.client.entity.renderer.TheHungryRenderer;
 import org.confluence.terraentity.client.entity.renderer.mob.*;
@@ -30,10 +32,7 @@ import org.confluence.terraentity.entity.monster.prefab.FlyMonsterPrefab;
 import org.confluence.terraentity.entity.monster.prefab.LandMonsterPrefab;
 import org.confluence.terraentity.entity.monster.skeleton.MeleeSkeleton;
 import org.confluence.terraentity.entity.monster.skeleton.RangeSkeleton;
-import org.confluence.terraentity.entity.monster.slime.BaseSlime;
-import org.confluence.terraentity.entity.monster.slime.BlackSlime;
-import org.confluence.terraentity.entity.monster.slime.GoldenSlime;
-import org.confluence.terraentity.entity.monster.slime.HoneySlime;
+import org.confluence.terraentity.entity.monster.slime.*;
 import org.confluence.terraentity.entity.util.AttBuilder;
 import org.confluence.terraentity.entity.util.SpawnPlacementChecks;
 import org.confluence.terraentity.init.TEEntities;
@@ -65,7 +64,7 @@ public class TEMonsterEntities {
     public static final RegistryObject<EntityType<BaseSlime>> GREEN_DUMPLING_SLIME = registerSlime("green_dumpling_slime", 0x32CD32, 2);
     public static final RegistryObject<EntityType<BaseSlime>> SWAMP_SLIME = registerSlime("swamp_slime", 0x556B2F, 2);
     public static final RegistryObject<EntityType<GoldenSlime>> GOLDEN_SLIME = TEEntities.ENTITIES.register("golden_slime", () -> EntityType.Builder.of(GoldenSlime::new, MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(TEEntities.Key("golden_slime")));
-//    public static final RegistryObject<EntityType<FleshSlime>> FLESH_SLIME = TEEntities.ENTITIES.register("flesh_slime", () -> EntityType.Builder.<FleshSlime>of((entityType, level) -> new FleshSlime(entityType, level, 0xFF0000, 2), MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(TEEntities.Key("fleshed_slime")));
+    public static final RegistryObject<EntityType<FleshSlime>> FLESH_SLIME = TEEntities.ENTITIES.register("flesh_slime", () -> EntityType.Builder.<FleshSlime>of((entityType, level) -> new FleshSlime(entityType, level, 0xFF0000, 2), MobCategory.MONSTER).sized(0.6F, 0.6F).clientTrackingRange(10).build(TEEntities.Key("fleshed_slime")));
 
     // 飞行怪
     public static final RegistryObject<EntityType<DemonEye>> DEMON_EYE = TEEntities.registerMonster("demon_eye", DemonEye::new, 1.1F, 1.1F);
@@ -155,7 +154,7 @@ public class TEMonsterEntities {
 
     //饿鬼
     public static final RegistryObject<EntityType<TheHungry>> THE_HUNGRY = TEEntities.registerMonster("the_hungry", (e, l) -> new TheHungry(e, l, new AbstractPrefab().getPrefab()), 1F, 1F);
-//    public static final RegistryObject<EntityType<HillHungry>> HILL_HUNGRY = TEEntities.registerMonster("hill_hungry", (e, l) -> new HillHungry(e, l, new AbstractPrefab().getPrefab()), 1F, 1F);
+    public static final RegistryObject<EntityType<HillHungry>> HILL_HUNGRY = TEEntities.registerMonster("hill_hungry", (e, l) -> new HillHungry(e, l, new AbstractPrefab().getPrefab()), 1F, 1F);
 
 
     /* *********肉后***************** */
@@ -191,7 +190,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.GREEN_DUMPLING_SLIME.get(), c -> new CustomSlimeRenderer(c, "green_dumpling"));
         event.registerEntityRenderer(TEMonsterEntities.SWAMP_SLIME.get(), c -> new CustomSlimeRenderer(c, "swamp"));
         event.registerEntityRenderer(TEMonsterEntities.GOLDEN_SLIME.get(), c -> new CustomSlimeRenderer(c, "yellow"));
-//        event.registerEntityRenderer(TEMonsterEntities.FLESH_SLIME.get(), c -> new CustomSlimeRenderer(c, "flesh"));
+        event.registerEntityRenderer(TEMonsterEntities.FLESH_SLIME.get(), c -> new CustomSlimeRenderer(c, "flesh"));
 
 
         event.registerEntityRenderer(TEMonsterEntities.CRIMSON_KEMERA.get(), c -> new GeoNormalRenderer<>(c, TEMonsterEntities.CRIMSON_KEMERA.getId(), true));
@@ -253,7 +252,7 @@ public class TEMonsterEntities {
         event.registerEntityRenderer(TEMonsterEntities.SNATCHER.get(), c -> new SnatcherRenderer<>(c, TEMonsterEntities.SNATCHER.getId()));
         event.registerEntityRenderer(TEMonsterEntities.MAN_EATER.get(), c -> new SnatcherRenderer<>(c, TEMonsterEntities.MAN_EATER.getId()));
         event.registerEntityRenderer(TEMonsterEntities.THE_HUNGRY.get(), c -> new TheHungryRenderer<>(c, TEMonsterEntities.THE_HUNGRY.getId()));
-//        event.registerEntityRenderer(TEMonsterEntities.HILL_HUNGRY.get(), c -> new TheHungryRenderer<>(c, TEMonsterEntities.THE_HUNGRY.getId()));
+        event.registerEntityRenderer(TEMonsterEntities.HILL_HUNGRY.get(), c -> new TheHungryRenderer<>(c, TEMonsterEntities.THE_HUNGRY.getId()));
 
         // 地牢骷髅
         event.registerEntityRenderer(TEMonsterEntities.BASE_BONES.get(), c -> new HumanoidRenderer<>(c, TEMonsterEntities.BASE_BONES.getId(), 0.9f, 0));
@@ -318,7 +317,7 @@ public class TEMonsterEntities {
 //                .add(Attributes.WATER_MOVEMENT_EFFICIENCY, BaseSlime.slimeWaterMoveSpeed)
                 .build()); // 由finalizeSpawn设置
         event.put(GOLDEN_SLIME.get(), GoldenSlime.createSlimeAttributes().build());
-//        event.put(FLESH_SLIME.get(), BaseSlime.createSlimeAttributes(14.0F, 6, 50.0F).build());
+        event.put(FLESH_SLIME.get(), BaseSlime.createSlimeAttributes(14.0F, 6, 50.0F).build());
 
         // land
         event.put(BLOOD_CRAWLER.get(), BloodCrawler.createAttributes().build());
@@ -337,7 +336,7 @@ public class TEMonsterEntities {
         event.put(SNATCHER.get(), AttBuilder.createAttributes(31, 10, 13, 20, 1, 1).build());
         event.put(MAN_EATER.get(), AttBuilder.createAttributes(57, 10, 15, 20, 1, 1).build());
         event.put(THE_HUNGRY.get(), AttBuilder.createAttributes(30,1,10,32,0.75f,1).build());
-//        event.put(HILL_HUNGRY.get(), AttBuilder.createAttributes(30,1,10,32,0.75f,1).build());
+        event.put(HILL_HUNGRY.get(), AttBuilder.createAttributes(30,1,10,32,0.75f,1).build());
 
         // fly
         event.put(DEMON_EYE.get(), DemonEye.createAttributes().build());

@@ -80,4 +80,6 @@ public class AdapterUtils {
     public static <T extends IDataComponentType<T>> @Nullable T getDataComponent(ItemStack itemStack, Supplier<DataComponentProvider<T>> dataComponentType){
         return IDataComponentType.getData(itemStack, dataComponentType);
     }
+
+
 }

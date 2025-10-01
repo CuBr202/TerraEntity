@@ -9,7 +9,6 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.attachment.*;
 
@@ -20,6 +19,7 @@ public final class TEAttachments {
     public static final Capability<SummonerAttachment> SUMMONER_STORAGE = CapabilityManager.get(new CapabilityToken<>() {});
     public static final Capability<WeaponStorage> WEAPON_STORAGE = CapabilityManager.get(new CapabilityToken<>() {});
     public static final Capability<ItemInHandTrailAttachment> TRAIL_STORAGE = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<UnSyncableAttachment> UNSYNC = CapabilityManager.get(new CapabilityToken<>() {});
 
 
     @Mod.EventBusSubscriber(modid = TerraEntity.MODID,bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -29,6 +29,8 @@ public final class TEAttachments {
             event.register(SummonerAttachment.class);
             event.register(WeaponStorage.class);
             event.register(ItemInHandTrailAttachment.class);
+            event.register(UnSyncableAttachment.class);
+
         }
     }
 
@@ -40,6 +42,7 @@ public final class TEAttachments {
                 event.addCapability(TerraEntity.space("summoner_record"), new SummonerProvider());
                 event.addCapability(TerraEntity.space("weapon_storage"), new WeaponStorageProvider());
                 event.addCapability(TerraEntity.space("trail_storage"), new ItemInHandTrailProvider());
+                event.addCapability(TerraEntity.space("unsync"), new UnsyncableProvider());
             }
             if(event.getObject().getClass().getName().equals("com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid")){
                 // 车万女仆
