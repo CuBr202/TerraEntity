@@ -2,11 +2,9 @@ package org.confluence.terraentity.network.s2c;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-
 import net.minecraftforge.network.NetworkEvent;
-import org.confluence.terraentity.mixed.IBossHealthOverlay;
 import org.confluence.terraentity.mixed.IBossEvent;
-import software.bernie.geckolib.network.GeckoLibNetwork;
+import org.confluence.terraentity.mixed.IBossHealthOverlay;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -31,7 +29,9 @@ public class SyncBossEventHealthPacket {
 
 
     public void write(FriendlyByteBuf buf) {
-
+        buf.writeUUID(this.uuid);
+        buf.writeFloat(this.health);
+        buf.writeFloat(this.maxHealth);
     }
 
     public static SyncBossEventHealthPacket decode(FriendlyByteBuf buffer) {
@@ -51,7 +51,9 @@ public class SyncBossEventHealthPacket {
                 bossEvent.terra_enity$setBossHealth(packet.health);
                 bossEvent.terra_enity$setBossMaxHealth(packet.maxHealth);
             } catch (Exception ignored) {
+
             }
+
         });
         ctx.get().setPacketHandled(true);
     }

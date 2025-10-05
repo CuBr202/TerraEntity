@@ -51,14 +51,14 @@ public class TheHungryRenderer<T extends TheHungry> extends GeoNormalRenderer<T>
                 Mth.lerp(partialTick, entity.xOld, entity.getX()),
                 Mth.lerp(partialTick, entity.yOld, entity.getY()),
                 Mth.lerp(partialTick, entity.zOld, entity.getZ())
-        );
+        ).add(0, entity.getBbHeight() * 0.5F , 0); // 让渲染中心在实体的正中央
 
         Vec3 _diff = lerpPos.subtract(init);
         Vec3 diffNorm = _diff.normalize();
 
         // 让叶子紧贴实体
         Vec3 offset = diffNorm.scale(-1);
-        Vec3 diff = _diff.subtract(offset);
+        Vec3 diff = _diff.add(offset);
         double distance = _diff.length(); // 获取实体与初始点的直线距离[6](@ref)
         float length = 2;
         int baseCount = 5; // 基础数量
@@ -69,25 +69,29 @@ public class TheHungryRenderer<T extends TheHungry> extends GeoNormalRenderer<T>
                 baseCount,
                 50
         );
+        diff = diff.normalize().scale(count); // 长度变化的时候不会看起来卡顿
         double dx = diff.x / count;
         double dy = diff.y / count;
         double dz = diff.z / count;
-        Quaternionf rotate = TEUtils.rotateFromV1ToV2(new Vector3f(0,1,0),new Vector3f((float) dx, (float) dy, (float) dz));
-        BakedModel model = Minecraft.getInstance().getModelManager().getModel(EntityBlockModelRegister.getInstance().getModelResourceLocation(entity.getType()));;
+        Quaternionf rotate = TEUtils.rotateFromV1ToV2(
+                new Vector3f(0, 1, 0),
+                new Vector3f((float) diff.x, (float) diff.y + entity.getBbHeight() * 0.5F, (float) diff.z));
+        BakedModel model = Minecraft.getInstance().getModelManager().getModel(EntityBlockModelRegister.getInstance().getModelResourceLocation(
+                TEMonsterEntities.THE_HUNGRY.get()));;
         for (int i = 0; i < count; i++) {
-            Vec3 pos = new Vec3(-i * dx + offset.x, -i * dy + offset.y, -i * dz + offset.z);
+            Vec3 pos = new Vec3(
+                    -i * dx ,
+                    -i * dy + (1 - i * 1.0f / count) * entity.getBbHeight() * 0.5F ,
+                    -i * dz );
             poseStack.pushPose();
-            poseStack.translate(-0.5f,0.5f,-0.5f);
-            poseStack.translate(pos.x, pos.y, pos.z);
-//            poseStack.translate(offset.x, offset.y, offset.z);
-            poseStack.translate(0.5,0,0.5);
 
+            poseStack.translate(pos.x, pos.y, pos.z);
 
             poseStack.mulPose(rotate);
             poseStack.mulPose(Axis.YN.rotation(i * 0.5f));
             poseStack.translate(-0.5,0,-0.5);
-
-//            poseStack.translate(-0.5,0,0);
+            // 为了计算方便，需要从实体位置出发渲染，所以y轴取反
+            poseStack.scale(1,-1,1);
 
             ItemStack stack = Items.AIR.getDefaultInstance();
             for (RenderType rendertype : model.getRenderTypes(stack, false)) {

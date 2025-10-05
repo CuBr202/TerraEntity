@@ -167,6 +167,7 @@ public abstract class BaseProj<T extends BaseProj<T>> extends Projectile impleme
     @Override
     protected void defineSynchedData() {
         this.entityData.define(DATA_INIT_SPEED, new Vector3f(0, 0, 0));
+        this.entityData.define(DATA_SCALE, 1.0f);
     }
 
     @Override

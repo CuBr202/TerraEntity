@@ -66,9 +66,10 @@ public class TEProjectileEntities {
         RegisterUtils.registerBaseProjRenderer(event, SUMMON_BEE_STICK_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         event.registerEntityRenderer(BOOMERANG_PROJECTILE.get(), BoomerangProjRenderer::new);
         event.registerEntityRenderer(SKULL.get(), SkullProjectileRenderer::new);
-        RegisterUtils.registerBaseProjRenderer(event, VILE_SPIT_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
+        RegisterUtils.registerBaseProjRenderer(event, VILE_SPIT_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION))); // 没有指定纹理，默认粒子弹幕
         RegisterUtils.registerBaseProjRenderer(event, DARK_CASTER_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         RegisterUtils.registerBaseProjRenderer(event, FIRE_IMP_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
+        RegisterUtils.registerBaseProjRenderer(event, FIRE_BOUND_PROJ.get(), c->new Stinger<>(c.bakeLayer(Stinger.LAYER_LOCATION)));
         RegisterUtils.registerBaseProjRenderer(event, HARPY_FEATURE_PROJ.get(), c->new HarpyFeatherProjectileModel<>(c.bakeLayer(HarpyFeatherProjectileModel.LAYER_LOCATION)));
 //        RegisterUtils.registerBaseProjRenderer(event, DEMON_SCYTHE_PROJ.get(), c->new DemonScytheModel<>(c.bakeLayer(DemonScytheModel.LAYER_LOCATION)));
 

@@ -83,6 +83,8 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
 //            float scale = animatable.getExpandingScale(partialTick);
 //            poseStack.scale(scale, scale, scale);
         }
+        float scale = animatable.currentScale;
+        poseStack.scale(scale,scale,scale);
 
     }
 
@@ -118,10 +120,10 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
             pos = new Vec3(radius * Math.cos(angle), pos.y, radius * Math.sin(angle));
             float u = i * 1.0f / count;
 
-            builder.vertex(poseStack.last().pose(), (float) pos.x, (float) pos.y, (float) pos.z).color(red, green, blue,150).uv(u + du,0 + dv).endVertex();
-            builder.vertex(poseStack.last().pose(), (float) pos.x,  (float) pos.y+ height, (float) pos.z).color(red, green, blue,0).uv(u+ du,1+ dv).endVertex();
-            builder.vertex(poseStack.last().pose(), (float) lastX,  (float) pos.y+ height, (float) lastZ).color(red, green, blue,0).uv(lastU+ du,1+ dv).endVertex();
-            builder.vertex(poseStack.last().pose(), (float) lastX, (float) pos.y, (float) lastZ).color(red, green, blue,150).uv(lastU+ du,0+ dv).endVertex();
+            builder.vertex(poseStack.last().pose(), (float) pos.x, (float) pos.y, (float) pos.z).uv(u + du,0 + dv).color(red, green, blue,150).endVertex();
+            builder.vertex(poseStack.last().pose(), (float) pos.x,  (float) pos.y+ height, (float) pos.z).uv(u+ du,1+ dv).color(red, green, blue,0).endVertex();
+            builder.vertex(poseStack.last().pose(), (float) lastX,  (float) pos.y+ height, (float) lastZ).uv(lastU+ du,1+ dv).color(red, green, blue,0).endVertex();
+            builder.vertex(poseStack.last().pose(), (float) lastX, (float) pos.y, (float) lastZ).uv(lastU+ du,0+ dv).color(red, green, blue,150).endVertex();
 
             angle += delta;
             lastX = pos.x;
@@ -157,7 +159,7 @@ public class HillOfFleshRenderer extends GeoNormalRenderer<HillOfFlesh> {
         RenderSystem.setShaderColor(f, f1, f2, 1);
 //        VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(TerraEntity.space("textures/gui/noise.png")));
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         RenderSystem.setShaderTexture(0, TerraEntity.space("textures/gui/noise.png"));
         Vec3 pos = new Vec3(radius * Math.cos(angle), -10, radius * Math.sin(angle));
