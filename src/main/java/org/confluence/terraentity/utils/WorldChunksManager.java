@@ -98,7 +98,6 @@ public class WorldChunksManager {
             }
         }
 
-        // 如果世界没有强制加载的区块，移除空映射以避免内存泄漏
         if (chunkDataMap.isEmpty()) {
             WORLD_DATA.remove(world);
         }
