@@ -1,6 +1,8 @@
 ## Fix
-1. Error loot table of valor.
-2. Enemy can't attack enemy by collision.
-3. compatible with Azurelib. 
+1. Yoyo may cause crash when dead.
+2. Attributes can be changed by vallina ways.
 
-Due to time constraints, there was no time to update the new content from 1.21.1. 
+## Update
+1. Add arguments to modify boss's skills by json data packs.
+
+Author is busy in work, so updates may be slow. Thanks for your patience.
