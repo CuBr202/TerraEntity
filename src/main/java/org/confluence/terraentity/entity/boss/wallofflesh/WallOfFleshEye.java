@@ -40,6 +40,7 @@ public class WallOfFleshEye extends WallOfFleshPart implements RangedAttackMob {
         this.shootDamage = difficultSelector.switchBy(8,10,12,15);
         this.shootCount = _shootCount;
         this.shootDelay = _shootDelay;
+        collisionProperties.detectInternal = 20;
     }
     
     protected boolean canShoot(Entity target, float range) {

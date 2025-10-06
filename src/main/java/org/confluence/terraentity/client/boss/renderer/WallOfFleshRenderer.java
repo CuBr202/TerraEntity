@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.util.Tuple;
 import java.util.List;
+import net.minecraft.core.Direction;
 
 public class WallOfFleshRenderer extends GeoNormalRenderer<WallOfFlesh> {
     static RenderBuffers bf = new RenderBuffers(Runtime.getRuntime().availableProcessors());
@@ -81,8 +82,7 @@ public class WallOfFleshRenderer extends GeoNormalRenderer<WallOfFlesh> {
     public void render(WallOfFlesh entity, float entityYaw, float partialTick,
                        PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         float alpha = Math.clamp(entity.getFadeProgress(), 0, 1);
-
-        // 应用溶解效果到肉山的材质
+        
         if (alpha < 0.98f && entity.isDeadOrDying()) {
             TextureTarget target;
             WallOfFleshTranslucent.tuple tuple = WallOfFleshTranslucent.entityMap.get(entity);
@@ -112,7 +112,7 @@ public class WallOfFleshRenderer extends GeoNormalRenderer<WallOfFlesh> {
     }
 
     private void renderToTarget(WallOfFlesh wall, float entityYaw, float partialTick,
-                               PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+                                PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         int collisionWidth = Mth.floor(150 * 2 / wall.gridSpacing);
         int collisionHeight = Mth.floor(150 * 2 / wall.gridSpacing);
         final int gridX = wall.getGridSizeX() + collisionWidth;
@@ -173,8 +173,6 @@ public class WallOfFleshRenderer extends GeoNormalRenderer<WallOfFlesh> {
 
         for (WallOfFleshPart modelPart : part) {
             if (modelPart != null && modelPart.isAlive()) {
-                poseStack.pushPose();
-
                 Vec3 localOffset = null;
 
                 int partIndex = -1;
@@ -193,7 +191,15 @@ public class WallOfFleshRenderer extends GeoNormalRenderer<WallOfFlesh> {
                 }
 
                 if (localOffset != null) {
-                    poseStack.translate(localOffset.x, localOffset.y, localOffset.z);
+                    Vec3 rotatedOffset = wall.rotateLocalOffset(localOffset);
+                    Vec3 worldPos = wall.position().add(rotatedOffset);
+
+                    if (!shouldRenderGrid(worldPos, wall.gridSpacing)) {
+                        continue;
+                    }
+
+                    poseStack.pushPose();
+                    poseStack.translate(rotatedOffset.x, rotatedOffset.y, rotatedOffset.z);
 
                     if (modelPart instanceof WallOfFleshEye eye) {
                         currentModel = new GeoBossModel<>("wall_of_flesh_eye") {
@@ -270,14 +276,11 @@ public class WallOfFleshRenderer extends GeoNormalRenderer<WallOfFlesh> {
                         currentModel = new GeoBossModel<>("wall_of_flesh_mouse");
                     }
 
-                    poseStack.mulPose(Axis.YP.rotationDegrees(wall.getYRot()));
                     poseStack.scale(1.75f, 1.75f, 1.75f);
                     super.render(wall, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+                    poseStack.popPose();
                 }
-
-                poseStack.popPose();
             }
-
         }
 
         boolean renderHitBoxes = Minecraft.getInstance().getEntityRenderDispatcher().shouldRenderHitBoxes();
