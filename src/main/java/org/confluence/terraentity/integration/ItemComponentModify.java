@@ -18,6 +18,7 @@ public class ItemComponentModify {
         Consumer<DataComponentPatch.Builder> yellow = builder -> builder.set(ConfluenceMagicLib.MOD_RARITY.get(), ModRarity.YELLOW);
         Consumer<DataComponentPatch.Builder> green = builder -> builder.set(ConfluenceMagicLib.MOD_RARITY.get(), ModRarity.GREEN);
         Consumer<DataComponentPatch.Builder> red = builder -> builder.set(ConfluenceMagicLib.MOD_RARITY.get(), ModRarity.RED);
+        Consumer<DataComponentPatch.Builder> light_red = builder -> builder.set(ConfluenceMagicLib.MOD_RARITY.get(), ModRarity.LIGHT_RED);
         Consumer<DataComponentPatch.Builder> master = builder -> builder.set(ConfluenceMagicLib.MOD_RARITY.get(), ModRarity.MASTER);
 
         // 鞭子
@@ -31,6 +32,9 @@ public class ItemComponentModify {
         event.modify(TEWhipItems.SAPPHIRE_WHIP.get(), blue);
         event.modify(TEWhipItems.AMETHYST_WHIP.get(), blue);
         event.modify(TEWhipItems.SWAMP_WHIP.get(), orange);
+        event.modify(TEWhipItems.SNAPTHORN.get(), orange);
+        event.modify(TEWhipItems.SPINAL_TAP.get(), green);
+        event.modify(TEWhipItems.FIRECRACKER.get(), light_red);
 
         // 回旋镖
         event.modify(TEBoomerangItems.WOOD_BOOMERANG.get(), blue);

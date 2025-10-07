@@ -52,23 +52,22 @@ public class TEWhipItems {
     public static final DeferredItem<BaseWhipItem> AMETHYST_WHIP = registerWhip("amethyst_whip", 12.5f, 1, 0.5f, 15,0.8f, p->p
             .setDurability(700)
     );
-    public static final DeferredItem<BaseWhipItem> SWAMP_WHIP = registerWhip("swamp_whip", 16f, 2, 1f, 15,1.5f, p->p
+    public static final DeferredItem<BaseWhipItem> SWAMP_WHIP = registerWhip("swamp_whip", 16f, 2, 1f, 15,1.6f, p->p
             .setDurability(1200)
             .setParticle(TEParticles.LEAVES, 0.01f)
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
                     new TimePossibilityAmplifierEffect("mud", MobEffects.MOVEMENT_SLOWDOWN, 40,0,0,1)
             )));
-    public static final DeferredItem<BaseWhipItem> SNAPTHORN = registerWhip("snapthorn", 18f, 3, 1f, 15,1.5f, p->p  // 11
+    public static final DeferredItem<BaseWhipItem> SNAPTHORN = registerWhip("snapthorn", 18f, 3, 1f, 15,1.85f, p->p
             .setDurability(3600)
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
                     new TimePossibilityAmplifierEffect("snapthorn", MobEffects.POISON, 3,0,0,1)
                     // 丛林之怒效果，增加攻速
             )));
-    public static final DeferredItem<BaseWhipItem> SPINAL_TAP = registerWhip("spinal_tap", 27f, 4, 1.2f, 13,1.5f, p->p  // 11
+    public static final DeferredItem<BaseWhipItem> SPINAL_TAP = registerWhip("spinal_tap", 27f, 4, 1.2f, 13,1.6f, p->p  // 11
             .setDurability(3600));
-    public static final DeferredItem<BaseWhipItem> FIRECRACKER = registerWhip("firecracker", 37f, 0, 1f, 15,1.5f, p->p  // 16
+    public static final DeferredItem<BaseWhipItem> FIRECRACKER = registerWhip("firecracker", 37f, 0, 1f, 15,1.85f, p->p  // 16 0.1=2格距离，生存为准，需要多加俩格
             .setDurability(3600)
-            .setParticle(TEParticles.FIRE_BOUND, 0.01f)
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
                     new TimePossibilityAmplifierEffect("firecracker", TEEffects.HELLFIRE, 40,0,0,1)
             )));
