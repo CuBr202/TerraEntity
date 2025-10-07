@@ -420,6 +420,9 @@ public class TEChineseProvider extends LanguageProvider {
         add(TEWhipItems.SAPPHIRE_WHIP.get(), "蓝玉鞭");
         add(TEWhipItems.AMETHYST_WHIP.get(), "紫晶鞭");
         add(TEWhipItems.SWAMP_WHIP.get(), "沼泽藤蔓");
+        add(TEWhipItems.SNAPTHORN.get(), "荆鞭");
+        add(TEWhipItems.SPINAL_TAP.get(), "脊柱骨鞭");
+        add(TEWhipItems.FIRECRACKER.get(), "鞭炮");
 
         // 回旋镖
         add(TEBoomerangItems.WOOD_BOOMERANG.get(), "木回旋镖");
