@@ -61,7 +61,7 @@ public class TEWhipItems {
     public static final DeferredItem<BaseWhipItem> SNAPTHORN = registerWhip("snapthorn", 18f, 3, 1f, 15,1.85f, p->p
             .setDurability(3600)
             .component(TEDataComponentTypes.EFFECT_STRATEGY, EffectStrategyComponent.of(
-                    new TimePossibilityAmplifierEffect("snapthorn", MobEffects.POISON, 3,0,0,1)
+                    new TimePossibilityAmplifierEffect("snapthorn", MobEffects.POISON, 60,1,1,2)
                     // 丛林之怒效果，增加攻速
             )));
     public static final DeferredItem<BaseWhipItem> SPINAL_TAP = registerWhip("spinal_tap", 27f, 4, 1.2f, 13,1.6f, p->p  // 11

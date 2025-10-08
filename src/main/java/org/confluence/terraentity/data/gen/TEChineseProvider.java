@@ -557,6 +557,8 @@ public class TEChineseProvider extends LanguageProvider {
 
         // hit effect
         add("terra_entity.effect.strategy.mud", "泥潭");
+        add("terra_entity.effect.strategy.snapthorn", "中毒");
+        add("terra_entity.effect.strategy.firecracker", "烈火焚身");
 
         add("terra_entity.effect.strategy.bat", "吸血 +1 hp");
         add("terra_entity.effect.strategy.lights_bane", "召唤魔光剑");

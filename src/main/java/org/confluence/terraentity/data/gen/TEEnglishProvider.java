@@ -160,8 +160,10 @@ public class TEEnglishProvider extends LanguageProvider {
         add("terra_entity.effect.strategy.bat", "Blood absorb +1 hp");
         add("terra_entity.effect.strategy.lights_bane", "Summon lights bane");
         add("terra_entity.effect.strategy.bee_keeper", "Summon bees");
+        add("terra_entity.effect.strategy.snapthorn", "Poisoned");
+        add("terra_entity.effect.strategy.firecracker", "Hell fire");
 
-
+        add("terra_entity.effect.strategy.frozen_burn_5_sec", "frozen burn 10 seconds");
         add("terra_entity.effect.strategy.frozen_burn_3_sec_50_chance", "50% chance frozen burn 3 seconds");
         add("terra_entity.effect.strategy.tentacle_spikes", "Tentacle spikes");
         add("terra_entity.effect.strategy.hunting_4_sec", "Hunting 4 seconds");
