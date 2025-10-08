@@ -564,6 +564,7 @@ public class TEChineseProvider extends LanguageProvider {
         add("terra_entity.effect.strategy.lights_bane", "召唤魔光剑");
         add("terra_entity.effect.strategy.bee_keeper", "召唤蜜蜂");
 
+        add("terra_entity.effect.strategy.frozen_burn_5_sec", "霜冻 10秒");
         add("terra_entity.effect.strategy.frozen_burn_3_sec_50_chance", "50%几率 霜冻 3秒");
         add("terra_entity.effect.strategy.tentacle_spikes", "触手钉锤");
         add("terra_entity.effect.strategy.hunting_4_sec", "狩猎 4秒");
