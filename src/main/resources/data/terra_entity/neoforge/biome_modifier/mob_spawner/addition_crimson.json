@@ -17,7 +17,7 @@
       "weight": 30
     },
     {
-      "type": "terra_entity:crimson_kemera",
+      "type": "terra_entity:crimera",
       "maxCount": 1,
       "minCount": 1,
       "weight": 60
