@@ -32,7 +32,7 @@ import org.confluence.terraentity.network.s2c.SyncNPCTradesPacketS2C;
 import org.confluence.terraentity.registries.mappeddata.MappedDataLoader;
 import org.confluence.terraentity.utils.AdapterUtils;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = TerraEntity.MODID)
+@EventBusSubscriber(modid = TerraEntity.MODID)
 public class GameEvent {
     @SubscribeEvent
     public static void onDatapackSync(OnDatapackSyncEvent event) {

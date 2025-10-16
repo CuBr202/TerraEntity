@@ -15,7 +15,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.entity.proj.TrailProjectile;
 import org.confluence.terraentity.entity.util.DifficultSelector;
 import org.confluence.terraentity.init.TETags;
-import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class WallOfFleshEye extends WallOfFleshPart implements RangedAttackMob {

@@ -3,16 +3,15 @@ package org.confluence.terraentity.network.s2c;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terraentity.TerraEntity;
 import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
 import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFleshPart;
 import org.jetbrains.annotations.NotNull;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class SyncWallOfFleshTargetPacket implements CustomPacketPayload {
     public static final Type<SyncWallOfFleshTargetPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(TerraEntity.MODID, "sync_wall_of_flesh_target"));

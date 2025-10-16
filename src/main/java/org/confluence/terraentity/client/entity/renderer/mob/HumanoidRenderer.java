@@ -7,14 +7,14 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
+import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
 import org.confluence.terraentity.client.entity.layer.ArmorLayer;
 import org.confluence.terraentity.client.entity.layer.BootArmorLayer;
 import org.confluence.terraentity.client.entity.layer.ItemInHandLayer;
 import org.confluence.terraentity.client.entity.model.GeoHumanoidModel;
 import org.confluence.terraentity.client.entity.renderer.AnimatorRenderer;
-import org.confluence.terraentity.entity.animation.BoneStates;
 import org.confluence.terraentity.client.util.DefaultBoneBoundIdents;
-import org.confluence.terraentity.api.entity.animation.IUseItemAnimatable;
+import org.confluence.terraentity.entity.animation.BoneStates;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 

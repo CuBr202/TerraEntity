@@ -33,7 +33,7 @@ import org.confluence.terraentity.integration.sodium_dynamic_light.SDHelper;
 import static org.confluence.terraentity.client.util.RegisterUtils.registerModel;
 
 
-@EventBusSubscriber(modid = TerraEntity.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = TerraEntity.MODID, value = Dist.CLIENT)
 public final class ModClientEvent {
 
     @SubscribeEvent

@@ -4,19 +4,14 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import org.confluence.terraentity.entity.ai.goal.MutableRangeNearestAttackableTargetGoal;
 import org.confluence.terraentity.entity.monster.BaseWorm;
 import org.confluence.terraentity.entity.monster.BaseWormPart;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
-import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
-
-import java.util.ArrayList;
 
 @SuppressWarnings("all")
 public class WallOfFleshMouse extends WallOfFleshPart {

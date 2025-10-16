@@ -20,7 +20,7 @@ import org.lwjgl.glfw.GLFW;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
 public class GameInputEvent {
 
     @SubscribeEvent

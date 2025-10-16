@@ -7,7 +7,6 @@ import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terraentity.TerraEntity;
-import org.confluence.terraentity.data.gen.recipe.TERecipeProvider;
 
 public class TEArmors {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(TerraEntity.MODID);

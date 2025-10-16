@@ -2,8 +2,6 @@ package org.confluence.terraentity.api.entity.ai;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
-import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terraentity.entity.ai.fsm.CircleMobSkills;
 import org.confluence.terraentity.entity.ai.fsm.MobSkill;
 import software.bernie.geckolib.animatable.GeoAnimatable;

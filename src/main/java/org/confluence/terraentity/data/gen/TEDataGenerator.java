@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = MODID)
 public class TEDataGenerator {
     public static Map<String, DataProvider> PROVIDERS = null;
 

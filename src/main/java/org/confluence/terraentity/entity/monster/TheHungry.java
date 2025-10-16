@@ -1,13 +1,11 @@
 package org.confluence.terraentity.entity.monster;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -21,14 +19,11 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.api.entity.Boss;
 import org.confluence.terraentity.api.entity.IMinion;
 import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
-import org.confluence.terraentity.entity.monster.demoneye.DemonEyeSurroundTargetGoal;
-import org.confluence.terraentity.entity.monster.demoneye.DemonEyeWanderGoal;
 import org.confluence.terraentity.entity.monster.prefab.AbstractPrefab;
 import org.confluence.terraentity.entity.monster.prefab.AttributeBuilder;
 import org.confluence.terraentity.init.TESounds;
 import org.confluence.terraentity.init.TETags;
 import org.confluence.terraentity.init.entity.TEMonsterEntities;
-import org.confluence.terraentity.mixin.accessor.EntityAccessor;
 import org.confluence.terraentity.utils.TEUtils;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;

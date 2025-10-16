@@ -14,7 +14,7 @@ import java.io.IOException;
 import static org.confluence.terraentity.TerraEntity.MODID;
 
 public final class ModRenderTypes {
-    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
     public static class Shaders {
         public static ShaderInstance floatBarShader;
         public static ShaderInstance colorBlitShader;

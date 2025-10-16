@@ -20,7 +20,7 @@ import org.confluence.terraentity.network.NetworkHandler;
 
 import java.util.List;
 
-@EventBusSubscriber(modid = TerraEntity.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = TerraEntity.MODID)
 public class ModEvent {
     @SubscribeEvent
     public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {

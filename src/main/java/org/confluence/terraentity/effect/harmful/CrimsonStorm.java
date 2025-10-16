@@ -7,7 +7,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terraentity.attachment.UnSyncableAttachment;
 import org.confluence.terraentity.entity.boss.hillofflesh.HillOfFlesh;
 import org.confluence.terraentity.init.TEAttachments;
-import org.confluence.terraentity.init.TEEffects;
 
 /**
  * 肉山范围效果，附近的敌人会向肉山方向移动。

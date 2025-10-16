@@ -2,11 +2,9 @@ package org.confluence.terraentity.mixin.client;
 
 
 import net.minecraft.server.level.ChunkMap;
-import net.minecraft.server.level.GenerationChunkHolder;
 import net.minecraft.world.entity.Entity;
 import org.confluence.terraentity.entity.boss.wallofflesh.WallOfFlesh;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 

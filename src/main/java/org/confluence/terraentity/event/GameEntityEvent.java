@@ -51,7 +51,7 @@ import org.confluence.terraentity.utils.TEUtils;
 
 import static org.confluence.terraentity.TerraEntity.MODID;
 
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = MODID)
 public class GameEntityEvent {
     @SubscribeEvent
     public static void entityJoinLevel(EntityJoinLevelEvent event) {

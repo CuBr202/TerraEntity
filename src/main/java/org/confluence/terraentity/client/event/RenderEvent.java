@@ -24,8 +24,8 @@ import org.confluence.terraentity.client.buffer.NPCChatBubbleBuffer;
 import org.confluence.terraentity.client.gui.CustomizeBossHealthBar;
 import org.confluence.terraentity.client.post.BossSpawnCameraManager;
 import org.confluence.terraentity.client.post.BrainTranslucent;
-import org.confluence.terraentity.client.post.WallOfFleshTranslucent;
 import org.confluence.terraentity.client.post.TongueRenderer;
+import org.confluence.terraentity.client.post.WallOfFleshTranslucent;
 import org.confluence.terraentity.integration.ModChecker;
 import org.confluence.terraentity.item.BaseWhipItem;
 import org.confluence.terraentity.item.YoyosItem;
@@ -33,7 +33,7 @@ import org.confluence.terraentity.item.YoyosItem;
 import static org.confluence.terraentity.TerraEntity.MODID;
 import static org.confluence.terraentity.config.ClientConfig.bossBarStyle;
 
-@EventBusSubscriber(modid = MODID,bus = EventBusSubscriber.Bus.GAME,value = Dist.CLIENT)
+@EventBusSubscriber(modid = MODID,value = Dist.CLIENT)
 public class RenderEvent {
     @SubscribeEvent
     public static void guiEvent( RenderGuiLayerEvent.Pre event){
