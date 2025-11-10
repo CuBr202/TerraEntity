@@ -34,16 +34,15 @@ public class ItemInHandTrailAttachment implements INBTSerializable<Tag> {
     int colorFrom = new Color(0x1FE6C0).getRGB();
     int colorTo = new Color(0xC67C28).getRGB();
 
-
     static Map<Item, Operator> registry = new java.util.HashMap<>();
 
-    public int tickColor(Player player){
+    public int tickColor(Player player) {
         float d = (player.getRandom().nextFloat() - 0.5f) * 0.05f;
 
         colorProgress = Mth.clamp(colorProgress + d + this.sliderProgress, 0, 1);
-        if(colorProgress >= 1){
+        if (colorProgress >= 1) {
             this.sliderProgress = -0.003f;
-        }else if(colorProgress <= 0){
+        } else if (colorProgress <= 0) {
             this.sliderProgress = 0.003f;
         }
         return lerpColor(colorFrom, colorTo, colorProgress);
@@ -56,45 +55,51 @@ public class ItemInHandTrailAttachment implements INBTSerializable<Tag> {
         return (r << 16) + (g << 8) + b;
     }
 
-
     static class Operator {
         Function<Player, Boolean> checkAdditionCondition;
         ItemInHandTail trail;
+
         public Operator(Function<Player, Boolean> checkAdditionCondition, ItemInHandTail trail) {
             this.checkAdditionCondition = checkAdditionCondition;
             this.trail = trail;
         }
     }
 
-    public static void register(Item item, Function<Player, Boolean> checkAdditionCondition, ItemInHandTail trail){
+    public static void register(Item item, Function<Player, Boolean> checkAdditionCondition, ItemInHandTail trail) {
         registry.put(item, new Operator(checkAdditionCondition, trail));
     }
 
-    public static void register(Item item, ItemInHandTail trail){
+    public static void register(Item item, ItemInHandTail trail) {
         registry.put(item, new Operator((player) -> true, trail));
     }
 
-    public static void registerDefault(){
-        ItemInHandTrailAttachment.register(TESummonItems.TERRAPRISMA.get().asItem(), new ColorfulItemInHandTrail(1, 0.15f, 8));
-        ItemInHandTrailAttachment.register(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.get().asItem(), new ItemInHandTail(1, 0.15f, 0x0000FF, 8));
+    public static void registerDefault() {
+        ItemInHandTrailAttachment.register(TESummonItems.TERRAPRISMA.get().asItem(),
+                new ColorfulItemInHandTrail(1, 0.15f, 8));
+        ItemInHandTrailAttachment.register(TESummonItems.SUMMON_DIAMOND_SWORD_STAFF.get().asItem(),
+                new ItemInHandTail(1, 0.15f, 0x0000FF, 8));
+        ItemInHandTrailAttachment.register(TESummonItems.SUMMON_ANCIENT_SPEAR_STAFF.get().asItem(),
+                new ItemInHandTail(1, 0.15f, 0xFFFF00, 8));
+        ItemInHandTrailAttachment.register(TESummonItems.SUMMON_ZWEIENDER_STAFF.get().asItem(),
+                new ItemInHandTail(1, 0.15f, 0x0000FF, 8));
     }
 
-
     @Nullable
-    public static ItemInHandTail updateTrails(Player player){
+    public static ItemInHandTail updateTrails(Player player) {
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
         Item item = stack.getItem();
-        ItemInHandTrailAttachment data = player.getCapability(TEAttachments.TRAIL_STORAGE).orElseGet(ItemInHandTrailAttachment::new);
-        if(registry.containsKey(item)){
+        ItemInHandTrailAttachment data = player.getCapability(TEAttachments.TRAIL_STORAGE)
+                .orElseGet(ItemInHandTrailAttachment::new);
+        if (registry.containsKey(item)) {
             // 如果已注册物品拖尾
             Operator operator = registry.get(item);
-            if(data.trail == operator.trail){
+            if (data.trail == operator.trail) {
                 // 没有变化
                 return data.trail;
             }
-            if(operator.checkAdditionCondition.apply(player)){
+            if (operator.checkAdditionCondition.apply(player)) {
                 // 条件满足，添加拖尾
-                if(data.trail != null) {
+                if (data.trail != null) {
                     // 之前有拖尾，清空
                     data.trail.trailsQueue.clear();
                 }
@@ -105,11 +110,12 @@ public class ItemInHandTrailAttachment implements INBTSerializable<Tag> {
         return null;
     }
 
-
+    @Override
+    public @UnknownNullability CompoundTag serializeNBT() {
+        return new CompoundTag();
+    }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT() {return new CompoundTag();}
-
-    @Override
-    public void deserializeNBT(Tag tag) {}
+    public void deserializeNBT(Tag tag) {
+    }
 }

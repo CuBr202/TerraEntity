@@ -178,6 +178,9 @@ dependencies {
     compileOnly fg.deobf("curse.maven:embeddium-908741:5681725")
     runtimeOnly fg.deobf("curse.maven:embeddium-908741:5681725")
 
+    compileOnly fg.deobf("curse.maven:lendercataclysm-551586:6906993")
+    runtimeOnly fg.deobf("curse.maven:lendercataclysm-551586:6906993")
+
 
     // mc lib 要用lib:
     implementation fg.deobf("libs:cafelib:1.0.1+1201forge-all")
